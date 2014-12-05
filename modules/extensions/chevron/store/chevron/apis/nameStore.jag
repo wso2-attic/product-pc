@@ -1,0 +1,55 @@
+<%
+
+require('/modules/store.js').exec(function(ctx) {
+     var log=new Log();
+var req=ctx.request;
+var res=ctx.response;
+var store = require('store');
+    var user = store.user;
+    var userReg = user.userRegistry(session);
+var type= req.getParameter('type');
+
+if(type=="POST")
+{
+
+
+var linkName=req.getParameter('linkName');
+
+   
+   var path = '/_system/governance/getProcessName';
+    var resource ={
+            content:linkName,
+            mediaType: 'text/plain',
+            description: 'This is a process name',
+            uuid: '0123',
+            properties:{prop1: 'val1', prop2: 'val2'}
+        };
+
+     userReg.put(path,resource);
+
+     var result=userReg.get(path);
+     print(result.content);
+    // log.info('RESULT in post'+result.content);
+    // log.info('NAME'+linkName);
+}
+
+if(type=="GET")
+{
+
+    var path = '/_system/governance/getProcessName';
+    var result=userReg.get(path);
+     var output=""+result.content;
+     
+
+    //log.info('RESULT NAMESTORE'+output.trim());
+
+    print(output);
+
+}
+
+
+}, request, response, session);
+
+
+
+%>

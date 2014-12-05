@@ -1,0 +1,37 @@
+    <%
+    require('/modules/store.js').exec(function(ctx) {
+
+        var log=new Log();
+
+    var req=ctx.request;
+    var res=ctx.response;
+    var store = require('store');
+        var user = store.user;
+        var userReg = user.userRegistry(session);
+        
+    var type= req.getParameter('type');
+    var processName= req.getParameter('name').trim();
+
+   
+    if(type=="GET")
+    {
+    //log.info('IN GET');
+    //log.info(processName);
+    
+    var path = '/_system/governance/'+processName;
+   // log.info('PATH'+path);
+    	var result=userReg.get(path);
+         var output= ""+result.content;
+         
+            print(output);
+    	//log.info('RESULT++++++'+ result);
+       // log.info('output pls'+ output);
+       
+
+
+    }
+
+    }, request, response, session);
+
+
+    %>
