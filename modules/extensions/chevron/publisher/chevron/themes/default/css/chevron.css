@@ -1,0 +1,89 @@
+td.T {
+    width: 100%;
+}
+.testgrid input {
+    width: 98%;
+}
+#dropArea {
+    cursor: pointer;
+    border: solid 1px gray;
+    height: 400px;
+    width: 800px;
+    position: relative;
+    overflow-y: scroll;
+}
+#canvasArea {
+    height: 600px;
+    width: 800px;
+    border: solid 1px gray;
+    position: relative;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+.chevron-text {
+    height: 5px;
+    width: 10px;
+}
+.description-main {
+    resize: none;
+    width: 40em;
+    height: 3em;
+}
+.toolbox {
+    border: solid 1px gray;
+    height: 80px;
+    width: 80px;
+}
+.chevron-textField {
+    position: relative;
+    resize: none;
+    width: 6em;
+    height: 3em;
+    top: 19.9340209960938px;
+    left: 35.5728759765625px;
+    background-color: #FFCC33;
+    text-align: center;
+}
+.chevron {
+    position: absolute;
+    left: 500px;
+    top: 150px;
+    width: 165px;
+    height: 80px;
+    display: inline-block;
+    float: left;
+    margin-right: 6px;
+    vertical-align: top;
+    background-image: url(../img/chevron-icon.jpg);
+}
+#propTable{
+    padding-bottom:10px; 
+    margin-left: 10px;
+}
+#viewMainProps {
+    padding-bottom: 10px;
+    margin-left: 10px;
+}
+.text-edit {
+    width: 6em;
+    height: 3em;
+    visibility: hidden;
+    resize: none;
+    text-align: center;
+}
+#default-canvas {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-top: 30px;
+}
+.chevron-toolbox {
+    left: 500px;
+    top: 150px;
+    width: 72px;
+    height: 80px;
+    display: inline-block;
+    float: left;
+    margin-right: 6px;
+    vertical-align: top;
+    background-image: url(../img/chevron-toolbox.png);
+}

@@ -1,0 +1,32 @@
+{{#with assets}}
+<form  method='post' action='{{url ""}}/apis/assets?type={{../rxt.shortName}}' class="form-horizontal" id="form-asset-create" data-redirect-url='{{url ""}}/asts/{{../rxt.shortName}}/list' >
+    <div class="control-group">
+        <div class="toolbox">
+            <div class="chevron-toolbox" id="cId">
+                <textarea  class="text-edit"name="0"></textarea>
+            </div>
+        </div>
+        <div id="dropArea">
+        </div>
+        <div>
+            {{> create_main_properties .}}
+        </div>
+        <div>
+            {{> create_element_properties .}}
+        </div>
+        <hr width="800px" />
+        <div id="images">
+            <table>
+                <tbody><tr>
+                    <td><b><label class="control-label">Thumbnail</label></b></td><td><input type="file" value="" name="images_thumbnail" class="input-large"></td>
+                </tr>
+            </tbody></table>
+        </div>
+    </div>
+    <div id="saveButtons" class="form-actions">
+        <input type="submit" id="btn-create-asset" class="btn btn-primary" name="addNewAssetButton" value='{{t "Create"}}'>
+        <button class="btn" type="reset">{{t "Reset"}}</button>
+        <input type="hidden" value="{{rxt.shortName}}" name="{{rxt.shortName}}" id="meta-asset-type">
+    </div>
+</form>
+{{/with}}
