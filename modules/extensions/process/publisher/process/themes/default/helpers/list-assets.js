@@ -3,7 +3,7 @@ log.info('######### Loading the list-assets helper ######## ');
 var resources = function (block, page, area, meta) {
     return {
         js: ['asset-core.js', 'asset-helpers.js', 'assets.js','jquery.event.mousestop.js'],
-        css: ['es-publisher-commons.css','assets.css','editablegrid-2.0.1.css','styles.css','font-awesome-ie7.min.css','jslider.css','jslider.round.plastic.css','navigation.css','sort-assets.css'],
+        css: ['es-publisher-commons.css','assets.css','grid.css','styles.css','font-awesome-ie7.min.css','jslider.css','jslider.round.plastic.css','navigation.css','sort-assets.css'],
     };
 };
 
