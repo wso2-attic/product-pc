@@ -1,0 +1,118 @@
+ <style>
+            body { font-family:'lucida grande', tahoma, verdana, arial, sans-serif; font-size:11px; }
+            h1 { font-size: 15px; }
+            a { color: #548dc4; text-decoration: none; }
+            a:hover { text-decoration: underline; }
+            table.testgrid { border-collapse: collapse; border: 1px solid #CCB; width: 800px; }
+            table.testgrid td, table.testgrid th {padding: 5px; border: 1px solid #E0E0E0; }
+            table.testgrid th { background: #E5E5E5; text-align: left; }
+            input.invalid { background: red; color: #FDFDFD; }
+        </style>
+        
+        <script>
+            
+            var isSocial = ('{{isSocial}}' == 'true');
+               
+        </script>
+
+
+
+
+ {{#with assets}}
+ <form class="form-horizontal" id='form-asset-update' method='post' action='{{url ""}}/apis/assets?type={{../rxt.shortName}}' >
+    <div class="control-group">
+
+      <div id = "headers"><table>
+
+
+  <tbody>
+  <tr>
+    <td><b><label class="control-label">Provider</label></b></td><td><input type="text" value="Enter Provider" name="overview_provider" class="input-large"></td>
+    </tr>
+
+  <tr>
+  <td><b><label class="control-label">Name</label></b></td><td><input type="text" value= "Enter New Name" name="overview_name" class="input-large"></td>
+  </tr>
+
+  <tr>
+  <td><b><label class="control-label">Version</label></b></td><td><input type="text" value="Enter New Version" name="overview_version" class="input-large"></td>
+  </tr>
+
+</tbody></table></div>
+<hr width="800px" />
+
+
+
+
+
+
+
+     <div style="padding-bottom: 10px"> <textarea rows = "15" name = "overview_description" class="input-large" style = "width:785px">{{this.tables.[0].fields.description.value}}</textarea></div>
+        <div id= "proptable">
+
+      <table id="htmlgrid" class="testgrid">
+                                <tr>
+                                    <th>Properties</th>
+                                    <th>Value</th>
+                                    
+                                </tr>
+                                <tr id="R1">
+                                    <td>Name</td>
+                                    <td style="width:255px"><input type="text" value="{{this.tables.[1].fields.name.value}}" name="properties_name"style="border:none;border-color:transparent;"></td>
+                                   
+                                </tr>
+                                <tr id="R2">
+                                    <td>Owner</td>
+                                    <td><input type="text" value="{{this.tables.[1].fields.owner.value}}" name="properties_owner" style="border:none;border-color:transparent;" ></td>
+                                                                      
+                                </tr>
+                                <tr id="R3">
+                                    <td>Predecessors</td>
+                                    <td><input type="text" value="{{this.tables.[1].fields.predecessors.value}}" name="properties_predecessors" style="border:none;border-color:transparent;"></td>
+                                   
+                                </tr>
+                                <tr id="R4">
+                                    <td>Successors</td>
+                                    <td><input type="text" value="{{this.tables.[1].fields.successors.value}}" name="properties_successors" style="border:none;border-color:transparent;" ></td>
+                                </tr>
+                                <tr id="R5">
+                                    <td>Generalizations</td>
+                                    <td><input type="text" value="{{this.tables.[1].fields.generalizations.value}}" name="properties_generalizations" style="border:none;border-color:transparent;"></td>
+                                   
+                                </tr>
+                                <tr id="R6">
+                                    <td>Specialization</td>
+                                    <td><input type="text" value="{{this.tables.[1].fields.specializations.value}}" name="properties_specializations" style="border:none;border-color:transparent;" ></td>
+                                   
+                                </tr>
+                            </table>
+
+
+
+    </div>
+    <hr width="800px" />
+    <div id="images">
+<table>
+
+
+    <tbody><tr>
+    <td><b><label class="control-label">Thumbnail</label></b></td><td><input type="file" value="" name="images_thumbnail" class="input-large"></td>
+    </tr>
+
+ 
+
+</tbody></table>    
+
+    </div>
+
+</div> 
+
+
+    <div id="saveButtons" class="form-actions">
+                            <input type="submit" value="Create New Variant" class="btn btn-primary"
+                                   name="editAssetButton" id="editAssetButton">
+                            <input type="reset" value="Reset" class="btn">
+                            <input type="hidden" value="{{rxt.shortName}}" name="{{rxt.shortName}}" id="meta-asset-type">
+    </div>   
+</form>
+{{/with}}

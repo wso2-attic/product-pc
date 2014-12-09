@@ -1,0 +1,29 @@
+<%
+require('/modules/store.js').exec(function(ctx) {
+    var log=new Log();
+    var req=ctx.request;
+    var res=ctx.response;
+
+
+
+    var store = require('store');
+    var user = store.user;
+    var server = store.server;
+    var sysReg = server.systemRegistry(-1234);
+    //var userReg = user.userRegistry(session);
+    var type= req.getParameter('reqType');
+   
+
+    if(type=="get")
+     {
+        var processName = req.getParameter('name');
+        var path = '/_system/governance/process/'+processName+'/'+processName+"content";
+        log.info(path);
+
+        var result = sysReg.get(path);
+        var output= ""+result.content;
+        print(output);
+     }
+
+}, request, response, session);
+%>
