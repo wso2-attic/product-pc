@@ -18,7 +18,7 @@
  */
 $(document).ready(function() {
     chevronProperties = []; //store properties of each chevron
-    var processId = 0; // store process Id for the current chevron
+    var processId = 0; // update process model Id
     $("#viewMainProps").show();
     $("#viewElementProps").hide();
     // ajax call to get the process name the view belongs to
@@ -29,50 +29,51 @@ $(document).ready(function() {
             type: "GET"
         },
         success: function(result) {
-            getXmlForProcess(result);
+            getXmlForChevron(result);
         }
     });
-    $('#canvasArea').dblclick(function(e) {
-        $("#viewMainProps").show();
+    $('#canvasArea').dblclick(function(e) {  // on double click of the canvas
+        $("#viewMainProps").show();  //show main chevron diagram details
         $("#viewElementProps").hide();
     });
     //function to get the specific xml content for the given process
-    function getXmlForProcess(process) {
+    function getXmlForChevron(chevronName) {
         $.ajax({
             type: "GET",
             url: "/store/asts/chevron/apis/chevronxml",
             data: {
                 type: "GET",
-                name: process
+                name: chevronName
             },
             success: function(xmlResult) {
-                drawDiagramOnCanvas(xmlResult); //send retrieved xml to be repainted on canvas
+                drawDiagramOnCanvas(xmlResult);
             }
         });
     }
     //function to draw retrived chevron content to canvas
     function drawDiagramOnCanvas(xmlResult) {
-        var canvasContent = xmlResult;
-        canvasContent = canvasContent.replace(/&quot;/g, '"'); //remove additional ""
-        canvasContent = canvasContent.split(',');
-        var jsonobj = eval("(" + canvasContent + ")");
+        var test = xmlResult;
+        test = test.replace(/&quot;/g, '"');
+        test = test.split(',');
+        var jsonObj = eval("(" + test + ")");
         // get length of elements  array
-        var numberOfElements = jsonobj.diagram[0].chevrons[0].element.length;
+        var numberOfElements = jsonObj.diagram[0].chevrons[0].element.length;
         //draw elements 
         for (var i = 0; i < numberOfElements; i++) {
-            var chevronId = jsonobj.diagram[0].chevrons[0].element[i].chevronId;
-            var chevronName = jsonobj.diagram[0].chevrons[0].element[i].chevronName;
-            var positionX = jsonobj.diagram[0].styles[0].format[i].X;
-            var positionY = jsonobj.diagram[0].styles[0].format[i].Y;
-            var process = jsonobj.diagram[0].chevrons[0].element[i].associatedAsset;
-            storePropertiesOfChevron(chevronId, chevronName, process); //store properties for individual chevron
-            var element1 = $('<div>').attr('id', 'chevronId').addClass('chevron'); //set chevron css
+            var chevronId = jsonObj.diagram[0].chevrons[0].element[i].chevronId;
+            var chevronName = jsonObj.diagram[0].chevrons[0].element[i].chevronName;
+            var positionX = jsonObj.diagram[0].styles[0].format[i].X;
+            var positionY = jsonObj.diagram[0].styles[0].format[i].Y;
+            var process = jsonObj.diagram[0].chevrons[0].element[i].associatedAsset;
+
+            storePropertiesOfChevron(chevronId, chevronName, process);  // store details for each chevron
+            var element1 = $('<div>').attr('id', 'chevronId').addClass('chevron');
             var textField = $('<textArea>').attr({
                 name: chevronId
             }).addClass("chevron-textField");
             textField.val(chevronName);
             element1.append(textField);
-            element1.find('.chevron-textField').position({ // position text box in the center of element
+            element1.find('.chevron-text').position({ // position text box in the center of element
                 my: "center",
                 at: "center",
                 of: element1
@@ -86,7 +87,7 @@ $(document).ready(function() {
         }
     }
 
-    function replaceProcessText(processName) { //replace process name text into a link
+    function replaceProcessText(processName) { // replace process model text into a link
         $.ajax({
             type: "GET",
             url: "../apis/processes?type=process",
@@ -99,18 +100,17 @@ $(document).ready(function() {
         });
     }
 
-    function setIdOfProcess(results, processName) { // get the link id for the process
+    function setIdOfProcess(results, processName) { // set id of process to the process model link
         var obj = eval("(" + results + ")");
         for (var i in obj) {
             var item = obj[i];
-            // alert(item.id);
             processId = item.id;
         }
-        $("#td_mod").append('<li><a href =/store/asts/process/details/' + processId + '>' + processModel + '</a></li>');
+        $("#td_mod").append('<li><a href = /store/asts/process/details/' + processId + '>' + processModel + '</a></li>');
     }
 
-    function storePropertiesOfChevron(id, name, process) {
-        if (process == '' || process == null) { //for chevron's that do not have an associated process
+    function storePropertiesOfChevron(id, name, process) {  // store  details for each chevron
+        if (process == '' || process == null) {
             process = "None";
         }
         chevronProperties.push({
@@ -120,13 +120,13 @@ $(document).ready(function() {
         });
     }
 
-    function chevronClicked() {
+    function chevronClicked() { // on click retrieve stored properties of each chevron into table fields
         $("#td_mod").html("");
         $("#viewElementProps").show();
         var clickedElement = $(this);
         var id = clickedElement.find('.chevron-textField').attr('name');
         $("#viewMainProps").hide();
-        for (i = 0; i < chevronProperties.length; i++) {
+        for (var i = 0; i < chevronProperties.length; i++) {
             if (id == chevronProperties[i].id) {
                 name = chevronProperties[i].name;
                 processModel = chevronProperties[i].process;
