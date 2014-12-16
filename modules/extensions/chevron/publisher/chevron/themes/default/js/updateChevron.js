@@ -40,6 +40,7 @@ jsPlumb.ready(function(e) {
     var flowList = []; //store original position order of elements
     var canvasElementList = []; //store alignment properties of all the chevrons
     var numOfCanvasElements = 0; // Keep count of all the elements currently on canvas
+    var previousName; // To store the previous chevron name to display the view if needed
     // associated process token store
     var assets = {
         data: []
@@ -173,6 +174,7 @@ jsPlumb.ready(function(e) {
                 var positionX = jsonobj.diagram[0].styles[0].format[i].X;
                 var positionY = jsonobj.diagram[0].styles[0].format[i].Y;
                 var process = jsonobj.diagram[0].chevrons[0].element[i].associatedAsset;
+                
                 storePropertiesOfChevron(chevronId, chevronName, process); //store each chevron property
                 var element1 = $('<div>').attr('id', 'chevronId').addClass('chevron');
                 var textField = $('<textArea>').attr({
@@ -209,7 +211,7 @@ jsPlumb.ready(function(e) {
                 setSuccessor(first, second);
             }
         }
-
+        //store position coordinates for the chevron
         function setPositionsForRelations(element) {
             var id = element.find('.chevron-textField').attr('name');
             var name = element.find('.chevron-textField').text();
@@ -222,7 +224,7 @@ jsPlumb.ready(function(e) {
                 yVal: yValue
             });
         }
-
+        //get relevant process name for the chevron
         function getProcessForChevron(id) {
             var nameOfProcess;
             for (var i = 0; i < chevronProperties.length; i++) {
@@ -263,8 +265,7 @@ jsPlumb.ready(function(e) {
                 name = chevronProperties[i].name;
                 $("#td_name1").html(name);
                 processModel = chevronProperties[i].process;
-                if (assets.length !== 0) // all stored process token inputs
-                {
+                if (assets.length !== 0) { // all stored process token inputs
                     for (var k = 0; k < assets.length; k++) {
                         for (var j in assets.data) {
                             if (processModel == assets.data[j].name) {
@@ -289,8 +290,7 @@ jsPlumb.ready(function(e) {
                     predecessorName = chevronProperties[i].name;
                 }
             }
-            if (predecessorCount == 0) // the first most element's predecessor should be empty
-            {
+            if (predecessorCount == 0) { // the first most element's predecessor should be empty
                 specializations.push({
                     id: predecessorId,
                     predecessor: empty,
@@ -364,7 +364,7 @@ jsPlumb.ready(function(e) {
             }
         }
     }
-
+    //clear property fields 
     function clearFields() {
         $("#td_predecessor1").html("");
         $("#td_successor1").html("");
@@ -372,9 +372,9 @@ jsPlumb.ready(function(e) {
         $("#td_mod").html("");
     }
     //adding a new chevron element to existing diagram
-    function newChevronCreation(x, y) {
-        newElementPosX = x;
-        newElementPosY = y;
+    function newChevronCreation(xPosition, yPosition) {
+        newElementPosX = xPosition;
+        newElementPosY = yPosition;
         clearFields();
         isNewElement = true; // new element properties to be added 
         $('#save').css('visibility', 'visible');
@@ -391,13 +391,12 @@ jsPlumb.ready(function(e) {
         isNewElement = false; //let element properties be viewed
     });
 
-    function saveStateForNewElement(id, name, process, x, y) //save state for new element
-    {
+    function saveStateForNewElement(id, name, process, xPosition, yPosition) { //save state for new element
         relationPositions.push({
             chevId: id,
             chevName: name,
-            xVal: x,
-            yVal: y
+            xVal: xPosition,
+            yVal: yPosition
         });
         chevrons.push({
             chevronId: id,
@@ -406,11 +405,11 @@ jsPlumb.ready(function(e) {
         });
         formatting.push({
             chevronId: id,
-            positionX: x,
-            positionY: y
+            positionX: xPosition,
+            positionY: yPosition
         });
     }
-
+    //set predecessor/successor values for newly created element
     function setRelationsForNewElement(id, name) {
         for (var i = 0; i < specializations.length; i++) {
             if (specializations[i].successor == "not declared") { // this would be the last available element 
@@ -434,16 +433,16 @@ jsPlumb.ready(function(e) {
             successor: newSuccessor
         });
     }
-
+    //on click of a chevron
     function chevronClicked() {
         $("#editMainProps").hide();
         $("#editElementProps").show();
         $("#td_mod").html("");
         var clickedElement = $(this);
+        clickedElement.find('.chevron-textField').focus();
         var id = clickedElement.find('.chevron-textField').attr('name');
         currentId = id;
-        if (id == 0) //if a new element is added
-        {
+        if (id == 0) { //if a new element is added
             newId = ++idList.length;
             clickedElement.find('.chevron-textField').attr('name', newId); //set an id for new element
             newChevId = clickedElement.find('.chevron-textField').attr('name');
@@ -451,49 +450,78 @@ jsPlumb.ready(function(e) {
             idList.push(newChevId);
             var positionX = parseInt(clickedElement.css("left"), 10);
             var positionY = parseInt(clickedElement.css("top"), 10);
-            newChevronCreation(positionX, positionY); // clear content and show save button
+            newChevronCreation(positionX, positionY); // save properties of new chevron
         }
-        if (!isNewElement) {
+        if (!isNewElement) { //existing element of diagram
             $('#save').css('visibility', 'hidden');
-            getProcessForChevron(id);
-            viewElementProperties(id); //view element details for chevron
+            getProcessForChevron(id); // get associated process for the chevron
+            var chevronText = clickedElement.find('.chevron-textField').val();
+            viewElementProperties(id); //view properties of that chevron
+            //view element details for chevron
         }
-        jsPlumb.draggable(clickedElement, {
+        jsPlumb.draggable(clickedElement, { //on element drag
             containment: 'parent',
             stop: function(event) {
                 stateDragged = true;
                 updatePositionInState(clickedElement); //alter initial saved state
                 updatePositionsForRelations(clickedElement); // update position changes for suc/pre relationships
+                updateRelations(clickedElement); //update pre/successor relationships from original to new
+            }
+        });
+        clickedElement.find('.chevron-textField').userInputAdded(function(e) { // user is done entering name for chevron
+            var nameOfCurrentTextBox = $(this).val();
+            $("#td_name1").html(nameOfCurrentTextBox);
+            if (!isNewElement) { // If exisiting element
+                updateNameInState(id, nameOfCurrentTextBox);
+                updateEditedName(id, nameOfCurrentTextBox);
+                editName = true;
                 updateRelations(clickedElement);
             }
         });
-        clickedElement.find('.chevron-textField').keyup(function(e) {
-            if (e.keyCode === 16) { //when user press shift key
-                var nameOfCurrentTextBox = $(this).val();
-                $("#td_name1").html(nameOfCurrentTextBox);
-                if (!isNewElement) { // If exisiting element
-                    updateNameInState(id, nameOfCurrentTextBox);
-                    updateEditedName(id, nameOfCurrentTextBox);
-                    editName = true;
-                    updateRelations(clickedElement);
-                }
+    }
+    // On time out/ click on canvas add chevron name to table name property
+    (function($) {
+        $.fn.extend({
+            userInputAdded: function(callback, timeout) {
+                timeout = timeout || 10e3; // 10 second default timeout
+                var timeoutReference,
+                    userInputAdded = function(instance) {
+                        if (!timeoutReference) return;
+                        timeoutReference = null;
+                        callback.call(instance);
+                    };
+                return this.each(function(i, instance) {
+                    var $instance = $(instance);
+                    $instance.is(':input') && $instance.on('keyup keypress', function(e) {
+                        if (e.type == 'keyup' && e.keyCode != 8) { // if user is still typing/deleting
+                            return;
+                        }
+                        if (timeoutReference) { //if timeout is set reset the time
+                            clearTimeout(timeoutReference);
+                        }
+                        timeoutReference = setTimeout(function() { //timeout passed auto update field name
+                            userInputAdded(instance);
+                        }, timeout);
+                    }).on('blur', function() { // if user is leaves the field 
+                        userInputAdded(instance);
+                    });
+                });
             }
         });
-    }
+    })(jQuery);
     // update predecessor successor relationships
     function getCurrentElementOldRelations(currenId, currentName, currentX) {
         for (var i = 0; i < specializations.length; i++) {
-            if (currentId == specializations[i].id) //if current element
-            {
+            if (currentId == specializations[i].id) { //if current element
                 // current object's old pre/suc values
                 oldPreId = specializations[i].predecessorId; //previous predecessor
                 oldPredecessor = specializations[i].predecessor;
                 oldSucId = specializations[i].successorId; //previous successor
                 oldSuccessor = specializations[i].successor;
                 var changed = checkForOrderChange(oldSucId, currentX);
-                if (changed) {   // chevron order changed
+                if (changed) { // chevron order changed
                     setCurrentElementNewPredecessor(currentId, oldSucId, oldSuccessor); // set new predecessor for current element
-                    getNewSuccessorValues(oldSucId, currentId, currentName, oldPreId, oldPredecessor);  // get new successor for current element
+                    getNewSuccessorValues(oldSucId, currentId, currentName, oldPreId, oldPredecessor); // get new successor for current element
                     positionChanged = false; // this method call is done
                     relationsReset = true; // should not set the successor again
                 }
@@ -512,15 +540,15 @@ jsPlumb.ready(function(e) {
                 specializations[j].predecessorId = oldPreId;
                 specializations[j].predecessor = oldPredecessor; //set new predecessor for previous successor
                 if (oldPreId == "not declared") {
-                    setOldPredecessorNewValues(currentId, currentName, oldSuccessorNextId);  // set new values for old predecessor 
+                    setOldPredecessorNewValues(currentId, currentName, oldSuccessorNextId); // set new values for old predecessor 
                 } else {
-                    setCurrentPredecessorAsNewSuccessor(currentId, oldPreId);  // set new values for old successor
+                    setCurrentPredecessorAsNewSuccessor(currentId, oldPreId); // set new values for old successor
                 }
                 setCurrentElementNewSuccessor(oldSuccessorNextId, oldSuccessorNext, currentId); //set new successor for current element
             }
         }
     }
-    
+    //set new successor for old predecessor
     function setCurrentPredecessorAsNewSuccessor(currentId, oldPreId) {
         for (var i = 0; i < specializations.length; i++) {
             if (currentId == specializations[i].id) {
@@ -532,16 +560,18 @@ jsPlumb.ready(function(e) {
     }
 
     function getCurrentElementAsNewSuccessor(oldPreId, newPreId, newPredecessor) {
-        for (var r = 0; r < specializations.length; r++) //set values for old predecessor element
-        {
+        for (var r = 0; r < specializations.length; r++) { //set values for old predecessor element
             if (oldPreId == specializations[r].id) {
                 specializations[r].successorId = newPreId;
                 specializations[r].successor = newPredecessor; //set new predecessor for previous predecessor
             }
         }
     }
-    //
+    // set new values for old predecessor
     function setOldPredecessorNewValues(currentId, currentName, oldSuccessorNextId) {
+        if (oldSuccessorNextId == "not declared") {
+            return;
+        }
         for (var t = 0; specializations.length; t++) {
             if (oldSuccessorNextId == specializations[t].id) {
                 specializations[t].predecessorId = currentId;
@@ -549,11 +579,10 @@ jsPlumb.ready(function(e) {
             }
         }
     }
-    //
+    // set new successor for current element
     function setCurrentElementNewSuccessor(oldSuccessorNextId, oldSuccessorNext, currentId) {
         for (var i = 0; i < specializations.length; i++) {
-            if (currentId == specializations[i].id) //if current element
-            {
+            if (currentId == specializations[i].id) { //if current element
                 specializations[i].successorId = oldSuccessorNextId;
                 specializations[i].successor = oldSuccessorNext;
             }
@@ -564,8 +593,7 @@ jsPlumb.ready(function(e) {
         for (var k = 0; k < relationPositions.length; k++) {
             if (oldSucId == relationPositions[k].chevId) {
                 oldX = relationPositions[k].xVal;
-                if (oldX < currentX) // current element is dragged forward
-                {
+                if (oldX < currentX) { // current element is dragged forward
                     return true;
                 } else {
                     return false;
@@ -573,42 +601,35 @@ jsPlumb.ready(function(e) {
             }
         }
     }
-    
+    //set new predecessor for current element
     function setCurrentElementNewPredecessor(currentId, oldSucId, oldSuccessor) {
         for (var i = 0; i < specializations.length; i++) {
-            if (currentId == specializations[i].id) //if current element
-            {
+            if (currentId == specializations[i].id) { //if current element
                 specializations[i].predecessorId = oldSucId; //set new predecessor for current element
                 specializations[i].predecessor = oldSuccessor;
             }
         }
     }
-    
     //update successor/predecessor for moved chevrons
     function updateRelations(element) {
         currentId = element.find('.chevron-textField').attr('name'); //current element id
         var currentName = element.find('.chevron-textField').val(); //current element's edited name
-        if (editName) // if the name of an element changed
-        {
+        if (editName) { // if the name of an element changed
             for (var count = 0; count < specializations.length; count++) {
-                if (currentId == specializations[count].predecessorId) //find current element in specializations predecessor
-                {
+                if (currentId == specializations[count].predecessorId) { //find current element in specializations predecessor
                     specializations[count].predecessor = currentName;
                 }
-                if (currentId == specializations[count].successorId) // find cutrrent element in specializations successor
-                {
+                if (currentId == specializations[count].successorId) { // find cutrrent element in specializations successor
                     specializations[count].successor = currentName;
                 }
             }
             editName = false;
         }
-        if (positionChanged) // position changed
-        {
+        if (positionChanged) { // position changed
             var currentX = parseInt(element.css("left"), 10);
             getCurrentElementOldRelations(currentId, currentName, currentX);
         }
     }
-   
     // update changed name in state property of that chevron
     function updateNameInState(id, editedName) {
         for (var i = 0; i < chevrons.length; i++) {
@@ -740,7 +761,7 @@ jsPlumb.ready(function(e) {
                 newElement.click(chevronClicked);
             }
         });
-        var url = "../apis/processes?type=process";
+        var url = "../apis/processes?type=process"; // url to derive all existing process models
         $("#td_mod").tokenInput(url, {
             preventDuplicates: true,
             theme: "facebook",
