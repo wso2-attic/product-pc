@@ -46,6 +46,8 @@ jsPlumb.ready(function(e) {
     // Save properties of elements
     $('#saveElms').click(function(e) {
         createElementProperties(mainProcess);
+        var chevronName = $("#properties_ename").val();
+        updateProcessModelOfState(chevronName); // save the new process model
         saveClicked = true;
         $("#elementProps").hide();
     });
@@ -54,6 +56,20 @@ jsPlumb.ready(function(e) {
         createMainProperties(mainProcess);
         $("#fullProps").hide();
     });
+
+    function updateProcessModelOfState(chevronName) {
+        for (var i = 0; i < chevrons.length; i++) {
+            if (chevrons[i].chevronName == chevronName){ // if its an existing element
+                for (var j = 0; j < mainProcess.length; j++){ // get process model for chevron
+                
+                    if (mainProcess[j].name == chevronName) {
+                        processModel = mainProcess[j].models;
+                    }
+                }
+                chevrons[i].processModel = processModel;
+            }
+        }
+    }
     // On Canvas doubleclick show create/view page
     $('#dropArea').dblclick(function(e) {
         if (mainProcess.length !== 0 && mainProcessName) { // propererties for main diagram added
@@ -215,7 +231,7 @@ jsPlumb.ready(function(e) {
             });
         }
 
-        function updateChevronPositions(element) {  //When moved, update position information for each  chevron
+        function updateChevronPositions(element) { //When moved, update position information for each  chevron
             var id = element.find('.text-edit').attr('name');
             var xValue = parseInt(element.css("left"), 10);
             var yValue = parseInt(element.css("top"), 10);
@@ -243,13 +259,13 @@ jsPlumb.ready(function(e) {
         //display properties for chevron  only if it was not displayed before
         function viewPropertyForNewChevron(chevronText) {
             if (chevronText == $("#properties_ename").val()) { // current chevron name is similar to table property name field
-                if (previousName !== chevronText) {   // previously opened view name is not equal to current chevron name
+                if (previousName !== chevronText) { // previously opened view name is not equal to current chevron name
                     previousName = chevronText;
                     viewElementProperties(mainProcess, specializations, chevronText); //show properties
                 }
             }
-            if (chevronText !== $("#properties_ename").val()) {// current chevron name is not similar to table property name field
-                if (previousName !== chevronText) {  //previously opened chevron name is not similar to current chevron name
+            if (chevronText !== $("#properties_ename").val()) { // current chevron name is not similar to table property name field
+                if (previousName !== chevronText) { //previously opened chevron name is not similar to current chevron name
                     previousName = chevronText;
                     viewElementProperties(mainProcess, specializations, chevronText);
                 }
@@ -514,7 +530,7 @@ jsPlumb.ready(function(e) {
     // add predecessor for element
     function setPredecessor(id) {
         var empty = "not declared";
-        if (!editName) {   //chevron name was not changed
+        if (!editName) { //chevron name was not changed
             if (id !== '1') { // not first element on canvas
                 var previous;
                 for (var i = 0; i < mainProcess.length; i++) {
@@ -604,10 +620,9 @@ jsPlumb.ready(function(e) {
             }
         }).done(function(result) {});
     }
-
-// align elements that are added to canvas
+    // align elements that are added to canvas
     function alignDroppedElement(element) {
-        var defaultSpace = 169;  // space between two chevron elements
+        var defaultSpace = 169; // space between two chevron elements
         var elementX = parseInt(element.css("left"), 10);
         var elementY = parseInt(element.css("top"), 10);
         if (numOfCanvasElements > 0) { // not the first element on canvas
