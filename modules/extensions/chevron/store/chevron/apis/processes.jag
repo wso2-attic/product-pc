@@ -1,6 +1,6 @@
 <%
 /*
- *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -16,33 +16,26 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-
-	require('/modules/store.js').exec(function(ctx) {
-		var log = new Log();
-		var req = ctx.request;
-		var res = ctx.response;
-		var processName = req.getParameter('q');
-		var type = req.getParameter('type');
-		var asset = require('rxt').asset;
-		var server = require('store').server;
-		var errorMessage = " Endpoint requires a query parameter sent in as processName ";
-
-		if(!processName){
-			log.error('Process/Details' + errorMessage);
-			res.sendError(400,'Process/Details' + errorMessage);
-		}
-		else{
-			var user=server.current(ctx.session);
-			
-			if(user){
-				var am=asset.createUserAssetManager(ctx.session,type);
-				var query={};
-				query.overview_name= processName;
-				var assets=am.search(query,null);
-				print(assets);
-			}
-		}
-
-	}, request, response, session);
-
-	%>
+require('/modules/store.js').exec(function(ctx) {
+    var log = new Log();
+    var req = ctx.request;
+    var res = ctx.response;
+    var processName = req.getParameter('q');
+    var type = req.getParameter('type');
+    var asset = require('rxt').asset;
+    var server = require('store').server;
+    var errorMessage = " Endpoint requires a query parameter sent in as processName ";
+    if (!processName) {
+        log.error('Process/Details' + errorMessage);
+        res.sendError(400, 'Process/Details' + errorMessage);
+    } else {
+        var user = server.current(ctx.session);
+        if (user) {
+            var am = asset.createUserAssetManager(ctx.session, type);
+            var query = {};
+            query.overview_name = processName;
+            var assets = am.search(query, null);
+            print(assets);
+        }
+    }
+}, request, response, session); %>

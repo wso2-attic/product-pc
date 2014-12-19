@@ -106,7 +106,7 @@ $(document).ready(function() {
             var item = obj[i];
             processId = item.id;
         }
-        $("#td_mod").append('<li><a href = /store/asts/process/details/' + processId + '>' + processModel + '</a></li>');
+        $("#td_mod").append('<li><a href = ../../../asts/process/details/' + processId + '>' + processModel + '</a></li>');
     }
 
     function storePropertiesOfChevron(id, name, process) {  // store  details for each chevron
