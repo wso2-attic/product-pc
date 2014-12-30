@@ -20,21 +20,21 @@
 <%
 require('/modules/publisher.js').exec(function(ctx) 
 {
-    var log=new Log();
-    var req=ctx.request;
-    var res=ctx.response;
+    var log = new Log();
+    var req = ctx.request;
+    var res = ctx.response;
     var store = require('store');
     var user = store.user;
     var userReg = user.userRegistry(session);
     var type= req.getParameter('reqType');
    
 
-   if(type=="post")
+   if(type == "post")
     {  
-        var processContent=req.getParameter('content');
+        var processContent = req.getParameter('content');
         var processName = req.getParameter('name');
         var path = '/_system/governance/process/'+processName+'/'+processName+"content";
-        var resource ={
+        var resource = {
                     content: processContent,
                     mediaType: 'text/plain',
                     description: 'This is a sample description',
@@ -44,18 +44,18 @@ require('/modules/publisher.js').exec(function(ctx)
         userReg.put(path,resource);
         //Check if the content was placed in the registry
         var result = userReg.get(path);
-        var output= ""+result.content;
+        var output = ""+result.content;
         print(output);
     }
 
 
-    if(type=="get")
+    if(type == "get")
      {
         var processName = req.getParameter('name');
         var path = '/_system/governance/process/'+processName+'/'+processName+"content";
 
         var result = userReg.get(path);
-        var output= ""+result.content;
+        var output = ""+result.content;
         print(output);
      }
 
