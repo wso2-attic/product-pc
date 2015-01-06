@@ -1,0 +1,195 @@
+{{#with assets}}
+<div class='content-div'>
+	<div class="tab-content asset-tab-content">
+		<div id="view" class="asset-view-container">
+            <div class="row-fluid asset-detail-top-row">
+                
+             
+                        <h4 style="color:#848484; font-size:30px;">{{name}}</h4>
+        
+            </div>
+		    <div class="row-fluid asset-details-row">
+		                <div class="span12 asset-content-box">
+		                     <div class="widget-content">
+                                       
+                                        <div id="buttons">
+                                             <a href='{{url ""}}/asts/process/variant?id={{id}}' class="btn btn-primary" style="margin-right:10px;" >Authorizations</a>
+                                             <a href='{{url ""}}/asts/process/variant?id={{id}}' class="btn btn-primary" style="margin-right:10px;">Validate</a>
+                                             <a href='{{url ""}}/asts/process/variant?id={{id}}' class="btn btn-primary" style="margin-right:10px;">Runtime Analysis</a>
+                                             <a href='{{url ""}}/asts/process/variant?id={{id}}' class="btn btn-primary" style="margin-right:10px;">Report an Issue</a>
+                                             <a href='{{url ""}}/asts/process/variant?id={{id}}' class="btn btn-primary" style="margin-right:10px;">Deploy</a>
+                                             <a href='{{url ""}}/asts/process/variant?id={{id}}' class="btn btn-primary" style="margin-right:10px;" >Start</a>
+
+                                        </div>
+
+                                        <hr width="800">
+                                        
+                                     
+                                        <div id="processArchive">
+                                            <table>
+                                            <tbody><tr>
+                                            <td style="width: 200px;padding-top: 2px;"><b><label class="control-label">Process Archive</label></b></td>
+                                            <td style="padding-right: 15px;"><label id= "lblProcessArchive"class="control-label">{{this.tables.[2].fields.processArchive.value}}</label></td>
+                                           <td > <a href='{{url ""}}/storage/eprocess/c4209699-1884-4c54-a85f-558a5abcfaca/{{this.tables.[2].fields.processArchive.value}}'class="btn btn-primary"  style="float:right;">Download</a></td>
+                                            </tr>
+                                            </tr>
+
+                                            </tbody>
+                                            </table>
+                                        </div>
+
+                                         <hr width="800">
+
+                                         <div id ="ast-description" style = "margin-left : 10px; margin-right :10px; padding-top:30px;text-align: justify">{{this.tables.[0].fields.description.value}}</div>
+
+                                         <hr width="800">
+
+                                        <div id= "proptable">
+                                            <table id="htmlgrid" class="testgrid">
+                                                <tr>
+                                                    <th>Properties</th>
+                                                    <th>Value</th>
+                                                </tr>
+                                                <tr id="R1">
+                                                    <td>Owner  </td>
+                                                    <td>{{this.tables.[1].fields.owner.value}}</td>
+                                                </tr>
+                                                <tr id="R2">
+                                                    <td>Deployment URL</td>
+                                                    <td>{{this.tables.[1].fields.deploymentUrl.value}}</td>
+                                                </tr>
+                                                <tr id="R3">
+                                                    <td>Web App URL</td>
+                                                    <td>{{this.tables.[1].fields.webappUrl.value}}</td>
+                                                </tr>
+                                                <tr id="R4">
+                                                    <td>IT Support</td>
+                                                    <td>{{this.tables.[1].fields.itSupport.value}}</td>
+                                                </tr>
+                                                <tr id="R5">
+                                                    <td>Developers</td>
+                                                    <td>{{this.tables.[1].fields.developers.value}}</td>
+                                                </tr>
+                                                <tr id="R6">
+                                                    <td>Predecessors</td>
+                                                    <td id = "td_pre">{{this.tables.[1].fields.predecessors.value}}</td>
+                                                </tr>
+                                                <tr id="R7">
+                                                    <td>Successors</td>
+                                                    <td id="td_suc">{{this.tables.[1].fields.sucessors.value}}</td>
+                                                </tr>
+                                                <tr id="R8">
+                                                    <td>Generalizations</td>
+                                                    <td id="td_gen">{{this.tables.[1].fields.generalizations.value}}</td>
+                                                </tr>
+                                                <tr id="R9">
+                                                    <td>Specialization</td>
+                                                    <td id="td_spec">{{this.tables.[1].fields.specializations.value}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                </div>
+		                </div>
+		    </div>
+        </div>
+
+        <!--div id="edit" class="tab-pane fade in">
+                    <div class="row-fluid">
+                            <div class="span12">
+                    <div class="info-div alert alert-error">
+                                            <a data-dismiss="alert" class="close">x</a>
+                                            <i class="icon-warning-sign text-red icon_block"></i>
+                                            This feature will be available on our next milestone..
+                                    </div>
+                                    <form class="form-horizontal">
+                                        {{#each data.fields}}
+                            <div class="control-group">
+                                <b><label class="control-label">{{this.label}}:</label>
+                                </b>
+                                <div class="controls">
+                                    <input id='{{this.name}}' type='text' value='{{this.value}}' disabled="disabled"/>
+                                </div>
+                            </div>
+                             {{/each}}
+                                        <div id="saveButtons" class="form-actions">
+                                                <input type="submit" value="Update" class="btn btn-primary"
+                                name="editAssetButton" disabled="disabled" id="editAssetButton">
+                                                <input type="reset" value="Cancel" disabled="disabled" class="btn">
+                                        </div>
+                                    </form>
+                            </div>
+                        </div>
+                </div>
+                <div id="lifecycles" class="tab-pane fade in">
+                        <div class="row-fluid">
+                            <div class="span12">
+                                    <form class="form-horizontal">
+                                        <div class="control-group">
+
+                                                <div class="controls">
+                                                    <legend><div id='state'>{{data.info.lifecycleState}}</div></legend>
+                                                    <div id='checklist'></div>
+                                                </div>
+                                        </div>
+                                        <div class="form-actions">
+                                                <input type="button" value="Promote" class="btn btn-primary"  id="btn-asset-promote">
+                                                <input type="button" value="Demote" class="btn" id="btn-asset-demote">
+                                        </div>
+                                    </form>
+                                    <h5>Life-Cycle History</h5>
+                                    <div id='lc-history'></div>
+                            </div>
+                        </div>
+                </div>
+
+                <div id="versions" class="tab-pane fade in">
+                        <div class="row-fluid">
+                            <div class="span12">
+                    <div class="info-div alert alert-error">
+                                            <a data-dismiss="alert" class="close">x</a>
+                                            <i class="icon-warning-sign text-red icon_block"></i>
+                                            This feature will be available on our next milestone..
+                                    </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                            <tr>
+                                                <th>Version</th>
+                                                <th>Number of subscriptions</th>
+                                            </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr>
+                                                <td>1.0.0</td>
+                                                <td>120</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1.0.0</td>
+                                                <td>120</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1.0.0</td>
+                                                <td>120</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1.0.0</td>
+                                                <td>120</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1.0.0</td>
+                                                <td>120</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1.0.0</td>
+                                                <td>120</td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                    </div>
+                </div-->
+	</div>
+</div>
+{{/with}}
+
+
+

@@ -1,0 +1,75 @@
+<artifactType type="application/vnd.wso2-eprocess+xml" shortName="eprocess" singularLabel="Executable Process" pluralLabel="Executable Processes" hasNamespace="false" iconSet="9">
+    <storagePath>/eprocess/@{name}/@{overview_version}</storagePath>
+	<nameAttribute>overview_name</nameAttribute>
+    <ui>
+        <list>
+            <column name="Name">
+                <data type="path" value="overview_name" href="/eprocess/@{name}"/>
+            </column>
+            <column name="Version">
+                <data type="path" value="overview_version" href="@{storagePath}"/>
+            </column>
+        </list>
+    </ui>
+    <relationships>
+        <association type="isConsumedBy" source="@{assets_entry:value}"/>
+    </relationships>
+    <content>
+        <table name="Overview">
+      <field type="text" required="true">
+        <name>Provider</name>
+      </field>
+      <field type="text" required="true">
+        <name>Name</name>
+      </field>
+      <field type="text" required="true">
+        <name>Version</name>
+      </field>
+      <field type="text-area">
+        <name>Description</name>
+      </field>
+    </table>
+    <table name="Properties">
+      <field type="text" required="true">
+        <name>Owner</name>
+      </field>
+      <field type="text" url="true" required="true">
+        <name>Deployment URL</name>
+      </field>
+      <field type="text" url="true" required="true">
+        <name>Webapp URL</name>
+      </field>
+      <field type="text">
+        <name>IT Support</name>
+      </field>
+      <field type="text">
+        <name>Developers</name>
+      </field>
+      <field type="text">
+        <name>Predecessors</name>
+      </field>
+      <field type="text">
+        <name>Sucessors</name>
+      </field>
+      <field type="text">
+        <name>Generalizations</name>
+      </field>
+      <field type="text">
+        <name>Specializations</name>
+      </field>
+    </table>
+        
+<table name="Images">
+      <field type="text" required="true">
+        <name>Thumbnail</name>
+      </field>
+      <field type="text" required="true">
+        <name>Banner</name>
+      </field>
+      <field type="text" required="true">
+        <name>Process Archive</name>
+      </field>
+      
+    </table>
+    </content>
+</artifactType>

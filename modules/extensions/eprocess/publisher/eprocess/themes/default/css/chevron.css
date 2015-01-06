@@ -1,0 +1,7 @@
+.shape{
+	position :relative;
+	cursor: pointer;
+	border:solid 1px gray;
+	height :20px;
+	background: #233445;
+}

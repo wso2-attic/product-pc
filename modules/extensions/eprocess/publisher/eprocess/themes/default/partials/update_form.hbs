@@ -1,0 +1,93 @@
+ 
+{{#with assets}}
+ <form class="form-horizontal" id='form-asset-update' method='post' action='{{url ""}}/apis/assets/{{../assets.id}}?type={{../rxt.shortName}}' >
+    <div class="control-group">
+     <div id = "headers"><table>
+            <tbody>
+                
+                <tr>
+                        <input type="text" value = "{{name}}" name="overview_name" id="processName" class="input-large" style="width:785px";>
+                </tr>
+                <tr>
+                   <td> <input type="text" value = "{{this.tables.[0].fields.provider.value}}" name="overview_provider" class="input-large" style="width:425px";></td>
+                
+                   <td> <input type="text" value = "{{this.tables.[0].fields.version.value}}" name="overview_version" class="input-large" style="width:343px";></td>
+                </tr>
+            </tbody></table></div>
+            <hr width="800px" />
+            <div id = "upload_area">
+    <table>
+        <tbody><tr>
+    <td><b><label class="control-label">Process Archive</label></b></td><td><input type="file" value="{{this.tables.[2].fields.processArchive.value}}" name="images_processArchive" class="input-large"></td>
+    </tr>
+
+</tbody>
+</table>
+<hr width="800px" />
+                
+            </div>
+            <div style="padding-bottom:15px"> <textarea  rows = "5" id ="overview_description" name = "overview_description" class="input-large" style = "width:785px;">{{this.tables.[0].fields.description.value}}</textarea></div>
+            <div id= "proptable">
+                <table id="htmlgrid" class="testgrid">
+                    <tr>
+                        <th>Properties</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr id="R1">
+                        <td>Owner  </td>
+                        <td><input type="text"  value="{{this.tables.[1].fields.owner.value}}" id="properties_owner" name="properties_owner" style="border:none;border-color:transparent;"></td>
+                    </tr>
+                    <tr id="R2">
+                        <td>Deployment URL</td>
+                        <td><input type="text" value="{{this.tables.[1].fields.deploymentUrl.value}}" id="properties_deploymentUrl"name="properties_deploymentUrl" style="border:none;border-color:transparent;" ></td>
+                    </tr>
+                    <tr id="R3">
+                        <td>Web App URL</td>
+                        <td><input type="text" value="{{this.tables.[1].fields.webappUrl.value}}" id="properties_webappUrl"name="properties_webappUrl" style="border:none;border-color:transparent;"></td>
+                    </tr>
+                    <tr id="R4">
+                        <td>IT Support</td>
+                        <td><input type="text" value="{{this.tables.[1].fields.itSupport.value}}" id="properties_itSupport" name="properties_itSupport" style="border:none;border-color:transparent;" ></td>
+                    </tr>
+                    <tr id="R5">
+                        <td>Developers</td>
+                        <td><input type="text"  value="{{this.tables.[1].fields.developers.value}}" id="properties_developers" name="properties_developers" style="border:none;border-color:transparent;"></td>
+                    </tr>
+                    <tr id="R6">
+                        <td>Predecessors</td>
+                        <td><input type="text"  value="{{this.tables.[1].fields.predecessors.value}}" id="properties_predecessors" name="properties_predecessors" style="border:none;border-color:transparent;"></td>
+                    </tr>
+                    <tr id="R7">
+                        <td>Successors</td>
+                        <td><input type="text" value="{{this.tables.[1].fields.sucessors.value}}" id="properties_sucessors" name="properties_sucessors"  style="border:none;border-color:transparent;" ></td>
+                    </tr>
+                    <tr id="R8">
+                        <td>Generalizations</td>
+                        <td><input type="text" value="{{this.tables.[1].fields.generalizations.value}}" id="properties_generalizations"name="properties_generalizations" style="border:none;border-color:transparent;"></td>
+                    </tr>
+                    <tr id="R9">
+                        <td>Specialization</td>
+                        <td><input type="text" value="{{this.tables.[1].fields.specializations.value}}" id="properties_specializations" name="properties_specializations" style="border:none;border-color:transparent;" ></td>
+                    </tr>
+                </table>
+            </div>
+            <hr width="800px" />
+            <div id="images">
+                <table>
+                    <tbody><tr>
+                        <td><b><label class="control-label">Thumbnail</label></b></td><td><input type="file" value="" name="images_thumbnail" class="input-large"></td>
+                    </tr>
+                </tbody></table>
+            </div>
+        </div>
+             
+    </div> 
+    <div id="saveButtons" class="form-actions">
+                            <input type="submit" value="Update" class="btn btn-primary"
+                                   name="editAssetButton" id="editAssetButton">
+                            <input type="reset" value="Reset" class="btn">
+                            <input type="hidden" value="{{rxt.shortName}}" name="{{rxt.shortName}}" id="meta-asset-type">
+    </div>   
+</form>
+
+{{/with}}
