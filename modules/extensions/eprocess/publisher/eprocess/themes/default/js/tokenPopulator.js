@@ -1,5 +1,5 @@
    /*
- * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ * Copyright (c) WSO2 Inc, 2014. (http://wso2.com) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,19 @@
 
    $(document).ready(function() {
 
-
-
      var url = "/publisher/asts/eprocess/apis/processes?type=eprocess";
-
 
      //Predecessors Loading
      $("#properties_predecessors").tokenInput(url, {
        preventDuplicates: true, theme:"facebook",
-
        onResult: function(results) {
          var assets = {
            data: []
          }
          $.each(results, function() {
-
-
-
            for (var i in results) {
              var item = results[i];
-
              assets.data.push({
-
                "path": item.path,
                "id": item.id,
                "name": item.attributes.overview_name
@@ -47,16 +38,11 @@
            };
          });
          return assets.data;
-
-
-
-         console.log('' + JSON.stringify(arguments));
        },
        tokenFormatter: function(item) {
          return "<li><a href = /publisher/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
        }
      });
-
 
 
      //Sucessors Loading
@@ -68,14 +54,9 @@
            data: []
          }
          $.each(results, function() {
-
-
-
            for (var i in results) {
              var item = results[i];
-
              assets.data.push({
-
                "path": item.path,
                "id": item.id,
                "name": item.attributes.overview_name
@@ -84,10 +65,6 @@
            };
          });
          return assets.data;
-
-
-
-         console.log('' + JSON.stringify(arguments));
        },
        tokenFormatter: function(item) {
          return "<li><a href = /publisher/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
@@ -99,32 +76,21 @@
 
      $("#properties_generalizations").tokenInput(url, {
        preventDuplicates: true,theme:"facebook",
-
        onResult: function(results) {
          var assets = {
            data: []
          }
          $.each(results, function() {
-
-
-
            for (var i in results) {
              var item = results[i];
-
              assets.data.push({
-
                "path": item.path,
                "id": item.id,
                "name": item.attributes.overview_name
              });
-
            };
          });
          return assets.data;
-
-
-
-         console.log('' + JSON.stringify(arguments));
        },
        tokenFormatter: function(item) {
          return "<li><a href = /publisher/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
@@ -135,20 +101,14 @@
 
      $("#properties_specializations").tokenInput(url, {
        preventDuplicates: true,theme:"facebook",
-
        onResult: function(results) {
          var assets = {
            data: []
          }
          $.each(results, function() {
-
-
-
            for (var i in results) {
              var item = results[i];
-
              assets.data.push({
-
                "path": item.path,
                "id": item.id,
                "name": item.attributes.overview_name
@@ -156,16 +116,9 @@
            };
          });
          return assets.data;
-
-
-
-         console.log('' + JSON.stringify(arguments));
        },
        tokenFormatter: function(item) {
          return "<li><a href = /publisher/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
        }
      });
-
-
-
    });

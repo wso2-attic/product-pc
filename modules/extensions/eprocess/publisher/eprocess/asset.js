@@ -1,3 +1,19 @@
+   /*
+ * Copyright (c) WSO2 Inc, 2014. (http://wso2.com) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 var assetLinks = function(user) {
     return {
         title: 'Process'
@@ -11,6 +27,7 @@ asset.manager = function(ctx) {
 
             var ref = require('utils').time;
             var GovernanceConstants = Packages.org.wso2.carbon.governance.api.util;
+
             //Check if the options object has a createdtime attribute and populate it 
             if ((options.attributes) && (options.attributes.hasOwnProperty('overview_createdtime'))) {
                 options.attributes.overview_createdtime = ref.getCurrentTime();
@@ -20,12 +37,10 @@ asset.manager = function(ctx) {
 
             var asset = this.get(options.id);
             
-        //Adding Associatin for Predecessors
+             //Adding Associatin for Predecessors
             if (asset.attributes.properties_predecessors != null) {
                 var tempArray1 = asset.attributes.properties_predecessors.split("\,");
-
                 for (var i = 0; i < tempArray1.length; i++) {
-
                     var preAsset = this.get(tempArray1[i]);
                     this.registry.associate(asset.path, preAsset.path, "Predecessors");
                 }
