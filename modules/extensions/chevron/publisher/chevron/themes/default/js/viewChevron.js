@@ -152,7 +152,7 @@ jsPlumb.ready(function(e) {
         drawConnectionsForElements(); // draw existing connections for all elements
     }
     // draw existing connections for all elements
-    function drawConnectionsForElements() {
+       function drawConnectionsForElements() {
         chevronList = document.querySelectorAll(".chevron");
         if (connections.length != 0) {
             for (var i = 0; i < connections.length; i++) {
@@ -166,7 +166,7 @@ jsPlumb.ready(function(e) {
                 var p5 = connections[i].targetAnchor2;
                 var p6 = connections[i].orientation3;
                 var p7 = connections[i].orientation4;
-                //  create a common endpoint
+                //   var dynamicAnchors = [ [p0,p1,p2,p3],[p4,p5,p6,p7]];
                 var common = {
                     connector: ["Flowchart"],
                     connectorStyle: {
@@ -190,13 +190,18 @@ jsPlumb.ready(function(e) {
                         strokeStyle: "#5c96bc",
                         lineWidth: 1
                     },
-                    endpointStyle: {
-                        fillStyle: "transparent"
-                    }
+                    endpointStyle:{fillStyle:"transparent"}
                 }, common);
+                /*  var connection = jsPlumb.connect({source:source, target:target, anchor: dynamicAnchors,
+            endpoint: ["Dot", {
+                radius: 4
+            }],
+            connector: ["Flowchart"]
+            });*/
             }
         }
     }
+    
     //show/hide connections on toggle
     $("#connectionVisibility").click(function() {
         if ($.trim($(this).text()) === 'Hide Connections') {

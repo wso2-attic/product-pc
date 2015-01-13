@@ -51,7 +51,7 @@ jsPlumb.ready(function(e) {
     };
     $("#editMainProps").show();
     $("#editElementProps").hide();
-    $('#save').css('visibility', 'hidden');
+    //$('#save').css('visibility', 'hidden');
     // ajax call to get the main chevron name of the diagram
     $.ajax({
         type: "GET",
@@ -297,61 +297,64 @@ jsPlumb.ready(function(e) {
                 e.stopPropagation();
             });
         }
-        drawConnectionsForElements(); //Draw existing connections for elements
-        loadingDiagram = false; // diagram loading is done
+       drawConnectionsForElements(); //Draw existing connections for elements
+       // loadingDiagram = false; // diagram loading is done
     }
     //Draw existing connections for elements
     function drawConnectionsForElements() {
-        loadingDiagram = true;
-        chevronList = document.querySelectorAll(".chevron");
-        if (connections.length != 0) {
-            for (var i = 0; i < connections.length; i++) {
-                var source = getMatchedElement(connections[i].sourceId);
-                var target = getMatchedElement(connections[i].targetId);
-                var p0 = connections[i].sourceAnchor1;
-                var p1 = connections[i].sourceAnchor2;
-                var p2 = connections[i].orientation1;
-                var p3 = connections[i].orientation2;
-                var p4 = connections[i].targetAnchor1;
-                var p5 = connections[i].targetAnchor2;
-                var p6 = connections[i].orientation3;
-                var p7 = connections[i].orientation4;
-                //create a common endpoint 
-                var common = {
-                    isTarget: true,
-                    isSource: true,
-                    maxConnections: -1,
-                    connector: ["Flowchart"],
-                    connectorStyle: {
-                        strokeStyle: "#5c96bc",
-                        lineWidth: 1,
-                        outlineColor: "transparent",
-                        outlineWidth: 4
-                    },
-                    anchor: [
-                        [p0, p1, p2, p3],
-                        [p4, p5, p6, p7]
-                    ],
-                    endpoint: ["Dot", {
-                        radius: 4
-                    }]
-                };
-                jsPlumb.connect({
-                    source: source,
-                    target: target,
-                    paintStyle: {
-                        strokeStyle: "#5c96bc",
-                        lineWidth: 1
-                    },
-                    endpointStyle: {
-                        fillStyle: "transparent"
-                    }
-                }, common);
-                addEndPointForElement(source);
-                addEndPointForElement(target);
+             loadingDiagram = true;
+            chevronList = document.querySelectorAll(".chevron");
+            if (connections.length != 0) {
+                for (var i = 0; i < connections.length; i++) {
+                    var source = getMatchedElement(connections[i].sourceId);
+                    var target = getMatchedElement(connections[i].targetId);
+                    var p0 = connections[i].sourceAnchor1;
+                    var p1 = connections[i].sourceAnchor2;
+                    var p2 = connections[i].orientation1;
+                    var p3 = connections[i].orientation2;
+                    var p4 = connections[i].targetAnchor1;
+                    var p5 = connections[i].targetAnchor2;
+                    var p6 = connections[i].orientation3;
+                    var p7 = connections[i].orientation4;
+                    //   var dynamicAnchors = [ [p0,p1,p2,p3],[p4,p5,p6,p7]];
+                    var common = {
+                        isTarget: true,
+                        isSource: true,
+                        maxConnections: -1,
+                        connector: ["Flowchart"],
+                        connectorStyle: {
+                            strokeStyle: "#5c96bc",
+                            lineWidth: 1,
+                            outlineColor: "transparent",
+                            outlineWidth: 4
+                        },
+                        anchor: [
+                            [p0, p1, p2, p3],
+                            [p4, p5, p6, p7]
+                        ],
+                        endpoint: ["Dot", {
+                            radius: 4
+                        }]
+                    };
+                    jsPlumb.connect({
+                        source: source,
+                        target: target,
+                        paintStyle: {
+                            strokeStyle: "#5c96bc",
+                            lineWidth: 1
+                        },
+                        endpointStyle: {
+                            fillStyle: "transparent"
+                        }
+                    }, common);
+                    addEndPointForElement(source);
+                    addEndPointForElement(target);
+                    
+                    
+                }
+                loadingDiagram = false;
             }
         }
-    }
     //return element for  given id
     function getMatchedElement(id) {
         for (var i = 0; i < chevronList.length; i++) {
@@ -369,9 +372,9 @@ jsPlumb.ready(function(e) {
         if (chevronProperties.length != 0) {
             for (var i = 0; i < chevronProperties.length; i++) {
                 if (id == chevronProperties[i].id) { // its an edit of a record
-                    propertyList[i].name = name;
-                    propertyList[i].process = process;
-                    propertyList[i].description = description;
+                    chevronProperties[i].name = name;
+                    chevronProperties[i].process = process;
+                    chevronProperties[i].description = description;
                     existingElement = true;
                 }
             }
@@ -411,6 +414,15 @@ jsPlumb.ready(function(e) {
             }
         }
     }
+    function updateStateOfElement(name,description,process){
+        for(var i = 0 ; i < chevrons.length; i++){
+            if( chevrons[i].chevronName == name){ //match found
+                chevrons[i].description = description;
+                chevrons[i].processModel = process;
+                return chevrons[i].elementId;
+            }
+        }
+    }
     //clear property fields 
     function clearAllFields() {
         $("#td_predecessor1").html("");
@@ -426,8 +438,10 @@ jsPlumb.ready(function(e) {
         var process = $("#td_mod").val();
         var description = $("#td_description").val();
         storePropertiesOfChevron(id, name, description, process);
+
         processModelChanged = true;
-        saveState(currentElement); //update state with new values
+       var elementId = updateStateOfElement(name,description,process); //update state with new values
+        storeDescriptionsForElements(elementId, description); 
         viewForName.push(name);
         processModelChanged = false;
         $("#editElementProps").hide();
@@ -1377,7 +1391,7 @@ jsPlumb.ready(function(e) {
                     addEndPointForElement(newElement); // add connecting endopint to element
                     clearAllFields();
                     isNewElement = true; //new element added to canvas
-                    $('#save').css('visibility', 'visible'); //show property save button
+                 //   $('#save').css('visibility', 'visible'); //show property save button
                     newElement.click(chevronClicked);
                     var elementId = newElement.attr('id');
                     descriptorSwitch.attr('id', elementId); //set default jsplumb id to descriptor button
