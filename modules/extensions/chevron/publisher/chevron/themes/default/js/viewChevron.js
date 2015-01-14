@@ -21,6 +21,7 @@ jsPlumb.ready(function(e) {
     var processId = 0; // update process model Id
     var connections = []; //store connections drawn 
     var descriptionsForChevrons = []; //Keep track of description value of each chevron
+    var elementList = []; //store drawn elements to draw connections
     $("#viewMainProps").show();
     $("#viewElementProps").hide();
     // ajax call to get the process name the view belongs to
@@ -134,6 +135,10 @@ jsPlumb.ready(function(e) {
                 'left': positionX
             });
             $('#canvasArea').append(element1);
+            elementList.push({ //store elements to draw connections
+                id: chevronId,
+                element: element1
+            });
             descriptorSwitch.attr('id', chevronId); //set element id for description button
             storeDescriptionsForExistingElements(chevronId, chevronDescription);
             element1.click(chevronClicked);
@@ -152,8 +157,7 @@ jsPlumb.ready(function(e) {
         drawConnectionsForElements(); // draw existing connections for all elements
     }
     // draw existing connections for all elements
-       function drawConnectionsForElements() {
-        chevronList = document.querySelectorAll(".chevron");
+    function drawConnectionsForElements() {
         if (connections.length != 0) {
             for (var i = 0; i < connections.length; i++) {
                 var source = getMatchedElement(connections[i].sourceId);
@@ -166,8 +170,11 @@ jsPlumb.ready(function(e) {
                 var p5 = connections[i].targetAnchor2;
                 var p6 = connections[i].orientation3;
                 var p7 = connections[i].orientation4;
-                //   var dynamicAnchors = [ [p0,p1,p2,p3],[p4,p5,p6,p7]];
+              
                 var common = {
+                    isTarget: true,
+                    isSource: true,
+                    maxConnections: -1,
                     connector: ["Flowchart"],
                     connectorStyle: {
                         strokeStyle: "#5c96bc",
@@ -190,18 +197,13 @@ jsPlumb.ready(function(e) {
                         strokeStyle: "#5c96bc",
                         lineWidth: 1
                     },
-                    endpointStyle:{fillStyle:"transparent"}
+                    endpointStyle: {
+                        fillStyle: "transparent"
+                    }
                 }, common);
-                /*  var connection = jsPlumb.connect({source:source, target:target, anchor: dynamicAnchors,
-            endpoint: ["Dot", {
-                radius: 4
-            }],
-            connector: ["Flowchart"]
-            });*/
             }
         }
     }
-    
     //show/hide connections on toggle
     $("#connectionVisibility").click(function() {
         if ($.trim($(this).text()) === 'Hide Connections') {
@@ -219,9 +221,10 @@ jsPlumb.ready(function(e) {
     });
     //return element for  given id
     function getMatchedElement(id) {
-        for (var i = 0; i < chevronList.length; i++) {
-            if (id == chevronList[i].childNodes[0].name) {
-                return chevronList[i];
+        for (var i = 0; i < elementList.length; i++) {
+            if (elementList[i].id == id) {
+                elementList[i].element.attr('id', id);
+                return elementList[i].element;
             }
         }
     }
