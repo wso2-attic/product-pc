@@ -23,7 +23,7 @@
         
 var resources = function (page, meta) {
     return {
-      js: ['jquery.MetaData.js', 'jquery.rating.pack.js', 'async.min.js', 'moment.min.js', 'porthole.min.js','jquery.jsPlumb-1.6.4-min.js','dom.jsPlumb-1.6.4-min.js','viewChevron.js','xml2json.js','xml2json.min.js','jquery.jsPlumb-1.6.4-min.js','dom.jsPlumb-1.6.4-min.js','jquery-ui.min.js'],
+      js: ['jquery.MetaData.js', 'jquery.rating.pack.js', 'async.min.js', 'moment.min.js', 'porthole.min.js','jquery.jsPlumb-1.6.4-min.js','dom.jsPlumb-1.6.4-min.js','viewChevron.js','xml2json.js','xml2json.min.js','jquery.jsPlumb-1.6.4-min.js','dom.jsPlumb-1.6.4-min.js','jquery-ui.min.js','listChevron.js'],
         css: ['jquery-ui.css','assets.css','editablegrid-2.0.1.css','styles.css','font-awesome-ie7.min.css','jslider.css','jslider.round.plastic.css','navigation.css','sort-assets.css','chevron.css'],
         code: ['store.asset.hbs']
     };
