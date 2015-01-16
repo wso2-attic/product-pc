@@ -59,6 +59,7 @@
     text-align: center;
     font-family: Arial;
     visibility: hidden;
+    border: 0px solid #000000;
 }
 .chevron {
     position: absolute;
