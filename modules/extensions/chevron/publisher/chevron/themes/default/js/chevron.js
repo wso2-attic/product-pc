@@ -1056,7 +1056,7 @@ jsPlumb.ready(function(e) {
             var item = chevrons[i];
             elements.push({
                 "elementId": item.elementId,
-                "chevronId": item.chevronId,
+                "textFieldId": item.chevronId,
                 "chevronName": item.chevronName,
                 "description": item.description,
                 "associatedAsset": item.processModel
