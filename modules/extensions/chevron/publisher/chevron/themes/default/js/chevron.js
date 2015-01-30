@@ -712,6 +712,8 @@ jsPlumb.ready(function(e) {
         var isFirstElement = false;
         var clickedElement = $(this);
         clickedDefaultId = clickedElement.attr('id');
+        //TO BE INCLUDEDv
+        // clickedElement.css('border','2px solid black');
         // element values before a drag and drop
         var originalXPosition = parseInt(clickedElement.css("left"), 10);
         var originalYPosition = parseInt(clickedElement.css("top"), 10);
@@ -842,6 +844,15 @@ jsPlumb.ready(function(e) {
                 outlineColor: "transparent",
                 outlineWidth: 4
             },
+            connectorOverlays: [
+                ["Arrow", {
+                    width: 10,
+                    length: 10,
+                    foldback: 1,
+                    location: 1,
+                    id: "arrow"
+                }]
+            ],
             paintStyle: {
                 fillStyle: "transparent"
             },
@@ -865,6 +876,15 @@ jsPlumb.ready(function(e) {
                 outlineColor: "transparent",
                 outlineWidth: 4
             },
+            connectorOverlays: [
+                ["Arrow", {
+                    width: 10,
+                    length: 10,
+                    foldback: 1,
+                    location: 1,
+                    id: "arrow"
+                }]
+            ],
             paintStyle: {
                 fillStyle: "transparent"
             },
@@ -888,6 +908,15 @@ jsPlumb.ready(function(e) {
                 outlineColor: "transparent",
                 outlineWidth: 4
             },
+            connectorOverlays: [
+                ["Arrow", {
+                    width: 10,
+                    length: 10,
+                    foldback: 1,
+                    location: 1,
+                    id: "arrow"
+                }]
+            ],
             paintStyle: {
                 fillStyle: "transparent"
             },
@@ -914,6 +943,15 @@ jsPlumb.ready(function(e) {
                 outlineColor: "transparent",
                 outlineWidth: 4
             },
+            connectorOverlays: [
+                ["Arrow", {
+                    width: 10,
+                    length: 10,
+                    foldback: 1,
+                    location: 1,
+                    id: "arrow"
+                }]
+            ],
             paintStyle: {
                 fillStyle: "transparent"
             },

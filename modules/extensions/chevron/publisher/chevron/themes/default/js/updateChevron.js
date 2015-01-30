@@ -285,6 +285,7 @@ jsPlumb.ready(function(e) {
             storeLocationOfElement(element1, row, cell);
             storeChevronNameForElement(element1, chevronName); //To be used in deriving predecessor/successors
             element1.click(chevronClicked);
+            element1.dblclick(removeElementFromCanvas);
             // Display description for chevron as a popup
             descriptorSwitch.popover({
                 html: true,
@@ -343,6 +344,15 @@ jsPlumb.ready(function(e) {
                             strokeStyle: "#5c96bc",
                             lineWidth: 1
                         },
+                        overlays: [
+            ["Arrow", {
+                width: 10,
+                length: 10,
+                foldback: 1,
+                location: 1,
+                id: "arrow"
+            }]
+        ],
                         endpointStyle: {
                             fillStyle: "transparent"
                         }
@@ -429,7 +439,7 @@ jsPlumb.ready(function(e) {
         $("#td_successor1").html("");
         $("#td_name1").html("");
         $("#td_mod").html("");
-        $("#td_description").html("");
+        $("#td_description").val("");
     }
     //save properties for new element on save button click
     $('#save').click(function() {
@@ -1259,6 +1269,15 @@ jsPlumb.ready(function(e) {
                 outlineColor: "transparent",
                 outlineWidth: 4
             },
+              connectorOverlays: [
+        ["Arrow", {
+            width: 10,
+            length: 10,
+            foldback: 1,
+            location: 1,
+            id: "arrow"
+        }]
+    ],
             paintStyle: {
                 fillStyle: "transparent"
             },
@@ -1281,6 +1300,15 @@ jsPlumb.ready(function(e) {
                 outlineColor: "transparent",
                 outlineWidth: 4
             },
+              connectorOverlays: [
+        ["Arrow", {
+            width: 10,
+            length: 10,
+            foldback: 1,
+            location: 1,
+            id: "arrow"
+        }]
+    ],
             paintStyle: {
                 fillStyle: "transparent"
             },
@@ -1304,6 +1332,15 @@ jsPlumb.ready(function(e) {
                 outlineColor: "transparent",
                 outlineWidth: 4
             },
+              connectorOverlays: [
+        ["Arrow", {
+            width: 10,
+            length: 10,
+            foldback: 1,
+            location: 1,
+            id: "arrow"
+        }]
+    ],
             paintStyle: {
                 fillStyle: "transparent"
             },
@@ -1330,6 +1367,15 @@ jsPlumb.ready(function(e) {
                 outlineColor: "transparent",
                 outlineWidth: 4
             },
+              connectorOverlays: [
+        ["Arrow", {
+            width: 10,
+            length: 10,
+            foldback: 1,
+            location: 1,
+            id: "arrow"
+        }]
+    ],
             paintStyle: {
                 fillStyle: "transparent"
             },
@@ -1355,6 +1401,73 @@ jsPlumb.ready(function(e) {
             }
         }
         return descriptionValue;
+    }
+
+// Remove cell/row combination from the grid
+    function removePositionFromGrid(element) {
+        var elementId = element.attr('id');
+        var elementCell = getGridCellForElementId(elementId); //get current element cell
+        var elementRow = getGridRowForElementId(elementId);
+        removeOldGridPositionFromList(elementRow, elementCell, element);
+    }
+    //Remove element from the mainProcess list
+    function removeFromMainProcessList(elementId) {
+        if (chevronProperties.length > 0) { //if it has elements 
+            for (var i = 0; i < chevronProperties.length; i++) {
+                if (chevronProperties[i].id == elementId) {
+                    chevronProperties.splice(i, 1); //remove element from list
+                }
+            }
+        }
+    }
+    // Remove element from the xml structure storing list
+    function removeFromXmlStoreList(elementId) {
+        if (chevrons.length > 0) {
+            for (var i = 0; i < chevrons.length; i++) {
+                if (chevrons[i].chevronId == elementId) {
+                    chevrons.splice(i, 1); //remove element from list
+                }
+            }
+        }
+    }
+    // Remove connections attached to the given element
+    function removeRelatedConnectionsFromList(element) {
+        var elementId = element.attr('id');
+        if (connections.length > 0) {
+            for (var i = 0; i < connections.length; i++) {
+                if (connections[i].sourceId == elementId) {
+                    connections.splice(i, 1); //remove element from list
+                } else if (connections[i].targetId == elementId) {
+                    connections.splice(i, 1);
+                }
+            }
+        }
+        if (specializations.length > 0) {
+            for (var i = 0; i < specializations.length; i++) { //clear the removed element from any relation (predecessor/successor)
+                if (specializations[i].id == elementId || specializations[i].predecessorId == elementId || specializations[i].successorId == elementId) {
+                    specializations.splice(i, 1);
+                }
+            }
+        }
+    }
+    //invoke doubleclick on the element
+    function removeElementFromCanvas(){
+
+                        var selectedElement = $(this);
+                        removeElement(selectedElement);
+                    
+    }
+    // remove selected element 
+    function removeElement(element) {
+        var id = element.find('.text-edit').attr('name');
+        removeFromMainProcessList(id);
+        removeFromXmlStoreList(id);
+        removePositionFromGrid(element);
+        removeRelatedConnectionsFromList(element);
+        jsPlumb.removeAllEndpoints(element); // remove endpoints of that element
+        jsPlumb.detachAllConnections(element); //remove added connections from element
+        element.remove(); //remove element
+        clearAllFields();
     }
     //At connection drag event show selected endpoints
     jsPlumb.bind("connectionDrag", function(info) {
@@ -1392,7 +1505,9 @@ jsPlumb.ready(function(e) {
                     clearAllFields();
                     isNewElement = true; //new element added to canvas
                  //   $('#save').css('visibility', 'visible'); //show property save button
+                    newElement.dblclick(removeElementFromCanvas);
                     newElement.click(chevronClicked);
+                    
                     var elementId = newElement.attr('id');
                     descriptorSwitch.attr('id', elementId); //set default jsplumb id to descriptor button
                     // show description value as a popup at click
@@ -1406,6 +1521,7 @@ jsPlumb.ready(function(e) {
                     }).click(function(e) {
                         e.stopPropagation(); // hold parent click events
                     });
+                      
                 }
             }
         });

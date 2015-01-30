@@ -170,7 +170,6 @@ jsPlumb.ready(function(e) {
                 var p5 = connections[i].targetAnchor2;
                 var p6 = connections[i].orientation3;
                 var p7 = connections[i].orientation4;
-              
                 var common = {
                     isTarget: true,
                     isSource: true,
@@ -182,6 +181,7 @@ jsPlumb.ready(function(e) {
                         outlineColor: "transparent",
                         outlineWidth: 4
                     },
+                   
                     anchor: [
                         [p0, p1, p2, p3],
                         [p4, p5, p6, p7]
@@ -197,6 +197,15 @@ jsPlumb.ready(function(e) {
                         strokeStyle: "#5c96bc",
                         lineWidth: 1
                     },
+                     overlays: [
+            ["Arrow", {
+                width: 10,
+                length: 10,
+                foldback: 1,
+                location: 1,
+                id: "arrow"
+            }]
+        ],
                     endpointStyle: {
                         fillStyle: "transparent"
                     }
