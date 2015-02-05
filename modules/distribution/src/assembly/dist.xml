@@ -23,43 +23,56 @@
 
     <fileSets>
         <!-- Copy ES as the base -->
-	<fileSet>
+        <fileSet>
             <directory>target/wso2es-${wso2es.version}</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
+            <fileMode>755</fileMode>
         </fileSet>
 
-	<!-- Textual process extensions -->
+        <!-- Textual process extensions -->
         <fileSet>
             <directory>../extensions/process/publisher</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets</outputDirectory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
+            </outputDirectory>
+            <fileMode>755</fileMode>
         </fileSet>
-	<fileSet>
+        <fileSet>
             <directory>../extensions/process/store</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/assets</outputDirectory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/assets
+            </outputDirectory>
+            <fileMode>755</fileMode>
         </fileSet>
 
-	 <!-- Chevron extensions -->
+        <!-- Chevron extensions -->
         <fileSet>
             <directory>../extensions/chevron/publisher</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets</outputDirectory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
+            </outputDirectory>
+            <fileMode>755</fileMode>
         </fileSet>
-	<fileSet>
+        <fileSet>
             <directory>../extensions/chevron/store</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/assets</outputDirectory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/assets
+            </outputDirectory>
+            <fileMode>755</fileMode>
         </fileSet>
 
     </fileSets>
 
     <files>
-	<!-- Textual process rxt -->
-	<file>
+        <!-- Textual process rxt -->
+        <file>
             <source>../extensions/process/process.rxt</source>
             <outputDirectory>wso2pc-1.0.0-SNAPSHOT/repository/resources/rxts</outputDirectory>
             <fileMode>644</fileMode>
         </file>
 
-      <!-- Chevron rxt -->
-	<file>
+        <!-- Chevron rxt -->
+        <file>
             <source>../extensions/chevron/chevron.rxt</source>
             <outputDirectory>wso2pc-1.0.0-SNAPSHOT/repository/resources/rxts</outputDirectory>
             <fileMode>644</fileMode>
