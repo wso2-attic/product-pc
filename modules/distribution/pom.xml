@@ -86,6 +86,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
+	        <version>2.4</version>
                 <executions>
                     <execution>
                         <id>4-dist</id>
@@ -94,6 +95,7 @@
                             <goal>attached</goal>
                         </goals>
                         <configuration>
+			    <appendAssemblyId>false</appendAssemblyId>
                             <descriptors>
                                 <descriptor>${basedir}/src/assembly/dist.xml</descriptor>
                             </descriptors>

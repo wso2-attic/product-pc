@@ -16,6 +16,7 @@
  ~ under the License.
  -->
 <assembly>
+    <id>pc-dist</id>
     <formats>
         <format>zip</format>
     </formats>
@@ -26,7 +27,6 @@
         <fileSet>
             <directory>target/wso2es-${wso2es.version}</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
-            <fileMode>755</fileMode>
         </fileSet>
 
         <!-- Textual process extensions -->
@@ -35,7 +35,6 @@
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
             </outputDirectory>
-            <fileMode>755</fileMode>
         </fileSet>
         <fileSet>
             <directory>../extensions/process/store</directory>
