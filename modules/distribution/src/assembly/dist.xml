@@ -41,7 +41,6 @@
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/assets
             </outputDirectory>
-            <fileMode>755</fileMode>
         </fileSet>
 
         <!-- Chevron extensions -->
@@ -50,14 +49,12 @@
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
             </outputDirectory>
-            <fileMode>755</fileMode>
         </fileSet>
         <fileSet>
             <directory>../extensions/chevron/store</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/assets
             </outputDirectory>
-            <fileMode>755</fileMode>
         </fileSet>
 
     </fileSets>
@@ -66,14 +63,14 @@
         <!-- Textual process rxt -->
         <file>
             <source>../extensions/process/process.rxt</source>
-            <outputDirectory>wso2pc-1.0.0-SNAPSHOT/repository/resources/rxts</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/rxts</outputDirectory>
             <fileMode>644</fileMode>
         </file>
 
         <!-- Chevron rxt -->
         <file>
             <source>../extensions/chevron/chevron.rxt</source>
-            <outputDirectory>wso2pc-1.0.0-SNAPSHOT/repository/resources/rxts</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/rxts</outputDirectory>
             <fileMode>644</fileMode>
         </file>
     </files>
