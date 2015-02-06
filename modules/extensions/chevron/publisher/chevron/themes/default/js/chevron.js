@@ -981,7 +981,8 @@ jsPlumb.ready(function(e) {
     (function($) {
         $.fn.extend({
             userInputAdded: function(callback, timeout) {
-                timeout = timeout || 100e3; // 10 second default timeout
+                var DEFAULT_TIMEOUT =100e3;
+                timeout = timeout || DEFAULT_TIMEOUT; // 10 second default timeout
                 var timeoutReference,
                     userInputAdded = function(instance) {
                         if (!timeoutReference) return;
