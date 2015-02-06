@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -16,9 +16,12 @@
  *  under the License.
  *
  */
+var log = new Log();
 
-var log=new Log();
-log.info('######### Loading the list-assets helper ######## ');
+if(log.isDebugEnabled()){
+ log.debug('######### Loading the list-assets helper ######## ');   
+}
+
 var resources = function (block, page, area, meta) {
     return {
         js: ['asset-core.js', 'asset-helpers.js', 'assets.js','listChevron.js'],

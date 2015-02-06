@@ -1,3 +1,23 @@
+
+.descriptor {
+    width:17px;
+    height:17px;
+    border:1px;
+    position: absolute;
+    left: 10px;
+    top:0px;
+    cursor:pointer;
+    background-image: url(../img/showDescriptionIcon.png);
+}
+.viewConnectionsBtn{
+    position:relative;
+    top: 0px;
+    right:0px;
+    background: #1FAB3A;
+    color:#FFFFFF;
+}
+
+
 #canvasArea {
     border: 1px solid #ECF0F1;
     height: 600px;
@@ -28,7 +48,7 @@
     height: 80px;
     width: 80px;
 }
-.chevron-textField {
+.text-edit {
     position: relative;
     resize: none;
     width: 6em;
@@ -37,6 +57,9 @@
     left: 35.5728759765625px;
     background-color: #FFCC33;
     text-align: center;
+    font-family: Arial;
+    visibility: hidden;
+    border: 0px solid #000000;
 }
 .chevron {
     position: absolute;
@@ -48,6 +71,7 @@
     float: left;
     margin-right: 6px;
     vertical-align: top;
+    cursor:pointer;
     background-image: url(../img/chevron-icon.jpg);
 }
 .chevron-toolbox {

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -18,7 +18,15 @@
  */
 var resources = function (block, page, area, meta) {
     return {
-        js: ['jquery.MetaData.js', 'jquery.rating.pack.js', 'async.min.js', 'moment.min.js', 'porthole.min.js','jquery-1.10.2.min.js','viewChevron.js','xml2json.js','xml2json.min.js','jquery.jsPlumb-1.6.4-min.js','dom.jsPlumb-1.6.4-min.js','jquery.min.js','jquery-ui.min.js'],
-        css: ['assets.css','editablegrid-2.0.1.css','styles.css','font-awesome-ie7.min.css','jslider.css','jslider.round.plastic.css','navigation.css','sort-assets.css','chevron.css','jquery-ui.css'],
+        js: ['jquery.MetaData.js', 'jquery.rating.pack.js', 'async.min.js', 'moment.min.js', 'porthole.min.js','jquery.jsPlumb-1.6.4-min.js','dom.jsPlumb-1.6.4-min.js','viewChevron.js','xml2json.js','xml2json.min.js','jquery.jsPlumb-1.6.4-min.js','dom.jsPlumb-1.6.4-min.js','jquery-ui.min.js'],
+        css: ['jquery-ui.css','assets.css','editablegrid-2.0.1.css','styles.css','font-awesome-ie7.min.css','jslider.css','jslider.round.plastic.css','navigation.css','sort-assets.css','chevron.css']
     };
 };
+
+
+
+
+
+
+
+ 	    

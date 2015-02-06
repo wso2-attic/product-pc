@@ -18,8 +18,6 @@
  */
 var linkName; //store chevron name
 var href; // store link of the redirected page
-
-//using chevron diagram name, get diagram details
 function getRelatedChevronDiagram(element) {
     var checkName = $.trim(linkName);
     $.ajax({
@@ -31,7 +29,6 @@ function getRelatedChevronDiagram(element) {
         }
     });
 }
-// when list page item is clicked
 $('.info_main').click(function(e) {
     var element = $(this);
     href = element.attr('href');
@@ -39,7 +36,7 @@ $('.info_main').click(function(e) {
     getRelatedChevronDiagram(element);
     loadPageForLink(href);
 });
-// when item name link is clicked get chevron process name 
+// when link is clicked get chevron process name 
 $('.info_link').click(function(e) {
     var element = $(this);
     linkName = element.text();
@@ -47,7 +44,7 @@ $('.info_link').click(function(e) {
     getRelatedChevronDiagram(element);
     loadPageForLink(href);
 });
-// load view page for relevant chevron diagram
+
 function loadPageForLink(href) {
     window.location = href;
 }
