@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Jasmine Spec Runner v2.1.3</title>
+        <link rel="shortcut icon" type="image/png" href="lib/jasmine-2.1.3/jasmine_favicon.png">
+        <link rel="shortcut icon" type="image/jpg" href="lib/chevron-icon.jpg">
+        <link rel="stylesheet" href="lib/jasmine-2.1.3/jasmine.css">
+        <script src="lib/jasmine-2.1.3/jasmine.js"></script>
+        <script src="lib/jasmine-2.1.3/jasmine-html.js"></script>
+        <script src="lib/jasmine-2.1.3/boot.js"></script>
+        <script src="lib/jquery.min.js"></script>
+        <script src="lib/jquery-ui.min.js"></script>
+        <script src="lib/jquery.jsPlumb-1.6.4-min.js"></script>
+        <script src="lib/jasmine-jquery.js"></script>
+        <script src="lib/jquery.tokeninput.js"></script>
+        <script src="lib/xml2json.js"></script>
+        <script src="lib/xml2json.min.js"></script>
+
+
+         <script src="lib/dom.jsPlumb-1.6.4-min.js"></script>
+                 <!-- include source files here... -->
+
+        <script src="src/chevron.js"></script>
+        <script src="src/updateChevron.js"></script>
+        <script src="src/viewChevron.js"></script>
+        <script src="src/listChevron.js"></script>
+
+
+        <!-- include spec files here... -->
+
+        <script src="spec/createAsset_spec.js"></script>
+        <script src="spec/updateAsset_spec.js"></script>
+        <script src="spec/listAsset_spec.js"></script>
+        <script src="spec/viewAsset_spec.js"></script>
+        
+
+
+        <script type="text/javascript">
+
+             function createHideButton() {
+             var msg = $('<div>');
+         msg.attr({
+                    id: 'elm'
+                });
+              var btn = $('<button/>',
+        {
+            text: 'hideConnections',
+            click: function () {  return msg; }
+        });
+              return btn;
+
+       }
+         function createShowButton() {
+               var msg = $('<div>');
+         msg.attr({
+                    id: 'elm1'
+                });
+              var btn = $('<button/>',
+        {
+            text: 'showConnections',
+            click: function () { return msg; }
+        });
+              return btn;
+
+       }
+
+       function returnElement(){
+        var top = 270;
+        var left = 100;
+        var textBox = $('<textarea>').addClass('text-edit');
+         var element = $('<div>');
+         element.attr({
+                    id: 'e1'
+                });
+         element.css({
+          'top':top,
+          'left': left
+         });
+         element.append(textBox);
+         return element;
+       }
+    function returnAnotherElement(){
+       var top = 350;
+        var left = 200;
+         var element2 = $('<div>');
+         element2.attr({
+                    id: 'e2'
+                });
+         element2.css({
+          'top':top,
+          'left': left
+         });
+         return element2;
+    }
+        //for update spec
+         function createNewElement(id,top,left){
+        var top = top;
+        var left = left;
+        var textBox = $('<textarea>').addClass('text-edit');
+         var element3 = $('<div>');
+         element3.attr({
+                    id: id
+                });
+         element3.css({
+          'top':top,
+          'left': left
+         });
+         element3.append(textBox);
+         return element3;
+     }
+
+            </script>
+        </head>
+        <body>
+        </body>
+    </html>
