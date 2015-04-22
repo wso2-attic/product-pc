@@ -1,4 +1,4 @@
-  /*
+/*
  * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +16,7 @@
 
 $( document ).ready(function() {
 
-  	var assets = {
-		data: []
-	};
-
-	var ids_pre = "";
+ 	var ids_pre = "";
 	var ids_suc = "";
 	var ids_gen = "";
 	var ids_spe = "";
@@ -28,13 +24,11 @@ $( document ).ready(function() {
 		data: []
 	}
    	var processName = $("#processName").val();
-
 	$.get( "/publisher/asts/process/apis/content", { name: processName, reqType:"get"} )
-  .done(function( result ) {
-    $("#processContent").val(result);
-  });
-
-
+     .done(function( result ) {
+     $("#processContent").val(result);
+    });
+   //Acquiring the ids for replacing the asset ids with asset name
   $("#R1").each(function() {
 		ids_pre = $(this).find("#properties_predecessors").text();
 		$(this).find("#properties_predecessors").empty();
@@ -52,14 +46,13 @@ $( document ).ready(function() {
 		$(this).find("#properties_specializations").empty();
 	});
 
+    //Splitting and isolating the ids
 	var tempPre = ids_pre.split(",");
 	var tempSuc = ids_suc.split(",");
 	var tempGen = ids_gen.split(",");
 	var tempSpe = ids_spe.split(",");
 
-
 	$.get("/publisher/apis/assets?type=process", function(response) {
-
 		for (var i in response.data) {
 			var item = response.data[i];
 			assets.data.push({
@@ -67,8 +60,7 @@ $( document ).ready(function() {
 				"name": item.attributes.overview_name
 			});
 		}
-
-		//loading the Pre 
+        //replacing the ids with the asset name and the link
 		for (var i = 0; i < tempPre.length; i++) {
 			for (var j in assets.data) {
 				if (tempPre[i] === assets.data[j].id) {
@@ -78,8 +70,7 @@ $( document ).ready(function() {
 				}
 			}
 		};
-
-		//loading the Pre 
+        //replacing the ids with the asset name and the link
 		for (var i = 0; i < tempSuc.length; i++) {
 			for (var j in assets.data) {
 				if (tempSuc[i] === assets.data[j].id) {
@@ -89,8 +80,7 @@ $( document ).ready(function() {
 				}
 			}
 		};
-
-		//loading the Pre 
+        //replacing the ids with the asset name and the link
 		for (var i = 0; i < tempGen.length; i++) {
 			for (var j in assets.data) {
 				if (tempGen[i] === assets.data[j].id) {
@@ -100,8 +90,7 @@ $( document ).ready(function() {
 				}
 			}
 		};
-
-		//loading the Pre 
+		//replacing the ids with the asset name and the link
 		for (var i = 0; i < tempSpe.length; i++) {
 			for (var j in assets.data) {
 				if (tempSpe[i] === assets.data[j].id) {
@@ -113,26 +102,22 @@ $( document ).ready(function() {
 		};
 	});
 
-
+    //Setting the field to none if the field is empty
 	if (tempPre == "") {
 		$("#R1").each(function() {
 		$(this).find("#properties_predecessors").append('None');
 		});
 	}
-
 	if (tempSpe == "") {
 		$("#R4").each(function() {
 		$(this).find("#properties_successors").append('None');
 		});
-
 	}
-
 	if (tempGen == "") {
 		$("#R3").each(function() {
 		$(this).find("#properties_generalizations").append('None');
 		});
 	}
-
 	if (tempSuc == "") {
 		$("#R2").each(function() {
 		$(this).find("#properties_specializations").append('None');

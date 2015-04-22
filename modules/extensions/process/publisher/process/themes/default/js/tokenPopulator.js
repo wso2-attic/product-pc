@@ -16,7 +16,7 @@
 $(document).ready(function() {
   var url = "/publisher/asts/process/apis/processes?type=process";
 
-     //Predecessors Loading
+  //Populates the token imput with the assets for the field properties_predecessors
   $("#properties_predecessors").tokenInput(url, {
     preventDuplicates: true, theme:"facebook",
        onResult: function(results) {
@@ -37,87 +37,86 @@ $(document).ready(function() {
          console.log('' + JSON.stringify(arguments));
        },
        tokenFormatter: function(item) {
-         return "<li><a href = https://localhost:9443/publisher/asts/process/details/" + item.id + ">" + item.name + " </a></li>"
+         return "<li><a href = https://localhost:9443/publisher/asts/process/details/" + item.id +
+                                                                    ">" + item.name + " </a></li>"
        }
   });
 
+  //Populates the token imput with the assets for the field properties_successors
+  $("#properties_successors").tokenInput(url, {
+    preventDuplicates: true,theme:"facebook",
+    onResult: function(results) {
+      var assets = {
+        data: []
+      }
+      $.each(results, function() {
+        for (var i in results) {
+          var item = results[i];
+          assets.data.push({
+            "path": item.path,
+            "id": item.id,
+            "name": item.attributes.overview_name
+          });
+        };
+      });
+      return assets.data;
+     console.log('' + JSON.stringify(arguments));
+    },
+    tokenFormatter: function(item) {
+      return "<li><a href = https://localhost:9443/publisher/asts/process/details/" + item.id +
+                                                                    ">" + item.name + " </a></li>"
+    }
+  });
 
+  ////Populates the token imput with the assets for the field properties_generalizations
+  $("#properties_generalizations").tokenInput(url, {
+    preventDuplicates: true,theme:"facebook",
+    onResult: function(results) {
+      var assets = {
+        data: []
+      }
+      $.each(results, function() {
+        for (var i in results) {
+          var item = results[i];
+          assets.data.push({
+            "path": item.path,
+            "id": item.id,
+            "name": item.attributes.overview_name
+          });
+        };
+      });
+      return assets.data;
+      console.log('' + JSON.stringify(arguments));
+    },
+    tokenFormatter: function(item) {
+      return "<li><a href = https://localhost:9443/publisher/asts/process/details/" + item.id +
+                                                                    ">" + item.name + " </a></li>"
+    }
+  });
 
-     //Sucessors Loading
-     $("#properties_successors").tokenInput(url, {
-       preventDuplicates: true,theme:"facebook",
-       onResult: function(results) {
-         var assets = {
-           data: []
-         }
-         $.each(results, function() {
-           for (var i in results) {
-             var item = results[i];
-             assets.data.push({
-               "path": item.path,
-               "id": item.id,
-               "name": item.attributes.overview_name
-             });
-           };
-         });
-         return assets.data;
-        console.log('' + JSON.stringify(arguments));
-       },
-       tokenFormatter: function(item) {
-         return "<li><a href = https://localhost:9443/publisher/asts/process/details/" + item.id + ">" + item.name + " </a></li>"
-       }
-     });
-
-
-     //Generaliztion Loading
-
-     $("#properties_generalizations").tokenInput(url, {
-       preventDuplicates: true,theme:"facebook",
-       onResult: function(results) {
-         var assets = {
-           data: []
-         }
-         $.each(results, function() {
-           for (var i in results) {
-             var item = results[i];
-             assets.data.push({
-               "path": item.path,
-               "id": item.id,
-               "name": item.attributes.overview_name
-             });
-           };
-         });
-         return assets.data;
-         console.log('' + JSON.stringify(arguments));
-       },
-       tokenFormatter: function(item) {
-         return "<li><a href = https://localhost:9443/publisher/asts/process/details/" + item.id + ">" + item.name + " </a></li>"
-       }
-     });
-
-     //specialization loading
-
-     $("#properties_specializations").tokenInput(url, {
-       preventDuplicates: true,theme:"facebook",
-       onResult: function(results) {
-         var assets = {
-           data: []
-         }
-         $.each(results, function() {
-          for (var i in results) {
-             var item = results[i];
-             assets.data.push({
-               "path": item.path,
-               "id": item.id,
-               "name": item.attributes.overview_name
-             });
-           };
-         });
-         return assets.data;
-         console.log('' + JSON.stringify(arguments));
-       },
-       tokenFormatter: function(item) {
-         return "<li><a href = https://localhost:9443/publisher/asts/process/details/" + item.id + ">" + item.name + " </a></li>"
-       }
-     });
-});
+  //Populates the token imput with the assets for the field properties_specializations
+  $("#properties_specializations").tokenInput(url, {
+    preventDuplicates: true,theme:"facebook",
+    onResult: function(results) {
+      var assets = {
+        data: []
+      }
+      $.each(results, function() {
+       for (var i in results) {
+          var item = results[i];
+          assets.data.push({
+            "path": item.path,
+            "id": item.id,
+            "name": item.attributes.overview_name
+          });
+        };
+      });
+      return assets.data;
+      console.log('' + JSON.stringify(arguments));
+    },
+    tokenFormatter: function(item) {
+      return "<li><a href = https://localhost:9443/publisher/asts/process/details/" + item.id +
+                                                                    ">" + item.name + " </a></li>"
+    }
+  });
+);

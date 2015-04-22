@@ -1,5 +1,5 @@
    /*
- * Copyright (c) WSO2 Inc, 2014. (http://wso2.com) All Rights Reserved.
+ * Copyright (c) WSO2 Inc, 2015. (http://wso2.com) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,24 +20,18 @@ var assetLinks = function(user) {
     };
 };
 
-
 asset.manager = function(ctx) {
     return {
         create: function(options) {
-
             var ref = require('utils').time;
             var GovernanceConstants = Packages.org.wso2.carbon.governance.api.util;
-
-            //Check if the options object has a createdtime attribute and populate it 
+            //Check if the options object has a createdtime attribute and populate it
             if ((options.attributes) && (options.attributes.hasOwnProperty('overview_createdtime'))) {
                 options.attributes.overview_createdtime = ref.getCurrentTime();
             }
-
             this._super.create.call(this, options);
-
             var asset = this.get(options.id);
-            
-             //Adding Associatin for Predecessors
+             //Adding association for Predecessors
             if (asset.attributes.properties_predecessors != null) {
                 var tempArray1 = asset.attributes.properties_predecessors.split("\,");
                 for (var i = 0; i < tempArray1.length; i++) {
@@ -45,9 +39,7 @@ asset.manager = function(ctx) {
                     this.registry.associate(asset.path, preAsset.path, "Predecessors");
                 }
             }
-
-
-            //Adding Associatin for properties_specializations
+            //Adding association for properties_specializations
             if (asset.attributes.properties_specializations != null) {
                 var tempArray2 = asset.attributes.properties_specializations.split("\,");
                 for (var i = 0; i < tempArray2.length; i++) {
@@ -55,8 +47,7 @@ asset.manager = function(ctx) {
                     this.registry.associate(asset.path, specAsset.path, "Specializations");
                 }
             }
-
-            //Adding Associatin for properties_generalizations
+            //Adding association for properties_generalizations
             if (asset.attributes.properties_generalizations != null) {
                 var tempArray3 = asset.attributes.properties_generalizations.split("\,");
                 for (var i = 0; i < tempArray3.length; i++) {
@@ -64,9 +55,7 @@ asset.manager = function(ctx) {
                     this.registry.associate(asset.path, genAsset.path, "Generalizations");
                 }
             }
-
-
-            //Adding Associatin for properties_successor
+            //Adding association for properties_successor
             if (asset.attributes.properties_sucessors != null) {
                 var tempArray4 = asset.attributes.properties_sucessors.split("\,");
                 for (var i = 0; i < tempArray4.length; i++) {
@@ -77,8 +66,6 @@ asset.manager = function(ctx) {
         }
     };
 };
-
-
 
 asset.configure = function () {
     return {

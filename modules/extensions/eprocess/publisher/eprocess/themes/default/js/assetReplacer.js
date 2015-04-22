@@ -15,21 +15,12 @@
  */
 
 $(document).ready(function() {
-
 	var tempZipUrl = $('#lblProcessArchive').text();
-
 	var tempZipSplit = tempZipUrl.split("/");
-
-$('#lblProcessArchive').text(tempZipSplit[1]);
-
-
-
-
+    $('#lblProcessArchive').text(tempZipSplit[1]);
 	var assets = {
 		data: []
 	};
-
-
 	var ids_pre = "";
 	var ids_suc = "";
 	var ids_gen = "";
@@ -37,7 +28,7 @@ $('#lblProcessArchive').text(tempZipSplit[1]);
 	var assets = {
 		data: []
 	}
-
+	//acquiring the asset ids from the textboxes
 	$("#R6").each(function() {
 		ids_pre = $(this).find("#td_pre").text();
 		$(this).find("#td_pre").empty();
@@ -54,142 +45,85 @@ $('#lblProcessArchive').text(tempZipSplit[1]);
 		ids_spe = $(this).find("#td_spec").text();
 		$(this).find("#td_spec").empty();
 	});
-
-
-
+    //splitting the assets
 	var tempPre = ids_pre.split(",");
 	var tempSuc = ids_suc.split(",");
 	var tempGen = ids_gen.split(",");
 	var tempSpe = ids_spe.split(",");
 
-
 	$.get("/publisher/apis/assets?type=eprocess", function(response) {
-
-
-
 		for (var i in response.data) {
 			var item = response.data[i];
-
 			assets.data.push({
-
 				"id": item.id,
 				"name": item.attributes.overview_name
 			});
-
-
-
 		}
-
-
-		//loading the Pre 
+		//Replacing the assets ids in predecessor with the asset name and the link to the asset
 		for (var i = 0; i < tempPre.length; i++) {
 			for (var j in assets.data) {
 				if (tempPre[i] === assets.data[j].id) {
-
 					$("#R6").each(function() {
-
-						$(this).find("#td_pre").append('<li><a href = /publisher/asts/eprocess/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
-
+						$(this).find("#td_pre").append('<li><a href = /publisher/asts/eprocess/details/' +
+						 assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 					});
-
-
 				}
-
 			}
 		};
-
-		//loading the Pre 
+		//Replacing the assets ids in successor with the asset name and the link to the asset
 		for (var i = 0; i < tempSuc.length; i++) {
 			for (var j in assets.data) {
 				if (tempSuc[i] === assets.data[j].id) {
-
 					$("#R7").each(function() {
-
-						$(this).find("#td_suc").append('<li><a href = /publisher/asts/eprocess/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
-
+						$(this).find("#td_suc").append('<li><a href = /publisher/asts/eprocess/details/' +
+						 assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 					});
-
-
 				}
-
 			}
 		};
-
-		//loading the Pre 
+		//Replacing the assets ids in genralization with the asset name and the link to the asset
 		for (var i = 0; i < tempGen.length; i++) {
 			for (var j in assets.data) {
 				if (tempGen[i] === assets.data[j].id) {
-
-
 					$("#R8").each(function() {
-
-						$(this).find("#td_gen").append('<li><a href = /publisher/asts/eprocess/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
-
+						$(this).find("#td_gen").append('<li><a href = /publisher/asts/eprocess/details/' +
+						 assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 					});
-
-
 				}
-
 			}
 		};
-
-		//loading the Pre 
+		//Replacing the assets ids in specialization with the asset name and the link to the asset
 		for (var i = 0; i < tempSpe.length; i++) {
 			for (var j in assets.data) {
 				if (tempSpe[i] === assets.data[j].id) {
-
 					$("#R9").each(function() {
-
-						$(this).find("#td_spec").append('<li><a href = /publisher/asts/eprocess/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
-
+						$(this).find("#td_spec").append('<li><a href = /publisher/asts/eprocess/details/' +
+						 assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 					});
-
-
 				}
-
 			}
 		};
-
-
 	});
 
-
+    //Setting the value to none if the respective field is empty
 	if (tempPre == "") {
 		$("#R1").each(function() {
-
 			$(this).find("#td_pre").append('None');
-
 		});
-
 	}
-
 	if (tempSpe == "") {
 		$("#R4").each(function() {
-
 			$(this).find("#td_spec").append('None');
-
 		});
-
 	}
-
 	if (tempGen == "") {
 		$("#R3").each(function() {
-
 			$(this).find("#td_gen").append('None');
-
 		});
-
 	}
-
 	if (tempSuc == "") {
 		$("#R2").each(function() {
-
 			$(this).find("#td_suc").append('None');
-
 		});
-
 	}
-
-
-
 });

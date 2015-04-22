@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://wso2.com) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,21 @@
  */
 $(document).ready(function() {
 
-var ids_pre = "";
-var ids_suc = "";
-var ids_gen = "";
-var ids_spe = "";
-var assets = {
+    var ids_pre = "";
+    var ids_suc = "";
+    var ids_gen = "";
+    var ids_spe = "";
+    var assets = {
 	data: []
-}
-
-var processName = $("#processName").text().trim();
-
+    }
+    var processName = $("#processName").text().trim();
 
 	$.get( "/store/asts/process/apis/content", { name: processName, reqType:"get"} )
 	 .done(function( result ) {
 	 $("#content").append(result);
 	});
 
-
+    //Acquiring the asset ids from the fields
 	$("#R1").each(function() {
 		ids_pre = $(this).find("#td_pre").text();
 		$(this).find("#td_pre").empty();
@@ -49,12 +47,11 @@ var processName = $("#processName").text().trim();
 		$(this).find("#td_spec").empty();
 	});
 
-
-
-		var tempPre = ids_pre.split(",");
-		var tempSuc = ids_suc.split(",");
-		var tempGen = ids_gen.split(",");
-		var tempSpe = ids_spe.split(",");
+    //splitting and isolating the ids
+	var tempPre = ids_pre.split(",");
+	var tempSuc = ids_suc.split(",");
+	var tempGen = ids_gen.split(",");
+	var tempSpe = ids_spe.split(",");
 
 	$.get("/store/apis/assets?type=process", function(response) {
 		for (var i in response.data) {
@@ -64,8 +61,7 @@ var processName = $("#processName").text().trim();
 				"name": item.attributes.overview_name
 				});
 		}
-
-		//loading the Pre 
+		//replacing the ids with the asset name and the link
 		for (var i = 0; i < tempPre.length; i++) {
 			for (var j in assets.data) {
 				if (tempPre[i] === assets.data[j].id) {
@@ -75,8 +71,7 @@ var processName = $("#processName").text().trim();
 				}
 			}
 		};
-
-		//loading the Pre 
+		//replacing the ids with the asset name and the link
 		for (var i = 0; i < tempSuc.length; i++) {
 			for (var j in assets.data) {
 				if (tempSuc[i] === assets.data[j].id) {
@@ -86,8 +81,7 @@ var processName = $("#processName").text().trim();
 				}
 			}
 		};
-
-		//loading the Pre 
+		//replacing the ids with the asset name and the link
 		for (var i = 0; i < tempGen.length; i++) {
 			for (var j in assets.data) {
 				if (tempGen[i] === assets.data[j].id) {
@@ -97,7 +91,7 @@ var processName = $("#processName").text().trim();
 				}
 			}
 		};
-		//loading the Pre 
+		//replacing the ids with the asset name and the link
 		for (var i = 0; i < tempSpe.length; i++) {
 			for (var j in assets.data) {
 				if (tempSpe[i] === assets.data[j].id) {
@@ -109,14 +103,12 @@ var processName = $("#processName").text().trim();
 		};
 	});
 
-
-
+    //setting the field to none if there are no assets
 	if (tempPre == "") {
 		$("#R1").each(function() {
 		$(this).find("#td_pre").append('None');
 		});
 	}
-
 	if (tempSpe == "") {
 		$("#R4").each(function() {
 		$(this).find("#td_spec").append('None');
@@ -132,5 +124,4 @@ var processName = $("#processName").text().trim();
 		$(this).find("#td_suc").append('None');
 		});
 	}
-
 });
