@@ -16,6 +16,9 @@
  *  under the License.
  *
  */
+/*
+ Functionality related to list created chevron diagrams in Publisher
+ */
 var linkName; //store chevron name
 var href; // store link of the redirected page
 function getRelatedChevronDiagram(element) {
@@ -29,7 +32,8 @@ function getRelatedChevronDiagram(element) {
         }
     });
 }
-$('.info_main').click(function(e) {
+// when the image is clicked get chevron name
+$('.info_main').click(function (e) {
     var element = $(this);
     href = element.attr('href');
     linkName = element[0].nextElementSibling.attributes[0].ownerElement.childNodes[1].innerText;
@@ -37,7 +41,7 @@ $('.info_main').click(function(e) {
     loadPageForLink(href);
 });
 // when link is clicked get chevron process name 
-$('.info_link').click(function(e) {
+$('.info_link').click(function (e) {
     var element = $(this);
     linkName = element.text();
     href = element.attr('href');

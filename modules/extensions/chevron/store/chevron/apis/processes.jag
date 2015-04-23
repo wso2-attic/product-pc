@@ -16,6 +16,10 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
+/*
+ Retrieve requested processes from process module to be listed
+ as Process Models of a chevron diagram
+ */
 require('/modules/store.js').exec(function(ctx) {
     var log = new Log();
     var req = ctx.request;
@@ -38,4 +42,5 @@ require('/modules/store.js').exec(function(ctx) {
             print(assets);
         }
     }
-}, request, response, session); %>
+}, request, response, session);
+%>

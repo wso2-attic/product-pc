@@ -16,7 +16,10 @@
  *  under the License.
  *
  */
-jsPlumb.ready(function(e) {
+/*
+ Functionality related to edit chevron diagram in Publisher
+ */
+jsPlumb.ready(function (e) {
     chevronProperties = []; //store properties of each chevron
     var processId = 0; // store current process id of the chevron clicked  
     var specializations = []; //store successor/predecessor relations for a chevron
@@ -59,23 +62,23 @@ jsPlumb.ready(function(e) {
         data: {
             type: "GET"
         },
-        success: function(result) {
+        success: function (result) {
             getXmlForProcess(result);
         }
     });
     // on form submit re-save the canvas xml content
-    $('#editAssetButton').click(function(e) {
+    $('#editAssetButton').click(function (e) {
         saveDiagram();
     });
     //show/hide connections on toggle
-    $("#connectionVisibility").click(function() {
+    $("#connectionVisibility").click(function () {
         if ($.trim($(this).text()) === 'Hide Connections') {
-            $('.chevron').each(function(index) {
+            $('.chevron').each(function (index) {
                 jsPlumb.hide(this.id, true);
             });
             $(this).text('Show Connections');
         } else {
-            $('.chevron').each(function(index) {
+            $('.chevron').each(function (index) {
                 jsPlumb.show(this.id, true);
             });
             $(this).text('Hide Connections');
@@ -153,6 +156,7 @@ jsPlumb.ready(function(e) {
             }
         })
     }
+
     //function to get the specific xml content for the given process
     function getXmlForProcess(process) {
         $.ajax({
@@ -162,11 +166,12 @@ jsPlumb.ready(function(e) {
                 type: "GET",
                 name: process
             },
-            success: function(xmlResult) {
+            success: function (xmlResult) {
                 drawDiagramOnCanvas(xmlResult, process);
             }
         });
     }
+
     //Check if element states are duplicted
     function checkForDuplicateState(id) {
         for (var i = 0; i < chevrons.length; i++) {
@@ -175,6 +180,7 @@ jsPlumb.ready(function(e) {
             }
         }
     }
+
     // store description value for each element
     function storeDescriptionsForElements(id, description) {
         var edited = false;
@@ -194,8 +200,9 @@ jsPlumb.ready(function(e) {
             });
         }
     }
+
     //save the state of each chevron that is already drawn at page load
-    saveStateOfExistingElement = function(element, mainProcess, id, name, description, process, xValue, yValue) {
+    saveStateOfExistingElement = function (element, mainProcess, id, name, description, process, xValue, yValue) {
         var mainProcessName = mainProcess; //state is first saved when element is dropped to canvas
         if (process == "" || process == null) {
             process = "None";
@@ -289,82 +296,84 @@ jsPlumb.ready(function(e) {
             // Display description for chevron as a popup
             descriptorSwitch.popover({
                 html: true,
-                content: function() {
+                content: function () {
                     var element = $(this);
                     var currentId = element.attr('id');
                     return getDescriptionForElement(currentId);
                 }
-            }).click(function(e) {
+            }).click(function (e) {
                 e.stopPropagation();
             });
         }
-       drawConnectionsForElements(); //Draw existing connections for elements
-       // loadingDiagram = false; // diagram loading is done
+        drawConnectionsForElements(); //Draw existing connections for elements
+        // loadingDiagram = false; // diagram loading is done
     }
+
     //Draw existing connections for elements
     function drawConnectionsForElements() {
-             loadingDiagram = true;
-            chevronList = document.querySelectorAll(".chevron");
-            if (connections.length != 0) {
-                for (var i = 0; i < connections.length; i++) {
-                    var source = getMatchedElement(connections[i].sourceId);
-                    var target = getMatchedElement(connections[i].targetId);
-                    var p0 = connections[i].sourceAnchor1;
-                    var p1 = connections[i].sourceAnchor2;
-                    var p2 = connections[i].orientation1;
-                    var p3 = connections[i].orientation2;
-                    var p4 = connections[i].targetAnchor1;
-                    var p5 = connections[i].targetAnchor2;
-                    var p6 = connections[i].orientation3;
-                    var p7 = connections[i].orientation4;
-                    //   var dynamicAnchors = [ [p0,p1,p2,p3],[p4,p5,p6,p7]];
-                    var common = {
-                        isTarget: true,
-                        isSource: true,
-                        maxConnections: -1,
-                        connector: ["Flowchart"],
-                        connectorStyle: {
-                            strokeStyle: "#5c96bc",
-                            lineWidth: 1,
-                            outlineColor: "transparent",
-                            outlineWidth: 4
-                        },
-                        anchor: [
-                            [p0, p1, p2, p3],
-                            [p4, p5, p6, p7]
-                        ],
-                        endpoint: ["Dot", {
-                            radius: 4
+        loadingDiagram = true;
+        chevronList = document.querySelectorAll(".chevron");
+        if (connections.length != 0) {
+            for (var i = 0; i < connections.length; i++) {
+                var source = getMatchedElement(connections[i].sourceId);
+                var target = getMatchedElement(connections[i].targetId);
+                var p0 = connections[i].sourceAnchor1;
+                var p1 = connections[i].sourceAnchor2;
+                var p2 = connections[i].orientation1;
+                var p3 = connections[i].orientation2;
+                var p4 = connections[i].targetAnchor1;
+                var p5 = connections[i].targetAnchor2;
+                var p6 = connections[i].orientation3;
+                var p7 = connections[i].orientation4;
+                //   var dynamicAnchors = [ [p0,p1,p2,p3],[p4,p5,p6,p7]];
+                var common = {
+                    isTarget: true,
+                    isSource: true,
+                    maxConnections: -1,
+                    connector: ["Flowchart"],
+                    connectorStyle: {
+                        strokeStyle: "#5c96bc",
+                        lineWidth: 1,
+                        outlineColor: "transparent",
+                        outlineWidth: 4
+                    },
+                    anchor: [
+                        [p0, p1, p2, p3],
+                        [p4, p5, p6, p7]
+                    ],
+                    endpoint: ["Dot", {
+                        radius: 4
+                    }]
+                };
+                jsPlumb.connect({
+                    source: source,
+                    target: target,
+                    paintStyle: {
+                        strokeStyle: "#5c96bc",
+                        lineWidth: 1
+                    },
+                    overlays: [
+                        ["Arrow", {
+                            width: 10,
+                            length: 10,
+                            foldback: 1,
+                            location: 1,
+                            id: "arrow"
                         }]
-                    };
-                    jsPlumb.connect({
-                        source: source,
-                        target: target,
-                        paintStyle: {
-                            strokeStyle: "#5c96bc",
-                            lineWidth: 1
-                        },
-                        overlays: [
-            ["Arrow", {
-                width: 10,
-                length: 10,
-                foldback: 1,
-                location: 1,
-                id: "arrow"
-            }]
-        ],
-                        endpointStyle: {
-                            fillStyle: "transparent"
-                        }
-                    }, common);
-                    addEndPointForElement(source);
-                    addEndPointForElement(target);
-                    
-                    
-                }
-                loadingDiagram = false;
+                    ],
+                    endpointStyle: {
+                        fillStyle: "transparent"
+                    }
+                }, common);
+                addEndPointForElement(source);
+                addEndPointForElement(target);
+
+
             }
+            loadingDiagram = false;
         }
+    }
+
     //return element for  given id
     function getMatchedElement(id) {
         for (var i = 0; i < chevronList.length; i++) {
@@ -373,7 +382,8 @@ jsPlumb.ready(function(e) {
             }
         }
     }
-    //store element properties 
+
+    //store element properties
     function storePropertiesOfChevron(id, name, description, process) {
         var existingElement = false;
         if (process == "" || process == null) {
@@ -398,8 +408,9 @@ jsPlumb.ready(function(e) {
             });
         }
     }
+
     // on double click of the canvas display diagram details
-    $('#canvasArea').dblclick(function(e) {
+    $('#canvasArea').dblclick(function (e) {
         $("#editMainProps").show();
         $("#editElementProps").hide();
     });
@@ -424,16 +435,18 @@ jsPlumb.ready(function(e) {
             }
         }
     }
-    function updateStateOfElement(name,description,process){
-        for(var i = 0 ; i < chevrons.length; i++){
-            if( chevrons[i].chevronName == name){ //match found
+
+    function updateStateOfElement(name, description, process) {
+        for (var i = 0; i < chevrons.length; i++) {
+            if (chevrons[i].chevronName == name) { //match found
                 chevrons[i].description = description;
                 chevrons[i].processModel = process;
                 return chevrons[i].elementId;
             }
         }
     }
-    //clear property fields 
+
+    //clear property fields
     function clearAllFields() {
         $("#td_predecessor1").html("");
         $("#td_successor1").html("");
@@ -441,8 +454,9 @@ jsPlumb.ready(function(e) {
         $("#td_mod").html("");
         $("#td_description").val("");
     }
+
     //save properties for new element on save button click
-    $('#save').click(function() {
+    $('#save').click(function () {
         id = iconId; // current element id
         var name = $("#td_name1").html();
         var process = $("#td_mod").val();
@@ -450,8 +464,8 @@ jsPlumb.ready(function(e) {
         storePropertiesOfChevron(id, name, description, process);
 
         processModelChanged = true;
-       var elementId = updateStateOfElement(name,description,process); //update state with new values
-        storeDescriptionsForElements(elementId, description); 
+        var elementId = updateStateOfElement(name, description, process); //update state with new values
+        storeDescriptionsForElements(elementId, description);
         viewForName.push(name);
         processModelChanged = false;
         $("#editElementProps").hide();
@@ -479,6 +493,7 @@ jsPlumb.ready(function(e) {
         }
         return rowId;
     }
+
     // get suitable cell id based on element position
     function getMatchingGridCell(row, element) {
         var cellId;
@@ -506,6 +521,7 @@ jsPlumb.ready(function(e) {
         // alert(cellId);
         return cellId;
     }
+
     // Set incremental ids for element textboxes that are added to the canvas
     function setIdsForElements(defaultId, element) {
         if (defaultId == 0 && elementsOnCanvas.length == 0) //first element
@@ -524,6 +540,7 @@ jsPlumb.ready(function(e) {
             element.find('.text-edit').attr('name', defaultId);
         }
     }
+
     //store coordinates of each chevron position
     function setChevronPositions(element) {
         var alreadyAdded = false;
@@ -548,6 +565,7 @@ jsPlumb.ready(function(e) {
             });
         }
     }
+
     //store new position where element was dragged
     function addNewGridPositionToList(updatedRow, updatedCell, element) {
         var id = element.attr('id');
@@ -565,6 +583,7 @@ jsPlumb.ready(function(e) {
             });
         }
     }
+
     //remove old element position from list
     function removeOldGridPositionFromList(originalRow, originalCell, element) {
         var id = element.attr('id');
@@ -574,7 +593,8 @@ jsPlumb.ready(function(e) {
             }
         }
     }
-    //When element name is edited ,update 
+
+    //When element name is edited ,update
     function updateRecordAsSuccessor(elementId, name, prevName) {
         for (var i = 0; i < specializations.length; i++) {
             if (specializations[i].id == elementId && specializations[i].successor == prevName) {
@@ -583,7 +603,8 @@ jsPlumb.ready(function(e) {
             }
         }
     }
-    //When element name is edited, update 
+
+    //When element name is edited, update
     function updateRecordAsPredecessor(elementId, name, prevName) {
         for (var i = 0; i < specializations.length; i++) {
             if (specializations[i].id == elementId && specializations[i].predecessor == prevName) {
@@ -592,6 +613,7 @@ jsPlumb.ready(function(e) {
             }
         }
     }
+
     //When element name is edited update successor/predecssors accordingly
     function updateNameInRelations(id, name, prevName) {
         for (var i = 0; i < specializations.length; i++) {
@@ -601,11 +623,13 @@ jsPlumb.ready(function(e) {
             }
         }
     }
+
     //If new position is already occupied move element back to original
     function revertToOldPosition(clickedElement, originalXPosition, originalYPosition) {
         clickedElement.css("left", originalXPosition);
         clickedElement.css("top", originalYPosition);
     }
+
     //check if element was moved from its current position
     function checkForDragChange(element) {
         var id = element.attr('id');
@@ -622,8 +646,9 @@ jsPlumb.ready(function(e) {
         }
         return dragged;
     }
+
     // Save state of the element
-    var saveState = function(chevron) {
+    var saveState = function (chevron) {
         var processModel = "not declared"; //state is first saved when element is dropped to canvas
         var chevronId1 = chevron.find('.text-edit').attr('name');
         var elementId = chevron.attr('id'); // To identify entire element in connections
@@ -658,7 +683,7 @@ jsPlumb.ready(function(e) {
             stateDragged = false;
         } else {
             var duplicated = false;
-            var duplicated = checkForDuplicateState(elementId);
+            duplicated = checkForDuplicateState(elementId);
             if (!duplicated) {
                 chevrons.push({
                     diagramName: mainProcessOfDiagram,
@@ -677,80 +702,84 @@ jsPlumb.ready(function(e) {
         }
     }
     // update chevron position with new coordinates
-        function updateChevronPositions(element) {
-            var id = element.attr('id');
-            var xValue = parseInt(element.css("left"), 10);
-            var yValue = parseInt(element.css("top"), 10);
-            for (var i = 0; i < chevronPositions.length; i++) {
-                if (id == chevronPositions[i].chevId) {
-                    if (chevronPositions[i].xVal != xValue) {
-                        chevronPositions[i].xVal = xValue;
-                        chevronPositions[i].yVal = yValue;
-                        chevronPositions[i].chevName = element.find('.text-edit').val();
-                        positionChanged = true;
-                    }
+    function updateChevronPositions(element) {
+        var id = element.attr('id');
+        var xValue = parseInt(element.css("left"), 10);
+        var yValue = parseInt(element.css("top"), 10);
+        for (var i = 0; i < chevronPositions.length; i++) {
+            if (id == chevronPositions[i].chevId) {
+                if (chevronPositions[i].xVal != xValue) {
+                    chevronPositions[i].xVal = xValue;
+                    chevronPositions[i].yVal = yValue;
+                    chevronPositions[i].chevName = element.find('.text-edit').val();
+                    positionChanged = true;
                 }
             }
         }
-        //add ,found element as a successor for current element
-        function addElementAsSuccessor(element, foundElementId) {
-            var defaultPredecessor = "not declared";
-            var successorAlreadyAdded = false;
-            var currentId = element.find('.text-edit').attr('name'); //get current element's id 
-            var successor = getChevronNameForId(foundElementId); //get name text of the found element
-            for (var i = 0; i < specializations.length; i++) {
-                if (specializations[i].id == currentId) { //this element has previous records
-                    if (specializations[i].successor == successor) { //if this predecessor is already added
-                        successorAlreadyAdded = true;
-                        return;
-                    }
-                }
-            }
-            if (!successorAlreadyAdded) {
-                specializations.push({
-                    id: currentId,
-                    predecessorId: defaultPredecessor,
-                    predecessor: defaultPredecessor,
-                    successorId: foundElementId,
-                    successor: successor
-                });
-            }
-        }
-        //store the chevron name ,id pair for the given element
-        function storeChevronNameForElement(element, name) {
-            var id = element.attr('id');
-            if (chevronNames.length == 0) {
-                chevronNames.push({
-                    id: id,
-                    name: name
-                })
-            } else {
-                for (var i = 0; i < chevronNames.length; i++) {
-                    if (chevronNames[i].id == id) { //name edition for a stored element
-                        chevronNames[i].name = name;
-                    } else {
-                        chevronNames.push({
-                            id: id,
-                            name: name
-                        })
-                    }
+    }
+
+    //add ,found element as a successor for current element
+    function addElementAsSuccessor(element, foundElementId) {
+        var defaultPredecessor = "not declared";
+        var successorAlreadyAdded = false;
+        var currentId = element.find('.text-edit').attr('name'); //get current element's id
+        var successor = getChevronNameForId(foundElementId); //get name text of the found element
+        for (var i = 0; i < specializations.length; i++) {
+            if (specializations[i].id == currentId) { //this element has previous records
+                if (specializations[i].successor == successor) { //if this predecessor is already added
+                    successorAlreadyAdded = true;
+                    return;
                 }
             }
         }
-        //return the chevron name of given element
-        function getChevronNameForId(id) {
-            if (chevronNames.length == 0) { //if no values are added for chevrons
-                return;
-            } else {
-                for (var i = 0; i < chevronNames.length; i++) {
-                    if (chevronNames[i].id == id) { //if matching element found
-                        return chevronNames[i].name;
-                    }
+        if (!successorAlreadyAdded) {
+            specializations.push({
+                id: currentId,
+                predecessorId: defaultPredecessor,
+                predecessor: defaultPredecessor,
+                successorId: foundElementId,
+                successor: successor
+            });
+        }
+    }
+
+    //store the chevron name ,id pair for the given element
+    function storeChevronNameForElement(element, name) {
+        var id = element.attr('id');
+        if (chevronNames.length == 0) {
+            chevronNames.push({
+                id: id,
+                name: name
+            })
+        } else {
+            for (var i = 0; i < chevronNames.length; i++) {
+                if (chevronNames[i].id == id) { //name edition for a stored element
+                    chevronNames[i].name = name;
+                } else {
+                    chevronNames.push({
+                        id: id,
+                        name: name
+                    })
                 }
             }
         }
-        // Storing  newly drawn connection arrays
-    jsPlumb.bind('connection', function(info) {
+    }
+
+    //return the chevron name of given element
+    function getChevronNameForId(id) {
+        if (chevronNames.length == 0) { //if no values are added for chevrons
+            return;
+        } else {
+            for (var i = 0; i < chevronNames.length; i++) {
+                if (chevronNames[i].id == id) { //if matching element found
+                    return chevronNames[i].name;
+                }
+            }
+        }
+    }
+
+    // Storing  newly drawn connection arrays
+    jsPlumb.bind('connection', function (info) {
         var endpoints = info.connection.endpoints; //get endpoints of the connection
         if (!loadingDiagram) {
             var endPointSourceX = endpoints[0].anchor.anchors[0].x;
@@ -799,6 +828,7 @@ jsPlumb.ready(function(e) {
             });
         }
     }
+
     // retrn the cell number for given element id
     function getGridCellForElementId(id) {
         for (var i = 0; i < occupiedGridPositions.length; i++) {
@@ -807,7 +837,8 @@ jsPlumb.ready(function(e) {
             }
         }
     }
-    //return row number of given element id 
+
+    //return row number of given element id
     function getGridRowForElementId(id) {
         for (var i = 0; i < occupiedGridPositions.length; i++) {
             if (id == occupiedGridPositions[i].id) {
@@ -815,6 +846,7 @@ jsPlumb.ready(function(e) {
             }
         }
     }
+
     //Find the pre/suc relationships for element
     function addRelationsForElement(element) {
         var elementId = element.attr('id');
@@ -831,7 +863,7 @@ jsPlumb.ready(function(e) {
                     connectedElementId = connections[i].targetId;
                 }
                 var connectedElementCell = getGridCellForElementId(connectedElementId); //get cell of connected element
-                if (connectedElementId !== 0 && currentElementCell > connectedElementCell) { //current found a preceeding
+                if (connectedElementId !== 0 && currentElementCell > connectedElementCell) { //current found a preceding
                     addElementAsPredecessor(element, connectedElementId); //add found element as a predecessor
                 }
                 if (connectedElementId !== 0 && currentElementCell < connectedElementCell) { //current found a succeeding
@@ -840,6 +872,7 @@ jsPlumb.ready(function(e) {
             } //end of for loop
         }
     }
+
     //display properties for chevron if it was not displayed before
     function viewPropertyForNewChevron(chevronText) {
         if (chevronText == $("#td_name1").html()) { //if name is same as before
@@ -855,7 +888,8 @@ jsPlumb.ready(function(e) {
             }
         }
     }
-    //update values of chevronProperties list at edits  
+
+    //update values of chevronProperties list at edits
     function updateChevronPropertyList(element) {
         var elementId = element.attr('id'); // To identify entire element in connections
         var chevronName = element.find(".text-edit").val();
@@ -866,6 +900,7 @@ jsPlumb.ready(function(e) {
             }
         }
     }
+
     //on click of a chevron
     function chevronClicked() {
         $("#editMainProps").hide();
@@ -894,7 +929,7 @@ jsPlumb.ready(function(e) {
         // make element draggable  
         jsPlumb.draggable(clickedElement, {
             containment: 'parent',
-            stop: function(event) {
+            stop: function (event) {
                 var dragState = checkForDragChange(clickedElement);
                 if (dragState) { //only if the element was moved to a new location
                     var latestPositionY = parseInt(clickedElement.css("top"), 10);
@@ -929,7 +964,7 @@ jsPlumb.ready(function(e) {
             $("#elementProps").show();
             clickedElement.find('.text-edit').css('background-color', 'white').focus();
         } // user is finished adding chevron name
-        clickedElement.find('.text-edit').userInputAdded(function() {
+        clickedElement.find('.text-edit').userInputAdded(function () {
             // alert('in');
             if (!isNewElement) { // If exisiting element
                 editName = true;
@@ -957,30 +992,31 @@ jsPlumb.ready(function(e) {
             currentElement = clickedElement; // temp storage of element to retrieve on save properties
         });
     }
+
     // On time out/ click on canvas add chevron name to table name property
-    (function($) {
+    (function ($) {
         $.fn.extend({
-            userInputAdded: function(callback, timeout) {
+            userInputAdded: function (callback, timeout) {
                 timeout = timeout || 100e3; // 10 second default timeout
                 var timeoutReference,
-                    userInputAdded = function(instance) {
+                    userInputAdded = function (instance) {
                         if (!timeoutReference) return;
                         timeoutReference = null;
                         callback.call(instance);
                     };
-                return this.each(function(i, instance) {
+                return this.each(function (i, instance) {
                     var $instance = $(instance);
-                    $instance.is(':input') && $instance.on('keyup keypress', function(e) {
+                    $instance.is(':input') && $instance.on('keyup keypress', function (e) {
                         if (e.type == 'keyup' && e.keyCode != 8) { // if user is still typing/deleting
                             return;
                         }
                         if (timeoutReference) { //if timeout is set reset the time
                             clearTimeout(timeoutReference);
                         }
-                        timeoutReference = setTimeout(function() { //timeout passed auto update field name
+                        timeoutReference = setTimeout(function () { //timeout passed auto update field name
                             userInputAdded(instance);
                         }, timeout);
-                    }).on('blur', function() { // if user is leaves the field 
+                    }).on('blur', function () { // if user is leaves the field
                         userInputAdded(instance);
                     });
                 });
@@ -995,12 +1031,13 @@ jsPlumb.ready(function(e) {
             data: {
                 q: processName
             },
-            success: function(Result) {
+            success: function (Result) {
                 setIdOfProcess(Result, processName);
             }
         });
     }
-    //get process link id for the given process 
+
+    //get process link id for the given process
     function setIdOfProcess(results, processName) {
         var obj = eval("(" + results + ")");
         for (var i in obj) {
@@ -1013,14 +1050,17 @@ jsPlumb.ready(function(e) {
             name: processName
         });
     }
+
     //create new row to position the element as requested
     function createDynamicRow() {
         var newLastId;
         var lastId = $('#canvasGrid tr:last').attr('id');
         newLastId = ++lastId;
-        $('#canvasGrid tr').last().after('<tr id=' + newLastId + '><td class="canvasCell">1</td><td class="canvasCell">2</td><td class="canvasCell">3</td><td class="canvasCell">4</td></tr>');
+        $('#canvasGrid tr').last().after('<tr id=' + newLastId + '><td class="canvasCell">1</td>' +
+            '<td class="canvasCell">2</td><td class="canvasCell">3</td><td class="canvasCell">4</td></tr>');
         return newLastId;
     }
+
     //get matching row id for new element on canvas
     function getMatchingGridRow(element) {
         var rowId; // store row id the element belongs to
@@ -1043,6 +1083,7 @@ jsPlumb.ready(function(e) {
         }
         return rowId;
     }
+
     //add dynamic cell to position element as requested
     function addDynamicCell(elementX, element) {
         // Canvas x axis ranges for each cell definition
@@ -1061,6 +1102,7 @@ jsPlumb.ready(function(e) {
         }
         return cellId;
     }
+
     //get matching grid row id to position element
     function getMatchingGridCell(row, element) {
         var cellId;
@@ -1087,6 +1129,7 @@ jsPlumb.ready(function(e) {
         }
         return cellId;
     }
+
     //check if requested cell and row are available
     function checkPositionAvailability(cell, row) {
         for (var i = 0; i < occupiedGridPositions.length; i++) {
@@ -1096,6 +1139,7 @@ jsPlumb.ready(function(e) {
         }
         return true;
     }
+
     //add new element to required cell location
     function addElementToGrid(row, cell, element) {
         var proceed = false;
@@ -1118,7 +1162,8 @@ jsPlumb.ready(function(e) {
             return true;
         }
     }
-    //retrieve predecessors for given element 
+
+    //retrieve predecessors for given element
     function getPredecessorsForElement(id) {
         var predecessorList = '';
         for (var i = 0; i < specializations.length; i++) {
@@ -1142,6 +1187,7 @@ jsPlumb.ready(function(e) {
         }
         return predecessorList;
     }
+
     //retrieve successors for given element
     function getSuccessorsForElement(id) {
         var successorList = '';
@@ -1165,6 +1211,7 @@ jsPlumb.ready(function(e) {
         }
         return successorList;
     }
+
     //  Store the grid occupied locations of all  existing elements binded to  click event
     function storeLocationOfElementAtClick(element, row, cell) {
         var elementId = element.attr('id');
@@ -1190,6 +1237,7 @@ jsPlumb.ready(function(e) {
             });
         }
     }
+
     //Keep track of occupied cell location at element drop on canvas
     function storeLocationOfElement(element, row, cell) {
         var elementId = element.attr('id');
@@ -1215,10 +1263,12 @@ jsPlumb.ready(function(e) {
             });
         }
     }
+
     //If cell isn't occupied position new element with default spacing
     function setPositionForElement(row, cell, element) {
         var defaultXGap = 166;
-        var defaultYGap = 117;;
+        var defaultYGap = 117;
+        ;
         var defaultX = 15;
         var defaultY = 17;
         if (row == 0 && cell == 0) { // position(0,0) element
@@ -1238,6 +1288,7 @@ jsPlumb.ready(function(e) {
             element.css("top", defaultY);
         }
     }
+
     //Get matching id for the associated process model name
     function getProcessIdForProcessModel(processName) {
         if (processName) {
@@ -1248,6 +1299,7 @@ jsPlumb.ready(function(e) {
             }
         }
     }
+
     //Adds four endpoints to dropped element
     function addEndPointForElement(element) {
         //create an endpoint
@@ -1256,7 +1308,8 @@ jsPlumb.ready(function(e) {
             isSource: true,
             maxConnections: -1,
             anchors: [
-                [0.2, 0.5], "Left",
+                [0.2, 0.5],
+                "Left",
             ],
             endpoint: ["Dot", {
                 radius: 4
@@ -1269,15 +1322,15 @@ jsPlumb.ready(function(e) {
                 outlineColor: "transparent",
                 outlineWidth: 4
             },
-              connectorOverlays: [
-        ["Arrow", {
-            width: 10,
-            length: 10,
-            foldback: 1,
-            location: 1,
-            id: "arrow"
-        }]
-    ],
+            connectorOverlays: [
+                ["Arrow", {
+                    width: 10,
+                    length: 10,
+                    foldback: 1,
+                    location: 1,
+                    id: "arrow"
+                }]
+            ],
             paintStyle: {
                 fillStyle: "transparent"
             },
@@ -1300,15 +1353,15 @@ jsPlumb.ready(function(e) {
                 outlineColor: "transparent",
                 outlineWidth: 4
             },
-              connectorOverlays: [
-        ["Arrow", {
-            width: 10,
-            length: 10,
-            foldback: 1,
-            location: 1,
-            id: "arrow"
-        }]
-    ],
+            connectorOverlays: [
+                ["Arrow", {
+                    width: 10,
+                    length: 10,
+                    foldback: 1,
+                    location: 1,
+                    id: "arrow"
+                }]
+            ],
             paintStyle: {
                 fillStyle: "transparent"
             },
@@ -1332,15 +1385,15 @@ jsPlumb.ready(function(e) {
                 outlineColor: "transparent",
                 outlineWidth: 4
             },
-              connectorOverlays: [
-        ["Arrow", {
-            width: 10,
-            length: 10,
-            foldback: 1,
-            location: 1,
-            id: "arrow"
-        }]
-    ],
+            connectorOverlays: [
+                ["Arrow", {
+                    width: 10,
+                    length: 10,
+                    foldback: 1,
+                    location: 1,
+                    id: "arrow"
+                }]
+            ],
             paintStyle: {
                 fillStyle: "transparent"
             },
@@ -1354,7 +1407,8 @@ jsPlumb.ready(function(e) {
             isSource: true,
             maxConnections: -1,
             anchors: [
-                [0.98, 0.5], "Right"
+                [0.98, 0.5],
+                "Right"
             ],
             endpoint: ["Dot", {
                 radius: 4
@@ -1367,15 +1421,15 @@ jsPlumb.ready(function(e) {
                 outlineColor: "transparent",
                 outlineWidth: 4
             },
-              connectorOverlays: [
-        ["Arrow", {
-            width: 10,
-            length: 10,
-            foldback: 1,
-            location: 1,
-            id: "arrow"
-        }]
-    ],
+            connectorOverlays: [
+                ["Arrow", {
+                    width: 10,
+                    length: 10,
+                    foldback: 1,
+                    location: 1,
+                    id: "arrow"
+                }]
+            ],
             paintStyle: {
                 fillStyle: "transparent"
             },
@@ -1410,6 +1464,7 @@ jsPlumb.ready(function(e) {
         var elementRow = getGridRowForElementId(elementId);
         removeOldGridPositionFromList(elementRow, elementCell, element);
     }
+
     //Remove element from the mainProcess list
     function removeFromMainProcessList(elementId) {
         if (chevronProperties.length > 0) { //if it has elements 
@@ -1420,6 +1475,7 @@ jsPlumb.ready(function(e) {
             }
         }
     }
+
     // Remove element from the xml structure storing list
     function removeFromXmlStoreList(elementId) {
         if (chevrons.length > 0) {
@@ -1430,6 +1486,7 @@ jsPlumb.ready(function(e) {
             }
         }
     }
+
     // Remove connections attached to the given element
     function removeRelatedConnectionsFromList(element) {
         var elementId = element.attr('id');
@@ -1444,20 +1501,22 @@ jsPlumb.ready(function(e) {
         }
         if (specializations.length > 0) {
             for (var i = 0; i < specializations.length; i++) { //clear the removed element from any relation (predecessor/successor)
-                if (specializations[i].id == elementId || specializations[i].predecessorId == elementId || specializations[i].successorId == elementId) {
+                if (specializations[i].id == elementId || specializations[i].predecessorId == elementId
+                    || specializations[i].successorId == elementId) {
                     specializations.splice(i, 1);
                 }
             }
         }
     }
-    //invoke doubleclick on the element
-    function removeElementFromCanvas(){
 
-                        var selectedElement = $(this);
-                        removeElement(selectedElement);
-                    
+    //invoke double-click on the element
+    function removeElementFromCanvas() {
+        var selectedElement = $(this);
+        removeElement(selectedElement);
+
     }
-    // remove selected element 
+
+    // remove selected element
     function removeElement(element) {
         var id = element.find('.text-edit').attr('name');
         removeFromMainProcessList(id);
@@ -1469,15 +1528,16 @@ jsPlumb.ready(function(e) {
         element.remove(); //remove element
         clearAllFields();
     }
+
     //At connection drag event show selected endpoints
-    jsPlumb.bind("connectionDrag", function(info) {
+    jsPlumb.bind("connectionDrag", function (info) {
         jsPlumb.selectEndpoints({
             element: info.sourceId
         }).setPaintStyle({
             fillStyle: "FF0000"
         });
     });
-    $(function() {
+    $(function () {
         //Drag icon from toolbox and place on canvas
         $(".chevron-toolbox").draggable({
             helper: 'clone',
@@ -1489,7 +1549,7 @@ jsPlumb.ready(function(e) {
             accept: '.chevron-toolbox',
             activeClass: "canvas-area",
             containment: 'canvasArea',
-            drop: function(e, ui) {
+            drop: function (e, ui) {
                 newElement = ui.helper.clone();
                 ui.helper.remove();
                 $(newElement).removeAttr("class");
@@ -1504,24 +1564,24 @@ jsPlumb.ready(function(e) {
                     addEndPointForElement(newElement); // add connecting endopint to element
                     clearAllFields();
                     isNewElement = true; //new element added to canvas
-                 //   $('#save').css('visibility', 'visible'); //show property save button
+                    //   $('#save').css('visibility', 'visible'); //show property save button
                     newElement.dblclick(removeElementFromCanvas);
                     newElement.click(chevronClicked);
-                    
+
                     var elementId = newElement.attr('id');
                     descriptorSwitch.attr('id', elementId); //set default jsplumb id to descriptor button
                     // show description value as a popup at click
                     descriptorSwitch.popover({
                         html: true,
-                        content: function() {
+                        content: function () {
                             var element = $(this);
                             var currentId = element.attr('id');
                             return getDescriptionForElement(currentId);
                         }
-                    }).click(function(e) {
+                    }).click(function (e) {
                         e.stopPropagation(); // hold parent click events
                     });
-                      
+
                 }
             }
         });
@@ -1529,8 +1589,8 @@ jsPlumb.ready(function(e) {
         $("#td_mod").tokenInput(url, {
             preventDuplicates: true,
             theme: "facebook",
-            onResult: function(results) {
-                $.each(results, function() {
+            onResult: function (results) {
+                $.each(results, function () {
                     for (var i in results) {
                         var item = results[i];
                         assets.data.push({
@@ -1538,12 +1598,13 @@ jsPlumb.ready(function(e) {
                             "id": item.id,
                             "name": item.attributes.overview_name
                         });
-                    };
+                    }
+                    ;
                 });
                 return assets.data;
                 console.log('' + JSON.stringify(arguments));
             },
-            onAdd: function(item) {
+            onAdd: function (item) {
                 var name = item.name;
                 $("#td_mod").val(name);
                 processTokens.push({
@@ -1551,7 +1612,7 @@ jsPlumb.ready(function(e) {
                     processName: item.name
                 });
             },
-            tokenFormatter: function(item) {
+            tokenFormatter: function (item) {
                 return "<li><a href =../../../asts/process/details/" + item.id + ">" + item.name + " </a></li>"
             }
         });

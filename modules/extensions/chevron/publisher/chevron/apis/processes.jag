@@ -16,7 +16,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-require('/modules/publisher.js').exec(function(ctx) {
+/*
+ Retrieve requested processes from process module to be listed
+ as Process Models of a chevron diagram
+ */
+require('/modules/publisher.js').exec(function (ctx) {
     var log = new Log();
     var req = ctx.request;
     var res = ctx.response;
@@ -38,4 +42,5 @@ require('/modules/publisher.js').exec(function(ctx) {
             print(assets);
         }
     }
-}, request, response, session); %>
+}, request, response, session);
+%>
