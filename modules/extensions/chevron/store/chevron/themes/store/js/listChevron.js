@@ -16,6 +16,9 @@
  *  under the License.
  *
  */
+/*
+ Functionality for listing created chevrons in Store
+ */
 var linkName; //store chevron name
 var href; // store link of the redirected page
 
@@ -32,7 +35,7 @@ function getRelatedChevronDiagram(element) {
     });
 }
 // when list page item is clicked
-$('.info_main').click(function(e) {
+$('.info_main').click(function (e) {
     var element = $(this);
     href = element.attr('href');
     linkName = element[0].nextElementSibling.attributes[0].ownerElement.childNodes[1].innerText;
@@ -40,7 +43,7 @@ $('.info_main').click(function(e) {
     loadPageForLink(href);
 });
 // when item name link is clicked get chevron process name 
-$('.info_link').click(function(e) {
+$('.info_link').click(function (e) {
     var element = $(this);
     linkName = element.text();
     href = element.attr('href');

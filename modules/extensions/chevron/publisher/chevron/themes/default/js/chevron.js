@@ -16,7 +16,10 @@
  *  under the License.
  *
  */
-jsPlumb.ready(function(e) {
+/*
+ Functionality related to create chevron diagram in Publisher
+ */
+jsPlumb.ready(function (e) {
     var mainProcess = []; // store properties of diagram and elements
     var viewForName = []; // names of chevron views 
     var mainProcessName; // name of diagram view
@@ -42,12 +45,12 @@ jsPlumb.ready(function(e) {
     var descriptionsForChevrons = []; //keep track of the element ids and descriptions
     var clickedDefaultId = 0; //Keep track of currently clicked element default ids given by jsplumb
     //on form submit save xml content of the drawn canvas
-    $('#btn-create-asset').click(function(e) {
+    $('#btn-create-asset').click(function (e) {
         checkForMandatoryFields(); //check if main properties of the diagram are added
         saveDiagram();
     });
     // Save  table properties of elements
-    $('#saveElms').click(function(e) {
+    $('#saveElms').click(function (e) {
         createElementProperties(mainProcess);
         var chevronName = $("#properties_ename").val(); //latest value 
         var chevronDescription = $("#properties_eDescription").val(); //get latest value
@@ -57,13 +60,13 @@ jsPlumb.ready(function(e) {
         $("#elementProps").hide();
     });
     //Save properties of main process
-    $('#save').click(function() {
+    $('#save').click(function () {
         createMainProperties(mainProcess);
         $("#fullProps").hide();
     });
     // On Canvas doubleclick show create/view page
-    $('#dropArea').dblclick(function(e) {
-        if (mainProcess.length !== 0 && mainProcessName) // propererties for main diagram added
+    $('#dropArea').dblclick(function (e) {
+        if (mainProcess.length !== 0 && mainProcessName) // properties for main diagram added
         {
             $("#fullProps").show();
             viewPropertyList(mainProcess);
@@ -74,7 +77,7 @@ jsPlumb.ready(function(e) {
         }
     });
     // Storing drawn connection arrays
-    jsPlumb.bind('connection', function(info) {
+    jsPlumb.bind('connection', function (info) {
         var endpoints = info.connection.endpoints; //get endpoints that are used for the connection
         var endPointSourceX = endpoints[0].anchor.anchors[0].x;
         var sourceOrientationX = endpoints[0].anchor.anchors[0].orientation[0];
@@ -114,6 +117,7 @@ jsPlumb.ready(function(e) {
             }
         }
     }
+
     //Before creating a chevron diagram check if diagram details are added.
     function checkForMandatoryFields() {
         var recordAdded = false;
@@ -129,6 +133,7 @@ jsPlumb.ready(function(e) {
             return true;
         }
     }
+
     //Get matching id for the associated process model name
     function getProcessIdForProcessModel(processName) {
         if (processName) {
@@ -139,6 +144,7 @@ jsPlumb.ready(function(e) {
             }
         }
     }
+
     //Display added properties for a view
     function viewElementProperties(propertyList, specializationList, name) {
         for (var i = 0; i < propertyList.length; i++) {
@@ -160,7 +166,8 @@ jsPlumb.ready(function(e) {
             }
         }
     }
-    //retrieve predecessors for given element 
+
+    //retrieve predecessors for given element
     function getPredecessorsForElement(id) {
         var predecessorList = '';
         for (var i = 0; i < specializations.length; i++) {
@@ -185,6 +192,7 @@ jsPlumb.ready(function(e) {
         return predecessorList;
     }
 
+    //retrieve successors for given element
     function getSuccessorsForElement(id) {
         var successorList = '';
         for (var i = 0; i < specializations.length; i++) {
@@ -207,6 +215,7 @@ jsPlumb.ready(function(e) {
         }
         return successorList;
     }
+
     //Add properties for elements
     function createElementProperties(propertyList) {
         var id = iconId; // get the current id of the element
@@ -251,6 +260,7 @@ jsPlumb.ready(function(e) {
         var viewName = name;
         viewForName.push(viewName); // keep track of the elements that has view properties added
     }
+
     //validating main table fields of chevron diagram
     function validateTableFields(description, name, owner, predecessor, successor) {
         var provider = $("#overview_provider").val();
@@ -260,6 +270,7 @@ jsPlumb.ready(function(e) {
             return false;
         }
     }
+
     // Add properties for main process
     function createMainProperties(propertyList) {
         var mainId = "mainId";
@@ -292,6 +303,7 @@ jsPlumb.ready(function(e) {
             mainProcessName = name;
         }
     }
+
     // Display added properties for main process
     function viewPropertyList(propertyList) {
         for (var i = 0; i < propertyList.length; i++) {
@@ -304,7 +316,8 @@ jsPlumb.ready(function(e) {
             }
         }
     }
-    // Get the relevant description value for the given id 
+
+    // Get the relevant description value for the given id
     function getDescriptionToSaveState(id) {
         var description = "not available"; //default value
         if (descriptionsForChevrons.length != 0) {
@@ -317,6 +330,7 @@ jsPlumb.ready(function(e) {
         }
         return description;
     }
+
     // update description field to new value
     function updateDescriptionOfState(name, description) {
         if (chevrons.length != 0) {
@@ -328,8 +342,9 @@ jsPlumb.ready(function(e) {
             }
         }
     }
+
     // Save canvas elements and positions
-    var saveState = function(chevron) {
+    var saveState = function (chevron) {
         var processModel = "not declared"; //state is first saved when element is dropped to canvas
         var chevronId1 = chevron.find('.text-edit').attr('name');
         var elementId = chevron.attr('id'); // To identify entire element in connections
@@ -376,297 +391,315 @@ jsPlumb.ready(function(e) {
         }
     }
     //store coordinates of each chevron position
-        function setChevronPositions(element) {
-            var name = "empty"; //default value
-            var id = element.find('.text-edit').attr('name');
-            var xValue = parseInt(element.css("left"), 10);
-            var yValue = parseInt(element.css("top"), 10);
-            chevronPositions.push({
-                chevId: id,
-                chevName: name,
-                xVal: xValue,
-                yVal: yValue
+    function setChevronPositions(element) {
+        var name = "empty"; //default value
+        var id = element.find('.text-edit').attr('name');
+        var xValue = parseInt(element.css("left"), 10);
+        var yValue = parseInt(element.css("top"), 10);
+        chevronPositions.push({
+            chevId: id,
+            chevName: name,
+            xVal: xValue,
+            yVal: yValue
+        });
+    }
+
+    // update stored coordinates of each chevron position
+    function updateChevronPositions(element) {
+        var id = element.find('.text-edit').attr('name');
+        var xValue = parseInt(element.css("left"), 10);
+        var yValue = parseInt(element.css("top"), 10);
+        for (var i = 0; i < chevronPositions.length; i++) {
+            if (id == chevronPositions[i].chevId) {
+                if (chevronPositions[i].xVal != xValue) {
+                    chevronPositions[i].xVal = xValue;
+                    chevronPositions[i].yVal = yValue;
+                    chevronPositions[i].chevName = element.find('.text-edit').val();
+                    positionChanged = true;
+                }
+            }
+        }
+    }
+
+    // check if the previous properties were saved
+    function validateUnsavedProperties() {
+        if ($("#properties_ename").val() !== '' && !saveClicked) {
+            alert("Please save entered properties first");
+            return false;
+        } else {
+            saveClicked = false;
+            return true;
+        }
+    }
+
+    //display properties for chevron if it was not displayed before
+    function viewPropertyForNewChevron(chevronText) {
+        if (chevronText == $("#properties_ename").val()) {
+            if (previousName !== chevronText) {
+                previousName = chevronText;
+                viewElementProperties(mainProcess, specializations, chevronText);
+            }
+        }
+        if (chevronText !== $("#properties_ename").val()) {
+            if (previousName !== chevronText) {
+                previousName = chevronText;
+                viewElementProperties(mainProcess, specializations, chevronText);
+            }
+        }
+    }
+
+    // Set incremental ids for elements that are added to the canvas
+    function setIdsForElements(defaultId, element) {
+        if (defaultId == 0 && elementsOnCanvas.length == 0) //first element
+        {
+            isFirstElement = true;
+            defaultId = ++count;
+            elementsOnCanvas.push(defaultId);
+            element.find('.text-edit').attr('name', defaultId);
+            setChevronPositions(element); //save position details for chevron
+        }
+        if (defaultId == 0 && elementsOnCanvas.length !== 0) //not first element
+        {
+            var lastLocation = elementsOnCanvas.length;
+            var temp = elementsOnCanvas[lastLocation - 1];
+            defaultId = temp + 1;
+            elementsOnCanvas.push(defaultId);
+            element.find('.text-edit').attr('name', defaultId);
+            setChevronPositions(element);
+        }
+    }
+
+    // get the row of the element
+    function getAlignedGridRow(yPosition) {
+        var rowId;
+        // Canvas y axis ranges for each row definition
+        var range1 = 0;
+        var range2 = 97;
+        var range3 = 98;
+        var range4 = 217;
+        var range5 = 218;
+        var range6 = 321;
+        var range7 = 322;
+        if (range1 < yPosition && yPosition <= range2) {
+            rowId = 0;
+        } else if (range3 < yPosition && yPosition <= range4) {
+            rowId = 1;
+        } else if (range5 < yPosition && yPosition <= range6) {
+            rowId = 2;
+        } else if (range7 < yPosition) {
+            rowId = 3;
+        }
+        return rowId;
+    }
+
+    // add taken grid position (row/column)
+    function addNewGridPositionToList(updatedRow, updatedCell, element) {
+        var id = element.attr('id');
+        var elementExists = false;
+        for (var i = 0; i < occupiedGridPositions.length; i++) {
+            if (occupiedGridPositions[i].id == id) {
+                elementExists = true;
+            }
+        }
+        if (!elementExists) {
+            occupiedGridPositions.push({ //save the taken cell position of the grid
+                id: id,
+                row: updatedRow,
+                cell: updatedCell
             });
         }
-        // update stored coordinates of each chevron position
-        function updateChevronPositions(element) {
-            var id = element.find('.text-edit').attr('name');
-            var xValue = parseInt(element.css("left"), 10);
-            var yValue = parseInt(element.css("top"), 10);
-            for (var i = 0; i < chevronPositions.length; i++) {
-                if (id == chevronPositions[i].chevId) {
-                    if (chevronPositions[i].xVal != xValue) {
-                        chevronPositions[i].xVal = xValue;
-                        chevronPositions[i].yVal = yValue;
-                        chevronPositions[i].chevName = element.find('.text-edit').val();
-                        positionChanged = true;
-                    }
-                }
+    }
+
+    //remove previous grid position(row/column)
+    function removeOldGridPositionFromList(originalRow, originalCell, element) {
+        var id = element.attr('id');
+        for (var i = 0; i < occupiedGridPositions.length; i++) {
+            if (occupiedGridPositions[i].id == id) {
+                occupiedGridPositions.splice(i, 1);
             }
         }
-        // check if the previous properties were saved 
-        function validateUnsavedProperties() {
-            if ($("#properties_ename").val() !== '' && !saveClicked) {
-                alert("Please save entered properties first");
+    }
+
+    // replace the element to previous position
+    function revertToOldPosition(clickedElement, originalXPosition, originalYPosition) {
+        clickedElement.css("left", originalXPosition);
+        clickedElement.css("top", originalYPosition);
+    }
+
+    // add the element to given row and cell
+    function addElementToGrid(row, cell, element) {
+        var proceed = false;
+        var available = checkPositionAvailability(cell, row); //check if position is not taken
+        if (!available) // if original spot is taken
+        {
+            var newCell = ++cell;
+            proceed = checkPositionAvailability(newCell, row); //check for next spot
+            if (!proceed) //if new spot is also taken
+            {
+                alert('Please add element to available location');
                 return false;
             } else {
-                saveClicked = false;
-                return true;
+                proceed == true;
             }
         }
-        //display properties for chevron if it was not displayed before
-        function viewPropertyForNewChevron(chevronText) {
-            if (chevronText == $("#properties_ename").val()) {
-                if (previousName !== chevronText) {
-                    previousName = chevronText;
-                    viewElementProperties(mainProcess, specializations, chevronText);
-                }
-            }
-            if (chevronText !== $("#properties_ename").val()) {
-                if (previousName !== chevronText) {
-                    previousName = chevronText;
-                    viewElementProperties(mainProcess, specializations, chevronText);
-                }
-            }
+        if (available || proceed) { // if the suggested position is not occupied
+            setPositionForElement(row, cell, element); //set css top/left values
+            storeLocationOfElement(element, row, cell);
+            element.appendTo('#dropArea'); //add element to canvas
+            return true;
         }
-        // Set incremental ids for elements that are added to the canvas
-        function setIdsForElements(defaultId, element) {
-            if (defaultId == 0 && elementsOnCanvas.length == 0) //first element
-            {
-                isFirstElement = true;
-                defaultId = ++count;
-                elementsOnCanvas.push(defaultId);
-                element.find('.text-edit').attr('name', defaultId);
-                setChevronPositions(element); //save position details for chevron
-            }
-            if (defaultId == 0 && elementsOnCanvas.length !== 0) //not first element 
-            {
-                var lastLocation = elementsOnCanvas.length;
-                var temp = elementsOnCanvas[lastLocation - 1];
-                defaultId = temp + 1;
-                elementsOnCanvas.push(defaultId);
-                element.find('.text-edit').attr('name', defaultId);
-                setChevronPositions(element);
-            }
-        }
-        // get the row of the element 
-        function getAlignedGridRow(yPosition) {
-            var rowId;
-            // Canvas y axis ranges for each row definition
-            var range1 = 0;
-            var range2 = 97;
-            var range3 = 98;
-            var range4 = 217;
-            var range5 = 218;
-            var range6 = 321;
-            var range7 = 322;
-            if (range1 < yPosition && yPosition <= range2) {
-                rowId = 0;
-            } else if (range3 < yPosition && yPosition <= range4) {
-                rowId = 1;
-            } else if (range5 < yPosition && yPosition <= range6) {
-                rowId = 2;
-            } else if (range7 < yPosition) {
-                rowId = 3;
-            }
-            return rowId;
-        }
-        // add taken grid position (row/column)
-        function addNewGridPositionToList(updatedRow, updatedCell, element) {
-            var id = element.attr('id');
-            var elementExists = false;
+    }
+
+    //store newly accessed row and cell of the grid
+    function storeLocationOfElement(element, row, cell) {
+        var elementId = element.attr('id');
+        var elementAdded = false;
+        if (occupiedGridPositions.length !== 0) { //if not first element
             for (var i = 0; i < occupiedGridPositions.length; i++) {
-                if (occupiedGridPositions[i].id == id) {
-                    elementExists = true;
+                if (occupiedGridPositions[i].id == elementId) {
+                    elementAdded = true;
                 }
             }
-            if (!elementExists) {
-                occupiedGridPositions.push({ //save the taken cell position of the grid
-                    id: id,
-                    row: updatedRow,
-                    cell: updatedCell
-                });
-            }
-        }
-        //remove previous grid position(row/column)
-        function removeOldGridPositionFromList(originalRow, originalCell, element) {
-            var id = element.attr('id');
-            for (var i = 0; i < occupiedGridPositions.length; i++) {
-                if (occupiedGridPositions[i].id == id) {
-                    occupiedGridPositions.splice(i, 1);
-                }
-            }
-        }
-        // replace the element to previous position
-        function revertToOldPosition(clickedElement, originalXPosition, originalYPosition) {
-            clickedElement.css("left", originalXPosition);
-            clickedElement.css("top", originalYPosition);
-        }
-        // add the element to given row and cell
-        function addElementToGrid(row, cell, element) {
-            var proceed = false;
-            var available = checkPositionAvailability(cell, row); //check if position is not taken
-            if (!available) // if original spot is taken
-            {
-                var newCell = ++cell;
-                proceed = checkPositionAvailability(newCell, row); //check for next spot
-                if (!proceed) //if new spot is also taken
-                {
-                    alert('Please add element to available location');
-                    return false;
-                } else {
-                    proceed == true;
-                }
-            }
-            if (available || proceed) { // if the suggested position is not occupied
-                setPositionForElement(row, cell, element); //set css top/left values 
-                storeLocationOfElement(element, row, cell);
-                element.appendTo('#dropArea'); //add element to canvas
-                return true;
-            }
-        }
-        //store newly accessed row and cell of the grid
-        function storeLocationOfElement(element, row, cell) {
-            var elementId = element.attr('id');
-            var elementAdded = false;
-            if (occupiedGridPositions.length !== 0) { //if not first element
-                for (var i = 0; i < occupiedGridPositions.length; i++) {
-                    if (occupiedGridPositions[i].id == elementId) {
-                        elementAdded = true;
-                    }
-                }
-                if (!elementAdded) {
-                    occupiedGridPositions.push({ //save the taken cell position of the grid
-                        id: elementId,
-                        row: row,
-                        cell: cell
-                    });
-                }
-            } else {
+            if (!elementAdded) {
                 occupiedGridPositions.push({ //save the taken cell position of the grid
                     id: elementId,
                     row: row,
                     cell: cell
                 });
             }
+        } else {
+            occupiedGridPositions.push({ //save the taken cell position of the grid
+                id: elementId,
+                row: row,
+                cell: cell
+            });
         }
-        // retrn the cell number for given element id
-        function getGridCellForElementId(id) {
-            for (var i = 0; i < occupiedGridPositions.length; i++) {
-                if (id == occupiedGridPositions[i].id) {
-                    return occupiedGridPositions[i].cell;
+    }
+
+    // retrn the cell number for given element id
+    function getGridCellForElementId(id) {
+        for (var i = 0; i < occupiedGridPositions.length; i++) {
+            if (id == occupiedGridPositions[i].id) {
+                return occupiedGridPositions[i].cell;
+            }
+        }
+    }
+
+    //return row number of given element id
+    function getGridRowForElementId(id) {
+        for (var i = 0; i < occupiedGridPositions.length; i++) {
+            if (id == occupiedGridPositions[i].id) {
+                return occupiedGridPositions[i].row;
+            }
+        }
+    }
+
+    //return the chevron name of given element id
+    function getChevronNameForId(id) {
+        if (chevronNames.length == 0) { //if no values are added for chevrons
+            return;
+        } else {
+            for (var i = 0; i < chevronNames.length; i++) {
+                if (chevronNames[i].id == id) { //if matching element found
+                    return chevronNames[i].name;
                 }
             }
         }
-        //return row number of given element id 
-        function getGridRowForElementId(id) {
-            for (var i = 0; i < occupiedGridPositions.length; i++) {
-                if (id == occupiedGridPositions[i].id) {
-                    return occupiedGridPositions[i].row;
+    }
+
+    //add found element as a successor for current element
+    function addElementAsSuccessor(element, foundElementId) {
+        var defaultPredecessor = "not declared";
+        var successorAlreadyAdded = false;
+        var currentId = element.find('.text-edit').attr('name'); //get current element's id
+        var successor = getChevronNameForId(foundElementId); //get name text of the found element
+        for (var i = 0; i < specializations.length; i++) {
+            if (specializations[i].id == currentId) { //this element has previous records
+                if (specializations[i].successor == successor) { //if this predecessor is already added
+                    successorAlreadyAdded = true;
+                    return;
                 }
             }
         }
-        //return the chevron name of given element id
-        function getChevronNameForId(id) {
-            if (chevronNames.length == 0) { //if no values are added for chevrons
-                return;
-            } else {
-                for (var i = 0; i < chevronNames.length; i++) {
-                    if (chevronNames[i].id == id) { //if matching element found
-                        return chevronNames[i].name;
-                    }
+        if (!successorAlreadyAdded) {
+            specializations.push({
+                id: currentId,
+                predecessorId: defaultPredecessor,
+                predecessor: defaultPredecessor,
+                successorId: foundElementId,
+                successor: successor
+            });
+        }
+    }
+
+    //add found element as a predecessor for current element
+    function addElementAsPredecessor(element, foundElementId) {
+        var defaultSuccessor = "not declared";
+        var predecessorAlreadyAdded = false;
+        var currentId = element.find('.text-edit').attr('name'); //get current element's id
+        var predecessor = getChevronNameForId(foundElementId); //get name text of the found element
+        for (var i = 0; i < specializations.length; i++) {
+            if (specializations[i].id == currentId) { //this element has previous records
+                if (specializations[i].predecessor == predecessor) { //if this predecessor is already added
+                    predecessorAlreadyAdded = true;
+                    return;
                 }
             }
         }
-        //add found element as a successor for current element
-        function addElementAsSuccessor(element, foundElementId) {
-            var defaultPredecessor = "not declared";
-            var successorAlreadyAdded = false;
-            var currentId = element.find('.text-edit').attr('name'); //get current element's id 
-            var successor = getChevronNameForId(foundElementId); //get name text of the found element
-            for (var i = 0; i < specializations.length; i++) {
-                if (specializations[i].id == currentId) { //this element has previous records
-                    if (specializations[i].successor == successor) { //if this predecessor is already added
-                        successorAlreadyAdded = true;
-                        return;
-                    }
+        if (!predecessorAlreadyAdded) {
+            specializations.push({
+                id: currentId,
+                predecessorId: foundElementId,
+                predecessor: predecessor,
+                successorId: defaultSuccessor,
+                successor: defaultSuccessor
+            });
+        }
+    }
+
+    //Find the pre/suc relationships for element
+    function addRelationsForElement(element) {
+        var elementId = element.attr('id');
+        var currentElementCell = getGridCellForElementId(elementId); //get current element cell
+        if (connections.length == 0) { //no connections added
+            return;
+        } else { //if connections are found
+            var connectedElementId = 0;
+            for (var i = 0; i < connections.length; i++) { //while connections
+                if (connections[i].targetId == elementId) { //if element id is found in target
+                    connectedElementId = connections[i].sourceId;
                 }
-            }
-            if (!successorAlreadyAdded) {
-                specializations.push({
-                    id: currentId,
-                    predecessorId: defaultPredecessor,
-                    predecessor: defaultPredecessor,
-                    successorId: foundElementId,
-                    successor: successor
-                });
-            }
-        }
-        //add found element as a predecessor for current element
-        function addElementAsPredecessor(element, foundElementId) {
-            var defaultSuccessor = "not declared";
-            var predecessorAlreadyAdded = false;
-            var currentId = element.find('.text-edit').attr('name'); //get current element's id 
-            var predecessor = getChevronNameForId(foundElementId); //get name text of the found element
-            for (var i = 0; i < specializations.length; i++) {
-                if (specializations[i].id == currentId) { //this element has previous records
-                    if (specializations[i].predecessor == predecessor) { //if this predecessor is already added
-                        predecessorAlreadyAdded = true;
-                        return;
-                    }
+                if (connections[i].sourceId == elementId) { //if element id is found in source
+                    connectedElementId = connections[i].targetId;
                 }
-            }
-            if (!predecessorAlreadyAdded) {
-                specializations.push({
-                    id: currentId,
-                    predecessorId: foundElementId,
-                    predecessor: predecessor,
-                    successorId: defaultSuccessor,
-                    successor: defaultSuccessor
-                });
-            }
+                var connectedElementCell = getGridCellForElementId(connectedElementId); //get cell of connected element
+                if (currentElementCell > connectedElementCell && connectedElementId != 0) { //current found a preceeding
+                    addElementAsPredecessor(element, connectedElementId); //add found element as a predecessor
+                }
+                if (currentElementCell < connectedElementCell && connectedElementId != 0) { //current found a succeeding
+                    addElementAsSuccessor(element, connectedElementId); //add found element as a successor
+                }
+            } //end of for loop
         }
-        //Find the pre/suc relationships for element
-        function addRelationsForElement(element) {
-            var elementId = element.attr('id');
-            var currentElementCell = getGridCellForElementId(elementId); //get current element cell
-            if (connections.length == 0) { //no connections added
-                return;
-            } else { //if connections are found
-                var connectedElementId = 0;
-                for (var i = 0; i < connections.length; i++) { //while connections
-                    if (connections[i].targetId == elementId) { //if element id is found in target
-                        connectedElementId = connections[i].sourceId;
-                    }
-                    if (connections[i].sourceId == elementId) { //if element id is found in source
-                        connectedElementId = connections[i].targetId;
-                    }
-                    var connectedElementCell = getGridCellForElementId(connectedElementId); //get cell of connected element
-                    if (currentElementCell > connectedElementCell && connectedElementId != 0) { //current found a preceeding
-                        addElementAsPredecessor(element, connectedElementId); //add found element as a predecessor
-                    }
-                    if (currentElementCell < connectedElementCell && connectedElementId != 0) { //current found a succeeding
-                        addElementAsSuccessor(element, connectedElementId); //add found element as a successor
-                    }
-                } //end of for loop
-            }
-        }
-        //clear all stored values on canvas reset 
-        function clearAllArrays() {
-            mainProcess = [];
-            viewForName = [];
-            elementsOnCanvas = [];
-            specializations = [];
-            chevrons = [];
-            formatting = [];
-            chevronPositions = [];
-            processTokens = [];
-            occupiedGridPositions = [];
-            connections = [];
-            chevrons = [];
-        }
-        // Clear canvas grid positions on reset
-    $("#removeDiagram").click(function() {
+    }
+
+    //clear all stored values on canvas reset
+    function clearAllArrays() {
+        mainProcess = [];
+        viewForName = [];
+        elementsOnCanvas = [];
+        specializations = [];
+        chevrons = [];
+        formatting = [];
+        chevronPositions = [];
+        processTokens = [];
+        occupiedGridPositions = [];
+        connections = [];
+        chevrons = [];
+    }
+
+    // Clear canvas grid positions on reset
+    $("#removeDiagram").click(function () {
         clearAllFields(); //Empty all table fields for previous chevrons
         clearAllArrays(); // Empty all previously made connections/relations
         jsPlumb.detachEveryConnection();
@@ -677,14 +710,14 @@ jsPlumb.ready(function(e) {
         }
     });
     //show/hide connections on toggle
-    $("#connectionVisibility").click(function() {
+    $("#connectionVisibility").click(function () {
         if ($.trim($(this).text()) === 'Hide Connections') {
-            $('.chevron').each(function(index) {
+            $('.chevron').each(function (index) {
                 jsPlumb.hide(this.id, true);
             });
             $(this).text('Show Connections');
         } else {
-            $('.chevron').each(function(index) {
+            $('.chevron').each(function (index) {
                 jsPlumb.show(this.id, true);
             });
             $(this).text('Hide Connections');
@@ -707,7 +740,8 @@ jsPlumb.ready(function(e) {
         }
         return dragged;
     }
-    // If chevron element is clicked 
+
+    // If chevron element is clicked
     function divClicked() {
         var isFirstElement = false;
         var clickedElement = $(this);
@@ -735,7 +769,7 @@ jsPlumb.ready(function(e) {
         // make element draggable  
         jsPlumb.draggable(clickedElement, {
             containment: 'parent',
-            stop: function(event) {
+            stop: function (event) {
                 // var element = $(this);
                 var dragState = checkForDragChange(clickedElement);
                 if (dragState) { //only if the element was moved to a new location
@@ -772,7 +806,7 @@ jsPlumb.ready(function(e) {
             clickedElement.find('.text-edit').focus();
             clickedElement.find('.text-edit').css('background-color', 'white');
             // user is finished adding chevron name
-            clickedElement.find('.text-edit').userInputAdded(function() {
+            clickedElement.find('.text-edit').userInputAdded(function () {
                 var tempId = clickedElement.find('.text-edit').attr('name');
                 iconId = tempId;
                 if ($.inArray(tempId, validElementIds) > -1) { // editing the name
@@ -816,7 +850,8 @@ jsPlumb.ready(function(e) {
             }
         }
     }
-    jsPlumb.bind("connectionDrag", function(info) { //on dragging thr connections
+
+    jsPlumb.bind("connectionDrag", function (info) { //on dragging thr connections
         jsPlumb.selectEndpoints({
             element: info.sourceId
         }).setPaintStyle({
@@ -831,7 +866,8 @@ jsPlumb.ready(function(e) {
             isSource: true,
             maxConnections: -1,
             anchors: [
-                [0.2, 0.5], "Left"
+                [0.2, 0.5],
+                "Left"
             ],
             endpoint: ["Dot", {
                 radius: 4
@@ -930,7 +966,8 @@ jsPlumb.ready(function(e) {
             isSource: true,
             maxConnections: -1,
             anchors: [
-                [0.98, 0.5], "Right"
+                [0.98, 0.5],
+                "Right"
             ],
             endpoint: ["Dot", {
                 radius: 4
@@ -963,13 +1000,13 @@ jsPlumb.ready(function(e) {
         jsPlumb.addEndpoint(element, endpointOptions1);
         jsPlumb.addEndpoint(element, endpointOptions2);
         jsPlumb.addEndpoint(element, endpointOptions3);
-        element.hover(function() {
+        element.hover(function () {
             jsPlumb.selectEndpoints({
                 element: $(this)
             }).setPaintStyle({
                 fillStyle: "FF0000"
             });
-        }, function() {
+        }, function () {
             jsPlumb.selectEndpoints({
                 element: $(this)
             }).setPaintStyle({
@@ -978,30 +1015,30 @@ jsPlumb.ready(function(e) {
         });
     } // function close
     // On time out/ click on canvas add chevron name to table name property
-    (function($) {
+    (function ($) {
         $.fn.extend({
-            userInputAdded: function(callback, timeout) {
-                var DEFAULT_TIMEOUT =100e3;
+            userInputAdded: function (callback, timeout) {
+                var DEFAULT_TIMEOUT = 100e3;
                 timeout = timeout || DEFAULT_TIMEOUT; // 10 second default timeout
                 var timeoutReference,
-                    userInputAdded = function(instance) {
+                    userInputAdded = function (instance) {
                         if (!timeoutReference) return;
                         timeoutReference = null;
                         callback.call(instance);
                     };
-                return this.each(function(i, instance) {
+                return this.each(function (i, instance) {
                     var $instance = $(instance);
-                    $instance.is(':input') && $instance.on('keyup keypress', function(e) {
+                    $instance.is(':input') && $instance.on('keyup keypress', function (e) {
                         if (e.type == 'keyup' && e.keyCode != 8) { // if user is still typing/deleting
                             return;
                         }
                         if (timeoutReference) { //if timeout is set reset the time
                             clearTimeout(timeoutReference);
                         }
-                        timeoutReference = setTimeout(function() { //timeout passed auto update field name
+                        timeoutReference = setTimeout(function () { //timeout passed auto update field name
                             userInputAdded(instance);
                         }, timeout);
-                    }).on('blur', function() { // if user is leaves the field 
+                    }).on('blur', function () { // if user is leaves the field
                         userInputAdded(instance);
                     });
                 });
@@ -1017,6 +1054,7 @@ jsPlumb.ready(function(e) {
         $("#properties_Associated_process_emodels").val("");
         $("#properties_eDescription").val("");
     }
+
     //at page load
     jsPlumb.setContainer($('#dropArea'));
     $("#fullProps").show();
@@ -1088,8 +1126,10 @@ jsPlumb.ready(function(e) {
                 name: mainProcessName,
                 type: "POST"
             }
-        }).done(function(result) {});
+        }).done(function (result) {
+        });
     }
+
     //Add a new row dynamically after the last available row
     function createDynamicRow() {
         var newLastId;
@@ -1098,6 +1138,7 @@ jsPlumb.ready(function(e) {
         $('#canvasGrid tr').last().after('<tr id=' + newLastId + '><td class="canvasCell">1</td><td class="canvasCell">2</td><td class="canvasCell">3</td><td class="canvasCell">4</td></tr>');
         return newLastId;
     }
+
     // Decide the suitable row id based on element position
     function getMatchingGridRow(element) {
         var rowId; // store row id the element belongs to
@@ -1120,6 +1161,7 @@ jsPlumb.ready(function(e) {
         }
         return rowId;
     }
+
     // Add a new cell dynamically after the last available cell
     function addDynamicCell(elementX, element) {
         // Canvas x axis ranges for each cell definition
@@ -1138,6 +1180,7 @@ jsPlumb.ready(function(e) {
         }
         return cellId;
     }
+
     // Decide suitable cell id  based on the element position
     function getMatchingGridCell(row, element) {
         var cellId;
@@ -1164,6 +1207,7 @@ jsPlumb.ready(function(e) {
         }
         return cellId;
     }
+
     //Check if suggested row/cell is free
     function checkPositionAvailability(cell, row) {
         for (var i = 0; i < occupiedGridPositions.length; i++) {
@@ -1173,10 +1217,11 @@ jsPlumb.ready(function(e) {
         }
         return true;
     }
+
     // Set the element on grid with default spacing
     function setPositionForElement(row, cell, element) {
         var defaultXGap = 166;
-        var defaultYGap = 117;;
+        var defaultYGap = 117;
         var defaultX = 15; // starting x position
         var defaultY = 17; // starting y position
         if (row == 0 && cell == 0) { // position(0,0) element
@@ -1196,6 +1241,7 @@ jsPlumb.ready(function(e) {
             element.css("top", defaultY);
         }
     }
+
     // Remove cell/row combination from the grid
     function removePositionFromGrid(element) {
         var elementId = element.attr('id');
@@ -1203,6 +1249,7 @@ jsPlumb.ready(function(e) {
         var elementRow = getGridRowForElementId(elementId);
         removeOldGridPositionFromList(elementRow, elementCell, element);
     }
+
     //Remove element from the mainProcess list
     function removeFromMainProcessList(elementId) {
         if (mainProcess.length > 0) { //if it has elements 
@@ -1213,6 +1260,7 @@ jsPlumb.ready(function(e) {
             }
         }
     }
+
     // Remove element from the xml structure storing list
     function removeFromXmlStoreList(elementId) {
         if (chevrons.length > 0) {
@@ -1223,6 +1271,7 @@ jsPlumb.ready(function(e) {
             }
         }
     }
+
     // Remove connections attached to the given element
     function removeRelatedConnectionsFromList(element) {
         var elementId = element.attr('id');
@@ -1243,7 +1292,8 @@ jsPlumb.ready(function(e) {
             }
         }
     }
-    // remove selected element 
+
+    // remove selected element
     function removeElement(element) {
         var id = element.find('.text-edit').attr('name');
         removeFromMainProcessList(id);
@@ -1254,6 +1304,7 @@ jsPlumb.ready(function(e) {
         jsPlumb.detachAllConnections(element); //remove added connections from element
         element.remove(); //remove element
     }
+
     // Get description value for the given element id
     function getDescriptionForElement(id) {
         var descriptionValue = "no description added";
@@ -1268,19 +1319,20 @@ jsPlumb.ready(function(e) {
         }
         return descriptionValue;
     }
+
     // at initial page load
-    $(function() {
+    $(function () {
         $("#fullProps").tabs(); //show main process table
         $("#elementProps").tabs(); //show element table
         var url = "../chevron/apis/processes?type=process"; // url to get all associated process names
         $("#properties_Associated_process_emodels").tokenInput(url, {
             preventDuplicates: true,
             theme: "facebook",
-            onResult: function(results) {
+            onResult: function (results) {
                 var assets = {
                     data: []
                 }
-                $.each(results, function() {
+                $.each(results, function () {
                     for (var i in results) {
                         var item = results[i];
                         assets.data.push({
@@ -1288,12 +1340,12 @@ jsPlumb.ready(function(e) {
                             "id": item.id,
                             "name": item.attributes.overview_name
                         });
-                    };
+                    }
                 });
                 return assets.data;
                 console.log('' + JSON.stringify(arguments));
             },
-            onAdd: function(item) {
+            onAdd: function (item) {
                 var name = item.name;
                 $("#properties_Associated_process_emodels").val(name);
                 processTokens.push({
@@ -1301,7 +1353,7 @@ jsPlumb.ready(function(e) {
                     processName: item.name
                 });
             },
-            tokenFormatter: function(item) {
+            tokenFormatter: function (item) {
                 return "<li><a href =../process/details/" + item.id + ">" + item.name + " </a></li>"
             }
         });
@@ -1316,7 +1368,7 @@ jsPlumb.ready(function(e) {
             accept: '.chevron-toolbox',
             activeClass: "drop-area",
             containment: 'dropArea',
-            drop: function(e, ui) {
+            drop: function (e, ui) {
                 droppedElement = ui.helper.clone();
                 ui.helper.remove();
                 $(droppedElement).removeAttr("class");
@@ -1336,15 +1388,15 @@ jsPlumb.ready(function(e) {
                     // On click of descriptor switch of element give pop up
                     descriptorSwitch.popover({
                         html: true,
-                        content: function() {
+                        content: function () {
                             var element = $(this);
                             var currentId = element.attr('id');
                             return getDescriptionForElement(currentId);
                         }
-                    }).click(function(e) {
+                    }).click(function (e) {
                         e.stopPropagation();
                     });
-                    droppedElement.bind("dblclick", function(e) { // remove element on double click
+                    droppedElement.bind("dblclick", function (e) { // remove element on double click
                         var selectedElement = $(this);
                         removeElement(selectedElement);
                     });
