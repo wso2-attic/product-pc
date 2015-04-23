@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-
-   $(document).ready(function() {
-
-     var url = "/publisher/asts/eprocess/apis/processes?type=eprocess";
-
-     //Predecessors Loading
+$(document).ready(function() {
+ var url = "/publisher/asts/eprocess/apis/processes?type=eprocess";
+  //Converting the input field to token input
+  //input fetches data and populates the field
      $("#properties_predecessors").tokenInput(url, {
        preventDuplicates: true, theme:"facebook",
        onResult: function(results) {
@@ -34,7 +32,6 @@
                "id": item.id,
                "name": item.attributes.overview_name
              });
-
            };
          });
          return assets.data;
@@ -43,12 +40,10 @@
          return "<li><a href = /publisher/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
        }
      });
-
-
-     //Sucessors Loading
+     //Converting the input field to token input
+     //input fetches data and populates the field
      $("#properties_sucessors").tokenInput(url, {
        preventDuplicates: true,theme:"facebook",
-
        onResult: function(results) {
          var assets = {
            data: []
@@ -70,10 +65,8 @@
          return "<li><a href = /publisher/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
        }
      });
-
-
-     //Generaliztion Loading
-
+     //Converting the input field to token input
+     //input fetches data and populates the field
      $("#properties_generalizations").tokenInput(url, {
        preventDuplicates: true,theme:"facebook",
        onResult: function(results) {
@@ -96,9 +89,8 @@
          return "<li><a href = /publisher/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
        }
      });
-
-     //specialization loading
-
+     //Converting the input field to token input
+     //input fetches data and populates the field
      $("#properties_specializations").tokenInput(url, {
        preventDuplicates: true,theme:"facebook",
        onResult: function(results) {
@@ -121,4 +113,4 @@
          return "<li><a href = /publisher/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
        }
      });
-   });
+});

@@ -24,61 +24,53 @@ var assetLinks = function(user) {
 };
 
 asset.manager = function(ctx) {
-    return {
-        create: function(options) {
+ return {
+     create: function(options) {
+         var ref = require('utils').time;
+         var GovernanceConstants = Packages.org.wso2.carbon.governance.api.util;
+         //Check if the options object has a createdtime attribute and populate it
+         if ((options.attributes) && (options.attributes.hasOwnProperty('overview_createdtime'))) {
+             options.attributes.overview_createdtime = ref.getCurrentTime();
+         }
+         this._super.create.call(this, options);
+         var asset = this.get(options.id);
 
-            var ref = require('utils').time;
-            var GovernanceConstants = Packages.org.wso2.carbon.governance.api.util;
-            //Check if the options object has a createdtime attribute and populate it 
-            if ((options.attributes) && (options.attributes.hasOwnProperty('overview_createdtime'))) {
-                options.attributes.overview_createdtime = ref.getCurrentTime();
-            }
+          //Adding associations for properties_predecessors
+         if (asset.attributes.properties_predecessors != null) {
+             var tempArray1 = asset.attributes.properties_predecessors.split("\,");
 
-            this._super.create.call(this, options);
+             for (var i = 0; i < tempArray1.length; i++) {
 
-            var asset = this.get(options.id);
-            
-	    //Adding Associatin for Predecessors
-            if (asset.attributes.properties_predecessors != null) {
-                var tempArray1 = asset.attributes.properties_predecessors.split("\,");
-
-                for (var i = 0; i < tempArray1.length; i++) {
-
-                    var preAsset = this.get(tempArray1[i]);
-                    this.registry.associate(asset.path, preAsset.path, "Predecessors");
-                }
-            }
-
-
-            //Adding Associatin for properties_specializations
-            if (asset.attributes.properties_specializations != null) {
-                var tempArray2 = asset.attributes.properties_specializations.split("\,");
-                for (var i = 0; i < tempArray2.length; i++) {
-                    var specAsset = this.get(tempArray2[i]);
-                    this.registry.associate(asset.path, specAsset.path, "Specializations");
-                }
-            }
-
-            //Adding Associatin for properties_generalizations
-            if (asset.attributes.properties_generalizations != null) {
-                var tempArray3 = asset.attributes.properties_generalizations.split("\,");
-                for (var i = 0; i < tempArray3.length; i++) {
-                    var genAsset = this.get(tempArray3[i]);
-                    this.registry.associate(asset.path, genAsset.path, "Generalizations");
-                }
-            }
-
-
-            //Adding Associatin for properties_successor
-            if (asset.attributes.properties_successors != null) {
-                var tempArray4 = asset.attributes.properties_successors.split("\,");
-                for (var i = 0; i < tempArray4.length; i++) {
-                    var sucAsset = this.get(tempArray4[i]);
-                    this.registry.associate(asset.path, sucAsset.path, "Successors");
-                }
-            }
-        }
-    };
+                 var preAsset = this.get(tempArray1[i]);
+                 this.registry.associate(asset.path, preAsset.path, "Predecessors");
+             }
+         }
+         //Adding associations for properties_specializations
+         if (asset.attributes.properties_specializations != null) {
+             var tempArray2 = asset.attributes.properties_specializations.split("\,");
+             for (var i = 0; i < tempArray2.length; i++) {
+                 var specAsset = this.get(tempArray2[i]);
+                 this.registry.associate(asset.path, specAsset.path, "Specializations");
+             }
+         }
+         //Adding associations for properties_generalizations
+         if (asset.attributes.properties_generalizations != null) {
+             var tempArray3 = asset.attributes.properties_generalizations.split("\,");
+             for (var i = 0; i < tempArray3.length; i++) {
+                 var genAsset = this.get(tempArray3[i]);
+                 this.registry.associate(asset.path, genAsset.path, "Generalizations");
+             }
+         }
+         //Adding associations for properties_successors
+         if (asset.attributes.properties_successors != null) {
+             var tempArray4 = asset.attributes.properties_successors.split("\,");
+             for (var i = 0; i < tempArray4.length; i++) {
+                 var sucAsset = this.get(tempArray4[i]);
+                 this.registry.associate(asset.path, sucAsset.path, "Successors");
+             }
+         }
+     }
+ };
 };
 
 asset.server = function(ctx) {

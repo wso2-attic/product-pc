@@ -31,7 +31,6 @@ var assetLinks = function (user) {
     };
 };
 
-
 asset.server = function(ctx) {
     var type = ctx.type;
     return {

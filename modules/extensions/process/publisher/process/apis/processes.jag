@@ -1,5 +1,5 @@
 <!--/*
-*  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *  WSO2 Inc. licenses this file to you under the Apache License,
 *  Version 2.0 (the "License"); you may not use this file except
@@ -18,17 +18,14 @@
 */-->
 
 <%
-
 require('/modules/publisher.js').exec(function(ctx) {
 	var log = new Log();
 	var req = ctx.request;
 	var res = ctx.response;
-
 	var q = req.getParameter('q');
 	var type = req.getParameter('type');
 	var asset = require('rxt').asset;
 	var server = require('store').server;
-
 	if(q){
 		var user = server.current(ctx.session);
 		if(user){			
@@ -40,17 +37,11 @@ require('/modules/publisher.js').exec(function(ctx) {
 		}
 		else{
 			log.error('User is not authenticated/ authorized to perform the request');		
-			
 		}
-		
 	}
 	else{
 		log.error('The endpoint requires a query parameter sent in as q.');
 		res.sendError(400,'The endpoint requires a query parameter sent in as the q');
-		
 	}
-
 }, request, response, session);
-
-
 %>

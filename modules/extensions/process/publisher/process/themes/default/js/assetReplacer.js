@@ -15,10 +15,6 @@
  */
 
 $(document).ready(function() {
-	var assets = {
-		data: []
-	};
-
 
 	var ids_pre = "";
 	var ids_suc = "";
@@ -27,15 +23,14 @@ $(document).ready(function() {
 	var assets = {
 		data: []
 	}
-
 	var processName = $("#processName").text().trim();
 
-
 	$.get( "/publisher/asts/process/apis/content", { name: processName, reqType:"get"} )
-  .done(function( result ) {
+     .done(function( result ) {
     $("#ast-description").append(result);
-  });
+    });
 
+    //Acquiring the asset ids
 	$("#R1").each(function() {
 		ids_pre = $(this).find("#td_pre").text();
 		$(this).find("#td_pre").empty();
@@ -53,14 +48,13 @@ $(document).ready(function() {
 		$(this).find("#td_spec").empty();
 	});
 
-
-
+    //Splitting and isolating asset ids
 	var tempPre = ids_pre.split(",");
 	var tempSuc = ids_suc.split(",");
 	var tempGen = ids_gen.split(",");
 	var tempSpe = ids_spe.split(",");
 
-
+    //Retiriving assets to identify assets using asset id and replace ids with names and link
 	$.get("/publisher/apis/assets?type=process", function(response) {
 		for (var i in response.data) {
 			var item = response.data[i];
@@ -69,9 +63,7 @@ $(document).ready(function() {
 				"name": item.attributes.overview_name
 			});
 		}
-
-
-		//loading the Pre 
+		//replacing the ids with the asset name and the link
 		for (var i = 0; i < tempPre.length; i++) {
 			for (var j in assets.data) {
 				if (tempPre[i] === assets.data[j].id) {
@@ -81,8 +73,7 @@ $(document).ready(function() {
 				}
 			}
 		};
-
-		//loading the Pre 
+		//replacing the ids with the asset name and the link
 		for (var i = 0; i < tempSuc.length; i++) {
 			for (var j in assets.data) {
 				if (tempSuc[i] === assets.data[j].id) {
@@ -92,8 +83,7 @@ $(document).ready(function() {
 				}
 			}
 		};
-
-		//loading the Pre 
+		//replacing the ids with the asset name and the link
 		for (var i = 0; i < tempGen.length; i++) {
 			for (var j in assets.data) {
 				if (tempGen[i] === assets.data[j].id) {
@@ -103,8 +93,7 @@ $(document).ready(function() {
 				}
 			}
 		};
-
-		//loading the Pre 
+		//replacing the ids with the asset name and the link
 		for (var i = 0; i < tempSpe.length; i++) {
 			for (var j in assets.data) {
 				if (tempSpe[i] === assets.data[j].id) {
@@ -116,27 +105,22 @@ $(document).ready(function() {
 		};
 	});
 
-
+    //setting the value to none if the field is empty
 	if (tempPre == "") {
 		$("#R1").each(function() {
 			$(this).find("#td_pre").append('None');
 		});
 	}
-
 	if (tempSpe == "") {
 		$("#R4").each(function() {
 			$(this).find("#td_spec").append('None');
 		});
-
 	}
-
 	if (tempGen == "") {
 		$("#R3").each(function() {
 			$(this).find("#td_gen").append('None');
 		});
-
 	}
-
 	if (tempSuc == "") {
 		$("#R2").each(function() {
 			$(this).find("#td_suc").append('None');

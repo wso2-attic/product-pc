@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://wso2.com) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,6 @@
 .asset-details:hover {
 	cursor: pointer;
 }
-/*
-.row-border-bottom {
-	border-bottom: 1px solid #F3F3F3;
-	margin-bottom: 16px;
-	padding-bottom: 23px;
-}*/
 
 .empty-assert {
 	font-size: 18px;
@@ -30,6 +24,7 @@
 	text-align: center;
 	padding-top: 125px;
 }
+
 .store-bookmark-icon{
     	color: #FFED00;
     	font-size: 30px;

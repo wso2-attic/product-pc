@@ -13,8 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-
-var processContent = null;	
+var processContent = null;
 var processName = null;	
 
 $('#btn-create-asset').click(function() {
@@ -22,7 +21,6 @@ $('#btn-create-asset').click(function() {
     processName = $('#processName').val();
     $.post( "/publisher/asts/process/apis/content", {content: processContent, name: processName, reqType:"post"} );
 });
-
 
 $('#editAssetButton').click(function() {
   processContent = $('#processContent').val();	
