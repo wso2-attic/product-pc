@@ -3,14 +3,14 @@
     <nameAttribute>overview_name</nameAttribute>
     <ui>
         <list>
-                    <column name="Provider">
-                <data type="path" value="overview_provider" href="@{storagePath}"/>
+            <column name="Provider">
+                <data type="path" value="overview_provider" href="@{storagePath}" />
             </column>
-                    <column name="Name">
-                <data type="path" value="overview_name" href="@{storagePath}"/>
+            <column name="Name">
+                <data type="path" value="overview_name" href="@{storagePath}" />
             </column>
             <column name="Version">
-                <data type="path" value="overview_version" href="@{storagePath}"/>
+                <data type="path" value="overview_version" href="@{storagePath}" />
             </column>
         </list>
     </ui>
@@ -39,7 +39,7 @@
             <field type="text" required="true">
                 <name>Owner</name>
             </field>
-             <field type="text" required="true">
+            <field type="text" required="true">
                 <name>Predecessors</name>
             </field>
             <field type="text" required="true">
@@ -57,7 +57,5 @@
                 <name>Banner</name>
             </field>
         </table>
-        
     </content>
-
 </artifactType>
