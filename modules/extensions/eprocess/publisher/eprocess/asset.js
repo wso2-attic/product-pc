@@ -33,33 +33,33 @@ asset.manager = function(ctx) {
             var asset = this.get(options.id);
              //Adding association for Predecessors
             if (asset.attributes.properties_predecessors != null) {
-                var tempArray1 = asset.attributes.properties_predecessors.split("\,");
-                for (var i = 0; i < tempArray1.length; i++) {
-                    var preAsset = this.get(tempArray1[i]);
+                var listOfPredecessors = asset.attributes.properties_predecessors.split("\,");
+                for (var i = 0; i < listOfPredecessors.length; i++) {
+                    var preAsset = this.get(listOfPredecessors[i]);
                     this.registry.associate(asset.path, preAsset.path, "Predecessors");
                 }
             }
             //Adding association for properties_specializations
             if (asset.attributes.properties_specializations != null) {
-                var tempArray2 = asset.attributes.properties_specializations.split("\,");
-                for (var i = 0; i < tempArray2.length; i++) {
-                    var specAsset = this.get(tempArray2[i]);
+                var listOfSpecializations = asset.attributes.properties_specializations.split("\,");
+                for (var i = 0; i < listOfSpecializations.length; i++) {
+                    var specAsset = this.get(listOfSpecializations[i]);
                     this.registry.associate(asset.path, specAsset.path, "Specializations");
                 }
             }
             //Adding association for properties_generalizations
             if (asset.attributes.properties_generalizations != null) {
-                var tempArray3 = asset.attributes.properties_generalizations.split("\,");
-                for (var i = 0; i < tempArray3.length; i++) {
-                    var genAsset = this.get(tempArray3[i]);
+                var listOfGeneralizations = asset.attributes.properties_generalizations.split("\,");
+                for (var i = 0; i < listOfGeneralizations.length; i++) {
+                    var genAsset = this.get(listOfGeneralizations[i]);
                     this.registry.associate(asset.path, genAsset.path, "Generalizations");
                 }
             }
             //Adding association for properties_successor
             if (asset.attributes.properties_sucessors != null) {
-                var tempArray4 = asset.attributes.properties_sucessors.split("\,");
-                for (var i = 0; i < tempArray4.length; i++) {
-                    var sucAsset = this.get(tempArray4[i]);
+                var listOfSucessors = asset.attributes.properties_sucessors.split("\,");
+                for (var i = 0; i < listOfSucessors.length; i++) {
+                    var sucAsset = this.get(listOfSucessors[i]);
                     this.registry.associate(asset.path, sucAsset.path, "Successors");
                 }
             }

@@ -31,11 +31,11 @@
                             <small> {{t "Version"}} {{overview_version}}</small>
                             <small> {{t "by"}} {{overview_provider}} </small>
                             <span class="asset-rating">
-                            <div style="width:{{../ratingPx}}px"></div>
+                            <div style="width:{{../ratingem}}em"></div>
                             </span>
                             <hr width="800">
                             <div id="content" class="content"
-                                 style="text-align:justify; width: 800px ">
+                                 style="text-align:justify; width: 800em ">
                             </div>
                             <div name="propTable">
                                 <hr width="800">
@@ -78,7 +78,7 @@
                         {{#if ../../features.social.enabled}}
                             <iframe name="socialIfr" id="socialIfr"
                                     src="{{../../../features.social.keys.socialAppUrl}}?target={{../../../rxt.shortName}}:{{../../id}}&user={{../../../cuser.username}}"
-                                    width="100%" height="100%" style="height: 300px;"
+                                    width="100%" height="100%" style="height: 300em;"
                                     data-script="{{../../../features.social.keys.socialScriptSource}}"
                                     data-script-type="{{../../../features.social.keys.socialScriptType}}"></iframe>
                         {{/if}}
