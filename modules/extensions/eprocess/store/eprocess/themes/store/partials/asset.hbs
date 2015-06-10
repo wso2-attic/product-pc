@@ -32,25 +32,25 @@
                             <small> {{t "Version"}} {{overview_version}}</small>
                             <small> {{t "by"}} {{overview_provider}} </small>
                             <span class="asset-rating">
-                            <div style="width:{{../ratingPx}}px"></div>
+                            <div style="width:{{../ratingem}}em"></div>
                             </span>
                             <hr width="800">
                             <div id="buttons">
                                 <a href='{{url ""}}/asts/process/variant?id={{id}}'
                                    class="btn btn-primary"
-                                   style="margin-right:10px;">Authorizations</a>
+                                   style="margin-right:10em;">Authorizations</a>
                                 <a href='{{url ""}}/asts/process/variant?id={{id}}'
-                                   class="btn btn-primary" style="margin-right:10px;">Validate</a>
+                                   class="btn btn-primary" style="margin-right:10em;">Validate</a>
                                 <a href='{{url ""}}/asts/process/variant?id={{id}}'
-                                   class="btn btn-primary" style="margin-right:10px;">Runtime
+                                   class="btn btn-primary" style="margin-right:10em;">Runtime
                                                                                       Analysis</a>
                                 <a href='{{url ""}}/asts/process/variant?id={{id}}'
-                                   class="btn btn-primary" style="margin-right:10px;">Report an
+                                   class="btn btn-primary" style="margin-right:10em;">Report an
                                                                                       Issue</a>
                                 <a href='{{url ""}}/asts/process/variant?id={{id}}'
-                                   class="btn btn-primary" style="margin-right:10px;">Deploy</a>
+                                   class="btn btn-primary" style="margin-right:10em;">Deploy</a>
                                 <a href='{{url ""}}/asts/process/variant?id={{id}}'
-                                   class="btn btn-primary" style="margin-right:10px;">Start</a>
+                                   class="btn btn-primary" style="margin-right:10em;">Start</a>
 
                             </div>
                             <hr width="800">
@@ -58,10 +58,10 @@
                                 <table>
                                     <tbody>
                                     <tr>
-                                        <td style="width: 200px;padding-top: 2px;"><b><label
+                                        <td style="width: 200em;padding-top: 2em;"><b><label
                                                 class="control-label">Process Archive</label></b>
                                         </td>
-                                        <td style="padding-right: 15px;"><label
+                                        <td style="padding-right: 15em;"><label
                                                 id="lblProcessArchive"
                                                 class="control-label">{{images_processArchive}}</label>
                                         </td>
@@ -78,7 +78,7 @@
                             <hr width="800">
 
                             <div id="ast-description"
-                                 style="margin-left : 10px; margin-right :10px; padding-top:30px;text-align: justify">{{overview_description}}</div>
+                                 style="margin-left : 10em; margin-right :10em; padding-top:30em;text-align: justify">{{overview_description}}</div>
 
                             <hr width="800">
 
@@ -149,7 +149,7 @@
                         {{#if ../../features.social.enabled}}
                             <iframe name="socialIfr" id="socialIfr"
                                     src="{{../../../features.social.keys.socialAppUrl}}?target={{../../../rxt.shortName}}:{{../../id}}&user={{../../../cuser.username}}"
-                                    width="100%" height="100%" style="height: 300px;"
+                                    width="100%" height="100%" style="height: 300em;"
                                     data-script="{{../../../features.social.keys.socialScriptSource}}"
                                     data-script-type="{{../../../features.social.keys.socialScriptType}}"></iframe>
                         {{/if}}
