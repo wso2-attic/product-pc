@@ -36,7 +36,7 @@ require('/modules/publisher.js').exec(function(ctx) {
 			print(assets);
 		}
 		else{
-			log.error('User is not authenticated/ authorized to perform the request');		
+			log.error('User is not authenticated/authorized to perform the request');		
 		}
 	}
 	else{
