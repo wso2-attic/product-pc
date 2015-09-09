@@ -549,14 +549,22 @@ jsPlumb.ready(function (e) {
             return true;
         }
     }
-
+     function storeElementIdInLocation(element, originalRow, originalCell){
+        var idOfElement = element.attr('id');
+         for (var i = 0; i < occupiedGridPositions.length; i++) {
+            if(occupiedGridPositions[i].row == originalRow && occupiedGridPositions[i].cell == originalCell){
+                occupiedGridPositions[i].id = idOfElement;
+                return;
+            }
+         } 
+     }
     //store newly accessed row and cell of the grid
     function storeLocationOfElement(element, row, cell) {
         var elementId = element.attr('id');
         var elementAdded = false;
         if (occupiedGridPositions.length !== 0) { //if not first element
             for (var i = 0; i < occupiedGridPositions.length; i++) {
-                if (occupiedGridPositions[i].id == elementId) {
+                if (occupiedGridPositions[i].row== row && occupiedGridPositions[i].cell ==cell) {
                     elementAdded = true;
                 }
             }
@@ -661,6 +669,7 @@ jsPlumb.ready(function (e) {
     function addRelationsForElement(element) {
         var elementId = element.attr('id');
         var currentElementCell = getGridCellForElementId(elementId); //get current element cell
+        var connectedElementCell; //cell id of the element connected to source
         if (connections.length == 0) { //no connections added
             return;
         } else { //if connections are found
@@ -668,11 +677,12 @@ jsPlumb.ready(function (e) {
             for (var i = 0; i < connections.length; i++) { //while connections
                 if (connections[i].targetId == elementId) { //if element id is found in target
                     connectedElementId = connections[i].sourceId;
+                    connectedElementCell = getGridCellForElementId(connectedElementId);
                 }
                 if (connections[i].sourceId == elementId) { //if element id is found in source
                     connectedElementId = connections[i].targetId;
+                    connectedElementCell = getGridCellForElementId(connectedElementId);
                 }
-                var connectedElementCell = getGridCellForElementId(connectedElementId); //get cell of connected element
                 if (currentElementCell > connectedElementCell && connectedElementId != 0) { //current found a preceeding
                     addElementAsPredecessor(element, connectedElementId); //add found element as a predecessor
                 }
@@ -754,7 +764,7 @@ jsPlumb.ready(function (e) {
         var originalRow = getAlignedGridRow(originalYPosition);
         var originalCell = getMatchingGridCell(originalRow, clickedElement);
         //store taken positions and ids 
-        storeLocationOfElement(clickedElement, originalRow, originalCell); //store grid position that is occupied
+        storeElementIdInLocation(clickedElement, originalRow, originalCell); //store grid position that is occupied
         clickedElement.find('.text-edit').position({ // position text box in the center of element
             my: "center",
             at: "center",
@@ -1120,7 +1130,7 @@ jsPlumb.ready(function (e) {
         //ajax call to save value in api
         $.ajax({
             type: "POST",
-            url: "/publisher/asts/chevron/apis/chevronxml",
+            url: "/publisher/assets/chevron/apis/chevronxml",
             data: {
                 content: strAsXml,
                 name: mainProcessName,

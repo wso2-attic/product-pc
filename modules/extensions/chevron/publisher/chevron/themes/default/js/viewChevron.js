@@ -30,7 +30,7 @@ jsPlumb.ready(function (e) {
     // ajax call to get the process name the view belongs to
     $.ajax({
         type: "GET",
-        url: "/publisher/asts/chevron/apis/nameStore",
+        url: "/publisher/assets/chevron/apis/nameStore",
         data: {
             type: "GET"
         },
@@ -46,7 +46,7 @@ jsPlumb.ready(function (e) {
     function getXmlForProcess(process) {
         $.ajax({
             type: "GET",
-            url: "/publisher/asts/chevron/apis/chevronxml",
+            url: "/publisher/assets/chevron/apis/chevronxml",
             data: {
                 type: "GET",
                 name: process
@@ -267,7 +267,7 @@ jsPlumb.ready(function (e) {
             var item = obj[i];
             processId = item.id;
         }
-        $("#td_mod").append('<li><a href = ../../../asts/process/details/' + processId + '>'
+        $("#td_mod").append('<li><a href = ../../../assets/process/details/' + processId + '>'
             + processModel + '</a></li>');
     }
 

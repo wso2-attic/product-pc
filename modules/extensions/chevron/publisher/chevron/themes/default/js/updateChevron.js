@@ -58,7 +58,7 @@ jsPlumb.ready(function (e) {
     // ajax call to get the main chevron name of the diagram
     $.ajax({
         type: "GET",
-        url: "/publisher/asts/chevron/apis/nameStore",
+        url: "/publisher/assets/chevron/apis/nameStore",
         data: {
             type: "GET"
         },
@@ -148,7 +148,7 @@ jsPlumb.ready(function (e) {
         //ajax call to save value in api
         $.ajax({
             type: "POST",
-            url: "/publisher/asts/chevron/apis/chevronxml",
+            url: "/publisher/assets/chevron/apis/chevronxml",
             data: {
                 content: strAsXml,
                 name: mainProcessName,
@@ -161,7 +161,7 @@ jsPlumb.ready(function (e) {
     function getXmlForProcess(process) {
         $.ajax({
             type: "GET",
-            url: "/publisher/asts/chevron/apis/chevronxml",
+            url: "/publisher/assets/chevron/apis/chevronxml",
             data: {
                 type: "GET",
                 name: process
@@ -1613,7 +1613,7 @@ jsPlumb.ready(function (e) {
                 });
             },
             tokenFormatter: function (item) {
-                return "<li><a href =../../../asts/process/details/" + item.id + ">" + item.name + " </a></li>"
+                return "<li><a href =../../../assets/process/details/" + item.id + ">" + item.name + " </a></li>"
             }
         });
     });
