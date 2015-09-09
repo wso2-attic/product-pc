@@ -128,6 +128,7 @@
             <groupId>org.wso2.es</groupId>
             <artifactId>wso2es</artifactId>
             <version>${wso2es.version}</version>
+          <type>zip</type>
         </dependency>
     </dependencies>
 
