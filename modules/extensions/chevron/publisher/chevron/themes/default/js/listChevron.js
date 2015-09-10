@@ -33,7 +33,7 @@ function getRelatedChevronDiagram(element) {
     });
 }
 // when the image is clicked get chevron name
-$('.info_main').click(function (e) {
+$('.ast-img').click(function (e) {
     var element = $(this);
     href = element.attr('href');
     linkName = element[0].nextElementSibling.attributes[0].ownerElement.childNodes[1].innerText;

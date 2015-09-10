@@ -10,26 +10,41 @@
     
     background-image: url(../img/showDescriptionIcon.png);
 }
+.createConnectionsBtn{
+position: absolute;
+    top: 150px;
+    right:620px;
+    background: #2d9dee;
+    color:#FFFFFF;
+}
+.createViewConnectionsBtn{
+  position: absolute;
+    top: 120px;
+    right:620px;
+    background: #2d9dee;
+    color:#FFFFFF;
+  
+}
 .connectionsBtn{
     position: absolute;
-    top: 60px;
-    right:20px;
-    background: #1FAB3A;
+    top: 120px;
+    right:620px;
+    background: #2d9dee;
     color:#FFFFFF;
 }
 .viewConnectionsBtn{
     position: absolute;
-    top: 2px;
-    right:2px;
-    background: #1FAB3A;
+    top: 120px;
+    right:620px;
+    background:#2d9dee;
     color:#FFFFFF;
 }
 
 .removeDiagramBtn{
      position: absolute;
-    top: 60px;
-    right:150px;
-    background: #1FAB3A;
+    top: 150px;
+    right:790px;
+    background: #2d9dee;
     color:#FFFFFF;
 
 }
@@ -77,6 +92,7 @@ width:100px;
     position:relative;
     overflow-x: scroll;
     overflow-y: scroll;
+    background-color:#FFFFFF;
 }
 .chevron-text {
     height: 5px;

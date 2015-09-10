@@ -70,6 +70,18 @@ jsPlumb.ready(function (e) {
     $('#editAssetButton').click(function (e) {
         saveDiagram();
     });
+    jsPlumb.bind("click", function(conn) {
+        var source = conn.sourceId;
+        var target = conn.targetId;
+        for(var i =0; i < connections.length; i++){
+            if(source == connections[i].sourceId || target == connections[i].targetId){
+                connections.splice(i,1);
+            }
+
+        }
+
+    jsPlumb.detach(conn);
+});
     //show/hide connections on toggle
     $("#connectionVisibility").click(function () {
         if ($.trim($(this).text()) === 'Hide Connections') {
@@ -694,7 +706,7 @@ jsPlumb.ready(function (e) {
                     processModel: processModel
                 });
                 formatting.push({
-                    chevronId: chevronId1,
+                    chevronId: elementId, //chevronId1
                     positionX: positionX,
                     positionY: positionY
                 });
@@ -1482,6 +1494,13 @@ jsPlumb.ready(function (e) {
             for (var i = 0; i < chevrons.length; i++) {
                 if (chevrons[i].chevronId == elementId) {
                     chevrons.splice(i, 1); //remove element from list
+                }
+            }
+        }
+        if(formatting.length > 0){
+            for(var i = 0; i < formatting.length; i++){
+                if(formatting[i].chevronId == elementId){
+                    formatting.splice(i,1);
                 }
             }
         }
