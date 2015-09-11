@@ -65,7 +65,6 @@ require('/modules/publisher.js').exec(function (ctx) {
         }
     }
     if (type == "GET") {
-    log.info('INSSSS GET');
         var path = '/_system/governance/chevron/' + processName;
         var result = userReg.get(path);
         var output = "" + result.content;
