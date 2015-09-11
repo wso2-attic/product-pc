@@ -29,7 +29,7 @@ require('/modules/publisher.js').exec(function (ctx) {
     var userReg = user.userRegistry(session);
     var type = req.getParameter('type');
     var processName = req.getParameter('name');
-    var method = req.getParameter('method');H
+    var method = req.getParameter('method');
 
     if (type == "POST") {
 
