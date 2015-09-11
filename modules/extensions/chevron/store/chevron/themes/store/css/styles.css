@@ -1327,6 +1327,7 @@ div.rating-cancel, div.star-rating {
     white-space: normal;
     word-wrap: break-word;
     word-break: break-all;
+    background-color:#FFFFFF;
 }
 /* Specify class=linenums on a pre to get line numbering */
 ol.linenums {

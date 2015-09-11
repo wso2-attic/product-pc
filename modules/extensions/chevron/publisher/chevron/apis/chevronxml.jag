@@ -29,8 +29,23 @@ require('/modules/publisher.js').exec(function (ctx) {
     var userReg = user.userRegistry(session);
     var type = req.getParameter('type');
     var processName = req.getParameter('name');
+    var method = req.getParameter('method');H
+
     if (type == "POST") {
-        var path = '/_system/governance/' + processName;
+
+      if (method == "DELETE"){
+
+       var path = '/_system/governance/chevron/' + processName;
+        var resourceAvailable = userReg.exists(path);
+              if(resourceAvailable){
+                 userReg.remove(path);
+                 if (log.isDebugEnabled()) {
+            log.debug("Asset " + processName + " is successfully removed");
+        }
+        }
+     }
+     else{
+        var path = '/_system/governance/chevron/' + processName;
         var xmlContent = req.getParameter('content');
         var resource = {
             content: xmlContent,
@@ -47,9 +62,11 @@ require('/modules/publisher.js').exec(function (ctx) {
         if (log.isDebugEnabled()) {
             log.debug("Content " + xmlContent + " is persisted for the asset");
         }
+        }
     }
     if (type == "GET") {
-        var path = '/_system/governance/' + processName;
+    log.info('INSSSS GET');
+        var path = '/_system/governance/chevron/' + processName;
         var result = userReg.get(path);
         var output = "" + result.content;
         print(output);

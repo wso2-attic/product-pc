@@ -9,38 +9,99 @@
     cursor:pointer;
     background-image: url(../img/showDescriptionIcon.png);
 }
+.createConnectionsBtn{
+position: absolute;
+    top: 150px;
+    right:620px;
+    background: #2d9dee;
+    color:#FFFFFF;
+}
+.createViewConnectionsBtn{
+  position: absolute;
+    top: 120px;
+    right:620px;
+    background: #2d9dee;
+    color:#FFFFFF;
+  
+}
+.connectionsBtn{
+    position: absolute;
+    top: 120px;
+    right:620px;
+    background: #2d9dee;
+    color:#FFFFFF;
+}
 .viewConnectionsBtn{
-    position:relative;
-    top: 0px;
-    right:0px;
-    background: #1FAB3A;
+    position: absolute;
+    top: 120px;
+    right:610px;
+    background:#2d9dee;
     color:#FFFFFF;
 }
 
+.removeDiagramBtn{
+     position: absolute;
+    top: 150px;
+    right:790px;
+    background: #2d9dee;
+    color:#FFFFFF;
 
-#canvasArea {
-    border: 1px solid #ECF0F1;
-    height: 600px;
+}
+.chevronEndPoint{
+    fillStyle:transparent;
+}
+
+td.T {
+    width: 100%;
+}
+td.canvasCell{
+
+height:80px;
+width:100px;
+ border:solid 1px gray;
+
+}
+.testgrid input {
+    width: 98%;
+  
+}
+#canvasGrid{
+    width:1000px;
+    height: 400px;
+    border:solid 1px gray;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+#dropArea {
+    cursor: pointer;
+    border: solid 1px gray;
+    height: 400px;
     width: 800px;
     position:relative;
-    overflow-y: scroll;
     overflow-x: scroll;
+    overflow-y: scroll;
+    
 }
-#viewMainProps {
-    padding-bottom: 10px;
-    margin-left: 10px;
-}
-#propTable {
-    padding-bottom: 10px;
-    margin-left: 10px;
+#canvasArea{
+     cursor: pointer;
+    border: solid 1px gray;
+    height: 400px;
+    width: 800px;
+    position:relative;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    background-color:#FFFFFF;
+     margin-top: 50px ;
 }
 .chevron-text {
     height: 5px;
     width: 10px;
+
 }
 .description-main {
     resize: none;
-    width: 30em;
+    width: 40em;
     height: 3em;
 }
 .toolbox {
@@ -62,26 +123,42 @@
     border: 0px solid #000000;
 }
 .chevron {
-    position: absolute;
-    left: 500px;
-    top: 150px;
+    position:absolute;
+    cursor:pointer;
     width: 165px;
     height: 80px;
-    display: inline-block;
-    float: left;
-    margin-right: 6px;
-    vertical-align: top;
-    cursor:pointer;
+   
     background-image: url(../img/chevron-icon.jpg);
+
+}
+._jsPlumb_drag_select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;    
+}
+#propTable{
+    padding-bottom:10px; 
+    margin-left: 10px;
+}
+#viewMainProps {
+    padding-bottom: 10px;
+    margin-left: 10px;
+}
+
+
+#default-canvas {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-top: 30px;
 }
 .chevron-toolbox {
-    left: 500px;
-    top: 150px;
+    position: absolute;
     width: 72px;
     height: 80px;
-    display: inline-block;
-    float: left;
-    margin-right: 6px;
-    vertical-align: top;
+
+   
     background-image: url(../img/chevron-toolbox.png);
 }

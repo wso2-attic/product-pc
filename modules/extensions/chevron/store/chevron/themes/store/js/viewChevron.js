@@ -17,12 +17,12 @@
  *
  */
 /*
- Functionality of viewing a selected chevron diagram in Store
+ Functionality related to viewing a selected chevron diagram in Publisher
  */
 jsPlumb.ready(function (e) {
     chevronProperties = []; //store properties of each chevron
     var processId = 0; // update process model Id
-    var connections = []; //store connections drawn
+    var connections = []; //store connections drawn 
     var descriptionsForChevrons = []; //Keep track of description value of each chevron
     var elementList = []; //store drawn elements to draw connections
     $("#viewMainProps").show();
@@ -30,7 +30,7 @@ jsPlumb.ready(function (e) {
     // ajax call to get the process name the view belongs to
     $.ajax({
         type: "GET",
-        url: "/store/assets/chevron/apis/nameStore",
+        url: "/publisher/assets/chevron/apis/nameStore",
         data: {
             type: "GET"
         },
@@ -46,7 +46,7 @@ jsPlumb.ready(function (e) {
     function getXmlForProcess(process) {
         $.ajax({
             type: "GET",
-            url: "/store/assets/chevron/apis/chevronxml",
+            url: "/publisher/assets/chevron/apis/chevronxml",
             data: {
                 type: "GET",
                 name: process
@@ -72,7 +72,7 @@ jsPlumb.ready(function (e) {
         return descriptionValue;
     }
 
-    // store descriptions for existing elements on the canvas
+    //store description ,id pairs for existing elements
     function storeDescriptionsForExistingElements(id, description) {
         descriptionsForChevrons.push({
             id: id,
@@ -80,7 +80,7 @@ jsPlumb.ready(function (e) {
         });
     }
 
-    //function to draw retrived chevron content to canvas
+    //function to draw retrieved chevron content to canvas
     function drawDiagramOnCanvas(xmlResult) {
         var test = xmlResult;
         test = test.replace(/&quot;/g, '"');
@@ -105,7 +105,7 @@ jsPlumb.ready(function (e) {
                 });
             }
         }
-        //draw elements
+        //draw elements 
         for (var i = 0; i < numberOfElements; i++) {
             var chevronId = jsonObj.diagram[0].chevrons[0].element[i].elementId;
             var chevronName = jsonObj.diagram[0].chevrons[0].element[i].chevronName;
@@ -113,7 +113,7 @@ jsPlumb.ready(function (e) {
             var positionX = jsonObj.diagram[0].styles[0].format[i].X;
             var positionY = jsonObj.diagram[0].styles[0].format[i].Y;
             var process = jsonObj.diagram[0].chevrons[0].element[i].associatedAsset;
-            storePropertiesOfChevron(chevronId, chevronName, chevronDescription, process); //store properties for the given element
+            storePropertiesOfChevron(chevronId, chevronName, chevronDescription, process); //store element properties for each
             var element1 = $('<div>').addClass('chevron');
             var textField = $('<textArea>').attr({
                 name: chevronId
@@ -148,6 +148,7 @@ jsPlumb.ready(function (e) {
             descriptorSwitch.attr('id', chevronId); //set element id for description button
             storeDescriptionsForExistingElements(chevronId, chevronDescription);
             element1.click(chevronClicked);
+            // Show description as a popup when clicked
             descriptorSwitch.popover({
                 html: true,
                 content: function () {
@@ -156,13 +157,13 @@ jsPlumb.ready(function (e) {
                     return getDescriptionForElement(currentId);
                 }
             }).click(function (e) {
-                e.stopPropagation();
+                e.stopPropagation(); //prevent parent click events
             });
         }
-        drawConnectionsForElements();
+        drawConnectionsForElements(); // draw existing connections for all elements
     }
 
-    //repaint connections for all existing elements
+    // draw existing connections for all elements
     function drawConnectionsForElements() {
         if (connections.length != 0) {
             for (var i = 0; i < connections.length; i++) {
@@ -176,7 +177,6 @@ jsPlumb.ready(function (e) {
                 var p5 = connections[i].targetAnchor2;
                 var p6 = connections[i].orientation3;
                 var p7 = connections[i].orientation4;
-                // create a common endpoint
                 var common = {
                     isTarget: true,
                     isSource: true,
@@ -188,6 +188,7 @@ jsPlumb.ready(function (e) {
                         outlineColor: "transparent",
                         outlineWidth: 4
                     },
+
                     anchor: [
                         [p0, p1, p2, p3],
                         [p4, p5, p6, p7]
@@ -203,6 +204,15 @@ jsPlumb.ready(function (e) {
                         strokeStyle: "#5c96bc",
                         lineWidth: 1
                     },
+                    overlays: [
+                        ["Arrow", {
+                            width: 10,
+                            length: 10,
+                            foldback: 1,
+                            location: 1,
+                            id: "arrow"
+                        }]
+                    ],
                     endpointStyle: {
                         fillStyle: "transparent"
                     }
@@ -236,7 +246,7 @@ jsPlumb.ready(function (e) {
         }
     }
 
-    //replace process text as a linked value
+    //Replace process name as a linked value
     function replaceProcessText(processName) {
         $.ajax({
             type: "GET",
@@ -250,7 +260,7 @@ jsPlumb.ready(function (e) {
         });
     }
 
-    // set process id for the given process
+    // set the id for the given process
     function setIdOfProcess(results, processName) {
         var obj = eval("(" + results + ")");
         for (var i in obj) {
@@ -261,7 +271,7 @@ jsPlumb.ready(function (e) {
             + processModel + '</a></li>');
     }
 
-//Store properties for each chevron element
+    //Store properties of each chevron element
     function storePropertiesOfChevron(id, name, description, process) {
         if (process == '' || process == null) {
             process = "None";
@@ -274,7 +284,7 @@ jsPlumb.ready(function (e) {
         });
     }
 
-// On click of a chevron element list the table properties
+// On click of chevron element list table details
     function chevronClicked() {
         $("#td_mod").html("");
         $("#viewElementProps").show();
@@ -288,11 +298,13 @@ jsPlumb.ready(function (e) {
                 processModel = chevronProperties[i].process;
                 $("#td_name1").html(name);
                 $("#td_description").html(description);
-                if (processModel !== "None") {
+                if (processModel == "not declared") {
+                    $("#td_mod").html("None");
+                } else if (processModel == "None") {
+                    $("#td_mod").html("None");
+                } else {
                     // set id and name of process as a link
                     replaceProcessText(processModel);
-                } else {
-                    $("#td_mod").html("None");
                 }
             }
         }

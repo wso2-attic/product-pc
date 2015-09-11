@@ -262,10 +262,10 @@ jsPlumb.ready(function (e) {
     }
 
     //validating main table fields of chevron diagram
-    function validateTableFields(description, name, owner, predecessor, successor) {
+    function validateTableFields(description, name, owner) {
         var provider = $("#overview_provider").val();
         var version = $("#overview_version").val();
-        if (!description || !name || !owner || !predecessor || !successor || !provider || !version) {
+        if (!description || !name || !owner  || !provider || !version) {
             alert('Please fill all the fields');
             return false;
         }
@@ -279,7 +279,7 @@ jsPlumb.ready(function (e) {
         var owner = $("#properties_owner").val();
         var predecessor = $("#properties_predecessors").val();
         var successor = $("#properties_successors").val();
-        validateTableFields(description, name, owner, predecessor, successor); //validate empty/null fields
+        validateTableFields(description, name, owner); //validate empty/null fields
         if (mainProcessName) //its an edit of record
         {
             for (var i = 0; i < propertyList.length; i++) {

@@ -32,7 +32,7 @@ require('/modules/publisher.js').exec(function (ctx) {
     var type = req.getParameter('type');
     if (type == "POST") {
         var linkName = req.getParameter('linkName');
-        var path = '/_system/governance/getProcessName';
+        var path = '/_system/governance/chevron/getProcessName';
         var resource = {
             content: linkName,
             mediaType: 'text/plain',
@@ -47,7 +47,7 @@ require('/modules/publisher.js').exec(function (ctx) {
         }
     }
     if (type == "GET") {
-        var path = '/_system/governance/getProcessName';
+        var path = '/_system/governance/chevron/getProcessName';
         var result = userReg.get(path);
         var output = "" + result.content;
         print(output);

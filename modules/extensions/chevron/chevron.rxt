@@ -1,5 +1,5 @@
 <artifactType type="application/vnd.wso2-chevron+xml" shortName="chevron" singularLabel="Chevron" pluralLabel="Chevrons" hasNamespace="false" iconSet="10">
-    <storagePath>/process/@{overview_provider}/@{overview_name}/@{overview_version}</storagePath>
+    <storagePath>/chevron/@{overview_provider}/@{overview_name}/@{overview_version}</storagePath>
     <nameAttribute>overview_name</nameAttribute>
     <ui>
         <list>

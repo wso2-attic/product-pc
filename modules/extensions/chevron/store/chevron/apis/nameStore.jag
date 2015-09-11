@@ -21,22 +21,23 @@
  Depending on the type parameter save/load the name of the clicked chevron diagram
  @param:type
  */
-require('/modules/store.js').exec(function (ctx) {
+require('/modules/publisher.js').exec(function (ctx) {
     var log = new Log();
     var req = ctx.request;
     var res = ctx.response;
     var store = require('store');
     var user = store.user;
+    var UUID = '0123';
     var userReg = user.userRegistry(session);
     var type = req.getParameter('type');
     if (type == "POST") {
         var linkName = req.getParameter('linkName');
-        var path = '/_system/governance/getProcessName';
+        var path = '/_system/governance/chevron/getProcessName';
         var resource = {
             content: linkName,
             mediaType: 'text/plain',
             description: 'This is a process name',
-            uuid: '0123'
+            uuid: UUID
         };
         userReg.put(path, resource);
         var result = userReg.get(path);
@@ -46,7 +47,7 @@ require('/modules/store.js').exec(function (ctx) {
         }
     }
     if (type == "GET") {
-        var path = '/_system/governance/getProcessName';
+        var path = '/_system/governance/chevron/getProcessName';
         var result = userReg.get(path);
         var output = "" + result.content;
         print(output);

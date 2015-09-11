@@ -17,40 +17,41 @@
  *
  */
 /*
- Functionality for listing created chevrons in Store
+ Functionality related to list created chevron diagrams in Publisher
  */
 var linkName; //store chevron name
 var href; // store link of the redirected page
-
-//using chevron diagram name, get diagram details
 function getRelatedChevronDiagram(element) {
     var checkName = $.trim(linkName);
     $.ajax({
         type: "POST",
-        url: "/store/assets/chevron/apis/nameStore",
+        url: "/publisher/assets/chevron/apis/nameStore",
         data: {
             linkName: checkName,
             type: "POST"
         }
     });
 }
-// when list page item is clicked
-$('.info_main').click(function (e) {
+// when the image is clicked get chevron name
+$('.ast-img').click(function (e) {
     var element = $(this);
     href = element.attr('href');
     linkName = element[0].nextElementSibling.attributes[0].ownerElement.childNodes[1].innerText;
+    //linkName.split("\\s+");
+    var content = linkName.split(/\r\n|\r|\n/g);
+    linkName = content[0];
     getRelatedChevronDiagram(element);
     loadPageForLink(href);
 });
-// when item name link is clicked get chevron process name 
-$('.info_link').click(function (e) {
+// when link is clicked get chevron process name 
+$('.ast-name').click(function (e) {
     var element = $(this);
     linkName = element.text();
     href = element.attr('href');
     getRelatedChevronDiagram(element);
     loadPageForLink(href);
 });
-// load view page for relevant chevron diagram
+
 function loadPageForLink(href) {
     window.location = href;
 }
