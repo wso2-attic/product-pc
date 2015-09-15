@@ -44,6 +44,8 @@ jsPlumb.ready(function (e) {
     var chevronNames = []; // holds related name for element id
     var descriptionsForChevrons = []; //keep track of the element ids and descriptions
     var clickedDefaultId = 0; //Keep track of currently clicked element default ids given by jsplumb
+    var X;
+    var Y;
     //on form submit save xml content of the drawn canvas
     $('#btn-create-asset').click(function (e) {
         checkForMandatoryFields(); //check if main properties of the diagram are added
@@ -1154,10 +1156,10 @@ jsPlumb.ready(function (e) {
         var rowId; // store row id the element belongs to
         var elementY = parseInt(element.css("top"), 10);
         // Canvas y axis ranges for each row definition
-        var range1 = 150;
-        var range2 = 250;
-        var range3 = 350;
-        var range4 = 450;
+        var range1 = 294; 
+        var range2 = 395; 
+        var range3 = 495; 
+        var range4 = 595; 
         if (elementY <= range1) {
             rowId = 0;
         } else if (range1 < elementY && elementY <= range2) {
@@ -1196,10 +1198,10 @@ jsPlumb.ready(function (e) {
         var cellId;
         var elementX = parseInt(element.css("left"), 10);
         // Canvas x axis ranges for each cell definition
-        var range1 = 160;
-        var range2 = 335;
-        var range3 = 505;
-        var range4 = 640;
+        var range1 = 198; 
+        var range2 = 375; 
+        var range3 = 450; 
+        var range4 = 550;
         if (elementX <= range1) {
             cellId = 0;
         }
@@ -1372,7 +1374,8 @@ jsPlumb.ready(function (e) {
             helper: 'clone',
             cursor: 'move',
             tolerance: 'fit',
-            revert: true
+            revert: true,
+            
         });
         $("#dropArea").droppable({
             accept: '.chevron-toolbox',
