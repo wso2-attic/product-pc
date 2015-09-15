@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 $(document).ready(function() {
-  var url = "/publisher/asts/process/apis/processes?type=process";
+  var url = "/publisher/assets/process/apis/processes?type=process";
 
   //Populates the token imput with the assets for the field properties_predecessors
   $("#properties_predecessors").tokenInput(url, {
@@ -37,7 +37,7 @@ $(document).ready(function() {
          console.log('' + JSON.stringify(arguments));
        },
        tokenFormatter: function(item) {
-         return "<li><a href = https://localhost:9443/publisher/asts/process/details/" + item.id +
+         return "<li><a href = https://localhost:9443/publisher/assets/process/details/" + item.id +
                                                                     ">" + item.name + " </a></li>"
        }
   });
@@ -63,7 +63,7 @@ $(document).ready(function() {
      console.log('' + JSON.stringify(arguments));
     },
     tokenFormatter: function(item) {
-      return "<li><a href = https://localhost:9443/publisher/asts/process/details/" + item.id +
+      return "<li><a href = https://localhost:9443/publisher/assets/process/details/" + item.id +
                                                                     ">" + item.name + " </a></li>"
     }
   });
@@ -89,7 +89,7 @@ $(document).ready(function() {
       console.log('' + JSON.stringify(arguments));
     },
     tokenFormatter: function(item) {
-      return "<li><a href = https://localhost:9443/publisher/asts/process/details/" + item.id +
+      return "<li><a href = https://localhost:9443/publisher/assets/process/details/" + item.id +
                                                                     ">" + item.name + " </a></li>"
     }
   });
@@ -115,8 +115,8 @@ $(document).ready(function() {
       console.log('' + JSON.stringify(arguments));
     },
     tokenFormatter: function(item) {
-      return "<li><a href = https://localhost:9443/publisher/asts/process/details/" + item.id +
+      return "<li><a href = https://localhost:9443/publisher/assets/process/details/" + item.id +
                                                                     ">" + item.name + " </a></li>"
     }
   });
-);
+});

@@ -23,26 +23,32 @@ $( document ).ready(function() {
 	var assets = {
 		data: []
 	}
-   	var processName = $("#processName").val();
-	$.get( "/publisher/asts/process/apis/content", { name: processName, reqType:"get"} )
-     .done(function( result ) {
+   	var processName = $("#processName").val().trim();
+	$.ajax({
+     		type:"GET",
+     		url:"/publisher/assets/process/apis/content",
+     		data: { name: processName, reqType:"get"},
+     		success:function(result){
      $("#processContent").val(result);
-    });
+       listAllProcessRelations();
+     		}
+
+     	});
    //Acquiring the ids for replacing the asset ids with asset name
   $("#R1").each(function() {
-		ids_pre = $(this).find("#properties_predecessors").text();
+		ids_pre = $(this).find("#properties_predecessors").val();
 		$(this).find("#properties_predecessors").empty();
 	});
 	$("#R2").each(function() {
-		ids_suc = $(this).find("#properties_successors").text();
+		ids_suc = $(this).find("#properties_successors").val();
 		$(this).find("#properties_successors").empty();
 	});
 	$("#R3").each(function() {
-		ids_gen = $(this).find("#properties_generalizations").text();
+		ids_gen = $(this).find("#properties_generalizations").val();
 		$(this).find("#properties_generalizations").empty();
 	});
 	$("#R4").each(function() {
-		ids_spe = $(this).find("#properties_specializations").text();
+		ids_spe = $(this).find("#properties_specializations").val();
 		$(this).find("#properties_specializations").empty();
 	});
 
@@ -52,55 +58,72 @@ $( document ).ready(function() {
 	var tempGen = ids_gen.split(",");
 	var tempSpe = ids_spe.split(",");
 
-	$.get("/publisher/apis/assets?type=process", function(response) {
-		for (var i in response.data) {
-			var item = response.data[i];
+	function listAllProcessRelations(){
+    //Retiriving assets to identify assets using asset id and replace ids with names and link
+		$.ajax({
+     		type:"GET",
+     		url:"/publisher/apis/assets?type=process",
+     		success:function(response){
+     			
+     				for (var i in response.list) {
+     					
+			var item = response.list[i];
+			
 			assets.data.push({
 				"id": item.id,
 				"name": item.attributes.overview_name
-			});
-		}
-        //replacing the ids with the asset name and the link
+	 		});
+	 	 }
+	 
+	
+	 	
+  //         //replacing the ids with the asset name and the link
 		for (var i = 0; i < tempPre.length; i++) {
 			for (var j in assets.data) {
 				if (tempPre[i] === assets.data[j].id) {
 					$("#R1").each(function() {
-					$(this).find("#td_pre").append('<li><a href = /publisher/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+					$(this).find("#td_pre").append('<li><a href = /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 					});
 				}
 			}
-		};
-        //replacing the ids with the asset name and the link
+		}
+		//replacing the ids with the asset name and the link
 		for (var i = 0; i < tempSuc.length; i++) {
 			for (var j in assets.data) {
 				if (tempSuc[i] === assets.data[j].id) {
 					$("#R2").each(function() {
-					$(this).find("#td_suc").append('<li><a href = /publisher/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+					$(this).find("#td_suc").append('<li><a href = /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 					});
 				}
 			}
-		};
-        //replacing the ids with the asset name and the link
+		}
+		//replacing the ids with the asset name and the link
 		for (var i = 0; i < tempGen.length; i++) {
 			for (var j in assets.data) {
 				if (tempGen[i] === assets.data[j].id) {
 					$("#R3").each(function() {
-					$(this).find("#td_gen").append('<li><a href = /publisher/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+					$(this).find("#td_gen").append('<li><a href = /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 					});
 				}
 			}
-		};
+		}
 		//replacing the ids with the asset name and the link
 		for (var i = 0; i < tempSpe.length; i++) {
 			for (var j in assets.data) {
 				if (tempSpe[i] === assets.data[j].id) {
 					$("#R4").each(function() {
-					$(this).find("#td_spec").append('<li><a href = /publisher/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+					$(this).find("#td_spec").append('<li><a href = /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 					});
 				}
 			}
-		};
+		} 
+
+     
+     	
+		}
 	});
+}
+
 
     //Setting the field to none if the field is empty
 	if (tempPre == "") {
