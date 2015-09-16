@@ -24,7 +24,7 @@ $(document).ready(function() {
     }
     var processName = $("#processName").text().trim();
 
-	$.get( "/store/asts/process/apis/content", { name: processName, reqType:"get"} )
+	$.get( "/store/assets/process/apis/content", { name: processName, reqType:"get"} )
 	 .done(function( result ) {
 	 $("#content").append(result);
 	});
@@ -66,7 +66,7 @@ $(document).ready(function() {
 			for (var j in assets.data) {
 				if (tempPre[i] === assets.data[j].id) {
 				   $("#R1").each(function() {
-					   $(this).find("#td_pre").append('<li><a href = /publisher/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+					   $(this).find("#td_pre").append('<li><a href = /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 		        	});
 				}
 			}
@@ -76,7 +76,7 @@ $(document).ready(function() {
 			for (var j in assets.data) {
 				if (tempSuc[i] === assets.data[j].id) {
 				   $("#R2").each(function() {
-			           $(this).find("#td_suc").append('<li><a /publisher/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+			           $(this).find("#td_suc").append('<li><a /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 					});
 				}
 			}
@@ -86,7 +86,7 @@ $(document).ready(function() {
 			for (var j in assets.data) {
 				if (tempGen[i] === assets.data[j].id) {
 				   $("#R3").each(function() {
-			           $(this).find("#td_gen").append('<li><a href = /publisher/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+			           $(this).find("#td_gen").append('<li><a href = /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 					});
 				}
 			}
@@ -96,7 +96,7 @@ $(document).ready(function() {
 			for (var j in assets.data) {
 				if (tempSpe[i] === assets.data[j].id) {
 				   $("#R4").each(function() {
-					   $(this).find("#td_spec").append('<li><a href = /publisher/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+					   $(this).find("#td_spec").append('<li><a href = /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 					});
 				}
 			}
