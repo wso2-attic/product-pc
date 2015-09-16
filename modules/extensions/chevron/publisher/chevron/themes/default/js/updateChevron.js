@@ -48,6 +48,10 @@ jsPlumb.ready(function (e) {
     var processModelChanged = false; //flag to check process model update
     var descriptionsForChevrons = []; //Keep track of the description value for each chevron 
     var loadingDiagram = false; // flag to unbind connections function at page load
+    var finalSelectedItems = []; // Keep track of selected element Ids
+    var addElementResults = [];
+    var addElementNewResults = [];
+
     // associated process token store
     var assets = {
         data: []
@@ -294,14 +298,15 @@ jsPlumb.ready(function (e) {
                 'left': positionX
             });
             $('#canvasArea').append(element1);
+           addEndPointForElement(element1);
             descriptorSwitch.attr('id', chevronId); //set element id for description button
             storeDescriptionsForElements(chevronId, chevronDescription);
             jsPlumb.setId(element1, chevronId);
             saveStateOfExistingElement(element1, mainProcess, chevronId, chevronName, chevronDescription, process, positionX, positionY); // save initial state of each chevron
             viewForName.push(chevronName);
             var row = getAlignedGridRow(positionY);
-            var cell = getMatchingGridCell(row, element1);
-            storeLocationOfElement(element1, row, cell);
+            var cell = getMatchingGridCellForDragged(row, element1);
+            storeLocationOfElement(chevronId, row, cell);
             storeChevronNameForElement(element1, chevronName); //To be used in deriving predecessor/successors
             element1.click(chevronClicked);
             element1.dblclick(removeElementFromCanvas);
@@ -382,8 +387,9 @@ jsPlumb.ready(function (e) {
 
 
             }
-            loadingDiagram = false;
+           
         }
+         loadingDiagram = false;
     }
 
     //return element for  given id
@@ -528,6 +534,35 @@ jsPlumb.ready(function (e) {
             cellId = 3;
         }
         if (elementX > range4) {
+
+            cellId = addDynamicCell(elementX, element);
+        }
+        // alert(cellId);
+        return cellId;
+    }
+
+    // get suitable cell id based on element position
+    function getMatchingGridCellForDragged(row, element) {
+        var cellId;
+        var elementX = parseInt(element.css("left"), 10);
+        // Canvas x axis ranges for each cell definition
+        var range1 = 15;//15
+        var range2 = 181;// 181
+        var range3 = 347; //347
+        var range4 = 513; //513
+        if (elementX <= range1) {
+            cellId = 0;
+        }
+        if (elementX > range1 && elementX <= range2) {
+            cellId = 1;
+        }
+        if (elementX > range2 && elementX <= range3) {
+            cellId = 2;
+        }
+        if (elementX > range3 && elementX <= range4) {
+            cellId = 3;
+        }
+        if (elementX > range4) {
             cellId = addDynamicCell(elementX, element);
         }
         // alert(cellId);
@@ -597,8 +632,8 @@ jsPlumb.ready(function (e) {
     }
 
     //remove old element position from list
-    function removeOldGridPositionFromList(originalRow, originalCell, element) {
-        var id = element.attr('id');
+    function removeOldGridPositionFromList(originalRow, originalCell,id) {
+       // var id = element.attr('id');
         for (var i = 0; i < occupiedGridPositions.length; i++) {
             if (occupiedGridPositions[i].id == id) {
                 occupiedGridPositions.splice(i, 1);
@@ -920,6 +955,9 @@ jsPlumb.ready(function (e) {
         $("#td_mod").html("");
         var isFirstElement = false;
         var clickedElement = $(this);
+        var selectedId = clickedElement.attr('id');
+        finalSelectedItems.push(selectedId); // For delete functionality
+
         setChevronPositions(clickedElement); //save position details for chevron
         // element values before a drag and drop
         var originalXPosition = parseInt(clickedElement.css("left"), 10);
@@ -946,12 +984,13 @@ jsPlumb.ready(function (e) {
                 if (dragState) { //only if the element was moved to a new location
                     var latestPositionY = parseInt(clickedElement.css("top"), 10);
                     var updatedRow = getAlignedGridRow(latestPositionY);
-                    var updatedCell = getMatchingGridCell(updatedRow, clickedElement);
+                    var updatedCell = getMatchingGridCellForDragged(updatedRow, clickedElement);
                     var availability = checkPositionAvailability(updatedCell, updatedRow); // check availability of the new position
                     if (!availability) {
                         revertToOldPosition(clickedElement, originalXPosition, originalYPosition); //send the element back to old position
                     } else {
-                        removeOldGridPositionFromList(originalRow, originalCell, clickedElement); // remove previous grid row/cell from stored list
+                        var id = clickedElement.attr('id');
+                        removeOldGridPositionFromList(originalRow, originalCell,id); // remove previous grid row/cell from stored list
                         setPositionForElement(updatedRow, updatedCell, clickedElement); //set the new position coordinates of the element
                         addNewGridPositionToList(updatedRow, updatedCell, clickedElement);
                         stateDragged = true;
@@ -1078,10 +1117,10 @@ jsPlumb.ready(function (e) {
         var rowId; // store row id the element belongs to
         var elementY = parseInt(element.css("top"), 10);
         // Canvas y axis ranges for each row definition
-        var range1 = 150;
-        var range2 = 250;
-        var range3 = 350;
-        var range4 = 450;
+        var range1 = 294; 
+        var range2 = 395; 
+        var range3 = 495; 
+        var range4 = 595; 
         if (elementY <= range1) {
             rowId = 0;
         } else if (range1 < elementY && elementY <= range2) {
@@ -1120,10 +1159,10 @@ jsPlumb.ready(function (e) {
         var cellId;
         var elementX = parseInt(element.css("left"), 10);
         // Canvas x axis ranges for each cell definition
-        var range1 = 160;
-        var range2 = 335;
-        var range3 = 505;
-        var range4 = 640;
+        var range1 = 198; //15
+        var range2 = 375; // 181
+        var range3 = 450;// 347
+        var range4 = 560; //513
         if (elementX <= range1) {
             cellId = 0;
         }
@@ -1168,10 +1207,29 @@ jsPlumb.ready(function (e) {
                 proceed == true;
             }
         }
-        if (available || proceed) { // if the suggested position is not occupied
-            setPositionForElement(row, cell, element); //set css top/left values 
+        if (available) { // if the suggested position is not occupied
             element.appendTo('#canvasArea'); //add element to canvas
-            return true;
+            setPositionForElement(row, cell, element); //set css top/left values 
+            if(addElementResults.length == 0){
+                addElementResults.push({
+                    result:'true',
+                    newCell:'none'
+                });
+            }
+            return addElementResults;
+        }
+        else if(proceed){
+             var result = addElementToGrid(row,newCell,element);
+                 if(result){
+                    if(addElementNewResults.length == 0){
+                   addElementNewResults.push({
+            result:'true',
+            newCell:newCell
+           });
+               }
+                    
+                 }
+              return addElementNewResults;
         }
     }
 
@@ -1251,8 +1309,8 @@ jsPlumb.ready(function (e) {
     }
 
     //Keep track of occupied cell location at element drop on canvas
-    function storeLocationOfElement(element, row, cell) {
-        var elementId = element.attr('id');
+    function storeLocationOfElement(elementId, row, cell) {
+        //var elementId = element.attr('id');
         var elementAdded = false;
         if (occupiedGridPositions.length !== 0) { //if not first element
             for (var i = 0; i < occupiedGridPositions.length; i++) {
@@ -1470,11 +1528,11 @@ jsPlumb.ready(function (e) {
     }
 
 // Remove cell/row combination from the grid
-    function removePositionFromGrid(element) {
-        var elementId = element.attr('id');
+    function removePositionFromGrid(elementId) {
+      //  var elementId = element.attr('id');
         var elementCell = getGridCellForElementId(elementId); //get current element cell
         var elementRow = getGridRowForElementId(elementId);
-        removeOldGridPositionFromList(elementRow, elementCell, element);
+        removeOldGridPositionFromList(elementRow, elementCell, elementId);
     }
 
     //Remove element from the mainProcess list
@@ -1507,8 +1565,8 @@ jsPlumb.ready(function (e) {
     }
 
     // Remove connections attached to the given element
-    function removeRelatedConnectionsFromList(element) {
-        var elementId = element.attr('id');
+    function removeRelatedConnectionsFromList(elementId) {
+      //  var elementId = element.attr('id');
         if (connections.length > 0) {
             for (var i = 0; i < connections.length; i++) {
                 if (connections[i].sourceId == elementId) {
@@ -1535,18 +1593,32 @@ jsPlumb.ready(function (e) {
 
     }
 
+     //remove selected element when button is clicked
+       $('#btn-delete').click(function (e) {
+         var deleteElementId = getSelectedToDelete();
+          var element = document.getElementById(deleteElementId);
+         removeElement(element);
+         finalSelectedItems.pop();
+    });
+       function getSelectedToDelete(){
+      var selectedElementId = finalSelectedItems[finalSelectedItems.length-1];
+        return selectedElementId;
+       }
+      
+
     // remove selected element
     function removeElement(element) {
-        var id = element.find('.text-edit').attr('name');
+     var id = element.attributes.id.nodeValue;
         removeFromMainProcessList(id);
         removeFromXmlStoreList(id);
-        removePositionFromGrid(element);
-        removeRelatedConnectionsFromList(element);
+        removePositionFromGrid(id);
+        removeRelatedConnectionsFromList(id);
         jsPlumb.removeAllEndpoints(element); // remove endpoints of that element
         jsPlumb.detachAllConnections(element); //remove added connections from element
         element.remove(); //remove element
         clearAllFields();
     }
+
 
     //At connection drag event show selected endpoints
     jsPlumb.bind("connectionDrag", function (info) {
@@ -1588,6 +1660,12 @@ jsPlumb.ready(function (e) {
                     newElement.click(chevronClicked);
 
                     var elementId = newElement.attr('id');
+                    if(addedElement[0].newCell == "none"){
+                    storeLocationOfElement(elementId,gridRow,gridCell);
+                }
+                else{
+                    storeLocationOfElement(elementId,gridRow,addedElement[0].newCell);
+                }
                     descriptorSwitch.attr('id', elementId); //set default jsplumb id to descriptor button
                     // show description value as a popup at click
                     descriptorSwitch.popover({

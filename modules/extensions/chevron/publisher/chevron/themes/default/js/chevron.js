@@ -44,13 +44,28 @@ jsPlumb.ready(function (e) {
     var chevronNames = []; // holds related name for element id
     var descriptionsForChevrons = []; //keep track of the element ids and descriptions
     var clickedDefaultId = 0; //Keep track of currently clicked element default ids given by jsplumb
-    var X;
-    var Y;
+    var finalSelectedItems = []; // Keep track of selected element Ids
+    var addElementResults = [];
+    var addElementNewResults = [];
+
     //on form submit save xml content of the drawn canvas
     $('#btn-create-asset').click(function (e) {
         checkForMandatoryFields(); //check if main properties of the diagram are added
         saveDiagram();
     });
+    //Remove only double clicked connection
+     jsPlumb.bind("click", function(conn) {
+        var source = conn.sourceId;
+        var target = conn.targetId;
+        for(var i =0; i < connections.length; i++){
+            if(source == connections[i].sourceId || target == connections[i].targetId){
+                connections.splice(i,1);
+            }
+
+        }
+
+    jsPlumb.detach(conn);
+});
     // Save  table properties of elements
     $('#saveElms').click(function (e) {
         createElementProperties(mainProcess);
@@ -513,8 +528,8 @@ jsPlumb.ready(function (e) {
     }
 
     //remove previous grid position(row/column)
-    function removeOldGridPositionFromList(originalRow, originalCell, element) {
-        var id = element.attr('id');
+    function removeOldGridPositionFromList(originalRow, originalCell,id) {
+       // var id = element.attributes.id.nodeValue;
         for (var i = 0; i < occupiedGridPositions.length; i++) {
             if (occupiedGridPositions[i].id == id) {
                 occupiedGridPositions.splice(i, 1);
@@ -544,12 +559,33 @@ jsPlumb.ready(function (e) {
                 proceed == true;
             }
         }
-        if (available || proceed) { // if the suggested position is not occupied
+        if (available) { // if the suggested position is not occupied
+             element.appendTo('#dropArea'); //add element to canvas
             setPositionForElement(row, cell, element); //set css top/left values
-            storeLocationOfElement(element, row, cell);
-            element.appendTo('#dropArea'); //add element to canvas
-            return true;
+           if(addElementResults.length == 0){
+           addElementResults.push({
+            result:'true',
+            newCell:'none'
+           });
+       }
+           
+            return addElementResults;
         }
+        else if (proceed){
+             var result = addElementToGrid(row,newCell,element);
+                 if(result){
+                    if(addElementNewResults.length == 0){
+                   addElementNewResults.push({
+            result:'true',
+            newCell:newCell
+           });
+               }
+                    
+                 }
+              return addElementNewResults;
+            
+        }
+
     }
      function storeElementIdInLocation(element, originalRow, originalCell){
         var idOfElement = element.attr('id');
@@ -561,8 +597,8 @@ jsPlumb.ready(function (e) {
          } 
      }
     //store newly accessed row and cell of the grid
-    function storeLocationOfElement(element, row, cell) {
-        var elementId = element.attr('id');
+    function storeLocationOfElement(elementId, row, cell) {
+        //var elementId = element.attr('id');
         var elementAdded = false;
         if (occupiedGridPositions.length !== 0) { //if not first element
             for (var i = 0; i < occupiedGridPositions.length; i++) {
@@ -758,6 +794,7 @@ jsPlumb.ready(function (e) {
         var isFirstElement = false;
         var clickedElement = $(this);
         clickedDefaultId = clickedElement.attr('id');
+          finalSelectedItems.push(clickedDefaultId); // For delete functionality
         //TO BE INCLUDEDv
         // clickedElement.css('border','2px solid black');
         // element values before a drag and drop
@@ -766,7 +803,7 @@ jsPlumb.ready(function (e) {
         var originalRow = getAlignedGridRow(originalYPosition);
         var originalCell = getMatchingGridCell(originalRow, clickedElement);
         //store taken positions and ids 
-        storeElementIdInLocation(clickedElement, originalRow, originalCell); //store grid position that is occupied
+       // storeElementIdInLocation(clickedElement, originalRow, originalCell); //store grid position that is occupied
         clickedElement.find('.text-edit').position({ // position text box in the center of element
             my: "center",
             at: "center",
@@ -792,7 +829,8 @@ jsPlumb.ready(function (e) {
                     if (!availability) {
                         revertToOldPosition(clickedElement, originalXPosition, originalYPosition); //send the element back to old position
                     } else {
-                        removeOldGridPositionFromList(originalRow, originalCell, clickedElement); // remove previous grid row/cell from stored list
+                        var id = clickedElement.attr('id');
+                        removeOldGridPositionFromList(originalRow, originalCell,id); // remove previous grid row/cell from stored list
                         setPositionForElement(updatedRow, updatedCell, clickedElement); //set the new position coordinates of the element
                         addNewGridPositionToList(updatedRow, updatedCell, clickedElement);
                         stateDragged = true;
@@ -1201,7 +1239,7 @@ jsPlumb.ready(function (e) {
         var range1 = 198; 
         var range2 = 375; 
         var range3 = 450; 
-        var range4 = 550;
+        var range4 = 560;
         if (elementX <= range1) {
             cellId = 0;
         }
@@ -1217,6 +1255,32 @@ jsPlumb.ready(function (e) {
         if (elementX > range4) {
             cellId = addDynamicCell(elementX, element);
         }
+        return cellId;
+    }
+     function getMatchingGridCellForDragged(row, element) {
+        var cellId;
+        var elementX = parseInt(element.css("left"), 10);
+        // Canvas x axis ranges for each cell definition
+        var range1 = 15;//15
+        var range2 = 181;// 181
+        var range3 = 347; //347
+        var range4 = 513; //513
+        if (elementX <= range1) {
+            cellId = 0;
+        }
+        if (elementX > range1 && elementX <= range2) {
+            cellId = 1;
+        }
+        if (elementX > range2 && elementX <= range3) {
+            cellId = 2;
+        }
+        if (elementX > range3 && elementX <= range4) {
+            cellId = 3;
+        }
+        if (elementX > range4) {
+            cellId = addDynamicCell(elementX, element);
+        }
+        // alert(cellId);
         return cellId;
     }
 
@@ -1255,11 +1319,11 @@ jsPlumb.ready(function (e) {
     }
 
     // Remove cell/row combination from the grid
-    function removePositionFromGrid(element) {
-        var elementId = element.attr('id');
-        var elementCell = getGridCellForElementId(elementId); //get current element cell
-        var elementRow = getGridRowForElementId(elementId);
-        removeOldGridPositionFromList(elementRow, elementCell, element);
+    function removePositionFromGrid(id) {
+       // var elementId =element.attributes.id.nodeValue;
+        var elementCell = getGridCellForElementId(id); //get current element cell
+        var elementRow = getGridRowForElementId(id);
+        removeOldGridPositionFromList(elementRow, elementCell,id);
     }
 
     //Remove element from the mainProcess list
@@ -1285,8 +1349,8 @@ jsPlumb.ready(function (e) {
     }
 
     // Remove connections attached to the given element
-    function removeRelatedConnectionsFromList(element) {
-        var elementId = element.attr('id');
+    function removeRelatedConnectionsFromList(id) {
+       // var elementId = element.attributes.id.nodeValue;
         if (connections.length > 0) {
             for (var i = 0; i < connections.length; i++) {
                 if (connections[i].sourceId == elementId) {
@@ -1304,14 +1368,26 @@ jsPlumb.ready(function (e) {
             }
         }
     }
+    //remove selected element when button is clicked
+       $('#btn-delete').click(function (e) {
+         var deleteElementId = getSelectedToDelete();
+          var element = document.getElementById(deleteElementId);
+         removeElement(element);
+         finalSelectedItems.pop();
+    });
+       function getSelectedToDelete(){
+      var selectedElementId = finalSelectedItems[finalSelectedItems.length-1];
+        return selectedElementId;
+       }
+      
 
     // remove selected element
     function removeElement(element) {
-        var id = element.find('.text-edit').attr('name');
+     var id = element.attributes.id.nodeValue;
         removeFromMainProcessList(id);
         removeFromXmlStoreList(id);
-        removePositionFromGrid(element);
-        removeRelatedConnectionsFromList(element);
+        removePositionFromGrid(id);
+        removeRelatedConnectionsFromList(id);
         jsPlumb.removeAllEndpoints(element); // remove endpoints of that element
         jsPlumb.detachAllConnections(element); //remove added connections from element
         element.remove(); //remove element
@@ -1396,6 +1472,12 @@ jsPlumb.ready(function (e) {
                     addEndPointForElement(droppedElement); // add connecting endopint to element
                     validateUnsavedProperties(); // check if previous properties for element was saved
                     var elementId = droppedElement.attr('id');
+                   if(addedElement[0].newCell == "none"){
+                     storeLocationOfElement(elementId,gridRow,gridCell);
+                 }
+                 else{
+                    storeLocationOfElement(elementId,gridRow,addedElement[0].newCell);
+                 }
                     descriptorSwitch.attr('id', elementId); // set jsPlumb id to the descriptorswitch Id
                     droppedElement.click(divClicked);
                     // On click of descriptor switch of element give pop up
@@ -1409,10 +1491,10 @@ jsPlumb.ready(function (e) {
                     }).click(function (e) {
                         e.stopPropagation();
                     });
-                    droppedElement.bind("dblclick", function (e) { // remove element on double click
-                        var selectedElement = $(this);
-                        removeElement(selectedElement);
-                    });
+                    // droppedElement.bind("dblclick", function (e) { // remove element on double click
+                    //     var selectedElement = $(this);
+                    //     removeElement(selectedElement);
+                    // });
                 }
             }
         });
