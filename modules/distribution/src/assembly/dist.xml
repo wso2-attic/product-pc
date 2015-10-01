@@ -35,13 +35,15 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app
             </outputDirectory>
         </fileSet>
-
+        
+        <fileSet>
         <directory>modules/process-center-theme</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/views/themes
             </outputDirectory>
         </fileSet>
         
+        <fileSet>
         <directory>modules/jaggery.conf</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso
