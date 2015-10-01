@@ -35,6 +35,13 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app
             </outputDirectory>
         </fileSet>
+
+        <fileSet>
+            <directory>../extensions/apps/store</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/app
+            </outputDirectory>
+        </fileSet>
         
         <fileSet>
         <directory>../extensions/themes</directory>
