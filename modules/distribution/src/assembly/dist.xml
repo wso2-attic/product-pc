@@ -44,10 +44,7 @@
         </fileSet>
         
         <fileSet>
-        <directory>../extensions/jaggery.conf</directory>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso
-            </outputDirectory>
+            <copy file="../extensions/jaggery.conf" todir="${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso"/>
         </fileSet>
 
         <!-- Textual process extensions -->
