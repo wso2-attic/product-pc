@@ -19,7 +19,7 @@
 /*
  Functionality related to viewing a selected chevron diagram in Publisher
  */
-jsPlumb.ready(function (e) {
+jsPlumb.ready(function(e) {
     chevronProperties = []; //store properties of each chevron
     var processId = 0; // update process model Id
     var connections = []; //store connections drawn 
@@ -34,11 +34,11 @@ jsPlumb.ready(function (e) {
         data: {
             type: "GET"
         },
-        success: function (result) {
+        success: function(result) {
             getXmlForProcess(result);
         }
     });
-    $('#canvasArea').dblclick(function (e) {
+    $('#canvasArea').dblclick(function(e) {
         $("#viewMainProps").show();
         $("#viewElementProps").hide();
     });
@@ -51,7 +51,7 @@ jsPlumb.ready(function (e) {
                 type: "GET",
                 name: process
             },
-            success: function (xmlResult) {
+            success: function(xmlResult) {
                 drawDiagramOnCanvas(xmlResult);
             }
         });
@@ -65,6 +65,9 @@ jsPlumb.ready(function (e) {
             for (var i = 0; i < descriptionsForChevrons.length; i++) {
                 if (id == descriptionsForChevrons[i].id) {
                     descriptionValue = descriptionsForChevrons[i].description;
+                    if(descriptionValue == '' || descriptionValue == null){
+                        descriptionValue = "no description added";
+                    }
                     return descriptionValue;
                 }
             }
@@ -151,12 +154,12 @@ jsPlumb.ready(function (e) {
             // Show description as a popup when clicked
             descriptorSwitch.popover({
                 html: true,
-                content: function () {
+                content: function() {
                     var element = $(this);
                     var currentId = element.attr('id');
                     return getDescriptionForElement(currentId);
                 }
-            }).click(function (e) {
+            }).click(function(e) {
                 e.stopPropagation(); //prevent parent click events
             });
         }
@@ -222,14 +225,14 @@ jsPlumb.ready(function (e) {
     }
 
     //show/hide connections on toggle
-    $("#connectionVisibility").click(function () {
+    $("#connectionVisibility").click(function() {
         if ($.trim($(this).text()) === 'Hide Connections') {
-            $('.chevron').each(function (index) {
+            $('.chevron').each(function(index) {
                 jsPlumb.hide(this.id, true);
             });
             $(this).text('Show Connections');
         } else {
-            $('.chevron').each(function (index) {
+            $('.chevron').each(function(index) {
                 jsPlumb.show(this.id, true);
             });
             $(this).text('Hide Connections');
@@ -254,7 +257,7 @@ jsPlumb.ready(function (e) {
             data: {
                 q: processName
             },
-            success: function (Result) {
+            success: function(Result) {
                 setIdOfProcess(Result, processName);
             }
         });
@@ -267,8 +270,7 @@ jsPlumb.ready(function (e) {
             var item = obj[i];
             processId = item.id;
         }
-        $("#td_mod").append('<li><a href = ../../../assets/process/details/' + processId + '>'
-            + processModel + '</a></li>');
+        $("#td_mod").append('<li><a href = ../../../assets/process/details/' + processId + '>' + processModel + '</a></li>');
     }
 
     //Store properties of each chevron element
@@ -284,7 +286,7 @@ jsPlumb.ready(function (e) {
         });
     }
 
-// On click of chevron element list table details
+    // On click of chevron element list table details
     function chevronClicked() {
         $("#td_mod").html("");
         $("#viewElementProps").show();

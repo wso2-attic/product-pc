@@ -19,6 +19,6 @@
 var resources = function (page, meta) {
     return {
        	js:['libs/jquery.form.min.js','create_asset.js','common/option_text.js','jquery.jsPlumb-1.6.4-min.js','dom.jsPlumb-1.6.4-min.js','jquery-ui.min.js','chevron.js','xml2json.js','xml2json.min.js','token.input/jquery.tokeninput.js'], 
-       	css:['bootstrap-select.min.css','datepick/smoothness.datepick.css','chevron.css','jquery-ui.css','token.input/css/token-input-facebook.css']
+       	css:['bootstrap-select.min.css','datepick/smoothness.datepick.css','chevron.css','jquery-ui.css','token.input/css/token-input-facebook.css','custom.css']
     };
 };
