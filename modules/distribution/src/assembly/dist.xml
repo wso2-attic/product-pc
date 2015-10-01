@@ -30,14 +30,14 @@
         </fileSet>
          <!-- publisher global configs-->
          <fileSet>
-            <directory>../extensions/process-center-apps</directory>
+            <directory>../extensions/apps/publisher</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app
             </outputDirectory>
         </fileSet>
         
         <fileSet>
-        <directory>../extensions/process-center-theme</directory>
+        <directory>../extensions/themes</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/views/themes
             </outputDirectory>
