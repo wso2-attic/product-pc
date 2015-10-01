@@ -43,10 +43,6 @@
             </outputDirectory>
         </fileSet>
         
-        <fileSet>
-            <copy file="../extensions/jaggery.conf" todir="${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso"/>
-        </fileSet>
-
         <!-- Textual process extensions -->
         <fileSet>
             <directory>../extensions/process/publisher</directory>
@@ -78,6 +74,13 @@
     </fileSets>
 
     <files>
+        <!-- global theme addition-->
+        <file>
+            <source>../extensions/jaggery.conf</source>
+             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso</outputDirectory>
+             <fileMode>644</fileMode>
+        </file>
+
         <!-- Textual process rxt -->
         <file>
             <source>../extensions/process/process.rxt</source>
