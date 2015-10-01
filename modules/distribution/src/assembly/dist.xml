@@ -28,23 +28,23 @@
             <directory>target/wso2es-${wso2es.version}</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
         </fileSet>
-         <!-- publisher configs-->
+         <!-- publisher global configs-->
          <fileSet>
-            <directory>modules/process-center-apps</directory>
+            <directory>/modules/process-center-apps</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app
             </outputDirectory>
         </fileSet>
         
         <fileSet>
-        <directory>modules/process-center-theme</directory>
+        <directory>/modules/process-center-theme</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/views/themes
             </outputDirectory>
         </fileSet>
         
         <fileSet>
-        <directory>modules/jaggery.conf</directory>
+        <directory>/modules/jaggery.conf</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso
             </outputDirectory>
