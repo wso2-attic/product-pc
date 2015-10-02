@@ -50,12 +50,12 @@
             </outputDirectory>
         </fileSet>
        
-         <fileSet>
+         <!--fileSet>
         <directory>../extensions/conf</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso
             </outputDirectory>
-        </fileSet>
+        </fileSet-->
 
         <!--fileSet>
         <directory>../extensions/conf</directory>
