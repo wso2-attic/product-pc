@@ -23,25 +23,33 @@
             <div id="headers">
                 <table>
                     <tbody>
-
+                    
                     <tr>
+                    <label for="name">Process</label>
+                    
                         <input type="text" placeholder="Enter Process Name" name="overview_name"
-                               id="processName" class="input-large" style="width:785em";>
+                               id="processName" class="input-large" style="width:100em";>
                     </tr>
                     <tr>
-                        <td><input type="text" placeholder="Enter Provider Name"
-                                   name="overview_provider" class="input-large" style="width:425em";>
-                        </td>
-
+                     <label for="provider">Provider</label>
+                      
+                        <input type="text" placeholder="Enter Provider Name"
+                                   name="overview_provider" class="input-large" style="width:100em";>
+                        
+                        </tr>
+                        <tr>
+                        <label for="version">Version</label>
+                        
                         <td><input type="text" placeholder="Enter Verision" name="overview_version"
-                                   class="input-large" style="width:343em";>
+                                   class="input-large" style="width:100em";>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
             <hr width="800em"/>
-            <div style="padding-bottom:15em"><textarea placeholder="Enter Process Details" rows="15"
+           <label for="details">Process Details</label>
+            <div style="padding-bottom:5em"><textarea placeholder="Enter Process Details" rows="15"
                                                        id="processContent" name="processContent"
                                                        class="input-large"
                                                        style="width:785em"></textarea></div>

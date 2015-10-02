@@ -28,6 +28,42 @@
             <directory>target/wso2es-${wso2es.version}</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
         </fileSet>
+         <!-- publisher global configs-->
+         <fileSet>
+            <directory>../extensions/apps/publisher</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app
+            </outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>../extensions/apps/store</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/app
+            </outputDirectory>
+        </fileSet>
+        
+        <fileSet>
+        <directory>../extensions/themes</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/views/themes
+            </outputDirectory>
+        </fileSet>
+       
+         <fileSet>
+        <directory>../extensions/conf</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso
+            </outputDirectory>
+        </fileSet>
+
+        <!--fileSet>
+        <directory>../extensions/conf</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials
+            </outputDirectory>
+        </fileSet-->
+         
 
         <!-- Textual process extensions -->
         <fileSet>
@@ -60,6 +96,18 @@
     </fileSets>
 
     <files>
+        <!-- global theme addition-->
+        <file>
+            <source>../extensions/conf/jaggery.conf</source>
+             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso</outputDirectory>
+             <fileMode>644</fileMode>
+        </file>
+         <!--file>
+            <source>../extensions/conf/store/product-title.hbs</source>
+             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
+             <fileMode>644</fileMode>
+        </file-->
+
         <!-- Textual process rxt -->
         <file>
             <source>../extensions/process/process.rxt</source>
