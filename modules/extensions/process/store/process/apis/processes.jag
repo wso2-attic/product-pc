@@ -1,5 +1,6 @@
-<!--/*
-*  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+<%
+/*
+*  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *  WSO2 Inc. licenses this file to you under the Apache License,
 *  Version 2.0 (the "License"); you may not use this file except
@@ -15,11 +16,8 @@
 *  specific language governing permissions and limitations
 *  under the License.
 *
-*
-*/-->
-
-<%
-require('/modules/store.js').exec(function(ctx) {
+*/
+require('/modules/publisher.js').exec(function(ctx) {
 	var log = new Log();
 	var req = ctx.request;
 	var res = ctx.response;
@@ -28,8 +26,8 @@ require('/modules/store.js').exec(function(ctx) {
 	var asset = require('rxt').asset;
 	var server = require('store').server;
 	if(q){
-		var user=server.current(ctx.session);
-		if(user){
+		var user = server.current(ctx.session);
+		if(user){			
 			var am = asset.createUserAssetManager(ctx.session,type);
 			var query = {};
 			query.overview_name = q;
@@ -37,7 +35,7 @@ require('/modules/store.js').exec(function(ctx) {
 			print(assets);
 		}
 		else{
-			log.error('User is not authenticated');
+			log.error('User is not authenticated/authorized to perform the request');		
 		}
 	}
 	else{
