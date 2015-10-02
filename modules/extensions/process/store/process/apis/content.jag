@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-require('/modules/publisher.js').exec(function(ctx)
+require('/modules/store.js').exec(function(ctx)
 {
     var log = new Log();
     var req = ctx.request;
