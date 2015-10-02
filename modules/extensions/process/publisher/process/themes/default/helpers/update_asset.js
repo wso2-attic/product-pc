@@ -19,7 +19,7 @@
 
 var resources = function (page, meta) {
     return {
-       	js:['libs/jquery.form.min.js','update_asset.js','updateContentLoader.js','processContent.js','tokenPopulator.js'], 
+       	js:['libs/jquery.form.min.js','update_asset.js','updateContentLoader.js','processContent.js','tokenPopulator.js','tinymce/tinymce.min.js'], 
        	css:['bootstrap-select.min.css','datepick/smoothness.datepick.css','grid.css']
     };
 };

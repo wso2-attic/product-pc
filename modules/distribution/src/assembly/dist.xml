@@ -49,7 +49,22 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/views/themes
             </outputDirectory>
         </fileSet>
-        
+       
+         <fileSet>
+        <directory>../extensions/conf</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso
+            </outputDirectory>
+        </fileSet>
+
+        <!--fileSet>
+        <directory>../extensions/conf</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials
+            </outputDirectory>
+        </fileSet-->
+         
+
         <!-- Textual process extensions -->
         <fileSet>
             <directory>../extensions/process/publisher</directory>
@@ -83,10 +98,15 @@
     <files>
         <!-- global theme addition-->
         <file>
-            <source>../extensions/jaggery.conf</source>
+            <source>../extensions/conf/jaggery.conf</source>
              <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso</outputDirectory>
              <fileMode>644</fileMode>
         </file>
+         <!--file>
+            <source>../extensions/conf/store/product-title.hbs</source>
+             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
+             <fileMode>644</fileMode>
+        </file-->
 
         <!-- Textual process rxt -->
         <file>

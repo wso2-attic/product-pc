@@ -16,140 +16,143 @@
 
 $(document).ready(function() {
 
-	var ids_pre = "";
-	var ids_suc = "";
-	var ids_gen = "";
-	var ids_spe = "";
-	var assets = {
-		data: []
-	}
-	var processName = $("#processName").text().trim();
-    
-    	$.ajax({
-     		type:"GET",
-     		url:"/publisher/assets/process/apis/content",
-     		data: { name: processName, reqType:"get"},
-     		success:function(result){
-     				 $("#ast-description").append(result);
-                      listAllProcessRelations();
-     		}
 
-     	});
-	// $.get( "/publisher/assets/process/apis/content", { name: processName, reqType:"get"} )
- //     .done(function( result ) {
- //    $("#ast-description").append(result);
- //    test();
- //    });
+
+
+    var ids_pre = "";
+    var ids_suc = "";
+    var ids_gen = "";
+    var ids_spe = "";
+    var assets = {
+        data: []
+    }
+    var processName = $("#processName").text().trim();
+
+    $.ajax({
+        type: "GET",
+        url: "/publisher/assets/process/apis/content",
+        data: {
+            name: processName,
+            reqType: "get"
+        },
+        success: function(result) {
+            result = $('<div>').html(result).text(); //decode html tags
+            tinymce.init({
+                selector: "#ast-description",
+                menubar: false,
+                statusbar: false,
+                toolbar: false,
+                plugins: "noneditable",
+                init_instance_callback: function(editor) {
+                    editor.setContent(result);
+                }
+            });
+
+            listAllProcessRelations();
+        }
+    });
 
     //Acquiring the asset ids
-	$("#R1").each(function() {
-		ids_pre = $(this).find("#td_pre").text();
-		$(this).find("#td_pre").empty();
-	});
-	$("#R2").each(function() {
-		ids_suc = $(this).find("#td_suc").text();
-		$(this).find("#td_suc").empty();
-	});
-	$("#R3").each(function() {
-		ids_gen = $(this).find("#td_gen").text();
-		$(this).find("#td_gen").empty();
-	});
-	$("#R4").each(function() {
-		ids_spe = $(this).find("#td_spec").text();
-		$(this).find("#td_spec").empty();
-	});
+    $("#R1").each(function() {
+        ids_pre = $(this).find("#td_pre").text();
+        $(this).find("#td_pre").empty();
+    });
+    $("#R2").each(function() {
+        ids_suc = $(this).find("#td_suc").text();
+        $(this).find("#td_suc").empty();
+    });
+    $("#R3").each(function() {
+        ids_gen = $(this).find("#td_gen").text();
+        $(this).find("#td_gen").empty();
+    });
+    $("#R4").each(function() {
+        ids_spe = $(this).find("#td_spec").text();
+        $(this).find("#td_spec").empty();
+    });
 
     //Splitting and isolating asset ids
-	var tempPre = ids_pre.split(",");
-	var tempSuc = ids_suc.split(",");
-	var tempGen = ids_gen.split(",");
-	var tempSpe = ids_spe.split(",");
+    var tempPre = ids_pre.split(",");
+    var tempSuc = ids_suc.split(",");
+    var tempGen = ids_gen.split(",");
+    var tempSpe = ids_spe.split(",");
 
-function listAllProcessRelations(){
-    //Retiriving assets to identify assets using asset id and replace ids with names and link
-		$.ajax({
-     		type:"GET",
-     		url:"/publisher/apis/assets?type=process",
-     		success:function(response){
-     			
-     				for (var i in response.list) {
-     					
-			var item = response.list[i];
-			
-			assets.data.push({
-				"id": item.id,
-				"name": item.attributes.overview_name
-	 		});
-	 	 }
-	 
-	
-	 	
-  //         //replacing the ids with the asset name and the link
-		for (var i = 0; i < tempPre.length; i++) {
-			for (var j in assets.data) {
-				if (tempPre[i] === assets.data[j].id) {
-					$("#R1").each(function() {
-					$(this).find("#td_pre").append('<li><a href = /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
-					});
-				}
-			}
-		}
-		//replacing the ids with the asset name and the link
-		for (var i = 0; i < tempSuc.length; i++) {
-			for (var j in assets.data) {
-				if (tempSuc[i] === assets.data[j].id) {
-					$("#R2").each(function() {
-					$(this).find("#td_suc").append('<li><a href = /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
-					});
-				}
-			}
-		}
-		//replacing the ids with the asset name and the link
-		for (var i = 0; i < tempGen.length; i++) {
-			for (var j in assets.data) {
-				if (tempGen[i] === assets.data[j].id) {
-					$("#R3").each(function() {
-					$(this).find("#td_gen").append('<li><a href = /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
-					});
-				}
-			}
-		}
-		//replacing the ids with the asset name and the link
-		for (var i = 0; i < tempSpe.length; i++) {
-			for (var j in assets.data) {
-				if (tempSpe[i] === assets.data[j].id) {
-					$("#R4").each(function() {
-					$(this).find("#td_spec").append('<li><a href = /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
-					});
-				}
-			}
-		} 
+    function listAllProcessRelations() {
+        //Retiriving assets to identify assets using asset id and replace ids with names and link
+        $.ajax({
+            type: "GET",
+            url: "/publisher/apis/assets?type=process",
+            success: function(response) {
+                for (var i in response.list) {
+                    var item = response.list[i];
+                    assets.data.push({
+                        "id": item.id,
+                        "name": item.attributes.overview_name
+                    });
+                }
 
-     
-     	
-		}
-	});
-}
+                //         //replacing the ids with the asset name and the link
+                for (var i = 0; i < tempPre.length; i++) {
+                    for (var j in assets.data) {
+                        if (tempPre[i] === assets.data[j].id) {
+                            $("#R1").each(function() {
+                                $(this).find("#td_pre").append('<li><a href = /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+                            });
+                        }
+                    }
+                }
+                //replacing the ids with the asset name and the link
+                for (var i = 0; i < tempSuc.length; i++) {
+                    for (var j in assets.data) {
+                        if (tempSuc[i] === assets.data[j].id) {
+                            $("#R2").each(function() {
+                                $(this).find("#td_suc").append('<li><a href = /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+                            });
+                        }
+                    }
+                }
+                //replacing the ids with the asset name and the link
+                for (var i = 0; i < tempGen.length; i++) {
+                    for (var j in assets.data) {
+                        if (tempGen[i] === assets.data[j].id) {
+                            $("#R3").each(function() {
+                                $(this).find("#td_gen").append('<li><a href = /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+                            });
+                        }
+                    }
+                }
+                //replacing the ids with the asset name and the link
+                for (var i = 0; i < tempSpe.length; i++) {
+                    for (var j in assets.data) {
+                        if (tempSpe[i] === assets.data[j].id) {
+                            $("#R4").each(function() {
+                                $(this).find("#td_spec").append('<li><a href = /publisher/assets/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+                            });
+                        }
+                    }
+                }
+            }
+        });
+    }
 
     //setting the value to none if the field is empty
-	if (tempPre == "") {
-		$("#R1").each(function() {
-			$(this).find("#td_pre").append('None');
-		});
-	}
-	if (tempSpe == "") {
-		$("#R4").each(function() {
-			$(this).find("#td_spec").append('None');
-		});
-	}
-	if (tempGen == "") {
-		$("#R3").each(function() {
-			$(this).find("#td_gen").append('None');
-		});
-	}
-	if (tempSuc == "") {
-		$("#R2").each(function() {
-			$(this).find("#td_suc").append('None');
-		});
-	}
+    if (tempPre == "") {
+        $("#R1").each(function() {
+            $(this).find("#td_pre").append('None');
+        });
+    }
+    if (tempSpe == "") {
+        $("#R4").each(function() {
+            $(this).find("#td_spec").append('None');
+        });
+    }
+    if (tempGen == "") {
+        $("#R3").each(function() {
+            $(this).find("#td_gen").append('None');
+        });
+    }
+    if (tempSuc == "") {
+        $("#R2").each(function() {
+            $(this).find("#td_suc").append('None');
+        });
+    }
 });

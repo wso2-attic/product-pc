@@ -32,7 +32,7 @@ require('/modules/publisher.js').exec(function(ctx)
         var path = '/_system/governance/process/' + processName + '/' + processName + "content";
         var resource = {
                     content: processContent,
-                    mediaType: 'text/plain',
+                    mediaType: 'text/html',
                     description: 'This is a sample description',
                     uuid: '0123',
                 };
