@@ -1,0 +1,107 @@
+{{!---
+/*
+ * Copyright (c) WSO2 Inc, 2015. (http://wso2.com) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ --}}
+<script>
+    var isSocial = ('{{features.social.enabled}}' == 'true');
+</script>
+{{#with assets}}
+    <form class="form-horizontal" id='form-asset-update' method='post'
+          action='{{url ""}}/apis/assets/{{id}}?type={{../rxt.shortName}}'>
+        <div class="control-group">
+            <div id="headers">
+                <table>
+                    <tbody>
+                    <tr>
+                        <input type="text" value="{{name}}" id="processName" class="input-large"
+                               style="width:785em";>
+                    </tr>
+                    <tr>
+                        <td><input type="text" value="{{this.tables.[0].fields.provider.value}}"
+                                   name="overview_provider" class="input-large" style="width:425em";>
+                        </td>
+
+                        <td><input type="text" value="{{this.tables.[0].fields.version.value}}"
+                                   name="overview_version" class="input-large" style="width:343em";>
+                        </td>
+                    </tr>
+                    <tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr width="800em"/>
+            <div style="padding-bottom: 10em"><textarea rows="15" id="processContent"
+                                                        name="overview_description"
+                                                        class="input-large"
+                                                        style="width:785em"> </textarea></div>
+            <div id="proptable">
+                <table id="htmlgrid" class="testgrid">
+                    <tr>
+                        <th>Properties</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr id="R1">
+                        <td>Predecessors</td>
+                        <td id="td_pre">
+                        <input type="text" value="{{this.tables.[1].fields.predecessors.value}}"
+                                   id="properties_predecessors" name="properties_predecessors"
+                                   style="border:none;border-color:transparent;"></td>
+                    </tr>
+                    <tr id="R2">
+                        <td>Successors</td>
+                        <td id="td_suc"><input type="text" value="{{this.tables.[1].fields.successors.value}}"
+                                   id="properties_successors" name="properties_successors"
+       
+                                   style="border:none;border-color:transparent;"></td>
+                    </tr>
+                    <tr id="R3">
+                        <td>Generalizations</td>
+                        <td id="td_gen"><input type="text"
+                                   value="{{this.tables.[1].fields.generalizations.value}}"
+                                   id="properties_generalizations" name="properties_generalizations"
+                                   style="border:none;border-color:transparent;"></td>
+                    </tr>
+                    <tr id="R4">
+                        <td>Specialization</td>
+                        <td id = "td_spec"><input type="text"
+                                   value="{{this.tables.[1].fields.specializations.value}}"
+                                   id="properties_specializations" name="properties_specializations"
+                                   style="border:none;border-color:transparent;"></td>
+                    </tr>
+                </table>
+            </div>
+            <hr width="800em"/>
+            <div id="images">
+                <table>
+                    <tbody>
+                    <tr>
+                        <td><b><label class="control-label">Thumbnail</label></b></td>
+                        <td><input type="file" value="" name="images_thumbnail" class="input-large">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="saveButtons" class="form-actions">
+            <input type="submit" value="Update" class="btn btn-primary"
+                   name="editAssetButton" id="editAssetButton">
+            <input type="reset" value="Reset" class="btn">
+            <input type="hidden" value="{{rxt.shortName}}" name="{{rxt.shortName}}"
+                   id="meta-asset-type">
+        </div>
+    </form>
+{{/with}}
