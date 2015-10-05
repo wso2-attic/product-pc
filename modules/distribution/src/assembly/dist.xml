@@ -28,7 +28,7 @@
             <directory>target/wso2es-${wso2es.version}</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
         </fileSet>
-         <!-- publisher global configs-->
+         <!-- global configs to disable other assets in PC-->
          <fileSet>
             <directory>../extensions/apps/publisher</directory>
             <outputDirectory>
@@ -42,7 +42,7 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/app
             </outputDirectory>
         </fileSet>
-        
+         <!-- global config to update product name in publisher -->
         <fileSet>
         <directory>../extensions/themes</directory>
             <outputDirectory>
@@ -50,21 +50,6 @@
             </outputDirectory>
         </fileSet>
        
-         <!--fileSet>
-        <directory>../extensions/conf</directory>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso
-            </outputDirectory>
-        </fileSet-->
-
-        <!--fileSet>
-        <directory>../extensions/conf</directory>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials
-            </outputDirectory>
-        </fileSet-->
-         
-
         <!-- Textual process extensions -->
         <fileSet>
             <directory>../extensions/process/publisher</directory>
@@ -96,17 +81,17 @@
     </fileSets>
 
     <files>
-        <!-- global theme addition-->
+        <!-- global theme addition(product name update) in publisher/store-->
         <file>
             <source>../extensions/conf/jaggery.conf</source>
              <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso</outputDirectory>
              <fileMode>644</fileMode>
         </file>
-         <!--file>
-            <source>../extensions/conf/store/product-title.hbs</source>
+         <file>
+            <source>../extensions/conf/storeTheme/product-title.hbs</source>
              <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
              <fileMode>644</fileMode>
-        </file-->
+        </file>
 
         <!-- Textual process rxt -->
         <file>
