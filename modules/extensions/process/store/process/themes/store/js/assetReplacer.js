@@ -27,16 +27,6 @@ $(document).ready(function() {
 	$.get( "/store/assets/process/apis/content", { name: processName, reqType:"get"} )
 	 .done(function( result ) {
 	result = $('<div>').html(result).text(); //decode html tags
-            tinymce.init({
-                selector: "#content",
-                menubar: false,
-                statusbar: false,
-                toolbar: false,
-               // plugins: "noneditable",
-                init_instance_callback: function(editor) {
-                    editor.setContent(result);
-                }
-            });
 	$("#content").append(result);
 	});
 
