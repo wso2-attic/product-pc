@@ -25,6 +25,7 @@ require('/modules/store.js').exec(function(ctx)
     var user = store.user;
     var userReg = user.userRegistry(session);
     var type= req.getParameter('reqType');
+if(userReg){
     if(type == "post")
     {  
         var processContent = req.getParameter('content');
@@ -52,6 +53,11 @@ require('/modules/store.js').exec(function(ctx)
         var output = "" + result.content;
         }
         print(output);
+     }
+     }
+     else{
+     log.error('User is not authenticated/authorized to perform the request');
+     res.sendError(401,'Unauthorized to access this content.');
      }
 }, request, response, session);
 %>

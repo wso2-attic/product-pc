@@ -25,6 +25,9 @@
             <field type="text" required="true">
                 <name>Version</name>
             </field>
+            <field type="text">
+                <name>Createdtime</name>
+            </field>
         </table>
         <table name="Properties">
             <field type="text" required="true">
