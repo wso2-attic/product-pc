@@ -15,12 +15,10 @@
  * limitations under the License.
  */
  --}}
-<script>
-    var isSocial = ('{{features.social.enabled}}' == 'true');
-</script>
+
 {{#with assets}}
     <form class="form-horizontal" id='form-asset-update' method='post'
-          action='{{url ""}}/apis/assets/{{id}}?type={{../rxt.shortName}}'>
+          action='{{url ""}}/apis/assets/{{id}}?type={{../rxt.shortName}}' data-redirect-url='{{url ""}}/assets/{{../rxt.shortName}}/details/'>
         <div class="control-group">
             <div id="headers">
                 <table>
@@ -55,28 +53,27 @@
                     </tr>
                     <tr id="R1">
                         <td>Predecessors</td>
-                        <td id="td_pre">
-                        <input type="text" value="{{this.tables.[1].fields.predecessors.value}}"
-                                   id="properties_predecessors" name="properties_predecessors"
-                                   style="border:none;border-color:transparent;"></td>
+                        <td width=100% id="td_pre">
+                        <input type="text" id="properties_predecessors" name="properties_predecessors"value="{{this.tables.[1].fields.predecessors.value}}"
+                                   style="width:98%"></td>
                     </tr>
                     <tr id="R2">
                         <td>Successors</td>
-                        <td id="td_suc"><input type="text" value="{{this.tables.[1].fields.successors.value}}"
+                        <td  width=100% id="td_suc"><input type="text" value="{{this.tables.[1].fields.successors.value}}"
                                    id="properties_successors" name="properties_successors"
        
-                                   style="border:none;border-color:transparent;"></td>
+                                   style="width:98%"></td>
                     </tr>
                     <tr id="R3">
                         <td>Generalizations</td>
-                        <td id="td_gen"><input type="text"
+                        <td width=100% id="td_gen"><input type="text"
                                    value="{{this.tables.[1].fields.generalizations.value}}"
                                    id="properties_generalizations" name="properties_generalizations"
                                    style="border:none;border-color:transparent;"></td>
                     </tr>
                     <tr id="R4">
                         <td>Specialization</td>
-                        <td id = "td_spec"><input type="text"
+                        <td width=100% id = "td_spec"><input type="text"
                                    value="{{this.tables.[1].fields.specializations.value}}"
                                    id="properties_specializations" name="properties_specializations"
                                    style="border:none;border-color:transparent;"></td>
