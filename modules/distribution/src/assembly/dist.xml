@@ -50,6 +50,12 @@
             </outputDirectory>
         </fileSet>
        
+        <fileSet>
+       <directory>../extensions/conf/decorators</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules
+            </outputDirectory>
+        </fileSet>
         <!-- Textual process extensions -->
         <fileSet>
             <directory>../extensions/process/publisher</directory>
@@ -91,6 +97,12 @@
             <source>../extensions/conf/storeTheme/product-title.hbs</source>
              <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
              <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>../extensions/conf/decorators/page-decorators.js</source>
+             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules</outputDirectory>
+             <!--fileMode>644</fileMode-->
         </file>
 
         <!-- Textual process rxt -->
