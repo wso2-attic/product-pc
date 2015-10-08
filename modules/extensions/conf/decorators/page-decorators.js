@@ -158,7 +158,6 @@ var pageDecorators = {};
         } else {
             for (var index in types) {
                 typeDetails = ctx.rxtManager.getRxtTypeDetails(types[index]);
-                log.info("PREV RXT SHORTNAME===="+ typeDetails.shortName);
                 type = typeDetails.shortName;
                 tenantAssetResources = tenantApi.createTenantAwareAssetResources(ctx.session, {
                     type: type
@@ -187,7 +186,6 @@ var pageDecorators = {};
         }
         // Display only process type assets for recent assets
         for(var i = 0; i <items.length; i++){
-            log.info(items[i].type);
              if(items[i].type == "process"){
                 log.debug("Found Process type assets"+ i); 
                var pcCurrentType =ctx.rxtManager.getRxtTypeDetails(items[i].type);

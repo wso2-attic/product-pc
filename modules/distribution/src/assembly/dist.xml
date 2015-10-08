@@ -50,8 +50,15 @@
             </outputDirectory>
         </fileSet>
        
+        <!--fileSet>
+       <directory>../extensions/conf/decorators/</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules
+            </outputDirectory>
+        </fileSet-->
+
         <fileSet>
-       <directory>../extensions/conf/decorators</directory>
+       <directory>../extensions/conf/navigators</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules
             </outputDirectory>
@@ -102,6 +109,16 @@
         <file>
             <source>../extensions/conf/decorators/page-decorators.js</source>
              <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules</outputDirectory>
+             <!--fileMode>644</fileMode-->
+        </file>
+        <file>
+            <source>../extensions/conf/navigators/navigation.hbs</source>
+             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
+             <!--fileMode>644</fileMode-->
+        </file>
+        <file>
+            <source>../extensions/conf/navigators/searchNavigators/advance-search-navigation.hbs</source>
+             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/app/store-common/themes/store/partials</outputDirectory>
              <!--fileMode>644</fileMode-->
         </file>
 

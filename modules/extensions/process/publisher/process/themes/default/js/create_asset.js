@@ -43,7 +43,6 @@ $(function(){
         success:function(data){
             var options=obtainFormMeta('#form-asset-create');
             $('#btn-create-asset').removeAttr('disabled');
-            alert(options.redirectUrl);
           //  $.cookie("new-asset-"+data.type , data.id + ":" + data.type + ":" + data.name );
             window.location = options.redirectUrl;
         },
