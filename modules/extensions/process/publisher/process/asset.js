@@ -24,23 +24,23 @@ var assetLinks = function(user) {
 };
 
 asset.manager = function(ctx) {
-     var notifier = require('store').notificationManager;
-     var storeConstants = require('store').storeConstants;
+    var notifier = require('store').notificationManager;
+    var storeConstants = require('store').storeConstants;
     var COMMENT = 'User comment';
     var carbon = require('carbon');
     var social = carbon.server.osgiService('org.wso2.carbon.social.core.service.SocialActivityService');
- return {
-     create: function(options) {
-         var ref = require('utils').time;
-         var GovernanceConstants = Packages.org.wso2.carbon.governance.api.util;
-         //Check if the options object has a createdtime attribute and populate it
-         if ((options.attributes) && (options.attributes.hasOwnProperty('overview_createdtime'))) {
-             options.attributes.overview_createdtime = ref.getCurrentTime();
-         }
-         this._super.create.call(this, options);
-         var asset = this.get(options.id);
+    var log = new Log('default-asset');
+    return {
+        create: function(options) {
+            var ref = require('utils').time;
+            //Check if the options object has a createdtime attribute and populate it
+            if ((options.attributes) && ctx.rxtManager.getRxtField(ctx.assetType, 'overview_createdtime')) {
+                options.attributes.overview_createdtime = ref.getCurrentTime();
+            }
+            this._super.create.call(this, options);
+            var asset = this.get(options.id); //TODO avoid get: expensive operation
 
-          //Adding associations for properties_predecessors
+            //Adding associations for properties_predecessors
          if (asset.attributes.properties_predecessors != null) {
              var listOfPredecessors = asset.attributes.properties_predecessors.split("\,");
 
@@ -74,7 +74,7 @@ asset.manager = function(ctx) {
                  this.registry.associate(asset.path, sucAsset.path, "Successors");
              }
          }
-         var assetPath = asset.path;
+            var assetPath = asset.path;
             var user = ctx.username;
             var userRoles = ctx.userManager.getRoleListOfUser(user);
             try {
@@ -99,12 +99,11 @@ asset.manager = function(ctx) {
             //Subscribe the asset author for LC update event and asset update event
             notifier.subscribeToEvent(provider, assetPath, endpoint, storeConstants.LC_STATE_CHANGE);
             notifier.subscribeToEvent(provider, assetPath, endpoint, storeConstants.ASSET_UPDATE);
-     },
-     update: function(options) {
+        },
+        update: function(options) {
             this._super.update.call(this, options);
             var asset = this.get(options.id); //TODO avoid get: expensive operation
-
-            if (asset.attributes.properties_predecessors != null) {
+             if (asset.attributes.properties_predecessors != null) {
              var listOfPredecessors = asset.attributes.properties_predecessors.split("\,");
              for (var i = 0; i < listOfPredecessors.length; i++) {
                  var preAsset = this.get(listOfPredecessors[i]);
@@ -133,12 +132,32 @@ asset.manager = function(ctx) {
                  this.registry.associate(asset.path, specAsset.path, "Specializations");
              }
          }
+
             //trigger notification on asset update
             notifier.notifyEvent(storeConstants.ASSET_UPDATE_EVENT, asset.type, asset.name, null, asset.path, ctx.tenantId);
+        },
+        search: function(query, paging) {
+            return this._super.search.call(this, query, paging);
+        },
+        list: function(paging) {
+            return this._super.list.call(this, paging);
+        },
+        get: function(id) {
+            return this._super.get.call(this, id);
+        },
+        invokeLcAction: function(asset, action, lcName) {
+            var success;
+            if (lcName) {
+                success = this._super.invokeLcAction.call(this, asset, action, lcName);
+            } else {
+                success = this._super.invokeLcAction.call(this, asset, action);
+            }
+            //trigger notification on LC state change
+            notifier.notifyEvent(storeConstants.LC_STATE_CHANGE_EVENT, asset.type, asset.name, COMMENT, asset.path, ctx.tenantId);
+            return success;
         }
- };
+    };
 };
-
 asset.server = function(ctx) {
     var type = ctx.type;
     return {
@@ -153,19 +172,28 @@ asset.server = function(ctx) {
             },{
                 url: 'processes',
                 path: 'processes.jag'
+            }, {
+                url: 'statistics',
+                path: 'statistics.jag'
             }],
             pages: [{
                 title: 'Asset: ' + type,
                 url: 'asset',
                 path: 'asset.jag'
-            }, {}, {
+            }, {
+                title: 'Assets ' + type,
+                url: 'assets',
+                path: 'assets.jag'
+            }, {
                 title: 'Create ' + type,
                 url: 'create',
-                path: 'create.jag'
+                path: 'create.jag',
+                permission: 'ASSET_CREATE'
             }, {
                 title: 'Update ' + type,
                 url: 'update',
-                path: 'update.jag'
+                path: 'update.jag',
+                permission: 'ASSET_UPDATE'
             }, {
                 title: 'Details ' + type,
                 url: 'details',
@@ -173,12 +201,102 @@ asset.server = function(ctx) {
             }, {
                 title: 'List ' + type,
                 url: 'list',
-                path: 'list.jag'
+                path: 'list.jag',
+                permission: 'ASSET_LIST'
             }, {
                 title: 'Lifecycle',
                 url: 'lifecycle',
-                path: 'lifecycle.jag'
+                path: 'lifecycle.jag',
+                permission: 'ASSET_LIFECYCLE'
+            }, {
+                title: 'Old lifecycle ',
+                url: 'old-lifecycle',
+                path: 'old-lifecycle.jag'
+            }, {
+                title: 'Statistics',
+                url: 'statistics',
+                path: 'statistics.jag'
+            }, {
+                title: 'Copy ' + type,
+                url: 'copy',
+                path: 'copy.jag',
+                permission: 'ASSET_CREATE'
+            }, {
+                title: 'Delete ' + type,
+                url: 'delete',
+                path: 'delete.jag'
             }]
         }
     };
 };
+asset.configure = function() {
+    return {
+        table: {
+            overview: {
+                fields: {
+                    provider: {
+                        auto: true
+                    },
+                    name: {
+                        name: {
+                            name: 'name',
+                            label: 'Name'
+                        },
+                        readonly: true,
+                        required:true,
+                        validation: function() {}
+                    },
+                    version: {
+                        name: {
+                            label: 'Version'
+                        },
+                        readonly: true,
+                        required:true
+                    },
+                    createdtime: {
+                        hidden: true
+                    }
+                }
+            },
+            images: {
+                fields: {
+                    thumbnail: {
+                        type: 'file'
+                    // },
+                    // banner: {
+                    //     type: 'file'
+                    // }
+                }
+            }
+        },
+        meta: {
+            lifecycle: {
+                name: 'SampleLifeCycle2',
+                defaultLifecycleEnabled: true,
+                defaultAction: 'Promote',
+                deletableStates: ['Unpublished'],
+                publishedStates: ['Published'],
+                lifecycleEnabled: true
+            },
+            // ui: {
+            //     icon: 'fw fw-resource'
+            // },
+            // categories: {
+            //     categoryField: 'overview_category'
+            // },
+            thumbnail: 'images_thumbnail',
+            //banner: 'images_banner',
+            nameAttribute: 'overview_name',
+            versionAttribute: 'overview_version',
+            providerAttribute: 'overview_provider',
+            timestamp: 'overview_createdtime',
+            grouping: {
+                groupingEnabled: false,
+                groupingAttributes: ['overview_name']
+            }
+            }
+        }
+    };
+};
+
+       
