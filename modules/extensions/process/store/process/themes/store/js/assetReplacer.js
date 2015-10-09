@@ -27,7 +27,7 @@ $(document).ready(function() {
 	$.get( "/store/assets/process/apis/content", { name: processName, reqType:"get"} )
 	 .done(function( result ) {
 	result = $('<div>').html(result).text(); //decode html tags
-	$("#content").append(result);
+	$("#textProcessContent").append(result);
 	});
 
     //Acquiring the asset ids from the fields

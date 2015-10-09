@@ -1,43 +1,64 @@
-{{!---
-/*
- * Copyright (c) WSO2 Inc, 2015. (http://wso2.com) All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
- --}}
 <script>
     var isSocial = ('{{features.social.enabled}}' == 'true');
+    var guestDomain = '{{guestDomain}}';
 </script>
 <div class="asset-description">
+
     {{#with assets}}
+
+
         {{#with attributes}}
             <div class="asset-description-header">
-                <div class="row">
-                    <div class="span9" style="height:auto">
-                        <div>
-                            <div id="processName">
-                                <h3>{{overview_name}}</h3>
-                            </div>
-                            <small> {{t "Version"}} {{overview_version}}</small>
-                            <small> {{t "by"}} {{overview_provider}} </small>
-                            <span class="asset-rating">
-                            <div style="width:{{../ratingem}}em"></div>
-                            </span>
-                            <hr width="800">
-                            <div id="content" class="content"
+                <div class="col-lg-12 white-bg left ">
+                    <h3 >{{../../rxt.singularLabel}} Details</h3>
+                    <div class="clear"></div>
+                    <hr>
+                </div>
+            </div>
+            <!-- asset details folder-->
+            <div class="asset-details-header ">
+                <!-- aset details -->
+             <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 white-bg">
+                <div class=" details-image white-bg">
+                    {{> asset-thumbnail ..}}
+                </div>
+                <div class="details-container">
+                    <div class="pull-left">
+                    <div id="processName">
+                        <h4 class="margin-none ">{{overview_name}}</h4>
+                        </div>
+                        <p class="grey padding-none margin-none">{{t "Version"}} {{overview_version}}</p>
+                        <p class="light-blue padding-none margin-none">{{t "by"}} {{overview_provider}}</p>
+                    </div>
+                    <div class="pull-right">
+                        <span class = "pull-right rating-count"> ( <i class="fa fa-users"></i> {{../count}} )</span>
+                        <span class="asset-rating pull-right">
+                        <div style="width:{{../ratingPx}}px"></div>
+                        </span>
+                        <div class="clearfix"></div>
+                        {{#hasAssetPermission . key="ASSET_BOOKMARK" type=../../rxt.shortName username=../../cuser.username tenantId=../../cuser.tenantId}}
+                        {{>asset-utilization ../../..}}
+                        {{/hasAssetPermission}}
+                        {{> asset-version-info ../..}}
+                    </div>
+                </div>
+             </div>
+                <!-- end of asset details-->
+            </div>
+            <div class="white-bg asset-details-wrapper ">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <h4>Text Content</h4>
+                   <div id="textProcessContent" class="textProcessContent"
                                  style="text-align:justify; width: 100em ">
                             </div>
-                            <div name="propTable">
+                    <hr>
+                    {{>tags ../../.}}
+            </div><!-- description column-->
+        </div>
+        </div>
+            <div>
+            <!-- asset description -->
+            <div name="propTable">
                                 <hr width="800">
                                 <table id="htmlgrid" class="testgrid">
                                     <tr>
@@ -62,55 +83,46 @@
                                     </tr>
                                 </table>
                             </div>
+                <div class="assetp-properties">
+                    <hr class="margin-bottom-double">
+                    <ul class="nav nav-tabs" id="assetp-tabs" data-aid="{{../path}}">
+                    
+                        {{#hasAssetPermission . key="ASSET_REVIEWS" type=../../rxt.shortName username=../../cuser.username tenantId=../../cuser.tenantId}}
+                        <li>
+                            <a href="#tab-reviews" data-toggle="tab" data-type="comments">{{t "User Reviews"}}</a>
+                        </li>
+                        {{/hasAssetPermission}}
+                        <li>
+                            <a href="#tab-share" data-toggle="tab" data-type="basic">{{t "Share"}}</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab-properties">
+                            <div class="content">
+                                {{>overview .}}
+                            </div>
                         </div>
+                        <div class="tab-pane" id="tab-share">
+                            <div class="content">
+                                {{>share ../..}}
+                            </div>
+                        </div>
+                        {{#hasAssetPermission . key="ASSET_REVIEWS" type=../../rxt.shortName username=../../cuser.username tenantId=../../cuser.tenantId}}
+                        <div class="tab-pane" id="tab-reviews">
+                             {{#if ../../../features.social.enabled}}
+                                <iframe name="socialIfr" id="socialIfr"
+                                    src="{{../../../../features.social.keys.socialAppUrl}}?target={{../../../../rxt.shortName}}:{{../../../id}}&user={{../../../../cuser.username}}&urlDomain={{../../../../features.social.keys.urlDomain}}"
+                                    width="100%" height="100%" style="min-height: 500px;" data-script="{{../../../../features.social.keys.socialScriptSource}}" data-script-type="{{../../../../features.social.keys.socialScriptType}}"></iframe>
+                             {{/if}}
+                            {{#if ../../../inDashboard}}
+                                 <div id="comment-content" class="content"></div>
+                            {{else}}
+                                <div id="comment-content" class="content user-review"></div>
+                            {{/if}}
+                        </div>
+                        {{/hasAssetPermission}}
                     </div>
                 </div>
-            </div>
-            <div class="assetp-properties">
-                <ul class="nav nav-tabs" id="assetp-tabs" data-aid="{{../path}}">
-                    <li class="active">
-                        <a href="#tab-reviews" data-toggle="tab"
-                           data-type="comments">{{t "User Reviews"}}</a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="tab-reviews">
-                        {{#if ../../features.social.enabled}}
-                            <iframe name="socialIfr" id="socialIfr"
-                                    src="{{../../../features.social.keys.socialAppUrl}}?target={{../../../rxt.shortName}}:{{../../id}}&user={{../../../cuser.username}}"
-                                    width="100%" height="100%" style="height: 300em;"
-                                    data-script="{{../../../features.social.keys.socialScriptSource}}"
-                                    data-script-type="{{../../../features.social.keys.socialScriptType}}"></iframe>
-                        {{/if}}
-                        {{#if ../../inDashboard}}
-                            <div id="comment-content" class="content"></div>
-                        {{else}}
-                            <div id="comment-content" class="content user-review"></div>
-                        {{/if}}
-                    </div>
-                </div>
-            </div>
         {{/with}}
     {{/with}}
 </div>
-<!-- Modal -->
-<!--<div id="modal-add-gadget" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-<i class="icon-remove"></i>
-</button>
-<h3 id="modal-add-gadget-header">Modal header</h3>
-</div>
-<div class="modal-body">
-<code>
-embed code goes here
-</code>
-</div>
-<div class="modal-footer">
-<span class="copy-status">
-
-</span>
-<button id="btn-copy-gadget-code" class="btn btn-primary">
-Copy Gadget Code
-</button>
-</div>-->

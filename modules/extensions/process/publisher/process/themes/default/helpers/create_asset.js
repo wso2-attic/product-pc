@@ -19,8 +19,9 @@
 
 var resources = function (page, meta) {
     return {
-       	js:['libs/jquery.form.min.js','create_asset.js','common/option_text.js','tokenPopulator.js',"processContent.js","tinymce/tinymce.min.js","textEditor.js"], 
-       	css:['bootstrap-select.min.css','datepick/smoothness.datepick.css','grid.css']
+       	js:['libs/jquery.form.min.js','publisher-utils.js','create_asset.js','jquery.cookie.js','common/option_text.js','tokenPopulator.js',"processContent.js","tinymce/tinymce.min.js","textEditor.js",'select2.min.js','tags/tags-common.js','tags/tags-init-create-asset.js','notify.min.js','messages.js'], 
+       	css:['bootstrap-select.min.css','datepick/smoothness.datepick.css','grid.css','select2.min.css'],
+        code: ['publisher.assets.hbs']
     };
 };
 
