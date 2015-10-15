@@ -1,82 +1,177 @@
-{{!---
-/*
- * Copyright (c) WSO2 Inc, 2015. (http://wso2.com) All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
- --}}
-
 <script>
-    var isSocial = ('{{features.social.enabled}}' == 'true');
-</script>
-{{#with assets}}
-    <div class='content-div'>
-        <div class="tab-content asset-tab-content">
-            <div id="view" class="asset-view-container">
-                <div class="row-fluid asset-detail-top-row">
-                </div>
-                <div class="row-fluid asset-details-row">
-                    <div class="span12 asset-content-box">
-                        <div class="widget wlightblue">
-                        
-                            <div class="widget-head">
-                                <div id="processName" class="pull-left">{{name}}
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="widget-content">
-                                <div class="mceNonEditable" id="ast-description"></div>
-                                <div id="ast-properties">
-                                    <div name="propTable"
-                                         style="padding-bottom:10em; margin-left: 10em;">
-                                        <hr width="800">
-                                        <table id="htmlgrid" class="testgrid">
-                                            <tr>
-                                                <th>Properties</th>
-                                                <th>Value</th>
-                                            </tr>
-                                            <tr id="R1">
-                                                <td>Predecessors</td>
-                                                <td id="td_pre">{{this.tables.[1].fields.predecessors.value}}</td>
-                                            </tr>
-                                            <tr id="R2">
-                                                <td>Successors</td>
-                                                <td id="td_suc">{{this.tables.[1].fields.successors.value}}</td>
-                                            </tr>
-                                            <tr id="R3">
-                                                <td>Generalizations</td>
-                                                <td id="td_gen">{{this.tables.[1].fields.generalizations.value}}</td>
-                                            </tr>
-                                            <tr id="R4">
-                                                <td>Specialization</td>
-                                                <td id="td_spec">{{this.tables.[1].fields.specializations.value}}</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                     Tags
-           <div id='tag-ui-container-view'>
-                            {{> tag-ui-container-view ..}}
-                        </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
+    function showBPMN() {
+
+        $("#overviewDiv").hide();
+        $("#processTextContainer").hide();
+        $("#processTextEditDiv").hide();
+        $("#bpmnViewDiv").show();
+        $("#bpmnEditDiv").hide();
+
+        $.ajax({
+            url: 'https://localhost:9443/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/{{assets.tables.[0].fields.name.value}}/{{assets.tables.[0].fields.version.value}}',
+            type: 'GET',
+            success: function (response) {
+                var bpmnObject = JSON.parse(response);
+                $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+
+    }
+
+    function viewText() {
+        loadProcessText();
+
+        $("#overviewDiv").hide();
+        $("#processTextContainer").show();
+        $("#processTextEditDiv").hide();
+        $("#bpmnViewDiv").hide();
+        $("#bpmnEditDiv").hide();
+    }
+
+    function editText() {
+        $("#processContent").val($("#processTextDiv").html());
+        showTextEditor();
+    }
+
+    function loadProcessText() {
+        var ppath = 'apis/get_process_text?process_text_path={{assets.tables.[1].fields.processtextpath.value}}';
+
+        $.ajax({
+            url: 'https://localhost:9443/publisher/assets/process/apis/get_process_text?process_text_path=/processText/{{assets.tables.[0].fields.name.value}}/{{assets.tables.[0].fields.version.value}}',
+            type: 'GET',
+            success: function (response) {
+                $("#processTextDiv").html(response);
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+
+    function saveProcessText() {
+        var textContent = tinyMCE.get('processContent').getContent();
+        if (textContent == "") {
+            alert("Process content is empty");
+        } else {
+            // save the process
+
+            $.ajax({
+                url: 'https://localhost:9443/publisher/assets/process/apis/save_process_text',
+                type: 'POST',
+                data: { 'processName': $("#textProcessName").val(), 'processVersion' : $("#textProcessVersion").val(), 'processText' : textContent},
+                success: function (response) {
+                    $("#viewTextButton").show();
+                    $("#addTextButton").hide();
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+
+    function showTextEditor() {
+        $("#overviewDiv").hide();
+        $("#processTextContainer").hide();
+        $("#processTextEditDiv").show();
+        $("#bpmnViewDiv").hide();
+        $("#bpmnEditDiv").hide();
+
+        tinymce.init({
+            selector: "#processContent"
+        });
+    }
+
+    function showBPMNUploader() {
+        $("#overviewDiv").hide();
+        $("#processTextContainer").hide();
+        $("#processTextEditDiv").hide();
+        $("#bpmnViewDiv").hide();
+        $("#bpmnEditDiv").show();
+    }
+
+    function showOverview() {
+        $("#overviewDiv").show();
+        $("#processTextContainer").hide();
+        $("#processTextEditDiv").hide();
+        $("#bpmnViewDiv").hide();
+        $("#bpmnEditDiv").hide();
+    }
+
+</script>
+
+<h2>{{assets.tables.[0].fields.name.value}}</h2>
+<br/>
+<div id="overviewDiv">
+<p>Version: {{assets.tables.[0].fields.version.value}}</p>
+<p>Owner: {{assets.tables.[0].fields.owner.value}}</p>
+<p>Process text path: {{assets.tables.[1].fields.processtextpath.value}}</p>
+
+    {{#if processTextAvaliable}}
+        <div id="vtdiv"><button id="viewTextButton" onclick="viewText()">Show process text</button></div>
+        <div id="atdiv"><button id="addTextButton" onclick="showTextEditor()" style="display: none">Describe process in text</button></div>
+    {{else}}
+        <div id="vtdiv"><button id="viewTextButton" onclick="viewText()" style="display: none">Show process text</button></div>
+        <div id="atdiv"><button id="addTextButton" onclick="showTextEditor()">Describe process in text</button></div>
+    {{/if}}
+
+
+{{#if bpmnAvaliable}}
+    <button onclick="showBPMN()">Show BPMN</button>
+    <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
+{{else}}
+    <button onclick="showBPMNUploader()">Associate a BPMN model</button>
+{{/if}}
+</div>
+
+<div id="processTextContainer" style="display: none">
+    <button onclick="showOverview()">Overview</button><button onclick="editText()">Edit</button>
+<div id="processTextDiv">
+    Place holder for rendering process text
+</div>
+</div>
+
+<div id="processTextEditDiv" style="display: none">
+    <button onclick="showOverview()">Overview</button><button onclick="saveProcessText()">Save</button>
+    <input type="hidden" id="textProcessName" name="textProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
+    <input type="hidden" id="textProcessVersion" name="textProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
+    <textarea placeholder="Enter Process Details" rows="15"
+              id="processContent" name="processContentName"
+              class="input-large"
+              style="width:80em"></textarea>
+</div>
+
+<div id="bpmnViewDiv" style="display: none">
+    <button onclick="showOverview()">Overview</button>
+<div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
+    <img id="bpmnImage" src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
+</div>
+</div>
+
+<div id="bpmnEditDiv" style="display:none">
+    <button onclick="showOverview()">Overview</button>
+    <form  method='post' action='../apis/upload_bpmn' enctype="multipart/form-data" class="form-horizontal" id="form-bar-create" data-redirect-url='{{url ""}}/assets/{{rxt.shortName}}/list' >
+        BPMN file<input type="file" placeholder="Enter archive" name="bpmn" id="bpmnFile" class="input-large" style="width:80em";>
+        <input type="hidden" id="bpmnProcessName" name="bpmnProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
+        <input type="hidden" id="bpmnProcessVersion" name="bpmnProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
+
+        <div id="saveButtons" class="form-actions">
+            <input type='submit' id="btn-create-asset-bar" class="btn btn-primary"
+                   name="addNewAssetButton" value='{{t "Upload archive"}}'>
+            <button class="btn" type="reset">{{t "Reset"}}</button>
+            <input type="hidden" value="{{rxt.shortName}}" name="{{rxt.shortName}}"
+                   id="meta-asset-type">
         </div>
-    </div>
-{{/with}}
+    </form>
+</div>
+
+
+
+
 
 
 

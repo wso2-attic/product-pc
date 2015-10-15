@@ -1,0 +1,15 @@
+<%
+importPackage(org.wso2.carbon.pc.core);
+
+var log = new Log();
+log.info("Process creation logic");
+
+var ps = new ProcessStore();
+var processName = String(request.getParameter("processName"));
+var processVersion = String(request.getParameter("processVersion"));
+var processOwner = String(request.getParameter("processOwner"));
+var processTags = String(request.getParameter("processTags"));
+log.info(processName);
+var status = ps.createProcess(processName, processVersion, processOwner, processTags);
+print(status);
+%>

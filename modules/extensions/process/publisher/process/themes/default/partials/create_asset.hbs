@@ -1,0 +1,121 @@
+<script>
+
+    function showTextEditor() {
+        saveProcess();
+        completeTextDetails();
+        $("#processTextDiv").show();
+        $("#overviewDiv").hide();
+        $("#bpmnView").hide();
+        tinymce.init({
+            selector: "#processContent"
+        });
+    }
+
+    function associateBPMN() {
+        saveProcess();
+        completeBPMNDetails();
+        $("#overviewDiv").hide();
+        $("#processTextView").show();
+        $("#bpmnView").show();
+    }
+
+    function showMain() {
+        $("#mainView").show();
+        $("#bpmnView").hide();
+        $("#processTextView").hide();
+    }
+
+    function saveProcess() {
+        if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
+            alert("Complete process name");
+        } else {
+            // save the process
+
+            $.ajax({
+                url: 'apis/create_process',
+                type: 'POST',
+                data: { 'processName': $("#pName").val(), 'processVersion' : $("#pVersion").val(), 'processOwner' : $("#pOwner").val(), 'processTags' : $("#pTags").val()},
+                success: function (response) {
+                    $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response);
+                    $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response);
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+
+        }
+    }
+
+    function saveProcessText() {
+        var textContent = tinyMCE.get('processContent').getContent();
+        alert("Process content: " + textContent)
+        if (textContent == "") {
+            alert("Process content is empty");
+        } else {
+            // save the process
+
+            $.ajax({
+                url: 'apis/save_process_text',
+                type: 'POST',
+                data: { 'processName': $("#pName").val(), 'processVersion' : $("#pVersion").val(), 'processText' : textContent},
+                success: function (response) {
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+
+    function completeBPMNDetails() {
+        $("#bpmnProcessName").val($("#pName").val());
+        $("#bpmnProcessVersion").val($("#pVersion").val());
+        return true;
+    }
+
+    function completeTextDetails() {
+        $("#textProcessName").val($("#pName").val());
+        $("#textProcessVersion").val($("#pVersion").val());
+        return true;
+    }
+</script>
+
+<div id="overviewDiv">
+    Process name<input onblur="blurIt()" type="text" placeholder="Enter Process Name" name="overview_name" id="pName" class="input-large" style="width:80em";>
+    Version<input onblur="blurIt()" type="text" placeholder="Enter Process Name" name="overview_name" id="pVersion" class="input-large" style="width:80em";>
+    Owner<input onblur="blurIt()" type="text" placeholder="Enter Process Name" name="overview_name" id="pOwner" class="input-large" style="width:80em";>
+    Tags<input onblur="blurIt()" type="text" placeholder="Enter Process Name" name="overview_tags" id="pTags" class="input-large" style="width:80em";>
+
+    <button onclick="showTextEditor()">Describe process in text...</button><button onclick="associateBPMN()">Associate BPMN model...</button>
+
+    <div><button value="Save process" onclick="saveProcess()">Save process</button></div>
+</div>
+
+<div id="processTextDiv" style="display: none">
+    <a id="processTextOverviewLink" href="">Overview</a><button onclick="saveProcessText()">Save</button>
+    <input type="hidden" id="textProcessName" name="textProcessName"/>
+    <input type="hidden" id="textProcessVersion" name="textProcessVersion"/>
+    <textarea placeholder="Enter Process Details" rows="15"
+              id="processContent" name="processContentName"
+              class="input-large"
+              style="width:80em"></textarea>
+</div>
+
+<div id="bpmnView" style="display:none">
+    <a id="bpmnOverviewLink" href="">Overview</a>
+    <form  method='post' action='apis/upload_bpmn' onsubmit='return completeBPMNDetails()' enctype="multipart/form-data" class="form-horizontal" id="form-bar-create" data-redirect-url='{{url ""}}/assets/{{rxt.shortName}}/list' >
+        BPMN file<input type="file" placeholder="Enter archive" name="bpmn" id="bpmnFile" class="input-large" style="width:80em";>
+        <input type="hidden" id="bpmnProcessName" name="bpmnProcessName"/>
+        <input type="hidden" id="bpmnProcessVersion" name="bpmnProcessVersion"/>
+
+        <div id="saveButtons" class="form-actions">
+            <input type='submit' id="btn-create-asset-bar" class="btn btn-primary"
+                   name="addNewAssetButton" value='{{t "Upload archive"}}'>
+            <button class="btn" type="reset">{{t "Reset"}}</button>
+            <input type="hidden" value="{{rxt.shortName}}" name="{{rxt.shortName}}"
+                   id="meta-asset-type">
+        </div>
+    </form>
+</div>
+

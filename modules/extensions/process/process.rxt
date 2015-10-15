@@ -1,10 +1,10 @@
-<artifactType type="application/vnd.wso2-process+xml" shortName="process" singularLabel="Process" pluralLabel="Processes" hasNamespace="false" iconSet="9">
-    <storagePath>/process/@{name}/@{overview_version}</storagePath>
- <nameAttribute>overview_name</nameAttribute>
+<artifactType type="application/vnd.wso2-process+xml" shortName="process" singularLabel="Process" pluralLabel="Processes" hasNamespace="false" iconSet="10">
+    <storagePath>/processes/@{overview_name}/@{overview_version}</storagePath>
+    <nameAttribute>overview_name</nameAttribute>
     <ui>
         <list>
-            <column name="Provider">
-                <data type="path" value="overview_provider" href="@{storagePath}"/>
+            <column name="Owner">
+                <data type="path" value="overview_owner" href="@{storagePath}"/>
             </column>
             <column name="Name">
                 <data type="path" value="overview_name" href="@{storagePath}"/>
@@ -17,7 +17,7 @@
     <content>
         <table name="Overview">
             <field type="text" required="true">
-                <name>Provider</name>
+                <name>Owner</name>
             </field>
             <field type="text" required="true">
                 <name>Name</name>
@@ -25,25 +25,55 @@
             <field type="text" required="true">
                 <name>Version</name>
             </field>
-            <field type="text">
-                <name>Createdtime</name>
+            <field type="text-area">
+                <name>Description</name>
             </field>
         </table>
         <table name="Properties">
-            <field type="text" required="true">
-                <name>Owner</name>
+            <field type="text" required="false">
+                <name>bpmnpath</name>
             </field>
-             <field type="text" required="true">
-                <name>Predecessors</name>
+            <field type="text" required="false">
+                <name>bpmnid</name>
+            </field>
+            <field type="text" required="false">
+                <name>processtextpath</name>
+            </field>
+            <field type="text" required="false">
+                <name>server</name>
+            </field>
+        </table>
+        <table name="Subprocess" maxoccurs="unbounded">
+            <field type="text" required="true">
+                <name>Name</name>
             </field>
             <field type="text" required="true">
-                <name>Successors</name>
+                <name>Path</name>
             </field>
             <field type="text" required="true">
-                <name>Generalizations</name>
+                <name>Id</name>
+            </field>
+        </table>
+        <table name="Successor" maxoccurs="unbounded">
+            <field type="text" required="true">
+                <name>Name</name>
             </field>
             <field type="text" required="true">
-                <name>Specializations</name>
+                <name>Path</name>
+            </field>
+            <field type="text" required="true">
+                <name>Id</name>
+            </field>
+        </table>
+        <table name="Predecessor" maxoccurs="unbounded">
+            <field type="text" required="true">
+                <name>Name</name>
+            </field>
+            <field type="text" required="true">
+                <name>Path</name>
+            </field>
+            <field type="text" required="true">
+                <name>Id</name>
             </field>
         </table>
         <table name="Images">
@@ -53,6 +83,8 @@
             <field type="text" required="true">
                 <name>Banner</name>
             </field>
-        </table>        
+        </table>
+
     </content>
+
 </artifactType>
