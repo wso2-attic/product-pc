@@ -286,7 +286,7 @@ public class ProcessStore {
                             appendText(bpmnDoc, bpmnOverview, "processpath", mns, "");
                             appendText(bpmnDoc, bpmnOverview, "description", mns, "");
                             Element bpmnAssetContentElement = append(bpmnDoc, bpmnRoot, "content", mns);
-                            appendText(bpmnDoc, bpmnAssetContentElement, "contentPath", mns, bpmnResourcePath);
+                            appendText(bpmnDoc, bpmnAssetContentElement, "contentpath", mns, bpmnResourcePath);
                             String bpmnAssetContent = xmlToString(bpmnDoc);
 
                             Resource bpmnAsset = reg.newResource();
@@ -346,7 +346,7 @@ public class ProcessStore {
                 appendText(doc, overviewElement, "processpath", mns, processPath);
 
                 Element contentElement = append(doc, rootElement, "content", mns);
-                appendText(doc, contentElement, "contentPath", mns, bpmnContentPath);
+                appendText(doc, contentElement, "contentpath", mns, bpmnContentPath);
 
                 String bpmnAssetContent = xmlToString(doc);
                 Resource bpmnAsset = reg.newResource();
@@ -421,7 +421,7 @@ public class ProcessStore {
                 reg.put(barResourcePath, barResource);
 
                 Element contentElement = append(doc, rootElement, "content", mns);
-                appendText(doc, contentElement, "contentPath", mns, barResourcePath);
+                appendText(doc, contentElement, "contentpath", mns, barResourcePath);
 
 //                reg.addAssociation(barAssetPath, barResourcePath, "has_content");
 
@@ -467,7 +467,7 @@ public class ProcessStore {
                         appendText(bpmnDoc, bpmnOverview, "package", mns, barName);
                         appendText(bpmnDoc, bpmnOverview, "description", mns, "");
                         Element bpmnAssetContentElement = append(bpmnDoc, bpmnRoot, "content", mns);
-                        appendText(bpmnDoc, bpmnAssetContentElement, "contentPath", mns, bpmnResourcePath);
+                        appendText(bpmnDoc, bpmnAssetContentElement, "contentpath", mns, bpmnResourcePath);
                         String bpmnAssetContent = xmlToString(bpmnDoc);
 
                         Resource bpmnAsset = reg.newResource();
@@ -533,8 +533,8 @@ public class ProcessStore {
                 bar.put("description", barDescription);
 
                 Element contentElement = (Element) document.getElementsByTagName("content").item(0);
-                String contentPath = contentElement.getElementsByTagName("contentPath").item(0).getTextContent();
-                bar.put("contentPath", contentPath);
+                String contentPath = contentElement.getElementsByTagName("contentpath").item(0).getTextContent();
+                bar.put("contentpath", contentPath);
 
                 JSONArray jbpmns = new JSONArray();
                 bar.put("bpmnModels", jbpmns);
@@ -604,8 +604,8 @@ public class ProcessStore {
                 bpmn.put("processPath", processPath);
 
                 Element contentElement = (Element) document.getElementsByTagName("content").item(0);
-                String contentPath = contentElement.getElementsByTagName("contentPath").item(0).getTextContent();
-                bpmn.put("contentPath", contentPath);
+                String contentPath = contentElement.getElementsByTagName("contentpath").item(0).getTextContent();
+                bpmn.put("contentpath", contentPath);
                 String encodedBPMNImage = getEncodedBPMNImage(contentPath);
                 bpmn.put("bpmnImage", encodedBPMNImage);
 

@@ -71,20 +71,22 @@ asset.server = function(ctx) {
             apis: [{
                 url: 'assets',
                 path: 'assets.jag'
-            }, {
+            }, 
+            {
+                url: 'TextContentRetriever',
+                path: 'TextContentRetriever.jag'
+            },
+            {
+                url: 'get_bpmn_content',
+                path: 'get_bpmn_content.jag'
+            },
+            {
                 url: 'subscriptions',
                 path: 'subscriptions.jag'
             }, {
                 url: 'rate',
                 path: 'rate.jag'
-            },{
-                url: 'content',
-                path: 'content.jag'
-            },{
-                url: 'processes',
-                path: 'processes.jag'
-            }
-            ],
+            }],
             pages: [{
                 title: 'Store |  ' + typeSingularLabel,
                 url: 'details',

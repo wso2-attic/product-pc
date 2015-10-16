@@ -1,5 +1,6 @@
+<%
 /*
- *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -14,11 +15,20 @@
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License.
- *
  */
-var resources = function (page, meta) {
-    return {
-        template: 'tags.hbs',
-        js: ['tags.js' ]
-    };
-};
+ 
+importPackage(org.wso2.carbon.pc.core);
+var log = new Log();
+if (log.isDebugEnabled()) {
+log.debug("INSIDE get bpmn content...");
+}
+var ps = new ProcessStore();
+
+var bpmnPath = String(request.getParameter("bpmn_content_path"));
+log.info("Retrieving BPMN content for: " + bpmnPath);
+var bpmnData = ps.getBPMN(bpmnPath);
+if (log.isDebugEnabled()) {
+log.debug(bpmnData);
+}
+print(bpmnData);
+%>

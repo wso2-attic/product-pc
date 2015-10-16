@@ -357,6 +357,34 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
             </outputDirectory>
         </fileSet>
+        <!-- PC copy configs for store and global -->
+
+        <fileSet>
+            <directory>../extensions/apps/publisher</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app
+            </outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>../extensions/apps/store</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/app
+            </outputDirectory>
+        </fileSet>
+         <!-- global config to update product name in publisher -->
+        <fileSet>
+        <directory>../extensions/themes</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/views/themes
+            </outputDirectory>
+        </fileSet>
+         <fileSet>
+       <directory>../extensions/conf/navigators</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules
+            </outputDirectory>
+        </fileSet>
 
     </fileSets>
     <dependencySets>
@@ -584,6 +612,32 @@
             <source>../extensions/process/process.rxt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/rxts</outputDirectory>
             <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>../extensions/conf/jaggery.conf</source>
+             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso</outputDirectory>
+             <fileMode>644</fileMode>
+        </file>
+         <file>
+            <source>../extensions/conf/storeTheme/product-title.hbs</source>
+             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
+             <fileMode>644</fileMode>
+        </file>
+         <file>
+            <source>../extensions/conf/decorators/page-decorators.js</source>
+             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules</outputDirectory>
+             <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../extensions/conf/navigators/navigation.hbs</source>
+             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
+             <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../extensions/conf/navigators/searchNavigators/advance-search-navigation.hbs</source>
+             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/app/store-common/themes/store/partials</outputDirectory>
+             <fileMode>644</fileMode>
         </file>
 
     </files>
