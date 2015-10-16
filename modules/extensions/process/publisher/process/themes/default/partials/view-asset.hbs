@@ -107,25 +107,41 @@
 <h2>{{assets.tables.[0].fields.name.value}}</h2>
 <br/>
 <div id="overviewDiv">
-<p>Version: {{assets.tables.[0].fields.version.value}}</p>
-<p>Owner: {{assets.tables.[0].fields.owner.value}}</p>
-<p>Process text path: {{assets.tables.[1].fields.processtextpath.value}}</p>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Version</th>
+            <th>Owner</th>
+            <th>Process text path</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{assets.tables.[0].fields.version.value}}</td>
+            <td>{{assets.tables.[0].fields.owner.value}}</td>
+            <td>{{assets.tables.[1].fields.processtextpath.value}}</td>
+        </tr>
+        </tbody>
+    </table>
 
-    {{#if processTextAvaliable}}
-        <div id="vtdiv"><button id="viewTextButton" onclick="viewText()">Show process text</button></div>
-        <div id="atdiv"><button id="addTextButton" onclick="showTextEditor()" style="display: none">Describe process in text</button></div>
-    {{else}}
-        <div id="vtdiv"><button id="viewTextButton" onclick="viewText()" style="display: none">Show process text</button></div>
-        <div id="atdiv"><button id="addTextButton" onclick="showTextEditor()">Describe process in text</button></div>
-    {{/if}}
+    <div class="control-group" style="display: inline-block">
+        {{#if processTextAvaliable}}
+            <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()">Show process text</button></div>
+            <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()" style="display: none">Describe process in text</button></div>
+        {{else}}
+            <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">Show process text</button></div>
+            <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button></div>
+        {{/if}}
+    </div>
 
-
-{{#if bpmnAvaliable}}
-    <button onclick="showBPMN()">Show BPMN</button>
-    <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
-{{else}}
-    <button onclick="showBPMNUploader()">Associate a BPMN model</button>
-{{/if}}
+    <div class="control-group" style="display: inline-block">
+        {{#if bpmnAvaliable}}
+            <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
+            <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
+        {{else}}
+            <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
+        {{/if}}
+    </div>
 </div>
 
 <div id="processTextContainer" style="display: none">
