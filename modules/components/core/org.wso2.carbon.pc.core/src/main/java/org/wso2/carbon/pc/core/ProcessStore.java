@@ -163,9 +163,9 @@ public class ProcessStore {
                 if(predecessor.length() != 0){
                     for(int i = 0 ; i < predecessor.length() ; i++){
                         Element predecessorElement = append(doc, rootElement, "predecessor", mns);
-                        appendText(doc, predecessorElement, "name", mns, successor.getJSONObject(i).getString("name"));
-                        appendText(doc, predecessorElement, "path", mns, successor.getJSONObject(i).getString("path"));
-                        appendText(doc, predecessorElement, "id", mns, successor.getJSONObject(i).getString("id"));
+                        appendText(doc, predecessorElement, "name", mns, predecessor.getJSONObject(i).getString("name"));
+                        appendText(doc, predecessorElement, "path", mns, predecessor.getJSONObject(i).getString("path"));
+                        appendText(doc, predecessorElement, "id", mns, predecessor.getJSONObject(i).getString("id"));
                     }
                 }
 
