@@ -44,6 +44,9 @@ asset.server = function(ctx) {
             }, {
                 url: 'statistics',
                 path: 'statistics.jag'
+            }, {
+                url: 'get_process_list',
+                path: 'get_process_list.jag'
             }]
         }
     }

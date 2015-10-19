@@ -99,11 +99,19 @@ public class ProcessStore {
     }
 
 
-    public String createProcess(String processName, String processVersion, String processOwner, String processTags) {
+    public String createProcess(String processDetails) {
 
         String processId = "FAILED TO ADD PROCESS";
 
         try {
+            JSONObject processInfo = new JSONObject(processDetails);
+            String processName = processInfo.getString("processName");
+            String processVersion = processInfo.getString("processVersion");
+            String processOwner = processInfo.getString("processOwner");
+            String processTags = processInfo.getString("processTags");
+            JSONArray successor = processInfo.getJSONArray("successor");
+            JSONArray predecessor = processInfo.getJSONArray("predecessor");
+
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
@@ -142,6 +150,24 @@ public class ProcessStore {
                 // fill bpmn properties with NA values
                 appendText(doc, propertiesElement, "bpmnpath", mns, "NA");
                 appendText(doc, propertiesElement, "bpmnid", mns, "NA");
+
+                if(successor.length() != 0){
+                    for(int i = 0 ; i < successor.length() ; i++){
+                        Element successorElement = append(doc, rootElement, "successor", mns);
+                        appendText(doc, successorElement, "name", mns, successor.getJSONObject(i).getString("name"));
+                        appendText(doc, successorElement, "path", mns, successor.getJSONObject(i).getString("path"));
+                        appendText(doc, successorElement, "id", mns, successor.getJSONObject(i).getString("id"));
+                    }
+                }
+
+                if(predecessor.length() != 0){
+                    for(int i = 0 ; i < predecessor.length() ; i++){
+                        Element predecessorElement = append(doc, rootElement, "predecessor", mns);
+                        appendText(doc, predecessorElement, "name", mns, predecessor.getJSONObject(i).getString("name"));
+                        appendText(doc, predecessorElement, "path", mns, predecessor.getJSONObject(i).getString("path"));
+                        appendText(doc, predecessorElement, "id", mns, predecessor.getJSONObject(i).getString("id"));
+                    }
+                }
 
                 String processAssetContent = xmlToString(doc);
                 Resource processAsset = reg.newResource();

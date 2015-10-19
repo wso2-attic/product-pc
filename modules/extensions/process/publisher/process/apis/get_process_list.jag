@@ -5,7 +5,9 @@ var log = new Log();
 log.info("Process creation logic");
 
 var ps = new ProcessStore();
-var processDetails = String(request.getParameter("processInfo"));
-var status = ps.createProcess(processDetails);
-print(status);
+
+var processList = ps.getProcesses();
+
+log.info(processList);
+print(processList);
 %>

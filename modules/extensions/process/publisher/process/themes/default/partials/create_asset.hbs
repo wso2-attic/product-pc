@@ -1,4 +1,9 @@
 <script>
+    var processNames = [];
+    var processIds = [];
+    var processPaths = [];
+
+    window.onload = getProcessList;
 
     function showTextEditor() {
         saveProcess();
@@ -34,10 +39,11 @@
             $.ajax({
                 url: 'apis/create_process',
                 type: 'POST',
-                data: { 'processName': $("#pName").val(), 'processVersion' : $("#pVersion").val(), 'processOwner' : $("#pOwner").val(), 'processTags' : $("#pTags").val()},
+                data: { 'processInfo': getProcessInfo() },
                 success: function (response) {
                     $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response);
                     $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response);
+                    window.location = "../../assets/process/list";
                 },
                 error: function () {
                     alert("error");
@@ -45,6 +51,18 @@
             });
 
         }
+    }
+
+    function getProcessInfo(){
+        var processDetails = {
+            'processName': $("#pName").val(),
+            'processVersion' : $("#pVersion").val(),
+            'processOwner' : $("#pOwner").val(),
+            'processTags' : $("#pTags").val(),
+            'successor' : readSuccessorTable(),
+            'predecessor' : readPredecessorTable()
+        };
+        return (JSON.stringify(processDetails));
     }
 
     function saveProcessText() {
@@ -79,17 +97,207 @@
         $("#textProcessVersion").val($("#pVersion").val());
         return true;
     }
+
+    function successorNameAutoComplete(){
+        $(".successor_Name").autocomplete({
+            source: processNames
+        });
+    }
+
+    function successorPathAutoComplete(){
+        $(".successor_Path").autocomplete({
+            source: processPaths
+        });
+    }
+
+    function successorIdAutoComplete(){
+        $(".successor_Id").autocomplete({
+            source: processIds
+        });
+    }
+
+    function predecessorNameAutoComplete(){
+        $(".predecessor_Name").autocomplete({
+            source: processNames
+        });
+    }
+
+    function predecessorPathAutoComplete(){
+        $(".predecessor_Path").autocomplete({
+            source: processPaths
+        });
+    }
+
+    function predecessorIdAutoComplete(){
+        $(".predecessor_Id").autocomplete({
+            source: processIds
+        });
+    }
+
+    function readSuccessorTable(){
+        var successorInfo = [];
+        $('#table_successor tbody tr').each(function(){
+            if($(this).find('td:eq(0) input').val() == '' && $(this).find('td:eq(1) input').val() == '' && $(this).find('td:eq(2) input').val() == ''){
+                //continue
+            }else{
+                successorInfo.push({
+                    name: $(this).find('td:eq(0) input').val(),
+                    path: $(this).find('td:eq(1) input').val(),
+                    id: $(this).find('td:eq(2) input').val()
+                });
+            }
+        });
+        return successorInfo;
+    }
+
+    function readPredecessorTable(){
+        var predecessorInfo = [];
+        $('#table_predecessor tbody tr').each(function(){
+            if($(this).find('td:eq(0) input').val() == '' && $(this).find('td:eq(1) input').val() == '' && $(this).find('td:eq(2) input').val() == ''){
+                //continue
+            }else{
+                predecessorInfo.push({
+                    name: $(this).find('td:eq(0) input').val(),
+                    path: $(this).find('td:eq(1) input').val(),
+                    id: $(this).find('td:eq(2) input').val()
+                });
+            }
+        });
+        return predecessorInfo;
+    }
+
+    function getProcessList(){
+        $.ajax({
+            url: 'https://localhost:9443/publisher/assets/process/apis/get_process_list',
+            type: 'GET',
+            success: function (response) {
+                var processListObj = JSON.parse(response);
+                for(var i = 0 ; i < processListObj.length ; i++){
+                    processNames.push(processListObj[i].processname);
+                    processIds.push(processListObj[i].processid);
+                    processPaths.push(processListObj[i].path);
+                }
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
 </script>
 
 <div id="overviewDiv">
-    Process name<input onblur="blurIt()" type="text" placeholder="Enter Process Name" name="overview_name" id="pName" class="input-large" style="width:80em";>
-    Version<input onblur="blurIt()" type="text" placeholder="Enter Process Name" name="overview_name" id="pVersion" class="input-large" style="width:80em";>
-    Owner<input onblur="blurIt()" type="text" placeholder="Enter Process Name" name="overview_name" id="pOwner" class="input-large" style="width:80em";>
-    Tags<input onblur="blurIt()" type="text" placeholder="Enter Process Name" name="overview_tags" id="pTags" class="input-large" style="width:80em";>
+    <form class="form-horizontal">
+        <div class="control-group">
+            <h2 class="field-title">
+                <a class="collapsing-h2" aria-expanded="true" href="#collapseprocessinfo" data-toggle="collapse">
+                    <i class="cu-btn-exp-col btn-collapsed">Process Information</i>
+                </a>
+            </h2>
+            <div class="collapse in responsive-form-container" id="collapseprocessinfo">
 
-    <button onclick="showTextEditor()">Describe process in text...</button><button onclick="associateBPMN()">Associate BPMN model...</button>
+                <div class="form-group">
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Process name<sup class="required-field">*</sup></label>
+                    <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                        <input onblur="blurIt()" type="text" placeholder="Enter Process Name" name="overview_name" id="pName" class="form-control" required="">
+                    </div>
+                </div>
 
-    <div><button value="Save process" onclick="saveProcess()">Save process</button></div>
+                <div class="form-group">
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Version<sup class="required-field">*</sup></label>
+                    <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                        <input onblur="blurIt()" type="text" placeholder="Enter Process Version" name="overview_version" id="pVersion" class="form-control" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Owner<sup class="required-field">*</sup></label>
+                    <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                        <input onblur="blurIt()" type="text" placeholder="Enter Process Owner" name="overview_owner" id="pOwner" class="form-control" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Tags</label>
+                    <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                        <input onblur="blurIt()" type="text" placeholder="Enter Tags" name="overview_tags" id="pTags" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button>
+                        <button class="btn btn-primary" onclick="associateBPMN()">Associate BPMN model</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <h2 class="field-title">
+                <a class="collapsing-h2" aria-expanded="true" href="#successor" data-toggle="collapse">
+                    <i class="cu-btn-exp-col btn-collapsed">Successor</i>
+                </a>
+            </h2>
+            <div id="successor" class="responsive-form-container collapse in" aria-expanded="true" style="">
+                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+                    &nbsp;
+                </div>
+                <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                    <div class="add-unbounded-row"><a class="js-add-unbounded-row" data-name="successor"><i class="fa fa-plus-circle"></i> Add Successor</a></div>
+                    <table class="tablex cu-data-table js-unbounded-table" id="table_successor">
+                        <thead>
+
+                        <tr><th></th>
+                        </tr></thead>
+                        <tbody>
+                        <tr><td valign="top"><input type="text" value="" name="successor_Name" id="successor_Name" class="input-large successor_Name" onkeydown="successorNameAutoComplete()"></td>
+                            <td valign="top"><input type="text" value="" name="successor_Path" id="successor_Path" class="input-large successor_Path" onkeydown="successorPathAutoComplete()"></td>
+                            <td valign="top"><input type="text" value="" name="successor_Id" id="successor_Id" class="input-large successor_Id" onkeydown="successorIdAutoComplete()"></td>
+                            <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <h2 class="field-title">
+                <a class="collapsing-h2" aria-expanded="true" href="#predecessor" data-toggle="collapse">
+                    <i class="cu-btn-exp-col btn-collapsed">Predecessor</i>
+                </a>
+            </h2>
+
+            <div id="predecessor" class="responsive-form-container collapse in" aria-expanded="true" style="">
+                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+                    &nbsp;
+                </div>
+                <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                    <div class="add-unbounded-row"><a class="js-add-unbounded-row" data-name="predecessor"><i class="fa fa-plus-circle"></i> Add Predecessor</a></div>
+                    <table class="tablex cu-data-table js-unbounded-table" id="table_predecessor">
+                        <thead>
+
+                        <tr><th></th>
+                        </tr></thead>
+                        <tbody>
+                        <tr>
+                            <td valign="top"><input type="text" value="" name="predecessor_Name" id="predecessor_Name" class="input-large predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
+                            <td valign="top"><input type="text" value="" name="predecessor_Path" id="predecessor_Path" class="input-large predecessor_Path" onkeydown="predecessorPathAutoComplete()"></td>
+                            <td valign="top"><input type="text" value="" name="predecessor_Id" id="predecessor_Id" class="input-large predecessor_Id" onkeydown="predecessorIdAutoComplete()"></td>
+                            <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="processButtons" class="form-actions">
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button class="btn btn btn-success" value="Save process" onclick="saveProcess()">Save process</button>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 
 <div id="processTextDiv" style="display: none">
@@ -119,3 +327,22 @@
     </form>
 </div>
 
+<table style="display: none;" class="refernceTableForUnbounded">
+    <tbody>
+    <tr id="table_reference_successor">
+        <td valign="top"><input type="text" class="form-control successor_Name" value="" name="successor_Name" id="successor_Name" onkeydown="successorNameAutoComplete()"></td>
+        <td valign="top"><input type="text" class="form-control successor_Path" value="" name="successor_Path" id="successor_Path" onkeydown="successorPathAutoComplete()"></td>
+        <td valign="top"><input type="text" class="form-control successor_Id" value="" name="successor_Id" id="successor_Id" onkeydown="successorIdAutoComplete()"></td>
+        <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td></tr>
+    </tbody>
+</table>
+
+<table style="display: none;" class="refernceTableForUnbounded">
+    <tbody>
+    <tr id="table_reference_predecessor">
+        <td valign="top"><input type="text" class="form-control predecessor_Name" value="" name="predecessor_Name" id="predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
+        <td valign="top"><input type="text" class="form-control predecessor_Path" value="" name="predecessor_Path" id="predecessor_Path" onkeydown="predecessorPathAutoComplete()"></td>
+        <td valign="top"><input type="text" class="form-control predecessor_Id" value="" name="predecessor_Id" id="predecessor_Id" onkeydown="predecessorIdAutoComplete()"></td>
+        <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td></tr>
+    </tbody>
+</table>
