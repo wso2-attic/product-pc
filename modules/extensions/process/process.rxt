@@ -1,6 +1,7 @@
 <artifactType type="application/vnd.wso2-process+xml" shortName="process" singularLabel="Process" pluralLabel="Processes" hasNamespace="false" iconSet="10">
     <storagePath>/processes/@{overview_name}/@{overview_version}</storagePath>
     <nameAttribute>overview_name</nameAttribute>
+    <lifecycle>SampleLifeCycle2</lifecycle>
     <ui>
         <list>
             <column name="Owner">
