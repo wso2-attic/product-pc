@@ -1,7 +1,6 @@
 <script>
     var processNames = [];
-    var processIds = [];
-    var processPaths = [];
+    var processListObj;
 
     window.onload = getProcessList;
 
@@ -104,46 +103,32 @@
         });
     }
 
-    function successorPathAutoComplete(){
-        $(".successor_Path").autocomplete({
-            source: processPaths
-        });
-    }
-
-    function successorIdAutoComplete(){
-        $(".successor_Id").autocomplete({
-            source: processIds
-        });
-    }
-
     function predecessorNameAutoComplete(){
         $(".predecessor_Name").autocomplete({
             source: processNames
         });
     }
 
-    function predecessorPathAutoComplete(){
-        $(".predecessor_Path").autocomplete({
-            source: processPaths
-        });
-    }
-
-    function predecessorIdAutoComplete(){
-        $(".predecessor_Id").autocomplete({
-            source: processIds
-        });
-    }
-
     function readSuccessorTable(){
         var successorInfo = [];
         $('#table_successor tbody tr').each(function(){
-            if($(this).find('td:eq(0) input').val() == '' && $(this).find('td:eq(1) input').val() == '' && $(this).find('td:eq(2) input').val() == ''){
+            if($(this).find('td:eq(0) input').val() == ''){
                 //continue
             }else{
+                var successorPath, successorId;
+                for(var i = 0 ; i < processListObj.length ; i++){
+                    if(processListObj[i].processname == $(this).find('td:eq(0) input').val().split("-")[0] &&
+                            processListObj[i].processversion == $(this).find('td:eq(0) input').val().split("-")[1]){
+                        successorPath = processListObj[i].path;
+                        successorId = processListObj[i].processid;
+                        break;
+                    }
+                }
+
                 successorInfo.push({
-                    name: $(this).find('td:eq(0) input').val(),
-                    path: $(this).find('td:eq(1) input').val(),
-                    id: $(this).find('td:eq(2) input').val()
+                    name: $(this).find('td:eq(0) input').val().split("-")[0],
+                    path: successorPath,
+                    id: successorId
                 });
             }
         });
@@ -153,13 +138,23 @@
     function readPredecessorTable(){
         var predecessorInfo = [];
         $('#table_predecessor tbody tr').each(function(){
-            if($(this).find('td:eq(0) input').val() == '' && $(this).find('td:eq(1) input').val() == '' && $(this).find('td:eq(2) input').val() == ''){
+            if($(this).find('td:eq(0) input').val() == ''){
                 //continue
             }else{
+                var predecessorPath, predecessorId;
+                for(var i = 0 ; i < processListObj.length ; i++){
+                    if(processListObj[i].processname == $(this).find('td:eq(0) input').val().split("-")[0] &&
+                            processListObj[i].processversion == $(this).find('td:eq(0) input').val().split("-")[1]){
+                        predecessorPath = processListObj[i].path;
+                        predecessorId = processListObj[i].processid;
+                        break;
+                    }
+                }
+
                 predecessorInfo.push({
-                    name: $(this).find('td:eq(0) input').val(),
-                    path: $(this).find('td:eq(1) input').val(),
-                    id: $(this).find('td:eq(2) input').val()
+                    name: $(this).find('td:eq(0) input').val().split("-")[0],
+                    path: predecessorPath,
+                    id: predecessorId
                 });
             }
         });
@@ -171,11 +166,9 @@
             url: 'https://localhost:9443/publisher/assets/process/apis/get_process_list',
             type: 'GET',
             success: function (response) {
-                var processListObj = JSON.parse(response);
+                processListObj = JSON.parse(response);
                 for(var i = 0 ; i < processListObj.length ; i++){
-                    processNames.push(processListObj[i].processname);
-                    processIds.push(processListObj[i].processid);
-                    processPaths.push(processListObj[i].path);
+                    processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
                 }
             },
             error: function () {
@@ -249,9 +242,8 @@
                         <tr><th></th>
                         </tr></thead>
                         <tbody>
-                        <tr><td valign="top"><input type="text" value="" name="successor_Name" id="successor_Name" class="input-large successor_Name" onkeydown="successorNameAutoComplete()"></td>
-                            <td valign="top"><input type="text" value="" name="successor_Path" id="successor_Path" class="input-large successor_Path" onkeydown="successorPathAutoComplete()"></td>
-                            <td valign="top"><input type="text" value="" name="successor_Id" id="successor_Id" class="input-large successor_Id" onkeydown="successorIdAutoComplete()"></td>
+                        <tr>
+                            <td valign="top"><input type="text" value="" name="successor_Name" id="successor_Name" class="input-large successor_Name" onkeydown="successorNameAutoComplete()"></td>
                             <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
                         </tr>
                         </tbody>
@@ -279,8 +271,6 @@
                         <tbody>
                         <tr>
                             <td valign="top"><input type="text" value="" name="predecessor_Name" id="predecessor_Name" class="input-large predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
-                            <td valign="top"><input type="text" value="" name="predecessor_Path" id="predecessor_Path" class="input-large predecessor_Path" onkeydown="predecessorPathAutoComplete()"></td>
-                            <td valign="top"><input type="text" value="" name="predecessor_Id" id="predecessor_Id" class="input-large predecessor_Id" onkeydown="predecessorIdAutoComplete()"></td>
                             <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
                         </tr>
                         </tbody>
@@ -331,8 +321,6 @@
     <tbody>
     <tr id="table_reference_successor">
         <td valign="top"><input type="text" class="form-control successor_Name" value="" name="successor_Name" id="successor_Name" onkeydown="successorNameAutoComplete()"></td>
-        <td valign="top"><input type="text" class="form-control successor_Path" value="" name="successor_Path" id="successor_Path" onkeydown="successorPathAutoComplete()"></td>
-        <td valign="top"><input type="text" class="form-control successor_Id" value="" name="successor_Id" id="successor_Id" onkeydown="successorIdAutoComplete()"></td>
         <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td></tr>
     </tbody>
 </table>
@@ -341,8 +329,6 @@
     <tbody>
     <tr id="table_reference_predecessor">
         <td valign="top"><input type="text" class="form-control predecessor_Name" value="" name="predecessor_Name" id="predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
-        <td valign="top"><input type="text" class="form-control predecessor_Path" value="" name="predecessor_Path" id="predecessor_Path" onkeydown="predecessorPathAutoComplete()"></td>
-        <td valign="top"><input type="text" class="form-control predecessor_Id" value="" name="predecessor_Id" id="predecessor_Id" onkeydown="predecessorIdAutoComplete()"></td>
         <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td></tr>
     </tbody>
 </table>

@@ -641,11 +641,13 @@ public class ProcessStore {
                     String processContent = new String((byte[]) processResource.getContent());
                     Document processXML = stringToXML(processContent);
                     String processName = processXML.getElementsByTagName("name").item(0).getTextContent();
+                    String processVersion = processXML.getElementsByTagName("version").item(0).getTextContent();
 
                     JSONObject processJSON = new JSONObject();
                     processJSON.put("path", processPath);
                     processJSON.put("processid", processResource.getUUID());
                     processJSON.put("processname", processName);
+                    processJSON.put("processversion", processVersion);
                     result.put(processJSON);
                 }
 
