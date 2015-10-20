@@ -357,6 +357,12 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
             </outputDirectory>
         </fileSet>
+        <fileSet>
+            <directory>../extensions/process/store</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/assets
+            </outputDirectory>
+        </fileSet>
         <!-- PC copy configs for store and global -->
 
         <fileSet>
