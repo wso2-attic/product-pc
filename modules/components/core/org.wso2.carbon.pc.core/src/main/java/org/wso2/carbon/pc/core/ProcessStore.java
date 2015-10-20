@@ -109,6 +109,7 @@ public class ProcessStore {
             String processVersion = processInfo.getString("processVersion");
             String processOwner = processInfo.getString("processOwner");
             String processTags = processInfo.getString("processTags");
+            JSONArray subprocess = processInfo.getJSONArray("subprocess");
             JSONArray successor = processInfo.getJSONArray("successor");
             JSONArray predecessor = processInfo.getJSONArray("predecessor");
 
@@ -150,6 +151,15 @@ public class ProcessStore {
                 // fill bpmn properties with NA values
                 appendText(doc, propertiesElement, "bpmnpath", mns, "NA");
                 appendText(doc, propertiesElement, "bpmnid", mns, "NA");
+
+                if(subprocess.length() != 0){
+                    for(int i = 0 ; i < subprocess.length() ; i++){
+                        Element successorElement = append(doc, rootElement, "subprocess", mns);
+                        appendText(doc, successorElement, "name", mns, subprocess.getJSONObject(i).getString("name"));
+                        appendText(doc, successorElement, "path", mns, subprocess.getJSONObject(i).getString("path"));
+                        appendText(doc, successorElement, "id", mns, subprocess.getJSONObject(i).getString("id"));
+                    }
+                }
 
                 if(successor.length() != 0){
                     for(int i = 0 ; i < successor.length() ; i++){

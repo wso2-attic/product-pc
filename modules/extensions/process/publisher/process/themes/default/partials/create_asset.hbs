@@ -58,6 +58,7 @@
             'processVersion' : $("#pVersion").val(),
             'processOwner' : $("#pOwner").val(),
             'processTags' : $("#pTags").val(),
+            'subprocess' : readSubprocessTable(),
             'successor' : readSuccessorTable(),
             'predecessor' : readPredecessorTable()
         };
@@ -97,6 +98,12 @@
         return true;
     }
 
+    function subProcessNamesAutoComplete(){
+        $(".subprocess_Name").autocomplete({
+            source: processNames
+        });
+    }
+
     function successorNameAutoComplete(){
         $(".successor_Name").autocomplete({
             source: processNames
@@ -107,6 +114,32 @@
         $(".predecessor_Name").autocomplete({
             source: processNames
         });
+    }
+
+    function readSubprocessTable(){
+        var subprocessInfo = [];
+        $('#table_subprocess tbody tr').each(function(){
+            if($(this).find('td:eq(0) input').val() == ''){
+                //continue
+            }else{
+                var subprocessPath, subprocessId;
+                for(var i = 0 ; i < processListObj.length ; i++){
+                    if(processListObj[i].processname == $(this).find('td:eq(0) input').val().split("-")[0] &&
+                            processListObj[i].processversion == $(this).find('td:eq(0) input').val().split("-")[1]){
+                        subprocessPath = processListObj[i].path;
+                        subprocessId = processListObj[i].processid;
+                        break;
+                    }
+                }
+
+                subprocessInfo.push({
+                    name: $(this).find('td:eq(0) input').val().split("-")[0],
+                    path: subprocessPath,
+                    id: subprocessId
+                });
+            }
+        });
+        return subprocessInfo;
     }
 
     function readSuccessorTable(){
@@ -226,6 +259,32 @@
             </div>
 
             <h2 class="field-title">
+                <a class="collapsing-h2" aria-expanded="true" href="#subprocess" data-toggle="collapse">
+                    <i class="cu-btn-exp-col btn-collapsed">Subprocess</i>
+                </a>
+            </h2>
+
+            <div id="subprocess" class="responsive-form-container collapse in" aria-expanded="true" style="">
+                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+                    &nbsp;
+                </div>
+                <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                    <div class="add-unbounded-row"><a class="js-add-unbounded-row" data-name="subprocess"><i class="fa fa-plus-circle"></i> Add Subprocess</a></div>
+                    <table class="tablex cu-data-table js-unbounded-table" id="table_subprocess">
+                        <thead>
+
+                        <tr><th></th>
+                        </tr></thead>
+                        <tbody>
+                        <tr>
+                            <td valign="top"><input type="text" value="" name="subprocess_Name" id="subprocess_Name" class="input-large subprocess_Name" onkeydown="subProcessNamesAutoComplete()"></td>
+                            <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <h2 class="field-title">
                 <a class="collapsing-h2" aria-expanded="true" href="#successor" data-toggle="collapse">
                     <i class="cu-btn-exp-col btn-collapsed">Successor</i>
                 </a>
@@ -316,6 +375,15 @@
         </div>
     </form>
 </div>
+
+<table style="display: none;" class="refernceTableForUnbounded">
+    <tbody>
+    <tr id="table_reference_subprocess">
+        <td valign="top"><input type="text" class="form-control subprocess_Name" value="" name="subprocess_Name" id="subprocess_Name" onkeydown="subProcessNamesAutoComplete()"></td>
+        <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
+    </tr>
+    </tbody>
+</table>
 
 <table style="display: none;" class="refernceTableForUnbounded">
     <tbody>
