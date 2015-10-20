@@ -1,4 +1,8 @@
 <script>
+    var processNames = [];
+    var processListObj;
+
+    window.onload = getProcessList;
 
     function showBPMN() {
 
@@ -102,46 +106,178 @@
         $("#bpmnEditDiv").hide();
     }
 
+    function subProcessNamesAutoComplete(){
+        $(".subprocess_Name").autocomplete({
+            source: processNames
+        });
+    }
+
+    function successorNameAutoComplete(){
+        $(".successor_Name").autocomplete({
+            source: processNames
+        });
+    }
+
+    function predecessorNameAutoComplete(){
+        $(".predecessor_Name").autocomplete({
+            source: processNames
+        });
+    }
+
+    function getProcessList(){
+        $.ajax({
+            url: 'https://localhost:9443/publisher/assets/process/apis/get_process_list',
+            type: 'GET',
+            success: function (response) {
+                processListObj = JSON.parse(response);
+                for(var i = 0 ; i < processListObj.length ; i++){
+                    processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
+                }
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+
 </script>
 
 <h2>{{assets.tables.[0].fields.name.value}}</h2>
 <br/>
 <div id="overviewDiv">
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>Version</th>
-            <th>Owner</th>
-            <th>Process text path</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>{{assets.tables.[0].fields.version.value}}</td>
-            <td>{{assets.tables.[0].fields.owner.value}}</td>
-            <td>{{assets.tables.[1].fields.processtextpath.value}}</td>
-        </tr>
-        </tbody>
-    </table>
+    <form class="form-horizontal">
+        <div class="control-group">
+            <table class="table table-responsive" style="width: 8cm;border-bottom:0px !important;">
+                <tbody>
+                <tr>
+                    <td width="40%" style="border: 0px !important;">Version:</td>
+                    <td width="60%" style="border: 0px !important;">{{assets.tables.[0].fields.version.value}}</td>
+                </tr>
+                <tr>
+                    <td width="40%" style="border: 0px !important;">Owner:</td>
+                    <td width="60%" style="border: 0px !important;" contenteditable="true">{{assets.tables.[0].fields.owner.value}}</td>
+                </tr>
+                </tbody>
+            </table>
 
-    <div class="control-group" style="display: inline-block">
-        {{#if processTextAvaliable}}
-            <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()">Show process text</button></div>
-            <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()" style="display: none">Describe process in text</button></div>
-        {{else}}
-            <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">Show process text</button></div>
-            <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button></div>
-        {{/if}}
-    </div>
+            <div class="control-group" style="display: inline-block">
+                {{#if processTextAvaliable}}
+                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()">Show process text</button></div>
+                    <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()" style="display: none">Describe process in text</button></div>
+                {{else}}
+                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">Show process text</button></div>
+                    <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button></div>
+                {{/if}}
+            </div>
 
-    <div class="control-group" style="display: inline-block">
-        {{#if bpmnAvaliable}}
-            <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
-            <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
-        {{else}}
-            <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
-        {{/if}}
-    </div>
+            <div class="control-group" style="display: inline-block">
+                {{#if bpmnAvaliable}}
+                    <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
+                    <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
+                {{else}}
+                    <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
+                {{/if}}
+            </div>
+            <br /><br />
+
+            <h2 class="field-title">
+                <a class="collapsing-h2" aria-expanded="true" href="#subprocess" data-toggle="collapse">
+                    <i class="cu-btn-exp-col btn-collapsed">Subprocess</i>
+                </a>
+            </h2>
+
+            <div id="subprocess" class="responsive-form-container collapse in" aria-expanded="true" style="">
+                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+                    &nbsp;
+                </div>
+                <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                    <div class="add-unbounded-row"><a class="js-add-unbounded-row" data-name="subprocess"><i class="fa fa-plus-circle"></i> Add Subprocess</a></div>
+                    <table class="tablex cu-data-table js-unbounded-table" id="table_subprocess">
+                        <thead>
+
+                        <tr><th></th>
+                        </tr></thead>
+                        <tbody>
+                        <tr>
+                        {{#each involveProcessList.subprocesses}}
+                                <td valign="top"><input type="text" value="{{this.name}}" name="subprocess_Name" id="subprocess_Name" class="input-large subprocess_Name" onkeydown="subProcessNamesAutoComplete()"></td>
+                                <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td></tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <h2 class="field-title">
+                <a class="collapsing-h2" aria-expanded="true" href="#successor" data-toggle="collapse">
+                    <i class="cu-btn-exp-col btn-collapsed">Successor</i>
+                </a>
+            </h2>
+            <div id="successor" class="responsive-form-container collapse in" aria-expanded="true" style="">
+                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+                    &nbsp;
+                </div>
+                <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                    <div class="add-unbounded-row"><a class="js-add-unbounded-row" data-name="successor"><i class="fa fa-plus-circle"></i> Add Successor</a></div>
+                    <table class="tablex cu-data-table js-unbounded-table" id="table_successor">
+                        <thead>
+
+                        <tr><th></th>
+                        </tr></thead>
+                        <tbody>
+                        <tr>
+                            {{#each involveProcessList.successors}}
+                                <td valign="top"><input type="text" value="{{this.name}}" name="successor_Name" id="successor_Name" class="input-large successor_Name" onkeydown="successorNameAutoComplete()"></td>
+                                <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
+                            {{/each}}
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <h2 class="field-title">
+                <a class="collapsing-h2" aria-expanded="true" href="#predecessor" data-toggle="collapse">
+                    <i class="cu-btn-exp-col btn-collapsed">Predecessor</i>
+                </a>
+            </h2>
+
+            <div id="predecessor" class="responsive-form-container collapse in" aria-expanded="true" style="">
+                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+                    &nbsp;
+                </div>
+                <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                    <div class="add-unbounded-row"><a class="js-add-unbounded-row" data-name="predecessor"><i class="fa fa-plus-circle"></i> Add Predecessor</a></div>
+                    <table class="tablex cu-data-table js-unbounded-table" id="table_predecessor">
+                        <thead>
+
+                        <tr><th></th>
+                        </tr></thead>
+                        <tbody>
+                        <tr>
+                            {{#each involveProcessList.predecessors}}
+                                <td valign="top"><input type="text" value="{{this.name}}" name="predecessor_Name" id="predecessor_Name" class="input-large predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
+                                <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
+                            {{/each}}
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="updateButtons" class="form-actions">
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <input type="submit" value="Update" class="btn btn-primary" name="editAssetButton" id="editAssetButton">
+                        <input type="reset" value="Reset" class="btn btn-default">
+                        <input type="hidden" value="process" name="process" id="meta-asset-type">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
 </div>
 
 <div id="processTextContainer" style="display: none">
@@ -185,7 +321,32 @@
     </form>
 </div>
 
+<table style="display: none;" class="refernceTableForUnbounded">
+    <tbody>
+    <tr id="table_reference_subprocess">
+        <td valign="top"><input type="text" class="form-control subprocess_Name" value="" name="subprocess_Name" id="subprocess_Name" onkeydown="subProcessNamesAutoComplete()"></td>
+        <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
+    </tr>
+    </tbody>
+</table>
 
+<table style="display: none;" class="refernceTableForUnbounded">
+    <tbody>
+    <tr id="table_reference_successor">
+        <td valign="top"><input type="text" class="form-control successor_Name" value="" name="successor_Name" id="successor_Name" onkeydown="successorNameAutoComplete()"></td>
+        <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
+    </tr>
+    </tbody>
+</table>
+
+<table style="display: none;" class="refernceTableForUnbounded">
+    <tbody>
+    <tr id="table_reference_predecessor">
+        <td valign="top"><input type="text" class="form-control predecessor_Name" value="" name="predecessor_Name" id="predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
+        <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
+    </tr>
+    </tbody>
+</table>
 
 
 

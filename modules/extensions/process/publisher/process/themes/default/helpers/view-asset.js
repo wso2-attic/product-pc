@@ -19,8 +19,7 @@
 
 var resources = function(){
     return {
-        js:['select2.min.js','tags/tags-common.js','tags/tags-init-view-asset.js','tinymce/tinymce.min.js','view-asset-functions.js'],
-        css:['select2.min.css']
+        js:['select2.min.js','tags/tags-common.js','update_asset.js','jquery-file-upload/jquery-ui.js','tags/tags-init-view-asset.js','tinymce/tinymce.min.js','view-asset-functions.js'],
+        css:['select2.min.css','jquery-ui.css']
     }
 };
-

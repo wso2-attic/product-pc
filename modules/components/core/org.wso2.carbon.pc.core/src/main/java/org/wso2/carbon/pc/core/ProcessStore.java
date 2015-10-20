@@ -728,6 +728,92 @@ public class ProcessStore {
         }
     }
 
+    public String getSucessorPredecessorSubprocessList(String resourcePath){
+        String resourceString = "";
+        try{
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                resourcePath = resourcePath.substring("/_system/governance/".length());
+                Resource resourceAsset = reg.get(resourcePath);
+                String resourceContent = new String((byte[]) resourceAsset.getContent());
+
+                JSONObject conObj = new JSONObject();
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder;
+                builder = factory.newDocumentBuilder();
+                Document document = builder.parse(new InputSource(new StringReader(resourceContent)));
+
+                JSONArray subprocessArray = new JSONArray();
+                JSONArray successorArray = new JSONArray();
+                JSONArray predecessorArray = new JSONArray();
+
+                conObj.put("subprocesses", subprocessArray);
+                conObj.put("successors", successorArray);
+                conObj.put("predecessors", predecessorArray);
+
+                NodeList subprocessElements = ((Element)document.getFirstChild()).getElementsByTagName("subprocess");
+                NodeList successorElements = ((Element)document.getFirstChild()).getElementsByTagName("successor");
+                NodeList predecessorElements = ((Element)document.getFirstChild()).getElementsByTagName("predecessor");
+
+                if(subprocessElements.getLength() != 0){
+                    for (int i = 0 ; i < subprocessElements.getLength() ; i++) {
+                        Element subprocessElement = (Element) subprocessElements.item(i);
+                        String subprocessName = subprocessElement.getElementsByTagName("name").item(0).getTextContent();
+                        String subprocessPath =
+                                subprocessElement.getElementsByTagName("path").item(0).getTextContent();
+                        String subprocessId =
+                                subprocessElement.getElementsByTagName("id").item(0).getTextContent();
+
+                        JSONObject subprocess = new JSONObject();
+                        subprocess.put("name", subprocessName);
+                        subprocess.put("path", subprocessPath);
+                        subprocess.put("id", subprocessId);
+                        subprocessArray.put(subprocess);
+                    }
+                }
+
+                if(successorElements.getLength() != 0){
+                    for(int i = 0 ; i < subprocessElements.getLength() ; i++){
+                        Element successorElement = (Element) successorElements.item(i);
+                        String successorName = successorElement.getElementsByTagName("name").item(0).getTextContent();
+                        String successorPath =
+                                successorElement.getElementsByTagName("path").item(0).getTextContent();
+                        String successorId =
+                                successorElement.getElementsByTagName("id").item(0).getTextContent();
+
+                        JSONObject successor = new JSONObject();
+                        successor.put("name", successorName);
+                        successor.put("path", successorPath);
+                        successor.put("id", successorId);
+                        successorArray.put(successor);
+                    }
+                }
+
+                if(predecessorElements.getLength() != 0){
+                    for(int i = 0 ; i < predecessorElements.getLength() ; i++){
+                        Element predecessorElement = (Element) predecessorElements.item(i);
+                        String predecessorName = predecessorElement.getElementsByTagName("name").item(0).getTextContent();
+                        String predecessorPath =
+                                predecessorElement.getElementsByTagName("path").item(0).getTextContent();
+                        String predecessorId =
+                                predecessorElement.getElementsByTagName("id").item(0).getTextContent();
+
+                        JSONObject predecessor = new JSONObject();
+                        predecessor.put("name", predecessorName);
+                        predecessor.put("path", predecessorPath);
+                        predecessor.put("id", predecessorId);
+                        predecessorArray.put(predecessor);
+                    }
+                }
+                resourceString = conObj.toString();
+            }
+        }catch (Exception e) {
+            log.error("Failed to fetch Successor Predecessor and Subprocess information: " + resourcePath);
+        }
+        return resourceString;
+    }
+
 
 //    public static void main(String[] args) {
 //        String path = "/home/chathura/temp/t5/TestProcess1.bpmn";
