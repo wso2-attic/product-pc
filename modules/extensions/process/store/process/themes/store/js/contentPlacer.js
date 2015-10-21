@@ -20,22 +20,27 @@
       var processName = $("#divProcessName").text().trim(); //current process name
       var bpmnPath = $("#divBpmnPath").text().trim(); //bpmn xml resource path
 
-      if (processPath) { // if process text added
+   
+
+      if (processPath !== "NA") { // if process text added
           processPath = "/_system/governance/" + processPath;
       }
-      if (bpmnPath) { // if bpmn path added
+      if (bpmnPath !== "NA") { // if bpmn path added
           bpmnPath = "/_system/governance/" + bpmnPath;
       }
 
       var preAssets = {
           data: []
       }
-
+     var subAssets = {
+          data: []
+      }
       var sucAssets = {
           data: []
       }
       var predecessors = " ";
       var successors = " ";
+      var subprocesses = " ";
 
       $("#btnView").show(); //by default hide
       $("#btnCollapse").hide();
@@ -69,7 +74,7 @@
       $("#tab-model").on("click", function() {
 
           // get bpmn model if available
-          if (bpmnPath) {
+          if (bpmnPath !== "NA") {
               $.ajax({
                   type: "GET",
                   url: "/store/assets/process/apis/get_bpmn_content",
@@ -113,7 +118,27 @@
                           });
                       }
                   } // end of predecessors
+                  //
+                  if (item.attributes.subprocess_Id) { //If predecessors exist
+                      var list = item.attributes.subprocess_Id[0];
+                      if (list !== " ") { //if multiple predecessors
 
+                          for (var j in item.attributes.subprocess_Id) {
+                              preAssets.data.push({
+                                  "id": item.attributes.subprocess_Id[j],
+                                  "name": item.attributes.subprocess_Name[j]
+                              });
+                          }
+                      } //multiple pres
+                      else { //only single predecessor
+                          subAssets.data.push({
+                              "id": item.attributes.subprocess_Id,
+                              "name": item.attributes.subprocess_Name
+                          });
+                      }
+                  } // end of predecessors
+
+                 //
                   if (item.attributes.successor_Id) { //If predecessors exist
                       var sucList = item.attributes.successor_Id[0];
                       if (sucList !== " ") { //if multiple successors
@@ -140,6 +165,12 @@
               // check if predecessor is published     
               predecessors += '<li><a href = /store/assets/process/details/' + id + '>' + preAssets.data[i].name + '</a></li>';
           }
+          for (var i = 0; i < subAssets.data.length; i++) {
+              var id = subAssets.data[i].id;
+              id = id.trim();
+              // check if predecessor is published     
+              subprocesses += '<li><a href = /store/assets/process/details/' + id + '>' + subAssets.data[i].name + '</a></li>';
+          }
           for (var i = 0; i < sucAssets.data.length; i++) {
               var id = sucAssets.data[i].id;
               id = id.trim();
@@ -147,12 +178,13 @@
           }
           $("#preContent").html(predecessors);
           $("#sucContent").html(successors);
+           $("#subContent").html(subprocesses);
       });
 
 
 
       // Get text process content if available
-      if (processPath) {
+      if (processPath !== "NA") {
 
           $.ajax({
               type: "GET",
