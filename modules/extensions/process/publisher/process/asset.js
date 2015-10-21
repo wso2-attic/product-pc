@@ -57,7 +57,7 @@ asset.renderer = function(ctx) {
     return {
         details: function(page) {
             var log = new Log();
-            log.info(page);
+
             var resourcePath = page.assets.path;
             log.info(resourcePath);
 
@@ -72,6 +72,14 @@ asset.renderer = function(ctx) {
             } else {
                 page.bpmnAvaliable = true;
             }
+
+            importPackage(org.wso2.carbon.pc.core);
+            var ps = new ProcessStore();
+            var conData = ps.getSucessorPredecessorSubprocessList(resourcePath);
+            var conObject = JSON.parse(conData);
+            log.info(conObject);
+            page.involveProcessList = conObject;
+            log.info(page);
         }
     };
 };
