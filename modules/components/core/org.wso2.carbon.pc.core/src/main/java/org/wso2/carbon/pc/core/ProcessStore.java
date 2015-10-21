@@ -764,28 +764,32 @@ public class ProcessStore {
                                 subprocessElement.getElementsByTagName("path").item(0).getTextContent();
                         String subprocessId =
                                 subprocessElement.getElementsByTagName("id").item(0).getTextContent();
+                        String subprocessVersion = subprocessPath.substring(subprocessPath.lastIndexOf("/") + 1).trim();
 
                         JSONObject subprocess = new JSONObject();
                         subprocess.put("name", subprocessName);
                         subprocess.put("path", subprocessPath);
                         subprocess.put("id", subprocessId);
+                        subprocess.put("version", subprocessVersion);
                         subprocessArray.put(subprocess);
                     }
                 }
 
                 if(successorElements.getLength() != 0){
-                    for(int i = 0 ; i < subprocessElements.getLength() ; i++){
+                    for(int i = 0 ; i < successorElements.getLength() ; i++){
                         Element successorElement = (Element) successorElements.item(i);
                         String successorName = successorElement.getElementsByTagName("name").item(0).getTextContent();
                         String successorPath =
                                 successorElement.getElementsByTagName("path").item(0).getTextContent();
                         String successorId =
                                 successorElement.getElementsByTagName("id").item(0).getTextContent();
+                        String successorVersion = successorPath.substring(successorPath.lastIndexOf("/") + 1).trim();
 
                         JSONObject successor = new JSONObject();
                         successor.put("name", successorName);
                         successor.put("path", successorPath);
                         successor.put("id", successorId);
+                        successor.put("version", successorVersion);
                         successorArray.put(successor);
                     }
                 }
@@ -798,11 +802,13 @@ public class ProcessStore {
                                 predecessorElement.getElementsByTagName("path").item(0).getTextContent();
                         String predecessorId =
                                 predecessorElement.getElementsByTagName("id").item(0).getTextContent();
+                        String predecessorVersion = predecessorPath.substring(predecessorPath.lastIndexOf("/") + 1).trim();
 
                         JSONObject predecessor = new JSONObject();
                         predecessor.put("name", predecessorName);
                         predecessor.put("path", predecessorPath);
                         predecessor.put("id", predecessorId);
+                        predecessor.put("version", predecessorVersion);
                         predecessorArray.put(predecessor);
                     }
                 }
