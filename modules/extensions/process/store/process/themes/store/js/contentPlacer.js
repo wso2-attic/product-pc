@@ -20,32 +20,41 @@
       var processName = $("#divProcessName").text().trim(); //current process name
       var bpmnPath = $("#divBpmnPath").text().trim(); //bpmn xml resource path
 
-      if (processPath) { // if process text added
+   
+
+      if (processPath !== "NA") { // if process text added
           processPath = "/_system/governance/" + processPath;
       }
-      if (bpmnPath) { // if bpmn path added
+      if (bpmnPath !== "NA") { // if bpmn path added
           bpmnPath = "/_system/governance/" + bpmnPath;
       }
 
       var preAssets = {
           data: []
       }
-
+     var subAssets = {
+          data: []
+      }
       var sucAssets = {
           data: []
       }
       var predecessors = " ";
       var successors = " ";
+      var subprocesses = " ";
 
-      $("#btnView").hide(); //by default hide
+      $("#btnView").show(); //by default hide
       $("#btnCollapse").hide();
       $("#collapsedProcessName").hide();
+      
+
 
       $("#btnView").on("click", function() {
           $(".asset-description").hide();
+           $(".margin-bottom-double").hide();
           $("#btnView").hide();
           $("#btnCollapse").show();
           $("#collapsedProcessName").show();
+         
           viewFlag = true;
       });
 
@@ -54,36 +63,18 @@
           $("#btnView").show();
           $("#btnCollapse").hide();
           $(".asset-description").show();
+           $(".margin-bottom-double").show();
           $("#collapsedProcessName").hide();
-          // $("#processNameCollapsed").hide();
+          
 
 
       });
 
-      // on click of "Text" tab
-      $("#tab-text").on("click", function() {
-
-          if (viewFlag) {
-              $("#btnView").hide();
-              $("#btnCollapse").show();
-          } else {
-              $("#btnCollapse").hide();
-              $("#btnView").show();
-          }
-      });
-      // on click of "Associations" tab
-      $("#tab-relations").on("click", function() {
-          $("#btnView").hide();
-          $("#btnCollapse").hide();
-      });
       // on click of "bpmn model" tab
       $("#tab-model").on("click", function() {
 
-          $("#btnView").hide();
-          $("#btnCollapse").hide();
-
           // get bpmn model if available
-          if (bpmnPath) {
+          if (bpmnPath !== "NA") {
               $.ajax({
                   type: "GET",
                   url: "/store/assets/process/apis/get_bpmn_content",
@@ -95,25 +86,7 @@
                       $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
 
                   }
-                 /* error: function(jqXHR, exception) {
-                      var msg = '';
-                      if (jqXHR.status === 0) {
-                          msg = 'Not connect.\n Verify Network.';
-                      } else if (jqXHR.status == 404) {
-                          msg = 'Requested page not found. [404]';
-                      } else if (jqXHR.status == 500) {
-                          msg = 'Internal Server Error [500].';
-                      } else if (exception === 'parsererror') {
-                          msg = 'Requested JSON parse failed.';
-                      } else if (exception === 'timeout') {
-                          msg = 'Time out error.';
-                      } else if (exception === 'abort') {
-                          msg = 'Ajax request aborted.';
-                      } else {
-                          msg = 'Uncaught Error.\n' + jqXHR.responseText;
-                      }
-                      $('#tab-bpmn').html(msg);
-                  }*/
+                
               });
           } else {
               $("#tab-bpmn").html("No bpmn model available");
@@ -145,7 +118,27 @@
                           });
                       }
                   } // end of predecessors
+                  //
+                  if (item.attributes.subprocess_Id) { //If predecessors exist
+                      var list = item.attributes.subprocess_Id[0];
+                      if (list !== " ") { //if multiple predecessors
 
+                          for (var j in item.attributes.subprocess_Id) {
+                              preAssets.data.push({
+                                  "id": item.attributes.subprocess_Id[j],
+                                  "name": item.attributes.subprocess_Name[j]
+                              });
+                          }
+                      } //multiple pres
+                      else { //only single predecessor
+                          subAssets.data.push({
+                              "id": item.attributes.subprocess_Id,
+                              "name": item.attributes.subprocess_Name
+                          });
+                      }
+                  } // end of predecessors
+
+                 //
                   if (item.attributes.successor_Id) { //If predecessors exist
                       var sucList = item.attributes.successor_Id[0];
                       if (sucList !== " ") { //if multiple successors
@@ -172,6 +165,12 @@
               // check if predecessor is published     
               predecessors += '<li><a href = /store/assets/process/details/' + id + '>' + preAssets.data[i].name + '</a></li>';
           }
+          for (var i = 0; i < subAssets.data.length; i++) {
+              var id = subAssets.data[i].id;
+              id = id.trim();
+              // check if predecessor is published     
+              subprocesses += '<li><a href = /store/assets/process/details/' + id + '>' + subAssets.data[i].name + '</a></li>';
+          }
           for (var i = 0; i < sucAssets.data.length; i++) {
               var id = sucAssets.data[i].id;
               id = id.trim();
@@ -179,12 +178,13 @@
           }
           $("#preContent").html(predecessors);
           $("#sucContent").html(successors);
+           $("#subContent").html(subprocesses);
       });
 
 
 
       // Get text process content if available
-      if (processPath) {
+      if (processPath !== "NA") {
 
           $.ajax({
               type: "GET",
@@ -199,30 +199,11 @@
                   $("#btnCollapse").hide();
 
               }
-            /*  error: function(jqXHR, exception) {
-                  var msg = '';
-                  if (jqXHR.status === 0) {
-                      msg = 'Not connect.\n Verify Network.';
-                  } else if (jqXHR.status == 404) {
-                      msg = 'Requested page not found. [404]';
-                  } else if (jqXHR.status == 500) {
-                      msg = 'Internal Server Error [500].';
-                  } else if (exception === 'parsererror') {
-                      msg = 'Requested JSON parse failed.';
-                  } else if (exception === 'timeout') {
-                      msg = 'Time out error.';
-                  } else if (exception === 'abort') {
-                      msg = 'Ajax request aborted.';
-                  } else {
-                      msg = 'Uncaught Error.\n' + jqXHR.responseText;
-                  }
-                  $('#tab-properties').html(msg);
-              }*/
+            
           });
       } else {
           $("#tab-properties").html("No text content available");
-          $("#btnView").hide();
-          $("#btnCollapse").hide();
+         
       }
 
   });

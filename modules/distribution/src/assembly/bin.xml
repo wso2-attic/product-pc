@@ -352,6 +352,12 @@
 
         <!-- Process extensions -->
         <fileSet>
+            <directory>../extensions/main</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps
+            </outputDirectory>
+        </fileSet>
+        <fileSet>
             <directory>../extensions/process/publisher</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
@@ -614,6 +620,18 @@
         <!-- Files of PC starts from here -->
 
         <!-- Process rxt -->
+        <file>
+            <source>../extensions/conf/sso/login.jag</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/views</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+          <file>
+            <source>../extensions/conf/identity/sso-idp-config.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/identity</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
         <file>
             <source>../extensions/process/process.rxt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/rxts</outputDirectory>
