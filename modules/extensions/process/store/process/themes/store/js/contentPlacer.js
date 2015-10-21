@@ -37,15 +37,19 @@
       var predecessors = " ";
       var successors = " ";
 
-      $("#btnView").hide(); //by default hide
+      $("#btnView").show(); //by default hide
       $("#btnCollapse").hide();
       $("#collapsedProcessName").hide();
+      
+
 
       $("#btnView").on("click", function() {
           $(".asset-description").hide();
+           $(".margin-bottom-double").hide();
           $("#btnView").hide();
           $("#btnCollapse").show();
           $("#collapsedProcessName").show();
+         
           viewFlag = true;
       });
 
@@ -54,33 +58,15 @@
           $("#btnView").show();
           $("#btnCollapse").hide();
           $(".asset-description").show();
+           $(".margin-bottom-double").show();
           $("#collapsedProcessName").hide();
-          // $("#processNameCollapsed").hide();
+          
 
 
       });
 
-      // on click of "Text" tab
-      $("#tab-text").on("click", function() {
-
-          if (viewFlag) {
-              $("#btnView").hide();
-              $("#btnCollapse").show();
-          } else {
-              $("#btnCollapse").hide();
-              $("#btnView").show();
-          }
-      });
-      // on click of "Associations" tab
-      $("#tab-relations").on("click", function() {
-          $("#btnView").hide();
-          $("#btnCollapse").hide();
-      });
       // on click of "bpmn model" tab
       $("#tab-model").on("click", function() {
-
-          $("#btnView").hide();
-          $("#btnCollapse").hide();
 
           // get bpmn model if available
           if (bpmnPath) {
@@ -95,25 +81,7 @@
                       $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
 
                   }
-                 /* error: function(jqXHR, exception) {
-                      var msg = '';
-                      if (jqXHR.status === 0) {
-                          msg = 'Not connect.\n Verify Network.';
-                      } else if (jqXHR.status == 404) {
-                          msg = 'Requested page not found. [404]';
-                      } else if (jqXHR.status == 500) {
-                          msg = 'Internal Server Error [500].';
-                      } else if (exception === 'parsererror') {
-                          msg = 'Requested JSON parse failed.';
-                      } else if (exception === 'timeout') {
-                          msg = 'Time out error.';
-                      } else if (exception === 'abort') {
-                          msg = 'Ajax request aborted.';
-                      } else {
-                          msg = 'Uncaught Error.\n' + jqXHR.responseText;
-                      }
-                      $('#tab-bpmn').html(msg);
-                  }*/
+                
               });
           } else {
               $("#tab-bpmn").html("No bpmn model available");
@@ -199,30 +167,11 @@
                   $("#btnCollapse").hide();
 
               }
-            /*  error: function(jqXHR, exception) {
-                  var msg = '';
-                  if (jqXHR.status === 0) {
-                      msg = 'Not connect.\n Verify Network.';
-                  } else if (jqXHR.status == 404) {
-                      msg = 'Requested page not found. [404]';
-                  } else if (jqXHR.status == 500) {
-                      msg = 'Internal Server Error [500].';
-                  } else if (exception === 'parsererror') {
-                      msg = 'Requested JSON parse failed.';
-                  } else if (exception === 'timeout') {
-                      msg = 'Time out error.';
-                  } else if (exception === 'abort') {
-                      msg = 'Ajax request aborted.';
-                  } else {
-                      msg = 'Uncaught Error.\n' + jqXHR.responseText;
-                  }
-                  $('#tab-properties').html(msg);
-              }*/
+            
           });
       } else {
           $("#tab-properties").html("No text content available");
-          $("#btnView").hide();
-          $("#btnCollapse").hide();
+         
       }
 
   });

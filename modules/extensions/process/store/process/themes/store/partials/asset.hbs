@@ -4,8 +4,8 @@
 </script>
 {{#with assets}}
  {{#with attributes}}
-<div id ="collapsedProcessName"><h4 class="margin-none ">{{overview_name}}</h4>
-</div>
+ <br>
+<div id ="collapsedProcessName"><h4 class="margin-none ">{{overview_name}} - {{overview_version}}</h4></div>
 {{/with}}
     {{/with}}
 <div class="asset-description">
@@ -63,6 +63,8 @@
             <!-- asset description -->
                 <div class="assetp-properties">
                     <hr class="margin-bottom-double">
+                     <button type="button" id="btnView">View</button>
+                         <button type="button" id="btnCollapse">Collapse</button>
                     <ul class="nav nav-tabs" id="assetp-tabs" data-aid="{{../path}}">
                         <li class="active">
                             <a href="#tab-properties" id="tab-text" data-toggle="tab" data-type="basic">{{t "Text"}}</a>
@@ -94,9 +96,8 @@
 
                             </div>
                         </div>
-                        <hr>
-                         <button type="button" id="btnView">View</button>
-                         <button type="button" id="btnCollapse">Collapse</button>
+                        
+                        
                         <!--Associations-->
                        {{#if ../../cuser.username}}
                         <div class="tab-pane" id="tab-associations">
