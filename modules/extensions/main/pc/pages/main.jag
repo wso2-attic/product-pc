@@ -1,0 +1,112 @@
+
+<%
+
+var caramel = require('caramel');
+var configs = require('/config/pc.js').config();
+var server = require('store').server;
+var log = new Log();
+   
+if (server.current(session) == null) {
+    response.sendRedirect(caramel.configs().context+'/login');
+} 
+
+else {
+var publisherUrl = configs.apps.publisher;
+var storeUrl = configs.apps.store;
+var logoutUrl = caramel.configs().context + '/logout';
+
+%>
+<head>
+<style>
+.app-logo {
+    height: 30px;
+    padding: 12px 20px 12px 16px;
+        background: #444444;
+}
+.app-logo img {
+    float: left;
+    margin-right: 20px;
+}
+.title {
+   font-weight: 500;
+    font-size: 17px;
+    margin: 0;
+    padding: 3px 0 0 0;
+    color: #fafafa;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.headerText{
+font-weight: 500;
+    font-size: 15px;
+    margin: 0;
+    padding: 3px 0 0 0;
+    color: #fafafa;
+    text-transform: camelcase;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.space{
+	height: 40px;
+}
+.fspace{
+	height: 400px;
+}
+a.switcher-link{
+display:inline-block;
+
+ font-size:  20px ;
+  text-decoration: none;
+  background-color: #EEEEEE;
+  color: #2374c8;
+  padding: 2px 6px 2px 6px;
+  border-radius:8px;
+	border:1px solid #dcdcdc;
+	padding:9px 18px;
+
+}
+a.switcher-link2{
+display:inline-block;
+width:130px;
+ font-size:  20px ;
+  text-decoration: none;
+  background-color: #EEEEEE;
+  color: #2374c8;
+  padding: 2px 6px 2px 6px;
+  border-radius:8px;
+	border:1px solid #dcdcdc;
+	padding:9px 18px;
+
+}
+
+</style>
+</head>
+<h2 class="col-xs-8 col-sm-8 app-logo">
+<img src="/pc/themes/store/img/logo.png">
+<div class="title">Process Center<div>
+</h2>
+
+<div  style="position:absolute; right:30px; top:15px;">
+<a href=<%=logoutUrl%>> <div class="headerText">Sign Out</div> </a>
+</div>
+Welcome to Process Center Home Page.
+<div class="space"></div>
+<ul>
+<li>
+<a class="switcher-link" href=<%=publisherUrl%>> Go To Publisher </a></li>
+<br>
+<div class="space"></div>
+
+<li><a class="switcher-link2" href=<%=storeUrl%>> Go To Store </a></li>
+</ul>
+<div class="fspace"></div>
+<hr>
+<footer class="footer">
+    <p>&copy; 2014 WSO2 Inc. All Rights Reserved</p>
+</footer>
+<%
+}
+%>
+
+
