@@ -820,6 +820,117 @@ public class ProcessStore {
         return resourceString;
     }
 
+    public String addSubprocess(String subprocessDetails){
+        try{
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+
+            if(registryService != null){
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+                JSONObject processInfo = new JSONObject(subprocessDetails);
+                String processName = processInfo.getString("processName");
+                String processVersion = processInfo.getString("processVersion");
+                JSONArray subprocessList = processInfo.getJSONArray("subprocessList");
+
+                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                Resource resource = reg.get(processAssetPath);
+                String processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
+
+                if(subprocessList.length() != 0){
+                    Element rootElement = doc.getDocumentElement();
+                    for(int i = 0 ; i < subprocessList.length() ; i++){
+                        Element successorElement = append(doc, rootElement, "subprocess", mns);
+                        appendText(doc, successorElement, "name", mns, subprocessList.getJSONObject(i).getString("name"));
+                        appendText(doc, successorElement, "path", mns, subprocessList.getJSONObject(i).getString("path"));
+                        appendText(doc, successorElement, "id", mns, subprocessList.getJSONObject(i).getString("id"));
+                    }
+                    String newProcessContent = xmlToString(doc);
+                    resource.setContent(newProcessContent);
+                    reg.put(processAssetPath, resource);
+                }
+            }
+
+        }catch (Exception e){
+            log.error(e);
+        }
+        return "OK";
+    }
+
+    public String addSuccessor(String successorDetails){
+        try{
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+
+            if(registryService != null){
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+                JSONObject processInfo = new JSONObject(successorDetails);
+                String processName = processInfo.getString("processName");
+                String processVersion = processInfo.getString("processVersion");
+                JSONArray successorList = processInfo.getJSONArray("successorList");
+
+                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                Resource resource = reg.get(processAssetPath);
+                String processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
+
+                if(successorDetails.length() != 0){
+                    Element rootElement = doc.getDocumentElement();
+                    for(int i = 0 ; i < successorList.length() ; i++){
+                        Element successorElement = append(doc, rootElement, "successor", mns);
+                        appendText(doc, successorElement, "name", mns, successorList.getJSONObject(i).getString("name"));
+                        appendText(doc, successorElement, "path", mns, successorList.getJSONObject(i).getString("path"));
+                        appendText(doc, successorElement, "id", mns, successorList.getJSONObject(i).getString("id"));
+                    }
+                    String newProcessContent = xmlToString(doc);
+                    resource.setContent(newProcessContent);
+                    reg.put(processAssetPath, resource);
+                }
+            }
+
+        }catch (Exception e){
+            log.error(e);
+        }
+        return "OK";
+    }
+
+    public String addPredecessor(String predecessorDetails){
+        try{
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+
+            if(registryService != null){
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+                JSONObject processInfo = new JSONObject(predecessorDetails);
+                String processName = processInfo.getString("processName");
+                String processVersion = processInfo.getString("processVersion");
+                JSONArray predecessorList = processInfo.getJSONArray("predecessorList");
+
+                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                Resource resource = reg.get(processAssetPath);
+                String processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
+
+                if(predecessorList.length() != 0){
+                    Element rootElement = doc.getDocumentElement();
+                    for(int i = 0 ; i < predecessorList.length() ; i++){
+                        Element successorElement = append(doc, rootElement, "predecessor", mns);
+                        appendText(doc, successorElement, "name", mns, predecessorList.getJSONObject(i).getString("name"));
+                        appendText(doc, successorElement, "path", mns, predecessorList.getJSONObject(i).getString("path"));
+                        appendText(doc, successorElement, "id", mns, predecessorList.getJSONObject(i).getString("id"));
+                    }
+                    String newProcessContent = xmlToString(doc);
+                    resource.setContent(newProcessContent);
+                    reg.put(processAssetPath, resource);
+                }
+            }
+
+        }catch (Exception e){
+            log.error(e);
+        }
+        return "OK";
+    }
+
 
 //    public static void main(String[] args) {
 //        String path = "/home/chathura/temp/t5/TestProcess1.bpmn";

@@ -1,0 +1,12 @@
+<%
+importPackage(org.wso2.carbon.pc.core);
+
+var log = new Log();
+log.info("Predecessor update logic");
+
+var ps = new ProcessStore();
+var predecessorDetails = String(request.getParameter("predecessorDetails"));
+var predecessorStatus = ps.addPredecessor(predecessorDetails);
+print(predecessorStatus);
+log.info("predecessorDetails: " + predecessorDetails);
+%>
