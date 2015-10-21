@@ -1,0 +1,12 @@
+<%
+importPackage(org.wso2.carbon.pc.core);
+
+var log = new Log();
+log.info("Subprocess update logic");
+
+var ps = new ProcessStore();
+var subprocessDetails = String(request.getParameter("subprocessDetails"));
+var subprocessStatus = ps.addSubprocess(subprocessDetails);
+print(subprocessStatus);
+log.info("subProcessDetails: " + subprocessDetails);
+%>

@@ -140,9 +140,147 @@
         });
     }
 
+    function isProcessNotAvailableInList(processName){
+        for(var i = 0 ; i < processNames.length ; i++){
+            if(processNames[i] == processName){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function readUpdatedSubprocess(e){
+        var subprocessInfo = [];
+        var subprocessInput = $(e).parent().parent().closest("tr").find("input").val();
+
+        if(subprocessInput == ''){
+            alert("Field is empty");
+        }else if(isProcessNotAvailableInList(subprocessInput)){
+            alert("Please enter correct process name that exists.");
+        }else{
+            var subprocessPath, subprocessId;
+            for(var i = 0 ; i < processListObj.length ; i++){
+                if(processListObj[i].processname == subprocessInput.split("-")[0] &&
+                        processListObj[i].processversion == subprocessInput.split("-")[1]){
+                    subprocessPath = processListObj[i].path;
+                    subprocessId = processListObj[i].processid;
+                    break;
+                }
+            }
+            subprocessInfo.push({
+                name: subprocessInput.split("-")[0],
+                path: subprocessPath,
+                id: subprocessId
+            });
+            var subProcessDetails = {
+                'processName': $('#view-header').text(),
+                'processVersion' : $('#process-version').text(),
+                'subprocessList' : subprocessInfo
+            };
+
+            $.ajax({
+                url: 'https://localhost:9443/publisher/assets/process/apis/update_subprocess_list',
+                type: 'POST',
+                data: { 'subprocessDetails': JSON.stringify(subProcessDetails) },
+                success: function (response) {
+                    alert("Updated the subprocess details.");
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+
+    function readUpdatedSuccessor(e){
+        var successorInfo = [];
+        var successorInput = $(e).parent().parent().closest("tr").find("input").val();
+
+        if(successorInput == ''){
+            alert("Field is empty");
+        }else if(isProcessNotAvailableInList(successorInput)){
+            alert("Please enter correct process name that exists.");
+        }else{
+            var successorPath, successorId;
+            for(var i = 0 ; i < processListObj.length ; i++){
+                if(processListObj[i].processname == successorInput.split("-")[0] &&
+                        processListObj[i].processversion == successorInput.split("-")[1]){
+                    successorPath = processListObj[i].path;
+                    successorId = processListObj[i].processid;
+                    break;
+                }
+            }
+            successorInfo.push({
+                name: successorInput.split("-")[0],
+                path: successorPath,
+                id: successorId
+            });
+            var successorDetails = {
+                'processName': $('#view-header').text(),
+                'processVersion' : $('#process-version').text(),
+                'successorList' : successorInfo
+            };
+
+            $.ajax({
+                url: 'https://localhost:9443/publisher/assets/process/apis/update_successor_list',
+                type: 'POST',
+                data: { 'successorDetails': JSON.stringify(successorDetails) },
+                success: function (response) {
+                    alert("Updated the subprocess details.");
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+
+    function readUpdatedPredecessor(e){
+        var predecessorInfo = [];
+        var predecessorInput = $(e).parent().parent().closest("tr").find("input").val();
+
+        if(predecessorInput == ''){
+            alert("Field is empty");
+        }else if(isProcessNotAvailableInList(predecessorInput)){
+            alert("Please enter correct process name that exists.");
+        }else{
+            var predecessorPath, predecessorId;
+            for(var i = 0 ; i < processListObj.length ; i++){
+                if(processListObj[i].processname == predecessorInput.split("-")[0] &&
+                        processListObj[i].processversion == predecessorInput.split("-")[1]){
+                    predecessorPath = processListObj[i].path;
+                    predecessorId = processListObj[i].processid;
+                    break;
+                }
+            }
+            predecessorInfo.push({
+                name: predecessorInput.split("-")[0],
+                path: predecessorPath,
+                id: predecessorId
+            });
+            var predecessorDetails = {
+                'processName': $('#view-header').text(),
+                'processVersion' : $('#process-version').text(),
+                'predecessorList' : predecessorInfo
+            };
+
+            $.ajax({
+                url: 'https://localhost:9443/publisher/assets/process/apis/update_predecessor_list',
+                type: 'POST',
+                data: { 'predecessorDetails': JSON.stringify(predecessorDetails) },
+                success: function (response) {
+                    alert("Updated the subprocess details.");
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+
 </script>
 
-<h2>{{assets.tables.[0].fields.name.value}}</h2>
+<h2 id="view-header">{{assets.tables.[0].fields.name.value}}</h2>
 <br/>
 <div id="overviewDiv">
     <form class="form-horizontal">
@@ -151,7 +289,7 @@
                 <tbody>
                 <tr>
                     <td width="40%" style="border: 0px !important;">Version:</td>
-                    <td width="60%" style="border: 0px !important;">{{assets.tables.[0].fields.version.value}}</td>
+                    <td width="60%" id="process-version" style="border: 0px !important;">{{assets.tables.[0].fields.version.value}}</td>
                 </tr>
                 <tr>
                     <td width="40%" style="border: 0px !important;">Owner:</td>
@@ -201,6 +339,7 @@
                         {{#each involveProcessList.subprocesses}}
                             <tr>
                                 <td valign="top"><input type="text" value="{{this.name}}-{{this.version}}" name="subprocess_Name" id="subprocess_Name" class="input-large subprocess_Name" onkeydown="subProcessNamesAutoComplete()"></td>
+                                <td><span class="js-edit-row" onclick=""><i class="fa fa-edit"></i></span> </td>
                                 <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
                             </tr>
                         {{/each}}
@@ -229,6 +368,7 @@
                         {{#each involveProcessList.successors}}
                             <tr>
                                 <td valign="top"><input type="text" value="{{this.name}}-{{this.version}}" name="successor_Name" id="successor_Name" class="input-large successor_Name" onkeydown="successorNameAutoComplete()"></td>
+                                <td><span class="js-edit-row" onclick=""><i class="fa fa-edit"></i></span> </td>
                                 <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
                             </tr>
                         {{/each}}
@@ -259,6 +399,7 @@
                         {{#each involveProcessList.predecessors}}
                             <tr>
                                 <td valign="top"><input type="text" value="{{this.name}}-{{this.version}}" name="predecessor_Name" id="predecessor_Name" class="input-large predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
+                                <td><span class="js-edit-row" onclick=""><i class="fa fa-edit"></i></span> </td>
                                 <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
                             </tr>
                         {{/each}}
@@ -266,17 +407,6 @@
                     </table>
                 </div>
             </div>
-
-            <div id="updateButtons" class="form-actions">
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <input type="submit" value="Update" class="btn btn-primary" name="editAssetButton" id="editAssetButton">
-                        <input type="reset" value="Reset" class="btn btn-default">
-                        <input type="hidden" value="process" name="process" id="meta-asset-type">
-                    </div>
-                </div>
-            </div>
-
         </div>
     </form>
 </div>
@@ -326,6 +456,7 @@
     <tbody>
     <tr id="table_reference_subprocess">
         <td valign="top"><input type="text" class="form-control subprocess_Name" value="" name="subprocess_Name" id="subprocess_Name" onkeydown="subProcessNamesAutoComplete()"></td>
+        <td><span class="js-edit-row" onclick="readUpdatedSubprocess(this)"><i class="fa fa-edit"></i></span> </td>
         <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
     </tr>
     </tbody>
@@ -335,6 +466,7 @@
     <tbody>
     <tr id="table_reference_successor">
         <td valign="top"><input type="text" class="form-control successor_Name" value="" name="successor_Name" id="successor_Name" onkeydown="successorNameAutoComplete()"></td>
+        <td><span class="js-edit-row" onclick="readUpdatedSuccessor(this)"><i class="fa fa-edit"></i></span> </td>
         <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
     </tr>
     </tbody>
@@ -344,6 +476,7 @@
     <tbody>
     <tr id="table_reference_predecessor">
         <td valign="top"><input type="text" class="form-control predecessor_Name" value="" name="predecessor_Name" id="predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
+        <td><span class="js-edit-row" onclick="readUpdatedPredecessor(this)"><i class="fa fa-edit"></i></span> </td>
         <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
     </tr>
     </tbody>
