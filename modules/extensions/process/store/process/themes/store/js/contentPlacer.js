@@ -19,8 +19,8 @@
       var processPath = $("#divTextProcessPath").text().trim(); // process text resource path
       var processName = $("#divProcessName").text().trim(); //current process name
       var bpmnPath = $("#divBpmnPath").text().trim(); //bpmn xml resource path
-
-   
+      
+      var mainProcessPath;
 
       if (processPath !== "NA") { // if process text added
           processPath = "/_system/governance/" + processPath;
@@ -41,6 +41,17 @@
       var predecessors = " ";
       var successors = " ";
       var subprocesses = " ";
+
+         //get main process path
+      $.get("/store/apis/assets?type=process", function(response) {
+          for (var i in response.data) {
+              var item = response.data[i];
+              if (processName == item.attributes.overview_name) {
+                    mainProcessPath = item.path;
+              }
+            }
+            
+            });
 
       $("#btnView").show(); //by default hide
       $("#btnCollapse").hide();
@@ -69,7 +80,76 @@
 
 
       });
+       //get associations on click 
+       $("#tab-relations").on("click", function() {
+        if(mainProcessPath !== "NA"){
+            $.ajax({
+                  type: "GET",
+                  url: "/store/assets/process/apis/getAssociations",
+                  data: {
+                      processPath: mainProcessPath
+                  },
+                  success: function(result) {
+                      var associationsObj = JSON.parse(result);
+                        if(associationsObj.subprocesses.length > 0){
+                          for(var i = 0; i < associationsObj.subprocesses.length; i++){
+                              subAssets.data.push({
+                                  "id": associationsObj.subprocesses[i].id,
+                                  "name":associationsObj.subprocesses[i].name
+                              });
+                          }
+                        }
 
+                         if(associationsObj.successors.length > 0){
+                          for(var i = 0; i < associationsObj.successors.length; i++){
+                              sucAssets.data.push({
+                                  "id": associationsObj.successors[i].id,
+                                  "name":associationsObj.successors[i].name
+                              });
+                          }
+                        }
+
+                        if(associationsObj.predecessors.length > 0){
+                          for(var i = 0; i < associationsObj.predecessors.length; i++){
+                              preAssets.data.push({
+                                  "id": associationsObj.predecessors[i].id,
+                                  "name":associationsObj.predecessors[i].name
+                              });
+                          }
+                        }
+
+              for (var i = 0; i < preAssets.data.length; i++) {
+              var id = preAssets.data[i].id;
+              id = id.trim();
+              // check if predecessor is published     
+              predecessors += '<li><a href = /store/assets/process/details/' + id + '>' + preAssets.data[i].name + '</a></li>';
+          }
+          for (var i = 0; i < subAssets.data.length; i++) {
+              var id = subAssets.data[i].id;
+              id = id.trim();
+              // check if predecessor is published     
+              subprocesses += '<li><a href = /store/assets/process/details/' + id + '>' + subAssets.data[i].name + '</a></li>';
+          }
+          for (var i = 0; i < sucAssets.data.length; i++) {
+              var id = sucAssets.data[i].id;
+              id = id.trim();
+              successors += '<li><a href = /store/assets/process/details/' + id + '>' + sucAssets.data[i].name + '</a></li>';
+          }
+           $("#preContent").html(predecessors);
+           $("#sucContent").html(successors);
+           $("#subContent").html(subprocesses);
+
+                  }
+                
+              });
+
+        }//end of if
+        else{
+            $("#tab-associations").html("No associations available");
+        }
+
+       }); //end of tab click
+      
       // on click of "bpmn model" tab
       $("#tab-model").on("click", function() {
 
@@ -95,92 +175,7 @@
       });
 
 
-      // get associations content if available
-      $.get("/store/apis/assets?type=process", function(response) {
-          for (var i in response.data) {
-              var item = response.data[i];
-              if (processName == item.attributes.overview_name) {
-                  if (item.attributes.predecessor_Id) { //If predecessors exist
-                      var list = item.attributes.predecessor_Id[0];
-                      if (list !== " ") { //if multiple predecessors
-
-                          for (var j in item.attributes.predecessor_Id) {
-                              preAssets.data.push({
-                                  "id": item.attributes.predecessor_Id[j],
-                                  "name": item.attributes.predecessor_Name[j]
-                              });
-                          }
-                      } //multiple pres
-                      else { //only single predecessor
-                          preAssets.data.push({
-                              "id": item.attributes.predecessor_Id,
-                              "name": item.attributes.predecessor_Name
-                          });
-                      }
-                  } // end of predecessors
-                  //
-                  if (item.attributes.subprocess_Id) { //If predecessors exist
-                      var list = item.attributes.subprocess_Id[0];
-                      if (list !== " ") { //if multiple predecessors
-
-                          for (var j in item.attributes.subprocess_Id) {
-                              preAssets.data.push({
-                                  "id": item.attributes.subprocess_Id[j],
-                                  "name": item.attributes.subprocess_Name[j]
-                              });
-                          }
-                      } //multiple pres
-                      else { //only single predecessor
-                          subAssets.data.push({
-                              "id": item.attributes.subprocess_Id,
-                              "name": item.attributes.subprocess_Name
-                          });
-                      }
-                  } // end of predecessors
-
-                 //
-                  if (item.attributes.successor_Id) { //If predecessors exist
-                      var sucList = item.attributes.successor_Id[0];
-                      if (sucList !== " ") { //if multiple successors
-
-                          for (var k in item.attributes.successor_Id) {
-                              sucAssets.data.push({
-                                  "id": item.attributes.successor_Id[k],
-                                  "name": item.attributes.successor_Name[k]
-                              });
-                          }
-                      } else {
-                          sucAssets.data.push({
-                              "id": item.attributes.successor_Id,
-                              "name": item.attributes.successor_Name
-                          });
-                      }
-                  } //end of successors
-              }
-          }
-
-          for (var i = 0; i < preAssets.data.length; i++) {
-              var id = preAssets.data[i].id;
-              id = id.trim();
-              // check if predecessor is published     
-              predecessors += '<li><a href = /store/assets/process/details/' + id + '>' + preAssets.data[i].name + '</a></li>';
-          }
-          for (var i = 0; i < subAssets.data.length; i++) {
-              var id = subAssets.data[i].id;
-              id = id.trim();
-              // check if predecessor is published     
-              subprocesses += '<li><a href = /store/assets/process/details/' + id + '>' + subAssets.data[i].name + '</a></li>';
-          }
-          for (var i = 0; i < sucAssets.data.length; i++) {
-              var id = sucAssets.data[i].id;
-              id = id.trim();
-              successors += '<li><a href = /store/assets/process/details/' + id + '>' + sucAssets.data[i].name + '</a></li>';
-          }
-          $("#preContent").html(predecessors);
-          $("#sucContent").html(successors);
-           $("#subContent").html(subprocesses);
-      });
-
+     
 
 
       // Get text process content if available
