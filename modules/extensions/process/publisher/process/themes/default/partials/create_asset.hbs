@@ -42,7 +42,7 @@
                 success: function (response) {
                     $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response);
                     $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response);
-                    window.location = "../../assets/process/list";
+                    window.location = "../../assets/process/details/" + response;
                 },
                 error: function () {
                     alert("error");

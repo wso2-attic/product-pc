@@ -151,13 +151,14 @@
 
     function readUpdatedSubprocess(e){
         var subprocessInfo = [];
-        var subprocessInput = $(e).parent().parent().closest("tr").find("input").val();
+        var subprocessInput = $(e).val();
 
         if(subprocessInput == ''){
             alert("Field is empty");
         }else if(isProcessNotAvailableInList(subprocessInput)){
             alert("Please enter correct process name that exists.");
         }else{
+            $(e).replaceWith("<span id='subprocess_Name' class='subprocess_Name'>"+subprocessInput+"</span>");
             var subprocessPath, subprocessId;
             for(var i = 0 ; i < processListObj.length ; i++){
                 if(processListObj[i].processname == subprocessInput.split("-")[0] &&
@@ -194,13 +195,14 @@
 
     function readUpdatedSuccessor(e){
         var successorInfo = [];
-        var successorInput = $(e).parent().parent().closest("tr").find("input").val();
+        var successorInput = $(e).val();
 
         if(successorInput == ''){
             alert("Field is empty");
         }else if(isProcessNotAvailableInList(successorInput)){
             alert("Please enter correct process name that exists.");
         }else{
+            $(e).replaceWith("<span id='successor_Name' class='successor_Name'>"+successorInput+"</span>");
             var successorPath, successorId;
             for(var i = 0 ; i < processListObj.length ; i++){
                 if(processListObj[i].processname == successorInput.split("-")[0] &&
@@ -226,7 +228,7 @@
                 type: 'POST',
                 data: { 'successorDetails': JSON.stringify(successorDetails) },
                 success: function (response) {
-                    alert("Updated the subprocess details.");
+                    alert("Updated the successor details.");
                 },
                 error: function () {
                     alert("error");
@@ -237,13 +239,14 @@
 
     function readUpdatedPredecessor(e){
         var predecessorInfo = [];
-        var predecessorInput = $(e).parent().parent().closest("tr").find("input").val();
+        var predecessorInput = $(e).val();
 
         if(predecessorInput == ''){
             alert("Field is empty");
         }else if(isProcessNotAvailableInList(predecessorInput)){
             alert("Please enter correct process name that exists.");
         }else{
+            $(e).replaceWith("<span id='predecessor_Name' class='predecessor_Name'>"+predecessorInput+"</span>");
             var predecessorPath, predecessorId;
             for(var i = 0 ; i < processListObj.length ; i++){
                 if(processListObj[i].processname == predecessorInput.split("-")[0] &&
@@ -269,7 +272,7 @@
                 type: 'POST',
                 data: { 'predecessorDetails': JSON.stringify(predecessorDetails) },
                 success: function (response) {
-                    alert("Updated the subprocess details.");
+                    alert("Updated the predecessor details.");
                 },
                 error: function () {
                     alert("error");
@@ -338,8 +341,7 @@
                         <tbody>
                         {{#each involveProcessList.subprocesses}}
                             <tr>
-                                <td valign="top"><input type="text" value="{{this.name}}-{{this.version}}" name="subprocess_Name" id="subprocess_Name" class="input-large subprocess_Name" onkeydown="subProcessNamesAutoComplete()"></td>
-                                <td><span class="js-edit-row" onclick=""><i class="fa fa-edit"></i></span> </td>
+                                <td valign="top"><span id="subprocess_Name" class="subprocess_Name">{{this.name}}-{{this.version}}</span></td>
                                 <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
                             </tr>
                         {{/each}}
@@ -367,8 +369,7 @@
                         <tbody>
                         {{#each involveProcessList.successors}}
                             <tr>
-                                <td valign="top"><input type="text" value="{{this.name}}-{{this.version}}" name="successor_Name" id="successor_Name" class="input-large successor_Name" onkeydown="successorNameAutoComplete()"></td>
-                                <td><span class="js-edit-row" onclick=""><i class="fa fa-edit"></i></span> </td>
+                                <td valign="top"><span id="successor_Name" class="successor_Name">{{this.name}}-{{this.version}}</span></td>
                                 <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
                             </tr>
                         {{/each}}
@@ -398,8 +399,7 @@
                         <tbody>
                         {{#each involveProcessList.predecessors}}
                             <tr>
-                                <td valign="top"><input type="text" value="{{this.name}}-{{this.version}}" name="predecessor_Name" id="predecessor_Name" class="input-large predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
-                                <td><span class="js-edit-row" onclick=""><i class="fa fa-edit"></i></span> </td>
+                                <td valign="top"><span id="predecessor_Name" class="predecessor_Name">{{this.name}}-{{this.version}}</span></td>
                                 <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
                             </tr>
                         {{/each}}
@@ -455,8 +455,7 @@
 <table style="display: none;" class="refernceTableForUnbounded">
     <tbody>
     <tr id="table_reference_subprocess">
-        <td valign="top"><input type="text" class="form-control subprocess_Name" value="" name="subprocess_Name" id="subprocess_Name" onkeydown="subProcessNamesAutoComplete()"></td>
-        <td><span class="js-edit-row" onclick="readUpdatedSubprocess(this)"><i class="fa fa-edit"></i></span> </td>
+        <td valign="top"><input type="text" class="form-control subprocess_Name" value="" name="subprocess_Name" id="subprocess_Name" onkeydown="subProcessNamesAutoComplete()" onblur="readUpdatedSubprocess(this)"></td>
         <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
     </tr>
     </tbody>
@@ -465,8 +464,7 @@
 <table style="display: none;" class="refernceTableForUnbounded">
     <tbody>
     <tr id="table_reference_successor">
-        <td valign="top"><input type="text" class="form-control successor_Name" value="" name="successor_Name" id="successor_Name" onkeydown="successorNameAutoComplete()"></td>
-        <td><span class="js-edit-row" onclick="readUpdatedSuccessor(this)"><i class="fa fa-edit"></i></span> </td>
+        <td valign="top"><input type="text" class="form-control successor_Name" value="" name="successor_Name" id="successor_Name" onkeydown="successorNameAutoComplete()" onblur="readUpdatedSuccessor(this)"></td>
         <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
     </tr>
     </tbody>
@@ -475,8 +473,7 @@
 <table style="display: none;" class="refernceTableForUnbounded">
     <tbody>
     <tr id="table_reference_predecessor">
-        <td valign="top"><input type="text" class="form-control predecessor_Name" value="" name="predecessor_Name" id="predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
-        <td><span class="js-edit-row" onclick="readUpdatedPredecessor(this)"><i class="fa fa-edit"></i></span> </td>
+        <td valign="top"><input type="text" class="form-control predecessor_Name" value="" name="predecessor_Name" id="predecessor_Name" onkeydown="predecessorNameAutoComplete()"  onblur="readUpdatedPredecessor(this)"></td>
         <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
     </tr>
     </tbody>
