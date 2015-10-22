@@ -398,6 +398,31 @@
         }
     }
 
+    function updateProcessOwner(e){
+        var processOwner = $(e).text();
+        if(processOwner == ''){
+            alert("Field is empty");
+        }else{
+            var ownerDetails = {
+                'processName': $('#view-header').text(),
+                'processVersion' : $('#process-version').text(),
+                'processOwner' : $(e).text()
+            };
+
+            $.ajax({
+                url: 'https://localhost:9443/publisher/assets/process/apis/update_owner',
+                type: 'POST',
+                data: { 'ownerDetails': JSON.stringify(ownerDetails) },
+                success: function (response) {
+                    alert("Successfully updated the Process owner name.");
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+
 </script>
 
 <h2 id="view-header">{{assets.tables.[0].fields.name.value}}</h2>
@@ -411,7 +436,7 @@
                 </tr>
                 <tr>
                     <td width="40%" style="border: 0px !important;">Owner:</td>
-                    <td width="60%" style="border: 0px !important;" contenteditable="true">{{assets.tables.[0].fields.owner.value}}</td>
+                    <td width="60%" style="border: 0px !important;" contenteditable="true" onblur="updateProcessOwner(this)">{{assets.tables.[0].fields.owner.value}}</td>
                 </tr>
                 </tbody>
             </table>

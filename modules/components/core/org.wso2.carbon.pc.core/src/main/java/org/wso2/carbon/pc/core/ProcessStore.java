@@ -823,6 +823,36 @@ public class ProcessStore {
         return resourceString;
     }
 
+    public String updateOwner(String ownerDetails){
+        try{
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+
+            if(registryService != null){
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+                JSONObject processInfo = new JSONObject(ownerDetails);
+                String processName = processInfo.getString("processName");
+                String processVersion = processInfo.getString("processVersion");
+                String processOwner = processInfo.getString("processOwner");
+
+                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                Resource resource = reg.get(processAssetPath);
+                String processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
+
+                doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
+
+                String newProcessContent = xmlToString(doc);
+                resource.setContent(newProcessContent);
+                reg.put(processAssetPath, resource);
+            }
+
+        }catch (Exception e){
+            log.error(e);
+        }
+        return "OK";
+    }
+
     public String addSubprocess(String subprocessDetails){
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();

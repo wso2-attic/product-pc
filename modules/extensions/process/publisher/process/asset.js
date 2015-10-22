@@ -65,6 +65,9 @@ asset.server = function(ctx) {
             }, {
                 url: 'delete_Predecessor',
                 path: 'delete_Predecessor.jag'
+            }, {
+                url: 'update_owner',
+                path: 'update_owner.jag'
             }]
         }
     }
