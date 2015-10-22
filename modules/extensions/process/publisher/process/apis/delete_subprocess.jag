@@ -1,0 +1,12 @@
+<%
+importPackage(org.wso2.carbon.pc.core);
+
+var log = new Log();
+log.info("Subprocess delete logic");
+
+var ps = new ProcessStore();
+var deleteSubprocessDetails = String(request.getParameter("deleteSubprocessDetails"));
+var deleteSubStatus = ps.deleteSubprocess(deleteSubprocessDetails);
+print(deleteSubStatus);
+log.info("deleteSubprocessDetails: " + deleteSubprocessDetails);
+%>

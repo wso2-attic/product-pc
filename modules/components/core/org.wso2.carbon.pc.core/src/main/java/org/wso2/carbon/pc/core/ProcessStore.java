@@ -843,10 +843,10 @@ public class ProcessStore {
                 if(subprocessList.length() != 0){
                     Element rootElement = doc.getDocumentElement();
                     for(int i = 0 ; i < subprocessList.length() ; i++){
-                        Element successorElement = append(doc, rootElement, "subprocess", mns);
-                        appendText(doc, successorElement, "name", mns, subprocessList.getJSONObject(i).getString("name"));
-                        appendText(doc, successorElement, "path", mns, subprocessList.getJSONObject(i).getString("path"));
-                        appendText(doc, successorElement, "id", mns, subprocessList.getJSONObject(i).getString("id"));
+                        Element subprocessElement = append(doc, rootElement, "subprocess", mns);
+                        appendText(doc, subprocessElement, "name", mns, subprocessList.getJSONObject(i).getString("name"));
+                        appendText(doc, subprocessElement, "path", mns, subprocessList.getJSONObject(i).getString("path"));
+                        appendText(doc, subprocessElement, "id", mns, subprocessList.getJSONObject(i).getString("id"));
                     }
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
@@ -917,10 +917,10 @@ public class ProcessStore {
                 if(predecessorList.length() != 0){
                     Element rootElement = doc.getDocumentElement();
                     for(int i = 0 ; i < predecessorList.length() ; i++){
-                        Element successorElement = append(doc, rootElement, "predecessor", mns);
-                        appendText(doc, successorElement, "name", mns, predecessorList.getJSONObject(i).getString("name"));
-                        appendText(doc, successorElement, "path", mns, predecessorList.getJSONObject(i).getString("path"));
-                        appendText(doc, successorElement, "id", mns, predecessorList.getJSONObject(i).getString("id"));
+                        Element predecessorElement = append(doc, rootElement, "predecessor", mns);
+                        appendText(doc, predecessorElement, "name", mns, predecessorList.getJSONObject(i).getString("name"));
+                        appendText(doc, predecessorElement, "path", mns, predecessorList.getJSONObject(i).getString("path"));
+                        appendText(doc, predecessorElement, "id", mns, predecessorList.getJSONObject(i).getString("id"));
                     }
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
@@ -928,6 +928,138 @@ public class ProcessStore {
                 }
             }
 
+        }catch (Exception e){
+            log.error(e);
+        }
+        return "OK";
+    }
+
+    public String deleteSubprocess(String deleteSubprocess){
+        try{
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+
+            if(registryService != null){
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+                JSONObject processInfo = new JSONObject(deleteSubprocess);
+                String processName = processInfo.getString("processName");
+                String processVersion = processInfo.getString("processVersion");
+                JSONObject subprocess = processInfo.getJSONObject("deleteSubprocess");
+
+                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                Resource resource = reg.get(processAssetPath);
+                String processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
+
+                if(subprocess != null){
+                    NodeList subprocessElements = ((Element)doc.getFirstChild()).getElementsByTagName("subprocess");
+                    for(int i = 0 ; i < subprocessElements.getLength() ; i++){
+                        Element subprocessElement = (Element) subprocessElements.item(i);
+                        String subprocessName = subprocessElement.getElementsByTagName("name").item(0).getTextContent();
+                        String subprocessPath =
+                                subprocessElement.getElementsByTagName("path").item(0).getTextContent();
+                        String subprocessId =
+                                subprocessElement.getElementsByTagName("id").item(0).getTextContent();
+
+                        if(subprocessName.equals(subprocess.getString("name")) && subprocessPath.equals(subprocess.getString("path")) &&
+                           subprocessId.equals(subprocess.getString("id"))){
+                            subprocessElement.getParentNode().removeChild(subprocessElement);
+                            break;
+                        }
+                    }
+                    String newProcessContent = xmlToString(doc);
+                    resource.setContent(newProcessContent);
+                    reg.put(processAssetPath, resource);
+                }
+            }
+        }catch (Exception e){
+            log.error(e);
+        }
+        return "OK";
+    }
+
+    public String deleteSuccessor(String deleteSuccessor){
+        try{
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+
+            if(registryService != null){
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+                JSONObject processInfo = new JSONObject(deleteSuccessor);
+                String processName = processInfo.getString("processName");
+                String processVersion = processInfo.getString("processVersion");
+                JSONObject successor = processInfo.getJSONObject("deleteSuccessor");
+
+                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                Resource resource = reg.get(processAssetPath);
+                String processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
+
+                if(successor != null){
+                    NodeList successorElements = ((Element)doc.getFirstChild()).getElementsByTagName("successor");
+                    for(int i = 0 ; i < successorElements.getLength() ; i++){
+                        Element successorElement = (Element) successorElements.item(i);
+                        String successorName = successorElement.getElementsByTagName("name").item(0).getTextContent();
+                        String successorPath =
+                                successorElement.getElementsByTagName("path").item(0).getTextContent();
+                        String successorId =
+                                successorElement.getElementsByTagName("id").item(0).getTextContent();
+
+                        if(successorName.equals(successor.getString("name")) && successorPath.equals(successor.getString("path")) &&
+                           successorId.equals(successor.getString("id"))){
+                            successorElement.getParentNode().removeChild(successorElement);
+                            break;
+                        }
+                    }
+                    String newProcessContent = xmlToString(doc);
+                    resource.setContent(newProcessContent);
+                    reg.put(processAssetPath, resource);
+                }
+            }
+        }catch (Exception e){
+            log.error(e);
+        }
+        return "OK";
+    }
+
+    public String deletePredecessor(String deletePredecessor){
+        try{
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+
+            if(registryService != null){
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+                JSONObject processInfo = new JSONObject(deletePredecessor);
+                String processName = processInfo.getString("processName");
+                String processVersion = processInfo.getString("processVersion");
+                JSONObject predecessor = processInfo.getJSONObject("deletePredecessor");
+
+                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                Resource resource = reg.get(processAssetPath);
+                String processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
+
+                if(predecessor != null){
+                    NodeList predecessorElements = ((Element)doc.getFirstChild()).getElementsByTagName("predecessor");
+                    for(int i = 0 ; i < predecessorElements.getLength() ; i++){
+                        Element predecessorElement = (Element) predecessorElements.item(i);
+                        String predecessorName = predecessorElement.getElementsByTagName("name").item(0).getTextContent();
+                        String predecessorPath =
+                                predecessorElement.getElementsByTagName("path").item(0).getTextContent();
+                        String predecessorId =
+                                predecessorElement.getElementsByTagName("id").item(0).getTextContent();
+
+                        if(predecessorName.equals(predecessor.getString("name")) && predecessorPath.equals(predecessor.getString("path")) &&
+                           predecessorId.equals(predecessor.getString("id"))){
+                            predecessorElement.getParentNode().removeChild(predecessorElement);
+                            break;
+                        }
+                    }
+                    String newProcessContent = xmlToString(doc);
+                    resource.setContent(newProcessContent);
+                    reg.put(processAssetPath, resource);
+                }
+            }
         }catch (Exception e){
             log.error(e);
         }
