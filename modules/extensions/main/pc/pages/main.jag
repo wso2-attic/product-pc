@@ -54,7 +54,9 @@ font-weight: 500;
 .fspace{
 	height: 400px;
 }
-
+a:hover{
+  color:#00BFFF;
+}
 
 button{
   margin:0 auto;
