@@ -663,6 +663,11 @@
              <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/app/store-common/themes/store/partials</outputDirectory>
              <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>../extensions/conf/partials/top_assets.hbs</source>
+             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
+             <fileMode>644</fileMode>
+        </file>
 
     </files>
 
