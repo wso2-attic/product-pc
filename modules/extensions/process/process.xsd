@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.wso2.org/governance/metadata" targetNamespace="http://www.wso2.org/governance/metadata">
+    <xs:element name="metadata">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="overview" type="tns:overviewType" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="properties" type="tns:propertiesType" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="subprocess" type="tns:processRefType" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="successor" type="tns:processRefType" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="predecessor" type="tns:processRefType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="overviewType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="version" type="xs:string"/>
+            <xs:element name="owner" type="xs:string"/>
+            <xs:element name="createdtime" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="propertiesType">
+        <xs:sequence>
+            <xs:element name="bpmnpath" type="xs:string"/>
+            <xs:element name="bpmnid" type="xs:string"/>
+            <xs:element name="processtextpath" type="xs:string"/>
+            <xs:element name="server" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="processRefType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="path" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
+
