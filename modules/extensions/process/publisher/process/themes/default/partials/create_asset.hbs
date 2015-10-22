@@ -4,8 +4,8 @@
 
     window.onload = getProcessList;
 
-    function showTextEditor() {
-        saveProcess();
+    function showTextEditor(e1) {
+        saveProcess(e1);
         completeTextDetails();
         $("#processTextDiv").show();
         $("#overviewDiv").hide();
@@ -15,8 +15,8 @@
         });
     }
 
-    function associateBPMN() {
-        saveProcess();
+    function associateBPMN(e2) {
+        saveProcess(e2);
         completeBPMNDetails();
         $("#overviewDiv").hide();
         $("#processTextView").show();
@@ -29,7 +29,7 @@
         $("#processTextView").hide();
     }
 
-    function saveProcess() {
+    function saveProcess(e) {
         if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
             alert("Complete process name");
         } else {
@@ -42,7 +42,10 @@
                 success: function (response) {
                     $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response);
                     $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response);
-                    window.location = "../../assets/process/details/" + response;
+
+                    if($(e).attr('id') == 'saveProcessBtn'){
+                        window.location = "../../assets/process/details/" + response;
+                    }
                 },
                 error: function () {
                     alert("error");
@@ -212,7 +215,6 @@
 </script>
 
 <div id="overviewDiv">
-    <form class="form-horizontal">
         <div class="control-group">
             <h2 class="field-title">
                 <a class="collapsing-h2" aria-expanded="true" href="#collapseprocessinfo" data-toggle="collapse">
@@ -220,39 +222,40 @@
                 </a>
             </h2>
             <div class="collapse in responsive-form-container" id="collapseprocessinfo">
-
-                <div class="form-group">
-                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Process name<sup class="required-field">*</sup></label>
-                    <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                        <input onblur="blurIt()" type="text" placeholder="Enter Process Name" name="overview_name" id="pName" class="form-control" required="">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Process name<sup class="required-field">*</sup></label>
+                        <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                            <input onblur="blurIt()" type="text" placeholder="Enter Process Name" name="overview_name" id="pName" class="form-control" required="">
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Version<sup class="required-field">*</sup></label>
-                    <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                        <input onblur="blurIt()" type="text" placeholder="Enter Process Version" name="overview_version" id="pVersion" class="form-control" required="">
+                    <div class="form-group">
+                        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Version<sup class="required-field">*</sup></label>
+                        <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                            <input onblur="blurIt()" type="text" placeholder="Enter Process Version" name="overview_version" id="pVersion" class="form-control" required="">
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Owner<sup class="required-field">*</sup></label>
-                    <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                        <input onblur="blurIt()" type="text" placeholder="Enter Process Owner" name="overview_owner" id="pOwner" class="form-control" required="">
+                    <div class="form-group">
+                        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Owner<sup class="required-field">*</sup></label>
+                        <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                            <input onblur="blurIt()" type="text" placeholder="Enter Process Owner" name="overview_owner" id="pOwner" class="form-control" required="">
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Tags</label>
-                    <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                        <input onblur="blurIt()" type="text" placeholder="Enter Tags" name="overview_tags" id="pTags" class="form-control">
+                    <div class="form-group">
+                        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Tags</label>
+                        <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                            <input onblur="blurIt()" type="text" placeholder="Enter Tags" name="overview_tags" id="pTags" class="form-control">
+                        </div>
                     </div>
-                </div>
+                </form>
 
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button>
-                        <button class="btn btn-primary" onclick="associateBPMN()">Associate BPMN model</button>
+                        <button class="btn btn-primary" onclick="showTextEditor(this)">Describe process in text</button>
+                        <button class="btn btn-primary" onclick="associateBPMN(this)">Associate BPMN model</button>
                     </div>
                 </div>
 
@@ -342,11 +345,10 @@
         <div id="processButtons" class="form-actions">
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <button class="btn btn btn-success" value="Save process" onclick="saveProcess()">Save process</button>
+                    <button class="btn btn btn-success" id="saveProcessBtn" value="Save process" onclick="saveProcess(this)">Save process</button>
                 </div>
             </div>
         </div>
-    </form>
 </div>
 
 <div id="processTextDiv" style="display: none">
