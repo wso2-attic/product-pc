@@ -73,6 +73,10 @@ asset.server = function(ctx) {
                 path: 'assets.jag'
             }, 
             {
+                url: 'getAssociations',
+                path: 'getAssociations.jag'
+            },
+            {
                 url: 'TextContentRetriever',
                 path: 'TextContentRetriever.jag'
             },
