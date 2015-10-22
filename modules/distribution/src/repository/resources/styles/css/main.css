@@ -16,7 +16,7 @@ table#main-table td#menu-panel {
 /* ---------------- header styles ------------------ */
 div#header-div {
     background-color:#222222;
-    background-image:none !important;
+    background-image: url(../images/logo.png);
 }
 
 div#header-div div.left-logo {

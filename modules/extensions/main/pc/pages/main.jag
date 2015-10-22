@@ -46,6 +46,7 @@ font-weight: 500;
     text-transform: camelcase;
     white-space: nowrap;
     overflow: hidden;
+    text-decoration:none;
 }
 .space{
 	height: 40px;
@@ -53,33 +54,24 @@ font-weight: 500;
 .fspace{
 	height: 400px;
 }
-a.switcher-link{
-display:inline-block;
-
- font-size:  20px ;
-  text-decoration: none;
-  background-color: #EEEEEE;
-  color: #2374c8;
-  padding: 2px 6px 2px 6px;
-  border-radius:8px;
-	border:1px solid #dcdcdc;
-	padding:9px 18px;
-
+a:hover{
+  color:#00BFFF;
 }
-a.switcher-link2{
-display:inline-block;
-width:130px;
- font-size:  20px ;
-  text-decoration: none;
-  background-color: #EEEEEE;
-  color: #2374c8;
-  padding: 2px 6px 2px 6px;
-  border-radius:8px;
-	border:1px solid #dcdcdc;
-	padding:9px 18px;
+
+button{
+  margin:0 auto;
+  display:inline-block;
+   margin: 150px;
+   width:300px;
+   height: 300px;
+   font-size:  30px ;
 
 }
 
+a{
+  text-decoration: none;
+  color: #2374c8;
+}
 </style>
 </head>
 <h2 class="col-xs-8 col-sm-8 app-logo">
@@ -91,20 +83,22 @@ width:130px;
 <a href=<%=logoutUrl%>> <div class="headerText">Sign Out</div> </a>
 </div>
 Welcome to Process Center Home Page.
-<div class="space"></div>
-<ul>
-<li>
-<a class="switcher-link" href=<%=publisherUrl%>> Go To Publisher </a></li>
 <br>
-<div class="space"></div>
+<div class ="space"></div>
+<button>
+<a  href=<%=publisherUrl%>> Process Editor </a>
+</button>
+<button>
+<a  href=<%=storeUrl%>> Process Explorer</a>
+</button>
 
-<li><a class="switcher-link2" href=<%=storeUrl%>> Go To Store </a></li>
-</ul>
 <div class="fspace"></div>
+<div>
 <hr>
 <footer class="footer">
     <p>&copy; 2014 WSO2 Inc. All Rights Reserved</p>
 </footer>
+</div>
 <%
 }
 %>
