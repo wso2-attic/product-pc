@@ -673,6 +673,11 @@
              <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
              <fileMode>644</fileMode>
         </file>
+         <file>
+            <source>../extensions/conf/plugins/org.wso2.store.admin.styles_2.0.1.SNAPSHOT.jar</source>
+             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/plugins</outputDirectory>
+             <fileMode>644</fileMode>
+        </file>
 
     </files>
 
