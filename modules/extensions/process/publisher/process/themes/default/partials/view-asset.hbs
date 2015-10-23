@@ -150,7 +150,6 @@
     }
 
     function readUpdatedSubprocess(e){
-        var subprocessInfo = [];
         var subprocessInput = $(e).val();
 
         if(subprocessInput == ''){
@@ -168,19 +167,21 @@
                     break;
                 }
             }
-            subprocessInfo.push({
+
+            var subprocessInfo = {
                 name: subprocessInput.split("-")[0],
                 path: subprocessPath,
                 id: subprocessId
-            });
+            };
+
             var subProcessDetails = {
                 'processName': $('#view-header').text(),
                 'processVersion' : $('#process-version').text(),
-                'subprocessList' : subprocessInfo
+                'subprocess' : subprocessInfo
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/update_subprocess_list',
+                url: 'https://localhost:9443/publisher/assets/process/apis/update_subprocess',
                 type: 'POST',
                 data: { 'subprocessDetails': JSON.stringify(subProcessDetails) },
                 success: function (response) {
@@ -194,7 +195,6 @@
     }
 
     function readUpdatedSuccessor(e){
-        var successorInfo = [];
         var successorInput = $(e).val();
 
         if(successorInput == ''){
@@ -212,19 +212,21 @@
                     break;
                 }
             }
-            successorInfo.push({
+
+            var successorInfo = {
                 name: successorInput.split("-")[0],
                 path: successorPath,
                 id: successorId
-            });
+            };
+
             var successorDetails = {
                 'processName': $('#view-header').text(),
                 'processVersion' : $('#process-version').text(),
-                'successorList' : successorInfo
+                'successor' : successorInfo
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/update_successor_list',
+                url: 'https://localhost:9443/publisher/assets/process/apis/update_successor',
                 type: 'POST',
                 data: { 'successorDetails': JSON.stringify(successorDetails) },
                 success: function (response) {
@@ -238,7 +240,6 @@
     }
 
     function readUpdatedPredecessor(e){
-        var predecessorInfo = [];
         var predecessorInput = $(e).val();
 
         if(predecessorInput == ''){
@@ -256,19 +257,21 @@
                     break;
                 }
             }
-            predecessorInfo.push({
+
+            var predecessorInfo = {
                 name: predecessorInput.split("-")[0],
                 path: predecessorPath,
                 id: predecessorId
-            });
+            };
+
             var predecessorDetails = {
                 'processName': $('#view-header').text(),
                 'processVersion' : $('#process-version').text(),
-                'predecessorList' : predecessorInfo
+                'predecessor' : predecessorInfo
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/update_predecessor_list',
+                url: 'https://localhost:9443/publisher/assets/process/apis/update_predecessor',
                 type: 'POST',
                 data: { 'predecessorDetails': JSON.stringify(predecessorDetails) },
                 success: function (response) {

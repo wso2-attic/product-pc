@@ -863,21 +863,20 @@ public class ProcessStore {
                 JSONObject processInfo = new JSONObject(subprocessDetails);
                 String processName = processInfo.getString("processName");
                 String processVersion = processInfo.getString("processVersion");
-                JSONArray subprocessList = processInfo.getJSONArray("subprocessList");
+                JSONObject subprocess = processInfo.getJSONObject("subprocess");
 
                 String processAssetPath = "processes/" + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                if(subprocessList.length() != 0){
+                if(subprocess != null){
                     Element rootElement = doc.getDocumentElement();
-                    for(int i = 0 ; i < subprocessList.length() ; i++){
-                        Element subprocessElement = append(doc, rootElement, "subprocess", mns);
-                        appendText(doc, subprocessElement, "name", mns, subprocessList.getJSONObject(i).getString("name"));
-                        appendText(doc, subprocessElement, "path", mns, subprocessList.getJSONObject(i).getString("path"));
-                        appendText(doc, subprocessElement, "id", mns, subprocessList.getJSONObject(i).getString("id"));
-                    }
+                    Element subprocessElement = append(doc, rootElement, "subprocess", mns);
+                    appendText(doc, subprocessElement, "name", mns, subprocess.getString("name"));
+                    appendText(doc, subprocessElement, "path", mns, subprocess.getString("path"));
+                    appendText(doc, subprocessElement, "id", mns, subprocess.getString("id"));
+
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
@@ -900,21 +899,20 @@ public class ProcessStore {
                 JSONObject processInfo = new JSONObject(successorDetails);
                 String processName = processInfo.getString("processName");
                 String processVersion = processInfo.getString("processVersion");
-                JSONArray successorList = processInfo.getJSONArray("successorList");
+                JSONObject successor = processInfo.getJSONObject("successor");
 
                 String processAssetPath = "processes/" + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                if(successorDetails.length() != 0){
+                if(successor != null){
                     Element rootElement = doc.getDocumentElement();
-                    for(int i = 0 ; i < successorList.length() ; i++){
-                        Element successorElement = append(doc, rootElement, "successor", mns);
-                        appendText(doc, successorElement, "name", mns, successorList.getJSONObject(i).getString("name"));
-                        appendText(doc, successorElement, "path", mns, successorList.getJSONObject(i).getString("path"));
-                        appendText(doc, successorElement, "id", mns, successorList.getJSONObject(i).getString("id"));
-                    }
+                    Element successorElement = append(doc, rootElement, "successor", mns);
+                    appendText(doc, successorElement, "name", mns, successor.getString("name"));
+                    appendText(doc, successorElement, "path", mns, successor.getString("path"));
+                    appendText(doc, successorElement, "id", mns, successor.getString("id"));
+
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
@@ -937,21 +935,20 @@ public class ProcessStore {
                 JSONObject processInfo = new JSONObject(predecessorDetails);
                 String processName = processInfo.getString("processName");
                 String processVersion = processInfo.getString("processVersion");
-                JSONArray predecessorList = processInfo.getJSONArray("predecessorList");
+                JSONObject predecessor = processInfo.getJSONObject("predecessor");
 
                 String processAssetPath = "processes/" + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                if(predecessorList.length() != 0){
+                if(predecessor != null){
                     Element rootElement = doc.getDocumentElement();
-                    for(int i = 0 ; i < predecessorList.length() ; i++){
-                        Element predecessorElement = append(doc, rootElement, "predecessor", mns);
-                        appendText(doc, predecessorElement, "name", mns, predecessorList.getJSONObject(i).getString("name"));
-                        appendText(doc, predecessorElement, "path", mns, predecessorList.getJSONObject(i).getString("path"));
-                        appendText(doc, predecessorElement, "id", mns, predecessorList.getJSONObject(i).getString("id"));
-                    }
+                    Element predecessorElement = append(doc, rootElement, "predecessor", mns);
+                    appendText(doc, predecessorElement, "name", mns, predecessor.getString("name"));
+                    appendText(doc, predecessorElement, "path", mns, predecessor.getString("path"));
+                    appendText(doc, predecessorElement, "id", mns, predecessor.getString("id"));
+
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
