@@ -27,7 +27,7 @@
     if(user === null) {
         response.sendRedirect(relayState);
     } else {
-        var config = require('/config/pc.js').config(),
+        var config = require('/config/process-center.js').config(),
                 sso = require('sso'),
                 sso_sessions = application.get('sso_sessions'),
                 sessionId = session.getId(),

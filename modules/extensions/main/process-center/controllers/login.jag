@@ -18,7 +18,7 @@
  *
  */
 (function(){
-    var configs = require('/config/pc.js').config(),
+    var configs = require('/config/process-center.js').config(),
             sso = require("sso"),
             sessionId = session.getId(),
             requestedPage = request.getParameter("requestedPage"),
@@ -26,7 +26,7 @@
             referer = request.getHeader("referer"),
             ignoreReferer = request.getParameter("ignoreReferer");
            var server = require('store').server;
-            var relayState = '/pc/pages/main';
+            var relayState = '/process-center/pages/main';
              var user = server.current(session);
 
             var log = new Log();

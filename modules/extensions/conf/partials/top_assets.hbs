@@ -1,6 +1,3 @@
-{{#if cuser.username}}
-<a href=" ../../pc">Go to Process Center Home Page</a>
-{{/if}}
 
 {{#if recentAssetsByType}}
     {{#each recentAssetsByType}}
@@ -12,7 +9,7 @@
                 {{rxt.pluralLabel}}
             </a>
         </div><!--title-->
-              
+              {{#if rxt.shortName}}
                     
                 <div class="float-right"><a href="{{tenantedUrl "/assets/"}}{{rxt.shortName}}/list" class="more">
                     <span class="fw-stack fw-lg  fw-inverse">
@@ -23,6 +20,7 @@
                     <span class="asset-more-in-listing">See More</span></a></div>
                 <hr>
             </div>
+             {{/if}}
         </div>
         {{#dyn asset=rxt.shortName}}
                 {{>assets}}

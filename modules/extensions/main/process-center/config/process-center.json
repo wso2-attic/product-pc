@@ -6,7 +6,7 @@
     "socialCommentsEnable": true,
     "cached": false,
     "rxt": {
-        "CONFIG_BASE_PATH": "/_system/config/pc/configs/",
+        "CONFIG_BASE_PATH": "/_system/config/process-center/configs/",
         "EXTENSION_PATH": "extensions/assets/",
         "ASSET_SCRIPT_PATH": "/asset.js",
         "DEFAULT_ASSET_SCRIPT": "/extensions/assets/default/asset.js"
@@ -32,10 +32,10 @@
         "methods": {
             "sso": {
                 "attributes": {
-                    "issuer": "pc",
+                    "issuer": "process-center",
                     "identityProviderURL": "%https.host%/samlsso",
                     "responseSigningEnabled": "true",
-                    "acs": "%https.host%/pc/acs",
+                    "acs": "%https.host%/process-center/acs",
                     "identityAlias": "wso2carbon",
                     "useTenantKey": false
                 }
