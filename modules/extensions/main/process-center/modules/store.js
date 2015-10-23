@@ -38,7 +38,7 @@ var init = function (options) {
             carbon = require('carbon'),
             mod = require('store'),
             server = mod.server,
-            config = require('/config/pc-tenant.json'),
+            config = require('/config/process-center-tenant.json'),
             system = server.systemRegistry(tenantId),
             um = server.userManager(tenantId);
         system.put(options.tenantConfigs, {
