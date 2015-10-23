@@ -281,6 +281,148 @@
         }
     }
 
+    function deleteSubprocess(e){
+        var deleteSubInput = $(e).parent().closest("tr").find("span").text();
+        if(! isProcessNotAvailableInList(deleteSubInput)){
+            var deleteSubPath, deleteSubId;
+            for(var i = 0 ; i < processListObj.length ; i++){
+                if(processListObj[i].processname == deleteSubInput.split("-")[0] &&
+                        processListObj[i].processversion == deleteSubInput.split("-")[1]){
+                    deleteSubPath = processListObj[i].path;
+                    deleteSubId = processListObj[i].processid;
+                    break;
+                }
+            }
+
+            var deleteSubInfo = {
+                name: deleteSubInput.split("-")[0],
+                path: deleteSubPath,
+                id: deleteSubId
+            };
+
+            var deleteSubObj = {
+                'processName': $('#view-header').text(),
+                'processVersion' : $('#process-version').text(),
+                'deleteSubprocess' : deleteSubInfo
+            };
+
+            $.ajax({
+                url: 'https://localhost:9443/publisher/assets/process/apis/delete_subprocess',
+                type: 'POST',
+                data: { 'deleteSubprocessDetails': JSON.stringify(deleteSubObj) },
+                success: function (response) {
+                    alert("Successfully deleted the subprocess.");
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+
+    function deleteSuccessor(e){
+        var deleteSuccessorInput = $(e).parent().closest("tr").find("span").text();
+        if(! isProcessNotAvailableInList(deleteSuccessorInput)){
+            var deleteSuccessorPath, deleteSuccessorId;
+            for(var i = 0 ; i < processListObj.length ; i++){
+                if(processListObj[i].processname == deleteSuccessorInput.split("-")[0] &&
+                        processListObj[i].processversion == deleteSuccessorInput.split("-")[1]){
+                    deleteSuccessorPath = processListObj[i].path;
+                    deleteSuccessorId = processListObj[i].processid;
+                    break;
+                }
+            }
+
+            var deleteSuccessorInfo = {
+                name: deleteSuccessorInput.split("-")[0],
+                path: deleteSuccessorPath,
+                id: deleteSuccessorId
+            };
+
+            var deleteSuccessorObj = {
+                'processName': $('#view-header').text(),
+                'processVersion' : $('#process-version').text(),
+                'deleteSuccessor' : deleteSuccessorInfo
+            };
+
+            $.ajax({
+                url: 'https://localhost:9443/publisher/assets/process/apis/delete_successor',
+                type: 'POST',
+                data: { 'deleteSuccessorDetails': JSON.stringify(deleteSuccessorObj) },
+                success: function (response) {
+                    alert("Successfully deleted the successor.");
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+
+    function deletePredecessor(e){
+        var deletePredecessorInput = $(e).parent().closest("tr").find("span").text();
+        if(! isProcessNotAvailableInList(deletePredecessorInput)){
+            var deletePredecessorPath, deletePredecessorId;
+            for(var i = 0 ; i < processListObj.length ; i++){
+                if(processListObj[i].processname == deletePredecessorInput.split("-")[0] &&
+                        processListObj[i].processversion == deletePredecessorInput.split("-")[1]){
+                    deletePredecessorPath = processListObj[i].path;
+                    deletePredecessorId = processListObj[i].processid;
+                    break;
+                }
+            }
+
+            var deletePredecessorInfo = {
+                name: deletePredecessorInput.split("-")[0],
+                path: deletePredecessorPath,
+                id: deletePredecessorId
+            };
+
+            var deletePredecessorObj = {
+                'processName': $('#view-header').text(),
+                'processVersion' : $('#process-version').text(),
+                'deletePredecessor' : deletePredecessorInfo
+            };
+
+            $.ajax({
+                url: 'https://localhost:9443/publisher/assets/process/apis/delete_Predecessor',
+                type: 'POST',
+                data: { 'deletePredecessorDetails': JSON.stringify(deletePredecessorObj) },
+                success: function (response) {
+                    alert("Successfully deleted the Predecessor.");
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+
+    function updateProcessOwner(e){
+        var processOwner = $(e).text();
+        if(processOwner == ''){
+            alert("Field is empty");
+        }else{
+            var ownerDetails = {
+                'processName': $('#view-header').text(),
+                'processVersion' : $('#process-version').text(),
+                'processOwner' : $(e).text()
+            };
+
+            $.ajax({
+                url: 'https://localhost:9443/publisher/assets/process/apis/update_owner',
+                type: 'POST',
+                data: { 'ownerDetails': JSON.stringify(ownerDetails) },
+                success: function (response) {
+                    alert("Successfully updated the Process owner name.");
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+
 </script>
 
 <h2 id="view-header">{{assets.tables.[0].fields.name.value}}</h2>
@@ -294,7 +436,7 @@
                 </tr>
                 <tr>
                     <td width="40%" style="border: 0px !important;">Owner:</td>
-                    <td width="60%" style="border: 0px !important;" contenteditable="true">{{assets.tables.[0].fields.owner.value}}</td>
+                    <td width="60%" style="border: 0px !important;" contenteditable="true" onblur="updateProcessOwner(this)">{{assets.tables.[0].fields.owner.value}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -343,7 +485,7 @@
                         {{#each involveProcessList.subprocesses}}
                             <tr>
                                 <td valign="top"><span id="subprocess_Name" class="subprocess_Name">{{this.name}}-{{this.version}}</span></td>
-                                <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
+                                <td><a class="js-remove-row" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></a> </td>
                             </tr>
                         {{/each}}
                         </tbody>
@@ -371,7 +513,7 @@
                         {{#each involveProcessList.successors}}
                             <tr>
                                 <td valign="top"><span id="successor_Name" class="successor_Name">{{this.name}}-{{this.version}}</span></td>
-                                <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
+                                <td><a class="js-remove-row" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></a> </td>
                             </tr>
                         {{/each}}
                         </tbody>
@@ -401,7 +543,7 @@
                         {{#each involveProcessList.predecessors}}
                             <tr>
                                 <td valign="top"><span id="predecessor_Name" class="predecessor_Name">{{this.name}}-{{this.version}}</span></td>
-                                <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
+                                <td><a class="js-remove-row" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></a> </td>
                             </tr>
                         {{/each}}
                         </tbody>
@@ -458,7 +600,7 @@
     <tbody>
     <tr id="table_reference_subprocess">
         <td valign="top"><input type="text" class="form-control subprocess_Name" value="" name="subprocess_Name" id="subprocess_Name" onkeydown="subProcessNamesAutoComplete()" onblur="readUpdatedSubprocess(this)"></td>
-        <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
+        <td><a class="js-remove-row" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></a> </td>
     </tr>
     </tbody>
 </table>
@@ -467,7 +609,7 @@
     <tbody>
     <tr id="table_reference_successor">
         <td valign="top"><input type="text" class="form-control successor_Name" value="" name="successor_Name" id="successor_Name" onkeydown="successorNameAutoComplete()" onblur="readUpdatedSuccessor(this)"></td>
-        <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
+        <td><a class="js-remove-row" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></a> </td>
     </tr>
     </tbody>
 </table>
@@ -476,7 +618,7 @@
     <tbody>
     <tr id="table_reference_predecessor">
         <td valign="top"><input type="text" class="form-control predecessor_Name" value="" name="predecessor_Name" id="predecessor_Name" onkeydown="predecessorNameAutoComplete()"  onblur="readUpdatedPredecessor(this)"></td>
-        <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
+        <td><a class="js-remove-row" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></a> </td>
     </tr>
     </tbody>
 </table>

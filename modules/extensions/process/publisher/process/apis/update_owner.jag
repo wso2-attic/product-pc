@@ -1,0 +1,12 @@
+<%
+importPackage(org.wso2.carbon.pc.core);
+
+var log = new Log();
+log.info("Process owner update logic");
+
+var ps = new ProcessStore();
+var ownerDetails = String(request.getParameter("ownerDetails"));
+var ownerStatus = ps.updateOwner(ownerDetails);
+print(ownerStatus);
+log.info("ownerDetails: " + ownerDetails);
+%>

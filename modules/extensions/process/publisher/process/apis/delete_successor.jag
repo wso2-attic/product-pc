@@ -1,0 +1,12 @@
+<%
+importPackage(org.wso2.carbon.pc.core);
+
+var log = new Log();
+log.info("Successor delete logic");
+
+var ps = new ProcessStore();
+var deleteSuccessorDetails = String(request.getParameter("deleteSuccessorDetails"));
+var deleteSuccessorStatus = ps.deleteSuccessor(deleteSuccessorDetails);
+print(deleteSuccessorStatus);
+log.info("deleteSuccessorDetails: " + deleteSuccessorDetails);
+%>

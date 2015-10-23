@@ -47,15 +47,27 @@ asset.server = function(ctx) {
             }, {
                 url: 'get_process_list',
                 path: 'get_process_list.jag'
-            },{
+            }, {
                 url: 'update_subprocess_list',
                 path: 'update_subprocess_list.jag'
-            },{
+            }, {
                 url: 'update_successor_list',
                 path: 'update_successor_list.jag'
-            },{
+            }, {
                 url: 'update_predecessor_list',
                 path: 'update_predecessor_list.jag'
+            }, {
+                url: 'delete_subprocess',
+                path: 'delete_subprocess.jag'
+            }, {
+                url: 'delete_successor',
+                path: 'delete_successor.jag'
+            }, {
+                url: 'delete_Predecessor',
+                path: 'delete_Predecessor.jag'
+            }, {
+                url: 'update_owner',
+                path: 'update_owner.jag'
             }]
         }
     }
