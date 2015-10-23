@@ -25,10 +25,10 @@
             <CustomLoginPage>/store/login.jag</CustomLoginPage>
         </ServiceProvider>
          <ServiceProvider>
-            <Issuer>pc</Issuer>
-            <AssertionConsumerService>https://localhost:9443/pc/acs</AssertionConsumerService>
+            <Issuer>process-center</Issuer>
+            <AssertionConsumerService>https://localhost:9443/process-center/acs</AssertionConsumerService>
             <SignResponse>true</SignResponse>
-            <CustomLoginPage>/pc/login.jag</CustomLoginPage>
+            <CustomLoginPage>/process-center/login.jag</CustomLoginPage>
         </ServiceProvider>
         <ServiceProvider>
             <Issuer>social</Issuer>

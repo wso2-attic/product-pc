@@ -2,7 +2,7 @@
 <%
 
 var caramel = require('caramel');
-var configs = require('/config/pc.js').config();
+var configs = require('/config/process-center.js').config();
 var server = require('store').server;
 var log = new Log();
    
@@ -75,7 +75,7 @@ a{
 </style>
 </head>
 <h2 class="col-xs-8 col-sm-8 app-logo">
-<img src="/pc/themes/store/img/logo.png">
+<img src="/process-center/themes/store/img/logo.png">
 <div class="title">Process Center<div>
 </h2>
 

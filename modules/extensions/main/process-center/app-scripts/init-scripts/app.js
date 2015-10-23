@@ -34,7 +34,7 @@ process.setProperty('https.port', httpsPort.toString());
 Finished the parsing stuff
  */
 caramel.configs({
-    context: '/pc',
+    context: '/process-center',
     cache: true,
     negotiation: true,
     themer: function () {
@@ -42,7 +42,7 @@ caramel.configs({
         if(meta.request.getRequestURI().indexOf('gadget') != -1) {
             return 'modern';
         }*/
-        return 'pc';
+        return 'process-center';
     }/*,
     languagesDir: '/i18n',
     language: function() {
@@ -50,11 +50,11 @@ caramel.configs({
     }*/
 });
 
-var configs = require('/config/pc.js').config();
+var configs = require('/config/process-center.js').config();
 
 var log=new Log();
 if(log.isDebugEnabled()){
-    log.debug('#### PC CONFIG LOGIC ####');
+    log.debug('#### process center CONFIG LOGIC ####');
 }
 
 var mod = require('store');
@@ -74,7 +74,7 @@ store.init(configs);
 rxt.server.init(configs);
 
 rxt.permissions.init();
-//log.info("PC URL : " + configs.server.http + caramel.configs().context);
+//log.info("process center URL : " + configs.server.http + caramel.configs().context);
 /*
 var url='https://<HOST>:<PORT>/admin',
     username='admin',
@@ -94,16 +94,16 @@ var event = require('event');
 event.emit('tenantLoad', tenantId);
 
 if(log.isDebugEnabled()){
-    log.debug('#### FINISHED PC CONFIG LOGIC #####');
+    log.debug('#### FINISHED process center CONFIG LOGIC #####');
 }
 
 //for server startup log for informing store URL
-var logPcUrl = function() {
+var  processCenterUrl = function() {
 	var log = new Log();
-	log.info("PC URL : " + configs.server.http + caramel.configs().context);
+	log.info("Process Center URL : " + configs.server.http + caramel.configs().context);
 };
 
-setTimeout(logPcUrl, 7000);
+setTimeout(processCenterUrl, 7000);
 
 
 

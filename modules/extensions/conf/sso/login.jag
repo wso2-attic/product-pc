@@ -42,8 +42,8 @@ if(RelayState){
     if(RelayState.indexOf("register_new_user") != -1 ){
         RelayState = "/store/pages/top-assets";
     }
-    if(RelayState == "pc"){
-        RelayState = "/pc/pages/main";
+    if(RelayState == "process-center"){
+        RelayState = "/process-center/pages/main";
     }
 }
 %>

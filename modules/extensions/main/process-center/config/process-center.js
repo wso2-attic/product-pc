@@ -3,7 +3,7 @@ var config;
     config = function () {
         var log = new Log(),
             pinch = require('/modules/pinch.min.js').pinch,
-            config = require('/config/pc.json'),
+            config = require('/config/process-center.json'),
             process = require('process'),
             CarbonUtils = Packages.org.wso2.carbon.utils.CarbonUtils,
             localIP = CarbonUtils.getServerConfiguration().getFirstProperty("HostName") || process.getProperty('server.host'),

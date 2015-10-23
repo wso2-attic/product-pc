@@ -19,7 +19,7 @@
  */
 (function () {
     var log = new Log(),
-            configs = require('/config/pc.js').config(),
+            configs = require('/config/process-center.js').config(),
             samlResponse = request.getParameter('SAMLResponse'),
             sessionId = session.getId(),
             samlRequest = request.getParameter('SAMLRequest'),
@@ -101,7 +101,7 @@
     
       
         var index = sso.client.decodeSAMLLogoutRequest(sso.client.getSamlObject(samlRequest));
-        log.debug('BACKEND LOGOUT RECIEVED FROM PC THE INDEX IS ######' + index);
+        log.debug('BACKEND LOGOUT RECIEVED FROM process-center THE INDEX IS ######' + index);
 
         var jSessionId = application.get('sso_sessions')[index];
 
