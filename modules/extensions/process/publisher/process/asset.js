@@ -48,14 +48,14 @@ asset.server = function(ctx) {
                 url: 'get_process_list',
                 path: 'get_process_list.jag'
             }, {
-                url: 'update_subprocess_list',
-                path: 'update_subprocess_list.jag'
+                url: 'update_subprocess',
+                path: 'update_subprocess.jag'
             }, {
-                url: 'update_successor_list',
-                path: 'update_successor_list.jag'
+                url: 'update_successor',
+                path: 'update_successor.jag'
             }, {
-                url: 'update_predecessor_list',
-                path: 'update_predecessor_list.jag'
+                url: 'update_predecessor',
+                path: 'update_predecessor.jag'
             }, {
                 url: 'delete_subprocess',
                 path: 'delete_subprocess.jag'
