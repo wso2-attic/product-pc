@@ -4,23 +4,35 @@
 
     window.onload = getProcessList;
 
+    function customAlertBox(message){
+        alertify.alert().set('title', 'PROCESS CENTER').set('message', message).show();
+    }
+
     function showTextEditor(e1) {
-        saveProcess(e1);
-        completeTextDetails();
-        $("#processTextDiv").show();
-        $("#overviewDiv").hide();
-        $("#bpmnView").hide();
-        tinymce.init({
-            selector: "#processContent"
-        });
+        if($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == ""){
+            customAlertBox('please fill the required fields');
+        }else{
+            saveProcess(e1);
+            completeTextDetails();
+            $("#processTextDiv").show();
+            $("#overviewDiv").hide();
+            $("#bpmnView").hide();
+            tinymce.init({
+                selector: "#processContent"
+            });
+        }
     }
 
     function associateBPMN(e2) {
-        saveProcess(e2);
-        completeBPMNDetails();
-        $("#overviewDiv").hide();
-        $("#processTextView").show();
-        $("#bpmnView").show();
+        if($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == ""){
+            customAlertBox('please fill the required fields');
+        }else{
+            saveProcess(e2);
+            completeBPMNDetails();
+            $("#overviewDiv").hide();
+            $("#processTextView").show();
+            $("#bpmnView").show();
+        }
     }
 
     function showMain() {
@@ -31,7 +43,7 @@
 
     function saveProcess(e) {
         if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
-            alert("Complete process name");
+            customAlertBox('please fill the required fields');
         } else {
             // save the process
 
@@ -48,7 +60,7 @@
                     }
                 },
                 error: function () {
-                    alert("error");
+                    alertify.error('Error');
                 }
             });
 
@@ -70,9 +82,9 @@
 
     function saveProcessText() {
         var textContent = tinyMCE.get('processContent').getContent();
-        alert("Process content: " + textContent)
+        customAlertBox("Process content: " + textContent);
         if (textContent == "") {
-            alert("Process content is empty");
+            customAlertBox('Process content is empty');
         } else {
             // save the process
 
@@ -83,7 +95,7 @@
                 success: function (response) {
                 },
                 error: function () {
-                    alert("error");
+                    alertify.error('Error');
                 }
             });
         }
@@ -208,7 +220,7 @@
                 }
             },
             error: function () {
-                alert("error");
+                alertify.error('Error');
             }
         });
     }
@@ -345,14 +357,17 @@
         <div id="processButtons" class="form-actions">
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <button class="btn btn btn-success" id="saveProcessBtn" value="Save process" onclick="saveProcess(this)">Save process</button>
+                    <button class="btn btn-success" id="saveProcessBtn" value="Save process" onclick="saveProcess(this)">Save process</button>
                 </div>
             </div>
         </div>
 </div>
 
 <div id="processTextDiv" style="display: none">
-    <a id="processTextOverviewLink" href="">Overview</a><button onclick="saveProcessText()">Save</button>
+    <br />
+    <a id="processTextOverviewLink" class="btn btn-primary" href="">Overview</a>
+    <button class="btn btn-primary" onclick="saveProcessText()">Save</button>
+
     <input type="hidden" id="textProcessName" name="textProcessName"/>
     <input type="hidden" id="textProcessVersion" name="textProcessVersion"/>
     <textarea placeholder="Enter Process Details" rows="15"
