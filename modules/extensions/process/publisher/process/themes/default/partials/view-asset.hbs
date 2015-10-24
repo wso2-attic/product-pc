@@ -4,6 +4,10 @@
 
     window.onload = getProcessList;
 
+    function customAlertBox(message){
+        alertify.alert().set('title', 'PROCESS CENTER').set('message', message).show();
+    }
+
     function showBPMN() {
 
         $("#overviewDiv").hide();
@@ -20,7 +24,7 @@
                 $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
             },
             error: function () {
-                alert("error");
+                alertify.error('Error');
             }
         });
 
@@ -51,7 +55,7 @@
                 $("#processTextDiv").html(response);
             },
             error: function () {
-                alert("error");
+                alertify.error('Error');
             }
         });
     }
@@ -59,7 +63,7 @@
     function saveProcessText() {
         var textContent = tinyMCE.get('processContent').getContent();
         if (textContent == "") {
-            alert("Process content is empty");
+            customAlertBox('Process content is empty');
         } else {
             // save the process
 
@@ -72,7 +76,7 @@
                     $("#addTextButton").hide();
                 },
                 error: function () {
-                    alert("error");
+                    alertify.error('Error');
                 }
             });
         }
@@ -135,7 +139,7 @@
                 }
             },
             error: function () {
-                alert("error");
+                alertify.error('Error');
             }
         });
     }
@@ -153,9 +157,9 @@
         var subprocessInput = $(e).val();
 
         if(subprocessInput == ''){
-            alert("Field is empty");
+            customAlertBox('Field is empty');
         }else if(isProcessNotAvailableInList(subprocessInput)){
-            alert("Please enter correct process name that exists.");
+            customAlertBox('Please enter a correct process name that already exists');
         }else{
             $(e).replaceWith("<span id='subprocess_Name' class='subprocess_Name'>"+subprocessInput+"</span>");
             var subprocessPath, subprocessId;
@@ -185,10 +189,10 @@
                 type: 'POST',
                 data: { 'subprocessDetails': JSON.stringify(subProcessDetails) },
                 success: function (response) {
-                    alert("Updated the subprocess details.");
+                    alertify.success('Successfully updated the subprocess details.');
                 },
                 error: function () {
-                    alert("error");
+                    alertify.error('Error');
                 }
             });
         }
@@ -198,9 +202,9 @@
         var successorInput = $(e).val();
 
         if(successorInput == ''){
-            alert("Field is empty");
+            customAlertBox('Field is empty');
         }else if(isProcessNotAvailableInList(successorInput)){
-            alert("Please enter correct process name that exists.");
+            customAlertBox('Please enter a correct process name that already exists');
         }else{
             $(e).replaceWith("<span id='successor_Name' class='successor_Name'>"+successorInput+"</span>");
             var successorPath, successorId;
@@ -230,10 +234,10 @@
                 type: 'POST',
                 data: { 'successorDetails': JSON.stringify(successorDetails) },
                 success: function (response) {
-                    alert("Updated the successor details.");
+                    alertify.success('Successfully updated the successor details.');
                 },
                 error: function () {
-                    alert("error");
+                    alertify.error('Error');
                 }
             });
         }
@@ -243,9 +247,9 @@
         var predecessorInput = $(e).val();
 
         if(predecessorInput == ''){
-            alert("Field is empty");
+            customAlertBox('Field is empty');
         }else if(isProcessNotAvailableInList(predecessorInput)){
-            alert("Please enter correct process name that exists.");
+            customAlertBox('Please enter correct process name that exists');
         }else{
             $(e).replaceWith("<span id='predecessor_Name' class='predecessor_Name'>"+predecessorInput+"</span>");
             var predecessorPath, predecessorId;
@@ -275,10 +279,10 @@
                 type: 'POST',
                 data: { 'predecessorDetails': JSON.stringify(predecessorDetails) },
                 success: function (response) {
-                    alert("Updated the predecessor details.");
+                    alertify.success('Successfully updated the predecessor details.');
                 },
                 error: function () {
-                    alert("error");
+                    alertify.error('Error');
                 }
             });
         }
@@ -314,10 +318,10 @@
                 type: 'POST',
                 data: { 'deleteSubprocessDetails': JSON.stringify(deleteSubObj) },
                 success: function (response) {
-                    alert("Successfully deleted the subprocess.");
+                    alertify.success('Successfully deleted the subprocess.');
                 },
                 error: function () {
-                    alert("error");
+                    alertify.error('Error');
                 }
             });
         }
@@ -353,10 +357,10 @@
                 type: 'POST',
                 data: { 'deleteSuccessorDetails': JSON.stringify(deleteSuccessorObj) },
                 success: function (response) {
-                    alert("Successfully deleted the successor.");
+                    alertify.success('Successfully deleted the successor.');
                 },
                 error: function () {
-                    alert("error");
+                    alertify.error('Error');
                 }
             });
         }
@@ -392,10 +396,10 @@
                 type: 'POST',
                 data: { 'deletePredecessorDetails': JSON.stringify(deletePredecessorObj) },
                 success: function (response) {
-                    alert("Successfully deleted the Predecessor.");
+                    alertify.success('Successfully deleted the Predecessor.');
                 },
                 error: function () {
-                    alert("error");
+                    alertify.error('Error');
                 }
             });
         }
@@ -404,7 +408,7 @@
     function updateProcessOwner(e){
         var processOwner = $(e).text();
         if(processOwner == ''){
-            alert("Field is empty");
+            customAlertBox('Field is empty');
         }else{
             var ownerDetails = {
                 'processName': $('#view-header').text(),
@@ -417,10 +421,10 @@
                 type: 'POST',
                 data: { 'ownerDetails': JSON.stringify(ownerDetails) },
                 success: function (response) {
-                    alert("Successfully updated the Process owner name.");
+                    alertify.success('Successfully updated the Process owner name.');
                 },
                 error: function () {
-                    alert("error");
+                    alertify.error('Error');
                 }
             });
         }
@@ -559,14 +563,20 @@
 </div>
 
 <div id="processTextContainer" style="display: none">
-    <button onclick="showOverview()">Overview</button><button onclick="editText()">Edit</button>
+    <div class="form-group">
+        <button class="btn btn-primary" onclick="showOverview()">Overview</button>
+        <button class="btn btn-primary" onclick="editText()">Edit</button>
+    </div>
 <div id="processTextDiv">
     Place holder for rendering process text
 </div>
 </div>
 
 <div id="processTextEditDiv" style="display: none">
-    <button onclick="showOverview()">Overview</button><button onclick="saveProcessText()">Save</button>
+    <div class="form-group">
+        <button class="btn btn-primary" onclick="showOverview()">Overview</button>
+        <button class="btn btn-primary" onclick="saveProcessText()">Save</button>
+    </div>
     <input type="hidden" id="textProcessName" name="textProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
     <input type="hidden" id="textProcessVersion" name="textProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
     <textarea placeholder="Enter Process Details" rows="15"
@@ -576,16 +586,16 @@
 </div>
 
 <div id="bpmnViewDiv" style="display: none">
-    <button onclick="showOverview()">Overview</button>
+    <button class="btn btn-primary" onclick="showOverview()">Overview</button><br /><br />
 <div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
     <img id="bpmnImage" src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
 </div>
 </div>
 
 <div id="bpmnEditDiv" style="display:none">
-    <button onclick="showOverview()">Overview</button>
+    <button class="btn btn-primary" onclick="showOverview()">Overview</button>
     <form  method='post' action='../apis/upload_bpmn' enctype="multipart/form-data" class="form-horizontal" id="form-bar-create" data-redirect-url='{{url ""}}/assets/{{rxt.shortName}}/list' >
-        BPMN file<input type="file" placeholder="Enter archive" name="bpmn" id="bpmnFile" class="input-large" style="width:80em";>
+        <br /><input type="file" class="filestyle" data-buttonName="btn-primary" data-placeholder="Enter archive" name="bpmn" id="bpmnFile" data-buttonText="BPMN file">
         <input type="hidden" id="bpmnProcessName" name="bpmnProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
         <input type="hidden" id="bpmnProcessVersion" name="bpmnProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
 
