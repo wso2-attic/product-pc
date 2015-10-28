@@ -103,7 +103,10 @@
         $("#bpmnEditDiv").show();
     }
 
-    function showOverview() {
+    function showOverview(e) {
+        if($(e).attr('id') == 'processTextOverviewBtn'){
+            saveProcessText();
+        }
         $("#overviewDiv").show();
         $("#processTextContainer").hide();
         $("#processTextEditDiv").hide();
@@ -155,14 +158,15 @@
     }
 
     function readUpdatedSubprocess(e){
-        var subprocessInput = $(e).val();
+        var subprocessInput = $(e).parent().closest("tr").find("input").val();
 
         if(subprocessInput == ''){
             customAlertBox('Field is empty');
         }else if(isProcessNotAvailableInList(subprocessInput)){
             customAlertBox('Please enter a correct process name that already exists');
         }else{
-            $(e).replaceWith("<span id='subprocess_Name' class='subprocess_Name'>"+subprocessInput+"</span>");
+            $(e).parent().closest("tr").find("input").replaceWith("<span id='subprocess_Name' class='subprocess_Name'>"+subprocessInput+"</span>");
+            $(e).replaceWith($(e).parent().closest("tr").find("a"));
             var subprocessPath, subprocessId;
             for(var i = 0 ; i < processListObj.length ; i++){
                 if(processListObj[i].processname == subprocessInput.split("-")[0] &&
@@ -200,14 +204,15 @@
     }
 
     function readUpdatedSuccessor(e){
-        var successorInput = $(e).val();
+        var successorInput = $(e).parent().closest("tr").find("input").val();
 
         if(successorInput == ''){
             customAlertBox('Field is empty');
         }else if(isProcessNotAvailableInList(successorInput)){
             customAlertBox('Please enter a correct process name that already exists');
         }else{
-            $(e).replaceWith("<span id='successor_Name' class='successor_Name'>"+successorInput+"</span>");
+            $(e).parent().closest("tr").find("input").replaceWith("<span id='successor_Name' class='successor_Name'>"+successorInput+"</span>");
+            $(e).replaceWith($(e).parent().closest("tr").find("a"));
             var successorPath, successorId;
             for(var i = 0 ; i < processListObj.length ; i++){
                 if(processListObj[i].processname == successorInput.split("-")[0] &&
@@ -245,14 +250,15 @@
     }
 
     function readUpdatedPredecessor(e){
-        var predecessorInput = $(e).val();
+        var predecessorInput = $(e).parent().closest("tr").find("input").val();
 
         if(predecessorInput == ''){
             customAlertBox('Field is empty');
         }else if(isProcessNotAvailableInList(predecessorInput)){
             customAlertBox('Please enter correct process name that exists');
         }else{
-            $(e).replaceWith("<span id='predecessor_Name' class='predecessor_Name'>"+predecessorInput+"</span>");
+            $(e).parent().closest("tr").find("input").replaceWith("<span id='predecessor_Name' class='predecessor_Name'>"+predecessorInput+"</span>");
+            $(e).replaceWith($(e).parent().closest("tr").find("a"));
             var predecessorPath, predecessorId;
             for(var i = 0 ; i < processListObj.length ; i++){
                 if(processListObj[i].processname == predecessorInput.split("-")[0] &&
@@ -451,10 +457,10 @@
 
             <div class="control-group" style="display: inline-block">
                 {{#if processTextAvaliable}}
-                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()">Show process text</button></div>
+                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View/Edit Process Text</button></div>
                     <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()" style="display: none">Describe process in text</button></div>
                 {{else}}
-                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">Show process text</button></div>
+                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View/Edit Process Text</button></div>
                     <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button></div>
                 {{/if}}
             </div>
@@ -492,8 +498,8 @@
                         <tbody>
                         {{#each involveProcessList.subprocesses}}
                             <tr>
-                                <td valign="top"><span id="subprocess_Name" class="subprocess_Name">{{this.name}}-{{this.version}}</span></td>
-                                <td><a class="js-remove-row" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></a> </td>
+                                <td valign="top" style="width: 85%;"><span id="subprocess_Name" class="subprocess_Name">{{this.name}}-{{this.version}}</span></td>
+                                <td style="width: 15%;"><a class="js-remove-row" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></a> </td>
                             </tr>
                         {{/each}}
                         </tbody>
@@ -520,8 +526,8 @@
                         <tbody>
                         {{#each involveProcessList.successors}}
                             <tr>
-                                <td valign="top"><span id="successor_Name" class="successor_Name">{{this.name}}-{{this.version}}</span></td>
-                                <td><a class="js-remove-row" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></a> </td>
+                                <td valign="top" style="width: 85%;"><span id="successor_Name" class="successor_Name">{{this.name}}-{{this.version}}</span></td>
+                                <td style="width: 15%;"><a class="js-remove-row" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></a> </td>
                             </tr>
                         {{/each}}
                         </tbody>
@@ -550,8 +556,8 @@
                         <tbody>
                         {{#each involveProcessList.predecessors}}
                             <tr>
-                                <td valign="top"><span id="predecessor_Name" class="predecessor_Name">{{this.name}}-{{this.version}}</span></td>
-                                <td><a class="js-remove-row" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></a> </td>
+                                <td valign="top" style="width: 85%;"><span id="predecessor_Name" class="predecessor_Name">{{this.name}}-{{this.version}}</span></td>
+                                <td style="width: 15%;"><a class="js-remove-row" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></a> </td>
                             </tr>
                         {{/each}}
                         </tbody>
@@ -565,7 +571,7 @@
 
 <div id="processTextContainer" style="display: none">
     <div class="form-group">
-        <button class="btn btn-primary" onclick="showOverview()">Overview</button>
+        <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button>
         <button class="btn btn-primary" onclick="editText()">Edit</button>
     </div>
     <div class = "panel panel-default">
@@ -577,7 +583,7 @@
 
 <div id="processTextEditDiv" style="display: none">
     <div class="form-group">
-        <button class="btn btn-primary" onclick="showOverview()">Overview</button>
+        <button class="btn btn-primary" id="processTextOverviewBtn" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button>
         <button class="btn btn-primary" onclick="saveProcessText()">Save</button>
     </div>
     <input type="hidden" id="textProcessName" name="textProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
@@ -589,14 +595,14 @@
 </div>
 
 <div id="bpmnViewDiv" style="display: none">
-    <button class="btn btn-primary" onclick="showOverview()">Overview</button><br /><br />
+    <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button><br /><br />
 <div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
     <img id="bpmnImage" src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
 </div>
 </div>
 
 <div id="bpmnEditDiv" style="display:none">
-    <button class="btn btn-primary" onclick="showOverview()">Overview</button>
+    <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button>
     <form  method='post' action='../apis/upload_bpmn' enctype="multipart/form-data" class="form-horizontal" id="form-bar-create" data-redirect-url='{{url ""}}/assets/{{rxt.shortName}}/list' >
         <br /><input type="file" class="filestyle" data-buttonName="btn-primary" data-placeholder="Enter archive" name="bpmn" id="bpmnFile" data-buttonText="BPMN file">
         <input type="hidden" id="bpmnProcessName" name="bpmnProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
@@ -615,8 +621,9 @@
 <table style="display: none;" class="refernceTableForUnbounded">
     <tbody>
     <tr id="table_reference_subprocess">
-        <td valign="top"><input type="text" class="form-control subprocess_Name" value="" name="subprocess_Name" id="subprocess_Name" onkeydown="subProcessNamesAutoComplete()" onblur="readUpdatedSubprocess(this)"></td>
-        <td><a class="js-remove-row" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></a> </td>
+        <td valign="top" style="width: 90%;"><input type="text" class="form-control subprocess_Name" value="" name="subprocess_Name" id="subprocess_Name" onkeydown="subProcessNamesAutoComplete()"></td>
+        <td style="width: 5%;"><span class="glyphicon glyphicon-pencil" style="color:#0081c2;cursor: pointer;" onclick="readUpdatedSubprocess(this)"></span></td>
+        <td style="width: 5%;"><a class="js-remove-row" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></a> </td>
     </tr>
     </tbody>
 </table>
@@ -624,8 +631,9 @@
 <table style="display: none;" class="refernceTableForUnbounded">
     <tbody>
     <tr id="table_reference_successor">
-        <td valign="top"><input type="text" class="form-control successor_Name" value="" name="successor_Name" id="successor_Name" onkeydown="successorNameAutoComplete()" onblur="readUpdatedSuccessor(this)"></td>
-        <td><a class="js-remove-row" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></a> </td>
+        <td valign="top" style="width: 90%;"><input type="text" class="form-control successor_Name" value="" name="successor_Name" id="successor_Name" onkeydown="successorNameAutoComplete()"></td>
+        <td style="width: 5%;"><span class="glyphicon glyphicon-pencil" style="color:#0081c2;cursor: pointer;" onclick="readUpdatedSuccessor(this)"></span></td>
+        <td style="width: 5%;"><a class="js-remove-row" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></a> </td>
     </tr>
     </tbody>
 </table>
@@ -633,8 +641,9 @@
 <table style="display: none;" class="refernceTableForUnbounded">
     <tbody>
     <tr id="table_reference_predecessor">
-        <td valign="top"><input type="text" class="form-control predecessor_Name" value="" name="predecessor_Name" id="predecessor_Name" onkeydown="predecessorNameAutoComplete()"  onblur="readUpdatedPredecessor(this)"></td>
-        <td><a class="js-remove-row" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></a> </td>
+        <td valign="top" style="width: 90%;"><input type="text" class="form-control predecessor_Name" value="" name="predecessor_Name" id="predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
+        <td style="width: 5%;"><span class="glyphicon glyphicon-pencil" style="color:#0081c2;cursor: pointer;" onclick="readUpdatedPredecessor(this)"></span></td>
+        <td style="width: 5%;"><a class="js-remove-row" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></a> </td>
     </tr>
     </tbody>
 </table>
