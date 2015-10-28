@@ -82,7 +82,6 @@
 
     function saveProcessText() {
         var textContent = tinyMCE.get('processContent').getContent();
-        customAlertBox("Process content: " + textContent);
         if (textContent == "") {
             customAlertBox('Process content is empty');
         } else {
@@ -93,6 +92,7 @@
                 type: 'POST',
                 data: { 'processName': $("#pName").val(), 'processVersion' : $("#pVersion").val(), 'processText' : textContent},
                 success: function (response) {
+                    alertify.success("Successfully saved the process content.");
                 },
                 error: function () {
                     alertify.error('Error');

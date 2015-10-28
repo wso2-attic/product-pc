@@ -72,6 +72,7 @@
                 type: 'POST',
                 data: { 'processName': $("#textProcessName").val(), 'processVersion' : $("#textProcessVersion").val(), 'processText' : textContent},
                 success: function (response) {
+                    alertify.success("Successfully saved the process content.");
                     $("#viewTextButton").show();
                     $("#addTextButton").hide();
                 },
@@ -567,9 +568,11 @@
         <button class="btn btn-primary" onclick="showOverview()">Overview</button>
         <button class="btn btn-primary" onclick="editText()">Edit</button>
     </div>
-<div id="processTextDiv">
-    Place holder for rendering process text
-</div>
+    <div class = "panel panel-default">
+        <div id="processTextDiv" class="panel-body">
+            Place holder for rendering process text
+        </div>
+    </div>
 </div>
 
 <div id="processTextEditDiv" style="display: none">
