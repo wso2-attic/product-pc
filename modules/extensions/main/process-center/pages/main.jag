@@ -52,7 +52,7 @@ font-weight: 500;
 	height: 40px;
 }
 .fspace{
-	height: 400px;
+	height: 60%;
 }
 a:hover{
   color:#00BFFF;
@@ -72,25 +72,50 @@ a{
   text-decoration: none;
   color: #2374c8;
 }
+
+.selectOption{
+  margin: auto;
+  width: 25%;
+  padding-top:20px;
+  font-size: 20px;
+  font-family: 'Lucida Console', sans-serif;
+  color: #222222;
+  background-color: #f1f1f1;
+  box-shadow: 3px 3px 5px #aaaaaa;
+}
+.btn{
+  padding:20px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-color: #aaaaaa;
+}
+.txt{
+  padding-left:20px;
+  style: 
+}
+span{
+  align: right;
+}
 </style>
+<title>Process Center</title>
 </head>
 <h2 class="col-xs-8 col-sm-8 app-logo">
-<img src="/process-center/themes/store/img/logo.png">
-<div class="title">Process Center<div>
+<img src="/process-center/themes/store/img/logo.png"/>
+<div class="title">Process Center</div>
 </h2>
 
 <div  style="position:absolute; right:30px; top:15px;">
 <a href=<%=logoutUrl%>> <div class="headerText">Sign Out</div> </a>
 </div>
-Welcome to Process Center Home Page.
+
 <br>
 <div class ="space"></div>
-<button>
-<a  href=<%=publisherUrl%>> Process Editor </a>
-</button>
-<button>
-<a  href=<%=storeUrl%>> Process Explorer</a>
-</button>
+<div class="selectOption">
+<div class="txt"><strong>SELECT AN ACTION </strong></div><br/>
+<a  href=<%=publisherUrl%>><div class="btn">Process Designer &gt;</div></a>
+<a  href=<%=storeUrl%>><div class="btn">Process Explorer &gt;</div></a>
+</div>
+
 
 <div class="fspace"></div>
 <div>
