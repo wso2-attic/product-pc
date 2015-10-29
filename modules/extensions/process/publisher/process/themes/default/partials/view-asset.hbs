@@ -60,7 +60,7 @@
         });
     }
 
-    function saveProcessText() {
+    function saveProcessText(e) {
         var textContent = tinyMCE.get('processContent').getContent();
         if (textContent == "") {
             customAlertBox('Process content is empty');
@@ -72,7 +72,9 @@
                 type: 'POST',
                 data: { 'processName': $("#textProcessName").val(), 'processVersion' : $("#textProcessVersion").val(), 'processText' : textContent},
                 success: function (response) {
-                    alertify.success("Successfully saved the process content.");
+                    if($(e).attr('id') == 'processTextSaveBtn'){
+                        alertify.success("Successfully saved the process content.");
+                    }
                     $("#viewTextButton").show();
                     $("#addTextButton").hide();
                 },
@@ -105,13 +107,21 @@
 
     function showOverview(e) {
         if($(e).attr('id') == 'processTextOverviewBtn'){
-            saveProcessText();
+            saveProcessText(e);
         }
         $("#overviewDiv").show();
         $("#processTextContainer").hide();
         $("#processTextEditDiv").hide();
         $("#bpmnViewDiv").hide();
         $("#bpmnEditDiv").hide();
+    }
+
+    function editProcessOwner(e){
+        if($(e).text() == ''){
+            customAlertBox('Process owner field is empty');
+        }else{
+            $('#processOwnerUpdateBtn').show();
+        }
     }
 
     function subProcessNamesAutoComplete(){
@@ -413,14 +423,14 @@
     }
 
     function updateProcessOwner(e){
-        var processOwner = $(e).text();
+        var processOwner = $(e).parent().closest("tr").find("td:eq(1)").text();
         if(processOwner == ''){
             customAlertBox('Field is empty');
         }else{
             var ownerDetails = {
                 'processName': $('#view-header').text(),
                 'processVersion' : $('#process-version').text(),
-                'processOwner' : $(e).text()
+                'processOwner' : processOwner
             };
 
             $.ajax({
@@ -428,6 +438,7 @@
                 type: 'POST',
                 data: { 'ownerDetails': JSON.stringify(ownerDetails) },
                 success: function (response) {
+                    $(e).hide();
                     alertify.success('Successfully updated the Process owner name.');
                 },
                 error: function () {
@@ -450,7 +461,8 @@
                 </tr>
                 <tr>
                     <td width="40%" style="border: 0px !important;">Owner:</td>
-                    <td width="60%" style="border: 0px !important;" contenteditable="true" onblur="updateProcessOwner(this)">{{assets.tables.[0].fields.owner.value}}</td>
+                    <td width="40%" style="border: 0px !important;" contenteditable="true" onblur="editProcessOwner(this)">{{assets.tables.[0].fields.owner.value}}</td>
+                    <td width="20%" style="border: 0px !important;"><span id="processOwnerUpdateBtn" class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Click here to update the value" style="color:#0081c2;cursor: pointer;display: none;" onclick="updateProcessOwner(this)"></span></td>
                 </tr>
                 </tbody>
             </table>
@@ -584,7 +596,7 @@
 <div id="processTextEditDiv" style="display: none">
     <div class="form-group">
         <button class="btn btn-primary" id="processTextOverviewBtn" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button>
-        <button class="btn btn-primary" onclick="saveProcessText()">Save</button>
+        <button class="btn btn-primary" id="processTextSaveBtn" onclick="saveProcessText(this)">Save</button>
     </div>
     <input type="hidden" id="textProcessName" name="textProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
     <input type="hidden" id="textProcessVersion" name="textProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
@@ -610,7 +622,7 @@
 
         <div id="saveButtons" class="form-actions">
             <input type='submit' id="btn-create-asset-bar" class="btn btn-primary"
-                   name="addNewAssetButton" value='{{t "Upload archive"}}'>
+                   name="addNewAssetButton" value='{{t "Upload file"}}'>
             <button class="btn" type="reset">{{t "Reset"}}</button>
             <input type="hidden" value="{{rxt.shortName}}" name="{{rxt.shortName}}"
                    id="meta-asset-type">
@@ -622,7 +634,7 @@
     <tbody>
     <tr id="table_reference_subprocess">
         <td valign="top" style="width: 90%;"><input type="text" class="form-control subprocess_Name" value="" name="subprocess_Name" id="subprocess_Name" onkeydown="subProcessNamesAutoComplete()"></td>
-        <td style="width: 5%;"><span class="glyphicon glyphicon-pencil" style="color:#0081c2;cursor: pointer;" onclick="readUpdatedSubprocess(this)"></span></td>
+        <td style="width: 5%;"><span class="glyphicon glyphicon-ok" style="color:#0081c2;cursor: pointer;" onclick="readUpdatedSubprocess(this)"></span></td>
         <td style="width: 5%;"><a class="js-remove-row" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></a> </td>
     </tr>
     </tbody>
@@ -632,7 +644,7 @@
     <tbody>
     <tr id="table_reference_successor">
         <td valign="top" style="width: 90%;"><input type="text" class="form-control successor_Name" value="" name="successor_Name" id="successor_Name" onkeydown="successorNameAutoComplete()"></td>
-        <td style="width: 5%;"><span class="glyphicon glyphicon-pencil" style="color:#0081c2;cursor: pointer;" onclick="readUpdatedSuccessor(this)"></span></td>
+        <td style="width: 5%;"><span class="glyphicon glyphicon-ok" style="color:#0081c2;cursor: pointer;" onclick="readUpdatedSuccessor(this)"></span></td>
         <td style="width: 5%;"><a class="js-remove-row" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></a> </td>
     </tr>
     </tbody>
@@ -642,7 +654,7 @@
     <tbody>
     <tr id="table_reference_predecessor">
         <td valign="top" style="width: 90%;"><input type="text" class="form-control predecessor_Name" value="" name="predecessor_Name" id="predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
-        <td style="width: 5%;"><span class="glyphicon glyphicon-pencil" style="color:#0081c2;cursor: pointer;" onclick="readUpdatedPredecessor(this)"></span></td>
+        <td style="width: 5%;"><span class="glyphicon glyphicon-ok" style="color:#0081c2;cursor: pointer;" onclick="readUpdatedPredecessor(this)"></span></td>
         <td style="width: 5%;"><a class="js-remove-row" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></a> </td>
     </tr>
     </tbody>
