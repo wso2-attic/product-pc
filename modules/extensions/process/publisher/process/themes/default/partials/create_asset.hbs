@@ -76,9 +76,12 @@
         return (JSON.stringify(processDetails));
     }
 
-    function saveProcessText() {
+    function saveProcessText(e) {
         var textContent = tinyMCE.get('processContent').getContent();
         if (textContent == "") {
+            if($(e).attr('id') == 'processTxtSaveBtn'){
+                alertify.error('Process content is empty.');
+            }
         } else {
             // save the process
 
@@ -87,6 +90,9 @@
                 type: 'POST',
                 data: { 'processName': $("#pName").val(), 'processVersion' : $("#pVersion").val(), 'processText' : textContent},
                 success: function (response) {
+                    if($(e).attr('id') == 'processTxtSaveBtn'){
+                        alertify.success("Successfully saved the process content.");
+                    }
                 },
                 error: function () {
                     alertify.error('Error');
@@ -384,8 +390,8 @@
 
 <div id="processTextDiv" style="display: none">
     <br />
-    <a id="processTextOverviewLink" class="btn btn-primary" onclick="saveProcessText()" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
-    <button class="btn btn-primary" onclick="saveProcessText()">Save</button><br /><br />
+    <a id="processTextOverviewLink" class="btn btn-primary" onclick="saveProcessText(this)" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
+    <button class="btn btn-primary" id="processTxtSaveBtn" onclick="saveProcessText(this)">Save</button><br /><br />
 
     <input type="hidden" id="textProcessName" name="textProcessName"/>
     <input type="hidden" id="textProcessVersion" name="textProcessVersion"/>
