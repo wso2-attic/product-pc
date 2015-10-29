@@ -448,6 +448,30 @@
         }
     }
 
+    function isInputFieldEmpty(tableName){
+        var isFieldEmpty = false;
+        $('#table_' + tableName + ' tbody tr').each(function(){
+            if($(this).find('td:eq(0) input').val() == ''){
+                isFieldEmpty = true;
+            }
+        });
+        return isFieldEmpty;
+    }
+
+    function addUnboundedRow(e){
+        var tableName = $(e).attr('data-name');
+        var table = $('#table_'+tableName);
+
+        if(! isInputFieldEmpty(tableName)) {
+            var referenceRow = $('#table_reference_' + tableName);
+            var newRow = referenceRow.clone().removeAttr('id');
+            $('input[type="text"]', newRow).val('');
+            table.show().append(newRow);
+        }else{
+            customAlertBox('Please fill the empty ' + tableName + ' field');
+        }
+    }
+
 </script>
 
 <h2 id="view-header">{{assets.tables.[0].fields.name.value}}</h2>
@@ -491,7 +515,7 @@
         <div class="control-group">
 
             <h2 class="field-title">
-                <a class="collapsing-h2" aria-expanded="true" href="#subprocess" data-toggle="collapse">
+                <a class="collapsing-h2" aria-expanded="true" href="#subprocess" data-toggle="collapse" rel="tooltip" title="List of subprocesses for a given process">
                     <i class="cu-btn-exp-col btn-collapsed">Subprocess</i>
                 </a>
             </h2>
@@ -501,7 +525,7 @@
                     &nbsp;
                 </div>
                 <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                    <div class="add-unbounded-row"><a class="js-add-unbounded-row" data-name="subprocess"><i class="fa fa-plus-circle"></i> Add Subprocess</a></div>
+                    <div class="add-unbounded-row"><a data-name="subprocess" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Subprocess</a></div>
                     <table class="tablex cu-data-table js-unbounded-table" id="table_subprocess">
                         <thead>
 
@@ -520,7 +544,7 @@
             </div>
 
             <h2 class="field-title">
-                <a class="collapsing-h2" aria-expanded="true" href="#successor" data-toggle="collapse">
+                <a class="collapsing-h2" aria-expanded="true" href="#successor" data-toggle="collapse" rel="tooltip" title="List of successor processes for a given process">
                     <i class="cu-btn-exp-col btn-collapsed">Successor</i>
                 </a>
             </h2>
@@ -529,7 +553,7 @@
                     &nbsp;
                 </div>
                 <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                    <div class="add-unbounded-row"><a class="js-add-unbounded-row" data-name="successor"><i class="fa fa-plus-circle"></i> Add Successor</a></div>
+                    <div class="add-unbounded-row"><a data-name="successor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Successor</a></div>
                     <table class="tablex cu-data-table js-unbounded-table" id="table_successor">
                         <thead>
 
@@ -549,7 +573,7 @@
 
 
             <h2 class="field-title">
-                <a class="collapsing-h2" aria-expanded="true" href="#predecessor" data-toggle="collapse">
+                <a class="collapsing-h2" aria-expanded="true" href="#predecessor" data-toggle="collapse" rel="tooltip" title="List of predecessor processes for a given process">
                     <i class="cu-btn-exp-col btn-collapsed">Predecessor</i>
                 </a>
             </h2>
@@ -559,7 +583,7 @@
                     &nbsp;
                 </div>
                 <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                    <div class="add-unbounded-row"><a class="js-add-unbounded-row" data-name="predecessor"><i class="fa fa-plus-circle"></i> Add Predecessor</a></div>
+                    <div class="add-unbounded-row"><a data-name="predecessor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Predecessor</a></div>
                     <table class="tablex cu-data-table js-unbounded-table" id="table_predecessor">
                         <thead>
 
