@@ -4,13 +4,9 @@
 
     window.onload = getProcessList;
 
-    function customAlertBox(message){
-        alertify.alert().set('title', 'PROCESS CENTER').set('message', message).show();
-    }
-
     function showTextEditor(e1) {
         if($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == ""){
-            customAlertBox('please fill the required fields');
+            alertify.error('please fill the required fields.');
         }else{
             saveProcess(e1);
             completeTextDetails();
@@ -25,7 +21,7 @@
 
     function associateBPMN(e2) {
         if($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == ""){
-            customAlertBox('please fill the required fields');
+            alertify.error('please fill the required fields.');
         }else{
             saveProcess(e2);
             completeBPMNDetails();
@@ -43,7 +39,7 @@
 
     function saveProcess(e) {
         if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
-            customAlertBox('please fill the required fields');
+            alertify.error('please fill the required fields.');
         } else {
             // save the process
 
@@ -243,7 +239,7 @@
             $('input[type="text"]', newRow).val('');
             table.show().append(newRow);
         }else{
-            customAlertBox('Please fill the empty ' + tableName + ' field');
+            alertify.error('Please fill the empty ' + tableName + ' field.');
         }
     }
 

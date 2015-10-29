@@ -4,8 +4,9 @@
 
     window.onload = getProcessList;
 
-    function customAlertBox(message){
-        alertify.alert().set('title', 'PROCESS CENTER').set('message', message).show();
+    function getMainProcess(){
+        var mainProcess = $('#view-header').text() + "-" + $('#process-version').text();
+        return mainProcess;
     }
 
     function showBPMN() {
@@ -63,7 +64,9 @@
     function saveProcessText(e) {
         var textContent = tinyMCE.get('processContent').getContent();
         if (textContent == "") {
-            customAlertBox('Process content is empty');
+            if($(e).attr('id') == 'processTextSaveBtn'){
+                alertify.error('Process content is empty.');
+            }
         } else {
             // save the process
 
@@ -118,7 +121,7 @@
 
     function editProcessOwner(e){
         if($(e).text() == ''){
-            customAlertBox('Process owner field is empty');
+            alertify.error('Process owner field is empty.');
         }else{
             $('#processOwnerUpdateBtn').show();
         }
@@ -171,9 +174,11 @@
         var subprocessInput = $(e).parent().closest("tr").find("input").val();
 
         if(subprocessInput == ''){
-            customAlertBox('Field is empty');
+            alertify.error('Field is empty.');
         }else if(isProcessNotAvailableInList(subprocessInput)){
-            customAlertBox('Please enter a correct process name that already exists');
+            alertify.warning('Please enter a correct process name that already exists.');
+        }else if(subprocessInput == getMainProcess()){
+            alertify.warning('You cannot assign the process name as its subprocess.');
         }else{
             $(e).parent().closest("tr").find("input").replaceWith("<span id='subprocess_Name' class='subprocess_Name'>"+subprocessInput+"</span>");
             $(e).replaceWith($(e).parent().closest("tr").find("a"));
@@ -217,9 +222,11 @@
         var successorInput = $(e).parent().closest("tr").find("input").val();
 
         if(successorInput == ''){
-            customAlertBox('Field is empty');
+            alertify.error('Field is empty.');
         }else if(isProcessNotAvailableInList(successorInput)){
-            customAlertBox('Please enter a correct process name that already exists');
+            alertify.warning('Please enter a correct process name that already exists.');
+        }else if(successorInput == getMainProcess()){
+            alertify.warning('You cannot assign the process name as its successor.');
         }else{
             $(e).parent().closest("tr").find("input").replaceWith("<span id='successor_Name' class='successor_Name'>"+successorInput+"</span>");
             $(e).replaceWith($(e).parent().closest("tr").find("a"));
@@ -263,9 +270,11 @@
         var predecessorInput = $(e).parent().closest("tr").find("input").val();
 
         if(predecessorInput == ''){
-            customAlertBox('Field is empty');
+            alertify.error('Field is empty.');
         }else if(isProcessNotAvailableInList(predecessorInput)){
-            customAlertBox('Please enter correct process name that exists');
+            alertify.warning('Please enter correct process name that exists.');
+        }else if(predecessorInput == getMainProcess()){
+            alertify.warning('You cannot assign the process name as its predecessor.');
         }else{
             $(e).parent().closest("tr").find("input").replaceWith("<span id='predecessor_Name' class='predecessor_Name'>"+predecessorInput+"</span>");
             $(e).replaceWith($(e).parent().closest("tr").find("a"));
@@ -425,7 +434,7 @@
     function updateProcessOwner(e){
         var processOwner = $(e).parent().closest("tr").find("td:eq(1)").text();
         if(processOwner == ''){
-            customAlertBox('Field is empty');
+            alertify.error('Field is empty.');
         }else{
             var ownerDetails = {
                 'processName': $('#view-header').text(),
@@ -468,7 +477,7 @@
             $('input[type="text"]', newRow).val('');
             table.show().append(newRow);
         }else{
-            customAlertBox('Please fill the empty ' + tableName + ' field');
+            alertify.error('Please fill the empty ' + tableName + ' field.');
         }
     }
 
