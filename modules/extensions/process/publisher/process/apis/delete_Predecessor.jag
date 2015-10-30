@@ -2,11 +2,15 @@
 importPackage(org.wso2.carbon.pc.core);
 
 var log = new Log();
-log.info("Predecessor delete logic");
+if(log.isDebugEnabled()){
+    log.debug("Predecessor delete logic");
+}
 
 var ps = new ProcessStore();
 var deletePredecessorDetails = String(request.getParameter("deletePredecessorDetails"));
 var deletePredecessorStatus = ps.deletePredecessor(deletePredecessorDetails);
 print(deletePredecessorStatus);
-log.info("deletePredecessorDetails: " + deletePredecessorDetails);
+if(log.isDebugEnabled()){
+    log.debug("deletePredecessorDetails: " + deletePredecessorDetails);
+}
 %>
