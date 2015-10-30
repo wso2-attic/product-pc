@@ -17,6 +17,7 @@ var logoutUrl = caramel.configs().context + '/logout';
 
 %>
 <head>
+<link rel="stylesheet" href="/publisher/themes/default/css/font-awesome.min.css">
 <style>
 .app-logo {
     height: 30px;
@@ -76,7 +77,7 @@ a{
 .selectOption{
   margin: auto;
   width: 25%;
-  padding-top:20px;
+  padding-top:30px;
   font-size: 20px;
   font-family: 'Lucida Console', sans-serif;
   color: #222222;
@@ -84,17 +85,14 @@ a{
   box-shadow: 3px 3px 5px #aaaaaa;
 }
 .btn{
-  padding:20px;
+  padding:30px;
   border-top-style: solid;
   border-top-width: 1px;
   border-color: #aaaaaa;
 }
 .txt{
-  padding-left:20px;
+  padding-left:40px;
   style: 
-}
-span{
-  align: right;
 }
 </style>
 <title>Process Center</title>
@@ -104,16 +102,16 @@ span{
 <div class="title">Process Center</div>
 </h2>
 
-<div  style="position:absolute; right:30px; top:15px;">
-<a href=<%=logoutUrl%>> <div class="headerText">Sign Out</div> </a>
+<div  style="border-color: #777; border-left-style: solid; border-left-width: 1px; height:30px; position:absolute; right:30px; top:20px;">
+<a href=<%=logoutUrl%>> <div style="padding-top:7px" class="headerText">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-unlock-alt"></i>&nbsp;Sign Out</div> </a>
 </div>
 
 <br>
 <div class ="space"></div>
 <div class="selectOption">
-<div class="txt"><strong>SELECT AN ACTION </strong></div><br/>
-<a  href=<%=publisherUrl%>><div class="btn">Process Designer &gt;</div></a>
-<a  href=<%=storeUrl%>><div class="btn">Process Explorer &gt;</div></a>
+<div class="txt"><strong><i class="fa fa-bars fa-1g"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SELECT AN ACTION </strong></div><br/>
+<a href=<%=publisherUrl%>><div class="btn"><i class="fa fa-pencil fa-2x"></i>&nbsp;&nbsp;&nbsp;&nbsp; Process Designer</div></a>
+<a href=<%=storeUrl%>><div class="btn"><i class="fa fa-eye fa-2x"></i>&nbsp;&nbsp;&nbsp; Process Explorer</div></a>
 </div>
 
 
