@@ -181,7 +181,7 @@
             alertify.warning('You cannot assign the process name as its subprocess.');
         }else{
             $(e).parent().closest("tr").find("input").replaceWith("<span id='subprocess_Name' class='subprocess_Name'>"+subprocessInput+"</span>");
-            $(e).replaceWith($(e).parent().closest("tr").find("a"));
+            $(e).hide();
             var subprocessPath, subprocessId;
             for(var i = 0 ; i < processListObj.length ; i++){
                 if(processListObj[i].processname == subprocessInput.split("-")[0] &&
@@ -209,7 +209,7 @@
                 type: 'POST',
                 data: { 'subprocessDetails': JSON.stringify(subProcessDetails) },
                 success: function (response) {
-                    alertify.success('Successfully updated the subprocess details.');
+                    alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
                 },
                 error: function () {
                     alertify.error('Error');
@@ -229,7 +229,7 @@
             alertify.warning('You cannot assign the process name as its successor.');
         }else{
             $(e).parent().closest("tr").find("input").replaceWith("<span id='successor_Name' class='successor_Name'>"+successorInput+"</span>");
-            $(e).replaceWith($(e).parent().closest("tr").find("a"));
+            $(e).hide();
             var successorPath, successorId;
             for(var i = 0 ; i < processListObj.length ; i++){
                 if(processListObj[i].processname == successorInput.split("-")[0] &&
@@ -257,7 +257,7 @@
                 type: 'POST',
                 data: { 'successorDetails': JSON.stringify(successorDetails) },
                 success: function (response) {
-                    alertify.success('Successfully updated the successor details.');
+                    alertify.success('Process ' + successorInput + ' successfully added to the successor list.');
                 },
                 error: function () {
                     alertify.error('Error');
@@ -277,7 +277,7 @@
             alertify.warning('You cannot assign the process name as its predecessor.');
         }else{
             $(e).parent().closest("tr").find("input").replaceWith("<span id='predecessor_Name' class='predecessor_Name'>"+predecessorInput+"</span>");
-            $(e).replaceWith($(e).parent().closest("tr").find("a"));
+            $(e).hide();
             var predecessorPath, predecessorId;
             for(var i = 0 ; i < processListObj.length ; i++){
                 if(processListObj[i].processname == predecessorInput.split("-")[0] &&
@@ -305,7 +305,7 @@
                 type: 'POST',
                 data: { 'predecessorDetails': JSON.stringify(predecessorDetails) },
                 success: function (response) {
-                    alertify.success('Successfully updated the predecessor details.');
+                    alertify.success('Process ' + predecessorInput + ' successfully added to the predecessor list.');
                 },
                 error: function () {
                     alertify.error('Error');
@@ -344,7 +344,7 @@
                 type: 'POST',
                 data: { 'deleteSubprocessDetails': JSON.stringify(deleteSubObj) },
                 success: function (response) {
-                    alertify.success('Successfully deleted the subprocess.');
+                    alertify.success('Successfully deleted ' + deleteSubInput + ' from the subprocess list.');
                 },
                 error: function () {
                     alertify.error('Error');
@@ -383,7 +383,7 @@
                 type: 'POST',
                 data: { 'deleteSuccessorDetails': JSON.stringify(deleteSuccessorObj) },
                 success: function (response) {
-                    alertify.success('Successfully deleted the successor.');
+                    alertify.success('Successfully deleted ' + deleteSuccessorInput + ' from the successor list.');
                 },
                 error: function () {
                     alertify.error('Error');
@@ -422,7 +422,7 @@
                 type: 'POST',
                 data: { 'deletePredecessorDetails': JSON.stringify(deletePredecessorObj) },
                 success: function (response) {
-                    alertify.success('Successfully deleted the Predecessor.');
+                    alertify.success('Successfully deleted ' + deletePredecessorInput + ' from the predecessor list.');
                 },
                 error: function () {
                     alertify.error('Error');
@@ -543,8 +543,9 @@
                         <tbody>
                         {{#each involveProcessList.subprocesses}}
                             <tr>
-                                <td valign="top" style="width: 85%;"><span id="subprocess_Name" class="subprocess_Name">{{this.name}}-{{this.version}}</span></td>
-                                <td style="width: 15%;"><a class="js-remove-row" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></a> </td>
+                                <td valign="top" style="width: 90%;"><span id="subprocess_Name" class="subprocess_Name">{{this.name}}-{{this.version}}</span></td>
+                                <td style="width: 5%;"></td>
+                                <td style="width: 5%;"><a class="js-remove-row" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></a> </td>
                             </tr>
                         {{/each}}
                         </tbody>
@@ -571,8 +572,9 @@
                         <tbody>
                         {{#each involveProcessList.successors}}
                             <tr>
-                                <td valign="top" style="width: 85%;"><span id="successor_Name" class="successor_Name">{{this.name}}-{{this.version}}</span></td>
-                                <td style="width: 15%;"><a class="js-remove-row" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></a> </td>
+                                <td valign="top" style="width: 90%;"><span id="successor_Name" class="successor_Name">{{this.name}}-{{this.version}}</span></td>
+                                <td style="width: 5%;"></td>
+                                <td style="width: 5%;"><a class="js-remove-row" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></a> </td>
                             </tr>
                         {{/each}}
                         </tbody>
@@ -601,8 +603,9 @@
                         <tbody>
                         {{#each involveProcessList.predecessors}}
                             <tr>
-                                <td valign="top" style="width: 85%;"><span id="predecessor_Name" class="predecessor_Name">{{this.name}}-{{this.version}}</span></td>
-                                <td style="width: 15%;"><a class="js-remove-row" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></a> </td>
+                                <td valign="top" style="width: 90%;"><span id="predecessor_Name" class="predecessor_Name">{{this.name}}-{{this.version}}</span></td>
+                                <td style="width: 5%;"></td>
+                                <td style="width: 5%;"><a class="js-remove-row" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></a> </td>
                             </tr>
                         {{/each}}
                         </tbody>
@@ -650,7 +653,7 @@
     <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button>
     <form  method='post' action='../apis/upload_bpmn' enctype="multipart/form-data" class="form-horizontal" id="form-bar-create" data-redirect-url='{{url ""}}/assets/{{rxt.shortName}}/list' >
         <br />
-        <div style="float-left;width:15cm">
+        <div style="float:left;width:15cm">
             <input type="file" class="filestyle" data-buttonName="btn-primary" data-placeholder="Enter archive" name="bpmn" id="bpmnFile" data-buttonText="BPMN file">
         </div>
         <input type="hidden" id="bpmnProcessName" name="bpmnProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
