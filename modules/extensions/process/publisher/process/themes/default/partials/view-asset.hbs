@@ -176,7 +176,7 @@
         if(subprocessInput == ''){
             alertify.error('Field is empty.');
         }else if(isProcessNotAvailableInList(subprocessInput)){
-            alertify.warning('Please enter a correct process name that already exists.');
+            alertify.warning('Please select a process from the dropdown list.');
         }else if(subprocessInput == getMainProcess()){
             alertify.warning('You cannot assign the process name as its subprocess.');
         }else{
@@ -224,7 +224,7 @@
         if(successorInput == ''){
             alertify.error('Field is empty.');
         }else if(isProcessNotAvailableInList(successorInput)){
-            alertify.warning('Please enter a correct process name that already exists.');
+            alertify.warning('Please select a process from the dropdown list.');
         }else if(successorInput == getMainProcess()){
             alertify.warning('You cannot assign the process name as its successor.');
         }else{
@@ -272,7 +272,7 @@
         if(predecessorInput == ''){
             alertify.error('Field is empty.');
         }else if(isProcessNotAvailableInList(predecessorInput)){
-            alertify.warning('Please enter correct process name that exists.');
+            alertify.warning('Please select a process from the dropdown list.');
         }else if(predecessorInput == getMainProcess()){
             alertify.warning('You cannot assign the process name as its predecessor.');
         }else{
