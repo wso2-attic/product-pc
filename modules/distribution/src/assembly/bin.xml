@@ -678,6 +678,11 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>../extensions/process/publisher/default/asset.js</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets/default</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
     </files>
 
     <!--
