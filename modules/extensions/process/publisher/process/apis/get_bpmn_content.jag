@@ -2,12 +2,18 @@
 
 importPackage(org.wso2.carbon.pc.core);
 var log = new Log();
-log.info("INSIDE get bpmn content...");
+if(log.isDebugEnabled()){
+    log.debug("INSIDE get bpmn content...");
+}
 var ps = new ProcessStore();
 
 var bpmnPath = String(request.getParameter("bpmn_content_path"));
-log.info("Retrieving BPMN content for: " + bpmnPath);
+if(log.isDebugEnabled()){
+    log.debug("Retrieving BPMN content for: " + bpmnPath);
+}
 var bpmnData = ps.getBPMN(bpmnPath);
-log.info(bpmnData);
+if(log.isDebugEnabled()){
+    log.debug(bpmnData);
+}
 print(bpmnData);
 %>

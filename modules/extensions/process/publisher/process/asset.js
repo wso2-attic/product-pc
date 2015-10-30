@@ -80,7 +80,9 @@ asset.renderer = function(ctx) {
             var log = new Log();
 
             var resourcePath = page.assets.path;
-            log.info(resourcePath);
+            if(log.isDebugEnabled()){
+                log.debug(resourcePath);
+            }
 
             if (page.assets.tables[1].fields.processtextpath.value == "NA") {
                 page.processTextAvaliable = false;
@@ -98,9 +100,13 @@ asset.renderer = function(ctx) {
             var ps = new ProcessStore();
             var conData = ps.getSucessorPredecessorSubprocessList(resourcePath);
             var conObject = JSON.parse(conData);
-            log.info(conObject);
+            if(log.isDebugEnabled()){
+                log.debug(conObject);
+            }
             page.involveProcessList = conObject;
-            log.info(page);
+            if(log.isDebugEnabled()){
+                log.debug(page);
+            }
         }
     };
 };

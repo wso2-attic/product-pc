@@ -2,11 +2,15 @@
 
 importPackage(org.wso2.carbon.pc.core);
 var log = new Log();
-log.info("INSIDE get process text...");
+if(log.isDebugEnabled()){
+    log.debug("INSIDE get process text...");
+}
 var ps = new ProcessStore();
 
 var processTextPath = String(request.getParameter("process_text_path"));
-log.info("Retrieving process text for: " + processTextPath);
+if(log.isDebugEnabled()){
+    log.debug("Retrieving process text for: " + processTextPath);
+}
 var processText = ps.getProcessText(processTextPath);
 print(processText);
 %>

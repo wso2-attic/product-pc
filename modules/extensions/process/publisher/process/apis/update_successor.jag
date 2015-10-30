@@ -2,11 +2,15 @@
 importPackage(org.wso2.carbon.pc.core);
 
 var log = new Log();
-log.info("Successor update logic");
+if(log.isDebugEnabled()){
+    log.debug("Successor update logic");
+}
 
 var ps = new ProcessStore();
 var successorDetails = String(request.getParameter("successorDetails"));
 var successorStatus = ps.addSuccessor(successorDetails);
 print(successorStatus);
-log.info("subProcessDetails: " + successorDetails);
+if(log.isDebugEnabled()){
+    log.debug("subProcessDetails: " + successorDetails);
+}
 %>
