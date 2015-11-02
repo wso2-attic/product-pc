@@ -19,7 +19,7 @@
 
 var resources = function (page, meta) {
     return {
-        js:['libs/jquery.form.min.js','publisher-utils.js','create_asset.js','jquery-file-upload/jquery-ui.js','jquery-file-upload/alertify.js','jquery.cookie.js','common/option_text.js',"tinymce/tinymce.min.js",'tags/tags-init-create-asset.js','notify.min.js','messages.js','jquery-file-upload/jquery.iframe-transport.js','jquery-file-upload/jquery.fileupload.js','jquery-file-upload/vendor/jquery.ui.widget.js'],
+        js:['libs/jquery.form.min.js','publisher-utils.js','create_asset.js','jquery-file-upload/jquery-ui.js','jquery-file-upload/alertify.js','jquery-file-upload/bootstrap-filestyle.js','jquery.cookie.js','common/option_text.js',"tinymce/tinymce.min.js",'tags/tags-init-create-asset.js','notify.min.js','messages.js','jquery-file-upload/jquery.iframe-transport.js','jquery-file-upload/jquery.fileupload.js','jquery-file-upload/vendor/jquery.ui.widget.js'],
         css:['bootstrap-select.min.css','alertify.css','default.css','datepick/smoothness.datepick.css','grid.css','select2.min.css','jquery-ui.css'],
         code: ['publisher.assets.hbs']
     };
