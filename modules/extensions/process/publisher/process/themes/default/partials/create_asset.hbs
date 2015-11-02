@@ -23,6 +23,7 @@
         if($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == ""){
             alertify.error('please fill the required fields.');
         }else{
+            $('#create-view-header').text($('#pName').val());
             saveProcess(e2);
             completeBPMNDetails();
             $("#overviewDiv").hide();
@@ -402,9 +403,14 @@
 </div>
 
 <div id="bpmnView" style="display:none">
-    <a id="bpmnOverviewLink" href="">Overview</a>
+    <h2 id="create-view-header"></h2>
+    <br /><a id="bpmnOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
     <form  method='post' action='apis/upload_bpmn' onsubmit='return completeBPMNDetails()' enctype="multipart/form-data" class="form-horizontal" id="form-bar-create" data-redirect-url='{{url ""}}/assets/{{rxt.shortName}}/list' >
-        BPMN file<input type="file" placeholder="Enter archive" name="bpmn" id="bpmnFile" class="input-large" style="width:80em";>
+        <br />
+        <div style="float:left;width:15cm">
+            <input type="file" class="filestyle" data-buttonName="btn-primary" data-placeholder="Enter archive" name="bpmn" id="bpmnFile" data-buttonText="BPMN file">
+        </div><br /><br />
+
         <input type="hidden" id="bpmnProcessName" name="bpmnProcessName"/>
         <input type="hidden" id="bpmnProcessVersion" name="bpmnProcessVersion"/>
 
