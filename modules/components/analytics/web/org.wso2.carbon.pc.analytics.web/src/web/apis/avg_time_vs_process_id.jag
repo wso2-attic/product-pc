@@ -18,10 +18,12 @@
 importPackage(org.wso2.carbon.pc.analytics.core);
 
 var log = new Log();
-log.info("Process level monitoring logic");
+log.info("Process level monitoring getAvgExecuteTimeVsProcessId logic");
 
 var processLevelMonitor = new ProcessLevelMonitor();
-var avgExecTimeVSuserId = processLevelMonitor.getAvgExecuteTimeVsProcessId();
+var dateRange = String(request.getParameter("dateRange"));
+log.info(dateRange);
+var avgExecTimeVSuserId = processLevelMonitor.getAvgExecuteTimeVsProcessId(dateRange);
 print(avgExecTimeVSuserId);
 log.info(avgExecTimeVSuserId);
 %>

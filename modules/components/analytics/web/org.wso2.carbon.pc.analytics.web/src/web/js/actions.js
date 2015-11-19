@@ -24,33 +24,99 @@ if (BPSTenant != undefined && BPSTenant.length > 0) {
 }
 
 $( document ).ready(function() {
-    drawAvgExecuteTimeVsProcessIdResult();
+    //drawAvgExecuteTimeVsProcessIdResults();
 });
 
-function drawAvgExecuteTimeVsProcessIdResult(){
- var url = "/" + CONTEXT + "/avg_time_vs_process_id";
+/**
+ Function to set date picker to date input elements
+ */
+function setDatePicker (dateElement) {
+    var elementID = '#' + dateElement;
+    $(elementID).daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        locale: {
+            format: 'MM/DD/YYYY'
+        }
+    });
+}
 
- $.ajax({
-  type: 'POST',
-  contentType: "application/json",
-  url: httpUrl + url,
-  //data: JSON.stringify(body),
-  success: function(data){
-      var dataStr = JSON.parse(data);
-      var dataset = [];
-      for(var i = 0 ; i < dataStr.length ; i++){
-        dataset.push({
-         "yData": dataStr[i].values.processDefKey,
-         "xData": dataStr[i].values.avgExecutionTime
+function drawAvgExecuteTimeVsProcessIdResult(){
+    var startDate = document.getElementById("startDate");
+    var startDateTemp = null;
+    if (startDate.value.length > 0) {
+        startDateTemp = new Date(startDate.value).getTime();
+        alert(startDateTemp);
+    }
+
+    var endDate = document.getElementById("endDate");
+    var endDateTemp = null;
+    if (endDate.value.length > 0) {
+        endDateTemp = new Date(endDate.value).getTime();
+        alert(endDateTemp);
+    }
+
+    if(startDateTemp != null && endDate != null){
+        var body = {
+            'startTime': startDateTemp,
+            'endTime': endDateTemp
+        };
+
+        //alert(JSON.stringify(body));
+
+        var url = "/" + CONTEXT + "/avg_time_vs_process_id";
+
+        $.ajax({
+            type: 'POST',
+            //contentType: "application/json",
+            url: httpUrl + url,
+            data: {'dateRange': JSON.stringify(body)},
+            success: function(data){
+                alert(data);
+                var dataStr = JSON.parse(data);
+                var dataset = [];
+                for(var i = 0 ; i < dataStr.length ; i++){
+                    dataset.push({
+                        "yData": dataStr[i].values.processDefKey,
+                        "xData": dataStr[i].values.avgExecutionTime
+                    });
+                }
+                //alert(JSON.stringify(dataset));
+                render(dataset, 'AVG Execution Time (ms)', 'Process Definition Key');
+            },
+            error: function (xhr, status, error) {
+                var errorJson = eval("(" + xhr.responseText + ")");
+                alert(errorJson.message);
+            }
         });
-      }
-      render(dataset, 'AVG Execution Time (ms)', 'Process Definition Key');
-  },
-  error: function (xhr, status, error) {
-      var errorJson = eval("(" + xhr.responseText + ")");
-      alert(errorJson.message);
-  }
- });
+    }
+
+}
+
+function drawAvgExecuteTimeVsProcessIdResults(){
+    var url = "/" + CONTEXT + "/avg_time_vs_process_id";
+
+    $.ajax({
+        type: 'POST',
+        contentType: "application/json",
+        url: httpUrl + url,
+        //data: JSON.stringify(body),
+        success: function(data){
+            var dataStr = JSON.parse(data);
+            var dataset = [];
+            for(var i = 0 ; i < dataStr.length ; i++){
+                dataset.push({
+                    "yData": dataStr[i].values.processDefKey,
+                    "xData": dataStr[i].values.avgExecutionTime
+                });
+            }
+            render(dataset, 'AVG Execution Time (ms)', 'Process Definition Key');
+        },
+        error: function (xhr, status, error) {
+            var errorJson = eval("(" + xhr.responseText + ")");
+            alert(errorJson.message);
+        }
+    });
 }
 
 function render(dataset, xTitle, yTitle){
@@ -61,8 +127,8 @@ function render(dataset, xTitle, yTitle){
      barPadding = 5;
 
  // Create a scale for the x-axis based on data
- // >> Domain - min and max values in the dataset
- // >> Range - physical range of the scale (reversed)
+ // >> Domain - min and max values in the dataset (input range)
+ // >> Range - physical range of the scale (reversed) (output range)
  var xScale = d3.scale.linear()
      .domain([0, d3.max(dataset, function(d){
       return d.xData;
@@ -99,7 +165,9 @@ function render(dataset, xTitle, yTitle){
 
  tooltip.append('div')
      .attr('class', 'contentBox');
-
+    /////////////////////////////////////////////
+    d3.select(".main").select("svg").remove();
+    ////////////////////////////////////////////
  // Creates the initial space for the chart
  // >> Select - grabs the empty <div> above this script
  // >> Append - places an <svg> wrapper inside the div
@@ -111,6 +179,7 @@ function render(dataset, xTitle, yTitle){
      .attr('height', height + margins.top + margins.bottom)
      .append('g')
      .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');
+
 
  // For each value in our dataset, places and styles a bar on the chart
 

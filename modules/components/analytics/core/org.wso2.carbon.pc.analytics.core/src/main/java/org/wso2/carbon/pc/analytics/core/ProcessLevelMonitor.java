@@ -17,14 +17,13 @@ package org.wso2.carbon.pc.analytics.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
 import org.wso2.carbon.pc.analytics.core.clients.AnalyticsRestClient;
 import org.wso2.carbon.pc.analytics.core.models.AggregateField;
 import org.wso2.carbon.pc.analytics.core.models.AggregateQuery;
 import org.wso2.carbon.pc.analytics.core.models.SearchQuery;
 import org.wso2.carbon.pc.analytics.core.utils.Helper;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -36,35 +35,38 @@ public class ProcessLevelMonitor {
 	/**
 	 * perform query: SELECT processDefinitionId, AVG(duration) AS avgExecutionTime FROM
 	 *                PROCESS_USAGE_SUMMARY WHERE <date range> GROUP BY processDefinitionId;
-	 * @param from is the long value of a given date
-	 * @param to is the long value of a given date
+	 * @param filters is a given date range represents as the JSON string
 	 * @return the result as a JSON string
 	 */
-	public String getAvgExecuteTimeVsProcessId(long from, long to) {
-		AggregateField avgField = new AggregateField();
-		avgField.setFieldName(AnalyticConstants.DURATION);
-		avgField.setAggregate(AnalyticConstants.AVG);
-		avgField.setAlias(AnalyticConstants.AVG_EXECUTION_TIME);
-
-		ArrayList<AggregateField> aggregateFields = new ArrayList<>();
-		aggregateFields.add(avgField);
-
-		AggregateQuery query = new AggregateQuery();
-		query.setTableName(AnalyticConstants.PROCESS_USAGE_TABLE);
-		query.setGroupByField(AnalyticConstants.PROCESS_DEFINITION_KEY);
-		query.setQuery(Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, from, to));
-		query.setAggregateFields(aggregateFields);
-
-		if (log.isDebugEnabled()) {
-			log.debug(Helper.getJSONString(query));
-		}
-
-		String result = null;
+	public String getAvgExecuteTimeVsProcessId(String filters) {
+		String result = "";
 		try {
+			JSONObject filterObj = new JSONObject(filters);
+			long from = filterObj.getLong("startTime");
+			long to = filterObj.getLong("endTime");
+
+			AggregateField avgField = new AggregateField();
+			avgField.setFieldName(AnalyticConstants.DURATION);
+			avgField.setAggregate(AnalyticConstants.AVG);
+			avgField.setAlias(AnalyticConstants.AVG_EXECUTION_TIME);
+
+			ArrayList<AggregateField> aggregateFields = new ArrayList<>();
+			aggregateFields.add(avgField);
+
+			AggregateQuery query = new AggregateQuery();
+			query.setTableName(AnalyticConstants.PROCESS_USAGE_TABLE);
+			query.setGroupByField(AnalyticConstants.PROCESS_DEFINITION_KEY);
+			query.setQuery(Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, from, to));
+			query.setAggregateFields(aggregateFields);
+
+			if (log.isDebugEnabled()) {
+				log.debug(Helper.getJSONString(query));
+			}
+
 			result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
 			                                  Helper.getJSONString(query));
-		} catch (IOException | XMLStreamException e) {
-			String errMsg = "Data Analytics Server configuration error.";
+		} catch (Exception e) {
+			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
 
@@ -78,35 +80,38 @@ public class ProcessLevelMonitor {
 	/**
 	 * perform query: SELECT processDefinitionId, COUNT(processInstanceId) AS processInstanceCount
 	 *                FROM PROCESS_USAGE_SUMMARY WHERE <date range> GROUP BY processDefinitionId;
-	 * @param from is the long value of a given date
-	 * @param to is the long value of a given date
+	 * @param filters is a given date range represents as the JSON string
 	 * @return the result as a JSON string
 	 */
-	public String getProcessInstanceCountVsProcessId(long from, long to) {
-		AggregateField countField = new AggregateField();
-		countField.setFieldName(AnalyticConstants.ALL);
-		countField.setAggregate(AnalyticConstants.COUNT);
-		countField.setAlias(AnalyticConstants.PROCESS_INSTANCE_COUNT);
-
-		ArrayList<AggregateField> aggregateFields = new ArrayList<>();
-		aggregateFields.add(countField);
-
-		AggregateQuery query = new AggregateQuery();
-		query.setTableName(AnalyticConstants.PROCESS_USAGE_TABLE);
-		query.setGroupByField(AnalyticConstants.PROCESS_DEFINITION_KEY);
-		query.setQuery(Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, from, to));
-		query.setAggregateFields(aggregateFields);
-
-		if(log.isDebugEnabled()){
-			log.debug(Helper.getJSONString(query));
-		}
-
-		String result = null;
+	public String getProcessInstanceCountVsProcessId(String filters) {
+		String result = "";
 		try {
+			JSONObject filterObj = new JSONObject(filters);
+			long from = filterObj.getLong("startTime");
+			long to = filterObj.getLong("endTime");
+
+			AggregateField countField = new AggregateField();
+			countField.setFieldName(AnalyticConstants.ALL);
+			countField.setAggregate(AnalyticConstants.COUNT);
+			countField.setAlias(AnalyticConstants.PROCESS_INSTANCE_COUNT);
+
+			ArrayList<AggregateField> aggregateFields = new ArrayList<>();
+			aggregateFields.add(countField);
+
+			AggregateQuery query = new AggregateQuery();
+			query.setTableName(AnalyticConstants.PROCESS_USAGE_TABLE);
+			query.setGroupByField(AnalyticConstants.PROCESS_DEFINITION_KEY);
+			query.setQuery(Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, from, to));
+			query.setAggregateFields(aggregateFields);
+
+			if(log.isDebugEnabled()){
+				log.debug(Helper.getJSONString(query));
+			}
+
 			result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
 			                                  Helper.getJSONString(query));
-		} catch (IOException | XMLStreamException e) {
-			String errMsg = "Data Analytics Server configuration error.";
+		} catch (Exception e) {
+			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
 
@@ -121,37 +126,40 @@ public class ProcessLevelMonitor {
 	 * perform query: SELECT processVersion, AVG(duration) AS avgExecutionTime FROM
 	 *                PROCESS_USAGE_SUMMARY WHERE <date range> AND <processId> GROUP BY
 	 *                processVersion;
-	 * @param processId process definition key
-	 * @param to is the long value of a given date
-	 * @param from is the long value of a given date
+	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */
-	public String getAvgExecuteTimeVsProcessVersion(long from, long to, String processId) {
-		AggregateField avgField = new AggregateField();
-		avgField.setFieldName(AnalyticConstants.DURATION);
-		avgField.setAggregate(AnalyticConstants.AVG);
-		avgField.setAlias(AnalyticConstants.AVG_EXECUTION_TIME);
-
-		ArrayList<AggregateField> aggregateFields = new ArrayList<>();
-		aggregateFields.add(avgField);
-
-		AggregateQuery query = new AggregateQuery();
-		query.setTableName(AnalyticConstants.PROCESS_USAGE_TABLE);
-		query.setGroupByField(AnalyticConstants.PROCESS_VERSION);
-		query.setQuery(Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, from, to)
-		               + " AND " + "processDefinitionId:" + processId);
-		query.setAggregateFields(aggregateFields);
-
-		if(log.isDebugEnabled()){
-			log.debug(Helper.getJSONString(query));
-		}
-
-		String result = null;
+	public String getAvgExecuteTimeVsProcessVersion(String filters) {
+		String result = "";
 		try {
+			JSONObject filterObj = new JSONObject(filters);
+			long from = filterObj.getLong("startTime");
+			long to = filterObj.getLong("endTime");
+			String processId = filterObj.getString("processId");
+
+			AggregateField avgField = new AggregateField();
+			avgField.setFieldName(AnalyticConstants.DURATION);
+			avgField.setAggregate(AnalyticConstants.AVG);
+			avgField.setAlias(AnalyticConstants.AVG_EXECUTION_TIME);
+
+			ArrayList<AggregateField> aggregateFields = new ArrayList<>();
+			aggregateFields.add(avgField);
+
+			AggregateQuery query = new AggregateQuery();
+			query.setTableName(AnalyticConstants.PROCESS_USAGE_TABLE);
+			query.setGroupByField(AnalyticConstants.PROCESS_VERSION);
+			query.setQuery(Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, from, to)
+			               + " AND " + "processDefinitionId:" + processId);
+			query.setAggregateFields(aggregateFields);
+
+			if(log.isDebugEnabled()){
+				log.debug(Helper.getJSONString(query));
+			}
+
 			result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
 			                                  Helper.getJSONString(query));
-		} catch (IOException | XMLStreamException e) {
-			String errMsg = "Data Analytics Server configuration error.";
+		} catch (Exception e) {
+			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
 
@@ -165,34 +173,39 @@ public class ProcessLevelMonitor {
 	/**
 	 * perform query: SELECT processVersion, COUNT(processInstanceId) AS processInstanceCount
 	 *                FROM PROCESS_USAGE_SUMMARY GROUP BY processVersion;
-	 * @param processId process definition key
+	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */
-	public String getProcessInstanceCountVsProcessVersion(String processId) {
-		AggregateField countField = new AggregateField();
-		countField.setFieldName(AnalyticConstants.ALL);
-		countField.setAggregate(AnalyticConstants.COUNT);
-		countField.setAlias(AnalyticConstants.PROCESS_INSTANCE_COUNT);
-
-		ArrayList<AggregateField> aggregateFields = new ArrayList<>();
-		aggregateFields.add(countField);
-
-		AggregateQuery query = new AggregateQuery();
-		query.setTableName(AnalyticConstants.PROCESS_USAGE_TABLE);
-		query.setGroupByField(AnalyticConstants.PROCESS_VERSION);
-		query.setQuery("processDefinitionId:" + processId);
-		query.setAggregateFields(aggregateFields);
-
-		if(log.isDebugEnabled()){
-			log.debug(Helper.getJSONString(query));
-		}
-
-		String result = null;
+	public String getProcessInstanceCountVsProcessVersion(String filters) {
+		String result = "";
 		try {
+			JSONObject filterObj = new JSONObject(filters);
+			//long from = filterObj.getLong("startTime");
+			//long to = filterObj.getLong("endTime");
+			String processId = filterObj.getString("processId");
+
+			AggregateField countField = new AggregateField();
+			countField.setFieldName(AnalyticConstants.ALL);
+			countField.setAggregate(AnalyticConstants.COUNT);
+			countField.setAlias(AnalyticConstants.PROCESS_INSTANCE_COUNT);
+
+			ArrayList<AggregateField> aggregateFields = new ArrayList<>();
+			aggregateFields.add(countField);
+
+			AggregateQuery query = new AggregateQuery();
+			query.setTableName(AnalyticConstants.PROCESS_USAGE_TABLE);
+			query.setGroupByField(AnalyticConstants.PROCESS_VERSION);
+			query.setQuery("processDefinitionId:" + processId);
+			query.setAggregateFields(aggregateFields);
+
+			if(log.isDebugEnabled()){
+				log.debug(Helper.getJSONString(query));
+			}
+
 			result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
 			                                  Helper.getJSONString(query));
-		} catch (IOException | XMLStreamException e) {
-			String errMsg = "Data Analytics Server configuration error.";
+		} catch (Exception e) {
+			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
 
@@ -206,31 +219,34 @@ public class ProcessLevelMonitor {
 	/**
 	 * perform query: SELECT DISTINCT processInstanceId, duration FROM PROCESS_USAGE_SUMMARY
 	 *                WHERE <date range> AND <processId>
-	 * @param processId process definition key
-	 * @param from is the long value of a given date
-	 * @param to is the long value of a given date
-	 * @param limit is used to limit the number of records to be retrieved
+	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */
-	public String getExecutionTimeVsProcessInstanceId(String processId, long from, long to, int limit) {
-		SearchQuery searchQuery = new SearchQuery();
-		searchQuery.setTableName(AnalyticConstants.PROCESS_USAGE_TABLE);
-		searchQuery.setQuery("processDefinitionId:" + processId + " AND " +
-		                     Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, from,
-		                                              to));
-		searchQuery.setStart(0);
-		searchQuery.setCount(limit);
-
-		if(log.isDebugEnabled()){
-			log.debug(Helper.getJSONString(searchQuery));
-		}
-
-		String result = null;
+	public String getExecutionTimeVsProcessInstanceId(String filters) {
+		String result = "";
 		try {
+			JSONObject filterObj = new JSONObject(filters);
+			long from = filterObj.getLong("startTime");
+			long to = filterObj.getLong("endTime");
+			String processId = filterObj.getString("processId");
+			int limit = filterObj.getInt("limit");
+
+			SearchQuery searchQuery = new SearchQuery();
+			searchQuery.setTableName(AnalyticConstants.PROCESS_USAGE_TABLE);
+			searchQuery.setQuery("processDefinitionId:" + processId + " AND " +
+			                     Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, from,
+			                                              to));
+			searchQuery.setStart(0);
+			searchQuery.setCount(limit);
+
+			if(log.isDebugEnabled()){
+				log.debug(Helper.getJSONString(searchQuery));
+			}
+
 			result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_SEARCH),
 			                                  Helper.getJSONString(searchQuery));
-		} catch (IOException | XMLStreamException e) {
-			String errMsg = "Data Analytics Server configuration error.";
+		} catch (Exception e) {
+			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
 
@@ -241,39 +257,43 @@ public class ProcessLevelMonitor {
 		return result;
 	}
 
-	public String getAvgExecuteTimeVsProcessId() {
-		AggregateField avgField = new AggregateField();
-		avgField.setFieldName("duration");
-		avgField.setAggregate("AVG");
-		avgField.setAlias("avgExecutionTime");
-
-		ArrayList<AggregateField> aggregateFields = new ArrayList<AggregateField>();
-		aggregateFields.add(avgField);
-
-		AggregateQuery query = new AggregateQuery();
-		query.setTableName("PROCESS_USAGE_SUMMARY_DATA");
-		query.setGroupByField("processDefKey");
-		query.setQuery(Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, 1444069800000l, 1444156200000l));
-		query.setAggregateFields(aggregateFields);
-
-		if(log.isDebugEnabled()){
-			log.debug(Helper.getJSONString(query));
-		}
-
-		String output = null;
-		try {
-			output = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
-			                                  Helper.getJSONString(query));
-		} catch (IOException | XMLStreamException e) {
-			String errMsg = "Data Analytics Server configuration error.";
-			log.error(errMsg, e);
-		}
-
-		if(log.isDebugEnabled()){
-			log.debug("Query = " + query.getQuery());
-			log.debug("Result = " + output);
-		}
-
-		return output;
-	}
+//	public String getAvgExecuteTimeVsProcessId(String dateRange) {
+//		String output = "";
+//		try {
+//			JSONObject dateRangeObj = new JSONObject(dateRange);
+//			long from = dateRangeObj.getLong("startTime");
+//			long to = dateRangeObj.getLong("endTime");
+//
+//			AggregateField avgField = new AggregateField();
+//			avgField.setFieldName("duration");
+//			avgField.setAggregate("AVG");
+//			avgField.setAlias("avgExecutionTime");
+//
+//			ArrayList<AggregateField> aggregateFields = new ArrayList<AggregateField>();
+//			aggregateFields.add(avgField);
+//
+//			AggregateQuery query = new AggregateQuery();
+//			query.setTableName("PROCESS_USAGE_SUMMARY_DATA");
+//			query.setGroupByField("processDefKey");
+//			query.setQuery(Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, from, to));
+//			query.setAggregateFields(aggregateFields);
+//
+//			if(log.isDebugEnabled()){
+//				log.debug(Helper.getJSONString(query));
+//			}
+//
+//			output = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
+//			                                  Helper.getJSONString(query));
+//
+//			if(log.isDebugEnabled()){
+//				log.debug("Query = " + query.getQuery());
+//				log.debug("Result = " + output);
+//			}
+//
+//		} catch (Exception e) {
+//			String errMsg = "PC Analytics core error.";
+//			log.error(errMsg, e);
+//		}
+//		return output;
+//	}
 }

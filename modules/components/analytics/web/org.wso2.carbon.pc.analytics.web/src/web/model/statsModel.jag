@@ -14,7 +14,7 @@
  ~ limitations under the License.
 */%>
 <%
-var headers = {"Authorization":"Basic " + auth};
+var headers = {"Authorization":"Basic " + auth, "Content-Type": "application/json"};
 
 //importPackage(org.wso2.carbon.pc.analytics.core);
 
@@ -25,6 +25,21 @@ var headers = {"Authorization":"Basic " + auth};
 //var avgExecTimeVSuserId = processLevelMonitor.getAvgExecuteTimeVsProcessId();
 
 //log.info(avgExecTimeVSuserId);
+
+<!--var url = "/bpmn-analytics-explorer/avg_time_vs_process_id";-->
+<!--var result = post(httpUrl + url, null, headers, "application/json");-->
+
+<!--result = parse(result.data);-->
+<!--log.info(result.toString());-->
+<!--if (result.error) {-->
+ <!--if (log.isDebugEnabeld()) {-->
+  <!--var errorCode = result.xhr().statusCode();-->
+  <!--log.debug("Unable to get result : " + errorCode);-->
+ <!--}-->
+
+<!--} else {-->
+ <!--render(result, 'AVG Execution Time (ms)', 'Process Definition Key');-->
+<!--}-->
 
 dashboardNavActive = 'class="active"';
 %>
