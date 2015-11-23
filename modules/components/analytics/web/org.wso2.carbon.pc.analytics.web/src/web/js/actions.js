@@ -23,9 +23,9 @@ if (BPSTenant != undefined && BPSTenant.length > 0) {
     CONTEXT = appName;
 }
 
-$( document ).ready(function() {
-    //drawAvgExecuteTimeVsProcessIdResults();
-});
+//$( document ).ready(function() {
+//    //drawAvgExecuteTimeVsProcessIdResults();
+//});
 
 /**
  Function to set date picker to date input elements
@@ -41,16 +41,19 @@ function setDatePicker (dateElement) {
     });
 }
 
-function drawAvgExecuteTimeVsProcessIdResult(){
-    var startDate = document.getElementById("startDate");
+function drawAvgExecuteTimeVsProcessIdResult(renderElement){
+    var renderElementID = '#' + renderElement;
+    var startDate = document.getElementById("processIdAvgExecTimeStartDate");
     var startDateTemp = null;
+    alert("Start Date:" + startDate.value);
     if (startDate.value.length > 0) {
         startDateTemp = new Date(startDate.value).getTime();
         alert(startDateTemp);
     }
 
-    var endDate = document.getElementById("endDate");
+    var endDate = document.getElementById("processIdAvgExecTimeEndDate");
     var endDateTemp = null;
+    alert("End Date:" + endDate.value);
     if (endDate.value.length > 0) {
         endDateTemp = new Date(endDate.value).getTime();
         alert(endDateTemp);
@@ -77,12 +80,12 @@ function drawAvgExecuteTimeVsProcessIdResult(){
                 var dataset = [];
                 for(var i = 0 ; i < dataStr.length ; i++){
                     dataset.push({
-                        "yData": dataStr[i].values.processDefKey,
-                        "xData": dataStr[i].values.avgExecutionTime
+                        "yData": dataStr[i].processDefKey,
+                        "xData": dataStr[i].avgExecutionTime
                     });
                 }
                 //alert(JSON.stringify(dataset));
-                render(dataset, 'AVG Execution Time (ms)', 'Process Definition Key');
+                render(renderElementID, dataset, 'AVG Execution Time (ms)', 'Process Definition Key');
             },
             error: function (xhr, status, error) {
                 var errorJson = eval("(" + xhr.responseText + ")");
@@ -90,40 +93,88 @@ function drawAvgExecuteTimeVsProcessIdResult(){
             }
         });
     }
-
 }
 
-function drawAvgExecuteTimeVsProcessIdResults(){
-    var url = "/" + CONTEXT + "/avg_time_vs_process_id";
+function drawProcessInstanceCountVsProcessIdResult(renderElement){
+    var renderElementID = '#' + renderElement;
+    var startDate = document.getElementById("processInstanceCountProcessDefStartDate");
+    var startDateTemp = null;
+    if (startDate.value.length > 0) {
+        startDateTemp = new Date(startDate.value).getTime();
+    }
 
-    $.ajax({
-        type: 'POST',
-        contentType: "application/json",
-        url: httpUrl + url,
-        //data: JSON.stringify(body),
-        success: function(data){
-            var dataStr = JSON.parse(data);
-            var dataset = [];
-            for(var i = 0 ; i < dataStr.length ; i++){
-                dataset.push({
-                    "yData": dataStr[i].values.processDefKey,
-                    "xData": dataStr[i].values.avgExecutionTime
-                });
+    var endDate = document.getElementById("processInstanceCountProcessDefEndDate");
+    var endDateTemp = null;
+    if (endDate.value.length > 0) {
+        endDateTemp = new Date(endDate.value).getTime();
+    }
+
+    if(startDateTemp != null && endDate != null){
+        var body = {
+            'startTime': startDateTemp,
+            'endTime': endDateTemp
+        };
+
+        //alert(JSON.stringify(body));
+
+        var url = "/" + CONTEXT + "/process_instance_count_vs_process_id";
+
+        $.ajax({
+            type: 'POST',
+            //contentType: "application/json",
+            url: httpUrl + url,
+            data: {'dateRange': JSON.stringify(body)},
+            success: function(data){
+                var dataStr = JSON.parse(data);
+                var dataset = [];
+                for(var i = 0 ; i < dataStr.length ; i++){
+                    dataset.push({
+                        "yData": dataStr[i].processDefKey,
+                        "xData": dataStr[i].processInstanceCount
+                    });
+                }
+                //alert(JSON.stringify(dataset));
+                render(renderElementID, dataset, 'Process Instance Count', 'Process Definition Key');
+            },
+            error: function (xhr, status, error) {
+                var errorJson = eval("(" + xhr.responseText + ")");
+                alert(errorJson.message);
             }
-            render(dataset, 'AVG Execution Time (ms)', 'Process Definition Key');
-        },
-        error: function (xhr, status, error) {
-            var errorJson = eval("(" + xhr.responseText + ")");
-            alert(errorJson.message);
-        }
-    });
+        });
+    }
 }
 
-function render(dataset, xTitle, yTitle){
+//function drawAvgExecuteTimeVsProcessIdResults(){
+//    var url = "/" + CONTEXT + "/avg_time_vs_process_id";
+//
+//    $.ajax({
+//        type: 'POST',
+//        contentType: "application/json",
+//        url: httpUrl + url,
+//        //data: JSON.stringify(body),
+//        success: function(data){
+//            var dataStr = JSON.parse(data);
+//            var dataset = [];
+//            for(var i = 0 ; i < dataStr.length ; i++){
+//                dataset.push({
+//                    "yData": dataStr[i].values.processDefKey,
+//                    "xData": dataStr[i].values.avgExecutionTime
+//                });
+//            }
+//            render(dataset, 'AVG Execution Time (ms)', 'Process Definition Key');
+//        },
+//        error: function (xhr, status, error) {
+//            var errorJson = eval("(" + xhr.responseText + ")");
+//            alert(errorJson.message);
+//        }
+//    });
+//}
+
+function render(renderElementID, dataset, xTitle, yTitle){
  // Dimensions for the chart: height, width, and space b/t the bars
  var margins = {top: 30, right: 110, bottom: 70, left: 110}
- var height = 500 - margins.left - margins.right,
-     width = 700 - margins.top - margins.bottom,
+ var height = 550 - margins.left - margins.right,
+     width = 900 - margins.top - margins.bottom,
      barPadding = 5;
 
  // Create a scale for the x-axis based on data
@@ -156,7 +207,7 @@ function render(dataset, xTitle, yTitle){
      .orient('left');
 
  //add tooltip
- var tooltip = d3.select(".main")
+ var tooltip = d3.select(renderElementID)
      .append("div")
      .attr("class", "d3-tip");
 
@@ -166,13 +217,13 @@ function render(dataset, xTitle, yTitle){
  tooltip.append('div')
      .attr('class', 'contentBox');
     /////////////////////////////////////////////
-    d3.select(".main").select("svg").remove();
+    d3.select(renderElementID).select("svg").remove();
     ////////////////////////////////////////////
  // Creates the initial space for the chart
  // >> Select - grabs the empty <div> above this script
  // >> Append - places an <svg> wrapper inside the div
  // >> Attr - applies our height & width values from above
- var chart = d3.select('.main')
+ var chart = d3.select(renderElementID)
      .append('svg')
      .attr('width', width + margins.left + margins.right)
 
@@ -223,7 +274,7 @@ function render(dataset, xTitle, yTitle){
              .style("top", (d3.event.pageY - 100) + "px");
 
       //tooltip.select('.label').html('AVG Execution Time').style("color", "#000000");
-      tooltip.select('.contentBox').html(d.xData + ' ms');
+      tooltip.select('.contentBox').html(d.xData);
       tooltip.style('display', 'block');
      })
      .on("mouseout", function() {

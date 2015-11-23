@@ -57,7 +57,7 @@ public class TaskLevelMonitor {
 			AggregateQuery query = new AggregateQuery();
 			query.setTableName(AnalyticConstants.TASK_USAGE_TABLE);
 			query.setGroupByField(AnalyticConstants.TASK_DEFINITION_KEY);
-			query.setQuery("processDefinitionId:" + processId);
+			query.setQuery("processDefinitionId:" + "\"'" + processId + "'\"");
 			query.setAggregateFields(aggregateFields);
 
 			if(log.isDebugEnabled()){
@@ -103,7 +103,7 @@ public class TaskLevelMonitor {
 			AggregateQuery query = new AggregateQuery();
 			query.setTableName(AnalyticConstants.TASK_USAGE_TABLE);
 			query.setGroupByField(AnalyticConstants.TASK_DEFINITION_KEY);
-			query.setQuery("processDefinitionId:" + processId);
+			query.setQuery("processDefinitionId:" + "\"'" + processId + "'\"");
 			query.setAggregateFields(aggregateFields);
 
 			if(log.isDebugEnabled()){
@@ -149,7 +149,7 @@ public class TaskLevelMonitor {
 			AggregateQuery query = new AggregateQuery();
 			query.setTableName(AnalyticConstants.TASK_USAGE_TABLE);
 			query.setGroupByField(AnalyticConstants.ASSIGN_USER);
-			query.setQuery("taskDefinitionKey:" + taskId);
+			query.setQuery("taskDefinitionKey:" + "\"'" + taskId + "'\"");
 			query.setAggregateFields(aggregateFields);
 
 			if(log.isDebugEnabled()){
@@ -195,7 +195,7 @@ public class TaskLevelMonitor {
 			AggregateQuery query = new AggregateQuery();
 			query.setTableName(AnalyticConstants.TASK_USAGE_TABLE);
 			query.setGroupByField(AnalyticConstants.ASSIGN_USER);
-			query.setQuery("taskDefinitionKey:" + taskId);
+			query.setQuery("taskDefinitionKey:" + "\"'" + taskId + "'\"");
 			query.setAggregateFields(aggregateFields);
 
 			if(log.isDebugEnabled()){
@@ -233,7 +233,7 @@ public class TaskLevelMonitor {
 
 			SearchQuery searchQuery = new SearchQuery();
 			searchQuery.setTableName("TASK_USAGE_SUMMARY_DATA");
-			searchQuery.setQuery(Helper.getDateRangeQuery("taskDefinitionKey:" + taskId + " AND " +
+			searchQuery.setQuery(Helper.getDateRangeQuery("taskDefinitionKey:" + "\"'" + taskId + "'\"" + " AND " +
 			                                              AnalyticConstants.COLUMN_FINISHED_TIME, from, to));
 			searchQuery.setStart(0);
 			searchQuery.setCount(limit);

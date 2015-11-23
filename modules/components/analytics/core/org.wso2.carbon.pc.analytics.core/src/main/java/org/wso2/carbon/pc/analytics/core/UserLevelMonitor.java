@@ -56,7 +56,7 @@ public class UserLevelMonitor {
 			AggregateQuery query = new AggregateQuery();
 			query.setTableName(AnalyticConstants.USER_INVOLVE_TABLE);
 			query.setGroupByField(AnalyticConstants.PROCESS_DEFINITION_KEY);
-			query.setQuery(Helper.getDateRangeQuery( "assignee:" + userId + " AND " +
+			query.setQuery(Helper.getDateRangeQuery( "assignee:" + "\"'" + userId + "'\"" + " AND " +
 			                                         AnalyticConstants.COLUMN_FINISHED_TIME, from, to));
 			query.setAggregateFields(aggregateFields);
 
@@ -148,7 +148,7 @@ public class UserLevelMonitor {
 			AggregateQuery query = new AggregateQuery();
 			query.setTableName(AnalyticConstants.USER_INVOLVE_TABLE);
 			query.setGroupByField(AnalyticConstants.PROCESS_DEFINITION_KEY);
-			query.setQuery("assignee:" + userId + " AND " +
+			query.setQuery("assignee:" + "\"'" + userId + "'\"" + " AND " +
 			               Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, from, to));
 			query.setAggregateFields(aggregateFields);
 

@@ -19,6 +19,9 @@ import com.google.gson.Gson;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wso2.carbon.pc.analytics.core.AnalyticConstants;
 import org.wso2.carbon.utils.CarbonUtils;
 
@@ -27,7 +30,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * Helper class is used to keep the methods which are helpful to the monitor classes.
@@ -145,5 +148,58 @@ public class Helper {
 			return requestHeader;
 		}
 		return null;
+	}
+
+	/**
+	 * Get sorted list
+	 * @param table is a hash table to keep the result as key-value pairs
+	 * @param key1 is the name for the first value of the JSON object
+	 * @param key2 is the name for the second value for the JSON object
+	 * @return a sorted list as a JSON array string
+	 * @throws JSONException
+	 */
+	public static String getDoubleValueSortedList(Hashtable<String, Double> table, String key1, String key2)
+																			throws JSONException {
+		//Transfer as List and sort it
+		ArrayList<Map.Entry<String, Double>> l = new ArrayList(table.entrySet());
+		Collections.sort(l, new Comparator<Map.Entry<String, Double>>() {
+			public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
+				return o1.getValue().compareTo(o2.getValue());
+			}
+		});
+		JSONArray array = new JSONArray();
+		for (int i = 0 ; i < l.size() ; i++){
+			JSONObject o = new JSONObject();
+			o.put(key1, l.get(i).getKey());
+			o.put(key2, l.get(i).getValue());
+			array.put(o);
+		}
+		return array.toString();
+	}
+
+	/**
+	 * Get sorted list
+	 * @param table is a hash table to keep the result as key-value pairs
+	 * @param key1 is the name for the first value of the JSON object
+	 * @param key2 is the name for the second value for the JSON object
+	 * @return a sorted list as a JSON array string
+	 * @throws JSONException
+	 */
+	public static String getIntegerValueSortedList(Hashtable<String, Integer> table, String key1, String key2)
+																			throws JSONException {
+		ArrayList<Map.Entry<String, Integer>> l = new ArrayList(table.entrySet());
+		Collections.sort(l, new Comparator<Map.Entry<String, Integer>>() {
+			public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+				return o1.getValue().compareTo(o2.getValue());
+			}
+		});
+		JSONArray array = new JSONArray();
+		for (int i = 0 ; i < l.size() ; i++){
+			JSONObject o = new JSONObject();
+			o.put(key1, l.get(i).getKey());
+			o.put(key2, l.get(i).getValue());
+			array.put(o);
+		}
+		return array.toString();
 	}
 }

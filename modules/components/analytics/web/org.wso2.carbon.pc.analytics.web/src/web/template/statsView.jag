@@ -13,39 +13,83 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
 -->
+<script type="text/javascript">
+$( document ).ready(function() {
+    //drawAvgExecuteTimeVsProcessIdResults();
+});
+</script>
 <div class="col-sm-12">
-  <div class="row">
-  <div class="col-lg-8 float-left">
-    <div class="row">
-        <div class="table-title" style="width:100%">Process Id vs Average execution time</div>
-        <div class="main" id="avgTimeProcessIdChart" style="height:33%" ></div>
-    </div>
-  </div>
-  <div class="col-lg-4 float-right">
-  <div class="row inline-block" style="margin-top: 140px">
-        <!--<form role="form" class="inline-block">-->
-                <div class="col-sm-4 col-md-4 col-lg-4">
-                    <div class="form-group">
-                        <label for="startDate">Start Date</label>
-                        <input id="startDate" name="startDate" type="text" class="form-control" onfocus="setDatePicker('startDate')" placeholder="MM/DD/YYYY"/>
+   <div class="row">
+     <div class="col-lg-12 float-left" id="barChartDisplay">
+            <!-- Default panel contents -->
+            <div class="table-title"  style="width:100%">  PROCESS ID VS AVERAGE EXECUTION TIME </div><br />
+            <div class="row inline-block" style="width:100%">
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label  class="input-group-addon" for="processIdAvgExecTimeStartDate">Start Date</label>
+                        <input id="processIdAvgExecTimeStartDate" name="processIdAvgExecTimeStartDate" type="text" class="form-control" onfocus="setDatePicker('processIdAvgExecTimeStartDate')" placeholder="MM/DD/YYYY"/>
                     </div>
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4">
-                    <div class="form-group">
-                        <label for="endDate">End Date</label>
-                        <input id="endDate" name="endDate" type="text" class="form-control" onfocus="setDatePicker('endDate')" placeholder="MM/DD/YYYY"/>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="processIdAvgExecTimeEndDate">End Date</label>
+                        <input id="processIdAvgExecTimeEndDate" name="processIdAvgExecTimeEndDate" type="text" class="form-control" onfocus="setDatePicker('processIdAvgExecTimeEndDate')" placeholder="MM/DD/YYYY"/>
                     </div>
-                </div><br />
+                </div>
 
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsProcessIdResult()">Search</button>
+                    <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsProcessIdResult('processDefAvgTimeBarChart')">Apply Filter</button>
                 </div>
-        <!--</form>-->
-        </div>
-    </div>
-   <!--<div class="main col-md-6" style="height: 500px;border-style: solid">-->
-    <!--<h2 style="text-align: center;">Process Id VS Average execution time</h2>-->
-    <!--&lt;!&ndash;<button class="btn btn-primary" style="display: inline" onclick="getAvgExecuteTimeVsProcessId()">Data</button>&ndash;&gt;-->
-  <!--</div>-->
+             </div>
+
+            <div class="main" id="processDefAvgTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
+
+            <br>
+            <div class="table-title"  style="width:100%"> PROCESS INSTANCE COUNT VS PROCESS ID </div><br />
+            <div class="row inline-block" style="width:100%">
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label  class="input-group-addon" for="processInstanceCountProcessDefStartDate">Start Date</label>
+                        <input id="processInstanceCountProcessDefStartDate" name="processInstanceCountProcessDefStartDate" type="text" class="form-control" onfocus="setDatePicker('processInstanceCountProcessDefStartDate')" placeholder="MM/DD/YYYY"/>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="processInstanceCountProcessDefEndDate">End Date</label>
+                        <input id="processInstanceCountProcessDefEndDate" name="processInstanceCountProcessDefEndDate" type="text" class="form-control" onfocus="setDatePicker('processInstanceCountProcessDefEndDate')" placeholder="MM/DD/YYYY"/>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
+                    <button class="btn btn-default btn-info" onclick="drawProcessInstanceCountVsProcessIdResult('processInstanceCountProcessIdBarChart')">Apply Filter</button>
+                </div>
+             </div>
+
+            <div class="main" id="processInstanceCountProcessIdBarChart" style="width: 80%;margin: 0 auto;"></div>
+            <br>
+
+            <!--<div class="table-title"  style="width:100">  User Vs Number Of Tasks Completed </div>-->
+            <!--<div id="colChartUserVsTasks">-->
+            <!--<div style="height: 20"> </div>-->
+            <!--</div>-->
+            <!--<br>-->
+            <!--<div class="table-title"  style="width:100">  User Vs Average Time Taken to Complete Tasks </div>-->
+            <!--<div id="userVsAvgTaskDuration">-->
+            <!--<div style="height: 20"> </div>-->
+            <!--</div>-->
+            <!--<br>-->
+            <!--<div class="table-title"  style="width:100"> Task Instance Count Variation Over Time </div>-->
+            <!--<div id="taskVariationOverTime"></div>-->
+            <!--<br>-->
+            <!--<div class="table-title"  style="width:100"> Process Instance Count Variation Over Time </div>-->
+            <!--<div id="processVariationOverTime"></div>-->
+            <!--<br>-->
+            <!--<div class="table-title"  style="width:100"> User Performance Of Tasks Instances Over Time </div>-->
+
+            <!--<div id="taskOfUserVariation"> Select a user to view the performance </div>-->
+            <!--<div style="height: 20"> </div>-->
+
+      </div>
+
   </div>
-</div>
+  </div>
