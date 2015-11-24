@@ -1,4 +1,4 @@
-<!--
+<%/*<!--
  ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,19 @@
  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
--->
+ -->*/%>
 <script type="text/javascript">
-$( document ).ready(function() {
-    //drawAvgExecuteTimeVsProcessIdResults();
-});
+window.onload = function() {
+   //call to your function here
+   $('.selectpicker').selectpicker({
+        style: 'btn',
+        size: 3
+    });
+    drawAvgExecuteTimeVsProcessIdResult('processDefAvgTimeBarChart');
+    drawProcessInstanceCountVsProcessIdResult('processInstanceCountProcessIdBarChart');
+};
 </script>
+
 <div class="col-sm-12">
    <div class="row">
      <div class="col-lg-12 float-left" id="barChartDisplay">
@@ -35,6 +42,21 @@ $( document ).ready(function() {
                         <label class="input-group-addon" for="processIdAvgExecTimeEndDate">End Date</label>
                         <input id="processIdAvgExecTimeEndDate" name="processIdAvgExecTimeEndDate" type="text" class="form-control" onfocus="setDatePicker('processIdAvgExecTimeEndDate')" placeholder="MM/DD/YYYY"/>
                     </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="processIdAvgExecTimeOrder" class="selectpicker">
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="processIdAvgExecTimeCount" class="selectpicker">
+                      <option value="3">3</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
                 </div>
 
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
@@ -58,6 +80,21 @@ $( document ).ready(function() {
                         <label class="input-group-addon" for="processInstanceCountProcessDefEndDate">End Date</label>
                         <input id="processInstanceCountProcessDefEndDate" name="processInstanceCountProcessDefEndDate" type="text" class="form-control" onfocus="setDatePicker('processInstanceCountProcessDefEndDate')" placeholder="MM/DD/YYYY"/>
                     </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="processInstanceCountProcessDefOrder" class="selectpicker">
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="processInstanceCountProcessDefCount" class="selectpicker">
+                     <option value="3">3</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
                 </div>
 
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">

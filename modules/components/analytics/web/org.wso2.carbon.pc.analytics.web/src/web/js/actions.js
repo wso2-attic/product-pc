@@ -24,7 +24,7 @@ if (BPSTenant != undefined && BPSTenant.length > 0) {
 }
 
 //$( document ).ready(function() {
-//    //drawAvgExecuteTimeVsProcessIdResults();
+
 //});
 
 /**
@@ -44,25 +44,27 @@ function setDatePicker (dateElement) {
 function drawAvgExecuteTimeVsProcessIdResult(renderElement){
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("processIdAvgExecTimeStartDate");
-    var startDateTemp = null;
-    alert("Start Date:" + startDate.value);
+    var startDateTemp = 0;
+    //alert("Start Date:" + startDate.value);
     if (startDate.value.length > 0) {
         startDateTemp = new Date(startDate.value).getTime();
-        alert(startDateTemp);
+        //alert(startDateTemp);
     }
 
     var endDate = document.getElementById("processIdAvgExecTimeEndDate");
-    var endDateTemp = null;
-    alert("End Date:" + endDate.value);
+    var endDateTemp = 0;
+    //alert("End Date:" + endDate.value);
     if (endDate.value.length > 0) {
         endDateTemp = new Date(endDate.value).getTime();
-        alert(endDateTemp);
+        //alert(endDateTemp);
     }
 
-    if(startDateTemp != null && endDate != null){
+    //if(startDateTemp != null && endDate != null){
         var body = {
             'startTime': startDateTemp,
-            'endTime': endDateTemp
+            'endTime': endDateTemp,
+            'order': $('#processIdAvgExecTimeOrder').val(),
+            'count': parseInt($('#processIdAvgExecTimeCount').val())
         };
 
         //alert(JSON.stringify(body));
@@ -75,7 +77,7 @@ function drawAvgExecuteTimeVsProcessIdResult(renderElement){
             url: httpUrl + url,
             data: {'dateRange': JSON.stringify(body)},
             success: function(data){
-                alert(data);
+                //alert(data);
                 var dataStr = JSON.parse(data);
                 var dataset = [];
                 for(var i = 0 ; i < dataStr.length ; i++){
@@ -92,27 +94,29 @@ function drawAvgExecuteTimeVsProcessIdResult(renderElement){
                 alert(errorJson.message);
             }
         });
-    }
+    //}
 }
 
 function drawProcessInstanceCountVsProcessIdResult(renderElement){
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("processInstanceCountProcessDefStartDate");
-    var startDateTemp = null;
+    var startDateTemp = 0;
     if (startDate.value.length > 0) {
         startDateTemp = new Date(startDate.value).getTime();
     }
 
     var endDate = document.getElementById("processInstanceCountProcessDefEndDate");
-    var endDateTemp = null;
+    var endDateTemp = 0;
     if (endDate.value.length > 0) {
         endDateTemp = new Date(endDate.value).getTime();
     }
 
-    if(startDateTemp != null && endDate != null){
+    //if(startDateTemp != null && endDate != null){
         var body = {
             'startTime': startDateTemp,
-            'endTime': endDateTemp
+            'endTime': endDateTemp,
+            'order': $('#processInstanceCountProcessDefOrder').val(),
+            'count': parseInt($('#processInstanceCountProcessDefCount').val())
         };
 
         //alert(JSON.stringify(body));
@@ -141,7 +145,7 @@ function drawProcessInstanceCountVsProcessIdResult(renderElement){
                 alert(errorJson.message);
             }
         });
-    }
+  //  }
 }
 
 //function drawAvgExecuteTimeVsProcessIdResults(){

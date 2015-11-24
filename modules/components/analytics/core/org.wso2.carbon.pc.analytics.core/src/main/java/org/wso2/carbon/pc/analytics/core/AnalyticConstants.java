@@ -53,4 +53,6 @@ public class AnalyticConstants {
 	public static final String CONFIG_PASSWORD = "dasPassword";
 	public static final String NAME = "name";
 	public static final String VALUE = "value";
+	public static final String TOP = "top";
+	public static final String BOTTOM = "bottom";
 }

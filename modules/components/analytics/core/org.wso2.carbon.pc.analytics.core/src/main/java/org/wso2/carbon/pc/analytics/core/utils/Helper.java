@@ -30,6 +30,8 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 /**
@@ -56,6 +58,20 @@ public class Helper {
 	 */
 	public static String getJSONString(Object query) {
 		return new Gson().toJson(query);
+	}
+
+	/**
+	 * Round a double value to two decimal points
+	 *
+	 * @param value double value
+	 * @param places number of decimals
+	 * @return rounded decimal value
+	 */
+	private static double round(double value, int places) {
+		if (places < 0) throw new IllegalArgumentException();
+		BigDecimal bd = new BigDecimal(value);
+		bd = bd.setScale(places, RoundingMode.HALF_UP);
+		return bd.doubleValue();
 	}
 
 	/**
@@ -152,13 +168,14 @@ public class Helper {
 
 	/**
 	 * Get sorted list
+	 *
 	 * @param table is a hash table to keep the result as key-value pairs
 	 * @param key1 is the name for the first value of the JSON object
 	 * @param key2 is the name for the second value for the JSON object
 	 * @return a sorted list as a JSON array string
 	 * @throws JSONException
 	 */
-	public static String getDoubleValueSortedList(Hashtable<String, Double> table, String key1, String key2)
+	public static String getDoubleValueSortedList(Hashtable<String, Double> table, String key1, String key2, String order, int count)
 																			throws JSONException {
 		//Transfer as List and sort it
 		ArrayList<Map.Entry<String, Double>> l = new ArrayList(table.entrySet());
@@ -171,21 +188,38 @@ public class Helper {
 		for (int i = 0 ; i < l.size() ; i++){
 			JSONObject o = new JSONObject();
 			o.put(key1, l.get(i).getKey());
-			o.put(key2, l.get(i).getValue());
+			o.put(key2, round(l.get(i).getValue(), 2));
 			array.put(o);
 		}
-		return array.toString();
+
+		//if count exceeds the array length, then assign the array length to the count variable
+		if(count > array.length()){
+			count = array.length();
+		}
+
+		JSONArray arrayPortion = new JSONArray();
+		if(order.equalsIgnoreCase(AnalyticConstants.TOP)){
+			for (int i = array.length() - count ; i < array.length() ; i++){
+				arrayPortion.put(array.get(i));
+			}
+		}else if(order.equalsIgnoreCase(AnalyticConstants.BOTTOM)){
+			for (int i = 0 ; i < count ; i++){
+				arrayPortion.put(array.get(i));
+			}
+		}
+		return arrayPortion.toString();
 	}
 
 	/**
 	 * Get sorted list
+	 *
 	 * @param table is a hash table to keep the result as key-value pairs
 	 * @param key1 is the name for the first value of the JSON object
 	 * @param key2 is the name for the second value for the JSON object
 	 * @return a sorted list as a JSON array string
 	 * @throws JSONException
 	 */
-	public static String getIntegerValueSortedList(Hashtable<String, Integer> table, String key1, String key2)
+	public static String getIntegerValueSortedList(Hashtable<String, Integer> table, String key1, String key2, String order, int count)
 																			throws JSONException {
 		ArrayList<Map.Entry<String, Integer>> l = new ArrayList(table.entrySet());
 		Collections.sort(l, new Comparator<Map.Entry<String, Integer>>() {
@@ -200,6 +234,22 @@ public class Helper {
 			o.put(key2, l.get(i).getValue());
 			array.put(o);
 		}
-		return array.toString();
+
+		//if count exceeds the array length, then assign the array length to the count variable
+		if(count > array.length()){
+			count = array.length();
+		}
+
+		JSONArray arrayPortion = new JSONArray();
+		if(order.equalsIgnoreCase(AnalyticConstants.TOP)){
+			for (int i = array.length() - count ; i < array.length() ; i++){
+				arrayPortion.put(array.get(i));
+			}
+		}else if(order.equalsIgnoreCase(AnalyticConstants.BOTTOM)){
+			for (int i = 0 ; i < count ; i++){
+				arrayPortion.put(array.get(i));
+			}
+		}
+		return arrayPortion.toString();
 	}
 }

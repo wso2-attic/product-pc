@@ -46,6 +46,8 @@ public class ProcessLevelMonitor {
 			JSONObject filterObj = new JSONObject(filters);
 			long from = filterObj.getLong("startTime");
 			long to = filterObj.getLong("endTime");
+			String order = filterObj.getString("order");
+			int processCount = filterObj.getInt("count");
 
 			AggregateField avgField = new AggregateField();
 			avgField.setFieldName(AnalyticConstants.DURATION);
@@ -58,8 +60,10 @@ public class ProcessLevelMonitor {
 			AggregateQuery query = new AggregateQuery();
 			query.setTableName(AnalyticConstants.PROCESS_USAGE_TABLE);
 			query.setGroupByField(AnalyticConstants.PROCESS_DEFINITION_KEY);
-			query.setQuery(
-					Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, from, to));
+			if(from != 0 && to != 0){
+				query.setQuery(
+						Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, from, to));
+			}
 			query.setAggregateFields(aggregateFields);
 
 
@@ -82,7 +86,8 @@ public class ProcessLevelMonitor {
 					table.put(processDefKey, avgExecTime);
 				}
 				sortedResult = Helper.getDoubleValueSortedList(table, "processDefKey",
-				                                                "avgExecutionTime");
+				                                               "avgExecutionTime", order,
+				                                               processCount);
 			}
 
 		} catch (Exception e) {
@@ -109,6 +114,8 @@ public class ProcessLevelMonitor {
 			JSONObject filterObj = new JSONObject(filters);
 			long from = filterObj.getLong("startTime");
 			long to = filterObj.getLong("endTime");
+			String order = filterObj.getString("order");
+			int processCount = filterObj.getInt("count");
 
 			AggregateField countField = new AggregateField();
 			countField.setFieldName(AnalyticConstants.ALL);
@@ -121,7 +128,9 @@ public class ProcessLevelMonitor {
 			AggregateQuery query = new AggregateQuery();
 			query.setTableName(AnalyticConstants.PROCESS_USAGE_TABLE);
 			query.setGroupByField(AnalyticConstants.PROCESS_DEFINITION_KEY);
-			query.setQuery(Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, from, to));
+			if(from != 0 && to != 0){
+				query.setQuery(Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, from, to));
+			}
 			query.setAggregateFields(aggregateFields);
 
 			if(log.isDebugEnabled()){
@@ -142,7 +151,7 @@ public class ProcessLevelMonitor {
 					int processInstanceCount = values.getInt("processInstanceCount");
 					table.put(processDefKey, processInstanceCount);
 				}
-				sortedResult = Helper.getIntegerValueSortedList(table, "processDefKey", "processInstanceCount");
+				sortedResult = Helper.getIntegerValueSortedList(table, "processDefKey", "processInstanceCount", order, processCount);
 			}
 
 		} catch (Exception e) {
