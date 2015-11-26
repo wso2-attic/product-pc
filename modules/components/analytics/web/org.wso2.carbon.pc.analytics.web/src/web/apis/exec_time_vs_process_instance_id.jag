@@ -13,17 +13,17 @@
  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
-*/
+ */
 
 importPackage(org.wso2.carbon.pc.analytics.core);
 
 var log = new Log();
-log.info("Process level monitoring getAvgExecuteTimeVsProcessId logic");
+log.info("Process level monitoring getExecutionTimeVsProcessInstanceId logic");
 
 var processLevelMonitor = new ProcessLevelMonitor();
 var filters = String(request.getParameter("filters"));
 log.info(filters);
-var avgExecTimeVsProcessId = processLevelMonitor.getAvgExecuteTimeVsProcessId(filters);
-print(avgExecTimeVsProcessId);
-log.info(avgExecTimeVsProcessId);
+var execTimeVsProcessInstanceId = processLevelMonitor.getExecutionTimeVsProcessInstanceId(filters);
+print(execTimeVsProcessInstanceId);
+log.info(execTimeVsProcessInstanceId);
 %>

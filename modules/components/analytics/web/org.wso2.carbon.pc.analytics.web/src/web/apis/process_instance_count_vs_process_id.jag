@@ -21,9 +21,9 @@ var log = new Log();
 log.info("Process level monitoring getProcessInstanceCountVsProcessId logic");
 
 var processLevelMonitor = new ProcessLevelMonitor();
-var dateRange = String(request.getParameter("dateRange"));
-log.info(dateRange);
-var processInstanceCountVsProcessId = processLevelMonitor.getProcessInstanceCountVsProcessId(dateRange);
+var filters = String(request.getParameter("filters"));
+log.info(filters);
+var processInstanceCountVsProcessId = processLevelMonitor.getProcessInstanceCountVsProcessId(filters);
 print(processInstanceCountVsProcessId);
 log.info(processInstanceCountVsProcessId);
 %>
