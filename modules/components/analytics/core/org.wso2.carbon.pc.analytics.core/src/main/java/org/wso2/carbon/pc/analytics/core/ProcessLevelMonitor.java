@@ -44,10 +44,10 @@ public class ProcessLevelMonitor {
 		String sortedResult = "";
 		try {
 			JSONObject filterObj = new JSONObject(filters);
-			long from = filterObj.getLong("startTime");
-			long to = filterObj.getLong("endTime");
-			String order = filterObj.getString("order");
-			int processCount = filterObj.getInt("count");
+			long from = filterObj.getLong(AnalyticConstants.START_TIME);
+			long to = filterObj.getLong(AnalyticConstants.END_TIME);
+			String order = filterObj.getString(AnalyticConstants.ORDER);
+			int processCount = filterObj.getInt(AnalyticConstants.NUM_COUNT);
 
 			AggregateField avgField = new AggregateField();
 			avgField.setFieldName(AnalyticConstants.DURATION);
@@ -112,10 +112,10 @@ public class ProcessLevelMonitor {
 		String sortedResult = "";
 		try {
 			JSONObject filterObj = new JSONObject(filters);
-			long from = filterObj.getLong("startTime");
-			long to = filterObj.getLong("endTime");
-			String order = filterObj.getString("order");
-			int processCount = filterObj.getInt("count");
+			long from = filterObj.getLong(AnalyticConstants.START_TIME);
+			long to = filterObj.getLong(AnalyticConstants.END_TIME);
+			String order = filterObj.getString(AnalyticConstants.ORDER);
+			int processCount = filterObj.getInt(AnalyticConstants.NUM_COUNT);
 
 			AggregateField countField = new AggregateField();
 			countField.setFieldName(AnalyticConstants.ALL);
@@ -177,9 +177,9 @@ public class ProcessLevelMonitor {
 		String sortedResult = "";
 		try {
 			JSONObject filterObj = new JSONObject(filters);
-			String processId = filterObj.getString("processId");
-			String order = filterObj.getString("order");
-			int processCount = filterObj.getInt("count");
+			String processId = filterObj.getString(AnalyticConstants.PROCESS_ID);
+			String order = filterObj.getString(AnalyticConstants.ORDER);
+			int processCount = filterObj.getInt(AnalyticConstants.NUM_COUNT);
 
 			AggregateField avgField = new AggregateField();
 			avgField.setFieldName(AnalyticConstants.DURATION);
@@ -240,9 +240,9 @@ public class ProcessLevelMonitor {
 		String sortedResult = "";
 		try {
 			JSONObject filterObj = new JSONObject(filters);
-			String processId = filterObj.getString("processId");
-			String order = filterObj.getString("order");
-			int processCount = filterObj.getInt("count");
+			String processId = filterObj.getString(AnalyticConstants.PROCESS_ID);
+			String order = filterObj.getString(AnalyticConstants.ORDER);
+			int processCount = filterObj.getInt(AnalyticConstants.NUM_COUNT);
 
 			AggregateField countField = new AggregateField();
 			countField.setFieldName(AnalyticConstants.ALL);
@@ -303,19 +303,20 @@ public class ProcessLevelMonitor {
 		String sortedResult = "";
 		try {
 			JSONObject filterObj = new JSONObject(filters);
-			long from = filterObj.getLong("startTime");
-			long to = filterObj.getLong("endTime");
-			String processId = filterObj.getString("processId");
-			String order = filterObj.getString("order");
-			int limit = filterObj.getInt("limit");
+			long from = filterObj.getLong(AnalyticConstants.START_TIME);
+			long to = filterObj.getLong(AnalyticConstants.END_TIME);
+			String processId = filterObj.getString(AnalyticConstants.PROCESS_ID);
+			String order = filterObj.getString(AnalyticConstants.ORDER);
+			int limit = filterObj.getInt(AnalyticConstants.LIMIT);
 
 			SearchQuery searchQuery = new SearchQuery();
 			searchQuery.setTableName(AnalyticConstants.PROCESS_USAGE_TABLE);
+			String queryStr = "processDefinitionId:" + "\"'" + processId + "'\"";
 			if(from != 0 && to != 0){
-				searchQuery.setQuery("processDefinitionId:" + "\"'" + processId + "'\"" + " AND " +
-				                     Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME, from,
-				                                              to));
+				queryStr += " AND " + Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME,
+				                                               from, to);
 			}
+			searchQuery.setQuery(queryStr);
 			searchQuery.setStart(0);
 			searchQuery.setCount(limit);
 
@@ -354,8 +355,11 @@ public class ProcessLevelMonitor {
 		return sortedResult;
 	}
 
-
-
+	/**
+	 * Get process definition key list
+	 *
+	 * @return process definition key list as a JSON array string
+	 */
 	public String getProcessIdList() {
 		String processIdList = "";
 		try {

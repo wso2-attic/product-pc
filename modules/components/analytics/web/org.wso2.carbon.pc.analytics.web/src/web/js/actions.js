@@ -336,7 +336,7 @@ function render(renderElementID, dataset, xTitle, yTitle) {
         .domain(dataset.map(function (d) {
             return d.yData;
         }))
-        .rangeRoundBands([height, 0], 0.1);
+        .rangeRoundBands([height, 0]);
 
     // Creates an axis based off the yScale properties
     var yAxis = d3.svg.axis()
@@ -389,7 +389,7 @@ function render(renderElementID, dataset, xTitle, yTitle) {
 
         // Step 3: Height & Width
         // Width - Based on barpadding and number of points in dataset
-        // Height - Scale using avgExecution Time and height of the chart area
+        // Height - Scale using height of the chart area
         .attr('height', (height / dataset.length) - barPadding)
         .attr('width', function (d) {
             return xScale(d.xData);

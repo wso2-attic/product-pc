@@ -55,4 +55,11 @@ public class AnalyticConstants {
 	public static final String VALUE = "value";
 	public static final String TOP = "top";
 	public static final String BOTTOM = "bottom";
+
+	public static final String START_TIME = "startTime";
+	public static final String END_TIME = "endTime";
+	public static final String ORDER = "order";
+	public static final String NUM_COUNT = "count";
+	public static final String PROCESS_ID = "processId";
+	public static final String LIMIT = "limit";
 }

@@ -16,30 +16,18 @@
 <%
 var headers = {"Authorization":"Basic " + auth, "Content-Type": "application/json"};
 
-//importPackage(org.wso2.carbon.pc.analytics.core);
-
-//var log = new Log();
-//log.info("Process level monitoring logic");
-
-//var processLevelMonitor = new ProcessLevelMonitor();
-//var avgExecTimeVSuserId = processLevelMonitor.getAvgExecuteTimeVsProcessId();
-
-//log.info(avgExecTimeVSuserId);
-
-<!--var url = "/bpmn-analytics-explorer/avg_time_vs_process_id";-->
-<!--var result = post(httpUrl + url, null, headers, "application/json");-->
-
-<!--result = parse(result.data);-->
-<!--log.info(result.toString());-->
-<!--if (result.error) {-->
- <!--if (log.isDebugEnabeld()) {-->
-  <!--var errorCode = result.xhr().statusCode();-->
-  <!--log.debug("Unable to get result : " + errorCode);-->
- <!--}-->
-
-<!--} else {-->
- <!--render(result, 'AVG Execution Time (ms)', 'Process Definition Key');-->
-<!--}-->
-
 dashboardNavActive = 'class="active"';
 %>
+<script type="text/javascript">
+window.onload = function() {
+   $('.selectpicker').selectpicker({
+        style: 'btn',
+        size: 3
+    });
+    drawAvgExecuteTimeVsProcessIdResult('processDefAvgTimeBarChart');
+    drawProcessInstanceCountVsProcessIdResult('processInstanceCountProcessIdBarChart');
+    loadProcessList('processVersionAvgExecTimeProcessList', 'processVersionAvgTimeBarChart', drawAvgExecuteTimeVsProcessVersionResult);
+    loadProcessList('processInstanceCountProcessVersionProcessList', 'processInstanceCountProcessVersionBarChart', drawProcessInstanceCountVsProcessVersionResult);
+    loadProcessList('processInstanceIdExecTimeProcessList', 'processInstanceIdExecTimeBarChart', drawExecutionTimeVsProcessInstanceIdResult);
+};
+</script>

@@ -13,24 +13,10 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
  -->*/%>
-<script type="text/javascript">
-window.onload = function() {
-   $('.selectpicker').selectpicker({
-        style: 'btn',
-        size: 3
-    });
-    drawAvgExecuteTimeVsProcessIdResult('processDefAvgTimeBarChart');
-    drawProcessInstanceCountVsProcessIdResult('processInstanceCountProcessIdBarChart');
-    loadProcessList('processVersionAvgExecTimeProcessList', 'processVersionAvgTimeBarChart', drawAvgExecuteTimeVsProcessVersionResult);
-    loadProcessList('processInstanceCountProcessVersionProcessList', 'processInstanceCountProcessVersionBarChart', drawProcessInstanceCountVsProcessVersionResult);
-    loadProcessList('processInstanceIdExecTimeProcessList', 'processInstanceIdExecTimeBarChart', drawExecutionTimeVsProcessInstanceIdResult);
-};
-</script>
-
 <div class="col-sm-12">
    <div class="row">
      <div class="col-lg-12 float-left" id="barChartDisplay">
-            <!-- ........................................... -->
+            <!-- PROCESS ID VS AVERAGE EXECUTION TIME -->
             <div class="table-title"  style="width:100%">  PROCESS ID VS AVERAGE EXECUTION TIME </div><br />
             <div class="row inline-block" style="width:100%">
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
@@ -60,16 +46,14 @@ window.onload = function() {
                       <option value="100">100</option>
                     </select>
                 </div>
-
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
                     <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsProcessIdResult('processDefAvgTimeBarChart')">Apply Filter</button>
                 </div>
              </div>
-
             <div class="main" id="processDefAvgTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
             <br>
 
-            <!-- ............................................................ -->
+            <!-- PROCESS INSTANCE COUNT VS PROCESS ID -->
             <div class="table-title"  style="width:100%"> PROCESS INSTANCE COUNT VS PROCESS ID </div><br />
             <div class="row inline-block" style="width:100%">
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
@@ -99,16 +83,14 @@ window.onload = function() {
                       <option value="100">100</option>
                     </select>
                 </div>
-
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
                     <button class="btn btn-default btn-info" onclick="drawProcessInstanceCountVsProcessIdResult('processInstanceCountProcessIdBarChart')">Apply Filter</button>
                 </div>
              </div>
-
             <div class="main" id="processInstanceCountProcessIdBarChart" style="width: 80%;margin: 0 auto;"></div>
             <br>
 
-            <!-- ............................................................ -->
+            <!-- PROCESS VERSION VS AVERAGE EXECUTION TIME -->
             <div class="table-title"  style="width:100%"> PROCESS VERSION VS AVERAGE EXECUTION TIME </div><br />
             <div class="row inline-block" style="width:100%">
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
@@ -129,16 +111,14 @@ window.onload = function() {
                       <option value="100">100</option>
                     </select>
                 </div>
-
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
                     <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsProcessVersionResult('processVersionAvgTimeBarChart')">Apply Filter</button>
                 </div>
              </div>
-
             <div class="main" id="processVersionAvgTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
             <br>
 
-            <!-- ................................................................... -->
+            <!-- PROCESS INSTANCE COUNT VS PROCESS VERSION -->
             <div class="table-title"  style="width:100%"> PROCESS INSTANCE COUNT VS PROCESS VERSION </div><br />
             <div class="row inline-block" style="width:100%">
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
@@ -159,16 +139,14 @@ window.onload = function() {
                       <option value="100">100</option>
                     </select>
                 </div>
-
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
                     <button class="btn btn-default btn-info" onclick="drawProcessInstanceCountVsProcessVersionResult('processInstanceCountProcessVersionBarChart')">Apply Filter</button>
                 </div>
              </div>
-
             <div class="main" id="processInstanceCountProcessVersionBarChart" style="width: 80%;margin: 0 auto;"></div>
             <br>
 
-            <!-- .................................................................. -->
+            <!-- PROCESS INSTANCE ID VS EXECUTION TIME -->
             <div class="table-title"  style="width:100%">  PROCESS INSTANCE ID VS EXECUTION TIME </div><br />
             <div class="row inline-block" style="width:100%">
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
@@ -201,15 +179,12 @@ window.onload = function() {
                       <option value="100">100</option>
                     </select>
                 </div>
-
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
                     <button class="btn btn-default btn-info" onclick="drawExecutionTimeVsProcessInstanceIdResult('processInstanceIdExecTimeBarChart')">Apply Filter</button>
                 </div>
              </div>
-
             <div class="main" id="processInstanceIdExecTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
             <br>
-      </div>
-
-  </div>
-  </div>
+     </div>
+   </div>
+</div>
