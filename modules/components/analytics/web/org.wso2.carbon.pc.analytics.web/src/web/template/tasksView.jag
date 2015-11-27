@@ -15,6 +15,158 @@
 -->
 <div class="col-sm-12">
   <div class="row">
+    <div class="col-lg-12 float-left" id="taskLevelBarChartsDisplay">
+      <!-- TASK ID VS AVERAGE EXECUTION TIME -->
+            <div class="table-title"  style="width:100%">  TASK ID VS AVERAGE EXECUTION TIME </div><br />
+            <div class="row inline-block" style="width:100%">
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="taskIdAvgExecTimeProcessList" class="selectpicker"></select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="taskIdAvgExecTimeOrder" class="selectpicker">
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="taskIdAvgExecTimeCount" class="selectpicker">
+                      <option value="3">3</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
+                    <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsTaskIdResult('taskDefAvgTimeBarChart')">Apply Filter</button>
+                </div>
+             </div>
+            <div class="main" id="taskDefAvgTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
+            <br>
 
+            <!-- TASK INSTANCE COUNT VS TASK ID -->
+            <div class="table-title"  style="width:100%"> TASK INSTANCE COUNT VS TASK ID </div><br />
+            <div class="row inline-block" style="width:100%">
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="taskInstanceCountTaskDefProcessList" class="selectpicker"></select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="taskInstanceCountTaskDefOrder" class="selectpicker">
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="taskInstanceCountTaskDefCount" class="selectpicker">
+                     <option value="3">3</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
+                    <button class="btn btn-default btn-info" onclick="drawTaskInstanceCountVsTaskIdResult('taskInstanceCountTaskDefBarChart')">Apply Filter</button>
+                </div>
+             </div>
+            <div class="main" id="taskInstanceCountTaskDefBarChart" style="width: 80%;margin: 0 auto;"></div>
+            <br>
+
+            <!-- TASK INSTANCE COUNT VS USER ID -->
+            <div class="table-title"  style="width:100%"> TASK INSTANCE COUNT VS USER ID </div><br />
+            <div class="row inline-block" style="width:100%">
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="taskInstanceCountUserIdTaskList" class="selectpicker"></select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="taskInstanceCountUserIdOrder" class="selectpicker">
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="taskInstanceCountUserIdCount" class="selectpicker">
+                     <option value="3">3</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
+                    <button class="btn btn-default btn-info" onclick="drawTaskInstanceCountVsUserIdResult('taskInstanceCountUserIdBarChart')">Apply Filter</button>
+                </div>
+             </div>
+            <div class="main" id="taskInstanceCountUserIdBarChart" style="width: 80%;margin: 0 auto;"></div>
+            <br>
+
+            <!-- USER ID VS AVERAGE EXECUTION TIME -->
+            <div class="table-title"  style="width:100%">  USER ID VS AVERAGE EXECUTION TIME </div><br />
+            <div class="row inline-block" style="width:100%">
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="userIdAvgExecTimeTaskList" class="selectpicker"></select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="userIdAvgExecTimeOrder" class="selectpicker">
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="userIdAvgExecTimeCount" class="selectpicker">
+                     <option value="3">3</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
+                    <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsUserIdResult('userIdAvgExecTimeBarChart')">Apply Filter</button>
+                </div>
+             </div>
+            <div class="main" id="userIdAvgExecTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
+            <br>
+
+            <!-- TASK INSTANCE ID VS EXECUTION TIME -->
+            <div class="table-title"  style="width:100%">  TASK INSTANCE ID VS EXECUTION TIME </div><br />
+            <div class="row inline-block" style="width:100%">
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="taskInstanceIdExecTimeTaskList" class="selectpicker"></select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label  class="input-group-addon" for="taskInstanceIdExecTimeStartDate">Start Date</label>
+                        <input id="taskInstanceIdExecTimeStartDate" name="taskInstanceIdExecTimeStartDate" type="text" class="form-control" onfocus="setDatePicker('taskInstanceIdExecTimeStartDate')" placeholder="MM/DD/YYYY"/>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="taskInstanceIdExecTimeEndDate">End Date</label>
+                        <input id="taskInstanceIdExecTimeEndDate" name="taskInstanceIdExecTimeEndDate" type="text" class="form-control" onfocus="setDatePicker('taskInstanceIdExecTimeEndDate')" placeholder="MM/DD/YYYY"/>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="taskInstanceIdExecTimeOrder" class="selectpicker">
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="taskInstanceIdExecTimeLimit" class="selectpicker">
+                      <option value="3">3</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
+                    <button class="btn btn-default btn-info" onclick="drawExecutionTimeVsTaskInstanceIdResult('taskInstanceIdExecTimeBarChart')">Apply Filter</button>
+                </div>
+             </div>
+            <div class="main" id="taskInstanceIdExecTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
+            <br>
+    </div>
   </div>
 </div>

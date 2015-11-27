@@ -89,16 +89,13 @@ public class ProcessLevelMonitor {
 				                                               "avgExecutionTime", order,
 				                                               processCount);
 			}
-
 		} catch (Exception e) {
 			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
-
 		if (log.isDebugEnabled()) {
 			log.debug("Result = " + sortedResult);
 		}
-
 		return sortedResult;
 	}
 
@@ -153,16 +150,13 @@ public class ProcessLevelMonitor {
 				}
 				sortedResult = Helper.getIntegerValueSortedList(table, "processDefKey", "processInstanceCount", order, processCount);
 			}
-
 		} catch (Exception e) {
 			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
-
 		if(log.isDebugEnabled()){
 			log.debug("Result = " + sortedResult);
 		}
-
 		return sortedResult;
 	}
 
@@ -217,16 +211,13 @@ public class ProcessLevelMonitor {
 				                                               "avgExecutionTime", order,
 				                                               processCount);
 			}
-
 		} catch (Exception e) {
 			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
-
 		if(log.isDebugEnabled()){
 			log.debug("Result = " + sortedResult);
 		}
-
 		return sortedResult;
 	}
 
@@ -280,16 +271,13 @@ public class ProcessLevelMonitor {
 				                                               "processInstanceCount", order,
 				                                               processCount);
 			}
-
 		} catch (Exception e) {
 			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
-
 		if(log.isDebugEnabled()){
 			log.debug("Result = " + sortedResult);
 		}
-
 		return sortedResult;
 	}
 
@@ -342,16 +330,13 @@ public class ProcessLevelMonitor {
 				                                               "duration", order,
 				                                               limit);
 			}
-
 		} catch (Exception e) {
 			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
-
 		if(log.isDebugEnabled()){
 			log.debug("Result = " + sortedResult);
 		}
-
 		return sortedResult;
 	}
 
@@ -385,6 +370,7 @@ public class ProcessLevelMonitor {
 
 			JSONArray array = new JSONArray(result);
 			JSONArray resultArray = new JSONArray();
+
 			if(array.length() != 0){
 				for(int i = 0 ; i < array.length() ; i++){
 					JSONObject jsonObj = array.getJSONObject(i);
@@ -401,7 +387,6 @@ public class ProcessLevelMonitor {
 				log.debug("Query = " + query.getQuery());
 				log.debug("Result = " + processIdList);
 			}
-
 		} catch (Exception e) {
 			String errMsg = "PC Analytics core error.";
 			log.error(errMsg, e);

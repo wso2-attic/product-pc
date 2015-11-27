@@ -17,6 +17,7 @@ package org.wso2.carbon.pc.analytics.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.pc.analytics.core.clients.AnalyticsRestClient;
 import org.wso2.carbon.pc.analytics.core.models.AggregateField;
@@ -25,6 +26,7 @@ import org.wso2.carbon.pc.analytics.core.models.SearchQuery;
 import org.wso2.carbon.pc.analytics.core.utils.Helper;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 /**
  * TaskLevelMonitor keeps all the functionalites for the task level monitoring
@@ -39,12 +41,12 @@ public class TaskLevelMonitor {
 	 * @return the result as a JSON string
 	 */
 	public String getAvgExecuteTimeVsTaskId(String filters) {
-		String result = "";
+		String sortedResult = "";
 		try {
 			JSONObject filterObj = new JSONObject(filters);
-			//long from = filterObj.getLong("startTime");
-			//long to = filterObj.getLong("endTime");
-			String processId = filterObj.getString("processId");
+			String processId = filterObj.getString(AnalyticConstants.PROCESS_ID);
+			String order = filterObj.getString(AnalyticConstants.ORDER);
+			int taskCount = filterObj.getInt(AnalyticConstants.NUM_COUNT);
 
 			AggregateField avgField = new AggregateField();
 			avgField.setFieldName(AnalyticConstants.DURATION);
@@ -55,7 +57,7 @@ public class TaskLevelMonitor {
 			aggregateFields.add(avgField);
 
 			AggregateQuery query = new AggregateQuery();
-			query.setTableName(AnalyticConstants.TASK_USAGE_TABLE);
+			query.setTableName(AnalyticConstants.USER_INVOLVE_TABLE);
 			query.setGroupByField(AnalyticConstants.TASK_DEFINITION_KEY);
 			query.setQuery("processDefinitionId:" + "\"'" + processId + "'\"");
 			query.setAggregateFields(aggregateFields);
@@ -64,18 +66,32 @@ public class TaskLevelMonitor {
 				log.debug(Helper.getJSONString(query));
 			}
 
-			result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
+			String result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
 			                                  Helper.getJSONString(query));
+
+			JSONArray unsortedResultArray = new JSONArray(result);
+			Hashtable<String , Double> table = new Hashtable<>();
+
+			if(unsortedResultArray.length() != 0){
+				for(int i = 0 ; i < unsortedResultArray.length() ; i++){
+					JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
+					JSONObject values = jsonObj.getJSONObject("values");
+					String taskDefKey = values.getJSONArray("taskDefId").getString(0);
+					double avgExecTime = values.getDouble("avgExecutionTime");
+					table.put(taskDefKey, avgExecTime);
+				}
+				sortedResult = Helper.getDoubleValueSortedList(table, "taskDefId",
+				                                               "avgExecutionTime", order,
+				                                               taskCount);
+			}
 		} catch (Exception e) {
 			String errMsg = "PC Analytics core TaskLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
-
 		if(log.isDebugEnabled()){
-			log.debug("Result = " + result);
+			log.debug("Result = " + sortedResult);
 		}
-
-		return result;
+		return sortedResult;
 	}
 
 	/**
@@ -85,12 +101,12 @@ public class TaskLevelMonitor {
 	 * @return the result as a JSON string
 	 */
 	public String getTaskInstanceCountVsTaskId(String filters) {
-		String result = "";
+		String sortedResult = "";
 		try {
 			JSONObject filterObj = new JSONObject(filters);
-			//long from = filterObj.getLong("startTime");
-			//long to = filterObj.getLong("endTime");
-			String processId = filterObj.getString("processId");
+			String processId = filterObj.getString(AnalyticConstants.PROCESS_ID);
+			String order = filterObj.getString(AnalyticConstants.ORDER);
+			int taskCount = filterObj.getInt(AnalyticConstants.NUM_COUNT);
 
 			AggregateField countField = new AggregateField();
 			countField.setFieldName(AnalyticConstants.ALL);
@@ -101,7 +117,7 @@ public class TaskLevelMonitor {
 			aggregateFields.add(countField);
 
 			AggregateQuery query = new AggregateQuery();
-			query.setTableName(AnalyticConstants.TASK_USAGE_TABLE);
+			query.setTableName(AnalyticConstants.USER_INVOLVE_TABLE);
 			query.setGroupByField(AnalyticConstants.TASK_DEFINITION_KEY);
 			query.setQuery("processDefinitionId:" + "\"'" + processId + "'\"");
 			query.setAggregateFields(aggregateFields);
@@ -110,18 +126,32 @@ public class TaskLevelMonitor {
 				log.debug(Helper.getJSONString(query));
 			}
 
-			result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
+			String result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
 			                                  Helper.getJSONString(query));
+
+			JSONArray unsortedResultArray = new JSONArray(result);
+			Hashtable<String , Integer> table = new Hashtable<>();
+
+			if(unsortedResultArray.length() != 0){
+				for(int i = 0 ; i < unsortedResultArray.length() ; i++){
+					JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
+					JSONObject values = jsonObj.getJSONObject("values");
+					String processDefKey = values.getJSONArray("taskDefId").getString(0);
+					int processInstanceCount = values.getInt("taskInstanceCount");
+					table.put(processDefKey, processInstanceCount);
+				}
+				sortedResult = Helper.getIntegerValueSortedList(table, "taskDefId",
+				                                                "taskInstanceCount", order,
+				                                                taskCount);
+			}
 		} catch (Exception e) {
 			String errMsg = "PC Analytics core TaskLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
-
 		if(log.isDebugEnabled()){
-			log.debug("Result = " + result);
+			log.debug("Result = " + sortedResult);
 		}
-
-		return result;
+		return sortedResult;
 	}
 
 	/**
@@ -131,12 +161,12 @@ public class TaskLevelMonitor {
 	 * @return the result as a JSON string
 	 */
 	public String getTaskInstanceCountVsUserId(String filters) {
-		String result = "";
+		String sortedResult = "";
 		try {
 			JSONObject filterObj = new JSONObject(filters);
-			//long from = filterObj.getLong("startTime");
-			//long to = filterObj.getLong("endTime");
-			String taskId = filterObj.getString("taskId");
+			String taskId = filterObj.getString(AnalyticConstants.TASK_ID);
+			String order = filterObj.getString(AnalyticConstants.ORDER);
+			int taskCount = filterObj.getInt(AnalyticConstants.NUM_COUNT);
 
 			AggregateField countField = new AggregateField();
 			countField.setFieldName(AnalyticConstants.ALL);
@@ -156,18 +186,32 @@ public class TaskLevelMonitor {
 				log.debug(Helper.getJSONString(query));
 			}
 
-			result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
+			String result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
 			                                  Helper.getJSONString(query));
+
+			JSONArray unsortedResultArray = new JSONArray(result);
+			Hashtable<String , Integer> table = new Hashtable<>();
+
+			if(unsortedResultArray.length() != 0){
+				for(int i = 0 ; i < unsortedResultArray.length() ; i++){
+					JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
+					JSONObject values = jsonObj.getJSONObject("values");
+					String userId = values.getJSONArray("assignUser").getString(0);
+					int taskInstanceCount = values.getInt("taskInstanceCount");
+					table.put(userId, taskInstanceCount);
+				}
+				sortedResult = Helper.getIntegerValueSortedList(table, "assignUser",
+				                                                "taskInstanceCount", order,
+				                                                taskCount);
+			}
 		} catch (Exception e) {
 			String errMsg = "PC Analytics core TaskLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
-
 		if(log.isDebugEnabled()){
-			log.debug("Result = " + result);
+			log.debug("Result = " + sortedResult);
 		}
-
-		return result;
+		return sortedResult;
 	}
 
 	/**
@@ -177,12 +221,12 @@ public class TaskLevelMonitor {
 	 * @return the result as a JSON string
 	 */
 	public String getAvgWaitingTimeVsUserId(String filters) {
-		String result = "";
+		String sortedResult = "";
 		try {
 			JSONObject filterObj = new JSONObject(filters);
-			//long from = filterObj.getLong("startTime");
-			//long to = filterObj.getLong("endTime");
-			String taskId = filterObj.getString("taskId");
+			String taskId = filterObj.getString(AnalyticConstants.TASK_ID);
+			String order = filterObj.getString(AnalyticConstants.ORDER);
+			int taskCount = filterObj.getInt(AnalyticConstants.NUM_COUNT);
 
 			AggregateField avgField = new AggregateField();
 			avgField.setFieldName(AnalyticConstants.DURATION);
@@ -202,18 +246,31 @@ public class TaskLevelMonitor {
 				log.debug(Helper.getJSONString(query));
 			}
 
-			result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
+			String result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
 			                                  Helper.getJSONString(query));
+
+			JSONArray unsortedResultArray = new JSONArray(result);
+			Hashtable<String , Double> table = new Hashtable<>();
+
+			if(unsortedResultArray.length() != 0){
+				for(int i = 0 ; i < unsortedResultArray.length() ; i++){
+					JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
+					JSONObject values = jsonObj.getJSONObject("values");
+					String userId = values.getJSONArray("assignUser").getString(0);
+					double avgExecTime = values.getInt("avgWaitingTime");
+					table.put(userId, avgExecTime);
+				}
+				sortedResult = Helper.getDoubleValueSortedList(table, "assignUser",
+				                                               "avgWaitingTime", order, taskCount);
+			}
 		} catch (Exception e) {
 			String errMsg = "PC Analytics core TaskLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
-
 		if(log.isDebugEnabled()){
-			log.debug("Result = " + result);
+			log.debug("Result = " + sortedResult);
 		}
-
-		return result;
+		return sortedResult;
 	}
 
 	/**
@@ -221,20 +278,24 @@ public class TaskLevelMonitor {
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */
-	public String getExectutionTimeVsTaskInstanceId(String filters) {
-		// need to pass start and count attributes to this method
-		String result = "";
+	public String getExecutionTimeVsTaskInstanceId(String filters) {
+		String sortedResult = "";
 		try {
 			JSONObject filterObj = new JSONObject(filters);
-			long from = filterObj.getLong("startTime");
-			long to = filterObj.getLong("endTime");
-			String taskId = filterObj.getString("taskId");
-			int limit = filterObj.getInt("limit");
+			long from = filterObj.getLong(AnalyticConstants.START_TIME);
+			long to = filterObj.getLong(AnalyticConstants.END_TIME);
+			String taskId = filterObj.getString(AnalyticConstants.TASK_ID);
+			String order = filterObj.getString(AnalyticConstants.ORDER);
+			int limit = filterObj.getInt(AnalyticConstants.LIMIT);
 
 			SearchQuery searchQuery = new SearchQuery();
-			searchQuery.setTableName("TASK_USAGE_SUMMARY_DATA");
-			searchQuery.setQuery(Helper.getDateRangeQuery("taskDefinitionKey:" + "\"'" + taskId + "'\"" + " AND " +
-			                                              AnalyticConstants.COLUMN_FINISHED_TIME, from, to));
+			searchQuery.setTableName(AnalyticConstants.TASK_USAGE_TABLE);
+			String queryStr = "taskDefinitionKey:" + "\"'" + taskId + "'\"";
+			if(from != 0 && to != 0){
+				queryStr += " AND " + Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME,
+				                                               from, to);
+			}
+			searchQuery.setQuery(queryStr);
 			searchQuery.setStart(0);
 			searchQuery.setCount(limit);
 
@@ -242,17 +303,85 @@ public class TaskLevelMonitor {
 				log.debug(Helper.getJSONString(searchQuery));
 			}
 
-			result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_SEARCH),
+			String result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_SEARCH),
 			                                  Helper.getJSONString(searchQuery));
+
+			JSONArray unsortedResultArray = new JSONArray(result);
+			Hashtable<String , Double> table = new Hashtable<>();
+
+			if(unsortedResultArray.length() != 0){
+				for(int i = 0 ; i < unsortedResultArray.length() ; i++){
+					JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
+					JSONObject values = jsonObj.getJSONObject("values");
+					String processDefKey = values.getString("taskInstanceId");
+					double executionTime = values.getDouble("duration");
+					table.put(processDefKey, executionTime);
+				}
+				sortedResult = Helper.getDoubleValueSortedList(table, "taskInstanceId",
+				                                               "duration", order,
+				                                               limit);
+			}
 		} catch (Exception e) {
 			String errMsg = "PC Analytics core TaskLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
-
 		if(log.isDebugEnabled()){
-			log.debug("Result = " + result);
+			log.debug("Result = " + sortedResult);
 		}
+		return sortedResult;
+	}
 
-		return result;
+	/**
+	 * Get task definition key list
+	 *
+	 * @return task definition key list as a JSON array string
+	 */
+	public String getTaskList(){
+		String taskIdList = "";
+		try {
+			AggregateField countField = new AggregateField();
+			countField.setFieldName(AnalyticConstants.ALL);
+			countField.setAggregate(AnalyticConstants.COUNT);
+			countField.setAlias(AnalyticConstants.TASK_INSTANCE_COUNT);
+
+			ArrayList<AggregateField> aggregateFields = new ArrayList<>();
+			aggregateFields.add(countField);
+
+			AggregateQuery query = new AggregateQuery();
+			query.setTableName(AnalyticConstants.USER_INVOLVE_TABLE);
+			query.setGroupByField(AnalyticConstants.TASK_DEFINITION_KEY);
+			query.setAggregateFields(aggregateFields);
+
+			if(log.isDebugEnabled()){
+				log.debug(Helper.getJSONString(query));
+			}
+
+			String result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
+			                                         Helper.getJSONString(query));
+
+			JSONArray array = new JSONArray(result);
+			JSONArray resultArray = new JSONArray();
+
+			if(array.length() != 0){
+				for(int i = 0 ; i < array.length() ; i++){
+					JSONObject jsonObj = array.getJSONObject(i);
+					JSONObject values = jsonObj.getJSONObject("values");
+					String taskDefKey = values.getJSONArray("taskDefId").getString(0);
+					JSONObject o = new JSONObject();
+					o.put("taskDefId", taskDefKey);
+					resultArray.put(o);
+				}
+				taskIdList = resultArray.toString();
+			}
+
+			if(log.isDebugEnabled()){
+				log.debug("Query = " + query.getQuery());
+				log.debug("Result = " + taskIdList);
+			}
+		}catch (Exception e){
+			String errMsg = "PC Analytics core error.";
+			log.error(errMsg, e);
+		}
+		return taskIdList;
 	}
 }

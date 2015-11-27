@@ -18,3 +18,16 @@ var headers = {"Authorization":"Basic " + auth};
 
 tasksNavActive = 'class="active"';
 %>
+<script type="text/javascript">
+window.onload = function() {
+   $('.selectpicker').selectpicker({
+        style: 'btn',
+        size: 3
+    });
+    loadProcessList('taskIdAvgExecTimeProcessList', 'taskDefAvgTimeBarChart', drawAvgExecuteTimeVsTaskIdResult);
+    loadProcessList('taskInstanceCountTaskDefProcessList', 'taskInstanceCountTaskDefBarChart', drawTaskInstanceCountVsTaskIdResult);
+    loadTaskList('taskInstanceCountUserIdTaskList', 'taskInstanceCountUserIdBarChart', drawTaskInstanceCountVsUserIdResult);
+    loadTaskList('userIdAvgExecTimeTaskList', 'userIdAvgExecTimeBarChart', drawAvgExecuteTimeVsUserIdResult);
+    loadTaskList('taskInstanceIdExecTimeTaskList', 'taskInstanceIdExecTimeBarChart', drawExecutionTimeVsTaskInstanceIdResult);
+};
+</script>

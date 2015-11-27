@@ -281,6 +281,225 @@ function drawExecutionTimeVsProcessInstanceIdResult(renderElement){
     }
 }
 
+function drawAvgExecuteTimeVsTaskIdResult(renderElement){
+    var renderElementID = '#' + renderElement;
+    var processId = $('#taskIdAvgExecTimeProcessList').val();
+
+    if(processId != ''){
+        var body = {
+            'processId': processId,
+            'order': $('#taskIdAvgExecTimeOrder').val(),
+            'count': parseInt($('#taskIdAvgExecTimeCount').val())
+        };
+
+        var url = "/" + CONTEXT + "/avg_time_vs_task_id";
+        $.ajax({
+            type: 'POST',
+            url: httpUrl + url,
+            data: {'filters': JSON.stringify(body)},
+            success: function (data) {
+                var dataStr = JSON.parse(data);
+                if(! $.isEmptyObject(dataStr)){
+                    var dataset = [];
+                    for (var i = 0; i < dataStr.length; i++) {
+                        dataset.push({
+                            "yData": dataStr[i].taskDefId,
+                            "xData": dataStr[i].avgExecutionTime
+                        });
+                    }
+                    render(renderElementID, dataset, 'AVG Execution Time (ms)', 'Task Definition Key');
+                }else{
+                    //Error message
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorJson = eval("(" + xhr.responseText + ")");
+                alert(errorJson.message);
+            }
+        });
+    }else{
+
+    }
+}
+
+function drawTaskInstanceCountVsTaskIdResult(renderElement){
+    var renderElementID = '#' + renderElement;
+    var processId = $('#taskInstanceCountTaskDefProcessList').val();
+
+    if(processId != ''){
+        var body = {
+            'processId': processId,
+            'order': $('#taskInstanceCountTaskDefOrder').val(),
+            'count': parseInt($('#taskInstanceCountTaskDefCount').val())
+        };
+
+        var url = "/" + CONTEXT + "/task_instance_count_vs_task_id";
+        $.ajax({
+            type: 'POST',
+            url: httpUrl + url,
+            data: {'filters': JSON.stringify(body)},
+            success: function (data) {
+                var dataStr = JSON.parse(data);
+                if(! $.isEmptyObject(dataStr)){
+                    var dataset = [];
+                    for (var i = 0; i < dataStr.length; i++) {
+                        dataset.push({
+                            "yData": dataStr[i].taskDefId,
+                            "xData": dataStr[i].taskInstanceCount
+                        });
+                    }
+                    render(renderElementID, dataset, 'Task Instance Count', 'Task Definition Key');
+                }else{
+                    //Error message
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorJson = eval("(" + xhr.responseText + ")");
+                alert(errorJson.message);
+            }
+        });
+    }else{
+
+    }
+}
+
+function drawTaskInstanceCountVsUserIdResult(renderElement){
+    var renderElementID = '#' + renderElement;
+    var taskId = $('#taskInstanceCountUserIdTaskList').val();
+
+    if(taskId != ''){
+        var body = {
+            'taskId': taskId,
+            'order': $('#taskInstanceCountUserIdOrder').val(),
+            'count': parseInt($('#taskInstanceCountUserIdCount').val())
+        };
+
+        var url = "/" + CONTEXT + "/task_instance_count_vs_user_id";
+        $.ajax({
+            type: 'POST',
+            url: httpUrl + url,
+            data: {'filters': JSON.stringify(body)},
+            success: function (data) {
+                var dataStr = JSON.parse(data);
+                if(! $.isEmptyObject(dataStr)){
+                    var dataset = [];
+                    for (var i = 0; i < dataStr.length; i++) {
+                        dataset.push({
+                            "yData": dataStr[i].assignUser,
+                            "xData": dataStr[i].taskInstanceCount
+                        });
+                    }
+                    render(renderElementID, dataset, 'Task Instance Count', 'Assignee');
+                }else{
+                    //Error message
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorJson = eval("(" + xhr.responseText + ")");
+                alert(errorJson.message);
+            }
+        });
+    }else{
+
+    }
+}
+
+function drawAvgExecuteTimeVsUserIdResult(renderElement){
+    var renderElementID = '#' + renderElement;
+    var taskId = $('#userIdAvgExecTimeTaskList').val();
+
+    if(taskId != ''){
+        var body = {
+            'taskId': taskId,
+            'order': $('#userIdAvgExecTimeOrder').val(),
+            'count': parseInt($('#userIdAvgExecTimeCount').val())
+        };
+
+        var url = "/" + CONTEXT + "/avg_wait_time_vs_user_id";
+        $.ajax({
+            type: 'POST',
+            url: httpUrl + url,
+            data: {'filters': JSON.stringify(body)},
+            success: function (data) {
+                var dataStr = JSON.parse(data);
+                if(! $.isEmptyObject(dataStr)){
+                    var dataset = [];
+                    for (var i = 0; i < dataStr.length; i++) {
+                        dataset.push({
+                            "yData": dataStr[i].assignUser,
+                            "xData": dataStr[i].avgWaitingTime
+                        });
+                    }
+                    render(renderElementID, dataset, 'AVG Waiting Time', 'Assignee');
+                }else{
+                    //Error message
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorJson = eval("(" + xhr.responseText + ")");
+                alert(errorJson.message);
+            }
+        });
+    }else{
+
+    }
+}
+
+function drawExecutionTimeVsTaskInstanceIdResult(renderElement){
+    var renderElementID = '#' + renderElement;
+    var taskId = $('#taskInstanceIdExecTimeTaskList').val();
+
+    if(taskId != ''){
+        var startDate = document.getElementById("taskInstanceIdExecTimeStartDate");
+        var startDateTemp = 0;
+        if (startDate.value.length > 0) {
+            startDateTemp = new Date(startDate.value).getTime();
+        }
+
+        var endDate = document.getElementById("taskInstanceIdExecTimeEndDate");
+        var endDateTemp = 0;
+        if (endDate.value.length > 0) {
+            endDateTemp = new Date(endDate.value).getTime();
+        }
+
+        var body = {
+            'startTime': startDateTemp,
+            'endTime': endDateTemp,
+            'taskId': taskId,
+            'order': $('#taskInstanceIdExecTimeOrder').val(),
+            'limit': parseInt($('#taskInstanceIdExecTimeLimit').val())
+        };
+
+        var url = "/" + CONTEXT + "/exec_time_vs_task_instance_id";
+        $.ajax({
+            type: 'POST',
+            url: httpUrl + url,
+            data: {'filters': JSON.stringify(body)},
+            success: function (data) {
+                var dataStr = JSON.parse(data);
+                if(! $.isEmptyObject(dataStr)){
+                    var dataset = [];
+                    for (var i = 0; i < dataStr.length; i++) {
+                        dataset.push({
+                            "yData": dataStr[i].taskInstanceId,
+                            "xData": dataStr[i].duration
+                        });
+                    }
+                    render(renderElementID, dataset, 'Execution Time (ms)', 'Task Instance Id');
+                }else{
+                    //Error message
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorJson = eval("(" + xhr.responseText + ")");
+                alert(errorJson.message);
+            }
+        });
+    }else{
+
+    }
+}
+
 function loadProcessList(dropdownId, barChartId, callback) {
     var dropdownElementID = '#' + dropdownId;
     var url = "/" + CONTEXT + "/process_definition_key_list";
@@ -297,7 +516,31 @@ function loadProcessList(dropdownId, barChartId, callback) {
                 $(dropdownElementID).append(el);
             }
             $(dropdownElementID).selectpicker("refresh");
-            //call to the processVersionVsExecTimeDraw method
+            callback(barChartId);
+        },
+        error: function (xhr, status, error) {
+            var errorJson = eval("(" + xhr.responseText + ")");
+            alert(errorJson.message);
+        }
+    });
+}
+
+function loadTaskList(dropdownId, barChartId, callback){
+    var dropdownElementID = '#' + dropdownId;
+    var url = "/" + CONTEXT + "/task_definition_key_list";
+    $.ajax({
+        type: 'POST',
+        url: httpUrl + url,
+        success: function (data) {
+            var dataStr = JSON.parse(data);
+            for (var i = 0; i < dataStr.length; i++) {
+                var opt = dataStr[i].taskDefId;
+                var el = document.createElement("option");
+                el.textContent = opt;
+                el.value = opt;
+                $(dropdownElementID).append(el);
+            }
+            $(dropdownElementID).selectpicker("refresh");
             callback(barChartId);
         },
         error: function (xhr, status, error) {
