@@ -62,5 +62,6 @@ public class AnalyticConstants {
 	public static final String NUM_COUNT = "count";
 	public static final String PROCESS_ID = "processId";
 	public static final String TASK_ID = "taskId";
+	public static final String USER_ID = "userId";
 	public static final String LIMIT = "limit";
 }

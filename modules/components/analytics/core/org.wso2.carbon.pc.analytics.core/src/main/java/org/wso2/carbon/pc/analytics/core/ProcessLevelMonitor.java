@@ -66,7 +66,6 @@ public class ProcessLevelMonitor {
 			}
 			query.setAggregateFields(aggregateFields);
 
-
 			if (log.isDebugEnabled()) {
 				log.debug(Helper.getJSONString(query));
 			}

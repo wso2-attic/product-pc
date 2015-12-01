@@ -36,7 +36,7 @@ public class TaskLevelMonitor {
 
 	/**
 	 * perform query: SELECT taskDefinitionKey, AVG(duration) AS avgExecutionTime FROM
-	 *                TASK_USAGE_SUMMARY GROUP BY taskDefinitionKey;
+	 *                USER_INVOLVE_SUMMARY_DATA GROUP BY taskDefinitionKey;
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */
@@ -96,7 +96,7 @@ public class TaskLevelMonitor {
 
 	/**
 	 * perform query: SELECT taskDefinitionKey, COUNT(taskInstanceId) AS taskInstanceCount FROM
-	 *                TASK_USAGE_SUMMARY GROUP BY taskDefinitionKey;
+	 *                USER_INVOLVE_SUMMARY_DATA GROUP BY taskDefinitionKey;
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */

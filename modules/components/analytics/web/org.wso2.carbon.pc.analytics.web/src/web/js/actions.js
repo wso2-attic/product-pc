@@ -181,7 +181,7 @@ function drawAvgExecuteTimeVsProcessVersionResult(renderElement) {
             }
         });
     }else{
-
+        console.log('Empty process id list.');
     }
 }
 
@@ -222,7 +222,7 @@ function drawProcessInstanceCountVsProcessVersionResult(renderElement){
             }
         });
     }else{
-
+        console.log('Empty process id list.');
     }
 }
 
@@ -277,7 +277,7 @@ function drawExecutionTimeVsProcessInstanceIdResult(renderElement){
             }
         });
     }else{
-
+        console.log('Empty process id list.');
     }
 }
 
@@ -318,7 +318,7 @@ function drawAvgExecuteTimeVsTaskIdResult(renderElement){
             }
         });
     }else{
-
+        console.log('Empty process id list.');
     }
 }
 
@@ -359,7 +359,7 @@ function drawTaskInstanceCountVsTaskIdResult(renderElement){
             }
         });
     }else{
-
+        console.log('Empty process id list.');
     }
 }
 
@@ -400,7 +400,7 @@ function drawTaskInstanceCountVsUserIdResult(renderElement){
             }
         });
     }else{
-
+        console.log('Empty task id list.');
     }
 }
 
@@ -441,7 +441,7 @@ function drawAvgExecuteTimeVsUserIdResult(renderElement){
             }
         });
     }else{
-
+        console.log('Empty task id list.');
     }
 }
 
@@ -496,7 +496,295 @@ function drawExecutionTimeVsTaskInstanceIdResult(renderElement){
             }
         });
     }else{
+        console.log('Empty task id list.');
+    }
+}
 
+function drawTotalInvolvedTimeVsUserIdResult(renderElement){
+    var renderElementID = '#' + renderElement;
+    var startDate = document.getElementById("userIdTotalInvolvedTimeStartDate");
+    var startDateTemp = 0;
+    if (startDate.value.length > 0) {
+        startDateTemp = new Date(startDate.value).getTime();
+    }
+
+    var endDate = document.getElementById("userIdTotalInvolvedTimeEndDate");
+    var endDateTemp = 0;
+    if (endDate.value.length > 0) {
+        endDateTemp = new Date(endDate.value).getTime();
+    }
+
+    var body = {
+        'startTime': startDateTemp,
+        'endTime': endDateTemp,
+        'order': $('#userIdTotalInvolvedTimeOrder').val(),
+        'count': parseInt($('#userIdTotalInvolvedTimeCount').val())
+    };
+
+    var url = "/" + CONTEXT + "/total_involved_time_vs_user_id";
+    $.ajax({
+        type: 'POST',
+        url: httpUrl + url,
+        data: {'filters': JSON.stringify(body)},
+        success: function (data) {
+            var dataStr = JSON.parse(data);
+            if(! $.isEmptyObject(dataStr)){
+                var dataset = [];
+                for (var i = 0; i < dataStr.length; i++) {
+                    dataset.push({
+                        "yData": dataStr[i].assignUser,
+                        "xData": dataStr[i].totalInvolvedTime
+                    });
+                }
+                render(renderElementID, dataset, 'Total Involved Time (ms)', 'Assignee');
+            }else{
+                //Error message
+            }
+        },
+        error: function (xhr, status, error) {
+            var errorJson = eval("(" + xhr.responseText + ")");
+            alert(errorJson.message);
+        }
+    });
+}
+
+function drawTotalCompletedTasksVsUserIdResult(renderElement){
+    var renderElementID = '#' + renderElement;
+    var startDate = document.getElementById("userIdTotalCompletedTasksStartDate");
+    var startDateTemp = 0;
+    if (startDate.value.length > 0) {
+        startDateTemp = new Date(startDate.value).getTime();
+    }
+
+    var endDate = document.getElementById("userIdTotalCompletedTasksEndDate");
+    var endDateTemp = 0;
+    if (endDate.value.length > 0) {
+        endDateTemp = new Date(endDate.value).getTime();
+    }
+
+    var body = {
+        'startTime': startDateTemp,
+        'endTime': endDateTemp,
+        'order': $('#userIdTotalCompletedTasksOrder').val(),
+        'count': parseInt($('#userIdCompletedTasksCount').val())
+    };
+
+    var url = "/" + CONTEXT + "/total_completed_tasks_vs_user_id";
+    $.ajax({
+        type: 'POST',
+        url: httpUrl + url,
+        data: {'filters': JSON.stringify(body)},
+        success: function (data) {
+            var dataStr = JSON.parse(data);
+            if(! $.isEmptyObject(dataStr)){
+                var dataset = [];
+                for (var i = 0; i < dataStr.length; i++) {
+                    dataset.push({
+                        "yData": dataStr[i].assignUser,
+                        "xData": dataStr[i].completedTotalTasks
+                    });
+                }
+                render(renderElementID, dataset, 'Total Completed Tasks', 'Assignee');
+            }else{
+                //Error message
+            }
+        },
+        error: function (xhr, status, error) {
+            var errorJson = eval("(" + xhr.responseText + ")");
+            alert(errorJson.message);
+        }
+    });
+}
+
+function drawTotalInvolvedTimeVsProcessIdResult(renderElement){
+    var renderElementID = '#' + renderElement;
+    var userId = $('#processIdTotalInvolvedTimeUserList').val();
+
+    if(userId != ''){
+        var startDate = document.getElementById("processIdTotalInvolvedTimeStartDate");
+        var startDateTemp = 0;
+        if (startDate.value.length > 0) {
+            startDateTemp = new Date(startDate.value).getTime();
+        }
+
+        var endDate = document.getElementById("processIdTotalInvolvedTimeEndDate");
+        var endDateTemp = 0;
+        if (endDate.value.length > 0) {
+            endDateTemp = new Date(endDate.value).getTime();
+        }
+
+        var body = {
+            'startTime': startDateTemp,
+            'endTime': endDateTemp,
+            'userId': userId,
+            'order': $('#processIdTotalInvolvedTimeOrder').val(),
+            'count': parseInt($('#processIdTotalInvolvedTimeCount').val())
+        };
+
+        var url = "/" + CONTEXT + "/total_involved_time_vs_process_id";
+        $.ajax({
+            type: 'POST',
+            url: httpUrl + url,
+            data: {'filters': JSON.stringify(body)},
+            success: function (data) {
+                var dataStr = JSON.parse(data);
+                if(! $.isEmptyObject(dataStr)){
+                    var dataset = [];
+                    for (var i = 0; i < dataStr.length; i++) {
+                        dataset.push({
+                            "yData": dataStr[i].processDefKey,
+                            "xData": dataStr[i].totalInvolvedTime
+                        });
+                    }
+                    render(renderElementID, dataset, 'Total Involved Time (ms)', 'Process Definition Key');
+                }else{
+                    //Error message
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorJson = eval("(" + xhr.responseText + ")");
+                alert(errorJson.message);
+            }
+        });
+    }else{
+        console.log('Empty user id list.');
+    }
+}
+
+function drawTotalInvolvedInstanceCountVsProcessIdResult(renderElement){
+    var renderElementID = '#' + renderElement;
+    var userId = $('#processIdTotalInvolvedInstanceCountUserList').val();
+
+    if(userId != ''){
+        var startDate = document.getElementById("processIdTotalInvolvedInstanceCountStartDate");
+        var startDateTemp = 0;
+        if (startDate.value.length > 0) {
+            startDateTemp = new Date(startDate.value).getTime();
+        }
+
+        var endDate = document.getElementById("processIdTotalInvolvedInstanceCountEndDate");
+        var endDateTemp = 0;
+        if (endDate.value.length > 0) {
+            endDateTemp = new Date(endDate.value).getTime();
+        }
+
+        var body = {
+            'startTime': startDateTemp,
+            'endTime': endDateTemp,
+            'userId': userId,
+            'order': $('#processIdTotalInvolvedInstanceCountOrder').val(),
+            'count': parseInt($('#processIdTotalInvolvedInstanceCountCount').val())
+        };
+
+        var url = "/" + CONTEXT + "/total_involved_instance_count_vs_process_id";
+        $.ajax({
+            type: 'POST',
+            url: httpUrl + url,
+            data: {'filters': JSON.stringify(body)},
+            success: function (data) {
+                var dataStr = JSON.parse(data);
+                if(! $.isEmptyObject(dataStr)){
+                    var dataset = [];
+                    for (var i = 0; i < dataStr.length; i++) {
+                        dataset.push({
+                            "yData": dataStr[i].processDefKey,
+                            "xData": dataStr[i].totalInstanceCount
+                        });
+                    }
+                    render(renderElementID, dataset, 'Total Involved Instance Count', 'Process Definition Key');
+                }else{
+                    //Error message
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorJson = eval("(" + xhr.responseText + ")");
+                alert(errorJson.message);
+            }
+        });
+    }else{
+        console.log('Empty user id list.');
+    }
+}
+
+function drawUserLevelTaskInstanceCountVsTaskIdResult(renderElement){
+    var renderElementID = '#' + renderElement;
+    var userId = $('#userLevelTaskInstanceCountTaskIdUserList').val();
+
+    if(userId != ''){
+        var body = {
+            'userId': userId,
+            'order': $('#userLevelTaskInstanceCountTaskIdOrder').val(),
+            'count': parseInt($('#userLevelTaskInstanceCountTaskIdCount').val())
+        };
+
+        var url = "/" + CONTEXT + "/user_level_task_instance_count_vs_task_id";
+        $.ajax({
+            type: 'POST',
+            url: httpUrl + url,
+            data: {'filters': JSON.stringify(body)},
+            success: function (data) {
+                var dataStr = JSON.parse(data);
+                if(! $.isEmptyObject(dataStr)){
+                    var dataset = [];
+                    for (var i = 0; i < dataStr.length; i++) {
+                        dataset.push({
+                            "yData": dataStr[i].taskDefId,
+                            "xData": dataStr[i].taskInstanceCount
+                        });
+                    }
+                    render(renderElementID, dataset, 'Task Instance Count', 'Task Definition Key');
+                }else{
+                    //Error message
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorJson = eval("(" + xhr.responseText + ")");
+                alert(errorJson.message);
+            }
+        });
+    }else{
+        console.log('Empty process id list.');
+    }
+}
+
+function drawUserLevelAvgExecuteTimeVsTaskIdResult(renderElement){
+    var renderElementID = '#' + renderElement;
+    var userId = $('#userLevelTaskIdAvgExecTimeUserList').val();
+
+    if(userId != ''){
+        var body = {
+            'userId': userId,
+            'order': $('#userLevelTaskIdAvgExecTimeOrder').val(),
+            'count': parseInt($('#userLevelTaskIdAvgExecTimeCount').val())
+        };
+
+        var url = "/" + CONTEXT + "/user_level_avg_time_vs_task_id";
+        $.ajax({
+            type: 'POST',
+            url: httpUrl + url,
+            data: {'filters': JSON.stringify(body)},
+            success: function (data) {
+                var dataStr = JSON.parse(data);
+                if(! $.isEmptyObject(dataStr)){
+                    var dataset = [];
+                    for (var i = 0; i < dataStr.length; i++) {
+                        dataset.push({
+                            "yData": dataStr[i].taskDefId,
+                            "xData": dataStr[i].avgExecutionTime
+                        });
+                    }
+                    render(renderElementID, dataset, 'AVG Execution Time (ms)', 'Task Definition Key');
+                }else{
+                    //Error message
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorJson = eval("(" + xhr.responseText + ")");
+                alert(errorJson.message);
+            }
+        });
+    }else{
+        console.log('Empty user id list.');
     }
 }
 
@@ -508,15 +796,17 @@ function loadProcessList(dropdownId, barChartId, callback) {
         url: httpUrl + url,
         success: function (data) {
             var dataStr = JSON.parse(data);
-            for (var i = 0; i < dataStr.length; i++) {
-                var opt = dataStr[i].processDefKey;
-                var el = document.createElement("option");
-                el.textContent = opt;
-                el.value = opt;
-                $(dropdownElementID).append(el);
+            if(! $.isEmptyObject(dataStr)){
+                for (var i = 0; i < dataStr.length; i++) {
+                    var opt = dataStr[i].processDefKey;
+                    var el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    $(dropdownElementID).append(el);
+                }
+                $(dropdownElementID).selectpicker("refresh");
+                callback(barChartId);
             }
-            $(dropdownElementID).selectpicker("refresh");
-            callback(barChartId);
         },
         error: function (xhr, status, error) {
             var errorJson = eval("(" + xhr.responseText + ")");
@@ -533,15 +823,44 @@ function loadTaskList(dropdownId, barChartId, callback){
         url: httpUrl + url,
         success: function (data) {
             var dataStr = JSON.parse(data);
-            for (var i = 0; i < dataStr.length; i++) {
-                var opt = dataStr[i].taskDefId;
-                var el = document.createElement("option");
-                el.textContent = opt;
-                el.value = opt;
-                $(dropdownElementID).append(el);
+            if(! $.isEmptyObject(dataStr)){
+                for (var i = 0; i < dataStr.length; i++) {
+                    var opt = dataStr[i].taskDefId;
+                    var el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    $(dropdownElementID).append(el);
+                }
+                $(dropdownElementID).selectpicker("refresh");
+                callback(barChartId);
             }
-            $(dropdownElementID).selectpicker("refresh");
-            callback(barChartId);
+        },
+        error: function (xhr, status, error) {
+            var errorJson = eval("(" + xhr.responseText + ")");
+            alert(errorJson.message);
+        }
+    });
+}
+
+function loadUserList(dropdownId, barChartId, callback){
+    var dropdownElementID = '#' + dropdownId;
+    var url = "/" + CONTEXT + "/user_id_list";
+    $.ajax({
+        type: 'POST',
+        url: httpUrl + url,
+        success: function (data) {
+            var dataStr = JSON.parse(data);
+            if(! $.isEmptyObject(dataStr)){
+                for (var i = 0; i < dataStr.length; i++) {
+                    var opt = dataStr[i].assignUser;
+                    var el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    $(dropdownElementID).append(el);
+                }
+                $(dropdownElementID).selectpicker("refresh");
+                callback(barChartId);
+            }
         },
         error: function (xhr, status, error) {
             var errorJson = eval("(" + xhr.responseText + ")");
@@ -552,7 +871,7 @@ function loadTaskList(dropdownId, barChartId, callback){
 
 function render(renderElementID, dataset, xTitle, yTitle) {
     // Dimensions for the chart: height, width, and space b/t the bars
-    var margins = {top: 30, right: 110, bottom: 70, left: 110}
+    var margins = {top: 30, right: 120, bottom: 75, left: 120}
     var height = 550 - margins.left - margins.right,
         width = 900 - margins.top - margins.bottom,
         barPadding = 5;

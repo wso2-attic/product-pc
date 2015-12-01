@@ -18,3 +18,17 @@ var headers = {"Authorization":"Basic " + auth};
 
 userNavActive = 'class="active"';
 %>
+<script type="text/javascript">
+window.onload = function() {
+   $('.selectpicker').selectpicker({
+        style: 'btn',
+        size: 3
+    });
+    drawTotalInvolvedTimeVsUserIdResult('userIdTotalInvolvedTimeBarChart');
+    drawTotalCompletedTasksVsUserIdResult('userIdTotalCompletedTasksBarChart');
+    loadUserList('processIdTotalInvolvedTimeUserList', 'processIdTotalInvolvedTimeBarChart', drawTotalInvolvedTimeVsProcessIdResult);
+    loadUserList('processIdTotalInvolvedInstanceCountUserList', 'processIdTotalInvolvedInstanceCountBarChart', drawTotalInvolvedInstanceCountVsProcessIdResult);
+    loadUserList('userLevelTaskInstanceCountTaskIdUserList', 'userLevelTaskInstanceCountTaskIdBarChart', drawUserLevelTaskInstanceCountVsTaskIdResult);
+    loadUserList('userLevelTaskIdAvgExecTimeUserList', 'userLevelTaskIdAvgTimeBarChart', drawUserLevelAvgExecuteTimeVsTaskIdResult);
+};
+</script>
