@@ -23,10 +23,6 @@ if (BPSTenant != undefined && BPSTenant.length > 0) {
     CONTEXT = appName;
 }
 
-//$( document ).ready(function() {
-
-//});
-
 /**
  Function to set date picker to date input elements
  */
@@ -45,10 +41,8 @@ function drawAvgExecuteTimeVsProcessIdResult(renderElement) {
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("processIdAvgExecTimeStartDate");
     var startDateTemp = 0;
-    //alert("Start Date:" + startDate.value);
     if (startDate.value.length > 0) {
         startDateTemp = new Date(startDate.value).getTime();
-        //alert(startDateTemp);
     }
 
     var endDate = document.getElementById("processIdAvgExecTimeEndDate");
@@ -57,7 +51,6 @@ function drawAvgExecuteTimeVsProcessIdResult(renderElement) {
         endDateTemp = new Date(endDate.value).getTime();
     }
 
-    //if(startDateTemp != null && endDate != null){
     var body = {
         'startTime': startDateTemp,
         'endTime': endDateTemp,
@@ -65,7 +58,6 @@ function drawAvgExecuteTimeVsProcessIdResult(renderElement) {
         'count': parseInt($('#processIdAvgExecTimeCount').val())
     };
 
-    //alert(JSON.stringify(body));
     var url = "/" + CONTEXT + "/avg_time_vs_process_id";
     $.ajax({
         type: 'POST',
@@ -91,7 +83,6 @@ function drawAvgExecuteTimeVsProcessIdResult(renderElement) {
             alert(errorJson.message);
         }
     });
-    //}
 }
 
 function drawProcessInstanceCountVsProcessIdResult(renderElement) {
@@ -108,7 +99,6 @@ function drawProcessInstanceCountVsProcessIdResult(renderElement) {
         endDateTemp = new Date(endDate.value).getTime();
     }
 
-    //if(startDateTemp != null && endDate != null){
     var body = {
         'startTime': startDateTemp,
         'endTime': endDateTemp,
@@ -141,7 +131,6 @@ function drawProcessInstanceCountVsProcessIdResult(renderElement) {
             alert(errorJson.message);
         }
     });
-    //  }
 }
 
 function drawAvgExecuteTimeVsProcessVersionResult(renderElement) {
