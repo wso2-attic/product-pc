@@ -19,6 +19,8 @@ import com.google.gson.Gson;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,12 +34,17 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
  * Helper class is used to keep the methods which are helpful to the monitor classes.
  */
 public class Helper {
+	private static final Log log = LogFactory.getLog(Helper.class);
+
 	/**
 	 * Build the lucene query format for the date range
 	 *
@@ -167,11 +174,13 @@ public class Helper {
 	}
 
 	/**
-	 * Get sorted list
+	 * Get sorted list (sort by double type values)
 	 *
 	 * @param table is a hash table to keep the result as key-value pairs
 	 * @param key1 is the name for the first value of the JSON object
 	 * @param key2 is the name for the second value for the JSON object
+	 * @param order is to get the top or bottom results
+	 * @param count is to limit the number of results
 	 * @return a sorted list as a JSON array string
 	 * @throws JSONException
 	 */
@@ -211,11 +220,13 @@ public class Helper {
 	}
 
 	/**
-	 * Get sorted list
+	 * Get sorted list (sort by int type values)
 	 *
 	 * @param table is a hash table to keep the result as key-value pairs
 	 * @param key1 is the name for the first value of the JSON object
 	 * @param key2 is the name for the second value for the JSON object
+	 * @param order is to get the top or bottom results
+	 * @param count is to limit the number of results
 	 * @return a sorted list as a JSON array string
 	 * @throws JSONException
 	 */
@@ -251,5 +262,57 @@ public class Helper {
 			}
 		}
 		return arrayPortion.toString();
+	}
+
+	/**
+	 * Get sorted list (sort by long type keys)
+	 *
+	 * @param table is a hash table to keep the result as key-value pairs
+	 * @param key1 is the name for the first value of the JSON object
+	 * @param key2 is the name for the second value for the JSON object
+	 * @return a sorted list as a JSON array string
+	 * @throws JSONException
+	 */
+	public static String getLongKeySortedList(Hashtable<Long, Integer> table, String key1, String key2)
+																			throws JSONException {
+		ArrayList<Map.Entry<Long, Integer>> l = new ArrayList(table.entrySet());
+		Collections.sort(l, new Comparator<Map.Entry<Long, Integer>>() {
+			public int compare(Map.Entry<Long, Integer> o1, Map.Entry<Long, Integer> o2) {
+				return o1.getKey().compareTo(o2.getKey());
+			}
+		});
+		JSONArray array = new JSONArray();
+		for (int i = 0 ; i < l.size() ; i++){
+			JSONObject o = new JSONObject();
+			o.put(key1, dateFormatter(l.get(i).getKey()));
+			o.put(key2, l.get(i).getValue());
+			array.put(o);
+		}
+		return array.toString();
+	}
+
+	/**
+	 * Convert given datetime string to date
+	 * @param time is the long value of a date
+	 * @return date as a String (eg: 2015-11-12)
+	 */
+	private static String dateFormatter(long time){
+		String date = new Date(time).toString();
+		String[] dateArray = date.split(AnalyticConstants.SPACE_SEPARATOR);
+		try {
+			Date dateMonth = new SimpleDateFormat(AnalyticConstants.MONTH_FORMAT, Locale.ENGLISH)
+																			.parse(dateArray[1]);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dateMonth);
+			int month = cal.get(Calendar.MONTH) + 1;
+			String dateString = dateArray[5] + AnalyticConstants.DATE_SEPARATOR + month +
+								AnalyticConstants.DATE_SEPARATOR + dateArray[2];
+			DateFormat df = new SimpleDateFormat(AnalyticConstants.DATE_FORMAT_WITHOUT_TIME);
+			return df.format(df.parse(dateString));
+		} catch (ParseException e) {
+			String errMsg = "Date format parse exception.";
+			log.error(errMsg, e);
+		}
+		return null;
 	}
 }

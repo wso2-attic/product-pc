@@ -27,6 +27,7 @@ import org.wso2.carbon.pc.analytics.core.utils.Helper;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  * ProcessLevelMonitor keeps all the functionalites for the process level monitoring
@@ -147,7 +148,9 @@ public class ProcessLevelMonitor {
 					int processInstanceCount = values.getInt("processInstanceCount");
 					table.put(processDefKey, processInstanceCount);
 				}
-				sortedResult = Helper.getIntegerValueSortedList(table, "processDefKey", "processInstanceCount", order, processCount);
+				sortedResult = Helper.getIntegerValueSortedList(table, "processDefKey",
+				                                                "processInstanceCount", order,
+				                                                processCount);
 			}
 		} catch (Exception e) {
 			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
@@ -267,8 +270,8 @@ public class ProcessLevelMonitor {
 					table.put(processVersion, processInstanceCount);
 				}
 				sortedResult = Helper.getIntegerValueSortedList(table, "processVer",
-				                                               "processInstanceCount", order,
-				                                               processCount);
+				                                                "processInstanceCount", order,
+				                                                processCount);
 			}
 		} catch (Exception e) {
 			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
@@ -326,10 +329,73 @@ public class ProcessLevelMonitor {
 					table.put(processDefKey, executionTime);
 				}
 				sortedResult = Helper.getDoubleValueSortedList(table, "processInstanceId",
-				                                               "duration", order,
-				                                               limit);
+				                                               "duration", order, limit);
 			}
 		} catch (Exception e) {
+			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
+			log.error(errMsg, e);
+		}
+		if(log.isDebugEnabled()){
+			log.debug("Result = " + sortedResult);
+		}
+		return sortedResult;
+	}
+
+	public String getDateVsProcessInstanceCount(String filters){
+		String sortedResult = "";
+		try {
+			JSONObject filterObj = new JSONObject(filters);
+			long from = filterObj.getLong(AnalyticConstants.START_TIME);
+			long to = filterObj.getLong(AnalyticConstants.END_TIME);
+			JSONArray processIdList = filterObj.getJSONArray(AnalyticConstants.PROCESS_ID_LIST);
+
+			AggregateField countField = new AggregateField();
+			countField.setFieldName(AnalyticConstants.ALL);
+			countField.setAggregate(AnalyticConstants.COUNT);
+			countField.setAlias(AnalyticConstants.PROCESS_INSTANCE_COUNT);
+
+			ArrayList<AggregateField> aggregateFields = new ArrayList<>();
+			aggregateFields.add(countField);
+
+			AggregateQuery query = new AggregateQuery();
+			query.setTableName(AnalyticConstants.PROCESS_USAGE_TABLE);
+			query.setGroupByField(AnalyticConstants.FINISHED_TIME);
+			String queryStr = Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME,
+			                                           from, to);
+
+			if(processIdList.length() != 0){
+				queryStr += " AND ";
+				for(int i = 0 ; i < processIdList.length() ; i++){
+					if(i == 0){
+						queryStr += "(processDefinitionId:" + "\"'" + processIdList.getString(i) + "'\"";
+					}else {
+						queryStr += " OR " + "processDefinitionId:" + "\"'" + processIdList.getString(i) + "'\"";
+					}
+					if(i == processIdList.length() - 1){
+						queryStr += ")";
+					}
+				}
+			}
+			query.setQuery(queryStr);
+			query.setAggregateFields(aggregateFields);
+
+			String result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
+			                                  Helper.getJSONString(query));
+
+			JSONArray unsortedResultArray = new JSONArray(result);
+			Hashtable<Long , Integer> table = new Hashtable<>();
+
+			if(unsortedResultArray.length() != 0){
+				for(int i = 0 ; i < unsortedResultArray.length() ; i++){
+					JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
+					JSONObject values = jsonObj.getJSONObject("values");
+					long completedTime = Long.parseLong(values.getJSONArray("finishTime").getString(0));
+					int processInstanceCount = values.getInt("processInstanceCount");
+					table.put(completedTime, processInstanceCount);
+				}
+				sortedResult = Helper.getLongKeySortedList(table, "finishTime", "processInstanceCount");
+			}
+		}catch (Exception e){
 			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
 			log.error(errMsg, e);
 		}

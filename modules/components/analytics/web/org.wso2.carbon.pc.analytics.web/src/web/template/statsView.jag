@@ -185,6 +185,31 @@
              </div>
             <div class="main" id="processInstanceIdExecTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
             <br>
+
+            <!-- COMPLETED PROCESS INSTANCE COUNT VS DATE -->
+            <div class="table-title"  style="width:100%">  COMPLETED PROCESS INSTANCE COUNT VS DATE </div><br />
+            <div class="row inline-block" style="width:100%">
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label  class="input-group-addon" for="processInstanceCountDateStartDate">Start Date</label>
+                        <input id="processInstanceCountDateStartDate" name="processInstanceCountDateStartDate" type="text" class="form-control" onfocus="setDatePicker('processInstanceCountDateStartDate')" placeholder="MM/DD/YYYY"/>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="processInstanceCountDateEndDate">End Date</label>
+                        <input id="processInstanceCountDateEndDate" name="processInstanceCountDateEndDate" type="text" class="form-control" onfocus="setDatePicker('processInstanceCountDateEndDate')" placeholder="MM/DD/YYYY"/>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="processInstanceCountDateProcessList" class="selectpicker" multiple></select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
+                    <button class="btn btn-default btn-info" onclick="drawDateVsProcessInstanceCountResult('processInstanceCountDateBarChart')">Apply Filter</button>
+                </div>
+             </div>
+            <div class="main" id="processInstanceCountDateBarChart" style="width: 80%;margin: 0 auto;"></div>
+            <br>
      </div>
    </div>
 </div>

@@ -270,6 +270,55 @@ function drawExecutionTimeVsProcessInstanceIdResult(renderElement){
     }
 }
 
+function drawDateVsProcessInstanceCountResult(renderElement){
+    var renderElementID = '#' + renderElement;
+    var startDate = document.getElementById("processInstanceCountDateStartDate");
+    var startDateTemp = new Date(startDate.value).getTime();
+
+    var endDate = document.getElementById("processInstanceCountDateEndDate");
+    var endDateTemp = new Date(endDate.value).getTime();
+
+    var processIds = $('#processInstanceCountDateProcessList').val();
+    var processIdArray = [];
+    if(processIds != null){
+        $('#processInstanceCountDateProcessList :selected').each(function(i, selected){
+            processIdArray[i] = $(selected).val();
+        });
+    }
+
+    var body = {
+        'startTime': startDateTemp,
+        'endTime': endDateTemp,
+        'processIdList': processIdArray
+    };
+
+    var url = "/" + CONTEXT + "/process_instance_count_vs_date";
+    $.ajax({
+        type: 'POST',
+        url: httpUrl + url,
+        data: {'filters': JSON.stringify(body)},
+        success: function (data) {
+            var dataStr = JSON.parse(data);
+            if(! $.isEmptyObject(dataStr)){
+                var dataset = [];
+                for (var i = 0; i < dataStr.length; i++) {
+                    dataset.push({
+                        "yData": dataStr[i].finishTime,
+                        "xData": dataStr[i].processInstanceCount
+                    });
+                }
+                render(renderElementID, dataset, 'Process Instance Count', 'Date');
+            }else{
+                //Error message
+            }
+        },
+        error: function (xhr, status, error) {
+            var errorJson = eval("(" + xhr.responseText + ")");
+            alert(errorJson.message);
+        }
+    });
+}
+
 function drawAvgExecuteTimeVsTaskIdResult(renderElement){
     var renderElementID = '#' + renderElement;
     var processId = $('#taskIdAvgExecTimeProcessList').val();
@@ -856,6 +905,22 @@ function loadUserList(dropdownId, barChartId, callback){
             alert(errorJson.message);
         }
     });
+}
+
+function loadDates(start, end, barChartId, callback){
+    var startDate = '#' + start;
+    var endDate = '#' + end;
+    setDatePicker(end);
+    $(startDate).daterangepicker({
+        singleDatePicker: true,
+        startDate: "7/11/2015",
+        showDropdowns: true,
+        locale: {
+            format: 'MM/DD/YYYY'
+        }
+    });
+    $(endDate).datepicker("setDate", new Date());
+    callback(barChartId);
 }
 
 function render(renderElementID, dataset, xTitle, yTitle) {

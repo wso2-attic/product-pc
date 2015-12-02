@@ -29,5 +29,7 @@ window.onload = function() {
     loadProcessList('processVersionAvgExecTimeProcessList', 'processVersionAvgTimeBarChart', drawAvgExecuteTimeVsProcessVersionResult);
     loadProcessList('processInstanceCountProcessVersionProcessList', 'processInstanceCountProcessVersionBarChart', drawProcessInstanceCountVsProcessVersionResult);
     loadProcessList('processInstanceIdExecTimeProcessList', 'processInstanceIdExecTimeBarChart', drawExecutionTimeVsProcessInstanceIdResult);
+    loadProcessList('processInstanceCountDateProcessList', 'processInstanceCountDateBarChart', drawDateVsProcessInstanceCountResult);
+    loadDates('processInstanceCountDateStartDate', 'processInstanceCountDateEndDate', 'processInstanceCountDateBarChart', drawDateVsProcessInstanceCountResult);
 };
 </script>

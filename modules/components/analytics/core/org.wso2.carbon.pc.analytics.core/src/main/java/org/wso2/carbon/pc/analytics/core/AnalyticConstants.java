@@ -40,6 +40,7 @@ public class AnalyticConstants {
 	public static final String ASSIGN_USER = "assignUser";
 	public static final String AVG_WAITING_TIME = "avgWaitingTime";
 	public static final String TOTAL_INVOLVED_TIME = "totalInvolvedTime";
+	public static final String FINISHED_TIME = "finishTime";
 	public static final String COMPLETED_TOTAL_TASKS = "completedTotalTasks";
 	public static final String TOTAL_INSTANCE_COUNT = "totalInstanceCount";
 	public static final String ALL = "*";
@@ -63,5 +64,11 @@ public class AnalyticConstants {
 	public static final String PROCESS_ID = "processId";
 	public static final String TASK_ID = "taskId";
 	public static final String USER_ID = "userId";
+	public static final String PROCESS_ID_LIST = "processIdList";
 	public static final String LIMIT = "limit";
+
+	public static final String DATE_FORMAT_WITHOUT_TIME = "yyyy-MM-dd";
+	public static final String MONTH_FORMAT = "MMM";
+	public static final String DATE_SEPARATOR = "-";
+	public static final String SPACE_SEPARATOR = " ";
 }
