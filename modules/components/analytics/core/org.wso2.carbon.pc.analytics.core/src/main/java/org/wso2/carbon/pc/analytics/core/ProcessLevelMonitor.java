@@ -27,7 +27,6 @@ import org.wso2.carbon.pc.analytics.core.utils.Helper;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
 
 /**
  * ProcessLevelMonitor keeps all the functionalites for the process level monitoring
