@@ -340,6 +340,13 @@ public class ProcessLevelMonitor {
 		return sortedResult;
 	}
 
+	/**
+	 * Perform query: SELECT DISTINCT finishTime, COUNT(*) AS processInstanceCount FROM
+	 *                PROCESS_USAGE_SUMMARY WHERE <date range> AND <process id list>
+	 *                GROUP BY finishTime
+	 * @param filters is used to filter the result
+	 * @return the result as a JSON string
+	 */
 	public String getDateVsProcessInstanceCount(String filters){
 		String sortedResult = "";
 		try {

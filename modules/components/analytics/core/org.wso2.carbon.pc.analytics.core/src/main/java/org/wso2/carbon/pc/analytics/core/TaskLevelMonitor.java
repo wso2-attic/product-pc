@@ -331,6 +331,12 @@ public class TaskLevelMonitor {
 		return sortedResult;
 	}
 
+	/**
+	 * Perform query: SELECT DISTINCT finishTime, COUNT(*) AS taskInstanceCount FROM TASK_USAGE_SUMMARY
+	 *                WHERE <date range> AND <task id list> GROUP BY finishTime
+	 * @param filters is used to filter the result
+	 * @return the result as a JSON string
+	 */
 	public String getDateVsTaskInstanceCount(String filters){
 		String sortedResult = "";
 		try {
@@ -379,7 +385,8 @@ public class TaskLevelMonitor {
 				for(int i = 0 ; i < unsortedResultArray.length() ; i++){
 					JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
 					JSONObject values = jsonObj.getJSONObject("values");
-					long completedTime = Long.parseLong(values.getJSONArray("finishTime").getString(0));
+					long completedTime =
+							Long.parseLong(values.getJSONArray("finishTime").getString(0));
 					int taskInstanceCount = values.getInt("taskInstanceCount");
 					table.put(completedTime, taskInstanceCount);
 				}
