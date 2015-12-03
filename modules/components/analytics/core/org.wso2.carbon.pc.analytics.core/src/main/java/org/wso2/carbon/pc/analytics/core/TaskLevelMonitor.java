@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 /**
- * TaskLevelMonitor keeps all the functionalites for the task level monitoring
+ * TaskLevelMonitor holds all the functionalites for the task level monitoring
  */
 public class TaskLevelMonitor {
 	private static final Log log = LogFactory.getLog(TaskLevelMonitor.class);
@@ -379,7 +379,7 @@ public class TaskLevelMonitor {
 				log.debug("Result = " + taskIdList);
 			}
 		}catch (Exception e){
-			String errMsg = "PC Analytics core error.";
+			String errMsg = "PC Analytics core - task id list error.";
 			log.error(errMsg, e);
 		}
 		return taskIdList;

@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 /**
- * ProcessLevelMonitor keeps all the functionalites for the process level monitoring
+ * ProcessLevelMonitor holds all the functionalites for the process level monitoring
  */
 public class ProcessLevelMonitor {
 	private static final Log log = LogFactory.getLog(ProcessLevelMonitor.class);
@@ -452,7 +452,7 @@ public class ProcessLevelMonitor {
 				log.debug("Result = " + processIdList);
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core error.";
+			String errMsg = "PC Analytics core - process id list error.";
 			log.error(errMsg, e);
 		}
 		return processIdList;

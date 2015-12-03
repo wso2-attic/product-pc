@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 /**
- * UserLevelMonitor keeps all the functionalites for the user level monitoring
+ * UserLevelMonitor holds all the functionalites for the user level monitoring
  */
 public class UserLevelMonitor {
 	private static final Log log = LogFactory.getLog(UserLevelMonitor.class);
@@ -87,7 +87,7 @@ public class UserLevelMonitor {
 				                                               userCount);
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core userLevelMonitoring error.";
+			String errMsg = "PC Analytics core UserLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
 		if(log.isDebugEnabled()){
@@ -150,7 +150,7 @@ public class UserLevelMonitor {
 				                                                userCount);
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core userLevelMonitoring error.";
+			String errMsg = "PC Analytics core UserLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
 		if(log.isDebugEnabled()){
@@ -216,7 +216,7 @@ public class UserLevelMonitor {
 				                                               "totalInvolvedTime", order, count);
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core userLevelMonitoring error.";
+			String errMsg = "PC Analytics core UserLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
 		if(log.isDebugEnabled()){
@@ -284,7 +284,7 @@ public class UserLevelMonitor {
 				                                                "totalInstanceCount", order, count);
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core userLevelMonitoring error.";
+			String errMsg = "PC Analytics core UserLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
 
@@ -346,7 +346,7 @@ public class UserLevelMonitor {
 				                                                taskCount);
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core TaskLevelMonitoring error.";
+			String errMsg = "PC Analytics core UserLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
 		if(log.isDebugEnabled()){
@@ -407,7 +407,7 @@ public class UserLevelMonitor {
 				                                               taskCount);
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core TaskLevelMonitoring error.";
+			String errMsg = "PC Analytics core UserLevelMonitoring error.";
 			log.error(errMsg, e);
 		}
 		if(log.isDebugEnabled()){
@@ -464,7 +464,7 @@ public class UserLevelMonitor {
 				log.debug("Result = " + userIdList);
 			}
 		}catch (Exception e){
-			String errMsg = "PC Analytics core error.";
+			String errMsg = "PC Analytics core - user id list error.";
 			log.error(errMsg, e);
 		}
 		return userIdList;
