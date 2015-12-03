@@ -307,7 +307,7 @@ function drawDateVsProcessInstanceCountResult(renderElement){
                         "xData": dataStr[i].processInstanceCount
                     });
                 }
-                render(renderElementID, dataset, 'Process Instance Count', 'Date');
+                render(renderElementID, dataset, 'Process Instance Count', 'Completion Date');
             }else{
                 //Error message
             }
@@ -536,6 +536,55 @@ function drawExecutionTimeVsTaskInstanceIdResult(renderElement){
     }else{
         console.log('Empty task id list.');
     }
+}
+
+function drawDateVsTaskInstanceCountResult(renderElement){
+    var renderElementID = '#' + renderElement;
+    var startDate = document.getElementById("taskInstanceCountDateStartDate");
+    var startDateTemp = new Date(startDate.value).getTime();
+
+    var endDate = document.getElementById("taskInstanceCountDateEndDate");
+    var endDateTemp = new Date(endDate.value).getTime();
+
+    var taskIds = $('#taskInstanceCountDateTaskList').val();
+    var taskIdArray = [];
+    if(taskIds != null){
+        $('#taskInstanceCountDateTaskList :selected').each(function(i, selected){
+            taskIdArray[i] = $(selected).val();
+        });
+    }
+
+    var body = {
+        'startTime': startDateTemp,
+        'endTime': endDateTemp,
+        'taskIdList': taskIdArray
+    };
+
+    var url = "/" + CONTEXT + "/task_instance_count_vs_date";
+    $.ajax({
+        type: 'POST',
+        url: httpUrl + url,
+        data: {'filters': JSON.stringify(body)},
+        success: function (data) {
+            var dataStr = JSON.parse(data);
+            if(! $.isEmptyObject(dataStr)){
+                var dataset = [];
+                for (var i = 0; i < dataStr.length; i++) {
+                    dataset.push({
+                        "yData": dataStr[i].finishTime,
+                        "xData": dataStr[i].taskInstanceCount
+                    });
+                }
+                render(renderElementID, dataset, 'Task Instance Count', 'Completion Date');
+            }else{
+                //Error message
+            }
+        },
+        error: function (xhr, status, error) {
+            var errorJson = eval("(" + xhr.responseText + ")");
+            alert(errorJson.message);
+        }
+    });
 }
 
 function drawTotalInvolvedTimeVsUserIdResult(renderElement){
@@ -843,7 +892,9 @@ function loadProcessList(dropdownId, barChartId, callback) {
                     $(dropdownElementID).append(el);
                 }
                 $(dropdownElementID).selectpicker("refresh");
-                callback(barChartId);
+                if(callback != null){
+                    callback(barChartId);
+                }
             }
         },
         error: function (xhr, status, error) {
@@ -870,7 +921,9 @@ function loadTaskList(dropdownId, barChartId, callback){
                     $(dropdownElementID).append(el);
                 }
                 $(dropdownElementID).selectpicker("refresh");
-                callback(barChartId);
+                if(callback != null){
+                    callback(barChartId);
+                }
             }
         },
         error: function (xhr, status, error) {
@@ -897,7 +950,9 @@ function loadUserList(dropdownId, barChartId, callback){
                     $(dropdownElementID).append(el);
                 }
                 $(dropdownElementID).selectpicker("refresh");
-                callback(barChartId);
+                if(callback != null){
+                    callback(barChartId);
+                }
             }
         },
         error: function (xhr, status, error) {
@@ -907,7 +962,7 @@ function loadUserList(dropdownId, barChartId, callback){
     });
 }
 
-function loadDates(start, end, barChartId, callback){
+function loadDates(start, end){
     var startDate = '#' + start;
     var endDate = '#' + end;
     setDatePicker(end);
@@ -920,7 +975,6 @@ function loadDates(start, end, barChartId, callback){
         }
     });
     $(endDate).datepicker("setDate", new Date());
-    callback(barChartId);
 }
 
 function render(renderElementID, dataset, xTitle, yTitle) {

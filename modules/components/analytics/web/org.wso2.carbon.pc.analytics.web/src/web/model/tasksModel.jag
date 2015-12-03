@@ -29,5 +29,7 @@ window.onload = function() {
     loadTaskList('taskInstanceCountUserIdTaskList', 'taskInstanceCountUserIdBarChart', drawTaskInstanceCountVsUserIdResult);
     loadTaskList('userIdAvgExecTimeTaskList', 'userIdAvgExecTimeBarChart', drawAvgExecuteTimeVsUserIdResult);
     loadTaskList('taskInstanceIdExecTimeTaskList', 'taskInstanceIdExecTimeBarChart', drawExecutionTimeVsTaskInstanceIdResult);
+    loadTaskList('taskInstanceCountDateTaskList', 'taskInstanceCountDateBarChart', drawDateVsTaskInstanceCountResult);
+    loadDates('taskInstanceCountDateStartDate', 'taskInstanceCountDateEndDate');
 };
 </script>

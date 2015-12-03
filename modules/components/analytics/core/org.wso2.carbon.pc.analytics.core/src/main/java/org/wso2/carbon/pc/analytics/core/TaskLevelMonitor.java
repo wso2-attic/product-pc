@@ -331,6 +331,70 @@ public class TaskLevelMonitor {
 		return sortedResult;
 	}
 
+	public String getDateVsTaskInstanceCount(String filters){
+		String sortedResult = "";
+		try {
+			JSONObject filterObj = new JSONObject(filters);
+			long from = filterObj.getLong(AnalyticConstants.START_TIME);
+			long to = filterObj.getLong(AnalyticConstants.END_TIME);
+			JSONArray taskIdList = filterObj.getJSONArray(AnalyticConstants.TASK_ID_LIST);
+
+			AggregateField countField = new AggregateField();
+			countField.setFieldName(AnalyticConstants.ALL);
+			countField.setAggregate(AnalyticConstants.COUNT);
+			countField.setAlias(AnalyticConstants.TASK_INSTANCE_COUNT);
+
+			ArrayList<AggregateField> aggregateFields = new ArrayList<>();
+			aggregateFields.add(countField);
+
+			AggregateQuery query = new AggregateQuery();
+			query.setTableName(AnalyticConstants.TASK_USAGE_TABLE);
+			query.setGroupByField(AnalyticConstants.FINISHED_TIME);
+			String queryStr = Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME,
+			                                           from, to);
+
+			if(taskIdList.length() != 0){
+				queryStr += " AND ";
+				for(int i = 0 ; i < taskIdList.length() ; i++){
+					if(i == 0){
+						queryStr += "(taskDefinitionKey:" + "\"'" + taskIdList.getString(i) + "'\"";
+					}else {
+						queryStr += " OR " + "taskDefinitionKey:" + "\"'" + taskIdList.getString(i) + "'\"";
+					}
+					if(i == taskIdList.length() - 1){
+						queryStr += ")";
+					}
+				}
+			}
+			query.setQuery(queryStr);
+			query.setAggregateFields(aggregateFields);
+
+			String result = AnalyticsRestClient.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
+			                                         Helper.getJSONString(query));
+
+			JSONArray unsortedResultArray = new JSONArray(result);
+			Hashtable<Long , Integer> table = new Hashtable<>();
+
+			if(unsortedResultArray.length() != 0){
+				for(int i = 0 ; i < unsortedResultArray.length() ; i++){
+					JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
+					JSONObject values = jsonObj.getJSONObject("values");
+					long completedTime = Long.parseLong(values.getJSONArray("finishTime").getString(0));
+					int taskInstanceCount = values.getInt("taskInstanceCount");
+					table.put(completedTime, taskInstanceCount);
+				}
+				sortedResult = Helper.getLongKeySortedList(table, "finishTime", "taskInstanceCount");
+			}
+		}catch (Exception e){
+			String errMsg = "PC Analytics core TaskLevelMonitoring error.";
+			log.error(errMsg, e);
+		}
+		if(log.isDebugEnabled()){
+			log.debug("Result = " + sortedResult);
+		}
+		return sortedResult;
+	}
+
 	/**
 	 * Get task definition key list
 	 *

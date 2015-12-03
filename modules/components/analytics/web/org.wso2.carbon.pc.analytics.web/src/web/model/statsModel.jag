@@ -30,6 +30,6 @@ window.onload = function() {
     loadProcessList('processInstanceCountProcessVersionProcessList', 'processInstanceCountProcessVersionBarChart', drawProcessInstanceCountVsProcessVersionResult);
     loadProcessList('processInstanceIdExecTimeProcessList', 'processInstanceIdExecTimeBarChart', drawExecutionTimeVsProcessInstanceIdResult);
     loadProcessList('processInstanceCountDateProcessList', 'processInstanceCountDateBarChart', drawDateVsProcessInstanceCountResult);
-    loadDates('processInstanceCountDateStartDate', 'processInstanceCountDateEndDate', 'processInstanceCountDateBarChart', drawDateVsProcessInstanceCountResult);
+    loadDates('processInstanceCountDateStartDate', 'processInstanceCountDateEndDate');
 };
 </script>

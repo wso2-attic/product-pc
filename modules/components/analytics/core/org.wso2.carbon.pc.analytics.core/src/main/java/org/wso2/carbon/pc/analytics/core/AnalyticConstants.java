@@ -65,6 +65,7 @@ public class AnalyticConstants {
 	public static final String TASK_ID = "taskId";
 	public static final String USER_ID = "userId";
 	public static final String PROCESS_ID_LIST = "processIdList";
+	public static final String TASK_ID_LIST = "taskIdList";
 	public static final String LIMIT = "limit";
 
 	public static final String DATE_FORMAT_WITHOUT_TIME = "yyyy-MM-dd";
