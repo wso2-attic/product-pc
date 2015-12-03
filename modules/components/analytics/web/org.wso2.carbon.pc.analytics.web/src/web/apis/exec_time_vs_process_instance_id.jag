@@ -18,12 +18,18 @@
 importPackage(org.wso2.carbon.pc.analytics.core);
 
 var log = new Log();
-log.info("Process level monitoring getExecutionTimeVsProcessInstanceId logic");
+if(log.isDebugEnabled()){
+ log.debug("Process level monitoring getExecutionTimeVsProcessInstanceId logic");
+}
 
 var processLevelMonitor = new ProcessLevelMonitor();
 var filters = String(request.getParameter("filters"));
-log.info(filters);
+if(log.isDebugEnabled()){
+ log.debug(filters);
+}
 var execTimeVsProcessInstanceId = processLevelMonitor.getExecutionTimeVsProcessInstanceId(filters);
 print(execTimeVsProcessInstanceId);
-log.info(execTimeVsProcessInstanceId);
+if(log.isDebugEnabled()){
+ log.debug(execTimeVsProcessInstanceId);
+}
 %>

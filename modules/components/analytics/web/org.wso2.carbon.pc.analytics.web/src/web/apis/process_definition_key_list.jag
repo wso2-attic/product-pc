@@ -18,10 +18,14 @@
 importPackage(org.wso2.carbon.pc.analytics.core);
 
 var log = new Log();
-log.info("Process level monitoring getProcessIdList logic");
+if(log.isDebugEnabled()){
+ log.debug("Process level monitoring getProcessIdList logic");
+}
 
 var processLevelMonitor = new ProcessLevelMonitor();
 var processIdList = processLevelMonitor.getProcessIdList();
 print(processIdList);
-log.info(processIdList);
+if(log.isDebugEnabled()){
+ log.debug(processIdList);
+}
 %>

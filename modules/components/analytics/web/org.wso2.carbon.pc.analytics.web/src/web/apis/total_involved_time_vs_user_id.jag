@@ -18,12 +18,18 @@
 importPackage(org.wso2.carbon.pc.analytics.core);
 
 var log = new Log();
-log.info("User level monitoring getTotalInvolvedTimeVsUserId logic");
+if(log.isDebugEnabled()){
+ log.debug("User level monitoring getTotalInvolvedTimeVsUserId logic");
+}
 
 var userLevelMonitor = new UserLevelMonitor();
 var filters = String(request.getParameter("filters"));
-log.info(filters);
+if(log.isDebugEnabled()){
+ log.debug(filters);
+}
 var totalInvolvedTimeVsUserId = userLevelMonitor.getTotalInvolvedTimeVsUserId(filters);
 print(totalInvolvedTimeVsUserId);
-log.info(totalInvolvedTimeVsUserId);
+if(log.isDebugEnabled()){
+ log.debug(totalInvolvedTimeVsUserId);
+}
 %>
