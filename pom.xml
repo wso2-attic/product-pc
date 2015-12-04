@@ -39,7 +39,10 @@
     </licenses>
     <modules>
         <module>modules/components/core/org.wso2.carbon.pc.core</module>
+        <module>modules/components/analytics/core/org.wso2.carbon.pc.analytics.core</module>
+        <module>modules/components/analytics/web/org.wso2.carbon.pc.analytics.web</module>
         <module>modules/features/core/org.wso2.carbon.pc.core.feature</module>
+        <module>modules/features/analytics-core/org.wso2.carbon.pc.analytics.core.feature</module>
         <module>modules/p2-profile-gen</module>
         <module>modules/distribution</module>
     </modules>
@@ -202,22 +205,22 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>${maven.antrunplugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>configure-user-mgt.xml</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>run</goal>
-                            </goals>
-                            <configuration>
-                                <tasks>
-                                    <!-- commenting "GetAllRolesOfUserEnabled" property to fix
-                                    https://wso2.org/jira/browse/IDENTITY-3498 -->
-                                    <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property&gt;" value="&lt;!--Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property--&gt;" />
-                                </tasks>
-                            </configuration>
-                        </execution>
-                    </executions>
+                    <!--<executions>-->
+                        <!--<execution>-->
+                            <!--<id>configure-user-mgt.xml</id>-->
+                            <!--<phase>package</phase>-->
+                            <!--<goals>-->
+                                <!--<goal>run</goal>-->
+                            <!--</goals>-->
+                            <!--<configuration>-->
+                                <!--<tasks>-->
+                                    <!--&lt;!&ndash; commenting "GetAllRolesOfUserEnabled" property to fix-->
+                                    <!--https://wso2.org/jira/browse/IDENTITY-3498 &ndash;&gt;-->
+                                    <!--<replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property&gt;" value="&lt;!&#45;&#45;Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property&#45;&#45;&gt;" />-->
+                                <!--</tasks>-->
+                            <!--</configuration>-->
+                        <!--</execution>-->
+                    <!--</executions>-->
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -228,6 +231,12 @@
             <dependency>
                 <groupId>org.wso2.pc</groupId>
                 <artifactId>org.wso2.carbon.pc.core</artifactId>
+                <version>${pc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.pc</groupId>
+                <artifactId>org.wso2.carbon.pc.analytics.core</artifactId>
                 <version>${pc.version}</version>
             </dependency>
 
@@ -605,6 +614,11 @@
                 <artifactId>guava</artifactId>
                 <version>${google.guava.version}</version>
             </dependency>
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>${commons-httpclient.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <scm>
@@ -748,6 +762,8 @@
         <carbon.multitenancy.version>4.4.1</carbon.multitenancy.version>
 
         <operadriver.version>0.8.1</operadriver.version>
+
+        <commons-httpclient.version>3.1</commons-httpclient.version>
 
         <maven.scrplugin.version>1.7.2</maven.scrplugin.version>
         <maven.wagon.ssh.version>2.1</maven.wagon.ssh.version>

@@ -1,0 +1,230 @@
+<!--
+ ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+<div class="col-sm-12">
+  <div class="row">
+    <div class="col-lg-12 float-left" id="userLevelBarChartsDisplay">
+            <!-- TOTAL INVOLVED TIME VS USER ID -->
+            <div class="table-title"  style="width:100%">  TOTAL INVOLVED TIME VS USER ID </div><br />
+            <div class="row inline-block" style="width:100%">
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label  class="input-group-addon" for="userIdTotalInvolvedTimeStartDate">Start Date</label>
+                        <input id="userIdTotalInvolvedTimeStartDate" name="userIdTotalInvolvedTimeStartDate" type="text" class="form-control" onfocus="setDatePicker('userIdTotalInvolvedTimeStartDate')" placeholder="MM/DD/YYYY"/>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="userIdTotalInvolvedTimeEndDate">End Date</label>
+                        <input id="userIdTotalInvolvedTimeEndDate" name="userIdTotalInvolvedTimeEndDate" type="text" class="form-control" onfocus="setDatePicker('userIdTotalInvolvedTimeEndDate')" placeholder="MM/DD/YYYY"/>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="userIdTotalInvolvedTimeOrder" class="selectpicker">
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="userIdTotalInvolvedTimeCount" class="selectpicker">
+                      <option value="3">3</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
+                    <button class="btn btn-default btn-info" onclick="drawTotalInvolvedTimeVsUserIdResult('userIdTotalInvolvedTimeBarChart')">Apply Filter</button>
+                </div>
+             </div>
+            <div class="main" id="userIdTotalInvolvedTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
+            <br>
+
+            <!-- TOTAL COMPLETED TASKS VS USER ID -->
+            <div class="table-title"  style="width:100%">  TOTAL COMPLETED TASKS VS USER ID </div><br />
+            <div class="row inline-block" style="width:100%">
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label  class="input-group-addon" for="userIdTotalCompletedTasksStartDate">Start Date</label>
+                        <input id="userIdTotalCompletedTasksStartDate" name="userIdTotalCompletedTasksStartDate" type="text" class="form-control" onfocus="setDatePicker('userIdTotalCompletedTasksStartDate')" placeholder="MM/DD/YYYY"/>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="userIdTotalCompletedTasksEndDate">End Date</label>
+                        <input id="userIdTotalCompletedTasksEndDate" name="userIdTotalCompletedTasksEndDate" type="text" class="form-control" onfocus="setDatePicker('userIdTotalCompletedTasksEndDate')" placeholder="MM/DD/YYYY"/>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="userIdTotalCompletedTasksOrder" class="selectpicker">
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="userIdCompletedTasksCount" class="selectpicker">
+                      <option value="3">3</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
+                    <button class="btn btn-default btn-info" onclick="drawTotalCompletedTasksVsUserIdResult('userIdTotalCompletedTasksBarChart')">Apply Filter</button>
+                </div>
+             </div>
+            <div class="main" id="userIdTotalCompletedTasksBarChart" style="width: 80%;margin: 0 auto;"></div>
+            <br>
+
+            <!-- TOTAL INVOLVED TIME VS PROCESS ID -->
+            <div class="table-title"  style="width:100%">  TOTAL INVOLVED TIME VS PROCESS ID </div><br />
+            <div class="row inline-block" style="width:100%">
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="processIdTotalInvolvedTimeUserList" class="selectpicker"></select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label  class="input-group-addon" for="processIdTotalInvolvedTimeStartDate">Start Date</label>
+                        <input id="processIdTotalInvolvedTimeStartDate" name="processIdTotalInvolvedTimeStartDate" type="text" class="form-control" onfocus="setDatePicker('processIdTotalInvolvedTimeStartDate')" placeholder="MM/DD/YYYY"/>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="processIdTotalInvolvedTimeEndDate">End Date</label>
+                        <input id="processIdTotalInvolvedTimeEndDate" name="processIdTotalInvolvedTimeEndDate" type="text" class="form-control" onfocus="setDatePicker('processIdTotalInvolvedTimeEndDate')" placeholder="MM/DD/YYYY"/>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="processIdTotalInvolvedTimeOrder" class="selectpicker">
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="processIdTotalInvolvedTimeCount" class="selectpicker">
+                      <option value="3">3</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
+                    <button class="btn btn-default btn-info" onclick="drawTotalInvolvedTimeVsProcessIdResult('processIdTotalInvolvedTimeBarChart')">Apply Filter</button>
+                </div>
+             </div>
+            <div class="main" id="processIdTotalInvolvedTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
+            <br>
+
+            <!-- TOTAL INVOLVED INSTANCE COUNT VS PROCESS ID -->
+            <div class="table-title"  style="width:100%">  TOTAL INVOLVED INSTANCE COUNT VS PROCESS ID </div><br />
+            <div class="row inline-block" style="width:100%">
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="processIdTotalInvolvedInstanceCountUserList" class="selectpicker"></select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label  class="input-group-addon" for="processIdTotalInvolvedInstanceCountStartDate">Start Date</label>
+                        <input id="processIdTotalInvolvedInstanceCountStartDate" name="processIdTotalInvolvedInstanceCountStartDate" type="text" class="form-control" onfocus="setDatePicker('processIdTotalInvolvedInstanceCountStartDate')" placeholder="MM/DD/YYYY"/>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="processIdTotalInvolvedInstanceCountEndDate">End Date</label>
+                        <input id="processIdTotalInvolvedInstanceCountEndDate" name="processIdTotalInvolvedInstanceCountEndDate" type="text" class="form-control" onfocus="setDatePicker('processIdTotalInvolvedInstanceCountEndDate')" placeholder="MM/DD/YYYY"/>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="processIdTotalInvolvedInstanceCountOrder" class="selectpicker">
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="processIdTotalInvolvedInstanceCountCount" class="selectpicker">
+                      <option value="3">3</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
+                    <button class="btn btn-default btn-info" onclick="drawTotalInvolvedInstanceCountVsProcessIdResult('processIdTotalInvolvedInstanceCountBarChart')">Apply Filter</button>
+                </div>
+             </div>
+            <div class="main" id="processIdTotalInvolvedInstanceCountBarChart" style="width: 80%;margin: 0 auto;"></div>
+            <br>
+
+            <!-- TASK INSTANCE COUNT VS TASK ID -->
+            <div class="table-title"  style="width:100%"> TASK INSTANCE COUNT VS TASK ID </div><br />
+            <div class="row inline-block" style="width:100%">
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="userLevelTaskInstanceCountTaskIdUserList" class="selectpicker"></select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="userLevelTaskInstanceCountTaskIdOrder" class="selectpicker">
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="userLevelTaskInstanceCountTaskIdCount" class="selectpicker">
+                     <option value="3">3</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
+                    <button class="btn btn-default btn-info" onclick="drawUserLevelTaskInstanceCountVsTaskIdResult('userLevelTaskInstanceCountTaskIdBarChart')">Apply Filter</button>
+                </div>
+             </div>
+            <div class="main" id="userLevelTaskInstanceCountTaskIdBarChart" style="width: 80%;margin: 0 auto;"></div>
+            <br>
+
+            <!-- TASK ID VS AVERAGE EXECUTION TIME -->
+            <div class="table-title"  style="width:100%">  TASK ID VS AVERAGE EXECUTION TIME </div><br />
+            <div class="row inline-block" style="width:100%">
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="userLevelTaskIdAvgExecTimeUserList" class="selectpicker"></select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="userLevelTaskIdAvgExecTimeOrder" class="selectpicker">
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
+                    <select id="userLevelTaskIdAvgExecTimeCount" class="selectpicker">
+                      <option value="3">3</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
+                    <button class="btn btn-default btn-info" onclick="drawUserLevelAvgExecuteTimeVsTaskIdResult('userLevelTaskIdAvgTimeBarChart')">Apply Filter</button>
+                </div>
+             </div>
+            <div class="main" id="userLevelTaskIdAvgTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
+            <br>
+    </div>
+  </div>
+</div>
