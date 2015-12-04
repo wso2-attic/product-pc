@@ -103,6 +103,27 @@ public class Helper {
 	}
 
 	/**
+	 * Check BPMN Analytics component is activated or not
+	 * @return true if the BPMN Analytics Component is activated
+	 * @throws IOException
+	 * @throws XMLStreamException
+	 */
+	public static boolean isDASAnalyticsActivated() throws IOException, XMLStreamException {
+		Iterator properties = getPropertyIterator();
+		while (properties.hasNext()) {
+			OMElement property = (OMElement) properties.next();
+			if (AnalyticConstants.ACTIVATE
+					.equals(property.getAttributeValue(new QName(null, AnalyticConstants.NAME)))) {
+				String value = property.getAttributeValue(new QName(null, AnalyticConstants.VALUE));
+				if (AnalyticConstants.TRUE.equalsIgnoreCase(value)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Build and return the DAS rest API urls
 	 *
 	 * @param path hold the relative path to a particular webservice

@@ -72,4 +72,9 @@ public class AnalyticConstants {
 	public static final String MONTH_FORMAT = "MMM";
 	public static final String DATE_SEPARATOR = "-";
 	public static final String SPACE_SEPARATOR = " ";
+	public static final String ACTIVATE = "analyticsEnabled";
+	public static final String TRUE = "true";
+
+	public static int MIN_COUNT = 0;
+	public static int MAX_COUNT = 1000;
 }
