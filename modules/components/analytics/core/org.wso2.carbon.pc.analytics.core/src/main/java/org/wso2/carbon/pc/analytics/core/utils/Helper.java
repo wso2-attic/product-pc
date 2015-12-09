@@ -40,7 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Helper class is used to keep the functions which are useful for the monitor classes.
+ * Helper class is used to keep= the functions which are useful for the monitor classes.
  */
 public class Helper {
 	private static final Log log = LogFactory.getLog(Helper.class);
@@ -75,7 +75,9 @@ public class Helper {
 	 * @return rounded decimal value
 	 */
 	private static double round(double value, int places) {
-		if (places < 0) throw new IllegalArgumentException();
+		if (places < 0) {
+			throw new IllegalArgumentException();
+		}
 		BigDecimal bd = new BigDecimal(value);
 		bd = bd.setScale(places, RoundingMode.HALF_UP);
 		return bd.doubleValue();
@@ -104,6 +106,7 @@ public class Helper {
 
 	/**
 	 * Check BPMN Analytics component is activated or not
+	 *
 	 * @return true if the BPMN Analytics Component is activated
 	 * @throws IOException
 	 * @throws XMLStreamException
@@ -314,6 +317,7 @@ public class Helper {
 
 	/**
 	 * Convert given datetime string to date
+	 *
 	 * @param time is the long value of a date
 	 * @return date as a String (eg: 2015-11-12)
 	 */

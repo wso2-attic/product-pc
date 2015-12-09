@@ -1,5 +1,5 @@
 /*
- ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright 2005-2015 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
  ~ you may not use this file except in compliance with the License.
@@ -965,15 +965,13 @@ function loadUserList(dropdownId, barChartId, callback){
 function loadDates(start, end){
     var startDate = '#' + start;
     var endDate = '#' + end;
+    setDatePicker(start);
     setDatePicker(end);
-    $(startDate).daterangepicker({
-        singleDatePicker: true,
-        startDate: "7/11/2015",
-        showDropdowns: true,
-        locale: {
-            format: 'MM/DD/YYYY'
-        }
-    });
+
+    var sDate = new Date();
+    sDate.setMonth(sDate.getMonth() - 5);
+
+    $(startDate).datepicker("setDate", sDate);
     $(endDate).datepicker("setDate", new Date());
 }
 

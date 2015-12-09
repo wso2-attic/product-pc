@@ -64,7 +64,7 @@ public class AnalyticsRestClient {
 			br = new BufferedReader(reader);
 
 			String output = null;
-			StringBuffer totalOutput = new StringBuffer();
+			StringBuilder totalOutput = new StringBuilder();
 
 			if (log.isDebugEnabled()) {
 				log.debug("Output from Server .... \n");
