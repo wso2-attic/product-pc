@@ -964,10 +964,7 @@ function loadUserList(dropdownId, barChartId, callback){
 
 function loadDates(start, end){
     var startDate = '#' + start;
-    var endDate = '#' + end;
-    setDatePicker(start);
     setDatePicker(end);
-
     var sDate = new Date();
     sDate.setMonth(sDate.getMonth() - 4);
     sDate = (sDate.getMonth() + 1) + '/' + sDate.getDate() + '/' +  sDate.getFullYear();
@@ -979,7 +976,6 @@ function loadDates(start, end){
             format: 'MM/DD/YYYY'
         }
     });
-    $(endDate).datepicker("setDate", new Date());
 }
 
 function render(renderElementID, dataset, xTitle, yTitle) {
