@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wso2.carbon.pc.analytics.core.AnalyticConstants;
+import org.wso2.carbon.pc.analytics.core.AnalyticsConstants;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.bind.DatatypeConverter;
@@ -40,10 +40,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Helper class is used to keep= the functions which are useful for the monitor classes.
+ * AnalyticsUtils class is used to keep= the functions which are useful for the monitor classes.
  */
-public class Helper {
-	private static final Log log = LogFactory.getLog(Helper.class);
+public class AnalyticsUtils {
+	private static final Log log = LogFactory.getLog(AnalyticsUtils.class);
 
 	/**
 	 * Build the lucene query format for the date range
@@ -93,14 +93,14 @@ public class Helper {
 	private static Iterator getPropertyIterator() throws IOException, XMLStreamException {
 		String carbonConfigDirPath = CarbonUtils.getCarbonConfigDirPath();
 		String pcConfigPath =
-				carbonConfigDirPath + File.separator + AnalyticConstants.PC_CONFIGURATION_FILE_NAME;
+				carbonConfigDirPath + File.separator + AnalyticsConstants.PC_CONFIGURATION_FILE_NAME;
 		File configFile = new File(pcConfigPath);
 		String configContent = FileUtils.readFileToString(configFile);
 		OMElement configElement = AXIOMUtil.stringToOM(configContent);
 		OMElement firstChild = configElement.getFirstChildWithName(
-				new QName(AnalyticConstants.PC_NAMESPACE, AnalyticConstants.ANALYTICS));
+				new QName(AnalyticsConstants.PC_NAMESPACE, AnalyticsConstants.ANALYTICS));
 		Iterator properties =
-				firstChild.getChildrenWithName(new QName(null, AnalyticConstants.PROPERTY));
+				firstChild.getChildrenWithName(new QName(null, AnalyticsConstants.PROPERTY));
 		return properties;
 	}
 
@@ -115,10 +115,10 @@ public class Helper {
 		Iterator properties = getPropertyIterator();
 		while (properties.hasNext()) {
 			OMElement property = (OMElement) properties.next();
-			if (AnalyticConstants.ACTIVATE
-					.equals(property.getAttributeValue(new QName(null, AnalyticConstants.NAME)))) {
-				String value = property.getAttributeValue(new QName(null, AnalyticConstants.VALUE));
-				if (AnalyticConstants.TRUE.equalsIgnoreCase(value)) {
+			if (AnalyticsConstants.ACTIVATE
+					.equals(property.getAttributeValue(new QName(null, AnalyticsConstants.NAME)))) {
+				String value = property.getAttributeValue(new QName(null, AnalyticsConstants.VALUE));
+				if (AnalyticsConstants.TRUE.equalsIgnoreCase(value)) {
 					return true;
 				}
 			}
@@ -138,10 +138,10 @@ public class Helper {
 		Iterator properties = getPropertyIterator();
 		while (properties.hasNext()) {
 			OMElement property = (OMElement) properties.next();
-			if (AnalyticConstants.CONFIG_BASE_URL
-					.equals(property.getAttributeValue(new QName(null, AnalyticConstants.NAME)))) {
+			if (AnalyticsConstants.CONFIG_BASE_URL
+					.equals(property.getAttributeValue(new QName(null, AnalyticsConstants.NAME)))) {
 				String baseUrl =
-						property.getAttributeValue(new QName(null, AnalyticConstants.VALUE));
+						property.getAttributeValue(new QName(null, AnalyticsConstants.VALUE));
 				if (baseUrl != null && !baseUrl.isEmpty()) {
 					if (!baseUrl.endsWith(File.separator)) {
 						baseUrl += File.separator;
@@ -171,16 +171,16 @@ public class Helper {
 				break;
 			}
 			OMElement property = (OMElement) properties.next();
-			if (AnalyticConstants.CONFIG_USER_NAME
-					.equals(property.getAttributeValue(new QName(null, AnalyticConstants.NAME)))) {
-				String name = property.getAttributeValue(new QName(null, AnalyticConstants.VALUE));
+			if (AnalyticsConstants.CONFIG_USER_NAME
+					.equals(property.getAttributeValue(new QName(null, AnalyticsConstants.NAME)))) {
+				String name = property.getAttributeValue(new QName(null, AnalyticsConstants.VALUE));
 				if (name != null && !name.isEmpty()) {
 					userName = name;
 				}
 			}
-			if (AnalyticConstants.CONFIG_PASSWORD
-					.equals(property.getAttributeValue(new QName(null, AnalyticConstants.NAME)))) {
-				String pwd = property.getAttributeValue(new QName(null, AnalyticConstants.VALUE));
+			if (AnalyticsConstants.CONFIG_PASSWORD
+					.equals(property.getAttributeValue(new QName(null, AnalyticsConstants.NAME)))) {
+				String pwd = property.getAttributeValue(new QName(null, AnalyticsConstants.VALUE));
 				if (pwd != null && !pwd.isEmpty()) {
 					password = pwd;
 				}
@@ -231,11 +231,11 @@ public class Helper {
 		}
 
 		JSONArray arrayPortion = new JSONArray();
-		if(order.equalsIgnoreCase(AnalyticConstants.TOP)){
+		if(order.equalsIgnoreCase(AnalyticsConstants.TOP)){
 			for (int i = array.length() - count ; i < array.length() ; i++){
 				arrayPortion.put(array.get(i));
 			}
-		}else if(order.equalsIgnoreCase(AnalyticConstants.BOTTOM)){
+		}else if(order.equalsIgnoreCase(AnalyticsConstants.BOTTOM)){
 			for (int i = 0 ; i < count ; i++){
 				arrayPortion.put(array.get(i));
 			}
@@ -276,11 +276,11 @@ public class Helper {
 		}
 
 		JSONArray arrayPortion = new JSONArray();
-		if(order.equalsIgnoreCase(AnalyticConstants.TOP)){
+		if(order.equalsIgnoreCase(AnalyticsConstants.TOP)){
 			for (int i = array.length() - count ; i < array.length() ; i++){
 				arrayPortion.put(array.get(i));
 			}
-		}else if(order.equalsIgnoreCase(AnalyticConstants.BOTTOM)){
+		}else if(order.equalsIgnoreCase(AnalyticsConstants.BOTTOM)){
 			for (int i = 0 ; i < count ; i++){
 				arrayPortion.put(array.get(i));
 			}
@@ -323,16 +323,16 @@ public class Helper {
 	 */
 	private static String dateFormatter(long time){
 		String date = new Date(time).toString();
-		String[] dateArray = date.split(AnalyticConstants.SPACE_SEPARATOR);
+		String[] dateArray = date.split(AnalyticsConstants.SPACE_SEPARATOR);
 		try {
-			Date dateMonth = new SimpleDateFormat(AnalyticConstants.MONTH_FORMAT, Locale.ENGLISH)
+			Date dateMonth = new SimpleDateFormat(AnalyticsConstants.MONTH_FORMAT, Locale.ENGLISH)
 																			.parse(dateArray[1]);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(dateMonth);
 			int month = cal.get(Calendar.MONTH) + 1;
-			String dateString = dateArray[5] + AnalyticConstants.DATE_SEPARATOR + month +
-								AnalyticConstants.DATE_SEPARATOR + dateArray[2];
-			DateFormat df = new SimpleDateFormat(AnalyticConstants.DATE_FORMAT_WITHOUT_TIME);
+			String dateString = dateArray[5] + AnalyticsConstants.DATE_SEPARATOR + month +
+								AnalyticsConstants.DATE_SEPARATOR + dateArray[2];
+			DateFormat df = new SimpleDateFormat(AnalyticsConstants.DATE_FORMAT_WITHOUT_TIME);
 			return df.format(df.parse(dateString));
 		} catch (ParseException e) {
 			String errMsg = "Date format parse exception.";

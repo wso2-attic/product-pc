@@ -969,9 +969,16 @@ function loadDates(start, end){
     setDatePicker(end);
 
     var sDate = new Date();
-    sDate.setMonth(sDate.getMonth() - 5);
-
-    $(startDate).datepicker("setDate", sDate);
+    sDate.setMonth(sDate.getMonth() - 4);
+    sDate = (sDate.getMonth() + 1) + '/' + sDate.getDate() + '/' +  sDate.getFullYear();
+    $(startDate).daterangepicker({
+        singleDatePicker: true,
+        startDate: sDate,
+        showDropdowns: true,
+        locale: {
+            format: 'MM/DD/YYYY'
+        }
+    });
     $(endDate).datepicker("setDate", new Date());
 }
 

@@ -23,7 +23,7 @@ import org.wso2.carbon.pc.analytics.core.clients.AnalyticsRestClient;
 import org.wso2.carbon.pc.analytics.core.models.AggregateField;
 import org.wso2.carbon.pc.analytics.core.models.AggregateQuery;
 import org.wso2.carbon.pc.analytics.core.models.SearchQuery;
-import org.wso2.carbon.pc.analytics.core.utils.Helper;
+import org.wso2.carbon.pc.analytics.core.utils.AnalyticsUtils;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -44,33 +44,33 @@ public class TaskLevelMonitor {
 	public String getAvgExecuteTimeVsTaskId(String filters) {
 		String sortedResult = "";
 		try {
-			if (Helper.isDASAnalyticsActivated()) {
+			if (AnalyticsUtils.isDASAnalyticsActivated()) {
 				JSONObject filterObj = new JSONObject(filters);
-				String processId = filterObj.getString(AnalyticConstants.PROCESS_ID);
-				String order = filterObj.getString(AnalyticConstants.ORDER);
-				int taskCount = filterObj.getInt(AnalyticConstants.NUM_COUNT);
+				String processId = filterObj.getString(AnalyticsConstants.PROCESS_ID);
+				String order = filterObj.getString(AnalyticsConstants.ORDER);
+				int taskCount = filterObj.getInt(AnalyticsConstants.NUM_COUNT);
 
 				AggregateField avgField = new AggregateField();
-				avgField.setFieldName(AnalyticConstants.DURATION);
-				avgField.setAggregate(AnalyticConstants.AVG);
-				avgField.setAlias(AnalyticConstants.AVG_EXECUTION_TIME);
+				avgField.setFieldName(AnalyticsConstants.DURATION);
+				avgField.setAggregate(AnalyticsConstants.AVG);
+				avgField.setAlias(AnalyticsConstants.AVG_EXECUTION_TIME);
 
 				ArrayList<AggregateField> aggregateFields = new ArrayList<>();
 				aggregateFields.add(avgField);
 
 				AggregateQuery query = new AggregateQuery();
-				query.setTableName(AnalyticConstants.USER_INVOLVE_TABLE);
-				query.setGroupByField(AnalyticConstants.TASK_DEFINITION_KEY);
+				query.setTableName(AnalyticsConstants.USER_INVOLVE_TABLE);
+				query.setGroupByField(AnalyticsConstants.TASK_DEFINITION_KEY);
 				query.setQuery("processDefinitionId:" + "\"'" + processId + "'\"");
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(Helper.getJSONString(query));
+					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient
-								.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
-						        Helper.getJSONString(query));
+								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						        AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -83,9 +83,9 @@ public class TaskLevelMonitor {
 						double avgExecTime = values.getDouble("avgExecutionTime");
 						table.put(taskDefKey, avgExecTime);
 					}
-					sortedResult = Helper.getDoubleValueSortedList(table, "taskDefId",
-					                                               "avgExecutionTime",
-					                                               order, taskCount);
+					sortedResult = AnalyticsUtils
+							.getDoubleValueSortedList(table, "taskDefId", "avgExecutionTime", order,
+							                          taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -108,33 +108,33 @@ public class TaskLevelMonitor {
 	public String getTaskInstanceCountVsTaskId(String filters) {
 		String sortedResult = "";
 		try {
-			if (Helper.isDASAnalyticsActivated()) {
+			if (AnalyticsUtils.isDASAnalyticsActivated()) {
 				JSONObject filterObj = new JSONObject(filters);
-				String processId = filterObj.getString(AnalyticConstants.PROCESS_ID);
-				String order = filterObj.getString(AnalyticConstants.ORDER);
-				int taskCount = filterObj.getInt(AnalyticConstants.NUM_COUNT);
+				String processId = filterObj.getString(AnalyticsConstants.PROCESS_ID);
+				String order = filterObj.getString(AnalyticsConstants.ORDER);
+				int taskCount = filterObj.getInt(AnalyticsConstants.NUM_COUNT);
 
 				AggregateField countField = new AggregateField();
-				countField.setFieldName(AnalyticConstants.ALL);
-				countField.setAggregate(AnalyticConstants.COUNT);
-				countField.setAlias(AnalyticConstants.TASK_INSTANCE_COUNT);
+				countField.setFieldName(AnalyticsConstants.ALL);
+				countField.setAggregate(AnalyticsConstants.COUNT);
+				countField.setAlias(AnalyticsConstants.TASK_INSTANCE_COUNT);
 
 				ArrayList<AggregateField> aggregateFields = new ArrayList<>();
 				aggregateFields.add(countField);
 
 				AggregateQuery query = new AggregateQuery();
-				query.setTableName(AnalyticConstants.USER_INVOLVE_TABLE);
-				query.setGroupByField(AnalyticConstants.TASK_DEFINITION_KEY);
+				query.setTableName(AnalyticsConstants.USER_INVOLVE_TABLE);
+				query.setGroupByField(AnalyticsConstants.TASK_DEFINITION_KEY);
 				query.setQuery("processDefinitionId:" + "\"'" + processId + "'\"");
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(Helper.getJSONString(query));
+					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient
-								.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
-						        Helper.getJSONString(query));
+								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						        AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Integer> table = new Hashtable<>();
@@ -147,9 +147,9 @@ public class TaskLevelMonitor {
 						int processInstanceCount = values.getInt("taskInstanceCount");
 						table.put(processDefKey, processInstanceCount);
 					}
-					sortedResult = Helper.getIntegerValueSortedList(table, "taskDefId",
-					                                                "taskInstanceCount", order,
-					                                                taskCount);
+					sortedResult = AnalyticsUtils
+							.getIntegerValueSortedList(table, "taskDefId", "taskInstanceCount",
+							                           order, taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -172,33 +172,33 @@ public class TaskLevelMonitor {
 	public String getTaskInstanceCountVsUserId(String filters) {
 		String sortedResult = "";
 		try {
-			if (Helper.isDASAnalyticsActivated()) {
+			if (AnalyticsUtils.isDASAnalyticsActivated()) {
 				JSONObject filterObj = new JSONObject(filters);
-				String taskId = filterObj.getString(AnalyticConstants.TASK_ID);
-				String order = filterObj.getString(AnalyticConstants.ORDER);
-				int taskCount = filterObj.getInt(AnalyticConstants.NUM_COUNT);
+				String taskId = filterObj.getString(AnalyticsConstants.TASK_ID);
+				String order = filterObj.getString(AnalyticsConstants.ORDER);
+				int taskCount = filterObj.getInt(AnalyticsConstants.NUM_COUNT);
 
 				AggregateField countField = new AggregateField();
-				countField.setFieldName(AnalyticConstants.ALL);
-				countField.setAggregate(AnalyticConstants.COUNT);
-				countField.setAlias(AnalyticConstants.TASK_INSTANCE_COUNT);
+				countField.setFieldName(AnalyticsConstants.ALL);
+				countField.setAggregate(AnalyticsConstants.COUNT);
+				countField.setAlias(AnalyticsConstants.TASK_INSTANCE_COUNT);
 
 				ArrayList<AggregateField> aggregateFields = new ArrayList<>();
 				aggregateFields.add(countField);
 
 				AggregateQuery query = new AggregateQuery();
-				query.setTableName(AnalyticConstants.TASK_USAGE_TABLE);
-				query.setGroupByField(AnalyticConstants.ASSIGN_USER);
+				query.setTableName(AnalyticsConstants.TASK_USAGE_TABLE);
+				query.setGroupByField(AnalyticsConstants.ASSIGN_USER);
 				query.setQuery("taskDefinitionKey:" + "\"'" + taskId + "'\"");
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(Helper.getJSONString(query));
+					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient
-								.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
-						        Helper.getJSONString(query));
+								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						        AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Integer> table = new Hashtable<>();
@@ -211,9 +211,9 @@ public class TaskLevelMonitor {
 						int taskInstanceCount = values.getInt("taskInstanceCount");
 						table.put(userId, taskInstanceCount);
 					}
-					sortedResult = Helper.getIntegerValueSortedList(table, "assignUser",
-					                                                "taskInstanceCount", order,
-					                                                taskCount);
+					sortedResult = AnalyticsUtils
+							.getIntegerValueSortedList(table, "assignUser", "taskInstanceCount",
+							                           order, taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -236,33 +236,33 @@ public class TaskLevelMonitor {
 	public String getAvgWaitingTimeVsUserId(String filters) {
 		String sortedResult = "";
 		try {
-			if (Helper.isDASAnalyticsActivated()) {
+			if (AnalyticsUtils.isDASAnalyticsActivated()) {
 				JSONObject filterObj = new JSONObject(filters);
-				String taskId = filterObj.getString(AnalyticConstants.TASK_ID);
-				String order = filterObj.getString(AnalyticConstants.ORDER);
-				int taskCount = filterObj.getInt(AnalyticConstants.NUM_COUNT);
+				String taskId = filterObj.getString(AnalyticsConstants.TASK_ID);
+				String order = filterObj.getString(AnalyticsConstants.ORDER);
+				int taskCount = filterObj.getInt(AnalyticsConstants.NUM_COUNT);
 
 				AggregateField avgField = new AggregateField();
-				avgField.setFieldName(AnalyticConstants.DURATION);
-				avgField.setAggregate(AnalyticConstants.AVG);
-				avgField.setAlias(AnalyticConstants.AVG_WAITING_TIME);
+				avgField.setFieldName(AnalyticsConstants.DURATION);
+				avgField.setAggregate(AnalyticsConstants.AVG);
+				avgField.setAlias(AnalyticsConstants.AVG_WAITING_TIME);
 
 				ArrayList<AggregateField> aggregateFields = new ArrayList<>();
 				aggregateFields.add(avgField);
 
 				AggregateQuery query = new AggregateQuery();
-				query.setTableName(AnalyticConstants.TASK_USAGE_TABLE);
-				query.setGroupByField(AnalyticConstants.ASSIGN_USER);
+				query.setTableName(AnalyticsConstants.TASK_USAGE_TABLE);
+				query.setGroupByField(AnalyticsConstants.ASSIGN_USER);
 				query.setQuery("taskDefinitionKey:" + "\"'" + taskId + "'\"");
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(Helper.getJSONString(query));
+					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient
-								.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
-						        Helper.getJSONString(query));
+								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						        AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -275,9 +275,9 @@ public class TaskLevelMonitor {
 						double avgExecTime = values.getInt("avgWaitingTime");
 						table.put(userId, avgExecTime);
 					}
-					sortedResult = Helper.getDoubleValueSortedList(table, "assignUser",
-					                                               "avgWaitingTime",
-					                                               order, taskCount);
+					sortedResult = AnalyticsUtils
+							.getDoubleValueSortedList(table, "assignUser", "avgWaitingTime", order,
+							                          taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -300,33 +300,34 @@ public class TaskLevelMonitor {
 	public String getExecutionTimeVsTaskInstanceId(String filters) {
 		String sortedResult = "";
 		try {
-			if (Helper.isDASAnalyticsActivated()) {
+			if (AnalyticsUtils.isDASAnalyticsActivated()) {
 				JSONObject filterObj = new JSONObject(filters);
-				long from = filterObj.getLong(AnalyticConstants.START_TIME);
-				long to = filterObj.getLong(AnalyticConstants.END_TIME);
-				String taskId = filterObj.getString(AnalyticConstants.TASK_ID);
-				String order = filterObj.getString(AnalyticConstants.ORDER);
-				int limit = filterObj.getInt(AnalyticConstants.LIMIT);
+				long from = filterObj.getLong(AnalyticsConstants.START_TIME);
+				long to = filterObj.getLong(AnalyticsConstants.END_TIME);
+				String taskId = filterObj.getString(AnalyticsConstants.TASK_ID);
+				String order = filterObj.getString(AnalyticsConstants.ORDER);
+				int limit = filterObj.getInt(AnalyticsConstants.LIMIT);
 
 				SearchQuery searchQuery = new SearchQuery();
-				searchQuery.setTableName(AnalyticConstants.TASK_USAGE_TABLE);
+				searchQuery.setTableName(AnalyticsConstants.TASK_USAGE_TABLE);
 				String queryStr = "taskDefinitionKey:" + "\"'" + taskId + "'\"";
 				if (from != 0 && to != 0) {
 					queryStr += " AND " +
-					            Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME,
-					                                     from, to);
+					            AnalyticsUtils
+							            .getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME,
+							                               from, to);
 				}
 				searchQuery.setQuery(queryStr);
-				searchQuery.setStart(AnalyticConstants.MIN_COUNT);
-				searchQuery.setCount(AnalyticConstants.MAX_COUNT);
+				searchQuery.setStart(AnalyticsConstants.MIN_COUNT);
+				searchQuery.setCount(AnalyticsConstants.MAX_COUNT);
 
 				if (log.isDebugEnabled()) {
-					log.debug(Helper.getJSONString(searchQuery));
+					log.debug(AnalyticsUtils.getJSONString(searchQuery));
 				}
 
 				String result = AnalyticsRestClient
-								.post(Helper.getURL(AnalyticConstants.ANALYTICS_SEARCH),
-						        Helper.getJSONString(searchQuery));
+								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_SEARCH),
+						        AnalyticsUtils.getJSONString(searchQuery));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -339,9 +340,9 @@ public class TaskLevelMonitor {
 						double executionTime = values.getDouble("duration");
 						table.put(processDefKey, executionTime);
 					}
-					sortedResult = Helper.getDoubleValueSortedList(table, "taskInstanceId",
-					                                               "duration",
-					                                               order, limit);
+					sortedResult = AnalyticsUtils
+							.getDoubleValueSortedList(table, "taskInstanceId", "duration", order,
+							                          limit);
 				}
 			}
 		} catch (Exception e) {
@@ -364,25 +365,25 @@ public class TaskLevelMonitor {
 	public String getDateVsTaskInstanceCount(String filters) {
 		String sortedResult = "";
 		try {
-			if (Helper.isDASAnalyticsActivated()) {
+			if (AnalyticsUtils.isDASAnalyticsActivated()) {
 				JSONObject filterObj = new JSONObject(filters);
-				long from = filterObj.getLong(AnalyticConstants.START_TIME);
-				long to = filterObj.getLong(AnalyticConstants.END_TIME);
-				JSONArray taskIdList = filterObj.getJSONArray(AnalyticConstants.TASK_ID_LIST);
+				long from = filterObj.getLong(AnalyticsConstants.START_TIME);
+				long to = filterObj.getLong(AnalyticsConstants.END_TIME);
+				JSONArray taskIdList = filterObj.getJSONArray(AnalyticsConstants.TASK_ID_LIST);
 
 				AggregateField countField = new AggregateField();
-				countField.setFieldName(AnalyticConstants.ALL);
-				countField.setAggregate(AnalyticConstants.COUNT);
-				countField.setAlias(AnalyticConstants.TASK_INSTANCE_COUNT);
+				countField.setFieldName(AnalyticsConstants.ALL);
+				countField.setAggregate(AnalyticsConstants.COUNT);
+				countField.setAlias(AnalyticsConstants.TASK_INSTANCE_COUNT);
 
 				ArrayList<AggregateField> aggregateFields = new ArrayList<>();
 				aggregateFields.add(countField);
 
 				AggregateQuery query = new AggregateQuery();
-				query.setTableName(AnalyticConstants.TASK_USAGE_TABLE);
-				query.setGroupByField(AnalyticConstants.FINISHED_TIME);
-				String queryStr = Helper.getDateRangeQuery(AnalyticConstants.COLUMN_FINISHED_TIME,
-				                                           from, to);
+				query.setTableName(AnalyticsConstants.TASK_USAGE_TABLE);
+				query.setGroupByField(AnalyticsConstants.FINISHED_TIME);
+				String queryStr = AnalyticsUtils
+						.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
 
 				if (taskIdList.length() != 0) {
 					queryStr += " AND ";
@@ -403,8 +404,8 @@ public class TaskLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				String result = AnalyticsRestClient
-								.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
-						        Helper.getJSONString(query));
+								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						        AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<Long, Integer> table = new Hashtable<>();
@@ -418,7 +419,8 @@ public class TaskLevelMonitor {
 						int taskInstanceCount = values.getInt("taskInstanceCount");
 						table.put(completedTime, taskInstanceCount);
 					}
-					sortedResult = Helper.getLongKeySortedList(table, "finishTime", "taskInstanceCount");
+					sortedResult = AnalyticsUtils
+							.getLongKeySortedList(table, "finishTime", "taskInstanceCount");
 				}
 			}
 		} catch (Exception e) {
@@ -439,27 +441,27 @@ public class TaskLevelMonitor {
 	public String getTaskList() {
 		String taskIdList = "";
 		try {
-			if (Helper.isDASAnalyticsActivated()) {
+			if (AnalyticsUtils.isDASAnalyticsActivated()) {
 				AggregateField countField = new AggregateField();
-				countField.setFieldName(AnalyticConstants.ALL);
-				countField.setAggregate(AnalyticConstants.COUNT);
-				countField.setAlias(AnalyticConstants.TASK_INSTANCE_COUNT);
+				countField.setFieldName(AnalyticsConstants.ALL);
+				countField.setAggregate(AnalyticsConstants.COUNT);
+				countField.setAlias(AnalyticsConstants.TASK_INSTANCE_COUNT);
 
 				ArrayList<AggregateField> aggregateFields = new ArrayList<>();
 				aggregateFields.add(countField);
 
 				AggregateQuery query = new AggregateQuery();
-				query.setTableName(AnalyticConstants.USER_INVOLVE_TABLE);
-				query.setGroupByField(AnalyticConstants.TASK_DEFINITION_KEY);
+				query.setTableName(AnalyticsConstants.USER_INVOLVE_TABLE);
+				query.setGroupByField(AnalyticsConstants.TASK_DEFINITION_KEY);
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(Helper.getJSONString(query));
+					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient
-								.post(Helper.getURL(AnalyticConstants.ANALYTICS_AGGREGATE),
-						        Helper.getJSONString(query));
+								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						        AnalyticsUtils.getJSONString(query));
 
 				JSONArray array = new JSONArray(result);
 				JSONArray resultArray = new JSONArray();

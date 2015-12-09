@@ -26,7 +26,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.pc.analytics.core.utils.Helper;
+import org.wso2.carbon.pc.analytics.core.utils.AnalyticsUtils;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import javax.xml.stream.XMLStreamException;
@@ -47,7 +47,7 @@ public class AnalyticsRestClient {
 		RegistryUtils.setTrustStoreSystemProperties();
 		HttpClient httpClient = new HttpClient();
 		PostMethod postRequest = new PostMethod(url);
-		postRequest.setRequestHeader("Authorization", Helper.getAuthorizationHeader());
+		postRequest.setRequestHeader("Authorization", AnalyticsUtils.getAuthorizationHeader());
 		BufferedReader br = null;
 		try {
 			StringRequestEntity input = new StringRequestEntity(message, "application/json", "UTF-8");
