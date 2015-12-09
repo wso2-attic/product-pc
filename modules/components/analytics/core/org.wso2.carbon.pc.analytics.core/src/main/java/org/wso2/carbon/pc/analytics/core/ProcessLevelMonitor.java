@@ -36,7 +36,7 @@ public class ProcessLevelMonitor {
 
 	/**
 	 * perform query: SELECT processDefinitionId, AVG(duration) AS avgExecutionTime FROM
-	 * PROCESS_USAGE_SUMMARY WHERE <date range> GROUP BY processDefinitionId;
+	 *                PROCESS_USAGE_SUMMARY WHERE <date range> GROUP BY processDefinitionId;
 	 *
 	 * @param filters is a given date range represents as the JSON string
 	 * @return the result as a JSON string
@@ -104,7 +104,7 @@ public class ProcessLevelMonitor {
 
 	/**
 	 * perform query: SELECT processDefinitionId, COUNT(processInstanceId) AS processInstanceCount
-	 * FROM PROCESS_USAGE_SUMMARY WHERE <date range> GROUP BY processDefinitionId;
+	 *                FROM PROCESS_USAGE_SUMMARY WHERE <date range> GROUP BY processDefinitionId;
 	 *
 	 * @param filters is a given date range represents as the JSON string
 	 * @return the result as a JSON string
@@ -172,8 +172,8 @@ public class ProcessLevelMonitor {
 
 	/**
 	 * perform query: SELECT processVersion, AVG(duration) AS avgExecutionTime FROM
-	 * PROCESS_USAGE_SUMMARY WHERE <date range> AND <processId> GROUP BY
-	 * processVersion;
+	 *                PROCESS_USAGE_SUMMARY WHERE <date range> AND <processId> GROUP BY
+	 *                processVersion;
 	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
@@ -237,7 +237,7 @@ public class ProcessLevelMonitor {
 
 	/**
 	 * perform query: SELECT processVersion, COUNT(processInstanceId) AS processInstanceCount
-	 * FROM PROCESS_USAGE_SUMMARY GROUP BY processVersion;
+	 *                FROM PROCESS_USAGE_SUMMARY GROUP BY processVersion;
 	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
@@ -301,7 +301,7 @@ public class ProcessLevelMonitor {
 
 	/**
 	 * perform query: SELECT DISTINCT processInstanceId, duration FROM PROCESS_USAGE_SUMMARY
-	 * WHERE <date range> AND <processId>
+	 *                WHERE <processId> AND <date range>
 	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
@@ -365,8 +365,8 @@ public class ProcessLevelMonitor {
 
 	/**
 	 * Perform query: SELECT DISTINCT finishTime, COUNT(*) AS processInstanceCount FROM
-	 * PROCESS_USAGE_SUMMARY WHERE <date range> AND <process id list>
-	 * GROUP BY finishTime
+	 *                PROCESS_USAGE_SUMMARY WHERE <date range> AND <process id list>
+	 *                GROUP BY finishTime
 	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string

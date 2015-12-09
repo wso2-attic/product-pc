@@ -37,6 +37,7 @@ public class TaskLevelMonitor {
 	/**
 	 * perform query: SELECT taskDefinitionKey, AVG(duration) AS avgExecutionTime FROM
 	 *                USER_INVOLVE_SUMMARY_DATA GROUP BY taskDefinitionKey;
+	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */
@@ -100,6 +101,7 @@ public class TaskLevelMonitor {
 	/**
 	 * perform query: SELECT taskDefinitionKey, COUNT(taskInstanceId) AS taskInstanceCount FROM
 	 *                USER_INVOLVE_SUMMARY_DATA GROUP BY taskDefinitionKey;
+	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */
@@ -163,6 +165,7 @@ public class TaskLevelMonitor {
 	/**
 	 * perform query: SELECT assignee, COUNT(taskInstanceId) AS taskInstanceCount FROM
 	 *                TASK_USAGE_SUMMARY GROUP BY assignee;
+	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */
@@ -226,6 +229,7 @@ public class TaskLevelMonitor {
 	/**
 	 * perform query: SELECT assignee, AVG(duration) AS avgExecutionTime FROM
 	 *                TASK_USAGE_SUMMARY GROUP BY assignee;
+	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */
@@ -287,7 +291,9 @@ public class TaskLevelMonitor {
 	}
 
 	/**
-	 * perform query: SELECT DISTINCT taskInstanceId, duration FROM TASK_USAGE_SUMMARY;
+	 * perform query: SELECT DISTINCT taskInstanceId, duration FROM TASK_USAGE_SUMMARY
+	 *                WHERE <taskDefinitionKey> AND <date range>
+	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */
@@ -351,6 +357,7 @@ public class TaskLevelMonitor {
 	/**
 	 * Perform query: SELECT DISTINCT finishTime, COUNT(*) AS taskInstanceCount FROM TASK_USAGE_SUMMARY
 	 *                WHERE <date range> AND <task id list> GROUP BY finishTime
+	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */

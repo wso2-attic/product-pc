@@ -16,7 +16,7 @@
 package org.wso2.carbon.pc.analytics.core.models;
 
 /**
- * SearchQuery class is used to create a search query
+ * SearchQuery class is used to create a search query object
  */
 public class SearchQuery {
 	private String tableName;

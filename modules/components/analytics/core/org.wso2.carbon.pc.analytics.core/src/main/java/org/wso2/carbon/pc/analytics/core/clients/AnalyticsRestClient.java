@@ -32,13 +32,13 @@ import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import javax.xml.stream.XMLStreamException;
 
 /**
- * AnalyticsRestClient class is used to call the DAS rest web service
+ * AnalyticsRestClient class is used to invoke the DAS REST API
  */
 public class AnalyticsRestClient {
 	private static final Log log = LogFactory.getLog(AnalyticsRestClient.class);
 
 	/**
-	 * Send post request to the DAS rest web service
+	 * Send post request to a DAS rest web service
 	 * @param url used to locate the webservice functionality
 	 * @param message is the request message that need to be sent to the web service
 	 * @return the result as a String

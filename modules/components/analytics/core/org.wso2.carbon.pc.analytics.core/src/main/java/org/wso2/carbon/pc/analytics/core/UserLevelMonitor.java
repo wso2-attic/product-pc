@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 /**
- * UserLevelMonitor holds all the functionalites for the user level monitoring
+ * UserLevelMonitor holds all the functionalities for the user level monitoring
  */
 public class UserLevelMonitor {
 	private static final Log log = LogFactory.getLog(UserLevelMonitor.class);
@@ -36,6 +36,7 @@ public class UserLevelMonitor {
 	/**
 	 * perform query: SELECT assignUser, SUM(duration) AS totalInvolvedTime FROM
 	 *                USER_INVOLVE_SUMMARY WHERE <date range> GROUP BY assignUser;
+	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */
@@ -103,6 +104,7 @@ public class UserLevelMonitor {
 	/**
 	 * perform query: SELECT assignUser, COUNT(*) AS completedTotalTasks FROM
 	 *                USER_INVOLVE_SUMMARY_DATA WHERE <date range> GROUP BY assignUser;
+	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */
@@ -169,7 +171,8 @@ public class UserLevelMonitor {
 
 	/**
 	 * perform query: SELECT processDefKey, SUM(duration) AS totalInvolvedTime FROM
-	 *                USER_INVOLVE_SUMMARY WHERE <date range> GROUP BY processDefKey;
+	 *                USER_INVOLVE_SUMMARY WHERE <assignee> AND <date range> GROUP BY processDefKey;
+	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */
@@ -240,8 +243,9 @@ public class UserLevelMonitor {
 
 	/**
 	 * perform query: SELECT processDefKey, COUNT(*) AS totalInstanceCount FROM
-	 *                USER_INVOLVE_SUMMARY WHERE assignee = <userId> AND <date range> GROUP BY
+	 *                USER_INVOLVE_SUMMARY WHERE <assignee> AND <date range> GROUP BY
 	 *                processDefKey;
+	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */
@@ -314,7 +318,8 @@ public class UserLevelMonitor {
 
 	/**
 	 * perform query: SELECT taskDefinitionKey, COUNT(taskInstanceId) AS taskInstanceCount FROM
-	 *                USER_INVOLVE_SUMMARY_DATA WHERE assignee = <user id> GROUP BY taskDefinitionKey;
+	 *                USER_INVOLVE_SUMMARY_DATA WHERE <assignee> GROUP BY taskDefinitionKey;
+	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */
@@ -377,7 +382,8 @@ public class UserLevelMonitor {
 
 	/**
 	 * perform query: SELECT taskDefinitionKey, AVG(duration) AS avgExecutionTime FROM
-	 *                USER_INVOLVE_SUMMARY_DATA WHERE assignee = <user id> GROUP BY taskDefinitionKey;
+	 *                USER_INVOLVE_SUMMARY_DATA WHERE <assignee> GROUP BY taskDefinitionKey;
+	 *
 	 * @param filters is used to filter the result
 	 * @return the result as a JSON string
 	 */

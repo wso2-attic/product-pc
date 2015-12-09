@@ -40,7 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Helper class is used to keep the methods which are helpful to the monitor classes.
+ * Helper class is used to keep the functions which are useful for the monitor classes.
  */
 public class Helper {
 	private static final Log log = LogFactory.getLog(Helper.class);
