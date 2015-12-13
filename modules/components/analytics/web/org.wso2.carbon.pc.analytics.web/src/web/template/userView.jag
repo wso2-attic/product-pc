@@ -38,8 +38,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="userIdTotalInvolvedTimeCount" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="userIdTotalInvolvedTimeCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -75,8 +76,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="userIdCompletedTasksCount" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="userIdCompletedTasksCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -115,8 +117,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processIdTotalInvolvedTimeCount" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="processIdTotalInvolvedTimeCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -155,8 +158,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processIdTotalInvolvedInstanceCountCount" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="processIdTotalInvolvedInstanceCountCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -183,8 +187,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="userLevelTaskInstanceCountTaskIdCount" class="selectpicker">
-                     <option value="3">3</option>
+                    <select id="userLevelTaskInstanceCountTaskIdCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -211,8 +216,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="userLevelTaskIdAvgExecTimeCount" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="userLevelTaskIdAvgExecTimeCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>

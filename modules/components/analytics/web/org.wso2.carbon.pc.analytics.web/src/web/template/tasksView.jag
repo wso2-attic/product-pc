@@ -29,8 +29,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="taskIdAvgExecTimeCount" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="taskIdAvgExecTimeCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -57,8 +58,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="taskInstanceCountTaskDefCount" class="selectpicker">
-                     <option value="3">3</option>
+                    <select id="taskInstanceCountTaskDefCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -85,8 +87,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="taskInstanceCountUserIdCount" class="selectpicker">
-                     <option value="3">3</option>
+                    <select id="taskInstanceCountUserIdCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -113,8 +116,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="userIdAvgExecTimeCount" class="selectpicker">
-                     <option value="3">3</option>
+                    <select id="userIdAvgExecTimeCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -153,8 +157,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="taskInstanceIdExecTimeLimit" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="taskInstanceIdExecTimeLimit" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>

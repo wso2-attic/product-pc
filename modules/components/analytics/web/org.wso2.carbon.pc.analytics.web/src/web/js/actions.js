@@ -37,6 +37,27 @@ function setDatePicker(dateElement) {
     });
 }
 
+function isInteger(param) {
+    return (Math.floor(param) == param && $.isNumeric(param));
+}
+
+function selectPickerValChange(selectPickerElement){
+    var idx = selectPickerElement.options.selectedIndex;
+    if (selectPickerElement.options[idx].value == 'other') {
+        var other = prompt("Please indicate 'other' value:");
+        if (other != '' && isInteger(other)) {
+            var opt = document.createElement('option');
+            opt.value = other;
+            opt.innerHTML = other;
+            selectPickerElement.appendChild(opt);
+            $(selectPickerElement).selectpicker('val', other);
+        } else {
+            selectPickerElement.selectedIndex = 1;
+            $(selectPickerElement).selectpicker("refresh");
+        }
+    }
+}
+
 function drawAvgExecuteTimeVsProcessIdResult(renderElement) {
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("processIdAvgExecTimeStartDate");

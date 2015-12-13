@@ -38,8 +38,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processIdAvgExecTimeCount" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="processIdAvgExecTimeCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -75,8 +76,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processInstanceCountProcessDefCount" class="selectpicker">
-                     <option value="3">3</option>
+                    <select id="processInstanceCountProcessDefCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -103,8 +105,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processVersionAvgExecTimeCount" class="selectpicker">
-                     <option value="3">3</option>
+                    <select id="processVersionAvgExecTimeCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -131,8 +134,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processInstanceCountProcessVersionCount" class="selectpicker">
-                     <option value="3">3</option>
+                    <select id="processInstanceCountProcessVersionCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -171,8 +175,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processInstanceIdExecTimeLimit" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="processInstanceIdExecTimeLimit" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>

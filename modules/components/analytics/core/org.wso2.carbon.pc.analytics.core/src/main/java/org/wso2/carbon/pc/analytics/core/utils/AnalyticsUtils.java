@@ -208,7 +208,8 @@ public class AnalyticsUtils {
 	 * @return a sorted list as a JSON array string
 	 * @throws JSONException
 	 */
-	public static String getDoubleValueSortedList(Hashtable<String, Double> table, String key1, String key2, String order, int count)
+	public static String getDoubleValueSortedList(Hashtable<String, Double> table, String key1,
+	                                              String key2, String order, int count)
 																			throws JSONException {
 		//Transfer as List and sort it
 		ArrayList<Map.Entry<String, Double>> l = new ArrayList(table.entrySet());
@@ -254,7 +255,8 @@ public class AnalyticsUtils {
 	 * @return a sorted list as a JSON array string
 	 * @throws JSONException
 	 */
-	public static String getIntegerValueSortedList(Hashtable<String, Integer> table, String key1, String key2, String order, int count)
+	public static String getIntegerValueSortedList(Hashtable<String, Integer> table, String key1,
+	                                               String key2, String order, int count)
 																			throws JSONException {
 		ArrayList<Map.Entry<String, Integer>> l = new ArrayList(table.entrySet());
 		Collections.sort(l, new Comparator<Map.Entry<String, Integer>>() {
