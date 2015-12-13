@@ -210,7 +210,7 @@ public class AnalyticsUtils {
 	 */
 	public static String getDoubleValueSortedList(Hashtable<String, Double> table, String key1,
 	                                              String key2, String order, int count)
-																			throws JSONException {
+												  throws JSONException {
 		//Transfer as List and sort it
 		ArrayList<Map.Entry<String, Double>> l = new ArrayList(table.entrySet());
 		Collections.sort(l, new Comparator<Map.Entry<String, Double>>() {
@@ -257,7 +257,7 @@ public class AnalyticsUtils {
 	 */
 	public static String getIntegerValueSortedList(Hashtable<String, Integer> table, String key1,
 	                                               String key2, String order, int count)
-																			throws JSONException {
+												   throws JSONException {
 		ArrayList<Map.Entry<String, Integer>> l = new ArrayList(table.entrySet());
 		Collections.sort(l, new Comparator<Map.Entry<String, Integer>>() {
 			public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
