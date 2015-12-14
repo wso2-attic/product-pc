@@ -25,7 +25,7 @@
                 $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
             },
             error: function () {
-                alertify.error('Error');
+                alertify.error('BPMN diagram showing error');
             }
         });
 
@@ -56,7 +56,7 @@
                 $("#processTextDiv").html(response);
             },
             error: function () {
-                alertify.error('Error');
+                alertify.error('Text editor error');
             }
         });
     }
@@ -82,7 +82,7 @@
                     $("#addTextButton").hide();
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Process text error');
                 }
             });
         }
@@ -156,7 +156,7 @@
                 }
             },
             error: function () {
-                alertify.error('Error');
+                alertify.error('Process list returning error');
             }
         });
     }
@@ -212,7 +212,7 @@
                     alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Subprocess updating error');
                 }
             });
         }
@@ -260,7 +260,7 @@
                     alertify.success('Process ' + successorInput + ' successfully added to the successor list.');
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Successor updating error');
                 }
             });
         }
@@ -308,7 +308,7 @@
                     alertify.success('Process ' + predecessorInput + ' successfully added to the predecessor list.');
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Predecessor updating error');
                 }
             });
         }
@@ -347,7 +347,7 @@
                     alertify.success('Successfully deleted ' + deleteSubInput + ' from the subprocess list.');
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Subprocess deleting error');
                 }
             });
         }
@@ -386,7 +386,7 @@
                     alertify.success('Successfully deleted ' + deleteSuccessorInput + ' from the successor list.');
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Successor deleting error');
                 }
             });
         }
@@ -425,7 +425,7 @@
                     alertify.success('Successfully deleted ' + deletePredecessorInput + ' from the predecessor list.');
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Predecessor deleting error');
                 }
             });
         }
@@ -451,7 +451,7 @@
                     alertify.success('Successfully updated the Process owner name.');
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Process owner updating error');
                 }
             });
         }
