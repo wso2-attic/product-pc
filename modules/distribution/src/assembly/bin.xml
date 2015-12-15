@@ -203,9 +203,15 @@
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security</directory>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/security/</outputDirectory>
             <includes>
+                <include>**/cipher-standalone-config.properties</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>src/repository/conf/security</directory>
+            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/security/</outputDirectory>
+            <includes>
                 <include>**/cipher-text.properties</include>
                 <include>**/cipher-tool.properties</include>
-                <include>**/cipher-standalone-config.properties</include>
             </includes>
         </fileSet>
         <fileSet>
