@@ -66,6 +66,7 @@ public class ProcessStore {
     private static final Log log = LogFactory.getLog(ProcessStore.class);
 
     private static final String mns = "http://www.wso2.org/governance/metadata";
+    private static final String OK = "OK";
 
     private Element append(Document doc, Element parent, String childName, String childNS) {
         Element childElement = doc.createElementNS(childNS, childName);
@@ -850,7 +851,7 @@ public class ProcessStore {
         }catch (Exception e){
             log.error(e);
         }
-        return "OK";
+        return OK;
     }
 
     public String addSubprocess(String subprocessDetails){
@@ -886,7 +887,7 @@ public class ProcessStore {
         }catch (Exception e){
             log.error(e);
         }
-        return "OK";
+        return OK;
     }
 
     public String addSuccessor(String successorDetails){
@@ -922,7 +923,7 @@ public class ProcessStore {
         }catch (Exception e){
             log.error(e);
         }
-        return "OK";
+        return OK;
     }
 
     public String addPredecessor(String predecessorDetails){
@@ -958,7 +959,7 @@ public class ProcessStore {
         }catch (Exception e){
             log.error(e);
         }
-        return "OK";
+        return OK;
     }
 
     public String deleteSubprocess(String deleteSubprocess){
@@ -1002,7 +1003,7 @@ public class ProcessStore {
         }catch (Exception e){
             log.error(e);
         }
-        return "OK";
+        return OK;
     }
 
     public String deleteSuccessor(String deleteSuccessor){
@@ -1046,7 +1047,7 @@ public class ProcessStore {
         }catch (Exception e){
             log.error(e);
         }
-        return "OK";
+        return OK;
     }
 
     public String deletePredecessor(String deletePredecessor){
@@ -1090,7 +1091,7 @@ public class ProcessStore {
         }catch (Exception e){
             log.error(e);
         }
-        return "OK";
+        return OK;
     }
 
 
