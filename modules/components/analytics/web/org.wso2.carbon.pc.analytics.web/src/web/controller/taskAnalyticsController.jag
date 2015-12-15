@@ -28,10 +28,10 @@ if (request.isSecure()) {//check whether the request is secure or not
 		}
 	} else {
 		include("/model/common.jag");
-		include("/model/userModel.jag");
+		include("/model/taskAnalyticsModel.jag");
 		include("/template/partials/header.jag");
 		include("/template/partials/navigation.jag");
-		include("/template/userView.jag");
+		include("/template/taskAnalyticsView.jag");
 		include("/template/partials/footer.jag");
 	}
 

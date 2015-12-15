@@ -93,7 +93,7 @@
 
     //Following variable were used to highlight current page which user is currently in.
     //these were set as 'active' at each corresponding task Model
-    var dashboardNavActive = ''; //Dashboard veiw [updated at statsModel and refered at navigation.jag]
+    var dashboardNavActive = ''; //Dashboard veiw [updated at processModel and refered at navigation.jag]
     var tasksNavActive = ''; //Tasks veiw [updated at tasksModel, refered at navigation.jag]
     var userNavActive = ''; //User view [updated at userModel, refered at navigation.jag]
 
@@ -110,6 +110,6 @@
     function getCommonErrorContent (errorMsg) {
         return errorMsg   + '<br><br> <div align="right">'
                             + ' <button class="btn btn-info" onclick="window.history.back();">&lt;&lt; Go back to previous page</button> '
-                            + ' <a class="btn btn-info" href="stats">Go to home</a></div>';
+                            + ' <a class="btn btn-info" href="processes">Go to home</a></div>';
     }
 %>

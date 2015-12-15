@@ -25,7 +25,7 @@
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-              <li <%=dashboardNavActive%>><a href="stats">
+              <li <%=dashboardNavActive%>><a href="processes">
                 <span class="fw-stack fw-lg">
                     <i class="fw fw-ring fw-stack-2x"></i>
                     <i class="fw fw-dashboard fw-lg fw-stack-1x padding-top-icon"></i>

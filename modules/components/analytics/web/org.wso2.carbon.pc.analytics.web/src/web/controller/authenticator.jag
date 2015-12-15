@@ -26,7 +26,7 @@ if (request.isSecure()) {//check whether the request is secure or not
 		requestUrl = requestUrl.replace("%3F", "?");
 	}
 	if(requestUrl == null || requestUrl == "null" || requestUrl == ""){
-		requestUrl = "stats";
+		requestUrl = "processes";
 	}
 	var authSuccess=false;
 	var USER='user',

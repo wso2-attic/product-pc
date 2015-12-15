@@ -30,8 +30,8 @@ if (request.isSecure()) {//check whether the request is secure or not
 		include("/template/loginView.jag");
 		include("/template/partials/footer.jag");
 	} else {
-	    //If already logged-in, redirect to the myTasks view
-	    response.sendRedirect("stats");
+	    //If already logged-in, redirect to the dashboard
+	    response.sendRedirect("processes");
 	}
 
 } else {
