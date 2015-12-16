@@ -84,24 +84,19 @@ public class AnalyticsUtils {
 	}
 
 	/**
-	 * Get property iterator
+	 * Get content of pc.xml file as a string
 	 *
-	 * @return Iterator object
+	 * @return the content of pc.xml file as a String
 	 * @throws IOException
 	 * @throws XMLStreamException
 	 */
-	private static Iterator getPropertyIterator() throws IOException, XMLStreamException {
+	private static OMElement getConfigElement() throws IOException, XMLStreamException {
 		String carbonConfigDirPath = CarbonUtils.getCarbonConfigDirPath();
 		String pcConfigPath =
 				carbonConfigDirPath + File.separator + AnalyticsConstants.PC_CONFIGURATION_FILE_NAME;
 		File configFile = new File(pcConfigPath);
 		String configContent = FileUtils.readFileToString(configFile);
-		OMElement configElement = AXIOMUtil.stringToOM(configContent);
-		OMElement firstChild = configElement.getFirstChildWithName(
-				new QName(AnalyticsConstants.PC_NAMESPACE, AnalyticsConstants.ANALYTICS));
-		Iterator properties =
-				firstChild.getChildrenWithName(new QName(null, AnalyticsConstants.PROPERTY));
-		return properties;
+		return AXIOMUtil.stringToOM(configContent);
 	}
 
 	/**
@@ -112,16 +107,13 @@ public class AnalyticsUtils {
 	 * @throws XMLStreamException
 	 */
 	public static boolean isDASAnalyticsActivated() throws IOException, XMLStreamException {
-		Iterator properties = getPropertyIterator();
-		while (properties.hasNext()) {
-			OMElement property = (OMElement) properties.next();
-			if (AnalyticsConstants.ACTIVATE
-					.equals(property.getAttributeValue(new QName(null, AnalyticsConstants.NAME)))) {
-				String value = property.getAttributeValue(new QName(null, AnalyticsConstants.VALUE));
-				if (AnalyticsConstants.TRUE.equalsIgnoreCase(value)) {
-					return true;
-				}
-			}
+		OMElement configElement = getConfigElement();
+		OMElement analyticsElement = configElement.getFirstChildWithName(
+				new QName(AnalyticsConstants.PC_NAMESPACE, AnalyticsConstants.ANALYTICS));
+		String value = analyticsElement.getFirstChildWithName(
+				new QName(null, AnalyticsConstants.ACTIVATE)).getText();
+		if (AnalyticsConstants.TRUE.equalsIgnoreCase(value)) {
+			return true;
 		}
 		return false;
 	}
@@ -135,20 +127,16 @@ public class AnalyticsUtils {
 	 * @throws XMLStreamException
 	 */
 	public static String getURL(String path) throws IOException, XMLStreamException {
-		Iterator properties = getPropertyIterator();
-		while (properties.hasNext()) {
-			OMElement property = (OMElement) properties.next();
-			if (AnalyticsConstants.CONFIG_BASE_URL
-					.equals(property.getAttributeValue(new QName(null, AnalyticsConstants.NAME)))) {
-				String baseUrl =
-						property.getAttributeValue(new QName(null, AnalyticsConstants.VALUE));
-				if (baseUrl != null && !baseUrl.isEmpty()) {
-					if (!baseUrl.endsWith(File.separator)) {
-						baseUrl += File.separator;
-					}
-					return baseUrl + path;
-				}
+		OMElement configElement = getConfigElement();
+		OMElement analyticsElement = configElement.getFirstChildWithName(
+				new QName(AnalyticsConstants.PC_NAMESPACE, AnalyticsConstants.ANALYTICS));
+		String baseUrl = analyticsElement.getFirstChildWithName(
+				new QName(null, AnalyticsConstants.CONFIG_BASE_URL)).getText();
+		if (baseUrl != null && !baseUrl.isEmpty()) {
+			if (!baseUrl.endsWith(File.separator)) {
+				baseUrl += File.separator;
 			}
+			return baseUrl + path;
 		}
 		return null;
 	}
@@ -162,30 +150,13 @@ public class AnalyticsUtils {
 	 */
 	public static String getAuthorizationHeader() throws IOException, XMLStreamException {
 		String requestHeader = "Basic ";
-		String userName = null;
-		String password = null;
-		Iterator properties = getPropertyIterator();
-
-		while (properties.hasNext()) {
-			if (userName != null && password != null) {
-				break;
-			}
-			OMElement property = (OMElement) properties.next();
-			if (AnalyticsConstants.CONFIG_USER_NAME
-					.equals(property.getAttributeValue(new QName(null, AnalyticsConstants.NAME)))) {
-				String name = property.getAttributeValue(new QName(null, AnalyticsConstants.VALUE));
-				if (name != null && !name.isEmpty()) {
-					userName = name;
-				}
-			}
-			if (AnalyticsConstants.CONFIG_PASSWORD
-					.equals(property.getAttributeValue(new QName(null, AnalyticsConstants.NAME)))) {
-				String pwd = property.getAttributeValue(new QName(null, AnalyticsConstants.VALUE));
-				if (pwd != null && !pwd.isEmpty()) {
-					password = pwd;
-				}
-			}
-		}
+		OMElement configElement = getConfigElement();
+		OMElement analyticsElement = configElement.getFirstChildWithName(
+				new QName(AnalyticsConstants.PC_NAMESPACE, AnalyticsConstants.ANALYTICS));
+		String userName = analyticsElement.getFirstChildWithName(new QName(
+				null, AnalyticsConstants.CONFIG_USER_NAME)).getText();
+		String password = analyticsElement.getFirstChildWithName(new QName(
+				null, AnalyticsConstants.CONFIG_PASSWORD)).getText();
 
 		if (userName != null && password != null) {
 			String headerPortion = userName + ":" + password;
