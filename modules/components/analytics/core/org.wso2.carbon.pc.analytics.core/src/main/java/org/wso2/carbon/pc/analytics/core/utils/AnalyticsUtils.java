@@ -26,6 +26,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2.carbon.pc.analytics.core.AnalyticsConstants;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.securevault.SecretResolver;
+import org.wso2.securevault.SecretResolverFactory;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.QName;
@@ -108,12 +110,12 @@ public class AnalyticsUtils {
 	 */
 	public static boolean isDASAnalyticsActivated() throws IOException, XMLStreamException {
 		OMElement configElement = getConfigElement();
-		OMElement analyticsElement = configElement.getFirstChildWithName(
-				new QName(AnalyticsConstants.PC_NAMESPACE, AnalyticsConstants.ANALYTICS));
-		String value = analyticsElement.getFirstChildWithName(
-				new QName(null, AnalyticsConstants.ACTIVATE)).getText();
-		if (AnalyticsConstants.TRUE.equalsIgnoreCase(value)) {
-			return true;
+		OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConstants.ANALYTICS));
+		if(analyticsElement != null){
+			String value = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.ACTIVATE)).getText();
+			if (AnalyticsConstants.TRUE.equalsIgnoreCase(value)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -128,15 +130,15 @@ public class AnalyticsUtils {
 	 */
 	public static String getURL(String path) throws IOException, XMLStreamException {
 		OMElement configElement = getConfigElement();
-		OMElement analyticsElement = configElement.getFirstChildWithName(
-				new QName(AnalyticsConstants.PC_NAMESPACE, AnalyticsConstants.ANALYTICS));
-		String baseUrl = analyticsElement.getFirstChildWithName(
-				new QName(null, AnalyticsConstants.CONFIG_BASE_URL)).getText();
-		if (baseUrl != null && !baseUrl.isEmpty()) {
-			if (!baseUrl.endsWith(File.separator)) {
-				baseUrl += File.separator;
+		OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConstants.ANALYTICS));
+		if(analyticsElement != null){
+			String baseUrl = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_BASE_URL)).getText();
+			if (baseUrl != null && !baseUrl.isEmpty()) {
+				if (!baseUrl.endsWith(File.separator)) {
+					baseUrl += File.separator;
+				}
+				return baseUrl + path;
 			}
-			return baseUrl + path;
 		}
 		return null;
 	}
@@ -151,13 +153,23 @@ public class AnalyticsUtils {
 	public static String getAuthorizationHeader() throws IOException, XMLStreamException {
 		String requestHeader = "Basic ";
 		OMElement configElement = getConfigElement();
-		OMElement analyticsElement = configElement.getFirstChildWithName(
-				new QName(AnalyticsConstants.PC_NAMESPACE, AnalyticsConstants.ANALYTICS));
-		String userName = analyticsElement.getFirstChildWithName(new QName(
-				null, AnalyticsConstants.CONFIG_USER_NAME)).getText();
-		String password = analyticsElement.getFirstChildWithName(new QName(
-				null, AnalyticsConstants.CONFIG_PASSWORD)).getText();
+		SecretResolver secretResolver = SecretResolverFactory.create(configElement, false);
+		OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConstants.ANALYTICS));
 
+		String userName = null;
+		String password = null;
+		if(analyticsElement != null){
+			userName = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_USER_NAME)).getText();
+			if(secretResolver != null && secretResolver.isInitialized()){
+				if(secretResolver.isTokenProtected(AnalyticsConstants.SECRET_ALIAS)){
+					password = secretResolver.resolve(AnalyticsConstants.SECRET_ALIAS);
+				}else{
+					password = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_PASSWORD)).getText();
+				}
+			}else{
+				password = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_PASSWORD)).getText();
+			}
+		}
 		if (userName != null && password != null) {
 			String headerPortion = userName + ":" + password;
 			byte[] encodedBytes = headerPortion.getBytes("UTF-8");
