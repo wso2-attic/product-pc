@@ -76,6 +76,6 @@ public class AnalyticsConstants {
 	public static final String TRUE = "true";
 	public static final String SECRET_ALIAS = "PC.Analytics.Password";
 
-	public static int MIN_COUNT = 0;
-	public static int MAX_COUNT = 1000;
+	public static final int MIN_COUNT = 0;
+	public static final int MAX_COUNT = 1000;
 }

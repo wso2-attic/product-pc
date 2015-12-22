@@ -111,7 +111,7 @@ public class AnalyticsUtils {
 	public static boolean isDASAnalyticsActivated() throws IOException, XMLStreamException {
 		OMElement configElement = getConfigElement();
 		OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConstants.ANALYTICS));
-		if(analyticsElement != null){
+		if(analyticsElement != null) {
 			String value = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.ACTIVATE)).getText();
 			if (AnalyticsConstants.TRUE.equalsIgnoreCase(value)) {
 				return true;
@@ -131,7 +131,7 @@ public class AnalyticsUtils {
 	public static String getURL(String path) throws IOException, XMLStreamException {
 		OMElement configElement = getConfigElement();
 		OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConstants.ANALYTICS));
-		if(analyticsElement != null){
+		if(analyticsElement != null) {
 			String baseUrl = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_BASE_URL)).getText();
 			if (baseUrl != null && !baseUrl.isEmpty()) {
 				if (!baseUrl.endsWith(File.separator)) {
@@ -158,15 +158,15 @@ public class AnalyticsUtils {
 
 		String userName = null;
 		String password = null;
-		if(analyticsElement != null){
+		if(analyticsElement != null) {
 			userName = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_USER_NAME)).getText();
-			if(secretResolver != null && secretResolver.isInitialized()){
-				if(secretResolver.isTokenProtected(AnalyticsConstants.SECRET_ALIAS)){
+			if(secretResolver != null && secretResolver.isInitialized()) {
+				if(secretResolver.isTokenProtected(AnalyticsConstants.SECRET_ALIAS)) {
 					password = secretResolver.resolve(AnalyticsConstants.SECRET_ALIAS);
-				}else{
+				} else {
 					password = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_PASSWORD)).getText();
 				}
-			}else{
+			} else {
 				password = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_PASSWORD)).getText();
 			}
 		}
@@ -201,7 +201,7 @@ public class AnalyticsUtils {
 			}
 		});
 		JSONArray array = new JSONArray();
-		for (int i = 0 ; i < l.size() ; i++){
+		for (int i = 0 ; i < l.size() ; i++) {
 			JSONObject o = new JSONObject();
 			o.put(key1, l.get(i).getKey());
 			o.put(key2, round(l.get(i).getValue(), 2));
@@ -209,16 +209,16 @@ public class AnalyticsUtils {
 		}
 
 		//if count exceeds the array length, then assign the array length to the count variable
-		if(count > array.length()){
+		if(count > array.length()) {
 			count = array.length();
 		}
 
 		JSONArray arrayPortion = new JSONArray();
-		if(order.equalsIgnoreCase(AnalyticsConstants.TOP)){
-			for (int i = array.length() - count ; i < array.length() ; i++){
+		if(order.equalsIgnoreCase(AnalyticsConstants.TOP)) {
+			for (int i = array.length() - count ; i < array.length() ; i++) {
 				arrayPortion.put(array.get(i));
 			}
-		}else if(order.equalsIgnoreCase(AnalyticsConstants.BOTTOM)){
+		} else if(order.equalsIgnoreCase(AnalyticsConstants.BOTTOM)) {
 			for (int i = 0 ; i < count ; i++){
 				arrayPortion.put(array.get(i));
 			}
@@ -246,7 +246,7 @@ public class AnalyticsUtils {
 			}
 		});
 		JSONArray array = new JSONArray();
-		for (int i = 0 ; i < l.size() ; i++){
+		for (int i = 0 ; i < l.size() ; i++) {
 			JSONObject o = new JSONObject();
 			o.put(key1, l.get(i).getKey());
 			o.put(key2, l.get(i).getValue());
@@ -254,16 +254,16 @@ public class AnalyticsUtils {
 		}
 
 		//if count exceeds the array length, then assign the array length to the count variable
-		if(count > array.length()){
+		if(count > array.length()) {
 			count = array.length();
 		}
 
 		JSONArray arrayPortion = new JSONArray();
-		if(order.equalsIgnoreCase(AnalyticsConstants.TOP)){
-			for (int i = array.length() - count ; i < array.length() ; i++){
+		if(order.equalsIgnoreCase(AnalyticsConstants.TOP)) {
+			for (int i = array.length() - count ; i < array.length() ; i++) {
 				arrayPortion.put(array.get(i));
 			}
-		}else if(order.equalsIgnoreCase(AnalyticsConstants.BOTTOM)){
+		} else if(order.equalsIgnoreCase(AnalyticsConstants.BOTTOM)) {
 			for (int i = 0 ; i < count ; i++){
 				arrayPortion.put(array.get(i));
 			}
@@ -289,7 +289,7 @@ public class AnalyticsUtils {
 			}
 		});
 		JSONArray array = new JSONArray();
-		for (int i = 0 ; i < l.size() ; i++){
+		for (int i = 0 ; i < l.size() ; i++) {
 			JSONObject o = new JSONObject();
 			o.put(key1, dateFormatter(l.get(i).getKey()));
 			o.put(key2, l.get(i).getValue());
@@ -304,7 +304,7 @@ public class AnalyticsUtils {
 	 * @param time is the long value of a date
 	 * @return date as a String (eg: 2015-11-12)
 	 */
-	private static String dateFormatter(long time){
+	private static String dateFormatter(long time) {
 		String date = new Date(time).toString();
 		String[] dateArray = date.split(AnalyticsConstants.SPACE_SEPARATOR);
 		try {
