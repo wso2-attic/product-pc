@@ -24,7 +24,8 @@ if (BPSTenant != undefined && BPSTenant.length > 0) {
 }
 
 /**
- Function to set date picker to date input elements
+ * Function to set date picker to date input elements
+ * @param dateElement is the element which holds the date picker
  */
 function setDatePicker(dateElement) {
     var elementID = '#' + dateElement;
@@ -37,10 +38,19 @@ function setDatePicker(dateElement) {
     });
 }
 
+/**
+ * Function to check a given String is an integer or not
+ * @param param is a String value
+ * @returns true if the given String value is an integer
+ */
 function isInteger(param) {
     return (Math.floor(param) == param && $.isNumeric(param));
 }
 
+/**
+ * Function to add an input text to the select picker
+ * @param selectPickerElement is a select element
+ */
 function selectPickerValChange(selectPickerElement){
     var idx = selectPickerElement.options.selectedIndex;
     if (selectPickerElement.options[idx].value == 'other') {
@@ -58,6 +68,10 @@ function selectPickerValChange(selectPickerElement){
     }
 }
 
+/**
+ * Function to draw Average Execution Time vs Process Id Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawAvgExecuteTimeVsProcessIdResult(renderElement) {
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("processIdAvgExecTimeStartDate");
@@ -106,6 +120,10 @@ function drawAvgExecuteTimeVsProcessIdResult(renderElement) {
     });
 }
 
+/**
+ * Function to draw Process Instance Count vs Process Id Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawProcessInstanceCountVsProcessIdResult(renderElement) {
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("processInstanceCountProcessDefStartDate");
@@ -154,6 +172,10 @@ function drawProcessInstanceCountVsProcessIdResult(renderElement) {
     });
 }
 
+/**
+ * Function to draw Average Execution Time Vs Process Version Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawAvgExecuteTimeVsProcessVersionResult(renderElement) {
     var renderElementID = '#' + renderElement;
     var processId = $('#processVersionAvgExecTimeProcessList').val();
@@ -195,6 +217,10 @@ function drawAvgExecuteTimeVsProcessVersionResult(renderElement) {
     }
 }
 
+/**
+ * Function to draw Process Instance Count vs Process Version Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawProcessInstanceCountVsProcessVersionResult(renderElement){
     var renderElementID = '#' + renderElement;
     var processId = $('#processInstanceCountProcessVersionProcessList').val();
@@ -236,6 +262,10 @@ function drawProcessInstanceCountVsProcessVersionResult(renderElement){
     }
 }
 
+/**
+ * Function to draw Execution Time vs Process Instance Id Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawExecutionTimeVsProcessInstanceIdResult(renderElement){
     var renderElementID = '#' + renderElement;
     var processId = $('#processInstanceIdExecTimeProcessList').val();
@@ -291,6 +321,10 @@ function drawExecutionTimeVsProcessInstanceIdResult(renderElement){
     }
 }
 
+/**
+ * Function to draw Date vs Process Instance Count Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawDateVsProcessInstanceCountResult(renderElement){
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("processInstanceCountDateStartDate");
@@ -340,6 +374,10 @@ function drawDateVsProcessInstanceCountResult(renderElement){
     });
 }
 
+/**
+ * Function to draw Average Execution Time vs Task Id Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawAvgExecuteTimeVsTaskIdResult(renderElement){
     var renderElementID = '#' + renderElement;
     var processId = $('#taskIdAvgExecTimeProcessList').val();
@@ -381,6 +419,10 @@ function drawAvgExecuteTimeVsTaskIdResult(renderElement){
     }
 }
 
+/**
+ * Function to draw Task Instance Count vs Task Id Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawTaskInstanceCountVsTaskIdResult(renderElement){
     var renderElementID = '#' + renderElement;
     var processId = $('#taskInstanceCountTaskDefProcessList').val();
@@ -422,6 +464,10 @@ function drawTaskInstanceCountVsTaskIdResult(renderElement){
     }
 }
 
+/**
+ * Function to draw Task Instance Count vs User Id Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawTaskInstanceCountVsUserIdResult(renderElement){
     var renderElementID = '#' + renderElement;
     var taskId = $('#taskInstanceCountUserIdTaskList').val();
@@ -463,6 +509,10 @@ function drawTaskInstanceCountVsUserIdResult(renderElement){
     }
 }
 
+/**
+ * Function to draw Average Execution Time vs User Id Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawAvgExecuteTimeVsUserIdResult(renderElement){
     var renderElementID = '#' + renderElement;
     var taskId = $('#userIdAvgExecTimeTaskList').val();
@@ -504,6 +554,10 @@ function drawAvgExecuteTimeVsUserIdResult(renderElement){
     }
 }
 
+/**
+ * Function to draw Execution Time vs Task Instance Id Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawExecutionTimeVsTaskInstanceIdResult(renderElement){
     var renderElementID = '#' + renderElement;
     var taskId = $('#taskInstanceIdExecTimeTaskList').val();
@@ -559,6 +613,10 @@ function drawExecutionTimeVsTaskInstanceIdResult(renderElement){
     }
 }
 
+/**
+ * Function to draw Date vs Task Instance Count Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawDateVsTaskInstanceCountResult(renderElement){
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("taskInstanceCountDateStartDate");
@@ -608,6 +666,10 @@ function drawDateVsTaskInstanceCountResult(renderElement){
     });
 }
 
+/**
+ * Function to draw Total Involved Time vs User Id Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawTotalInvolvedTimeVsUserIdResult(renderElement){
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("userIdTotalInvolvedTimeStartDate");
@@ -656,6 +718,10 @@ function drawTotalInvolvedTimeVsUserIdResult(renderElement){
     });
 }
 
+/**
+ * Function to draw Total Completed Tasks vs User Id Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawTotalCompletedTasksVsUserIdResult(renderElement){
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("userIdTotalCompletedTasksStartDate");
@@ -704,6 +770,10 @@ function drawTotalCompletedTasksVsUserIdResult(renderElement){
     });
 }
 
+/**
+ * Function to draw Total Involved Time vs Process Id Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawTotalInvolvedTimeVsProcessIdResult(renderElement){
     var renderElementID = '#' + renderElement;
     var userId = $('#processIdTotalInvolvedTimeUserList').val();
@@ -759,6 +829,10 @@ function drawTotalInvolvedTimeVsProcessIdResult(renderElement){
     }
 }
 
+/**
+ * Function to draw Total Involved Instance Count vs Process Id Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawTotalInvolvedInstanceCountVsProcessIdResult(renderElement){
     var renderElementID = '#' + renderElement;
     var userId = $('#processIdTotalInvolvedInstanceCountUserList').val();
@@ -814,6 +888,10 @@ function drawTotalInvolvedInstanceCountVsProcessIdResult(renderElement){
     }
 }
 
+/**
+ * Function to draw User Level Task Instance Count vs Task Id Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawUserLevelTaskInstanceCountVsTaskIdResult(renderElement){
     var renderElementID = '#' + renderElement;
     var userId = $('#userLevelTaskInstanceCountTaskIdUserList').val();
@@ -855,6 +933,10 @@ function drawUserLevelTaskInstanceCountVsTaskIdResult(renderElement){
     }
 }
 
+/**
+ * Function to draw User Level Average Execution Time Vs Task Id Result
+ * @param renderElement is the id of the rendering section
+ */
 function drawUserLevelAvgExecuteTimeVsTaskIdResult(renderElement){
     var renderElementID = '#' + renderElement;
     var userId = $('#userLevelTaskIdAvgExecTimeUserList').val();
@@ -896,6 +978,12 @@ function drawUserLevelAvgExecuteTimeVsTaskIdResult(renderElement){
     }
 }
 
+/**
+ * Function to load the Process List
+ * @param dropdownId is the id of the drop down list
+ * @param barChartId is the id of the rendering element
+ * @param callback is to hold a given rendering function
+ */
 function loadProcessList(dropdownId, barChartId, callback) {
     var dropdownElementID = '#' + dropdownId;
     var url = "/" + CONTEXT + "/process_definition_key_list";
@@ -925,6 +1013,12 @@ function loadProcessList(dropdownId, barChartId, callback) {
     });
 }
 
+/**
+ * Function to load the Task List
+ * @param dropdownId is the id of the drop down list
+ * @param barChartId is the id of the rendering element
+ * @param callback is to hold a given rendering function
+ */
 function loadTaskList(dropdownId, barChartId, callback){
     var dropdownElementID = '#' + dropdownId;
     var url = "/" + CONTEXT + "/task_definition_key_list";
@@ -954,6 +1048,12 @@ function loadTaskList(dropdownId, barChartId, callback){
     });
 }
 
+/**
+ * Function to load the User List
+ * @param dropdownId is the id of the drop down list
+ * @param barChartId is the id of the rendering element
+ * @param callback is to hold a given rendering function
+ */
 function loadUserList(dropdownId, barChartId, callback){
     var dropdownElementID = '#' + dropdownId;
     var url = "/" + CONTEXT + "/user_id_list";
@@ -983,6 +1083,11 @@ function loadUserList(dropdownId, barChartId, callback){
     });
 }
 
+/**
+ * Function to load the default dates
+ * @param start is to hold the start date
+ * @param end is to hold the end date
+ */
 function loadDates(start, end){
     var startDate = '#' + start;
     setDatePicker(end);
@@ -999,6 +1104,13 @@ function loadDates(start, end){
     });
 }
 
+/**
+ * Function to render a bar chart to the given data set
+ * @param renderElementID is to hold the rendering element
+ * @param dataset values are used to draw the bar chart
+ * @param xTitle is the title for the x-axis
+ * @param yTitle is the title for the y-axis
+ */
 function render(renderElementID, dataset, xTitle, yTitle) {
     // Dimensions for the chart: height, width, and space b/t the bars
     var margins = {top: 30, right: 120, bottom: 75, left: 120}
