@@ -68,9 +68,8 @@ public class TaskLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -83,9 +82,8 @@ public class TaskLevelMonitor {
 						double avgExecTime = values.getDouble("avgExecutionTime");
 						table.put(taskDefKey, avgExecTime);
 					}
-					sortedResult = AnalyticsUtils
-							.getDoubleValueSortedList(table, "taskDefId", "avgExecutionTime", order,
-							                          taskCount);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, "taskDefId", "avgExecutionTime",
+					                                                       order, taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -132,9 +130,8 @@ public class TaskLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Integer> table = new Hashtable<>();
@@ -147,9 +144,8 @@ public class TaskLevelMonitor {
 						int processInstanceCount = values.getInt("taskInstanceCount");
 						table.put(processDefKey, processInstanceCount);
 					}
-					sortedResult = AnalyticsUtils
-							.getIntegerValueSortedList(table, "taskDefId", "taskInstanceCount",
-							                           order, taskCount);
+					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, "taskDefId", "taskInstanceCount",
+					                                                        order, taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -196,9 +192,8 @@ public class TaskLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Integer> table = new Hashtable<>();
@@ -211,9 +206,8 @@ public class TaskLevelMonitor {
 						int taskInstanceCount = values.getInt("taskInstanceCount");
 						table.put(userId, taskInstanceCount);
 					}
-					sortedResult = AnalyticsUtils
-							.getIntegerValueSortedList(table, "assignUser", "taskInstanceCount",
-							                           order, taskCount);
+					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, "assignUser", "taskInstanceCount",
+					                                                        order, taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -260,9 +254,8 @@ public class TaskLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -275,9 +268,8 @@ public class TaskLevelMonitor {
 						double avgExecTime = values.getInt("avgWaitingTime");
 						table.put(userId, avgExecTime);
 					}
-					sortedResult = AnalyticsUtils
-							.getDoubleValueSortedList(table, "assignUser", "avgWaitingTime", order,
-							                          taskCount);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, "assignUser", "avgWaitingTime",
+					                                                       order, taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -312,10 +304,8 @@ public class TaskLevelMonitor {
 				searchQuery.setTableName(AnalyticsConstants.TASK_USAGE_TABLE);
 				String queryStr = "taskDefinitionKey:" + "\"'" + taskId + "'\"";
 				if (from != 0 && to != 0) {
-					queryStr += " AND " +
-					            AnalyticsUtils
-							            .getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME,
-							                               from, to);
+					queryStr += " AND " + AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME,
+					                                                       from, to);
 				}
 				searchQuery.setQuery(queryStr);
 				searchQuery.setStart(AnalyticsConstants.MIN_COUNT);
@@ -325,9 +315,8 @@ public class TaskLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(searchQuery));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_SEARCH),
-						        AnalyticsUtils.getJSONString(searchQuery));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_SEARCH),
+				                                         AnalyticsUtils.getJSONString(searchQuery));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -340,9 +329,8 @@ public class TaskLevelMonitor {
 						double executionTime = values.getDouble("duration");
 						table.put(processDefKey, executionTime);
 					}
-					sortedResult = AnalyticsUtils
-							.getDoubleValueSortedList(table, "taskInstanceId", "duration", order,
-							                          limit);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, "taskInstanceId", "duration",
+					                                                       order, limit);
 				}
 			}
 		} catch (Exception e) {
@@ -382,18 +370,15 @@ public class TaskLevelMonitor {
 				AggregateQuery query = new AggregateQuery();
 				query.setTableName(AnalyticsConstants.TASK_USAGE_TABLE);
 				query.setGroupByField(AnalyticsConstants.FINISHED_TIME);
-				String queryStr = AnalyticsUtils
-						.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
+				String queryStr = AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
 
 				if (taskIdList.length() != 0) {
 					queryStr += " AND ";
 					for (int i = 0; i < taskIdList.length(); i++) {
 						if (i == 0) {
-							queryStr += "(taskDefinitionKey:" + "\"'" + taskIdList.getString(i)
-							            + "'\"";
+							queryStr += "(taskDefinitionKey:" + "\"'" + taskIdList.getString(i) + "'\"";
 						} else {
-							queryStr += " OR " + "taskDefinitionKey:" + "\"'" +
-							            taskIdList.getString(i) + "'\"";
+							queryStr += " OR " + "taskDefinitionKey:" + "\"'" + taskIdList.getString(i) + "'\"";
 						}
 						if (i == taskIdList.length() - 1) {
 							queryStr += ")";
@@ -403,9 +388,8 @@ public class TaskLevelMonitor {
 				query.setQuery(queryStr);
 				query.setAggregateFields(aggregateFields);
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<Long, Integer> table = new Hashtable<>();
@@ -419,8 +403,7 @@ public class TaskLevelMonitor {
 						int taskInstanceCount = values.getInt("taskInstanceCount");
 						table.put(completedTime, taskInstanceCount);
 					}
-					sortedResult = AnalyticsUtils
-							.getLongKeySortedList(table, "finishTime", "taskInstanceCount");
+					sortedResult = AnalyticsUtils.getLongKeySortedList(table, "finishTime", "taskInstanceCount");
 				}
 			}
 		} catch (Exception e) {
@@ -459,9 +442,8 @@ public class TaskLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray array = new JSONArray(result);
 				JSONArray resultArray = new JSONArray();

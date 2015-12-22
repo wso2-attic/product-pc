@@ -63,8 +63,7 @@ public class ProcessLevelMonitor {
 				query.setTableName(AnalyticsConstants.PROCESS_USAGE_TABLE);
 				query.setGroupByField(AnalyticsConstants.PROCESS_DEFINITION_KEY);
 				if (from != 0 && to != 0) {
-					query.setQuery(AnalyticsUtils.getDateRangeQuery(
-							AnalyticsConstants.COLUMN_FINISHED_TIME, from, to));
+					query.setQuery(AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to));
 				}
 				query.setAggregateFields(aggregateFields);
 
@@ -72,9 +71,8 @@ public class ProcessLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -87,9 +85,8 @@ public class ProcessLevelMonitor {
 						double avgExecTime = values.getDouble("avgExecutionTime");
 						table.put(processDefKey, avgExecTime);
 					}
-					sortedResult = AnalyticsUtils
-							.getDoubleValueSortedList(table, "processDefKey", "avgExecutionTime",
-							                          order, processCount);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, "processDefKey", "avgExecutionTime",
+					                                                       order, processCount);
 				}
 			}
 		} catch (Exception e) {
@@ -140,9 +137,8 @@ public class ProcessLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Integer> table = new Hashtable<>();
@@ -155,8 +151,7 @@ public class ProcessLevelMonitor {
 						int processInstanceCount = values.getInt("processInstanceCount");
 						table.put(processDefKey, processInstanceCount);
 					}
-					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, "processDefKey",
-					                                                        "processInstanceCount",
+					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, "processDefKey", "processInstanceCount",
 					                                                        order, processCount);
 				}
 			}
@@ -205,9 +200,8 @@ public class ProcessLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -220,9 +214,8 @@ public class ProcessLevelMonitor {
 						double avgExecTime = values.getDouble("avgExecutionTime");
 						table.put(processVersion, avgExecTime);
 					}
-					sortedResult = AnalyticsUtils
-							.getDoubleValueSortedList(table, "processVer", "avgExecutionTime",
-							                          order, processCount);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, "processVer", "avgExecutionTime",
+					                                                       order, processCount);
 				}
 			}
 		} catch (Exception e) {
@@ -269,9 +262,8 @@ public class ProcessLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Integer> table = new Hashtable<>();
@@ -284,9 +276,8 @@ public class ProcessLevelMonitor {
 						int processInstanceCount = values.getInt("processInstanceCount");
 						table.put(processVersion, processInstanceCount);
 					}
-					sortedResult = AnalyticsUtils
-							.getIntegerValueSortedList(table, "processVer", "processInstanceCount",
-							                           order, processCount);
+					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, "processVer", "processInstanceCount",
+					                                                        order, processCount);
 				}
 			}
 		} catch (Exception e) {
@@ -321,10 +312,8 @@ public class ProcessLevelMonitor {
 				searchQuery.setTableName(AnalyticsConstants.PROCESS_USAGE_TABLE);
 				String queryStr = "processDefinitionId:" + "\"'" + processId + "'\"";
 				if (from != 0 && to != 0) {
-					queryStr += " AND " +
-					            AnalyticsUtils
-							            .getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME,
-							                               from, to);
+					queryStr += " AND " + AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME,
+					                                                       from, to);
 				}
 				searchQuery.setQuery(queryStr);
 				searchQuery.setStart(AnalyticsConstants.MIN_COUNT);
@@ -334,9 +323,8 @@ public class ProcessLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(searchQuery));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_SEARCH),
-						        AnalyticsUtils.getJSONString(searchQuery));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_SEARCH),
+				                                         AnalyticsUtils.getJSONString(searchQuery));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -349,9 +337,8 @@ public class ProcessLevelMonitor {
 						double executionTime = values.getDouble("duration");
 						table.put(processDefKey, executionTime);
 					}
-					sortedResult = AnalyticsUtils
-							.getDoubleValueSortedList(table, "processInstanceId", "duration", order,
-							                          limit);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, "processInstanceId", "duration",
+					                                                       order, limit);
 				}
 			}
 		} catch (Exception e) {
@@ -392,18 +379,15 @@ public class ProcessLevelMonitor {
 				AggregateQuery query = new AggregateQuery();
 				query.setTableName(AnalyticsConstants.PROCESS_USAGE_TABLE);
 				query.setGroupByField(AnalyticsConstants.FINISHED_TIME);
-				String queryStr = AnalyticsUtils
-						.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
+				String queryStr = AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
 
 				if (processIdList.length() != 0) {
 					queryStr += " AND ";
 					for (int i = 0; i < processIdList.length(); i++) {
 						if (i == 0) {
-							queryStr += "(processDefinitionId:" + "\"'" + processIdList.getString(i)
-							            + "'\"";
+							queryStr += "(processDefinitionId:" + "\"'" + processIdList.getString(i) + "'\"";
 						} else {
-							queryStr += " OR " + "processDefinitionId:" + "\"'" +
-							            processIdList.getString(i) + "'\"";
+							queryStr += " OR " + "processDefinitionId:" + "\"'" + processIdList.getString(i) + "'\"";
 						}
 						if (i == processIdList.length() - 1) {
 							queryStr += ")";
@@ -413,9 +397,8 @@ public class ProcessLevelMonitor {
 				query.setQuery(queryStr);
 				query.setAggregateFields(aggregateFields);
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<Long, Integer> table = new Hashtable<>();
@@ -424,13 +407,11 @@ public class ProcessLevelMonitor {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject("values");
-						long completedTime = Long.parseLong(values.getJSONArray("finishTime")
-						                                          .getString(0));
+						long completedTime = Long.parseLong(values.getJSONArray("finishTime").getString(0));
 						int processInstanceCount = values.getInt("processInstanceCount");
 						table.put(completedTime, processInstanceCount);
 					}
-					sortedResult = AnalyticsUtils
-							.getLongKeySortedList(table, "finishTime", "processInstanceCount");
+					sortedResult = AnalyticsUtils.getLongKeySortedList(table, "finishTime", "processInstanceCount");
 				}
 			}
 		} catch (Exception e) {
@@ -469,9 +450,8 @@ public class ProcessLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray array = new JSONArray(result);
 				JSONArray resultArray = new JSONArray();

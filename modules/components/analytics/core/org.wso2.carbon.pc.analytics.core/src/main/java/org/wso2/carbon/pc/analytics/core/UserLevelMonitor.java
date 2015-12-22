@@ -62,8 +62,7 @@ public class UserLevelMonitor {
 				query.setTableName(AnalyticsConstants.USER_INVOLVE_TABLE);
 				query.setGroupByField(AnalyticsConstants.ASSIGN_USER);
 				if (from != 0 && to != 0) {
-					query.setQuery(AnalyticsUtils.getDateRangeQuery(
-							AnalyticsConstants.COLUMN_FINISHED_TIME, from, to));
+					query.setQuery(AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to));
 				}
 				query.setAggregateFields(aggregateFields);
 
@@ -71,9 +70,8 @@ public class UserLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -86,9 +84,8 @@ public class UserLevelMonitor {
 						double totalInvolvedTime = values.getDouble("totalInvolvedTime");
 						table.put(assignee, totalInvolvedTime);
 					}
-					sortedResult = AnalyticsUtils
-							.getDoubleValueSortedList(table, "assignUser", "totalInvolvedTime",
-							                          order, userCount);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, "assignUser", "totalInvolvedTime",
+					                                                       order, userCount);
 				}
 			}
 		} catch (Exception e) {
@@ -130,8 +127,7 @@ public class UserLevelMonitor {
 				query.setTableName(AnalyticsConstants.USER_INVOLVE_TABLE);
 				query.setGroupByField(AnalyticsConstants.ASSIGN_USER);
 				if (from != 0 && to != 0) {
-					query.setQuery(AnalyticsUtils.getDateRangeQuery(
-							AnalyticsConstants.COLUMN_FINISHED_TIME, from, to));
+					query.setQuery(AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to));
 				}
 				query.setAggregateFields(aggregateFields);
 
@@ -139,9 +135,8 @@ public class UserLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Integer> table = new Hashtable<>();
@@ -154,9 +149,8 @@ public class UserLevelMonitor {
 						int totalInvolvedTime = values.getInt("completedTotalTasks");
 						table.put(assignee, totalInvolvedTime);
 					}
-					sortedResult = AnalyticsUtils
-							.getIntegerValueSortedList(table, "assignUser", "completedTotalTasks",
-							                           order, userCount);
+					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, "assignUser", "completedTotalTasks",
+					                                                        order, userCount);
 				}
 			}
 		} catch (Exception e) {
@@ -200,10 +194,7 @@ public class UserLevelMonitor {
 				query.setGroupByField(AnalyticsConstants.PROCESS_DEFINITION_KEY);
 				String queryStr = "assignee:" + "\"'" + userId + "'\"";
 				if (from != 0 && to != 0) {
-					queryStr += " AND " +
-					            AnalyticsUtils
-							            .getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME,
-							                               from, to);
+					queryStr += " AND " + AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
 				}
 				query.setQuery(queryStr);
 				query.setAggregateFields(aggregateFields);
@@ -212,9 +203,8 @@ public class UserLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -227,9 +217,8 @@ public class UserLevelMonitor {
 						double totalInvolvedTime = values.getDouble("totalInvolvedTime");
 						table.put(processDefKey, totalInvolvedTime);
 					}
-					sortedResult = AnalyticsUtils
-							.getDoubleValueSortedList(table, "processDefKey", "totalInvolvedTime",
-							                          order, count);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, "processDefKey", "totalInvolvedTime",
+					                                                       order, count);
 				}
 			}
 		} catch (Exception e) {
@@ -274,10 +263,7 @@ public class UserLevelMonitor {
 				query.setGroupByField(AnalyticsConstants.PROCESS_DEFINITION_KEY);
 				String queryStr = "assignee:" + "\"'" + userId + "'\"";
 				if (from != 0 && to != 0) {
-					queryStr += " AND " +
-					            AnalyticsUtils
-							            .getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME,
-							                               from, to);
+					queryStr += " AND " + AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
 				}
 				query.setQuery(queryStr);
 				query.setAggregateFields(aggregateFields);
@@ -286,9 +272,8 @@ public class UserLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Integer> table = new Hashtable<>();
@@ -301,9 +286,8 @@ public class UserLevelMonitor {
 						int instanceCount = values.getInt("totalInstanceCount");
 						table.put(processDefKey, instanceCount);
 					}
-					sortedResult = AnalyticsUtils
-							.getIntegerValueSortedList(table, "processDefKey", "totalInstanceCount",
-							                           order, count);
+					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, "processDefKey", "totalInstanceCount",
+					                                                        order, count);
 				}
 			}
 		} catch (Exception e) {
@@ -352,9 +336,8 @@ public class UserLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Integer> table = new Hashtable<>();
@@ -367,9 +350,8 @@ public class UserLevelMonitor {
 						int processInstanceCount = values.getInt("taskInstanceCount");
 						table.put(processDefKey, processInstanceCount);
 					}
-					sortedResult = AnalyticsUtils
-							.getIntegerValueSortedList(table, "taskDefId", "taskInstanceCount",
-							                           order, taskCount);
+					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, "taskDefId", "taskInstanceCount",
+					                                                        order, taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -416,9 +398,8 @@ public class UserLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -431,9 +412,8 @@ public class UserLevelMonitor {
 						double avgExecTime = values.getDouble("avgExecutionTime");
 						table.put(taskDefKey, avgExecTime);
 					}
-					sortedResult = AnalyticsUtils
-							.getDoubleValueSortedList(table, "taskDefId", "avgExecutionTime", order,
-							                          taskCount);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, "taskDefId", "avgExecutionTime",
+					                                                       order, taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -472,9 +452,8 @@ public class UserLevelMonitor {
 					log.debug(AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient
-								.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-						        AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+				                                         AnalyticsUtils.getJSONString(query));
 
 				JSONArray array = new JSONArray(result);
 				JSONArray resultArray = new JSONArray();
