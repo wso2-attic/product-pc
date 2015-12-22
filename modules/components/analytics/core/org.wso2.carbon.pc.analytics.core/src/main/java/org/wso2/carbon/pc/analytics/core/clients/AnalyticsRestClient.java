@@ -74,7 +74,7 @@ public class AnalyticsRestClient {
 				totalOutput.append(output);
 			}
 
-			if(log.isDebugEnabled()){
+			if(log.isDebugEnabled()) {
 				log.debug("Output = " + totalOutput.toString());
 			}
 
