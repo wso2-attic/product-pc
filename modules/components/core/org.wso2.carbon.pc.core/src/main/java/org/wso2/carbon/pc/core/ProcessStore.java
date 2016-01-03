@@ -819,7 +819,7 @@ public class ProcessStore {
                 resourceString = conObj.toString();
             }
         }catch (Exception e) {
-            log.error("Failed to fetch Successor Predecessor and Subprocess information: " + resourcePath);
+            log.error("Failed to fetch Successor Predecessor and Subprocess information: " + resourcePath, e);
         }
         return resourceString;
     }
