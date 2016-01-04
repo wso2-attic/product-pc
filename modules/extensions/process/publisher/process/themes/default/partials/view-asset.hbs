@@ -174,7 +174,7 @@
         var subprocessInput = $(e).parent().closest("tr").find("input").val();
 
         if(subprocessInput == ''){
-            alertify.error('Field is empty.');
+            alertify.error('Subprocess field is empty.');
         }else if(isProcessNotAvailableInList(subprocessInput)){
             alertify.warning('Please select a process from the dropdown list.');
         }else if(subprocessInput == getMainProcess()){
@@ -222,7 +222,7 @@
         var successorInput = $(e).parent().closest("tr").find("input").val();
 
         if(successorInput == ''){
-            alertify.error('Field is empty.');
+            alertify.error('Successor Field is empty.');
         }else if(isProcessNotAvailableInList(successorInput)){
             alertify.warning('Please select a process from the dropdown list.');
         }else if(successorInput == getMainProcess()){
@@ -270,7 +270,7 @@
         var predecessorInput = $(e).parent().closest("tr").find("input").val();
 
         if(predecessorInput == ''){
-            alertify.error('Field is empty.');
+            alertify.error('Predecessor field is empty.');
         }else if(isProcessNotAvailableInList(predecessorInput)){
             alertify.warning('Please select a process from the dropdown list.');
         }else if(predecessorInput == getMainProcess()){
