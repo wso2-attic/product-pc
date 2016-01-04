@@ -738,7 +738,7 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                resourcePath = resourcePath.substring("/_system/governance/".length());
+                resourcePath = resourcePath.substring(ProcessStoreConstants.GREG_PATH.length());
                 Resource resourceAsset = reg.get(resourcePath);
                 String resourceContent = new String((byte[]) resourceAsset.getContent());
 
@@ -836,7 +836,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 String processOwner = processInfo.getString("processOwner");
 
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
@@ -866,7 +866,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject subprocess = processInfo.getJSONObject("subprocess");
 
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
@@ -902,7 +902,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject successor = processInfo.getJSONObject("successor");
 
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
@@ -938,7 +938,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject predecessor = processInfo.getJSONObject("predecessor");
 
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
@@ -974,7 +974,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject subprocess = processInfo.getJSONObject("deleteSubprocess");
 
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
@@ -1018,7 +1018,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject successor = processInfo.getJSONObject("deleteSuccessor");
 
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
@@ -1062,7 +1062,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject predecessor = processInfo.getJSONObject("deletePredecessor");
 
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
