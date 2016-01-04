@@ -3,7 +3,7 @@ importPackage(org.wso2.carbon.pc.core);
 
 var log = new Log();
 if(log.isDebugEnabled()){
-    log.debug("Successor delete logic");
+    log.debug("Deleting successor X of process Y");
 }
 
 var ps = new ProcessStore();
