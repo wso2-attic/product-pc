@@ -109,8 +109,6 @@ function drawAvgExecuteTimeVsProcessIdResult(renderElement) {
                     });
                 }
                 render(renderElementID, dataset, 'AVG Execution Time (ms)', 'Process Definition Key');
-            } else {
-                //Error message
             }
         },
         error: function (xhr, status, error) {
@@ -161,8 +159,6 @@ function drawProcessInstanceCountVsProcessIdResult(renderElement) {
                     });
                 }
                 render(renderElementID, dataset, 'Process Instance Count', 'Process Definition Key');
-            } else {
-                //Error message
             }
         },
         error: function (xhr, status, error) {
@@ -203,8 +199,6 @@ function drawAvgExecuteTimeVsProcessVersionResult(renderElement) {
                         });
                     }
                     render(renderElementID, dataset, 'AVG Execution Time (ms)', 'Process Version');
-                } else {
-                    //Error message
                 }
             },
             error: function (xhr, status, error) {
@@ -248,8 +242,6 @@ function drawProcessInstanceCountVsProcessVersionResult(renderElement) {
                         });
                     }
                     render(renderElementID, dataset, 'Process Instance Count', 'Process Version');
-                } else {
-                    //Error message
                 }
             },
             error: function (xhr, status, error) {
@@ -307,8 +299,6 @@ function drawExecutionTimeVsProcessInstanceIdResult(renderElement) {
                         });
                     }
                     render(renderElementID, dataset, 'Execution Time (ms)', 'Process Instance Id');
-                } else {
-                    //Error message
                 }
             },
             error: function (xhr, status, error) {
@@ -363,8 +353,6 @@ function drawDateVsProcessInstanceCountResult(renderElement) {
                     });
                 }
                 render(renderElementID, dataset, 'Process Instance Count', 'Completion Date');
-            } else {
-                //Error message
             }
         },
         error: function (xhr, status, error) {
@@ -405,8 +393,6 @@ function drawAvgExecuteTimeVsTaskIdResult(renderElement) {
                         });
                     }
                     render(renderElementID, dataset, 'AVG Execution Time (ms)', 'Task Definition Key');
-                } else {
-                    //Error message
                 }
             },
             error: function (xhr, status, error) {
@@ -450,8 +436,6 @@ function drawTaskInstanceCountVsTaskIdResult(renderElement) {
                         });
                     }
                     render(renderElementID, dataset, 'Task Instance Count', 'Task Definition Key');
-                } else {
-                    //Error message
                 }
             },
             error: function (xhr, status, error) {
@@ -495,8 +479,6 @@ function drawTaskInstanceCountVsUserIdResult(renderElement) {
                         });
                     }
                     render(renderElementID, dataset, 'Task Instance Count', 'Assignee');
-                } else {
-                    //Error message
                 }
             },
             error: function (xhr, status, error) {
@@ -540,8 +522,6 @@ function drawAvgExecuteTimeVsUserIdResult(renderElement) {
                         });
                     }
                     render(renderElementID, dataset, 'AVG Waiting Time', 'Assignee');
-                } else {
-                    //Error message
                 }
             },
             error: function (xhr, status, error) {
@@ -599,8 +579,6 @@ function drawExecutionTimeVsTaskInstanceIdResult(renderElement) {
                         });
                     }
                     render(renderElementID, dataset, 'Execution Time (ms)', 'Task Instance Id');
-                } else {
-                    //Error message
                 }
             },
             error: function (xhr, status, error) {
@@ -655,8 +633,6 @@ function drawDateVsTaskInstanceCountResult(renderElement) {
                     });
                 }
                 render(renderElementID, dataset, 'Task Instance Count', 'Completion Date');
-            } else {
-                //Error message
             }
         },
         error: function (xhr, status, error) {
@@ -707,8 +683,6 @@ function drawTotalInvolvedTimeVsUserIdResult(renderElement) {
                     });
                 }
                 render(renderElementID, dataset, 'Total Involved Time (ms)', 'Assignee');
-            } else {
-                //Error message
             }
         },
         error: function (xhr, status, error) {
@@ -759,8 +733,6 @@ function drawTotalCompletedTasksVsUserIdResult(renderElement) {
                     });
                 }
                 render(renderElementID, dataset, 'Total Completed Tasks', 'Assignee');
-            } else {
-                //Error message
             }
         },
         error: function (xhr, status, error) {
@@ -815,8 +787,6 @@ function drawTotalInvolvedTimeVsProcessIdResult(renderElement) {
                         });
                     }
                     render(renderElementID, dataset, 'Total Involved Time (ms)', 'Process Definition Key');
-                } else {
-                    //Error message
                 }
             },
             error: function (xhr, status, error) {
@@ -874,8 +844,6 @@ function drawTotalInvolvedInstanceCountVsProcessIdResult(renderElement) {
                         });
                     }
                     render(renderElementID, dataset, 'Total Involved Instance Count', 'Process Definition Key');
-                } else {
-                    //Error message
                 }
             },
             error: function (xhr, status, error) {
@@ -919,8 +887,6 @@ function drawUserLevelTaskInstanceCountVsTaskIdResult(renderElement) {
                         });
                     }
                     render(renderElementID, dataset, 'Task Instance Count', 'Task Definition Key');
-                } else {
-                    //Error message
                 }
             },
             error: function (xhr, status, error) {
@@ -964,8 +930,6 @@ function drawUserLevelAvgExecuteTimeVsTaskIdResult(renderElement) {
                         });
                     }
                     render(renderElementID, dataset, 'AVG Execution Time (ms)', 'Task Definition Key');
-                } else {
-                    //Error message
                 }
             },
             error: function (xhr, status, error) {
