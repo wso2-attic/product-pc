@@ -849,7 +849,7 @@ public class ProcessStore {
             }
 
         }catch (Exception e) {
-            log.error(e);
+            log.error("Failed to update the process owner", e);
         }
         return OK;
     }
@@ -885,7 +885,7 @@ public class ProcessStore {
             }
 
         }catch (Exception e) {
-            log.error(e);
+            log.error("Failed to add a subprocess", e);
         }
         return OK;
     }
@@ -921,7 +921,7 @@ public class ProcessStore {
             }
 
         }catch (Exception e) {
-            log.error(e);
+            log.error("Failed to add a successor", e);
         }
         return OK;
     }
@@ -957,7 +957,7 @@ public class ProcessStore {
             }
 
         }catch (Exception e) {
-            log.error(e);
+            log.error("Failed to add a predecessor", e);
         }
         return OK;
     }
@@ -1001,7 +1001,7 @@ public class ProcessStore {
                 }
             }
         }catch (Exception e) {
-            log.error(e);
+            log.error("Failed to delete a subprocess", e);
         }
         return OK;
     }
@@ -1045,7 +1045,7 @@ public class ProcessStore {
                 }
             }
         }catch (Exception e) {
-            log.error(e);
+            log.error("Failed to delete a successor", e);
         }
         return OK;
     }
@@ -1089,7 +1089,7 @@ public class ProcessStore {
                 }
             }
         }catch (Exception e) {
-            log.error(e);
+            log.error("Failed to delete a predecessor", e);
         }
         return OK;
     }
