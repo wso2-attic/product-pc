@@ -212,7 +212,7 @@
 
     function getProcessList(){
         $.ajax({
-            url: 'https://localhost:9443/publisher/assets/process/apis/get_process_list',
+            url: '/publisher/assets/process/apis/get_process_list',
             type: 'GET',
             success: function (response) {
                 processListObj = JSON.parse(response);

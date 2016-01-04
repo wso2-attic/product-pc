@@ -147,7 +147,7 @@
 
     function getProcessList(){
         $.ajax({
-            url: 'https://localhost:9443/publisher/assets/process/apis/get_process_list',
+            url: '/publisher/assets/process/apis/get_process_list',
             type: 'GET',
             success: function (response) {
                 processListObj = JSON.parse(response);
@@ -205,7 +205,7 @@
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/update_subprocess',
+                url: '/publisher/assets/process/apis/update_subprocess',
                 type: 'POST',
                 data: { 'subprocessDetails': JSON.stringify(subProcessDetails) },
                 success: function (response) {
@@ -253,7 +253,7 @@
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/update_successor',
+                url: '/publisher/assets/process/apis/update_successor',
                 type: 'POST',
                 data: { 'successorDetails': JSON.stringify(successorDetails) },
                 success: function (response) {
@@ -301,7 +301,7 @@
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/update_predecessor',
+                url: '/publisher/assets/process/apis/update_predecessor',
                 type: 'POST',
                 data: { 'predecessorDetails': JSON.stringify(predecessorDetails) },
                 success: function (response) {
@@ -340,7 +340,7 @@
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/delete_subprocess',
+                url: '/publisher/assets/process/apis/delete_subprocess',
                 type: 'POST',
                 data: { 'deleteSubprocessDetails': JSON.stringify(deleteSubObj) },
                 success: function (response) {
@@ -379,7 +379,7 @@
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/delete_successor',
+                url: '/publisher/assets/process/apis/delete_successor',
                 type: 'POST',
                 data: { 'deleteSuccessorDetails': JSON.stringify(deleteSuccessorObj) },
                 success: function (response) {
@@ -418,7 +418,7 @@
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/delete_Predecessor',
+                url: '/publisher/assets/process/apis/delete_Predecessor',
                 type: 'POST',
                 data: { 'deletePredecessorDetails': JSON.stringify(deletePredecessorObj) },
                 success: function (response) {
@@ -443,7 +443,7 @@
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/update_owner',
+                url: '/publisher/assets/process/apis/update_owner',
                 type: 'POST',
                 data: { 'ownerDetails': JSON.stringify(ownerDetails) },
                 success: function (response) {
