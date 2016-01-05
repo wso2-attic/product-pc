@@ -82,10 +82,10 @@ public class AnalyticsRestClient {
 
 		} catch (UnsupportedEncodingException e) {
 			String errMsg = "Async DAS client unsupported encoding exception.";
-			log.error(errMsg, e);
+			throw new UnsupportedEncodingException(errMsg);
 		} catch (UnsupportedOperationException e) {
 			String errMsg = "Async DAS client unsupported operation exception.";
-			log.error(errMsg, e);
+			throw new UnsupportedOperationException(errMsg);
 		} catch (IOException e) {
 			String errMsg = "Async DAS client I/O exception.";
 			log.error(errMsg, e);
