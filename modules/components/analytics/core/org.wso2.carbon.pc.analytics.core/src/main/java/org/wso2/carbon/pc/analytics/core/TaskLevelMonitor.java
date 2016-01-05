@@ -77,13 +77,13 @@ public class TaskLevelMonitor {
 				if (unsortedResultArray.length() != 0) {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
-						JSONObject values = jsonObj.getJSONObject("values");
-						String taskDefKey = values.getJSONArray("taskDefId").getString(0);
-						double avgExecTime = values.getDouble("avgExecutionTime");
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String taskDefKey = values.getJSONArray(AnalyticsConstants.TASK_DEFINITION_KEY).getString(0);
+						double avgExecTime = values.getDouble(AnalyticsConstants.AVG_EXECUTION_TIME);
 						table.put(taskDefKey, avgExecTime);
 					}
-					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, "taskDefId", "avgExecutionTime",
-					                                                       order, taskCount);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, AnalyticsConstants.TASK_DEFINITION_KEY,
+					                                                       AnalyticsConstants.AVG_EXECUTION_TIME, order, taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -139,13 +139,13 @@ public class TaskLevelMonitor {
 				if (unsortedResultArray.length() != 0) {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
-						JSONObject values = jsonObj.getJSONObject("values");
-						String processDefKey = values.getJSONArray("taskDefId").getString(0);
-						int processInstanceCount = values.getInt("taskInstanceCount");
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String processDefKey = values.getJSONArray(AnalyticsConstants.TASK_DEFINITION_KEY).getString(0);
+						int processInstanceCount = values.getInt(AnalyticsConstants.TASK_INSTANCE_COUNT);
 						table.put(processDefKey, processInstanceCount);
 					}
-					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, "taskDefId", "taskInstanceCount",
-					                                                        order, taskCount);
+					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, AnalyticsConstants.TASK_DEFINITION_KEY,
+					                                                        AnalyticsConstants.TASK_INSTANCE_COUNT, order, taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -201,13 +201,13 @@ public class TaskLevelMonitor {
 				if (unsortedResultArray.length() != 0) {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
-						JSONObject values = jsonObj.getJSONObject("values");
-						String userId = values.getJSONArray("assignUser").getString(0);
-						int taskInstanceCount = values.getInt("taskInstanceCount");
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String userId = values.getJSONArray(AnalyticsConstants.ASSIGN_USER).getString(0);
+						int taskInstanceCount = values.getInt(AnalyticsConstants.TASK_INSTANCE_COUNT);
 						table.put(userId, taskInstanceCount);
 					}
-					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, "assignUser", "taskInstanceCount",
-					                                                        order, taskCount);
+					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, AnalyticsConstants.ASSIGN_USER,
+					                                                        AnalyticsConstants.TASK_INSTANCE_COUNT, order, taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -263,13 +263,13 @@ public class TaskLevelMonitor {
 				if (unsortedResultArray.length() != 0) {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
-						JSONObject values = jsonObj.getJSONObject("values");
-						String userId = values.getJSONArray("assignUser").getString(0);
-						double avgExecTime = values.getInt("avgWaitingTime");
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String userId = values.getJSONArray(AnalyticsConstants.ASSIGN_USER).getString(0);
+						double avgExecTime = values.getInt(AnalyticsConstants.AVG_WAITING_TIME);
 						table.put(userId, avgExecTime);
 					}
-					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, "assignUser", "avgWaitingTime",
-					                                                       order, taskCount);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, AnalyticsConstants.ASSIGN_USER,
+					                                                       AnalyticsConstants.AVG_WAITING_TIME, order, taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -324,13 +324,13 @@ public class TaskLevelMonitor {
 				if (unsortedResultArray.length() != 0) {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
-						JSONObject values = jsonObj.getJSONObject("values");
-						String processDefKey = values.getString("taskInstanceId");
-						double executionTime = values.getDouble("duration");
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String processDefKey = values.getString(AnalyticsConstants.TASK_INSTANCE_ID);
+						double executionTime = values.getDouble(AnalyticsConstants.DURATION);
 						table.put(processDefKey, executionTime);
 					}
-					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, "taskInstanceId", "duration",
-					                                                       order, limit);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, AnalyticsConstants.TASK_INSTANCE_ID,
+					                                                       AnalyticsConstants.DURATION, order, limit);
 				}
 			}
 		} catch (Exception e) {
@@ -397,13 +397,13 @@ public class TaskLevelMonitor {
 				if (unsortedResultArray.length() != 0) {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
-						JSONObject values = jsonObj.getJSONObject("values");
-						long completedTime = Long.parseLong(values.getJSONArray("finishTime")
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						long completedTime = Long.parseLong(values.getJSONArray(AnalyticsConstants.FINISHED_TIME)
 						                                          .getString(0));
-						int taskInstanceCount = values.getInt("taskInstanceCount");
+						int taskInstanceCount = values.getInt(AnalyticsConstants.TASK_INSTANCE_COUNT);
 						table.put(completedTime, taskInstanceCount);
 					}
-					sortedResult = AnalyticsUtils.getLongKeySortedList(table, "finishTime", "taskInstanceCount");
+					sortedResult = AnalyticsUtils.getLongKeySortedList(table, AnalyticsConstants.FINISHED_TIME, AnalyticsConstants.TASK_INSTANCE_COUNT);
 				}
 			}
 		} catch (Exception e) {
@@ -451,10 +451,10 @@ public class TaskLevelMonitor {
 				if (array.length() != 0) {
 					for (int i = 0; i < array.length(); i++) {
 						JSONObject jsonObj = array.getJSONObject(i);
-						JSONObject values = jsonObj.getJSONObject("values");
-						String taskDefKey = values.getJSONArray("taskDefId").getString(0);
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String taskDefKey = values.getJSONArray(AnalyticsConstants.TASK_DEFINITION_KEY).getString(0);
 						JSONObject o = new JSONObject();
-						o.put("taskDefId", taskDefKey);
+						o.put(AnalyticsConstants.TASK_DEFINITION_KEY, taskDefKey);
 						resultArray.put(o);
 					}
 					taskIdList = resultArray.toString();

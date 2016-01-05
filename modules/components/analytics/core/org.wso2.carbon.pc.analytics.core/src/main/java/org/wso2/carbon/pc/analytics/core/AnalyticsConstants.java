@@ -75,6 +75,9 @@ public class AnalyticsConstants {
 	public static final String ACTIVATE = "analyticsEnabled";
 	public static final String TRUE = "true";
 	public static final String SECRET_ALIAS = "PC.Analytics.Password";
+	public static final String VALUES = "values";
+	public static final String PROCESS_INSTANCE_ID = "processInstanceId";
+	public static final String TASK_INSTANCE_ID = "taskInstanceId";
 
 	public static final int MIN_COUNT = 0;
 	public static final int MAX_COUNT = 100000;
