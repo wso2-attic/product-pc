@@ -26,6 +26,6 @@ var processLevelMonitor = new ProcessLevelMonitor();
 var processIdList = processLevelMonitor.getProcessIdList();
 print(processIdList);
 if(log.isDebugEnabled()){
- log.debug(processIdList);
+ log.debug("Process Id List Result:" + processIdList);
 }
 %>

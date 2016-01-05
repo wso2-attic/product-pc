@@ -25,11 +25,11 @@ if(log.isDebugEnabled()){
 var taskLevelMonitor = new TaskLevelMonitor();
 var filters = String(request.getParameter("filters"));
 if(log.isDebugEnabled()){
- log.debug(filters);
+ log.debug("Avg Execution Time Vs Task Id Filters:" + filters);
 }
 var avgExecTimeVsTaskId = taskLevelMonitor.getAvgExecuteTimeVsTaskId(filters);
 print(avgExecTimeVsTaskId);
 if(log.isDebugEnabled()){
- log.debug(avgExecTimeVsTaskId);
+ log.debug("Avg Execution Time Vs Task Id Result:" + avgExecTimeVsTaskId);
 }
 %>

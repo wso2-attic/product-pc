@@ -25,11 +25,11 @@ if(log.isDebugEnabled()){
 var taskLevelMonitor = new TaskLevelMonitor();
 var filters = String(request.getParameter("filters"));
 if(log.isDebugEnabled()){
- log.debug(filters);
+ log.debug("Task Instance Count Vs User Id Filters:" + filters);
 }
 var taskInstanceCountVsUserId = taskLevelMonitor.getTaskInstanceCountVsUserId(filters);
 print(taskInstanceCountVsUserId);
 if(log.isDebugEnabled()){
- log.debug(taskInstanceCountVsUserId);
+ log.debug("Task Instance Count Vs User Id Result:" + taskInstanceCountVsUserId);
 }
 %>

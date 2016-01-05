@@ -26,6 +26,6 @@ var taskLevelMonitor = new TaskLevelMonitor();
 var taskIdList = taskLevelMonitor.getTaskList();
 print(taskIdList);
 if(log.isDebugEnabled()){
- log.debug(taskIdList);
+ log.debug("Task List Result:" + taskIdList);
 }
 %>

@@ -25,11 +25,11 @@ if(log.isDebugEnabled()){
 var taskLevelMonitor = new TaskLevelMonitor();
 var filters = String(request.getParameter("filters"));
 if(log.isDebugEnabled()){
- log.debug(filters);
+ log.debug("Date Vs Task Instance Count Filters:" + filters);
 }
 var taskInstanceCountVsDate = taskLevelMonitor.getDateVsTaskInstanceCount(filters);
 print(taskInstanceCountVsDate);
 if(log.isDebugEnabled()){
- log.debug(taskInstanceCountVsDate);
+ log.debug("Date Vs Task Instance Count Result:" + taskInstanceCountVsDate);
 }
 %>

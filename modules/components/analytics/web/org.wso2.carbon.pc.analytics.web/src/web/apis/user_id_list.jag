@@ -26,6 +26,6 @@ var userLevelMonitor = new UserLevelMonitor();
 var userIdList = userLevelMonitor.getUserList();
 print(userIdList);
 if(log.isDebugEnabled()){
- log.debug(userIdList);
+ log.debug("User List Result:" + userIdList);
 }
 %>

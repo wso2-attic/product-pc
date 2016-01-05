@@ -25,11 +25,11 @@ if(log.isDebugEnabled()){
 var userLevelMonitor = new UserLevelMonitor();
 var filters = String(request.getParameter("filters"));
 if(log.isDebugEnabled()){
- log.debug(filters);
+ log.debug("User Level Avg Execution Time Vs Task Id Filters:" + filters);
 }
 var userLevelAvgExecTimeVsTaskId = userLevelMonitor.getUserLevelAvgExecuteTimeVsTaskId(filters);
 print(userLevelAvgExecTimeVsTaskId);
 if(log.isDebugEnabled()){
- log.debug(userLevelAvgExecTimeVsTaskId);
+ log.debug("User Level Avg Execution Time Vs Task Id Result:" + userLevelAvgExecTimeVsTaskId);
 }
 %>

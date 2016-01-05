@@ -25,11 +25,11 @@ if(log.isDebugEnabled()){
 var userLevelMonitor = new UserLevelMonitor();
 var filters = String(request.getParameter("filters"));
 if(log.isDebugEnabled()){
- log.debug(filters);
+ log.debug("Total Involved Time Vs Process Id Filters:" + filters);
 }
 var totalInvolvedTimeVsProcessId = userLevelMonitor.getTotalInvolvedTimeVsProcessId(filters);
 print(totalInvolvedTimeVsProcessId);
 if(log.isDebugEnabled()){
- log.debug(totalInvolvedTimeVsProcessId);
+ log.debug("Total Involved Time Vs Process Id Result:" + totalInvolvedTimeVsProcessId);
 }
 %>

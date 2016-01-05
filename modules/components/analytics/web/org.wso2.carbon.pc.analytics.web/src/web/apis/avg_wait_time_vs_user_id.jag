@@ -25,11 +25,11 @@ if(log.isDebugEnabled()){
 var taskLevelMonitor = new TaskLevelMonitor();
 var filters = String(request.getParameter("filters"));
 if(log.isDebugEnabled()){
- log.debug(filters);
+ log.debug("Avg Waiting Time Vs User Id Filters:" + filters);
 }
 var avgWaitingTimeVsUserId = taskLevelMonitor.getAvgWaitingTimeVsUserId(filters);
 print(avgWaitingTimeVsUserId);
 if(log.isDebugEnabled()){
- log.debug(avgWaitingTimeVsUserId);
+ log.debug("Avg Waiting Time Vs User Id Result:" + avgWaitingTimeVsUserId);
 }
 %>

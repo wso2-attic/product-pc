@@ -25,11 +25,11 @@ if(log.isDebugEnabled()){
 var userLevelMonitor = new UserLevelMonitor();
 var filters = String(request.getParameter("filters"));
 if(log.isDebugEnabled()){
- log.debug(filters);
+ log.debug("Total Completed Tasks Vs User Id Filters:" + filters);
 }
 var totalCompletedTasksVsUserId = userLevelMonitor.getTotalCompletedTasksVsUserId(filters);
 print(totalCompletedTasksVsUserId);
 if(log.isDebugEnabled()){
- log.debug(totalCompletedTasksVsUserId);
+ log.debug("Total Completed Tasks Vs User Id Result:" + totalCompletedTasksVsUserId);
 }
 %>
