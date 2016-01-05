@@ -1,5 +1,5 @@
 <!--
- ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright 2005-2015 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
  ~ you may not use this file except in compliance with the License.
@@ -38,8 +38,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="userIdTotalInvolvedTimeCount" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="userIdTotalInvolvedTimeCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -47,7 +48,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawTotalInvolvedTimeVsUserIdResult('userIdTotalInvolvedTimeBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawTotalInvolvedTimeVsUserIdResult('userIdTotalInvolvedTimeBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="userIdTotalInvolvedTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
@@ -75,8 +76,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="userIdCompletedTasksCount" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="userIdCompletedTasksCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -84,7 +86,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawTotalCompletedTasksVsUserIdResult('userIdTotalCompletedTasksBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawTotalCompletedTasksVsUserIdResult('userIdTotalCompletedTasksBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="userIdTotalCompletedTasksBarChart" style="width: 80%;margin: 0 auto;"></div>
@@ -115,8 +117,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processIdTotalInvolvedTimeCount" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="processIdTotalInvolvedTimeCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -124,7 +127,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawTotalInvolvedTimeVsProcessIdResult('processIdTotalInvolvedTimeBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawTotalInvolvedTimeVsProcessIdResult('processIdTotalInvolvedTimeBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="processIdTotalInvolvedTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
@@ -155,8 +158,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processIdTotalInvolvedInstanceCountCount" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="processIdTotalInvolvedInstanceCountCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -164,7 +168,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawTotalInvolvedInstanceCountVsProcessIdResult('processIdTotalInvolvedInstanceCountBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawTotalInvolvedInstanceCountVsProcessIdResult('processIdTotalInvolvedInstanceCountBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="processIdTotalInvolvedInstanceCountBarChart" style="width: 80%;margin: 0 auto;"></div>
@@ -183,8 +187,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="userLevelTaskInstanceCountTaskIdCount" class="selectpicker">
-                     <option value="3">3</option>
+                    <select id="userLevelTaskInstanceCountTaskIdCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -192,7 +197,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawUserLevelTaskInstanceCountVsTaskIdResult('userLevelTaskInstanceCountTaskIdBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawUserLevelTaskInstanceCountVsTaskIdResult('userLevelTaskInstanceCountTaskIdBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="userLevelTaskInstanceCountTaskIdBarChart" style="width: 80%;margin: 0 auto;"></div>
@@ -211,8 +216,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="userLevelTaskIdAvgExecTimeCount" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="userLevelTaskIdAvgExecTimeCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -220,7 +226,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawUserLevelAvgExecuteTimeVsTaskIdResult('userLevelTaskIdAvgTimeBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawUserLevelAvgExecuteTimeVsTaskIdResult('userLevelTaskIdAvgTimeBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="userLevelTaskIdAvgTimeBarChart" style="width: 80%;margin: 0 auto;"></div>

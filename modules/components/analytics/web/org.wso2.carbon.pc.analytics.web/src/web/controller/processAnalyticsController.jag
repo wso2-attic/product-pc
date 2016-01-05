@@ -1,5 +1,5 @@
-<!--
- ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+<%/*<!--
+ ~ Copyright 2005-2015 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
  ~ you may not use this file except in compliance with the License.
@@ -12,26 +12,26 @@
  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
--->
+-->*/%>
 <%
 include("/model/common.jag");
 
 if (request.isSecure()) {//check whether the request is secure or not
 
-    var authSuccess = session.get("authSuccess");
-    if(!authSuccess){
-        var queryParameters = request.getQueryString();
-        if(queryParameters == "null" || queryParameters == null){
-            response.sendRedirect("login?requestUrl=" + request.getRequestURI());
-        } else{
-            response.sendRedirect("login?requestUrl=" + request.getRequestURI() + "%3F" + request.getQueryString());
-		}
+	var authSuccess = session.get("authSuccess");
+
+	if(!authSuccess){
+		var queryParameters = request.getQueryString();
+        	if(queryParameters == "null" || queryParameters == null){
+        			response.sendRedirect("login?requestUrl=" + request.getRequestURI());
+        	} else{
+        			response.sendRedirect("login?requestUrl=" + request.getRequestURI() + "%3F" + request.getQueryString());
+        	}
 	} else {
-		include("/model/common.jag");
-		include("/model/tasksModel.jag");
+		include("/model/processAnalyticsModel.jag");
 		include("/template/partials/header.jag");
 		include("/template/partials/navigation.jag");
-		include("/template/tasksView.jag");
+		include("/template/processAnalyticsView.jag");
 		include("/template/partials/footer.jag");
 	}
 
@@ -44,3 +44,4 @@ if (request.isSecure()) {//check whether the request is secure or not
     response.sendRedirect(application.get('serverAddress') + request.getRequestURI() + queryStr);
 }
 %>
+

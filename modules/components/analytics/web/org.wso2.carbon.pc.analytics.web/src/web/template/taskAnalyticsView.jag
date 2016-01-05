@@ -1,5 +1,5 @@
 <!--
- ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright 2005-2015 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
  ~ you may not use this file except in compliance with the License.
@@ -29,8 +29,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="taskIdAvgExecTimeCount" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="taskIdAvgExecTimeCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -38,7 +39,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsTaskIdResult('taskDefAvgTimeBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsTaskIdResult('taskDefAvgTimeBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="taskDefAvgTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
@@ -57,8 +58,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="taskInstanceCountTaskDefCount" class="selectpicker">
-                     <option value="3">3</option>
+                    <select id="taskInstanceCountTaskDefCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -66,7 +68,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawTaskInstanceCountVsTaskIdResult('taskInstanceCountTaskDefBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawTaskInstanceCountVsTaskIdResult('taskInstanceCountTaskDefBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="taskInstanceCountTaskDefBarChart" style="width: 80%;margin: 0 auto;"></div>
@@ -85,8 +87,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="taskInstanceCountUserIdCount" class="selectpicker">
-                     <option value="3">3</option>
+                    <select id="taskInstanceCountUserIdCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -94,7 +97,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawTaskInstanceCountVsUserIdResult('taskInstanceCountUserIdBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawTaskInstanceCountVsUserIdResult('taskInstanceCountUserIdBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="taskInstanceCountUserIdBarChart" style="width: 80%;margin: 0 auto;"></div>
@@ -113,8 +116,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="userIdAvgExecTimeCount" class="selectpicker">
-                     <option value="3">3</option>
+                    <select id="userIdAvgExecTimeCount" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -122,7 +126,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsUserIdResult('userIdAvgExecTimeBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsUserIdResult('userIdAvgExecTimeBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="userIdAvgExecTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
@@ -153,8 +157,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="taskInstanceIdExecTimeLimit" class="selectpicker">
-                      <option value="3">3</option>
+                    <select id="taskInstanceIdExecTimeLimit" class="selectpicker" onchange="selectPickerValChange(this)">
+                      <option value="other">Set a new value</option>
+                      <option selected="selected" value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -162,7 +167,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawExecutionTimeVsTaskInstanceIdResult('taskInstanceIdExecTimeBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawExecutionTimeVsTaskInstanceIdResult('taskInstanceIdExecTimeBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="taskInstanceIdExecTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
@@ -187,7 +192,7 @@
                     <select id="taskInstanceCountDateTaskList" class="selectpicker" multiple></select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawDateVsTaskInstanceCountResult('taskInstanceCountDateBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawDateVsTaskInstanceCountResult('taskInstanceCountDateBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="taskInstanceCountDateBarChart" style="width: 80%;margin: 0 auto;"></div>

@@ -16,9 +16,9 @@
 package org.wso2.carbon.pc.analytics.core;
 
 /**
- * Keep all the constants which are used in the project
+ * Keep all the constants
  */
-public class AnalyticConstants {
+public class AnalyticsConstants {
 	public static final String COLUMN_FINISHED_TIME = "finishedTime";
 	public static final String ANALYTICS_AGGREGATE = "analytics/aggregates";
 	public static final String ANALYTICS_SEARCH = "analytics/search";
@@ -74,7 +74,8 @@ public class AnalyticConstants {
 	public static final String SPACE_SEPARATOR = " ";
 	public static final String ACTIVATE = "analyticsEnabled";
 	public static final String TRUE = "true";
+	public static final String SECRET_ALIAS = "PC.Analytics.Password";
 
-	public static int MIN_COUNT = 0;
-	public static int MAX_COUNT = 1000;
+	public static final int MIN_COUNT = 0;
+	public static final int MAX_COUNT = 100000;
 }

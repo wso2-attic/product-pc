@@ -24,8 +24,10 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wso2.carbon.pc.analytics.core.AnalyticConstants;
+import org.wso2.carbon.pc.analytics.core.AnalyticsConstants;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.securevault.SecretResolver;
+import org.wso2.securevault.SecretResolverFactory;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.QName;
@@ -40,10 +42,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Helper class is used to keep the methods which are helpful to the monitor classes.
+ * AnalyticsUtils class is used to keep= the functions which are useful for the monitor classes.
  */
-public class Helper {
-	private static final Log log = LogFactory.getLog(Helper.class);
+public class AnalyticsUtils {
+	private static final Log log = LogFactory.getLog(AnalyticsUtils.class);
 
 	/**
 	 * Build the lucene query format for the date range
@@ -75,49 +77,44 @@ public class Helper {
 	 * @return rounded decimal value
 	 */
 	private static double round(double value, int places) {
-		if (places < 0) throw new IllegalArgumentException();
+		if (places < 0) {
+			throw new IllegalArgumentException();
+		}
 		BigDecimal bd = new BigDecimal(value);
 		bd = bd.setScale(places, RoundingMode.HALF_UP);
 		return bd.doubleValue();
 	}
 
 	/**
-	 * Get property iterator
+	 * Get content of pc.xml file as a string
 	 *
-	 * @return Iterator object
+	 * @return the content of pc.xml file as a String
 	 * @throws IOException
 	 * @throws XMLStreamException
 	 */
-	private static Iterator getPropertyIterator() throws IOException, XMLStreamException {
+	private static OMElement getConfigElement() throws IOException, XMLStreamException {
 		String carbonConfigDirPath = CarbonUtils.getCarbonConfigDirPath();
 		String pcConfigPath =
-				carbonConfigDirPath + File.separator + AnalyticConstants.PC_CONFIGURATION_FILE_NAME;
+				carbonConfigDirPath + File.separator + AnalyticsConstants.PC_CONFIGURATION_FILE_NAME;
 		File configFile = new File(pcConfigPath);
 		String configContent = FileUtils.readFileToString(configFile);
-		OMElement configElement = AXIOMUtil.stringToOM(configContent);
-		OMElement firstChild = configElement.getFirstChildWithName(
-				new QName(AnalyticConstants.PC_NAMESPACE, AnalyticConstants.ANALYTICS));
-		Iterator properties =
-				firstChild.getChildrenWithName(new QName(null, AnalyticConstants.PROPERTY));
-		return properties;
+		return AXIOMUtil.stringToOM(configContent);
 	}
 
 	/**
 	 * Check BPMN Analytics component is activated or not
+	 *
 	 * @return true if the BPMN Analytics Component is activated
 	 * @throws IOException
 	 * @throws XMLStreamException
 	 */
 	public static boolean isDASAnalyticsActivated() throws IOException, XMLStreamException {
-		Iterator properties = getPropertyIterator();
-		while (properties.hasNext()) {
-			OMElement property = (OMElement) properties.next();
-			if (AnalyticConstants.ACTIVATE
-					.equals(property.getAttributeValue(new QName(null, AnalyticConstants.NAME)))) {
-				String value = property.getAttributeValue(new QName(null, AnalyticConstants.VALUE));
-				if (AnalyticConstants.TRUE.equalsIgnoreCase(value)) {
-					return true;
-				}
+		OMElement configElement = getConfigElement();
+		OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConstants.ANALYTICS));
+		if(analyticsElement != null) {
+			String value = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.ACTIVATE)).getText();
+			if (AnalyticsConstants.TRUE.equalsIgnoreCase(value)) {
+				return true;
 			}
 		}
 		return false;
@@ -132,19 +129,15 @@ public class Helper {
 	 * @throws XMLStreamException
 	 */
 	public static String getURL(String path) throws IOException, XMLStreamException {
-		Iterator properties = getPropertyIterator();
-		while (properties.hasNext()) {
-			OMElement property = (OMElement) properties.next();
-			if (AnalyticConstants.CONFIG_BASE_URL
-					.equals(property.getAttributeValue(new QName(null, AnalyticConstants.NAME)))) {
-				String baseUrl =
-						property.getAttributeValue(new QName(null, AnalyticConstants.VALUE));
-				if (baseUrl != null && !baseUrl.isEmpty()) {
-					if (!baseUrl.endsWith(File.separator)) {
-						baseUrl += File.separator;
-					}
-					return baseUrl + path;
+		OMElement configElement = getConfigElement();
+		OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConstants.ANALYTICS));
+		if(analyticsElement != null) {
+			String baseUrl = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_BASE_URL)).getText();
+			if (baseUrl != null && !baseUrl.isEmpty()) {
+				if (!baseUrl.endsWith(File.separator)) {
+					baseUrl += File.separator;
 				}
+				return baseUrl + path;
 			}
 		}
 		return null;
@@ -159,31 +152,24 @@ public class Helper {
 	 */
 	public static String getAuthorizationHeader() throws IOException, XMLStreamException {
 		String requestHeader = "Basic ";
+		OMElement configElement = getConfigElement();
+		SecretResolver secretResolver = SecretResolverFactory.create(configElement, false);
+		OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConstants.ANALYTICS));
+
 		String userName = null;
 		String password = null;
-		Iterator properties = getPropertyIterator();
-
-		while (properties.hasNext()) {
-			if (userName != null && password != null) {
-				break;
-			}
-			OMElement property = (OMElement) properties.next();
-			if (AnalyticConstants.CONFIG_USER_NAME
-					.equals(property.getAttributeValue(new QName(null, AnalyticConstants.NAME)))) {
-				String name = property.getAttributeValue(new QName(null, AnalyticConstants.VALUE));
-				if (name != null && !name.isEmpty()) {
-					userName = name;
+		if(analyticsElement != null) {
+			userName = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_USER_NAME)).getText();
+			if(secretResolver != null && secretResolver.isInitialized()) {
+				if(secretResolver.isTokenProtected(AnalyticsConstants.SECRET_ALIAS)) {
+					password = secretResolver.resolve(AnalyticsConstants.SECRET_ALIAS);
+				} else {
+					password = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_PASSWORD)).getText();
 				}
-			}
-			if (AnalyticConstants.CONFIG_PASSWORD
-					.equals(property.getAttributeValue(new QName(null, AnalyticConstants.NAME)))) {
-				String pwd = property.getAttributeValue(new QName(null, AnalyticConstants.VALUE));
-				if (pwd != null && !pwd.isEmpty()) {
-					password = pwd;
-				}
+			} else {
+				password = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_PASSWORD)).getText();
 			}
 		}
-
 		if (userName != null && password != null) {
 			String headerPortion = userName + ":" + password;
 			byte[] encodedBytes = headerPortion.getBytes("UTF-8");
@@ -205,8 +191,8 @@ public class Helper {
 	 * @return a sorted list as a JSON array string
 	 * @throws JSONException
 	 */
-	public static String getDoubleValueSortedList(Hashtable<String, Double> table, String key1, String key2, String order, int count)
-																			throws JSONException {
+	public static String getDoubleValueSortedList(Hashtable<String, Double> table, String key1,
+	                                              String key2, String order, int count) throws JSONException {
 		//Transfer as List and sort it
 		ArrayList<Map.Entry<String, Double>> l = new ArrayList(table.entrySet());
 		Collections.sort(l, new Comparator<Map.Entry<String, Double>>() {
@@ -215,7 +201,7 @@ public class Helper {
 			}
 		});
 		JSONArray array = new JSONArray();
-		for (int i = 0 ; i < l.size() ; i++){
+		for (int i = 0 ; i < l.size() ; i++) {
 			JSONObject o = new JSONObject();
 			o.put(key1, l.get(i).getKey());
 			o.put(key2, round(l.get(i).getValue(), 2));
@@ -223,16 +209,16 @@ public class Helper {
 		}
 
 		//if count exceeds the array length, then assign the array length to the count variable
-		if(count > array.length()){
+		if(count > array.length()) {
 			count = array.length();
 		}
 
 		JSONArray arrayPortion = new JSONArray();
-		if(order.equalsIgnoreCase(AnalyticConstants.TOP)){
-			for (int i = array.length() - count ; i < array.length() ; i++){
+		if(order.equalsIgnoreCase(AnalyticsConstants.TOP)) {
+			for (int i = array.length() - count ; i < array.length() ; i++) {
 				arrayPortion.put(array.get(i));
 			}
-		}else if(order.equalsIgnoreCase(AnalyticConstants.BOTTOM)){
+		} else if(order.equalsIgnoreCase(AnalyticsConstants.BOTTOM)) {
 			for (int i = 0 ; i < count ; i++){
 				arrayPortion.put(array.get(i));
 			}
@@ -251,8 +237,8 @@ public class Helper {
 	 * @return a sorted list as a JSON array string
 	 * @throws JSONException
 	 */
-	public static String getIntegerValueSortedList(Hashtable<String, Integer> table, String key1, String key2, String order, int count)
-																			throws JSONException {
+	public static String getIntegerValueSortedList(Hashtable<String, Integer> table, String key1,
+	                                               String key2, String order, int count) throws JSONException {
 		ArrayList<Map.Entry<String, Integer>> l = new ArrayList(table.entrySet());
 		Collections.sort(l, new Comparator<Map.Entry<String, Integer>>() {
 			public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
@@ -260,7 +246,7 @@ public class Helper {
 			}
 		});
 		JSONArray array = new JSONArray();
-		for (int i = 0 ; i < l.size() ; i++){
+		for (int i = 0 ; i < l.size() ; i++) {
 			JSONObject o = new JSONObject();
 			o.put(key1, l.get(i).getKey());
 			o.put(key2, l.get(i).getValue());
@@ -268,16 +254,16 @@ public class Helper {
 		}
 
 		//if count exceeds the array length, then assign the array length to the count variable
-		if(count > array.length()){
+		if(count > array.length()) {
 			count = array.length();
 		}
 
 		JSONArray arrayPortion = new JSONArray();
-		if(order.equalsIgnoreCase(AnalyticConstants.TOP)){
-			for (int i = array.length() - count ; i < array.length() ; i++){
+		if(order.equalsIgnoreCase(AnalyticsConstants.TOP)) {
+			for (int i = array.length() - count ; i < array.length() ; i++) {
 				arrayPortion.put(array.get(i));
 			}
-		}else if(order.equalsIgnoreCase(AnalyticConstants.BOTTOM)){
+		} else if(order.equalsIgnoreCase(AnalyticsConstants.BOTTOM)) {
 			for (int i = 0 ; i < count ; i++){
 				arrayPortion.put(array.get(i));
 			}
@@ -303,7 +289,7 @@ public class Helper {
 			}
 		});
 		JSONArray array = new JSONArray();
-		for (int i = 0 ; i < l.size() ; i++){
+		for (int i = 0 ; i < l.size() ; i++) {
 			JSONObject o = new JSONObject();
 			o.put(key1, dateFormatter(l.get(i).getKey()));
 			o.put(key2, l.get(i).getValue());
@@ -314,21 +300,22 @@ public class Helper {
 
 	/**
 	 * Convert given datetime string to date
+	 *
 	 * @param time is the long value of a date
 	 * @return date as a String (eg: 2015-11-12)
 	 */
-	private static String dateFormatter(long time){
+	private static String dateFormatter(long time) {
 		String date = new Date(time).toString();
-		String[] dateArray = date.split(AnalyticConstants.SPACE_SEPARATOR);
+		String[] dateArray = date.split(AnalyticsConstants.SPACE_SEPARATOR);
 		try {
-			Date dateMonth = new SimpleDateFormat(AnalyticConstants.MONTH_FORMAT, Locale.ENGLISH)
+			Date dateMonth = new SimpleDateFormat(AnalyticsConstants.MONTH_FORMAT, Locale.ENGLISH)
 																			.parse(dateArray[1]);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(dateMonth);
 			int month = cal.get(Calendar.MONTH) + 1;
-			String dateString = dateArray[5] + AnalyticConstants.DATE_SEPARATOR + month +
-								AnalyticConstants.DATE_SEPARATOR + dateArray[2];
-			DateFormat df = new SimpleDateFormat(AnalyticConstants.DATE_FORMAT_WITHOUT_TIME);
+			String dateString = dateArray[5] + AnalyticsConstants.DATE_SEPARATOR + month +
+								AnalyticsConstants.DATE_SEPARATOR + dateArray[2];
+			DateFormat df = new SimpleDateFormat(AnalyticsConstants.DATE_FORMAT_WITHOUT_TIME);
 			return df.format(df.parse(dateString));
 		} catch (ParseException e) {
 			String errMsg = "Date format parse exception.";

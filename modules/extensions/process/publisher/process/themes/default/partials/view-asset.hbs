@@ -25,7 +25,7 @@
                 $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
             },
             error: function () {
-                alertify.error('Error');
+                alertify.error('BPMN diagram showing error');
             }
         });
 
@@ -56,7 +56,7 @@
                 $("#processTextDiv").html(response);
             },
             error: function () {
-                alertify.error('Error');
+                alertify.error('Text editor error');
             }
         });
     }
@@ -82,7 +82,7 @@
                     $("#addTextButton").hide();
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Process text error');
                 }
             });
         }
@@ -147,7 +147,7 @@
 
     function getProcessList(){
         $.ajax({
-            url: 'https://localhost:9443/publisher/assets/process/apis/get_process_list',
+            url: '/publisher/assets/process/apis/get_process_list',
             type: 'GET',
             success: function (response) {
                 processListObj = JSON.parse(response);
@@ -156,7 +156,7 @@
                 }
             },
             error: function () {
-                alertify.error('Error');
+                alertify.error('Process list returning error');
             }
         });
     }
@@ -174,7 +174,7 @@
         var subprocessInput = $(e).parent().closest("tr").find("input").val();
 
         if(subprocessInput == ''){
-            alertify.error('Field is empty.');
+            alertify.error('Subprocess field is empty.');
         }else if(isProcessNotAvailableInList(subprocessInput)){
             alertify.warning('Please select a process from the dropdown list.');
         }else if(subprocessInput == getMainProcess()){
@@ -205,14 +205,14 @@
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/update_subprocess',
+                url: '/publisher/assets/process/apis/update_subprocess',
                 type: 'POST',
                 data: { 'subprocessDetails': JSON.stringify(subProcessDetails) },
                 success: function (response) {
                     alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Subprocess updating error');
                 }
             });
         }
@@ -222,7 +222,7 @@
         var successorInput = $(e).parent().closest("tr").find("input").val();
 
         if(successorInput == ''){
-            alertify.error('Field is empty.');
+            alertify.error('Successor field is empty.');
         }else if(isProcessNotAvailableInList(successorInput)){
             alertify.warning('Please select a process from the dropdown list.');
         }else if(successorInput == getMainProcess()){
@@ -253,14 +253,14 @@
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/update_successor',
+                url: '/publisher/assets/process/apis/update_successor',
                 type: 'POST',
                 data: { 'successorDetails': JSON.stringify(successorDetails) },
                 success: function (response) {
                     alertify.success('Process ' + successorInput + ' successfully added to the successor list.');
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Successor updating error');
                 }
             });
         }
@@ -270,7 +270,7 @@
         var predecessorInput = $(e).parent().closest("tr").find("input").val();
 
         if(predecessorInput == ''){
-            alertify.error('Field is empty.');
+            alertify.error('Predecessor field is empty.');
         }else if(isProcessNotAvailableInList(predecessorInput)){
             alertify.warning('Please select a process from the dropdown list.');
         }else if(predecessorInput == getMainProcess()){
@@ -301,14 +301,14 @@
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/update_predecessor',
+                url: '/publisher/assets/process/apis/update_predecessor',
                 type: 'POST',
                 data: { 'predecessorDetails': JSON.stringify(predecessorDetails) },
                 success: function (response) {
                     alertify.success('Process ' + predecessorInput + ' successfully added to the predecessor list.');
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Predecessor updating error');
                 }
             });
         }
@@ -340,14 +340,14 @@
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/delete_subprocess',
+                url: '/publisher/assets/process/apis/delete_subprocess',
                 type: 'POST',
                 data: { 'deleteSubprocessDetails': JSON.stringify(deleteSubObj) },
                 success: function (response) {
                     alertify.success('Successfully deleted ' + deleteSubInput + ' from the subprocess list.');
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Subprocess deleting error');
                 }
             });
         }
@@ -379,14 +379,14 @@
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/delete_successor',
+                url: '/publisher/assets/process/apis/delete_successor',
                 type: 'POST',
                 data: { 'deleteSuccessorDetails': JSON.stringify(deleteSuccessorObj) },
                 success: function (response) {
                     alertify.success('Successfully deleted ' + deleteSuccessorInput + ' from the successor list.');
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Successor deleting error');
                 }
             });
         }
@@ -418,14 +418,14 @@
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/delete_Predecessor',
+                url: '/publisher/assets/process/apis/delete_Predecessor',
                 type: 'POST',
                 data: { 'deletePredecessorDetails': JSON.stringify(deletePredecessorObj) },
                 success: function (response) {
                     alertify.success('Successfully deleted ' + deletePredecessorInput + ' from the predecessor list.');
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Predecessor deleting error');
                 }
             });
         }
@@ -443,7 +443,7 @@
             };
 
             $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/update_owner',
+                url: '/publisher/assets/process/apis/update_owner',
                 type: 'POST',
                 data: { 'ownerDetails': JSON.stringify(ownerDetails) },
                 success: function (response) {
@@ -451,7 +451,7 @@
                     alertify.success('Successfully updated the Process owner name.');
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Process owner updating error');
                 }
             });
         }

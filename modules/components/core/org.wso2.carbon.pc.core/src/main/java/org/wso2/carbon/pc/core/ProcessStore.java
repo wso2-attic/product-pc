@@ -66,6 +66,7 @@ public class ProcessStore {
     private static final Log log = LogFactory.getLog(ProcessStore.class);
 
     private static final String mns = "http://www.wso2.org/governance/metadata";
+    private static final String OK = "OK";
 
     private Element append(Document doc, Element parent, String childName, String childNS) {
         Element childElement = doc.createElementNS(childNS, childName);
@@ -152,8 +153,8 @@ public class ProcessStore {
                 appendText(doc, propertiesElement, "bpmnpath", mns, "NA");
                 appendText(doc, propertiesElement, "bpmnid", mns, "NA");
 
-                if(subprocess.length() != 0){
-                    for(int i = 0 ; i < subprocess.length() ; i++){
+                if(subprocess.length() != 0) {
+                    for(int i = 0 ; i < subprocess.length() ; i++) {
                         Element successorElement = append(doc, rootElement, "subprocess", mns);
                         appendText(doc, successorElement, "name", mns, subprocess.getJSONObject(i).getString("name"));
                         appendText(doc, successorElement, "path", mns, subprocess.getJSONObject(i).getString("path"));
@@ -161,8 +162,8 @@ public class ProcessStore {
                     }
                 }
 
-                if(successor.length() != 0){
-                    for(int i = 0 ; i < successor.length() ; i++){
+                if(successor.length() != 0) {
+                    for(int i = 0 ; i < successor.length() ; i++) {
                         Element successorElement = append(doc, rootElement, "successor", mns);
                         appendText(doc, successorElement, "name", mns, successor.getJSONObject(i).getString("name"));
                         appendText(doc, successorElement, "path", mns, successor.getJSONObject(i).getString("path"));
@@ -170,8 +171,8 @@ public class ProcessStore {
                     }
                 }
 
-                if(predecessor.length() != 0){
-                    for(int i = 0 ; i < predecessor.length() ; i++){
+                if(predecessor.length() != 0) {
+                    for(int i = 0 ; i < predecessor.length() ; i++) {
                         Element predecessorElement = append(doc, rootElement, "predecessor", mns);
                         appendText(doc, predecessorElement, "name", mns, predecessor.getJSONObject(i).getString("name"));
                         appendText(doc, predecessorElement, "path", mns, predecessor.getJSONObject(i).getString("path"));
@@ -731,13 +732,13 @@ public class ProcessStore {
         }
     }
 
-    public String getSucessorPredecessorSubprocessList(String resourcePath){
+    public String getSucessorPredecessorSubprocessList(String resourcePath) {
         String resourceString = "";
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                resourcePath = resourcePath.substring("/_system/governance/".length());
+                resourcePath = resourcePath.substring(ProcessStoreConstants.GREG_PATH.length());
                 Resource resourceAsset = reg.get(resourcePath);
                 String resourceContent = new String((byte[]) resourceAsset.getContent());
 
@@ -759,7 +760,7 @@ public class ProcessStore {
                 NodeList successorElements = ((Element)document.getFirstChild()).getElementsByTagName("successor");
                 NodeList predecessorElements = ((Element)document.getFirstChild()).getElementsByTagName("predecessor");
 
-                if(subprocessElements.getLength() != 0){
+                if(subprocessElements.getLength() != 0) {
                     for (int i = 0 ; i < subprocessElements.getLength() ; i++) {
                         Element subprocessElement = (Element) subprocessElements.item(i);
                         String subprocessName = subprocessElement.getElementsByTagName("name").item(0).getTextContent();
@@ -778,8 +779,8 @@ public class ProcessStore {
                     }
                 }
 
-                if(successorElements.getLength() != 0){
-                    for(int i = 0 ; i < successorElements.getLength() ; i++){
+                if(successorElements.getLength() != 0) {
+                    for(int i = 0 ; i < successorElements.getLength() ; i++) {
                         Element successorElement = (Element) successorElements.item(i);
                         String successorName = successorElement.getElementsByTagName("name").item(0).getTextContent();
                         String successorPath =
@@ -797,8 +798,8 @@ public class ProcessStore {
                     }
                 }
 
-                if(predecessorElements.getLength() != 0){
-                    for(int i = 0 ; i < predecessorElements.getLength() ; i++){
+                if(predecessorElements.getLength() != 0) {
+                    for(int i = 0 ; i < predecessorElements.getLength() ; i++) {
                         Element predecessorElement = (Element) predecessorElements.item(i);
                         String predecessorName = predecessorElement.getElementsByTagName("name").item(0).getTextContent();
                         String predecessorPath =
@@ -818,16 +819,16 @@ public class ProcessStore {
                 resourceString = conObj.toString();
             }
         }catch (Exception e) {
-            log.error("Failed to fetch Successor Predecessor and Subprocess information: " + resourcePath);
+            log.error("Failed to fetch Successor Predecessor and Subprocess information: " + resourcePath, e);
         }
         return resourceString;
     }
 
-    public String updateOwner(String ownerDetails){
+    public String updateOwner(String ownerDetails) {
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
-            if(registryService != null){
+            if(registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 JSONObject processInfo = new JSONObject(ownerDetails);
@@ -835,7 +836,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 String processOwner = processInfo.getString("processOwner");
 
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
@@ -847,17 +848,17 @@ public class ProcessStore {
                 reg.put(processAssetPath, resource);
             }
 
-        }catch (Exception e){
-            log.error(e);
+        }catch (Exception e) {
+            log.error("Failed to update the process owner", e);
         }
-        return "OK";
+        return OK;
     }
 
-    public String addSubprocess(String subprocessDetails){
+    public String addSubprocess(String subprocessDetails) {
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
-            if(registryService != null){
+            if(registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 JSONObject processInfo = new JSONObject(subprocessDetails);
@@ -865,12 +866,12 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject subprocess = processInfo.getJSONObject("subprocess");
 
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                if(subprocess != null){
+                if(subprocess != null) {
                     Element rootElement = doc.getDocumentElement();
                     Element subprocessElement = append(doc, rootElement, "subprocess", mns);
                     appendText(doc, subprocessElement, "name", mns, subprocess.getString("name"));
@@ -883,17 +884,17 @@ public class ProcessStore {
                 }
             }
 
-        }catch (Exception e){
-            log.error(e);
+        }catch (Exception e) {
+            log.error("Failed to add a subprocess", e);
         }
-        return "OK";
+        return OK;
     }
 
-    public String addSuccessor(String successorDetails){
+    public String addSuccessor(String successorDetails) {
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
-            if(registryService != null){
+            if(registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 JSONObject processInfo = new JSONObject(successorDetails);
@@ -901,7 +902,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject successor = processInfo.getJSONObject("successor");
 
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
@@ -919,17 +920,17 @@ public class ProcessStore {
                 }
             }
 
-        }catch (Exception e){
-            log.error(e);
+        }catch (Exception e) {
+            log.error("Failed to add a successor", e);
         }
-        return "OK";
+        return OK;
     }
 
-    public String addPredecessor(String predecessorDetails){
+    public String addPredecessor(String predecessorDetails) {
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
-            if(registryService != null){
+            if(registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 JSONObject processInfo = new JSONObject(predecessorDetails);
@@ -937,12 +938,12 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject predecessor = processInfo.getJSONObject("predecessor");
 
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                if(predecessor != null){
+                if(predecessor != null) {
                     Element rootElement = doc.getDocumentElement();
                     Element predecessorElement = append(doc, rootElement, "predecessor", mns);
                     appendText(doc, predecessorElement, "name", mns, predecessor.getString("name"));
@@ -955,17 +956,17 @@ public class ProcessStore {
                 }
             }
 
-        }catch (Exception e){
-            log.error(e);
+        }catch (Exception e) {
+            log.error("Failed to add a predecessor", e);
         }
-        return "OK";
+        return OK;
     }
 
-    public String deleteSubprocess(String deleteSubprocess){
+    public String deleteSubprocess(String deleteSubprocess) {
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
-            if(registryService != null){
+            if(registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 JSONObject processInfo = new JSONObject(deleteSubprocess);
@@ -973,14 +974,14 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject subprocess = processInfo.getJSONObject("deleteSubprocess");
 
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                if(subprocess != null){
+                if(subprocess != null) {
                     NodeList subprocessElements = ((Element)doc.getFirstChild()).getElementsByTagName("subprocess");
-                    for(int i = 0 ; i < subprocessElements.getLength() ; i++){
+                    for(int i = 0 ; i < subprocessElements.getLength() ; i++) {
                         Element subprocessElement = (Element) subprocessElements.item(i);
                         String subprocessName = subprocessElement.getElementsByTagName("name").item(0).getTextContent();
                         String subprocessPath =
@@ -989,7 +990,7 @@ public class ProcessStore {
                                 subprocessElement.getElementsByTagName("id").item(0).getTextContent();
 
                         if(subprocessName.equals(subprocess.getString("name")) && subprocessPath.equals(subprocess.getString("path")) &&
-                           subprocessId.equals(subprocess.getString("id"))){
+                           subprocessId.equals(subprocess.getString("id"))) {
                             subprocessElement.getParentNode().removeChild(subprocessElement);
                             break;
                         }
@@ -999,17 +1000,17 @@ public class ProcessStore {
                     reg.put(processAssetPath, resource);
                 }
             }
-        }catch (Exception e){
-            log.error(e);
+        }catch (Exception e) {
+            log.error("Failed to delete a subprocess", e);
         }
-        return "OK";
+        return OK;
     }
 
-    public String deleteSuccessor(String deleteSuccessor){
+    public String deleteSuccessor(String deleteSuccessor) {
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
-            if(registryService != null){
+            if(registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 JSONObject processInfo = new JSONObject(deleteSuccessor);
@@ -1017,14 +1018,14 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject successor = processInfo.getJSONObject("deleteSuccessor");
 
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                if(successor != null){
+                if(successor != null) {
                     NodeList successorElements = ((Element)doc.getFirstChild()).getElementsByTagName("successor");
-                    for(int i = 0 ; i < successorElements.getLength() ; i++){
+                    for(int i = 0 ; i < successorElements.getLength() ; i++) {
                         Element successorElement = (Element) successorElements.item(i);
                         String successorName = successorElement.getElementsByTagName("name").item(0).getTextContent();
                         String successorPath =
@@ -1033,7 +1034,7 @@ public class ProcessStore {
                                 successorElement.getElementsByTagName("id").item(0).getTextContent();
 
                         if(successorName.equals(successor.getString("name")) && successorPath.equals(successor.getString("path")) &&
-                           successorId.equals(successor.getString("id"))){
+                           successorId.equals(successor.getString("id"))) {
                             successorElement.getParentNode().removeChild(successorElement);
                             break;
                         }
@@ -1043,17 +1044,17 @@ public class ProcessStore {
                     reg.put(processAssetPath, resource);
                 }
             }
-        }catch (Exception e){
-            log.error(e);
+        }catch (Exception e) {
+            log.error("Failed to delete a successor", e);
         }
-        return "OK";
+        return OK;
     }
 
-    public String deletePredecessor(String deletePredecessor){
+    public String deletePredecessor(String deletePredecessor) {
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
-            if(registryService != null){
+            if(registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 JSONObject processInfo = new JSONObject(deletePredecessor);
@@ -1061,14 +1062,14 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject predecessor = processInfo.getJSONObject("deletePredecessor");
 
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                if(predecessor != null){
+                if(predecessor != null) {
                     NodeList predecessorElements = ((Element)doc.getFirstChild()).getElementsByTagName("predecessor");
-                    for(int i = 0 ; i < predecessorElements.getLength() ; i++){
+                    for(int i = 0 ; i < predecessorElements.getLength() ; i++) {
                         Element predecessorElement = (Element) predecessorElements.item(i);
                         String predecessorName = predecessorElement.getElementsByTagName("name").item(0).getTextContent();
                         String predecessorPath =
@@ -1077,7 +1078,7 @@ public class ProcessStore {
                                 predecessorElement.getElementsByTagName("id").item(0).getTextContent();
 
                         if(predecessorName.equals(predecessor.getString("name")) && predecessorPath.equals(predecessor.getString("path")) &&
-                           predecessorId.equals(predecessor.getString("id"))){
+                           predecessorId.equals(predecessor.getString("id"))) {
                             predecessorElement.getParentNode().removeChild(predecessorElement);
                             break;
                         }
@@ -1087,10 +1088,10 @@ public class ProcessStore {
                     reg.put(processAssetPath, resource);
                 }
             }
-        }catch (Exception e){
-            log.error(e);
+        }catch (Exception e) {
+            log.error("Failed to delete a predecessor", e);
         }
-        return "OK";
+        return OK;
     }
 
 

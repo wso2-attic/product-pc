@@ -26,19 +26,19 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.pc.analytics.core.utils.Helper;
+import org.wso2.carbon.pc.analytics.core.utils.AnalyticsUtils;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import javax.xml.stream.XMLStreamException;
 
 /**
- * AnalyticsRestClient class is used to call the DAS rest web service
+ * AnalyticsRestClient class is used to invoke the DAS REST API
  */
 public class AnalyticsRestClient {
 	private static final Log log = LogFactory.getLog(AnalyticsRestClient.class);
 
 	/**
-	 * Send post request to the DAS rest web service
+	 * Send post request to a DAS rest web service
 	 * @param url used to locate the webservice functionality
 	 * @param message is the request message that need to be sent to the web service
 	 * @return the result as a String
@@ -47,7 +47,7 @@ public class AnalyticsRestClient {
 		RegistryUtils.setTrustStoreSystemProperties();
 		HttpClient httpClient = new HttpClient();
 		PostMethod postRequest = new PostMethod(url);
-		postRequest.setRequestHeader("Authorization", Helper.getAuthorizationHeader());
+		postRequest.setRequestHeader("Authorization", AnalyticsUtils.getAuthorizationHeader());
 		BufferedReader br = null;
 		try {
 			StringRequestEntity input = new StringRequestEntity(message, "application/json", "UTF-8");
@@ -64,7 +64,7 @@ public class AnalyticsRestClient {
 			br = new BufferedReader(reader);
 
 			String output = null;
-			StringBuffer totalOutput = new StringBuffer();
+			StringBuilder totalOutput = new StringBuilder();
 
 			if (log.isDebugEnabled()) {
 				log.debug("Output from Server .... \n");
@@ -74,7 +74,7 @@ public class AnalyticsRestClient {
 				totalOutput.append(output);
 			}
 
-			if(log.isDebugEnabled()){
+			if(log.isDebugEnabled()) {
 				log.debug("Output = " + totalOutput.toString());
 			}
 

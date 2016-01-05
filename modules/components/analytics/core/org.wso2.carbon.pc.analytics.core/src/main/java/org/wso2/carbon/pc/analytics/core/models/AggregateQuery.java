@@ -18,7 +18,7 @@ package org.wso2.carbon.pc.analytics.core.models;
 import java.util.ArrayList;
 
 /**
- * AggregateQuery class is used to generate the query object
+ * AggregateQuery class is used to generate a query object
  */
 public class AggregateQuery {
 	private String tableName;

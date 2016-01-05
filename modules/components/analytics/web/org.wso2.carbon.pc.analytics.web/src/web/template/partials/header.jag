@@ -1,5 +1,5 @@
 <!--
- ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright 2005-2015 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
  ~ you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ var loggedUser = session.get("user");
 <body>
 	<header>
 		<div class="logo-wrapper app-logo">
-	    	<a href="stats"><img src="images/logo-wso2.png"><h2 class="app-title"><%=data.app.title%></h2></a>
+	    	<a href="processes"><img src="images/logo-wso2.png"><h2 class="app-title"><%=data.app.title%></h2></a>
 		</div>
 			<% if (loggedUser != null) { %>
 		        <div class="login-wrapper">

@@ -57,7 +57,7 @@
                     }
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Process saving error');
                 }
             });
 
@@ -96,7 +96,7 @@
                     }
                 },
                 error: function () {
-                    alertify.error('Error');
+                    alertify.error('Process text saving error');
                 }
             });
         }
@@ -212,7 +212,7 @@
 
     function getProcessList(){
         $.ajax({
-            url: 'https://localhost:9443/publisher/assets/process/apis/get_process_list',
+            url: '/publisher/assets/process/apis/get_process_list',
             type: 'GET',
             success: function (response) {
                 processListObj = JSON.parse(response);
@@ -221,7 +221,7 @@
                 }
             },
             error: function () {
-                alertify.error('Error');
+                alertify.error('Process List error');
             }
         });
     }
