@@ -68,7 +68,7 @@ public class ProcessLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Avg Execution Time Vs ProcessId Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -94,7 +94,7 @@ public class ProcessLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Avg Execution Time Vs ProcessId Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -134,7 +134,7 @@ public class ProcessLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Process Instance Count Vs ProcessId Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -160,7 +160,7 @@ public class ProcessLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Process Instance Count Vs ProcessId Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -197,7 +197,7 @@ public class ProcessLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Avg Execution Time Vs Process Version Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -223,7 +223,7 @@ public class ProcessLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Avg Execution Time Vs Process Version Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -259,7 +259,7 @@ public class ProcessLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Process Instance Count Vs Process Version Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -285,7 +285,7 @@ public class ProcessLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Process Instance Count Vs Process Version Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -320,7 +320,7 @@ public class ProcessLevelMonitor {
 				searchQuery.setCount(AnalyticsConstants.MAX_COUNT);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(searchQuery));
+					log.debug("Query to get the Execution Time Vs Process Instance Id Result:" + AnalyticsUtils.getJSONString(searchQuery));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_SEARCH),
@@ -346,7 +346,7 @@ public class ProcessLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Execution Time Vs Process Instance Id Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -419,7 +419,7 @@ public class ProcessLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Date Vs Process Instance Count Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -447,7 +447,7 @@ public class ProcessLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Process Id List Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -469,8 +469,7 @@ public class ProcessLevelMonitor {
 				}
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query = " + query.getQuery());
-					log.debug("Result = " + processIdList);
+					log.debug("Process Id List Result:" + processIdList);
 				}
 			}
 		} catch (Exception e) {

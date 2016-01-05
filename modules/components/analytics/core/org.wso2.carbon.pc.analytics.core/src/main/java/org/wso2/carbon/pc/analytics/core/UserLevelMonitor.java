@@ -67,7 +67,7 @@ public class UserLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Total Involved Time Vs User Id Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -93,7 +93,7 @@ public class UserLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Total Involved Time Vs User Id Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -132,7 +132,7 @@ public class UserLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Total Completed Tasks Vs User Id Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -158,7 +158,7 @@ public class UserLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Total Completed Tasks Vs User Id Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -200,7 +200,7 @@ public class UserLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Total Involved Time Vs Process Id Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -226,7 +226,7 @@ public class UserLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Total Involved Time Vs Process Id Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -269,7 +269,7 @@ public class UserLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Total Involved Instance Count Vs Process Id Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -296,7 +296,7 @@ public class UserLevelMonitor {
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Total Involved Instance Count Vs Process Id Result:" + sortedResult);
 		}
 
 		return sortedResult;
@@ -333,7 +333,7 @@ public class UserLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the User Level Task Instance Count Vs Task Id Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -359,7 +359,7 @@ public class UserLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("User Level Task Instance Count Vs Task Id Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -395,7 +395,7 @@ public class UserLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the User Level Avg Execution Time Vs Task Id Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -421,7 +421,7 @@ public class UserLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("User Level Avg Execution Time Vs Task Id Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -449,7 +449,7 @@ public class UserLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the User List Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -471,8 +471,7 @@ public class UserLevelMonitor {
 				}
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query = " + query.getQuery());
-					log.debug("Result = " + userIdList);
+					log.debug("User List Result:" + userIdList);
 				}
 			}
 		} catch (Exception e) {

@@ -65,7 +65,7 @@ public class TaskLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Avg Execution Time Vs Task Id Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -91,7 +91,7 @@ public class TaskLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Avg Execution Time Vs Task Id Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -127,7 +127,7 @@ public class TaskLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Task Instance Count Vs Task Id Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -153,7 +153,7 @@ public class TaskLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Task Instance Count Vs Task Id Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -189,7 +189,7 @@ public class TaskLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Task Instance Count Vs User Id Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -215,7 +215,7 @@ public class TaskLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Task Instance Count Vs User Id Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -251,7 +251,7 @@ public class TaskLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Avg Waiting Time Vs User Id Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -277,7 +277,7 @@ public class TaskLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Avg Waiting Time Vs User Id Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -312,7 +312,7 @@ public class TaskLevelMonitor {
 				searchQuery.setCount(AnalyticsConstants.MAX_COUNT);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(searchQuery));
+					log.debug("Query to get the Execution Time Vs Task Instance Id Result:" + AnalyticsUtils.getJSONString(searchQuery));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_SEARCH),
@@ -338,7 +338,7 @@ public class TaskLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Execution Time Vs Task Instance Id Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -411,7 +411,7 @@ public class TaskLevelMonitor {
 			log.error(errMsg, e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Date Vs Task Instance Count Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -439,7 +439,7 @@ public class TaskLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Task List Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -461,8 +461,7 @@ public class TaskLevelMonitor {
 				}
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query = " + query.getQuery());
-					log.debug("Result = " + taskIdList);
+					log.debug("Task List Result:" + taskIdList);
 				}
 			}
 		} catch (Exception e) {
