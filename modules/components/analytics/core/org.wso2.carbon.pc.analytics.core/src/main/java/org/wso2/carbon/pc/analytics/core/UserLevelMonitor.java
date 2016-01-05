@@ -29,6 +29,8 @@ import java.util.Hashtable;
 
 /**
  * UserLevelMonitor holds all the functionalities for the user level monitoring
+ * eg:  1.) Involvement of different users in a given process
+ *      2.) Total involved time of different users with a given process
  */
 public class UserLevelMonitor {
 	private static final Log log = LogFactory.getLog(UserLevelMonitor.class);
