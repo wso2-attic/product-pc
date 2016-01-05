@@ -39,7 +39,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsTaskIdResult('taskDefAvgTimeBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsTaskIdResult('taskDefAvgTimeBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="taskDefAvgTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
@@ -68,7 +68,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawTaskInstanceCountVsTaskIdResult('taskInstanceCountTaskDefBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawTaskInstanceCountVsTaskIdResult('taskInstanceCountTaskDefBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="taskInstanceCountTaskDefBarChart" style="width: 80%;margin: 0 auto;"></div>
@@ -97,7 +97,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawTaskInstanceCountVsUserIdResult('taskInstanceCountUserIdBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawTaskInstanceCountVsUserIdResult('taskInstanceCountUserIdBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="taskInstanceCountUserIdBarChart" style="width: 80%;margin: 0 auto;"></div>
@@ -126,7 +126,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsUserIdResult('userIdAvgExecTimeBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsUserIdResult('userIdAvgExecTimeBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="userIdAvgExecTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
@@ -167,7 +167,7 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawExecutionTimeVsTaskInstanceIdResult('taskInstanceIdExecTimeBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawExecutionTimeVsTaskInstanceIdResult('taskInstanceIdExecTimeBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="taskInstanceIdExecTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
@@ -192,7 +192,7 @@
                     <select id="taskInstanceCountDateTaskList" class="selectpicker" multiple></select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawDateVsTaskInstanceCountResult('taskInstanceCountDateBarChart')">Apply Filter</button>
+                    <button class="btn btn-default btn-info" onclick="drawDateVsTaskInstanceCountResult('taskInstanceCountDateBarChart', this)">Apply Filter</button>
                 </div>
              </div>
             <div class="main" id="taskInstanceCountDateBarChart" style="width: 80%;margin: 0 auto;"></div>

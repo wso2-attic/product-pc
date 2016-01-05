@@ -24,8 +24,8 @@ window.onload = function() {
         style: 'btn',
         size: 3
     });
-    drawTotalInvolvedTimeVsUserIdResult('userIdTotalInvolvedTimeBarChart');
-    drawTotalCompletedTasksVsUserIdResult('userIdTotalCompletedTasksBarChart');
+    drawTotalInvolvedTimeVsUserIdResult('userIdTotalInvolvedTimeBarChart', null);
+    drawTotalCompletedTasksVsUserIdResult('userIdTotalCompletedTasksBarChart', null);
     loadUserList('processIdTotalInvolvedTimeUserList', 'processIdTotalInvolvedTimeBarChart', drawTotalInvolvedTimeVsProcessIdResult);
     loadUserList('processIdTotalInvolvedInstanceCountUserList', 'processIdTotalInvolvedInstanceCountBarChart', drawTotalInvolvedInstanceCountVsProcessIdResult);
     loadUserList('userLevelTaskInstanceCountTaskIdUserList', 'userLevelTaskInstanceCountTaskIdBarChart', drawUserLevelTaskInstanceCountVsTaskIdResult);

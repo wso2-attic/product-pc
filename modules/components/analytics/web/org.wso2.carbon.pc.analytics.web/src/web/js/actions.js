@@ -68,11 +68,19 @@ function selectPickerValChange(selectPickerElement) {
     }
 }
 
+function showBtnAlert(element, message){
+    if(element != null){
+        if(element.tagName == 'BUTTON'){
+            alert(message);
+        }
+    }
+}
+
 /**
  * Function to draw Average Execution Time vs Process Id Result
  * @param renderElement is the id of the rendering section
  */
-function drawAvgExecuteTimeVsProcessIdResult(renderElement) {
+function drawAvgExecuteTimeVsProcessIdResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("processIdAvgExecTimeStartDate");
     var startDateTemp = 0;
@@ -122,7 +130,7 @@ function drawAvgExecuteTimeVsProcessIdResult(renderElement) {
  * Function to draw Process Instance Count vs Process Id Result
  * @param renderElement is the id of the rendering section
  */
-function drawProcessInstanceCountVsProcessIdResult(renderElement) {
+function drawProcessInstanceCountVsProcessIdResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("processInstanceCountProcessDefStartDate");
     var startDateTemp = 0;
@@ -172,7 +180,7 @@ function drawProcessInstanceCountVsProcessIdResult(renderElement) {
  * Function to draw Average Execution Time Vs Process Version Result
  * @param renderElement is the id of the rendering section
  */
-function drawAvgExecuteTimeVsProcessVersionResult(renderElement) {
+function drawAvgExecuteTimeVsProcessVersionResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var processId = $('#processVersionAvgExecTimeProcessList').val();
 
@@ -208,6 +216,7 @@ function drawAvgExecuteTimeVsProcessVersionResult(renderElement) {
         });
     } else {
         console.log('Empty process id list.');
+        showBtnAlert(currentObj, "Process id list is empty.");
     }
 }
 
@@ -215,7 +224,7 @@ function drawAvgExecuteTimeVsProcessVersionResult(renderElement) {
  * Function to draw Process Instance Count vs Process Version Result
  * @param renderElement is the id of the rendering section
  */
-function drawProcessInstanceCountVsProcessVersionResult(renderElement) {
+function drawProcessInstanceCountVsProcessVersionResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var processId = $('#processInstanceCountProcessVersionProcessList').val();
 
@@ -251,6 +260,7 @@ function drawProcessInstanceCountVsProcessVersionResult(renderElement) {
         });
     } else {
         console.log('Empty process id list.');
+        showBtnAlert(currentObj, "Process id list is empty.");
     }
 }
 
@@ -258,7 +268,7 @@ function drawProcessInstanceCountVsProcessVersionResult(renderElement) {
  * Function to draw Execution Time vs Process Instance Id Result
  * @param renderElement is the id of the rendering section
  */
-function drawExecutionTimeVsProcessInstanceIdResult(renderElement) {
+function drawExecutionTimeVsProcessInstanceIdResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var processId = $('#processInstanceIdExecTimeProcessList').val();
 
@@ -308,6 +318,7 @@ function drawExecutionTimeVsProcessInstanceIdResult(renderElement) {
         });
     } else {
         console.log('Empty process id list.');
+        showBtnAlert(currentObj, "Process id list is empty.");
     }
 }
 
@@ -315,7 +326,7 @@ function drawExecutionTimeVsProcessInstanceIdResult(renderElement) {
  * Function to draw Date vs Process Instance Count Result
  * @param renderElement is the id of the rendering section
  */
-function drawDateVsProcessInstanceCountResult(renderElement) {
+function drawDateVsProcessInstanceCountResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("processInstanceCountDateStartDate");
     var startDateTemp = new Date(startDate.value).getTime();
@@ -366,7 +377,7 @@ function drawDateVsProcessInstanceCountResult(renderElement) {
  * Function to draw Average Execution Time vs Task Id Result
  * @param renderElement is the id of the rendering section
  */
-function drawAvgExecuteTimeVsTaskIdResult(renderElement) {
+function drawAvgExecuteTimeVsTaskIdResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var processId = $('#taskIdAvgExecTimeProcessList').val();
 
@@ -402,6 +413,7 @@ function drawAvgExecuteTimeVsTaskIdResult(renderElement) {
         });
     } else {
         console.log('Empty process id list.');
+        showBtnAlert(currentObj, "Process id list is empty.");
     }
 }
 
@@ -409,7 +421,7 @@ function drawAvgExecuteTimeVsTaskIdResult(renderElement) {
  * Function to draw Task Instance Count vs Task Id Result
  * @param renderElement is the id of the rendering section
  */
-function drawTaskInstanceCountVsTaskIdResult(renderElement) {
+function drawTaskInstanceCountVsTaskIdResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var processId = $('#taskInstanceCountTaskDefProcessList').val();
 
@@ -445,6 +457,7 @@ function drawTaskInstanceCountVsTaskIdResult(renderElement) {
         });
     } else {
         console.log('Empty process id list.');
+        showBtnAlert(currentObj, "Process id list is empty.");
     }
 }
 
@@ -452,7 +465,7 @@ function drawTaskInstanceCountVsTaskIdResult(renderElement) {
  * Function to draw Task Instance Count vs User Id Result
  * @param renderElement is the id of the rendering section
  */
-function drawTaskInstanceCountVsUserIdResult(renderElement) {
+function drawTaskInstanceCountVsUserIdResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var taskId = $('#taskInstanceCountUserIdTaskList').val();
 
@@ -488,6 +501,7 @@ function drawTaskInstanceCountVsUserIdResult(renderElement) {
         });
     } else {
         console.log('Empty task id list.');
+        showBtnAlert(currentObj, "Task id list is empty.");
     }
 }
 
@@ -495,7 +509,7 @@ function drawTaskInstanceCountVsUserIdResult(renderElement) {
  * Function to draw Average Execution Time vs User Id Result
  * @param renderElement is the id of the rendering section
  */
-function drawAvgExecuteTimeVsUserIdResult(renderElement) {
+function drawAvgExecuteTimeVsUserIdResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var taskId = $('#userIdAvgExecTimeTaskList').val();
 
@@ -531,6 +545,7 @@ function drawAvgExecuteTimeVsUserIdResult(renderElement) {
         });
     } else {
         console.log('Empty task id list.');
+        showBtnAlert(currentObj, "Task id list is empty.");
     }
 }
 
@@ -538,7 +553,7 @@ function drawAvgExecuteTimeVsUserIdResult(renderElement) {
  * Function to draw Execution Time vs Task Instance Id Result
  * @param renderElement is the id of the rendering section
  */
-function drawExecutionTimeVsTaskInstanceIdResult(renderElement) {
+function drawExecutionTimeVsTaskInstanceIdResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var taskId = $('#taskInstanceIdExecTimeTaskList').val();
 
@@ -588,6 +603,7 @@ function drawExecutionTimeVsTaskInstanceIdResult(renderElement) {
         });
     } else {
         console.log('Empty task id list.');
+        showBtnAlert(currentObj, "Task id list is empty.");
     }
 }
 
@@ -595,7 +611,7 @@ function drawExecutionTimeVsTaskInstanceIdResult(renderElement) {
  * Function to draw Date vs Task Instance Count Result
  * @param renderElement is the id of the rendering section
  */
-function drawDateVsTaskInstanceCountResult(renderElement) {
+function drawDateVsTaskInstanceCountResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("taskInstanceCountDateStartDate");
     var startDateTemp = new Date(startDate.value).getTime();
@@ -646,7 +662,7 @@ function drawDateVsTaskInstanceCountResult(renderElement) {
  * Function to draw Total Involved Time vs User Id Result
  * @param renderElement is the id of the rendering section
  */
-function drawTotalInvolvedTimeVsUserIdResult(renderElement) {
+function drawTotalInvolvedTimeVsUserIdResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("userIdTotalInvolvedTimeStartDate");
     var startDateTemp = 0;
@@ -696,7 +712,7 @@ function drawTotalInvolvedTimeVsUserIdResult(renderElement) {
  * Function to draw Total Completed Tasks vs User Id Result
  * @param renderElement is the id of the rendering section
  */
-function drawTotalCompletedTasksVsUserIdResult(renderElement) {
+function drawTotalCompletedTasksVsUserIdResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var startDate = document.getElementById("userIdTotalCompletedTasksStartDate");
     var startDateTemp = 0;
@@ -746,7 +762,7 @@ function drawTotalCompletedTasksVsUserIdResult(renderElement) {
  * Function to draw Total Involved Time vs Process Id Result
  * @param renderElement is the id of the rendering section
  */
-function drawTotalInvolvedTimeVsProcessIdResult(renderElement) {
+function drawTotalInvolvedTimeVsProcessIdResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var userId = $('#processIdTotalInvolvedTimeUserList').val();
 
@@ -796,6 +812,7 @@ function drawTotalInvolvedTimeVsProcessIdResult(renderElement) {
         });
     } else {
         console.log('Empty user id list.');
+        showBtnAlert(currentObj, "User id list is empty.");
     }
 }
 
@@ -803,7 +820,7 @@ function drawTotalInvolvedTimeVsProcessIdResult(renderElement) {
  * Function to draw Total Involved Instance Count vs Process Id Result
  * @param renderElement is the id of the rendering section
  */
-function drawTotalInvolvedInstanceCountVsProcessIdResult(renderElement) {
+function drawTotalInvolvedInstanceCountVsProcessIdResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var userId = $('#processIdTotalInvolvedInstanceCountUserList').val();
 
@@ -853,6 +870,7 @@ function drawTotalInvolvedInstanceCountVsProcessIdResult(renderElement) {
         });
     } else {
         console.log('Empty user id list.');
+        showBtnAlert(currentObj, "User id list is empty.");
     }
 }
 
@@ -860,7 +878,7 @@ function drawTotalInvolvedInstanceCountVsProcessIdResult(renderElement) {
  * Function to draw User Level Task Instance Count vs Task Id Result
  * @param renderElement is the id of the rendering section
  */
-function drawUserLevelTaskInstanceCountVsTaskIdResult(renderElement) {
+function drawUserLevelTaskInstanceCountVsTaskIdResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var userId = $('#userLevelTaskInstanceCountTaskIdUserList').val();
 
@@ -896,6 +914,7 @@ function drawUserLevelTaskInstanceCountVsTaskIdResult(renderElement) {
         });
     } else {
         console.log('Empty process id list.');
+        showBtnAlert(currentObj, "Process id list is empty.");
     }
 }
 
@@ -903,7 +922,7 @@ function drawUserLevelTaskInstanceCountVsTaskIdResult(renderElement) {
  * Function to draw User Level Average Execution Time Vs Task Id Result
  * @param renderElement is the id of the rendering section
  */
-function drawUserLevelAvgExecuteTimeVsTaskIdResult(renderElement) {
+function drawUserLevelAvgExecuteTimeVsTaskIdResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
     var userId = $('#userLevelTaskIdAvgExecTimeUserList').val();
 
@@ -939,6 +958,7 @@ function drawUserLevelAvgExecuteTimeVsTaskIdResult(renderElement) {
         });
     } else {
         console.log('Empty user id list.');
+        showBtnAlert(currentObj, "User id list is empty.");
     }
 }
 
@@ -966,7 +986,7 @@ function loadProcessList(dropdownId, barChartId, callback) {
                 }
                 $(dropdownElementID).selectpicker("refresh");
                 if (callback != null) {
-                    callback(barChartId);
+                    callback(barChartId, null);
                 }
             }
         },
@@ -1001,7 +1021,7 @@ function loadTaskList(dropdownId, barChartId, callback) {
                 }
                 $(dropdownElementID).selectpicker("refresh");
                 if (callback != null) {
-                    callback(barChartId);
+                    callback(barChartId, null);
                 }
             }
         },
@@ -1036,7 +1056,7 @@ function loadUserList(dropdownId, barChartId, callback) {
                 }
                 $(dropdownElementID).selectpicker("refresh");
                 if (callback != null) {
-                    callback(barChartId);
+                    callback(barChartId, null);
                 }
             }
         },

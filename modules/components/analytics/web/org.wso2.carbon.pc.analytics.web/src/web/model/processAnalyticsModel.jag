@@ -24,8 +24,8 @@ window.onload = function() {
         style: 'btn',
         size: 3
     });
-    drawAvgExecuteTimeVsProcessIdResult('processDefAvgTimeBarChart');
-    drawProcessInstanceCountVsProcessIdResult('processInstanceCountProcessIdBarChart');
+    drawAvgExecuteTimeVsProcessIdResult('processDefAvgTimeBarChart', null);
+    drawProcessInstanceCountVsProcessIdResult('processInstanceCountProcessIdBarChart', null);
     loadProcessList('processVersionAvgExecTimeProcessList', 'processVersionAvgTimeBarChart', drawAvgExecuteTimeVsProcessVersionResult);
     loadProcessList('processInstanceCountProcessVersionProcessList', 'processInstanceCountProcessVersionBarChart', drawProcessInstanceCountVsProcessVersionResult);
     loadProcessList('processInstanceIdExecTimeProcessList', 'processInstanceIdExecTimeBarChart', drawExecutionTimeVsProcessInstanceIdResult);
