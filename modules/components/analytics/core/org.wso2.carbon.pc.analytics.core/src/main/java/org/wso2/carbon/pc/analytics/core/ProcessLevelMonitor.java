@@ -1,5 +1,5 @@
 /**
- * Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,8 +90,7 @@ public class ProcessLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core ProcessLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Avg Execution Time Vs ProcessId Result:" + sortedResult);
@@ -156,8 +155,7 @@ public class ProcessLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core ProcessLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Process Instance Count Vs ProcessId Result:" + sortedResult);
@@ -219,8 +217,7 @@ public class ProcessLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core ProcessLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Avg Execution Time Vs Process Version Result:" + sortedResult);
@@ -281,8 +278,7 @@ public class ProcessLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core ProcessLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Process Instance Count Vs Process Version Result:" + sortedResult);
@@ -342,8 +338,7 @@ public class ProcessLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core ProcessLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Execution Time Vs Process Instance Id Result:" + sortedResult);
@@ -415,8 +410,7 @@ public class ProcessLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core ProcessLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Date Vs Process Instance Count Result:" + sortedResult);
@@ -473,8 +467,7 @@ public class ProcessLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core - process id list error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core - process id list error.", e);
 		}
 		return processIdList;
 	}

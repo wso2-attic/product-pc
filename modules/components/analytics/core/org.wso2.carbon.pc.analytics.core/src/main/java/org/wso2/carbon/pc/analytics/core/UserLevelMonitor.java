@@ -1,5 +1,5 @@
 /**
- * Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,8 +91,7 @@ public class UserLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core UserLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core UserLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Total Involved Time Vs User Id Result:" + sortedResult);
@@ -156,8 +155,7 @@ public class UserLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core UserLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core UserLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Total Completed Tasks Vs User Id Result:" + sortedResult);
@@ -224,8 +222,7 @@ public class UserLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core UserLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core UserLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Total Involved Time Vs Process Id Result:" + sortedResult);
@@ -293,8 +290,7 @@ public class UserLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core UserLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core UserLevelMonitoring error.", e);
 		}
 
 		if (log.isDebugEnabled()) {
@@ -357,8 +353,7 @@ public class UserLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core UserLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core UserLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("User Level Task Instance Count Vs Task Id Result:" + sortedResult);
@@ -419,8 +414,7 @@ public class UserLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core UserLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core UserLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("User Level Avg Execution Time Vs Task Id Result:" + sortedResult);
@@ -477,8 +471,7 @@ public class UserLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core - user id list error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core - user id list error.", e);
 		}
 		return userIdList;
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,8 +87,7 @@ public class TaskLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core TaskLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core TaskLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Avg Execution Time Vs Task Id Result:" + sortedResult);
@@ -149,8 +148,7 @@ public class TaskLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core TaskLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core TaskLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Task Instance Count Vs Task Id Result:" + sortedResult);
@@ -211,8 +209,7 @@ public class TaskLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core TaskLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core TaskLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Task Instance Count Vs User Id Result:" + sortedResult);
@@ -273,8 +270,7 @@ public class TaskLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core TaskLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core TaskLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Avg Waiting Time Vs User Id Result:" + sortedResult);
@@ -334,8 +330,7 @@ public class TaskLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core TaskLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core TaskLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Execution Time Vs Task Instance Id Result:" + sortedResult);
@@ -407,8 +402,7 @@ public class TaskLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core TaskLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core TaskLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Date Vs Task Instance Count Result:" + sortedResult);
@@ -465,8 +459,7 @@ public class TaskLevelMonitor {
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core - task id list error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core - task id list error.", e);
 		}
 		return taskIdList;
 	}
