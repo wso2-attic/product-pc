@@ -4,11 +4,11 @@
 
     window.onload = getProcessList;
 
-    function showTextEditor(e1) {
+    function showTextEditor(element) {
         if($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == ""){
             alertify.error('please fill the required fields.');
         }else{
-            saveProcess(e1);
+            saveProcess(element);
             completeTextDetails();
             $("#processTextDiv").show();
             $("#overviewDiv").hide();
@@ -19,12 +19,12 @@
         }
     }
 
-    function associateBPMN(e2) {
+    function associateBPMN(element) {
         if($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == ""){
             alertify.error('please fill the required fields.');
         }else{
             $('#create-view-header').text($('#pName').val());
-            saveProcess(e2);
+            saveProcess(element);
             completeBPMNDetails();
             $("#overviewDiv").hide();
             $("#processTextView").show();
@@ -38,7 +38,7 @@
         $("#processTextView").hide();
     }
 
-    function saveProcess(e) {
+    function saveProcess(currentElement) {
         if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
             alertify.error('please fill the required fields.');
         } else {
@@ -52,7 +52,7 @@
                     $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response);
                     $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response);
 
-                    if($(e).attr('id') == 'saveProcessBtn'){
+                    if($(currentElement).attr('id') == 'saveProcessBtn'){
                         window.location = "../../assets/process/details/" + response;
                     }
                 },
@@ -77,10 +77,10 @@
         return (JSON.stringify(processDetails));
     }
 
-    function saveProcessText(e) {
+    function saveProcessText(currentElement) {
         var textContent = tinyMCE.get('processContent').getContent();
         if (textContent == "") {
-            if($(e).attr('id') == 'processTxtSaveBtn'){
+            if($(currentElement).attr('id') == 'processTxtSaveBtn'){
                 alertify.error('Process content is empty.');
             }
         } else {
@@ -91,7 +91,7 @@
                 type: 'POST',
                 data: { 'processName': $("#pName").val(), 'processVersion' : $("#pVersion").val(), 'processText' : textContent},
                 success: function (response) {
-                    if($(e).attr('id') == 'processTxtSaveBtn'){
+                    if($(currentElement).attr('id') == 'processTxtSaveBtn'){
                         alertify.success("Successfully saved the process content.");
                     }
                 },
@@ -236,8 +236,8 @@
         return isFieldEmpty;
     }
 
-    function addUnboundedRow(e){
-        var tableName = $(e).attr('data-name');
+    function addUnboundedRow(element){
+        var tableName = $(element).attr('data-name');
         var table = $('#table_'+tableName);
 
         if(! isInputFieldEmpty(tableName)) {
