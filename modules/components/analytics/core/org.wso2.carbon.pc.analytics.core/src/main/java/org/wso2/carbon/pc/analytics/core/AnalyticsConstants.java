@@ -16,7 +16,7 @@
 package org.wso2.carbon.pc.analytics.core;
 
 /**
- * Keep all the constants
+ * Keep all the constants of analytics core
  */
 public class AnalyticsConstants {
 	public static final String COLUMN_FINISHED_TIME = "finishedTime";
