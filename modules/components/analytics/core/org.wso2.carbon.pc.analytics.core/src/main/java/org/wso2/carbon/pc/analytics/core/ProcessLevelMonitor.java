@@ -1,5 +1,5 @@
 /**
- * Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ public class ProcessLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Avg Execution Time Vs ProcessId Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -80,21 +80,20 @@ public class ProcessLevelMonitor {
 				if (unsortedResultArray.length() != 0) {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
-						JSONObject values = jsonObj.getJSONObject("values");
-						String processDefKey = values.getJSONArray("processDefKey").getString(0);
-						double avgExecTime = values.getDouble("avgExecutionTime");
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String processDefKey = values.getJSONArray(AnalyticsConstants.PROCESS_DEFINITION_KEY).getString(0);
+						double avgExecTime = values.getDouble(AnalyticsConstants.AVG_EXECUTION_TIME);
 						table.put(processDefKey, avgExecTime);
 					}
-					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, "processDefKey", "avgExecutionTime",
-					                                                       order, processCount);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, AnalyticsConstants.PROCESS_DEFINITION_KEY,
+					                                                       AnalyticsConstants.AVG_EXECUTION_TIME, order, processCount);
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core ProcessLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Avg Execution Time Vs ProcessId Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -134,7 +133,7 @@ public class ProcessLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Process Instance Count Vs ProcessId Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -146,21 +145,20 @@ public class ProcessLevelMonitor {
 				if (unsortedResultArray.length() != 0) {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
-						JSONObject values = jsonObj.getJSONObject("values");
-						String processDefKey = values.getJSONArray("processDefKey").getString(0);
-						int processInstanceCount = values.getInt("processInstanceCount");
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String processDefKey = values.getJSONArray(AnalyticsConstants.PROCESS_DEFINITION_KEY).getString(0);
+						int processInstanceCount = values.getInt(AnalyticsConstants.PROCESS_INSTANCE_COUNT);
 						table.put(processDefKey, processInstanceCount);
 					}
-					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, "processDefKey", "processInstanceCount",
-					                                                        order, processCount);
+					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, AnalyticsConstants.PROCESS_DEFINITION_KEY,
+					                                                        AnalyticsConstants.PROCESS_INSTANCE_COUNT, order, processCount);
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core ProcessLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Process Instance Count Vs ProcessId Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -197,7 +195,7 @@ public class ProcessLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Avg Execution Time Vs Process Version Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -209,21 +207,20 @@ public class ProcessLevelMonitor {
 				if (unsortedResultArray.length() != 0) {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
-						JSONObject values = jsonObj.getJSONObject("values");
-						String processVersion = values.getJSONArray("processVer").getString(0);
-						double avgExecTime = values.getDouble("avgExecutionTime");
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String processVersion = values.getJSONArray(AnalyticsConstants.PROCESS_VERSION).getString(0);
+						double avgExecTime = values.getDouble(AnalyticsConstants.AVG_EXECUTION_TIME);
 						table.put(processVersion, avgExecTime);
 					}
-					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, "processVer", "avgExecutionTime",
-					                                                       order, processCount);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, AnalyticsConstants.PROCESS_VERSION,
+					                                                       AnalyticsConstants.AVG_EXECUTION_TIME, order, processCount);
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core ProcessLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Avg Execution Time Vs Process Version Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -259,7 +256,7 @@ public class ProcessLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Process Instance Count Vs Process Version Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -271,21 +268,20 @@ public class ProcessLevelMonitor {
 				if (unsortedResultArray.length() != 0) {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
-						JSONObject values = jsonObj.getJSONObject("values");
-						String processVersion = values.getJSONArray("processVer").getString(0);
-						int processInstanceCount = values.getInt("processInstanceCount");
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String processVersion = values.getJSONArray(AnalyticsConstants.PROCESS_VERSION).getString(0);
+						int processInstanceCount = values.getInt(AnalyticsConstants.PROCESS_INSTANCE_COUNT);
 						table.put(processVersion, processInstanceCount);
 					}
-					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, "processVer", "processInstanceCount",
+					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, AnalyticsConstants.PROCESS_VERSION, AnalyticsConstants.PROCESS_INSTANCE_COUNT,
 					                                                        order, processCount);
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core ProcessLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Process Instance Count Vs Process Version Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -320,7 +316,7 @@ public class ProcessLevelMonitor {
 				searchQuery.setCount(AnalyticsConstants.MAX_COUNT);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(searchQuery));
+					log.debug("Query to get the Execution Time Vs Process Instance Id Result:" + AnalyticsUtils.getJSONString(searchQuery));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_SEARCH),
@@ -332,21 +328,20 @@ public class ProcessLevelMonitor {
 				if (unsortedResultArray.length() != 0) {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
-						JSONObject values = jsonObj.getJSONObject("values");
-						String processDefKey = values.getString("processInstanceId");
-						double executionTime = values.getDouble("duration");
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String processDefKey = values.getString(AnalyticsConstants.PROCESS_INSTANCE_ID);
+						double executionTime = values.getDouble(AnalyticsConstants.DURATION);
 						table.put(processDefKey, executionTime);
 					}
-					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, "processInstanceId", "duration",
-					                                                       order, limit);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, AnalyticsConstants.PROCESS_INSTANCE_ID,
+					                                                       AnalyticsConstants.DURATION, order, limit);
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core ProcessLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Execution Time Vs Process Instance Id Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -406,20 +401,19 @@ public class ProcessLevelMonitor {
 				if (unsortedResultArray.length() != 0) {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
-						JSONObject values = jsonObj.getJSONObject("values");
-						long completedTime = Long.parseLong(values.getJSONArray("finishTime").getString(0));
-						int processInstanceCount = values.getInt("processInstanceCount");
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						long completedTime = Long.parseLong(values.getJSONArray(AnalyticsConstants.FINISHED_TIME).getString(0));
+						int processInstanceCount = values.getInt(AnalyticsConstants.PROCESS_INSTANCE_COUNT);
 						table.put(completedTime, processInstanceCount);
 					}
-					sortedResult = AnalyticsUtils.getLongKeySortedList(table, "finishTime", "processInstanceCount");
+					sortedResult = AnalyticsUtils.getLongKeySortedList(table, AnalyticsConstants.FINISHED_TIME, AnalyticsConstants.PROCESS_INSTANCE_COUNT);
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core ProcessLevelMonitoring error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core ProcessLevelMonitoring error.", e);
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Result = " + sortedResult);
+			log.debug("Date Vs Process Instance Count Result:" + sortedResult);
 		}
 		return sortedResult;
 	}
@@ -447,7 +441,7 @@ public class ProcessLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug(AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Process Id List Result:" + AnalyticsUtils.getJSONString(query));
 				}
 
 				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
@@ -459,23 +453,21 @@ public class ProcessLevelMonitor {
 				if (array.length() != 0) {
 					for (int i = 0; i < array.length(); i++) {
 						JSONObject jsonObj = array.getJSONObject(i);
-						JSONObject values = jsonObj.getJSONObject("values");
-						String processDefKey = values.getJSONArray("processDefKey").getString(0);
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String processDefKey = values.getJSONArray(AnalyticsConstants.PROCESS_DEFINITION_KEY).getString(0);
 						JSONObject o = new JSONObject();
-						o.put("processDefKey", processDefKey);
+						o.put(AnalyticsConstants.PROCESS_DEFINITION_KEY, processDefKey);
 						resultArray.put(o);
 					}
 					processIdList = resultArray.toString();
 				}
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query = " + query.getQuery());
-					log.debug("Result = " + processIdList);
+					log.debug("Process Id List Result:" + processIdList);
 				}
 			}
 		} catch (Exception e) {
-			String errMsg = "PC Analytics core - process id list error.";
-			log.error(errMsg, e);
+			log.error("PC Analytics core - process id list error.", e);
 		}
 		return processIdList;
 	}

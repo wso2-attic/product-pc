@@ -170,8 +170,8 @@
         return true;
     }
 
-    function readUpdatedSubprocess(e){
-        var subprocessInput = $(e).parent().closest("tr").find("input").val();
+    function readUpdatedSubprocess(currentObj){
+        var subprocessInput = $(currentObj).parent().closest("tr").find("input").val();
 
         if(subprocessInput == ''){
             alertify.error('Subprocess field is empty.');
@@ -180,8 +180,8 @@
         }else if(subprocessInput == getMainProcess()){
             alertify.warning('You cannot assign the process name as its subprocess.');
         }else{
-            $(e).parent().closest("tr").find("input").replaceWith("<span id='subprocess_Name' class='subprocess_Name'>"+subprocessInput+"</span>");
-            $(e).hide();
+            $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='subprocess_Name' class='subprocess_Name'>"+subprocessInput+"</span>");
+            $(currentObj).hide();
             var subprocessPath, subprocessId;
             for(var i = 0 ; i < processListObj.length ; i++){
                 if(processListObj[i].processname == subprocessInput.split("-")[0] &&
@@ -218,8 +218,8 @@
         }
     }
 
-    function readUpdatedSuccessor(e){
-        var successorInput = $(e).parent().closest("tr").find("input").val();
+    function readUpdatedSuccessor(currentObj){
+        var successorInput = $(currentObj).parent().closest("tr").find("input").val();
 
         if(successorInput == ''){
             alertify.error('Successor field is empty.');
@@ -228,8 +228,8 @@
         }else if(successorInput == getMainProcess()){
             alertify.warning('You cannot assign the process name as its successor.');
         }else{
-            $(e).parent().closest("tr").find("input").replaceWith("<span id='successor_Name' class='successor_Name'>"+successorInput+"</span>");
-            $(e).hide();
+            $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='successor_Name' class='successor_Name'>"+successorInput+"</span>");
+            $(currentObj).hide();
             var successorPath, successorId;
             for(var i = 0 ; i < processListObj.length ; i++){
                 if(processListObj[i].processname == successorInput.split("-")[0] &&
@@ -266,8 +266,8 @@
         }
     }
 
-    function readUpdatedPredecessor(e){
-        var predecessorInput = $(e).parent().closest("tr").find("input").val();
+    function readUpdatedPredecessor(currentObj){
+        var predecessorInput = $(currentObj).parent().closest("tr").find("input").val();
 
         if(predecessorInput == ''){
             alertify.error('Predecessor field is empty.');
@@ -276,8 +276,8 @@
         }else if(predecessorInput == getMainProcess()){
             alertify.warning('You cannot assign the process name as its predecessor.');
         }else{
-            $(e).parent().closest("tr").find("input").replaceWith("<span id='predecessor_Name' class='predecessor_Name'>"+predecessorInput+"</span>");
-            $(e).hide();
+            $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='predecessor_Name' class='predecessor_Name'>"+predecessorInput+"</span>");
+            $(currentObj).hide();
             var predecessorPath, predecessorId;
             for(var i = 0 ; i < processListObj.length ; i++){
                 if(processListObj[i].processname == predecessorInput.split("-")[0] &&
@@ -314,8 +314,8 @@
         }
     }
 
-    function deleteSubprocess(e){
-        var deleteSubInput = $(e).parent().closest("tr").find("span").text();
+    function deleteSubprocess(element){
+        var deleteSubInput = $(element).parent().closest("tr").find("span").text();
         if(! isProcessNotAvailableInList(deleteSubInput)){
             var deleteSubPath, deleteSubId;
             for(var i = 0 ; i < processListObj.length ; i++){
@@ -353,8 +353,8 @@
         }
     }
 
-    function deleteSuccessor(e){
-        var deleteSuccessorInput = $(e).parent().closest("tr").find("span").text();
+    function deleteSuccessor(element){
+        var deleteSuccessorInput = $(element).parent().closest("tr").find("span").text();
         if(! isProcessNotAvailableInList(deleteSuccessorInput)){
             var deleteSuccessorPath, deleteSuccessorId;
             for(var i = 0 ; i < processListObj.length ; i++){
@@ -392,8 +392,8 @@
         }
     }
 
-    function deletePredecessor(e){
-        var deletePredecessorInput = $(e).parent().closest("tr").find("span").text();
+    function deletePredecessor(element){
+        var deletePredecessorInput = $(element).parent().closest("tr").find("span").text();
         if(! isProcessNotAvailableInList(deletePredecessorInput)){
             var deletePredecessorPath, deletePredecessorId;
             for(var i = 0 ; i < processListObj.length ; i++){
@@ -431,10 +431,10 @@
         }
     }
 
-    function updateProcessOwner(e){
-        var processOwner = $(e).parent().closest("tr").find("td:eq(1)").text();
+    function updateProcessOwner(element){
+        var processOwner = $(element).parent().closest("tr").find("td:eq(1)").text();
         if(processOwner == ''){
-            alertify.error('Field is empty.');
+            alertify.error('Process owner field is empty.');
         }else{
             var ownerDetails = {
                 'processName': $('#view-header').text(),
@@ -447,7 +447,7 @@
                 type: 'POST',
                 data: { 'ownerDetails': JSON.stringify(ownerDetails) },
                 success: function (response) {
-                    $(e).hide();
+                    $(element).hide();
                     alertify.success('Successfully updated the Process owner name.');
                 },
                 error: function () {
@@ -467,8 +467,8 @@
         return isFieldEmpty;
     }
 
-    function addUnboundedRow(e){
-        var tableName = $(e).attr('data-name');
+    function addUnboundedRow(element){
+        var tableName = $(element).attr('data-name');
         var table = $('#table_'+tableName);
 
         if(! isInputFieldEmpty(tableName)) {

@@ -1,5 +1,5 @@
 /**
- * Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package org.wso2.carbon.pc.analytics.core;
 
 /**
- * Keep all the constants
+ * Keep all the constants of analytics core
  */
 public class AnalyticsConstants {
 	public static final String COLUMN_FINISHED_TIME = "finishedTime";
@@ -75,6 +75,9 @@ public class AnalyticsConstants {
 	public static final String ACTIVATE = "analyticsEnabled";
 	public static final String TRUE = "true";
 	public static final String SECRET_ALIAS = "PC.Analytics.Password";
+	public static final String VALUES = "values";
+	public static final String PROCESS_INSTANCE_ID = "processInstanceId";
+	public static final String TASK_INSTANCE_ID = "taskInstanceId";
 
 	public static final int MIN_COUNT = 0;
 	public static final int MAX_COUNT = 100000;

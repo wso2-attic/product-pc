@@ -1,6 +1,6 @@
 <%
 /*
- ~ Copyright 2005-2015 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
  ~ you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ if(log.isDebugEnabled()){
 var taskLevelMonitor = new TaskLevelMonitor();
 var filters = String(request.getParameter("filters"));
 if(log.isDebugEnabled()){
- log.debug(filters);
+ log.debug("Task Instance Count Vs Task Id Filters:" + filters);
 }
 var taskInstanceCountVsTaskId = taskLevelMonitor.getTaskInstanceCountVsTaskId(filters);
 print(taskInstanceCountVsTaskId);
 if(log.isDebugEnabled()){
- log.debug(taskInstanceCountVsTaskId);
+ log.debug("Task Instance Count Vs Task Id Result:" + taskInstanceCountVsTaskId);
 }
 %>

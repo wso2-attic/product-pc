@@ -1,6 +1,6 @@
 <%
 /*
- ~ Copyright 2005-2015 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
  ~ you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ if(log.isDebugEnabled()){
 var userLevelMonitor = new UserLevelMonitor();
 var filters = String(request.getParameter("filters"));
 if(log.isDebugEnabled()){
- log.debug(filters);
+ log.debug("Total Completed Tasks Vs User Id Filters:" + filters);
 }
 var totalCompletedTasksVsUserId = userLevelMonitor.getTotalCompletedTasksVsUserId(filters);
 print(totalCompletedTasksVsUserId);
 if(log.isDebugEnabled()){
- log.debug(totalCompletedTasksVsUserId);
+ log.debug("Total Completed Tasks Vs User Id Result:" + totalCompletedTasksVsUserId);
 }
 %>

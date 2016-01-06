@@ -1,6 +1,6 @@
 <%
 /*
- ~ Copyright 2005-2015 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
  ~ you may not use this file except in compliance with the License.
@@ -26,6 +26,6 @@ var processLevelMonitor = new ProcessLevelMonitor();
 var processIdList = processLevelMonitor.getProcessIdList();
 print(processIdList);
 if(log.isDebugEnabled()){
- log.debug(processIdList);
+ log.debug("Process Id List Result:" + processIdList);
 }
 %>

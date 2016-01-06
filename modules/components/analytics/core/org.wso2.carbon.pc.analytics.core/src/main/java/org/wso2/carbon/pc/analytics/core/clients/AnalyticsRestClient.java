@@ -1,5 +1,5 @@
 /**
- * Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,10 +82,10 @@ public class AnalyticsRestClient {
 
 		} catch (UnsupportedEncodingException e) {
 			String errMsg = "Async DAS client unsupported encoding exception.";
-			log.error(errMsg, e);
+			throw new UnsupportedEncodingException(errMsg);
 		} catch (UnsupportedOperationException e) {
 			String errMsg = "Async DAS client unsupported operation exception.";
-			log.error(errMsg, e);
+			throw new UnsupportedOperationException(errMsg);
 		} catch (IOException e) {
 			String errMsg = "Async DAS client I/O exception.";
 			log.error(errMsg, e);
