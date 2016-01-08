@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Built-By: sathya
+Tool: Bnd-1.43.0
+Bundle-Name: WSO2 Process Center - Core
+Created-By: Apache Maven Bundle Plugin
+Bundle-Vendor: WSO2
+Build-Jdk: 1.7.0_67
+Bundle-Version: 1.0.0.SNAPSHOT
+Bnd-LastModified: 1452228238881
+Bundle-ManifestVersion: 2
+Bundle-Description: WSO2 Process Center
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
+Bundle-DocURL: http://wso2.com
+Bundle-SymbolicName: org.wso2.carbon.process-center.core
+
