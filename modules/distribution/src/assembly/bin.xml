@@ -321,6 +321,13 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/bpmn-analytics-explorer
             </outputDirectory>
         </fileSet>
+        <fileSet>
+            <directory>../components/analytics/udf/org.wso2.carbon.pc.analytics.udf/target</directory>
+            <outputDirectory>${project.artifactId}-${pc.version}/analytics</outputDirectory>
+            <includes>
+                <include>**/PCAnalyticsUDF.jar</include>
+            </includes>
+        </fileSet>
 
         <!--fileSet>
             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0001</directory>
