@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<artifacts>
+    <artifact name="PC_ANALYTICS_CAPP" version="v1.0.0" type="carbon/application">        
+
+	<dependency artifact="Eventstream_bpmn_process" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+	<dependency artifact="Eventstream_bpmn_task" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+	
+	<dependency artifact="Eventstore_bpmn_process" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+	<dependency artifact="Eventstore_bpmn_task" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+	
+	<dependency artifact="Eventreceiver_bpmn_process" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+	<dependency artifact="Eventreceiver_bpmn_task" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+	
+	<dependency artifact="Sparkscripts" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+	
+    </artifact>
+</artifacts>

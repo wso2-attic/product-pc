@@ -328,6 +328,13 @@
                 <include>**/PCAnalyticsUDF.jar</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>../components/analytics/capp/org.wso2.carbon.pc.analytics.capp/target</directory>
+            <outputDirectory>${project.artifactId}-${pc.version}/analytics</outputDirectory>
+            <includes>
+                <include>**/*.car</include>
+            </includes>
+        </fileSet>
 
         <!--fileSet>
             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0001</directory>

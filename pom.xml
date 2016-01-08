@@ -42,6 +42,7 @@
         <module>modules/components/analytics/core/org.wso2.carbon.pc.analytics.core</module>
         <module>modules/components/analytics/web/org.wso2.carbon.pc.analytics.web</module>
         <module>modules/components/analytics/udf/org.wso2.carbon.pc.analytics.udf</module>
+        <module>modules/components/analytics/capp/org.wso2.carbon.pc.analytics.capp</module>
         <module>modules/features/core/org.wso2.carbon.pc.core.feature</module>
         <module>modules/features/analytics-core/org.wso2.carbon.pc.analytics.core.feature</module>
         <module>modules/p2-profile-gen</module>
