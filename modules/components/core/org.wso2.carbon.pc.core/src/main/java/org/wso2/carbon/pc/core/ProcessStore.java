@@ -207,7 +207,7 @@ public class ProcessStore {
         return processId;
     }
 
-    public String saveProcessText(String processName, String processVersion, String processText) {
+    public boolean saveProcessText(String processName, String processVersion, String processText) {
 
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
@@ -243,7 +243,7 @@ public class ProcessStore {
             log.error(e);
         }
 
-        return "OK";
+        return true;
     }
 
     public void processBPMN(String version, String type, StreamHostObject s) {
@@ -824,7 +824,7 @@ public class ProcessStore {
         return resourceString;
     }
 
-    public String updateOwner(String ownerDetails) {
+    public boolean updateOwner(String ownerDetails) {
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
@@ -851,10 +851,10 @@ public class ProcessStore {
         }catch (Exception e) {
             log.error("Failed to update the process owner", e);
         }
-        return OK;
+        return true;
     }
 
-    public String addSubprocess(String subprocessDetails) {
+    public boolean addSubprocess(String subprocessDetails) {
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
@@ -887,10 +887,10 @@ public class ProcessStore {
         }catch (Exception e) {
             log.error("Failed to add a subprocess", e);
         }
-        return OK;
+        return true;
     }
 
-    public String addSuccessor(String successorDetails) {
+    public boolean addSuccessor(String successorDetails) {
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
@@ -923,10 +923,10 @@ public class ProcessStore {
         }catch (Exception e) {
             log.error("Failed to add a successor", e);
         }
-        return OK;
+        return true;
     }
 
-    public String addPredecessor(String predecessorDetails) {
+    public boolean addPredecessor(String predecessorDetails) {
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
@@ -959,10 +959,10 @@ public class ProcessStore {
         }catch (Exception e) {
             log.error("Failed to add a predecessor", e);
         }
-        return OK;
+        return true;
     }
 
-    public String deleteSubprocess(String deleteSubprocess) {
+    public boolean deleteSubprocess(String deleteSubprocess) {
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
@@ -1003,10 +1003,10 @@ public class ProcessStore {
         }catch (Exception e) {
             log.error("Failed to delete a subprocess", e);
         }
-        return OK;
+        return true;
     }
 
-    public String deleteSuccessor(String deleteSuccessor) {
+    public boolean deleteSuccessor(String deleteSuccessor) {
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
@@ -1047,10 +1047,10 @@ public class ProcessStore {
         }catch (Exception e) {
             log.error("Failed to delete a successor", e);
         }
-        return OK;
+        return true;
     }
 
-    public String deletePredecessor(String deletePredecessor) {
+    public boolean deletePredecessor(String deletePredecessor) {
         try{
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
@@ -1091,7 +1091,7 @@ public class ProcessStore {
         }catch (Exception e) {
             log.error("Failed to delete a predecessor", e);
         }
-        return OK;
+        return true;
     }
 
 
