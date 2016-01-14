@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -64,16 +64,19 @@ public class UserLevelMonitor {
 				query.setTableName(AnalyticsConstants.USER_INVOLVE_TABLE);
 				query.setGroupByField(AnalyticsConstants.ASSIGN_USER);
 				if (from != 0 && to != 0) {
-					query.setQuery(AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to));
+					query.setQuery(AnalyticsUtils.getDateRangeQuery(
+							AnalyticsConstants.COLUMN_FINISHED_TIME, from, to));
 				}
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query to get the Total Involved Time Vs User Id Result:" + AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Total Involved Time Vs User Id Result:" +
+					          AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-				                                         AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						      AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -82,12 +85,16 @@ public class UserLevelMonitor {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
-						String assignee = values.getJSONArray(AnalyticsConstants.ASSIGN_USER).getString(0);
-						double totalInvolvedTime = values.getDouble(AnalyticsConstants.TOTAL_INVOLVED_TIME);
+						String assignee =
+								values.getJSONArray(AnalyticsConstants.ASSIGN_USER).getString(0);
+						double totalInvolvedTime =
+								values.getDouble(AnalyticsConstants.TOTAL_INVOLVED_TIME);
 						table.put(assignee, totalInvolvedTime);
 					}
-					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, AnalyticsConstants.ASSIGN_USER,
-					                                                       AnalyticsConstants.TOTAL_INVOLVED_TIME, order, userCount);
+					sortedResult = AnalyticsUtils
+							.getDoubleValueSortedList(table, AnalyticsConstants.ASSIGN_USER,
+							                          AnalyticsConstants.TOTAL_INVOLVED_TIME, order,
+							                          userCount);
 				}
 			}
 		} catch (Exception e) {
@@ -128,16 +135,19 @@ public class UserLevelMonitor {
 				query.setTableName(AnalyticsConstants.USER_INVOLVE_TABLE);
 				query.setGroupByField(AnalyticsConstants.ASSIGN_USER);
 				if (from != 0 && to != 0) {
-					query.setQuery(AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to));
+					query.setQuery(AnalyticsUtils.getDateRangeQuery(
+							AnalyticsConstants.COLUMN_FINISHED_TIME, from, to));
 				}
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query to get the Total Completed Tasks Vs User Id Result:" + AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Total Completed Tasks Vs User Id Result:" +
+					          AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-				                                         AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						      AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Integer> table = new Hashtable<>();
@@ -146,12 +156,16 @@ public class UserLevelMonitor {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
-						String assignee = values.getJSONArray(AnalyticsConstants.ASSIGN_USER).getString(0);
-						int totalInvolvedTime = values.getInt(AnalyticsConstants.COMPLETED_TOTAL_TASKS);
+						String assignee =
+								values.getJSONArray(AnalyticsConstants.ASSIGN_USER).getString(0);
+						int totalInvolvedTime =
+								values.getInt(AnalyticsConstants.COMPLETED_TOTAL_TASKS);
 						table.put(assignee, totalInvolvedTime);
 					}
-					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, AnalyticsConstants.ASSIGN_USER,
-					                                                        AnalyticsConstants.COMPLETED_TOTAL_TASKS, order, userCount);
+					sortedResult = AnalyticsUtils
+							.getIntegerValueSortedList(table, AnalyticsConstants.ASSIGN_USER,
+							                           AnalyticsConstants.COMPLETED_TOTAL_TASKS,
+							                           order, userCount);
 				}
 			}
 		} catch (Exception e) {
@@ -194,17 +208,20 @@ public class UserLevelMonitor {
 				query.setGroupByField(AnalyticsConstants.PROCESS_DEFINITION_KEY);
 				String queryStr = "assignee:" + "\"'" + userId + "'\"";
 				if (from != 0 && to != 0) {
-					queryStr += " AND " + AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
+					queryStr += " AND " + AnalyticsUtils
+							.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
 				}
 				query.setQuery(queryStr);
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query to get the Total Involved Time Vs Process Id Result:" + AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Total Involved Time Vs Process Id Result:" +
+					          AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-				                                         AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						      AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -213,12 +230,17 @@ public class UserLevelMonitor {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
-						String processDefKey = values.getJSONArray(AnalyticsConstants.PROCESS_DEFINITION_KEY).getString(0);
-						double totalInvolvedTime = values.getDouble(AnalyticsConstants.TOTAL_INVOLVED_TIME);
+						String processDefKey =
+								values.getJSONArray(AnalyticsConstants.PROCESS_DEFINITION_KEY)
+								      .getString(0);
+						double totalInvolvedTime =
+								values.getDouble(AnalyticsConstants.TOTAL_INVOLVED_TIME);
 						table.put(processDefKey, totalInvolvedTime);
 					}
-					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, AnalyticsConstants.PROCESS_DEFINITION_KEY,
-					                                                       AnalyticsConstants.TOTAL_INVOLVED_TIME, order, count);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table,
+					                                                       AnalyticsConstants.PROCESS_DEFINITION_KEY,
+					                                                       AnalyticsConstants.TOTAL_INVOLVED_TIME,
+					                                                       order, count);
 				}
 			}
 		} catch (Exception e) {
@@ -262,17 +284,21 @@ public class UserLevelMonitor {
 				query.setGroupByField(AnalyticsConstants.PROCESS_DEFINITION_KEY);
 				String queryStr = "assignee:" + "\"'" + userId + "'\"";
 				if (from != 0 && to != 0) {
-					queryStr += " AND " + AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
+					queryStr += " AND " + AnalyticsUtils
+							.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
 				}
 				query.setQuery(queryStr);
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query to get the Total Involved Instance Count Vs Process Id Result:" + AnalyticsUtils.getJSONString(query));
+					log.debug(
+							"Query to get the Total Involved Instance Count Vs Process Id Result:" +
+							AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-				                                         AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						      AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Integer> table = new Hashtable<>();
@@ -281,12 +307,16 @@ public class UserLevelMonitor {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
-						String processDefKey = values.getJSONArray(AnalyticsConstants.PROCESS_DEFINITION_KEY).getString(0);
+						String processDefKey =
+								values.getJSONArray(AnalyticsConstants.PROCESS_DEFINITION_KEY)
+								      .getString(0);
 						int instanceCount = values.getInt(AnalyticsConstants.TOTAL_INSTANCE_COUNT);
 						table.put(processDefKey, instanceCount);
 					}
-					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, AnalyticsConstants.PROCESS_DEFINITION_KEY,
-					                                                        AnalyticsConstants.TOTAL_INSTANCE_COUNT, order, count);
+					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table,
+					                                                        AnalyticsConstants.PROCESS_DEFINITION_KEY,
+					                                                        AnalyticsConstants.TOTAL_INSTANCE_COUNT,
+					                                                        order, count);
 				}
 			}
 		} catch (Exception e) {
@@ -331,11 +361,13 @@ public class UserLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query to get the User Level Task Instance Count Vs Task Id Result:" + AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the User Level Task Instance Count Vs Task Id Result:" +
+					          AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-				                                         AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						      AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Integer> table = new Hashtable<>();
@@ -344,12 +376,17 @@ public class UserLevelMonitor {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
-						String processDefKey = values.getJSONArray(AnalyticsConstants.TASK_DEFINITION_KEY).getString(0);
-						int processInstanceCount = values.getInt(AnalyticsConstants.TASK_INSTANCE_COUNT);
+						String processDefKey =
+								values.getJSONArray(AnalyticsConstants.TASK_DEFINITION_KEY)
+								      .getString(0);
+						int processInstanceCount =
+								values.getInt(AnalyticsConstants.TASK_INSTANCE_COUNT);
 						table.put(processDefKey, processInstanceCount);
 					}
-					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, AnalyticsConstants.TASK_DEFINITION_KEY,
-					                                                        AnalyticsConstants.TASK_INSTANCE_COUNT, order, taskCount);
+					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table,
+					                                                        AnalyticsConstants.TASK_DEFINITION_KEY,
+					                                                        AnalyticsConstants.TASK_INSTANCE_COUNT,
+					                                                        order, taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -392,11 +429,13 @@ public class UserLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query to get the User Level Avg Execution Time Vs Task Id Result:" + AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the User Level Avg Execution Time Vs Task Id Result:" +
+					          AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-				                                         AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						      AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -405,12 +444,17 @@ public class UserLevelMonitor {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
-						String taskDefKey = values.getJSONArray(AnalyticsConstants.TASK_DEFINITION_KEY).getString(0);
-						double avgExecTime = values.getDouble(AnalyticsConstants.AVG_EXECUTION_TIME);
+						String taskDefKey =
+								values.getJSONArray(AnalyticsConstants.TASK_DEFINITION_KEY)
+								      .getString(0);
+						double avgExecTime =
+								values.getDouble(AnalyticsConstants.AVG_EXECUTION_TIME);
 						table.put(taskDefKey, avgExecTime);
 					}
-					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, AnalyticsConstants.TASK_DEFINITION_KEY,
-					                                                       AnalyticsConstants.AVG_EXECUTION_TIME, order, taskCount);
+					sortedResult = AnalyticsUtils
+							.getDoubleValueSortedList(table, AnalyticsConstants.TASK_DEFINITION_KEY,
+							                          AnalyticsConstants.AVG_EXECUTION_TIME, order,
+							                          taskCount);
 				}
 			}
 		} catch (Exception e) {
@@ -445,11 +489,13 @@ public class UserLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query to get the User List Result:" + AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the User List Result:" +
+					          AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-				                                         AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						      AnalyticsUtils.getJSONString(query));
 
 				JSONArray array = new JSONArray(result);
 				JSONArray resultArray = new JSONArray();
@@ -458,7 +504,8 @@ public class UserLevelMonitor {
 					for (int i = 0; i < array.length(); i++) {
 						JSONObject jsonObj = array.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
-						String userId = values.getJSONArray(AnalyticsConstants.ASSIGN_USER).getString(0);
+						String userId =
+								values.getJSONArray(AnalyticsConstants.ASSIGN_USER).getString(0);
 						JSONObject o = new JSONObject();
 						o.put(AnalyticsConstants.ASSIGN_USER, userId);
 						resultArray.put(o);
