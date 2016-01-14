@@ -9,7 +9,7 @@ if(log.isDebugEnabled()){
 var ps = new ProcessStore();
 var deletePredecessorDetails = String(request.getParameter("deletePredecessorDetails"));
 var deletePredecessorStatus = ps.deletePredecessor(deletePredecessorDetails);
-print(deletePredecessorStatus);
+print(String(deletePredecessorStatus));
 if(log.isDebugEnabled()){
     log.debug("deletePredecessorDetails: " + deletePredecessorDetails);
 }

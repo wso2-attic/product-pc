@@ -14,5 +14,5 @@ if(log.isDebugEnabled()){
     log.debug(processName);
 }
 var result = ps.saveProcessText(processName, processVersion, processText);
-print(result);
+print(String(result));
 %>
