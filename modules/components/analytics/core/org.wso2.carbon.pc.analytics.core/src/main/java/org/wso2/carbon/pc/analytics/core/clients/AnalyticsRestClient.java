@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,7 +50,8 @@ public class AnalyticsRestClient {
 		postRequest.setRequestHeader("Authorization", AnalyticsUtils.getAuthorizationHeader());
 		BufferedReader br = null;
 		try {
-			StringRequestEntity input = new StringRequestEntity(message, "application/json", "UTF-8");
+			StringRequestEntity input =
+					new StringRequestEntity(message, "application/json", "UTF-8");
 			postRequest.setRequestEntity(input);
 
 			int returnCode = httpClient.executeMethod(postRequest);
@@ -60,7 +61,8 @@ public class AnalyticsRestClient {
 				throw new RuntimeException(errorCode);
 			}
 
-			InputStreamReader reader = new InputStreamReader((postRequest.getResponseBodyAsStream()));
+			InputStreamReader reader =
+					new InputStreamReader((postRequest.getResponseBodyAsStream()));
 			br = new BufferedReader(reader);
 
 			String output = null;
@@ -74,7 +76,7 @@ public class AnalyticsRestClient {
 				totalOutput.append(output);
 			}
 
-			if(log.isDebugEnabled()) {
+			if (log.isDebugEnabled()) {
 				log.debug("Output = " + totalOutput.toString());
 			}
 
@@ -90,15 +92,15 @@ public class AnalyticsRestClient {
 			String errMsg = "Async DAS client I/O exception.";
 			log.error(errMsg, e);
 		} finally {
-				postRequest.releaseConnection();
-				if(br != null) {
-					try {
-						br.close();
-					} catch (Exception e) {
-						String errMsg = "Async DAS rest client BufferedReader close exception.";
-						log.error(errMsg, e);
-					}
+			postRequest.releaseConnection();
+			if (br != null) {
+				try {
+					br.close();
+				} catch (Exception e) {
+					String errMsg = "Async DAS rest client BufferedReader close exception.";
+					log.error(errMsg, e);
 				}
+			}
 		}
 		return null;
 	}
