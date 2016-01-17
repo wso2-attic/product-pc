@@ -483,8 +483,6 @@ a.collapsing-h2 {
     height: 43px;
     padding: 7px 0 0 10px;
     font-size: 20px;
-    //float: left;
-    width: 99.9%;
 }
 .table-title>a {
     color: #333;
@@ -505,13 +503,13 @@ a.collapsing-h2 {
 
 .table-status-column {
     background: #282828;
-    height: 440px;
+    height: 100%;
     color: #fff;
 }
 
 .table-status-column a {
     color: #fff;
-    font-size: 16px;
+    font-size: 12px;
 }
 .addAttachment{
     margin:0px 20px;
@@ -521,7 +519,7 @@ a.collapsing-h2 {
     width: 99.9%;
 }
 .main {
-    height: 440px;
+    height: 100%;
 }
 
 .breadcrumb {
@@ -979,7 +977,7 @@ hr {
     border: 0;
 }
 .capitalize{text-transform: capitalize}
-.main {
+.mainGraph {
     margin: 0px 25px;
 }
 

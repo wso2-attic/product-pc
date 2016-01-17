@@ -1098,8 +1098,8 @@ function loadDates(start, end) {
 function render(renderElementID, dataset, xTitle, yTitle) {
     // Dimensions for the chart: height, width, and space b/t the bars
     var margins = {top: 30, right: 120, bottom: 75, left: 120}
-    var height = 550 - margins.left - margins.right,
-        width = 900 - margins.top - margins.bottom,
+    var height = $(renderElementID).height() - margins.left - margins.right,
+        width = $(renderElementID).width() - margins.top - margins.bottom,
         barPadding = 5;
 
     // Create a scale for the x-axis based on data
@@ -1196,7 +1196,7 @@ function render(renderElementID, dataset, xTitle, yTitle) {
             var pos = d3.mouse(this);
             console.log(pos);
             tooltip.style("left", (d3.event.pageX) + "px")
-                .style("top", (d3.event.pageY - 100) + "px");
+                .style("top", (d3.event.pageY) + "px");
 
             //tooltip.select('.label').html('AVG Execution Time').style("color", "#000000");
             tooltip.select('.contentBox').html(d.xData);
