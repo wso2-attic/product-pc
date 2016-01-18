@@ -68,9 +68,9 @@ function selectPickerValChange(selectPickerElement) {
     }
 }
 
-function showBtnAlert(element, message){
-    if(element != null){
-        if(element.tagName == 'BUTTON'){
+function showBtnAlert(element, message) {
+    if (element != null) {
+        if (element.tagName == 'BUTTON') {
             alert(message);
         }
     }
@@ -1193,13 +1193,11 @@ function render(renderElementID, dataset, xTitle, yTitle) {
             return d.xData;
         })
         .on("mouseover", function (d) {
-            var pos = d3.mouse(this);
-            console.log(pos);
-            tooltip.style("left", (d3.event.pageX) + "px")
-                .style("top", (d3.event.pageY) + "px");
-
-            //tooltip.select('.label').html('AVG Execution Time').style("color", "#000000");
-            tooltip.select('.contentBox').html(d.xData);
+            var matrix = this.getScreenCTM()
+                .translate(this.getAttribute("x"), this.getAttribute("y"));
+            tooltip.html(d.xData)
+                .style("left", (window.pageXOffset + matrix.e + 15) + "px")
+                .style("top", (window.pageYOffset + matrix.f - 30) + "px");
             tooltip.style('display', 'block');
         })
         .on("mouseout", function () {
