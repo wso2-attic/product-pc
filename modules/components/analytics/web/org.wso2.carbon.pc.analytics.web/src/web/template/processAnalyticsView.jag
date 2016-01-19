@@ -1,5 +1,5 @@
 <%/*<!--
- ~ Copyright 2005-2015 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
  ~ you may not use this file except in compliance with the License.
@@ -13,208 +13,51 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
  -->*/%>
-<div class="col-sm-12">
-   <div class="row">
-     <div class="col-lg-12 float-left" id="barChartDisplay">
-            <!-- PROCESS ID VS AVERAGE EXECUTION TIME -->
-            <div class="table-title"  style="width:100%">  PROCESS ID VS AVERAGE EXECUTION TIME </div><br />
-            <div class="row inline-block" style="width:100%">
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <div class="input-group">
-                        <label  class="input-group-addon" for="processIdAvgExecTimeStartDate">Start Date</label>
-                        <input id="processIdAvgExecTimeStartDate" name="processIdAvgExecTimeStartDate" type="text" class="form-control" onfocus="setDatePicker('processIdAvgExecTimeStartDate')" placeholder="MM/DD/YYYY"/>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <div class="input-group">
-                        <label class="input-group-addon" for="processIdAvgExecTimeEndDate">End Date</label>
-                        <input id="processIdAvgExecTimeEndDate" name="processIdAvgExecTimeEndDate" type="text" class="form-control" onfocus="setDatePicker('processIdAvgExecTimeEndDate')" placeholder="MM/DD/YYYY"/>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processIdAvgExecTimeOrder" class="selectpicker">
-                      <option value="top">Top</option>
-                      <option value="bottom">Bottom</option>
-                    </select>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processIdAvgExecTimeCount" class="selectpicker" onchange="selectPickerValChange(this)">
-                      <option value="other">Set a new value</option>
-                      <option selected="selected" value="3">3</option>
-                      <option value="5">5</option>
-                      <option value="10">10</option>
-                      <option value="50">50</option>
-                      <option value="100">100</option>
-                    </select>
-                </div>
-                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsProcessIdResult('processDefAvgTimeBarChart', this)">Apply Filter</button>
-                </div>
-             </div>
-            <div class="main" id="processDefAvgTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
-            <br>
+<div class="row">
+    <div class="panel-inbox">
+        <!-- Default panel contents -->
+        <div class=" margin-left-double table-title">Process Level Analysis</div>
+        <div class="table-body margin-left-double">
+            <div class="col-sm-3 col-md-3 col-lg-3 sidebar table-status-column ">
+              <ul class="nav nav-sidebar nav-pills nav-stacked margin-bottom-double margin-top-double">
+                <%
+function updateActiveStatusNavTab(status, button) {
+    if (status != button) {
+        return "";
+    }
+    return "class=\"active\"";
+}
+%>
+                <li <%=updateActiveStatusNavTab(statusQuery, "processIdVsAvgExecutionTime")%>><a href="processes?status_query=processIdVsAvgExecutionTime">PROCESS ID VS AVERAGE EXECUTION TIME</a></li>
+                <br/>
+                <li <%=updateActiveStatusNavTab(statusQuery, "processInstanceCountVsProcessId")%>><a href="processes?status_query=processInstanceCountVsProcessId">PROCESS INSTANCE COUNT VS PROCESS ID</a></li>
+                <br/>
+                <li <%=updateActiveStatusNavTab(statusQuery, "processVersionVsAvgExecutionTime")%>><a href="processes?status_query=processVersionVsAvgExecutionTime">PROCESS VERSION VS AVERAGE EXECUTION TIME</a></li>
+                <br/>
+                <li <%=updateActiveStatusNavTab(statusQuery, "processInstanceCountVsProcessVersion")%>><a href="processes?status_query=processInstanceCountVsProcessVersion">PROCESS INSTANCE COUNT VS PROCESS VERSION</a></li>
+                <br/>
+                <li <%=updateActiveStatusNavTab(statusQuery, "processInstanceIdVsExecutionTime")%>><a href="processes?status_query=processInstanceIdVsExecutionTime">PROCESS INSTANCE ID VS EXECUTION TIME</a></li>
+                <br/>
+                <li <%=updateActiveStatusNavTab(statusQuery, "processInstanceCountVsDate")%>><a href="processes?status_query=processInstanceCountVsDate">PROCESS INSTANCE COUNT VS DATE</a></li>
+              </ul>
+            </div>
 
-            <!-- PROCESS INSTANCE COUNT VS PROCESS ID -->
-            <div class="table-title"  style="width:100%"> PROCESS INSTANCE COUNT VS PROCESS ID </div><br />
-            <div class="row inline-block" style="width:100%">
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <div class="input-group">
-                        <label  class="input-group-addon" for="processInstanceCountProcessDefStartDate">Start Date</label>
-                        <input id="processInstanceCountProcessDefStartDate" name="processInstanceCountProcessDefStartDate" type="text" class="form-control" onfocus="setDatePicker('processInstanceCountProcessDefStartDate')" placeholder="MM/DD/YYYY"/>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <div class="input-group">
-                        <label class="input-group-addon" for="processInstanceCountProcessDefEndDate">End Date</label>
-                        <input id="processInstanceCountProcessDefEndDate" name="processInstanceCountProcessDefEndDate" type="text" class="form-control" onfocus="setDatePicker('processInstanceCountProcessDefEndDate')" placeholder="MM/DD/YYYY"/>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processInstanceCountProcessDefOrder" class="selectpicker">
-                      <option value="top">Top</option>
-                      <option value="bottom">Bottom</option>
-                    </select>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processInstanceCountProcessDefCount" class="selectpicker" onchange="selectPickerValChange(this)">
-                      <option value="other">Set a new value</option>
-                      <option selected="selected" value="3">3</option>
-                      <option value="5">5</option>
-                      <option value="10">10</option>
-                      <option value="50">50</option>
-                      <option value="100">100</option>
-                    </select>
-                </div>
-                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawProcessInstanceCountVsProcessIdResult('processInstanceCountProcessIdBarChart', this)">Apply Filter</button>
-                </div>
-             </div>
-            <div class="main" id="processInstanceCountProcessIdBarChart" style="width: 80%;margin: 0 auto;"></div>
-            <br>
-
-            <!-- PROCESS VERSION VS AVERAGE EXECUTION TIME -->
-            <div class="table-title"  style="width:100%"> PROCESS VERSION VS AVERAGE EXECUTION TIME </div><br />
-            <div class="row inline-block" style="width:100%">
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processVersionAvgExecTimeProcessList" class="selectpicker"></select>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processVersionAvgExecTimeOrder" class="selectpicker">
-                      <option value="top">Top</option>
-                      <option value="bottom">Bottom</option>
-                    </select>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processVersionAvgExecTimeCount" class="selectpicker" onchange="selectPickerValChange(this)">
-                      <option value="other">Set a new value</option>
-                      <option selected="selected" value="3">3</option>
-                      <option value="5">5</option>
-                      <option value="10">10</option>
-                      <option value="50">50</option>
-                      <option value="100">100</option>
-                    </select>
-                </div>
-                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawAvgExecuteTimeVsProcessVersionResult('processVersionAvgTimeBarChart', this)">Apply Filter</button>
-                </div>
-             </div>
-            <div class="main" id="processVersionAvgTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
-            <br>
-
-            <!-- PROCESS INSTANCE COUNT VS PROCESS VERSION -->
-            <div class="table-title"  style="width:100%"> PROCESS INSTANCE COUNT VS PROCESS VERSION </div><br />
-            <div class="row inline-block" style="width:100%">
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processInstanceCountProcessVersionProcessList" class="selectpicker"></select>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processInstanceCountProcessVersionOrder" class="selectpicker">
-                      <option value="top">Top</option>
-                      <option value="bottom">Bottom</option>
-                    </select>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processInstanceCountProcessVersionCount" class="selectpicker" onchange="selectPickerValChange(this)">
-                      <option value="other">Set a new value</option>
-                      <option selected="selected" value="3">3</option>
-                      <option value="5">5</option>
-                      <option value="10">10</option>
-                      <option value="50">50</option>
-                      <option value="100">100</option>
-                    </select>
-                </div>
-                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawProcessInstanceCountVsProcessVersionResult('processInstanceCountProcessVersionBarChart', this)">Apply Filter</button>
-                </div>
-             </div>
-            <div class="main" id="processInstanceCountProcessVersionBarChart" style="width: 80%;margin: 0 auto;"></div>
-            <br>
-
-            <!-- PROCESS INSTANCE ID VS EXECUTION TIME -->
-            <div class="table-title"  style="width:100%">  PROCESS INSTANCE ID VS EXECUTION TIME </div><br />
-            <div class="row inline-block" style="width:100%">
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processInstanceIdExecTimeProcessList" class="selectpicker"></select>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <div class="input-group">
-                        <label  class="input-group-addon" for="processInstanceIdExecTimeStartDate">Start Date</label>
-                        <input id="processInstanceIdExecTimeStartDate" name="processInstanceIdExecTimeStartDate" type="text" class="form-control" onfocus="setDatePicker('processInstanceIdExecTimeStartDate')" placeholder="MM/DD/YYYY"/>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <div class="input-group">
-                        <label class="input-group-addon" for="processInstanceIdExecTimeEndDate">End Date</label>
-                        <input id="processInstanceIdExecTimeEndDate" name="processInstanceIdExecTimeEndDate" type="text" class="form-control" onfocus="setDatePicker('processInstanceIdExecTimeEndDate')" placeholder="MM/DD/YYYY"/>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processInstanceIdExecTimeOrder" class="selectpicker">
-                      <option value="top">Top</option>
-                      <option value="bottom">Bottom</option>
-                    </select>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processInstanceIdExecTimeLimit" class="selectpicker" onchange="selectPickerValChange(this)">
-                      <option value="other">Set a new value</option>
-                      <option selected="selected" value="3">3</option>
-                      <option value="5">5</option>
-                      <option value="10">10</option>
-                      <option value="50">50</option>
-                      <option value="100">100</option>
-                    </select>
-                </div>
-                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawExecutionTimeVsProcessInstanceIdResult('processInstanceIdExecTimeBarChart', this)">Apply Filter</button>
-                </div>
-             </div>
-            <div class="main" id="processInstanceIdExecTimeBarChart" style="width: 80%;margin: 0 auto;"></div>
-            <br>
-
-            <!-- COMPLETED PROCESS INSTANCE COUNT VS DATE -->
-            <div class="table-title"  style="width:100%">  COMPLETED PROCESS INSTANCE COUNT VS DATE </div><br />
-            <div class="row inline-block" style="width:100%">
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <div class="input-group">
-                        <label  class="input-group-addon" for="processInstanceCountDateStartDate">Start Date</label>
-                        <input id="processInstanceCountDateStartDate" name="processInstanceCountDateStartDate" type="text" class="form-control" onfocus="setDatePicker('processInstanceCountDateStartDate')" placeholder="MM/DD/YYYY"/>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <div class="input-group">
-                        <label class="input-group-addon" for="processInstanceCountDateEndDate">End Date</label>
-                        <input id="processInstanceCountDateEndDate" name="processInstanceCountDateEndDate" type="text" class="form-control" onfocus="setDatePicker('processInstanceCountDateEndDate')" placeholder="MM/DD/YYYY"/>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 form-group" style="width: 235px">
-                    <select id="processInstanceCountDateProcessList" class="selectpicker" multiple></select>
-                </div>
-                <div class="col-sm-12 col-md-12 col-lg-2 margin-bottom-double">
-                    <button class="btn btn-default btn-info" onclick="drawDateVsProcessInstanceCountResult('processInstanceCountDateBarChart', this)">Apply Filter</button>
-                </div>
-             </div>
-            <div class="main" id="processInstanceCountDateBarChart" style="width: 80%;margin: 0 auto;"></div>
-            <br>
-     </div>
-   </div>
+            <div class="col-sm-9 col-md-9 col-lg-9 main padding-none">
+<%if (statusQuery == "processIdVsAvgExecutionTime") {
+    include("partials/filters/process/avgTimeProcessIdFilter.jag");
+} else if (statusQuery == "processInstanceCountVsProcessId") {
+    include("partials/filters/process/processInstanceCountProcessIdFilter.jag");
+} else if (statusQuery == "processVersionVsAvgExecutionTime") {
+    include("partials/filters/process/processVersionAvgExecTimeFilter.jag");
+} else if (statusQuery == "processInstanceCountVsProcessVersion") {
+    include("partials/filters/process/processInstanceCountProcessVersionFilter.jag");
+} else if (statusQuery == "processInstanceIdVsExecutionTime") {
+    include("partials/filters/process/processInstanceIdExecTimeFilter.jag");
+} else if (statusQuery == "processInstanceCountVsDate") {
+    include("partials/filters/process/completedProcessInstanceCountDateFilter.jag");
+}
+%>
+</div>
+</div>
+</div>
 </div>
