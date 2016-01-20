@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~ Copyright (c) 2015, WSO2 Inc. (http://wso2.com) All Rights Reserved.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -624,8 +624,9 @@
         </dependencies>
     </dependencyManagement>
     <scm>
-        <connection>scm:git:https://github.com/wso2/product-es.git</connection>
-        <developerConnection>scm:git:https://github.com/wso2/product-es.git</developerConnection>
+        <url>https://github.com/wso2/product-pc.git</url>
+        <connection>scm:git:https://github.com/wso2/product-pc.git</connection>
+        <developerConnection>scm:git:https://github.com/wso2/product-pc.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
     <repositories>
@@ -736,13 +737,13 @@
 
         <pc.version>1.0.0-SNAPSHOT</pc.version>
         <!--<carbon.kernel.version>4.3.0</carbon.kernel.version>-->
-        <wso2es.version>2.0.0</wso2es.version>
+        <!--<wso2es.version>2.0.0</wso2es.version>-->
 
         <!--<carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>-->
 
         <!-- Properties taken from ES -->
 
-        <project.scm.id>github-scm</project.scm.id>
+        <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <carbon.kernel.version>4.4.1</carbon.kernel.version>
