@@ -16,3 +16,5 @@ Configuring BPMN-Analytics-Explorer
 4. Restart the Data Analytics Server.
 
 5. Open pc.xml in <PC_HOME>/repository/conf folder and change the value of analyticsEnabled element to true.
+
+6. Change the values of dasBaseUrl, dasUsername and dasPassword elements in pc.xml according to your Data Analytics Server configuration.
