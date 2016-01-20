@@ -17,8 +17,7 @@
     },
     "apps": {
         "publisher": "%https.host%/publisher",
-        "store": "%https.host%/store",
-        "analytics": "%https.host%/bpmn-analytics-explorer"
+        "store": "%https.host%/store"
     },
     "lifeCycleBehaviour": {
         "visibleIn": ["Published"]
