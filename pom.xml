@@ -543,49 +543,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.es</groupId>
-                <artifactId>org.wso2.es.integration.common.clients</artifactId>
-                <version>${product.es.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.es</groupId>
-                <artifactId>org.wso2.es.integration.common.clients</artifactId>
-                <version>${product.es.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.wso2.carbon</groupId>
-                        <artifactId>org.wso2.carbon.rest.api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.es</groupId>
-                <artifactId>org.wso2.es.integration.common.utils</artifactId>
-                <version>${product.es.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.wso2.carbon</groupId>
-                        <artifactId>org.wso2.carbon.rest.api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.es</groupId>
-                <artifactId>ui-pages</artifactId>
-                <version>${product.es.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.es</groupId>
-                <artifactId>org.wso2.store.admin.styles</artifactId>
-                <version>${product.es.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.es</groupId>
-                <artifactId>ui-test-utils</artifactId>
-                <version>${product.es.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>javax.mail</groupId>
                 <artifactId>mail</artifactId>
                 <version>${javax.mail.version}</version>
@@ -750,7 +707,7 @@
         <carbon.social.version>2.3.8</carbon.social.version>
         <carbon.store.version>2.3.8</carbon.store.version>
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
-        <product.es.version>2.0.1-SNAPSHOT</product.es.version>
+        <!--<product.es.version>2.0.1-SNAPSHOT</product.es.version>-->
 
         <test.framework.version>4.4.2</test.framework.version>
         <automation.utils.version>4.4.2</automation.utils.version>

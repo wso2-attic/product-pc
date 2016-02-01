@@ -6,7 +6,7 @@ BPMN-Analytics-Explorer jaggery based web-app providing user interface to visual
 Configuring BPMN-Analytics-Explorer
 ===================================
 
-1. Upload <PC_HOME>/analytics/Process_Center_Analytics.car file to Data Analytics Server.
+1. Upload <PC_HOME>/analytics/PC_Analytics.car file to Data Analytics Server.
 
 2. Copy <PC_HOME>/analytics/PCAnalyticsUDF.jar file to <DAS_HOME>/repository/components/lib/ folder.
 

@@ -152,9 +152,9 @@
                                 <!-- REMOVED_featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.jaxws.webapp.mgt.feature:${jaxws.webapp.mgt.version}
                                 </featureArtifactDef-->
-                                <featureArtifactDef>
-                                    org.wso2.es:org.wso2.store.styles.feature:${product.es.version}
-                                </featureArtifactDef>
+                                <!--<featureArtifactDef>-->
+                                    <!--org.wso2.es:org.wso2.store.styles.feature:${product.es.version}-->
+                                <!--</featureArtifactDef>-->
                                 <featureArtifactDef>
                                     org.wso2.carbon.store:org.wso2.carbon.store.feature:${carbon.store.version}
                                 </featureArtifactDef>
@@ -485,10 +485,10 @@
                                     <id>org.wso2.carbon.store.feature.group</id>
                                     <version>${carbon.store.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.store.styles.feature.group</id>
-                                    <version>${product.es.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.store.styles.feature.group</id>-->
+                                    <!--<version>${product.es.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.security.mgt.feature.group</id>
                                     <version>${carbon.identity.version}</version>
