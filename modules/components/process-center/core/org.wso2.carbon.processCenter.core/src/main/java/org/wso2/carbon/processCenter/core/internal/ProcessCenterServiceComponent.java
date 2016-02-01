@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.pc.core.internal;
+package org.wso2.carbon.processCenter.core.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,7 +21,7 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 /**
- * @scr.component name="ProcessCenterServiceComponent" immediate="true"
+ * @scr.component name="org.wso2.carbon.processCenter.core.internal.ProcessCenterServiceComponent" immediate="true"
  * @scr.reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService"
  * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
  */

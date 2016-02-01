@@ -322,6 +322,13 @@
             </outputDirectory>
         </fileSet>
 
+        <fileSet>
+            <directory>../components/process-center/web/org.wso2.carbon.process-center.web/src/web</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/bpmn-process-center-explorer
+            </outputDirectory>
+        </fileSet>
+
         <!--fileSet>
             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0001</directory>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/components/patches/</outputDirectory>
