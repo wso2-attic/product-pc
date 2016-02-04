@@ -72,7 +72,7 @@ public class AnalyticsUtils {
 	/**
 	 * Round a double value to two decimal points
 	 *
-	 * @param value double value
+	 * @param value  double value
 	 * @param places number of decimals
 	 * @return rounded decimal value
 	 */
@@ -94,8 +94,8 @@ public class AnalyticsUtils {
 	 */
 	private static OMElement getConfigElement() throws IOException, XMLStreamException {
 		String carbonConfigDirPath = CarbonUtils.getCarbonConfigDirPath();
-		String pcConfigPath =
-				carbonConfigDirPath + File.separator + AnalyticsConstants.PC_CONFIGURATION_FILE_NAME;
+		String pcConfigPath = carbonConfigDirPath + File.separator +
+		                      AnalyticsConstants.PC_CONFIGURATION_FILE_NAME;
 		File configFile = new File(pcConfigPath);
 		String configContent = FileUtils.readFileToString(configFile);
 		return AXIOMUtil.stringToOM(configContent);
@@ -110,9 +110,12 @@ public class AnalyticsUtils {
 	 */
 	public static boolean isDASAnalyticsActivated() throws IOException, XMLStreamException {
 		OMElement configElement = getConfigElement();
-		OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConstants.ANALYTICS));
-		if(analyticsElement != null) {
-			String value = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.ACTIVATE)).getText();
+		OMElement analyticsElement =
+				configElement.getFirstChildWithName(new QName(AnalyticsConstants.ANALYTICS));
+		if (analyticsElement != null) {
+			String value =
+					analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.ACTIVATE))
+					                .getText();
 			if (AnalyticsConstants.TRUE.equalsIgnoreCase(value)) {
 				return true;
 			}
@@ -130,9 +133,11 @@ public class AnalyticsUtils {
 	 */
 	public static String getURL(String path) throws IOException, XMLStreamException {
 		OMElement configElement = getConfigElement();
-		OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConstants.ANALYTICS));
-		if(analyticsElement != null) {
-			String baseUrl = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_BASE_URL)).getText();
+		OMElement analyticsElement =
+				configElement.getFirstChildWithName(new QName(AnalyticsConstants.ANALYTICS));
+		if (analyticsElement != null) {
+			String baseUrl = analyticsElement
+					.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_BASE_URL)).getText();
 			if (baseUrl != null && !baseUrl.isEmpty()) {
 				if (!baseUrl.endsWith(File.separator)) {
 					baseUrl += File.separator;
@@ -154,20 +159,27 @@ public class AnalyticsUtils {
 		String requestHeader = "Basic ";
 		OMElement configElement = getConfigElement();
 		SecretResolver secretResolver = SecretResolverFactory.create(configElement, false);
-		OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConstants.ANALYTICS));
+		OMElement analyticsElement =
+				configElement.getFirstChildWithName(new QName(AnalyticsConstants.ANALYTICS));
 
 		String userName = null;
 		String password = null;
-		if(analyticsElement != null) {
-			userName = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_USER_NAME)).getText();
-			if(secretResolver != null && secretResolver.isInitialized()) {
-				if(secretResolver.isTokenProtected(AnalyticsConstants.SECRET_ALIAS)) {
+		if (analyticsElement != null) {
+			userName = analyticsElement
+					.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_USER_NAME))
+					.getText();
+			if (secretResolver != null && secretResolver.isInitialized()) {
+				if (secretResolver.isTokenProtected(AnalyticsConstants.SECRET_ALIAS)) {
 					password = secretResolver.resolve(AnalyticsConstants.SECRET_ALIAS);
 				} else {
-					password = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_PASSWORD)).getText();
+					password = analyticsElement
+							.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_PASSWORD))
+							.getText();
 				}
 			} else {
-				password = analyticsElement.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_PASSWORD)).getText();
+				password = analyticsElement
+						.getFirstChildWithName(new QName(AnalyticsConstants.CONFIG_PASSWORD))
+						.getText();
 			}
 		}
 		if (userName != null && password != null) {
@@ -184,15 +196,16 @@ public class AnalyticsUtils {
 	 * Get sorted list (sort by double type values)
 	 *
 	 * @param table is a hash table to keep the result as key-value pairs
-	 * @param key1 is the name for the first value of the JSON object
-	 * @param key2 is the name for the second value for the JSON object
+	 * @param key1  is the name for the first value of the JSON object
+	 * @param key2  is the name for the second value for the JSON object
 	 * @param order is to get the top or bottom results
 	 * @param count is to limit the number of results
 	 * @return a sorted list as a JSON array string
 	 * @throws JSONException
 	 */
 	public static String getDoubleValueSortedList(Hashtable<String, Double> table, String key1,
-	                                              String key2, String order, int count) throws JSONException {
+	                                              String key2, String order, int count)
+			throws JSONException {
 		//Transfer as List and sort it
 		ArrayList<Map.Entry<String, Double>> l = new ArrayList(table.entrySet());
 		Collections.sort(l, new Comparator<Map.Entry<String, Double>>() {
@@ -201,7 +214,7 @@ public class AnalyticsUtils {
 			}
 		});
 		JSONArray array = new JSONArray();
-		for (int i = 0 ; i < l.size() ; i++) {
+		for (int i = 0; i < l.size(); i++) {
 			JSONObject o = new JSONObject();
 			o.put(key1, l.get(i).getKey());
 			o.put(key2, round(l.get(i).getValue(), 2));
@@ -209,17 +222,17 @@ public class AnalyticsUtils {
 		}
 
 		//if count exceeds the array length, then assign the array length to the count variable
-		if(count > array.length()) {
+		if (count > array.length()) {
 			count = array.length();
 		}
 
 		JSONArray arrayPortion = new JSONArray();
-		if(order.equalsIgnoreCase(AnalyticsConstants.TOP)) {
-			for (int i = array.length() - count ; i < array.length() ; i++) {
+		if (order.equalsIgnoreCase(AnalyticsConstants.TOP)) {
+			for (int i = array.length() - count; i < array.length(); i++) {
 				arrayPortion.put(array.get(i));
 			}
-		} else if(order.equalsIgnoreCase(AnalyticsConstants.BOTTOM)) {
-			for (int i = 0 ; i < count ; i++){
+		} else if (order.equalsIgnoreCase(AnalyticsConstants.BOTTOM)) {
+			for (int i = 0; i < count; i++) {
 				arrayPortion.put(array.get(i));
 			}
 		}
@@ -230,15 +243,16 @@ public class AnalyticsUtils {
 	 * Get sorted list (sort by int type values)
 	 *
 	 * @param table is a hash table to keep the result as key-value pairs
-	 * @param key1 is the name for the first value of the JSON object
-	 * @param key2 is the name for the second value for the JSON object
+	 * @param key1  is the name for the first value of the JSON object
+	 * @param key2  is the name for the second value for the JSON object
 	 * @param order is to get the top or bottom results
 	 * @param count is to limit the number of results
 	 * @return a sorted list as a JSON array string
 	 * @throws JSONException
 	 */
 	public static String getIntegerValueSortedList(Hashtable<String, Integer> table, String key1,
-	                                               String key2, String order, int count) throws JSONException {
+	                                               String key2, String order, int count)
+			throws JSONException {
 		ArrayList<Map.Entry<String, Integer>> l = new ArrayList(table.entrySet());
 		Collections.sort(l, new Comparator<Map.Entry<String, Integer>>() {
 			public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
@@ -246,7 +260,7 @@ public class AnalyticsUtils {
 			}
 		});
 		JSONArray array = new JSONArray();
-		for (int i = 0 ; i < l.size() ; i++) {
+		for (int i = 0; i < l.size(); i++) {
 			JSONObject o = new JSONObject();
 			o.put(key1, l.get(i).getKey());
 			o.put(key2, l.get(i).getValue());
@@ -254,17 +268,17 @@ public class AnalyticsUtils {
 		}
 
 		//if count exceeds the array length, then assign the array length to the count variable
-		if(count > array.length()) {
+		if (count > array.length()) {
 			count = array.length();
 		}
 
 		JSONArray arrayPortion = new JSONArray();
-		if(order.equalsIgnoreCase(AnalyticsConstants.TOP)) {
-			for (int i = array.length() - count ; i < array.length() ; i++) {
+		if (order.equalsIgnoreCase(AnalyticsConstants.TOP)) {
+			for (int i = array.length() - count; i < array.length(); i++) {
 				arrayPortion.put(array.get(i));
 			}
-		} else if(order.equalsIgnoreCase(AnalyticsConstants.BOTTOM)) {
-			for (int i = 0 ; i < count ; i++){
+		} else if (order.equalsIgnoreCase(AnalyticsConstants.BOTTOM)) {
+			for (int i = 0; i < count; i++) {
 				arrayPortion.put(array.get(i));
 			}
 		}
@@ -275,13 +289,13 @@ public class AnalyticsUtils {
 	 * Get sorted list (sort by long type keys)
 	 *
 	 * @param table is a hash table to keep the result as key-value pairs
-	 * @param key1 is the name for the first value of the JSON object
-	 * @param key2 is the name for the second value for the JSON object
+	 * @param key1  is the name for the first value of the JSON object
+	 * @param key2  is the name for the second value for the JSON object
 	 * @return a sorted list as a JSON array string
 	 * @throws JSONException
 	 */
-	public static String getLongKeySortedList(Hashtable<Long, Integer> table, String key1, String key2)
-																			throws JSONException {
+	public static String getLongKeySortedList(Hashtable<Long, Integer> table, String key1,
+	                                          String key2) throws JSONException {
 		ArrayList<Map.Entry<Long, Integer>> l = new ArrayList(table.entrySet());
 		Collections.sort(l, new Comparator<Map.Entry<Long, Integer>>() {
 			public int compare(Map.Entry<Long, Integer> o1, Map.Entry<Long, Integer> o2) {
@@ -289,7 +303,7 @@ public class AnalyticsUtils {
 			}
 		});
 		JSONArray array = new JSONArray();
-		for (int i = 0 ; i < l.size() ; i++) {
+		for (int i = 0; i < l.size(); i++) {
 			JSONObject o = new JSONObject();
 			o.put(key1, dateFormatter(l.get(i).getKey()));
 			o.put(key2, l.get(i).getValue());
@@ -309,12 +323,12 @@ public class AnalyticsUtils {
 		String[] dateArray = date.split(AnalyticsConstants.SPACE_SEPARATOR);
 		try {
 			Date dateMonth = new SimpleDateFormat(AnalyticsConstants.MONTH_FORMAT, Locale.ENGLISH)
-																			.parse(dateArray[1]);
+					.parse(dateArray[1]);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(dateMonth);
 			int month = cal.get(Calendar.MONTH) + 1;
 			String dateString = dateArray[5] + AnalyticsConstants.DATE_SEPARATOR + month +
-								AnalyticsConstants.DATE_SEPARATOR + dateArray[2];
+			                    AnalyticsConstants.DATE_SEPARATOR + dateArray[2];
 			DateFormat df = new SimpleDateFormat(AnalyticsConstants.DATE_FORMAT_WITHOUT_TIME);
 			return df.format(df.parse(dateString));
 		} catch (ParseException e) {

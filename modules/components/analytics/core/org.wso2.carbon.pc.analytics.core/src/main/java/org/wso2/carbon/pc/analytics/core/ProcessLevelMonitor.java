@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -63,16 +63,19 @@ public class ProcessLevelMonitor {
 				query.setTableName(AnalyticsConstants.PROCESS_USAGE_TABLE);
 				query.setGroupByField(AnalyticsConstants.PROCESS_DEFINITION_KEY);
 				if (from != 0 && to != 0) {
-					query.setQuery(AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to));
+					query.setQuery(AnalyticsUtils.getDateRangeQuery(
+							AnalyticsConstants.COLUMN_FINISHED_TIME, from, to));
 				}
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query to get the Avg Execution Time Vs ProcessId Result:" + AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Avg Execution Time Vs ProcessId Result:" +
+					          AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-				                                         AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						      AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -81,12 +84,17 @@ public class ProcessLevelMonitor {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
-						String processDefKey = values.getJSONArray(AnalyticsConstants.PROCESS_DEFINITION_KEY).getString(0);
-						double avgExecTime = values.getDouble(AnalyticsConstants.AVG_EXECUTION_TIME);
+						String processDefKey =
+								values.getJSONArray(AnalyticsConstants.PROCESS_DEFINITION_KEY)
+								      .getString(0);
+						double avgExecTime =
+								values.getDouble(AnalyticsConstants.AVG_EXECUTION_TIME);
 						table.put(processDefKey, avgExecTime);
 					}
-					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, AnalyticsConstants.PROCESS_DEFINITION_KEY,
-					                                                       AnalyticsConstants.AVG_EXECUTION_TIME, order, processCount);
+					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table,
+					                                                       AnalyticsConstants.PROCESS_DEFINITION_KEY,
+					                                                       AnalyticsConstants.AVG_EXECUTION_TIME,
+					                                                       order, processCount);
 				}
 			}
 		} catch (Exception e) {
@@ -133,11 +141,13 @@ public class ProcessLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query to get the Process Instance Count Vs ProcessId Result:" + AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Process Instance Count Vs ProcessId Result:" +
+					          AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-				                                         AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						      AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Integer> table = new Hashtable<>();
@@ -146,12 +156,17 @@ public class ProcessLevelMonitor {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
-						String processDefKey = values.getJSONArray(AnalyticsConstants.PROCESS_DEFINITION_KEY).getString(0);
-						int processInstanceCount = values.getInt(AnalyticsConstants.PROCESS_INSTANCE_COUNT);
+						String processDefKey =
+								values.getJSONArray(AnalyticsConstants.PROCESS_DEFINITION_KEY)
+								      .getString(0);
+						int processInstanceCount =
+								values.getInt(AnalyticsConstants.PROCESS_INSTANCE_COUNT);
 						table.put(processDefKey, processInstanceCount);
 					}
-					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, AnalyticsConstants.PROCESS_DEFINITION_KEY,
-					                                                        AnalyticsConstants.PROCESS_INSTANCE_COUNT, order, processCount);
+					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table,
+					                                                        AnalyticsConstants.PROCESS_DEFINITION_KEY,
+					                                                        AnalyticsConstants.PROCESS_INSTANCE_COUNT,
+					                                                        order, processCount);
 				}
 			}
 		} catch (Exception e) {
@@ -195,11 +210,13 @@ public class ProcessLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query to get the Avg Execution Time Vs Process Version Result:" + AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Avg Execution Time Vs Process Version Result:" +
+					          AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-				                                         AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						      AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -208,12 +225,17 @@ public class ProcessLevelMonitor {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
-						String processVersion = values.getJSONArray(AnalyticsConstants.PROCESS_VERSION).getString(0);
-						double avgExecTime = values.getDouble(AnalyticsConstants.AVG_EXECUTION_TIME);
+						String processVersion =
+								values.getJSONArray(AnalyticsConstants.PROCESS_VERSION)
+								      .getString(0);
+						double avgExecTime =
+								values.getDouble(AnalyticsConstants.AVG_EXECUTION_TIME);
 						table.put(processVersion, avgExecTime);
 					}
-					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, AnalyticsConstants.PROCESS_VERSION,
-					                                                       AnalyticsConstants.AVG_EXECUTION_TIME, order, processCount);
+					sortedResult = AnalyticsUtils
+							.getDoubleValueSortedList(table, AnalyticsConstants.PROCESS_VERSION,
+							                          AnalyticsConstants.AVG_EXECUTION_TIME, order,
+							                          processCount);
 				}
 			}
 		} catch (Exception e) {
@@ -256,11 +278,13 @@ public class ProcessLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query to get the Process Instance Count Vs Process Version Result:" + AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Process Instance Count Vs Process Version Result:" +
+					          AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-				                                         AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						      AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Integer> table = new Hashtable<>();
@@ -269,12 +293,17 @@ public class ProcessLevelMonitor {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
-						String processVersion = values.getJSONArray(AnalyticsConstants.PROCESS_VERSION).getString(0);
-						int processInstanceCount = values.getInt(AnalyticsConstants.PROCESS_INSTANCE_COUNT);
+						String processVersion =
+								values.getJSONArray(AnalyticsConstants.PROCESS_VERSION)
+								      .getString(0);
+						int processInstanceCount =
+								values.getInt(AnalyticsConstants.PROCESS_INSTANCE_COUNT);
 						table.put(processVersion, processInstanceCount);
 					}
-					sortedResult = AnalyticsUtils.getIntegerValueSortedList(table, AnalyticsConstants.PROCESS_VERSION, AnalyticsConstants.PROCESS_INSTANCE_COUNT,
-					                                                        order, processCount);
+					sortedResult = AnalyticsUtils
+							.getIntegerValueSortedList(table, AnalyticsConstants.PROCESS_VERSION,
+							                           AnalyticsConstants.PROCESS_INSTANCE_COUNT,
+							                           order, processCount);
 				}
 			}
 		} catch (Exception e) {
@@ -308,19 +337,21 @@ public class ProcessLevelMonitor {
 				searchQuery.setTableName(AnalyticsConstants.PROCESS_USAGE_TABLE);
 				String queryStr = "processDefinitionId:" + "\"'" + processId + "'\"";
 				if (from != 0 && to != 0) {
-					queryStr += " AND " + AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME,
-					                                                       from, to);
+					queryStr += " AND " + AnalyticsUtils
+							.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
 				}
 				searchQuery.setQuery(queryStr);
 				searchQuery.setStart(AnalyticsConstants.MIN_COUNT);
 				searchQuery.setCount(AnalyticsConstants.MAX_COUNT);
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query to get the Execution Time Vs Process Instance Id Result:" + AnalyticsUtils.getJSONString(searchQuery));
+					log.debug("Query to get the Execution Time Vs Process Instance Id Result:" +
+					          AnalyticsUtils.getJSONString(searchQuery));
 				}
 
-				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_SEARCH),
-				                                         AnalyticsUtils.getJSONString(searchQuery));
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_SEARCH),
+						      AnalyticsUtils.getJSONString(searchQuery));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<String, Double> table = new Hashtable<>();
@@ -329,12 +360,14 @@ public class ProcessLevelMonitor {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
-						String processDefKey = values.getString(AnalyticsConstants.PROCESS_INSTANCE_ID);
+						String processDefKey =
+								values.getString(AnalyticsConstants.PROCESS_INSTANCE_ID);
 						double executionTime = values.getDouble(AnalyticsConstants.DURATION);
 						table.put(processDefKey, executionTime);
 					}
-					sortedResult = AnalyticsUtils.getDoubleValueSortedList(table, AnalyticsConstants.PROCESS_INSTANCE_ID,
-					                                                       AnalyticsConstants.DURATION, order, limit);
+					sortedResult = AnalyticsUtils
+							.getDoubleValueSortedList(table, AnalyticsConstants.PROCESS_INSTANCE_ID,
+							                          AnalyticsConstants.DURATION, order, limit);
 				}
 			}
 		} catch (Exception e) {
@@ -361,7 +394,8 @@ public class ProcessLevelMonitor {
 				JSONObject filterObj = new JSONObject(filters);
 				long from = filterObj.getLong(AnalyticsConstants.START_TIME);
 				long to = filterObj.getLong(AnalyticsConstants.END_TIME);
-				JSONArray processIdList = filterObj.getJSONArray(AnalyticsConstants.PROCESS_ID_LIST);
+				JSONArray processIdList =
+						filterObj.getJSONArray(AnalyticsConstants.PROCESS_ID_LIST);
 
 				AggregateField countField = new AggregateField();
 				countField.setFieldName(AnalyticsConstants.ALL);
@@ -374,15 +408,19 @@ public class ProcessLevelMonitor {
 				AggregateQuery query = new AggregateQuery();
 				query.setTableName(AnalyticsConstants.PROCESS_USAGE_TABLE);
 				query.setGroupByField(AnalyticsConstants.FINISHED_TIME);
-				String queryStr = AnalyticsUtils.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
+				String queryStr = AnalyticsUtils
+						.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
 
 				if (processIdList.length() != 0) {
 					queryStr += " AND ";
 					for (int i = 0; i < processIdList.length(); i++) {
 						if (i == 0) {
-							queryStr += "(processDefinitionId:" + "\"'" + processIdList.getString(i) + "'\"";
+							queryStr +=
+									"(processDefinitionId:" + "\"'" + processIdList.getString(i) +
+									"'\"";
 						} else {
-							queryStr += " OR " + "processDefinitionId:" + "\"'" + processIdList.getString(i) + "'\"";
+							queryStr += " OR " + "processDefinitionId:" + "\"'" +
+							            processIdList.getString(i) + "'\"";
 						}
 						if (i == processIdList.length() - 1) {
 							queryStr += ")";
@@ -392,8 +430,9 @@ public class ProcessLevelMonitor {
 				query.setQuery(queryStr);
 				query.setAggregateFields(aggregateFields);
 
-				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-				                                         AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						      AnalyticsUtils.getJSONString(query));
 
 				JSONArray unsortedResultArray = new JSONArray(result);
 				Hashtable<Long, Integer> table = new Hashtable<>();
@@ -402,11 +441,15 @@ public class ProcessLevelMonitor {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
-						long completedTime = Long.parseLong(values.getJSONArray(AnalyticsConstants.FINISHED_TIME).getString(0));
-						int processInstanceCount = values.getInt(AnalyticsConstants.PROCESS_INSTANCE_COUNT);
+						long completedTime = Long.parseLong(
+								values.getJSONArray(AnalyticsConstants.FINISHED_TIME).getString(0));
+						int processInstanceCount =
+								values.getInt(AnalyticsConstants.PROCESS_INSTANCE_COUNT);
 						table.put(completedTime, processInstanceCount);
 					}
-					sortedResult = AnalyticsUtils.getLongKeySortedList(table, AnalyticsConstants.FINISHED_TIME, AnalyticsConstants.PROCESS_INSTANCE_COUNT);
+					sortedResult = AnalyticsUtils
+							.getLongKeySortedList(table, AnalyticsConstants.FINISHED_TIME,
+							                      AnalyticsConstants.PROCESS_INSTANCE_COUNT);
 				}
 			}
 		} catch (Exception e) {
@@ -441,11 +484,13 @@ public class ProcessLevelMonitor {
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
-					log.debug("Query to get the Process Id List Result:" + AnalyticsUtils.getJSONString(query));
+					log.debug("Query to get the Process Id List Result:" +
+					          AnalyticsUtils.getJSONString(query));
 				}
 
-				String result = AnalyticsRestClient.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
-				                                         AnalyticsUtils.getJSONString(query));
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						      AnalyticsUtils.getJSONString(query));
 
 				JSONArray array = new JSONArray(result);
 				JSONArray resultArray = new JSONArray();
@@ -454,7 +499,9 @@ public class ProcessLevelMonitor {
 					for (int i = 0; i < array.length(); i++) {
 						JSONObject jsonObj = array.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
-						String processDefKey = values.getJSONArray(AnalyticsConstants.PROCESS_DEFINITION_KEY).getString(0);
+						String processDefKey =
+								values.getJSONArray(AnalyticsConstants.PROCESS_DEFINITION_KEY)
+								      .getString(0);
 						JSONObject o = new JSONObject();
 						o.put(AnalyticsConstants.PROCESS_DEFINITION_KEY, processDefKey);
 						resultArray.put(o);

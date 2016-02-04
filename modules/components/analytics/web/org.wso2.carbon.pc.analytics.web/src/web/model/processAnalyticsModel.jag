@@ -1,5 +1,5 @@
 <%/*
- ~ Copyright 2005-2015 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
  ~ you may not use this file except in compliance with the License.
@@ -14,22 +14,11 @@
  ~ limitations under the License.
 */%>
 <%
-var headers = {"Authorization":"Basic " + auth, "Content-Type": "application/json"};
-
 dashboardNavActive = 'class="active"';
+var requestParameters = request.getAllParameters();
+var statusQuery = requestParameters.status_query;
+
+if (statusQuery == null) {
+ statusQuery = "processIdVsAvgExecutionTime";
+}
 %>
-<script type="text/javascript">
-window.onload = function() {
-   $('.selectpicker').selectpicker({
-        style: 'btn',
-        size: 3
-    });
-    drawAvgExecuteTimeVsProcessIdResult('processDefAvgTimeBarChart', null);
-    drawProcessInstanceCountVsProcessIdResult('processInstanceCountProcessIdBarChart', null);
-    loadProcessList('processVersionAvgExecTimeProcessList', 'processVersionAvgTimeBarChart', drawAvgExecuteTimeVsProcessVersionResult);
-    loadProcessList('processInstanceCountProcessVersionProcessList', 'processInstanceCountProcessVersionBarChart', drawProcessInstanceCountVsProcessVersionResult);
-    loadProcessList('processInstanceIdExecTimeProcessList', 'processInstanceIdExecTimeBarChart', drawExecutionTimeVsProcessInstanceIdResult);
-    loadProcessList('processInstanceCountDateProcessList', 'processInstanceCountDateBarChart', drawDateVsProcessInstanceCountResult);
-    loadDates('processInstanceCountDateStartDate', 'processInstanceCountDateEndDate');
-};
-</script>
