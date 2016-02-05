@@ -9,7 +9,7 @@ if(log.isDebugEnabled()){
 var ps = new ProcessStore();
 var successorDetails = String(request.getParameter("successorDetails"));
 var successorStatus = ps.addSuccessor(successorDetails);
-print(successorStatus);
+print(String(successorStatus));
 if(log.isDebugEnabled()){
     log.debug("subProcessDetails: " + successorDetails);
 }

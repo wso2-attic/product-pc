@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~ Copyright (c) 2015, WSO2 Inc. (http://wso2.com) All Rights Reserved.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -43,6 +43,8 @@
         <module>modules/components/analytics/web/org.wso2.carbon.pc.analytics.web</module>
         <module>modules/components/process-center/core/org.wso2.carbon.processCenter.core</module>
         <module>modules/components/process-center/web/org.wso2.carbon.process-center.web</module>
+        <module>modules/components/analytics/udf/org.wso2.carbon.pc.analytics.udf</module>
+        <module>modules/components/analytics/capp/org.wso2.carbon.pc.analytics.capp</module>
         <module>modules/features/core/org.wso2.carbon.pc.core.feature</module>
         <module>modules/features/analytics-core/org.wso2.carbon.pc.analytics.core.feature</module>
         <module>modules/features/pc-core/org.wso2.carbon.processCenter.core.feature</module>
@@ -550,49 +552,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.es</groupId>
-                <artifactId>org.wso2.es.integration.common.clients</artifactId>
-                <version>${product.es.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.es</groupId>
-                <artifactId>org.wso2.es.integration.common.clients</artifactId>
-                <version>${product.es.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.wso2.carbon</groupId>
-                        <artifactId>org.wso2.carbon.rest.api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.es</groupId>
-                <artifactId>org.wso2.es.integration.common.utils</artifactId>
-                <version>${product.es.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.wso2.carbon</groupId>
-                        <artifactId>org.wso2.carbon.rest.api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.es</groupId>
-                <artifactId>ui-pages</artifactId>
-                <version>${product.es.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.es</groupId>
-                <artifactId>org.wso2.store.admin.styles</artifactId>
-                <version>${product.es.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.es</groupId>
-                <artifactId>ui-test-utils</artifactId>
-                <version>${product.es.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>javax.mail</groupId>
                 <artifactId>mail</artifactId>
                 <version>${javax.mail.version}</version>
@@ -639,8 +598,9 @@
         </dependencies>
     </dependencyManagement>
     <scm>
-        <connection>scm:git:https://github.com/wso2/product-es.git</connection>
-        <developerConnection>scm:git:https://github.com/wso2/product-es.git</developerConnection>
+        <url>https://github.com/wso2/product-pc.git</url>
+        <connection>scm:git:https://github.com/wso2/product-pc.git</connection>
+        <developerConnection>scm:git:https://github.com/wso2/product-pc.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
     <repositories>
@@ -751,20 +711,20 @@
 
         <pc.version>1.0.0-SNAPSHOT</pc.version>
         <!--<carbon.kernel.version>4.3.0</carbon.kernel.version>-->
-        <wso2es.version>2.0.0</wso2es.version>
+        <!--<wso2es.version>2.0.0</wso2es.version>-->
 
         <!--<carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>-->
 
         <!-- Properties taken from ES -->
 
-        <project.scm.id>github-scm</project.scm.id>
+        <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <carbon.kernel.version>4.4.1</carbon.kernel.version>
         <carbon.social.version>2.3.8</carbon.social.version>
         <carbon.store.version>2.3.8</carbon.store.version>
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
-        <product.es.version>2.0.1-SNAPSHOT</product.es.version>
+        <!--<product.es.version>2.0.1-SNAPSHOT</product.es.version>-->
 
         <test.framework.version>4.4.2</test.framework.version>
         <automation.utils.version>4.4.2</automation.utils.version>
