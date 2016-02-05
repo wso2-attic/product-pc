@@ -51,7 +51,8 @@
                         </Private-Package>
                         <Export-Package>
                             !org.wso2.carbon.pc.core.internal,
-                            org.wso2.carbon.pc.core;version=${project.version}
+                            org.wso2.carbon.pc.core;version=${project.version},
+                            org.wso2.carbon.pc.core.processcenter;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             *;resolution:=optional

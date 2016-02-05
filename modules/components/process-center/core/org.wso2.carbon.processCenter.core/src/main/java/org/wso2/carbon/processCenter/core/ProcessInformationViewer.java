@@ -222,6 +222,7 @@ public class ProcessInformationViewer {
                     String processOwner = processXML.getElementsByTagName(ProcessCenterConstants.OWNER).item(0).getTextContent();
                     if(processOwner.equals(loggedUser)) {
                         Iterator<String> listIterator = list.keySet().iterator();
+                        //check whether all the filters match this process.
                         while (listIterator.hasNext()) {
                             String key = listIterator.next();
                             if(!"NA".equals(processXML.getElementsByTagName(key).item(0).getTextContent())){
@@ -236,7 +237,11 @@ public class ProcessInformationViewer {
                         if (matched) {
                             JSONObject processJSON = new JSONObject();
                             for (int i = 0; i < keys.length; i++) {
-                                processJSON.put(keys[i], processXML.getElementsByTagName(keys[i]).item(0).getTextContent());
+                                if(!"NA".equals(processXML.getElementsByTagName(keys[i]).item(0).getTextContent())) {
+                                    processJSON.put(keys[i], processXML.getElementsByTagName(keys[i]).item(0).getTextContent());
+                                }else{
+                                    processJSON.put(keys[i], "");
+                                }
                             }
                             result.put(processJSON);
                         }
@@ -247,7 +252,7 @@ public class ProcessInformationViewer {
         } catch (RegistryException e) {
             log.error(e);
         } catch (JSONException e) {
-            log.error(e);
+            log.error(e.getMessage());
         }
         return "{}";
     }
