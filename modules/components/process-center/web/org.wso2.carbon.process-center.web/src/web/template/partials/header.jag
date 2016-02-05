@@ -14,8 +14,8 @@
  ~ limitations under the License.
 -->
 <%
-	var title = session.get("title");
-	session.put("title", null);
+var title = session.get("title");
+session.put("title", null);
 %>
 <head>
 	<meta charset="utf-8">
@@ -40,6 +40,8 @@
 	<link rel="stylesheet" href="css/main.css">
 	<link rel="stylesheet" href="css/navigation.css">
 	<link rel="stylesheet" href="css/top-assets.css">
+	<link rel="stylesheet" href="css/asset.css">
+	<link rel="stylesheet" href="css/process.css">
 	<link rel="ICON" href="images/favicon.png" type="image/ico" />
     <script>
         var BPSTenant = "<%=bpsTenantDomain%>";

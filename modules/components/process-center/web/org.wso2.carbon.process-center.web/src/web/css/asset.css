@@ -314,9 +314,11 @@ a.disabled-button:hover {
 }
 
 .asset-details-wrapper {
-    width: 58.3%;
     border-left: 1px solid #ccc;
     float: left;
+    margin-left: 15px;
+    width: 98%;
+    height: 60px;
 }
 
 .asset-details-wrapper h4 {

@@ -15,19 +15,18 @@
 -->
 <%
 include("/model/common.jag");
-var log = new Log("exp cont");
 if (request.isSecure()) {//check whether the request is secure or not
 
     var authSuccess = session.get("authSuccess");
     //Check whether the user has already logged-in
     if (authSuccess) {
         //If already logged-in, redirect to the dashboard
-        session.put("title", "Store | Top Assets");
+        session.put("title", "Store | Process");
         include("/template/partials/header.jag");
         include("/template/partials/headerWithLogout.jag");
-        include("/model/processModel.jag");
         include("/template/searchBarView.jag");
-        include("/template/searchAssetsView.jag");
+        include("/template/processView.jag");
+        include("/model/processViewModel.jag");
         include("/template/partials/footer.jag");
 
     } else {

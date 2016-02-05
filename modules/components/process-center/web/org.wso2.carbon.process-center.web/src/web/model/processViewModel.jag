@@ -16,17 +16,7 @@
 <script type="text/javascript">
     window.onload = function() {
         var expression = location.search;
-        if((expression.indexOf("overview_") > -1) || (expression.indexOf("properties_") > -1)){
-            invokeAdvanceSearch();
-        }else if(expression.indexOf("name") > -1){
-            var words = expression.split("\%22");
-            viewProcess("#section", words[3]);
-        }else{
-            var element="";
-            element += "<div class=\"assets-container margin-top-double\">";
-            element += "   <div class=\"top-assets-empty-assert\">We couldn&#x27;t find anything for you.<\/div>";
-            element += "<\/div>";
-            $('#search-null').append(element);
-        }
+        var processID = expression.split("=")[1];
+        getProcessByProcessID(processID);
     };
 </script>

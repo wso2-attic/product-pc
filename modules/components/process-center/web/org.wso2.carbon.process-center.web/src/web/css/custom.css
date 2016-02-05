@@ -987,7 +987,7 @@ a.more:focus {
     background-color: #237bd5;
     border-image: none;
     border-style: solid;
-    border-width: 1px;
+    border-width: 0px;
     color: #fff;
     cursor: default;
     padding: 15px;

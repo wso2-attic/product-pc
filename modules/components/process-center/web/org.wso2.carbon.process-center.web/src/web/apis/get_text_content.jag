@@ -14,17 +14,17 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
  */
-//importPackage(org.wso2.carbon.processCenter.core);
 var log = new Log();
 if(log.isDebugEnabled()){
- log.debug("Process information viewer getProcessByName logic");
+    log.debug("Process information viewer getProcessByName logic");
 }
 var processInformationViewerInstance = new Packages.org.wso2.carbon.pc.core.processcenter.ProcessInformationViewer;
+
 var filters = String(request.getParameter("filters"));
 if(log.isDebugEnabled()){
- log.debug("Process information using :" + filters);
+    log.debug("Process information using :" + filters);
 }
 var loggedUser = session.get("user");
-var processInformation = processInformationViewerInstance.getProcessInformationByName(filters, loggedUser);
-print(processInformation);
+var textContent = processInformationViewerInstance.getProcessText(filters);
+print(textContent);
 %>

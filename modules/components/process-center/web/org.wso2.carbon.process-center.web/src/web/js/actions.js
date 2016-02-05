@@ -17,6 +17,8 @@ var appName = "bpmn-process-center-explorer";
 var httpUrl = location.protocol + "//" + location.host;
 var CONTEXT = "";
 
+var processList;
+
 if (BPSTenant != undefined && BPSTenant.length > 0) {
     CONTEXT = "t/" + BPSTenant + "/jaggeryapps/" + appName;
 } else {
@@ -29,50 +31,6 @@ function viewProcess(renderElement, processName) {
             'name': processName
         };
         var url = "/" + CONTEXT + "/search_process_by_name";
-        $.ajax({
-            type: 'POST',
-            url: httpUrl + url,
-            data: {'filters': JSON.stringify(body)},
-            success: function (data) {
-                var dataStr = JSON.parse(data);
-                if (!$.isEmptyObject(dataStr)) {
-                    var dataset = [];
-                    for (var i = 0; i < dataStr.length; i++) {
-                        dataset.push({
-                            "processname": dataStr[i].processname,
-                            "processversion": dataStr[i].processversion,
-                            "path": dataStr[i].path,
-                            "processid": dataStr[i].processid,
-                            "bpmnpath": dataStr[i].bpmnpath,
-                            "bpmnid": dataStr[i].bpmnid,
-                            "processtextpath": dataStr[i].processtextpath
-                        });
-                    }
-                    render(renderElement, dataset);
-                }else{
-                    var element="";
-                    element += "<div class=\"assets-container margin-top-double\">";
-                    element += "   <div class=\"top-assets-empty-assert\">We couldn&#x27;t find anything for you.<\/div>";
-                    element += "<\/div>";
-                    $('#search-null').append(element);
-                }
-            },
-
-            error: function (xhr, status, error) {
-                var errorJson = eval("(" + xhr.responseText + ")");
-                alert(errorJson.message);
-            }
-        });
-    }
-}
-
-function advanceSearchViewProcess(renderElement, elementName, elementValue){
-    if (elementName != null && elementValue != null) {
-        var body = {
-            'attribute': elementName,
-            'value':elementValue
-        };
-        var url = "/" + CONTEXT + "/advance_search";
         $.ajax({
             type: 'POST',
             url: httpUrl + url,
@@ -136,97 +94,79 @@ $('#search').keydown(function(e){
 });
 
 $('input[name=overview_owner]').keydown(function(e){
-    if(e.which == 13){
-        if (!jQuery.isEmptyObject(document.getElementsByName("overview_owner")[0].value)) {
-            var url = "processes?q=" + "\"overview_owner\":\"" + document.getElementsByName("overview_owner")[0].value + "\"";
-            window.location = url;
-        }
-    }
+    redirectToURL(document.getElementsByName("overview_owner"), e);
 });
 
 $('input[name=overview_name]').keydown(function(e){
-    if(e.which == 13) {
-        if (!jQuery.isEmptyObject(document.getElementsByName("overview_name")[0].value)) {
-            var url = "processes?q=" + "\"overview_name\":\"" + document.getElementsByName("overview_name")[0].value + "\"";
-            window.location = url;
-        }
-    }
+    redirectToURL(document.getElementsByName("overview_name"), e);
 });
 
 $('input[name=overview_version]').keydown(function(e){
-    if(e.which == 13) {
-        if (!jQuery.isEmptyObject(document.getElementsByName("overview_version")[0].value)) {
-            var url = "processes?q=" + "\"overview_version\":\"" + document.getElementsByName("overview_version")[0].value + "\"";
-            window.location = url;
-        }
-    }
+    redirectToURL(document.getElementsByName("overview_version"), e);
 });
 
 $('input[name=overview_createdtime]').keydown(function(e){
-    if(e.which == 13) {
-        if (!jQuery.isEmptyObject(document.getElementsByName("overview_createdtime")[0].value)) {
-            var url = "processes?q=" + "\"overview_createdtime\":\"" + document.getElementsByName("overview_createdtime")[0].value + "\"";
-            window.location = url;
-        }
-    }
+    redirectToURL(document.getElementsByName("overview_createdtime"), e);
 });
 
 $('input[name=properties_bpmnpath]').keydown(function(e){
-    if(e.which == 13) {
-        if (!jQuery.isEmptyObject(document.getElementsByName("properties_bpmnpath")[0].value)) {
-            var url = "processes?q=" + "\"properties_bpmnpath\":\"" + document.getElementsByName("properties_bpmnpath")[0].value + "\"";
-            window.location = url;
-        }
-    }
+    redirectToURL(document.getElementsByName("properties_bpmnpath"), e);
 });
 
 $('input[name=properties_bpmnid]').keydown(function(e){
-    if(e.which == 13) {
-        if (!jQuery.isEmptyObject(document.getElementsByName("properties_bpmnid")[0].value)) {
-            var url = "processes?q=" + "\"properties_bpmnid\":\"" + document.getElementsByName("properties_bpmnid")[0].value + "\"";
-            window.location = url;
-        }
-    }
+    redirectToURL(document.getElementsByName("properties_bpmnid"), e);
 });
 
 $('input[name=properties_processtextpath]').keydown(function(e){
+    redirectToURL(document.getElementsByName("properties_processtextpath"), e);
+});
+
+function redirectToURL(element, e){
     if(e.which == 13) {
-        if (!jQuery.isEmptyObject(document.getElementsByName("properties_processtextpath")[0].value)) {
-            var url = "processes?q=" + "\"properties_processtextpath\":\"" + document.getElementsByName("properties_processtextpath")[0].value + "\"";
+        if (!jQuery.isEmptyObject(element[0].value)) {
+            var url = "processes";
+            if (checkValueNull(element[0].getAttribute("name"))) {
+                url = "processes?q=" + "\""+ element[0].getAttribute("name") +"\":\"" + element[0].value + "\"";
+            }else{
+                url = getUrl();
+            }
             window.location = url;
         }
     }
-});
+}
 
 $('#search-button2').click(function () {
-    var data = [];
-    data[0] = document.getElementsByName("overview_owner")[0].value;
-    data[1] = document.getElementsByName("overview_name")[0].value;
-    data[2] = document.getElementsByName("overview_version")[0].value;
-    data[3] = document.getElementsByName("overview_createdtime")[0].value;
-    data[4] = document.getElementsByName("properties_bpmnpath")[0].value;
-    data[5] = document.getElementsByName("properties_bpmnid")[0].value;
-    data[6] = document.getElementsByName("properties_processtextpath")[0].value;
-    var nullCount = 0;
-    for(var i=0; i<data.length; i++){
-        if(data[i] == "")
-            nullCount++;
-    }
-
-    if(nullCount > 0){
-        advanceSearch(data);
-    }
+    window.location = getUrl();
 });
 
-function advanceSearch(data){
+function invokeAdvanceSearch(){
+    var expression = location.search;
+    var data = [];
+    var labels = ["overview_owner", "overview_name", "overview_version", "overview_createdtime", "properties_bpmnpath", "properties_bpmnid", "properties_processtextpath"];
+    if(expression.indexOf("overview") > -1 || expression.indexOf("properties") > -1){
+        var words = expression.split("\%22");
+        for(var i = 1; i < words.length - 3; (i = i + 2)){
+            data[labels.indexOf(words[i])] = words[i + 2];
+            i = i + 2;
+        }
+        for(var i = 0; i < labels.length; i++){
+            if(expression.indexOf(labels[i]) == -1){
+                data[i] = "";
+            }
+        }
+        advanceSearch(data);
+    }
+}
+
+function advanceSearch(dataList){
     var body = {
-        'owner':data[0],
-        'name':data[1],
-        'version':data[2],
-        'createdtime':data[3],
-        'bpmnpath':data[4],
-        'bpmnid':data[5],
-        'processtextpath':data[6]
+        'owner':dataList[0],
+        'name':dataList[1],
+        'version':dataList[2],
+        'createdtime':dataList[3],
+        'bpmnpath':dataList[4],
+        'bpmnid':dataList[5],
+        'processtextpath':dataList[6]
     };
 
     var url = "/" + CONTEXT + "/advance_search";
@@ -240,16 +180,18 @@ function advanceSearch(data){
                 var dataset = [];
                 for (var i = 0; i < dataStr.length; i++) {
                     dataset.push({
-                        "processname": dataStr[i].processname,
-                        "processversion": dataStr[i].processversion,
+                        "processname": dataStr[i].name,
+                        "processversion": dataStr[i].version,
+                        "processowner":dataStr[i].owner,
                         "path": dataStr[i].path,
                         "processid": dataStr[i].processid,
+                        "createdtime":dataStr[i].createdtime,
                         "bpmnpath": dataStr[i].bpmnpath,
                         "bpmnid": dataStr[i].bpmnid,
                         "processtextpath": dataStr[i].processtextpath
                     });
                 }
-                render(renderElement, dataset);
+                render('#section', dataset);
             }else{
                 var element="";
                 element += "<div class=\"assets-container margin-top-double\">";
@@ -272,12 +214,12 @@ function render(renderElementID, dataset) {
             var element = "";
             element += "<div class=\"ctrl-wr-asset\" id=\"process" + i + "\">";
             element += "    <div class=\"itm-ast\">";
-            element += "        <a class=\"ast-img \" href=\"\">";
+            element += "        <a class=\"ast-img \" href=\"details?q="+ dataset[i].processid +"\">";
             element += "            <img alt='thumbnail' src='\images\/default-thumbnail.png' class=\"img-responsive\" >";
             element += "        <\/a>";
             element += "        <div class=\"ast-content\">";
             element += "            <div class=\"ast-title padding\">";
-            element += "                <a class=\"ast-name truncate processImg\" href=\"\" title=\"" + dataset[i].processname + "\">" + dataset[i].processname + "<\/a>";
+            element += "                <a class=\"ast-name truncate processImg\" href=\"details\/"+ dataset[i].processid +"\" title=\"" + dataset[i].processname + "\">" + dataset[i].processname + "<\/a>";
             element += "                <span class=\"ast-auth\" title=\"\"><\/span>";
             element += "                <span class=\"ast-ver\">" + dataset[i].processversion + "<\/span>";
             element += "            <\/div>";
@@ -294,7 +236,7 @@ function render(renderElementID, dataset) {
             element += "                        <li>";
             element += "                            <a class=\"btn js_bookmark left\"";
             element += "                            href='#'";
-            element += "                            data-aid=\"6014d43a-e165-43d6-a221-84a88551f7b4\" data-type=\"process\">";
+            element += "                            data-aid=\""+ dataset[i].processid +"\" data-type=\"process\">";
             element += "                                <span id=\"main-bookmark\">";
             element += "                                Bookmark";
             element += "                                    <span class=\"sub-bookmark\"><\/span>";
@@ -324,3 +266,93 @@ function render(renderElementID, dataset) {
         $('#search-null').append(element);
     }
 }
+
+function checkValueNull(exceptElement){
+    var elements = document.getElementsByClassName("search-input");
+    var count = 0;
+    for(var i = 0; i < elements.length; i++){
+        if(elements[i].getAttribute("name") != exceptElement){
+            if(elements[i].value != ""){
+                count++;
+            }
+        }
+    }
+
+    return (count == 0);
+}
+
+function getUrl(){
+    var elements = document.getElementsByClassName("search-input");
+    var url = "processes";
+    for(var i=0; i<elements.length; i++){
+        if(elements[i].value != ""){
+            if(i == 0)
+                url = "processes?q=";
+
+            url += "\"" + elements[i].getAttribute("name") + "\":\"" + elements[i].value + "\"," ;
+        }
+    }
+    return url;
+}
+
+function getProcessByProcessID(processID){
+    if (processID != null) {
+        var body = {
+            'processid': processID
+        };
+        var url = "/" + CONTEXT + "/search_process_by_name";
+        $.ajax({
+            type: 'POST',
+            url: httpUrl + url,
+            data: {'filters': JSON.stringify(body)},
+            success: function (data) {
+                var dataStr = JSON.parse(data);
+                if (!$.isEmptyObject(dataStr)) {
+                    var dataset = [];
+                    for (var i = 0; i < dataStr.length; i++) {
+                        dataset.push({
+                            "processname": dataStr[i].processname,
+                            "processversion": dataStr[i].processversion,
+                            "path": dataStr[i].path,
+                            "processid": dataStr[i].processid,
+                            "bpmnpath": dataStr[i].bpmnpath,
+                            "bpmnid": dataStr[i].bpmnid,
+                            "processtextpath": dataStr[i].processtextpath,
+                            "processowner":dataStr[i].processowner
+                        });
+                    }
+
+                    renderProcess('#desc-div', dataset);
+                }else{
+                    var element="";
+                    element += "<div class=\"assets-container margin-top-double\">";
+                    element += "   <div class=\"top-assets-empty-assert\">We couldn&#x27;t find anything for you.<\/div>";
+                    element += "<\/div>";
+                    $('#search-null').append(element);
+                }
+            },
+
+            error: function (xhr, status, error) {
+                var errorJson = eval("(" + xhr.responseText + ")");
+                alert(errorJson.message);
+            }
+        });
+    }
+}
+
+function renderProcess(renderElementID, dataset){
+    if(dataset.length > 0){
+        for(var i=0; i<dataset.length; i++){
+            $('#processname').text(dataset[i].processname);
+            $('#processversion').text("Version " + dataset[i].processversion);
+            $('#processowner').text("by " + dataset[i].processowner);
+            $('#btn-add-gadget').attr('data-aid', dataset[i].processid);
+            $('#divProcessName').text(dataset[i].processname);
+            $('#colProcess').text(dataset[i].processname + " - " + dataset[i].processversion);
+            $('#viewProcess').attr("href", "details?q=" + dataset[i].processid);
+        }
+
+    }
+}
+
+
