@@ -1,0 +1,38 @@
+<div class="wrapper">
+    <div class="container-fluid">
+        <!-- header -->
+<header>
+    <div class="row wr-global-header">
+        <div class="col-xs-8 col-sm-8 app-logo">
+            <a href='/publisher/assets/process/list'>
+                <img src="images/logo.png" />
+                <h2 class="app-title">Process Center - Designer</h2>
+            </a>
+        </div>
+        <div class="col-xs-4 col-sm-4 wr-auth-container">
+        		<div class="wr-auth pull-right">
+                    <a href="/process-center-explorer">
+                        <div class="auth-img">
+                            <h2 class="app-title" style="padding-top:8px"><i style="margin-right:10px;" class="fa fa-bars fa-1g"></i>Process Center</h2>
+                        </div>
+                    </a>
+
+        			<a href="#" data-toggle="dropdown" class="">
+        				<div class="auth-img">
+        					<span>admin</span>&nbsp;&nbsp;<i class="fw fw-user fw-lg"></i>
+        				</div>
+        			</a>
+        			<div class="dropdown-menu">
+        				<div class="cu-arrow"></div>
+        				<div class="dropdown-menu-content">
+        					<a class="filter-item" onclick="window.location.href='logout'" href="#">Sign out</a>
+        				</div>
+        			</div>
+        		</div>
+        </div>
+    </div>
+</header>
+
+<!-- /header -->
+    </div>
+</div>

@@ -19,18 +19,16 @@
 
 var log = new Log();
 if (log.isDebugEnabled()) {
-    log.debug("Accessing associations for the process...");
+log.debug("Accessing associations for the process...");
 }
-
-log.info("################");
-var ps = new Packages.org.wso2.carbon.pc.core.ProcessInformationViewer;
+var ps = new Packages.org.wso2.carbon.processCenter.core.ProcessStore;
 
 var processPath = String(request.getParameter("processPath"));
 log.info("Retrieving associations for: " + processPath);
-var associateData = ps.getSuccessorPredecessorSubProcessList(processPath);
+var associateData = ps.getSucessorPredecessorSubprocessList(processPath);
 log.info(associateData);
 if (log.isDebugEnabled()) {
-    log.debug(associateData);
+log.debug(associateData);
 }
 print(associateData);
 %>

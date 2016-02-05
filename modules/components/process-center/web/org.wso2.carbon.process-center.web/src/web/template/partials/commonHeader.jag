@@ -1,0 +1,16 @@
+<header>
+		<div id="div1" class="logo-wrapper app-logo">
+	    	<a href="main"><img src="images/logo.png"><h2 class="app-title" id="header1"><%=data.app.title%></h2></a>
+		</div>
+
+
+
+			<% if (loggedUser != null) { %>
+		        <div class="login-wrapper">
+					<i class="fw fw-user"></i>
+				    <span class="padding-top margin-left margin-right"><%=loggedUser%></span>|
+				    <span class="padding-top"><a href="logout">Logout</a></span>
+				</div>
+		    <% } %>
+
+</header>
