@@ -570,7 +570,6 @@ public class ProcessLevelMonitor {
 				if (log.isDebugEnabled()) {
 					log.debug("Process Key List Result:" + processKeyList);
 				}
-				log.info("Process Key List Result:" + processKeyList);
 			}
 		} catch (Exception e) {
 			log.error("PC Analytics core - process key list error.", e);
