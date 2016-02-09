@@ -35,6 +35,7 @@ public class AnalyticsConstants {
 	public static final String TASK_USAGE_TABLE = "TASK_USAGE_SUMMARY_DATA";
 	public static final String USER_INVOLVE_TABLE = "USER_INVOLVE_SUMMARY_DATA";
 	public static final String PROCESS_DEFINITION_KEY = "processDefKey";
+	public static final String PROCESS_KEY = "processKey";
 	public static final String TASK_DEFINITION_KEY = "taskDefId";
 	public static final String PROCESS_VERSION = "processVer";
 	public static final String ASSIGN_USER = "assignUser";

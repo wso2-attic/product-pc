@@ -191,7 +191,7 @@ public class ProcessLevelMonitor {
 		try {
 			if (AnalyticsUtils.isDASAnalyticsActivated()) {
 				JSONObject filterObj = new JSONObject(filters);
-				String processId = filterObj.getString(AnalyticsConstants.PROCESS_ID);
+				String processKey = filterObj.getString(AnalyticsConstants.PROCESS_KEY);
 				String order = filterObj.getString(AnalyticsConstants.ORDER);
 				int processCount = filterObj.getInt(AnalyticsConstants.NUM_COUNT);
 
@@ -206,7 +206,7 @@ public class ProcessLevelMonitor {
 				AggregateQuery query = new AggregateQuery();
 				query.setTableName(AnalyticsConstants.PROCESS_USAGE_TABLE);
 				query.setGroupByField(AnalyticsConstants.PROCESS_VERSION);
-				query.setQuery("processDefinitionId:" + "\"'" + processId + "'\"");
+				query.setQuery("processKeyName:" + "\"'" + processKey + "'\"");
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
@@ -259,7 +259,7 @@ public class ProcessLevelMonitor {
 		try {
 			if (AnalyticsUtils.isDASAnalyticsActivated()) {
 				JSONObject filterObj = new JSONObject(filters);
-				String processId = filterObj.getString(AnalyticsConstants.PROCESS_ID);
+				String processKey = filterObj.getString(AnalyticsConstants.PROCESS_KEY);
 				String order = filterObj.getString(AnalyticsConstants.ORDER);
 				int processCount = filterObj.getInt(AnalyticsConstants.NUM_COUNT);
 
@@ -274,7 +274,7 @@ public class ProcessLevelMonitor {
 				AggregateQuery query = new AggregateQuery();
 				query.setTableName(AnalyticsConstants.PROCESS_USAGE_TABLE);
 				query.setGroupByField(AnalyticsConstants.PROCESS_VERSION);
-				query.setQuery("processDefinitionId:" + "\"'" + processId + "'\"");
+				query.setQuery("processKeyName:" + "\"'" + processKey + "'\"");
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
@@ -517,5 +517,64 @@ public class ProcessLevelMonitor {
 			log.error("PC Analytics core - process id list error.", e);
 		}
 		return processIdList;
+	}
+
+	/**
+	 * Get process key list
+	 *
+	 * @return process key list as a JSON array string
+	 */
+	public String getProcessKeyList() {
+		String processKeyList = "";
+		try {
+			if (AnalyticsUtils.isDASAnalyticsActivated()) {
+				AggregateField avgField = new AggregateField();
+				avgField.setFieldName(AnalyticsConstants.ALL);
+				avgField.setAggregate(AnalyticsConstants.COUNT);
+				avgField.setAlias(AnalyticsConstants.PROCESS_INSTANCE_COUNT);
+
+				ArrayList<AggregateField> aggregateFields = new ArrayList<>();
+				aggregateFields.add(avgField);
+
+				AggregateQuery query = new AggregateQuery();
+				query.setTableName(AnalyticsConstants.PROCESS_USAGE_TABLE);
+				query.setGroupByField(AnalyticsConstants.PROCESS_KEY);
+				query.setAggregateFields(aggregateFields);
+
+				if (log.isDebugEnabled()) {
+					log.debug("Query to get the Process Key List Result:" +
+					          AnalyticsUtils.getJSONString(query));
+				}
+
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+						      AnalyticsUtils.getJSONString(query));
+
+				JSONArray array = new JSONArray(result);
+				JSONArray resultArray = new JSONArray();
+
+				if (array.length() != 0) {
+					for (int i = 0; i < array.length(); i++) {
+						JSONObject jsonObj = array.getJSONObject(i);
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String processKey =
+								values.getJSONArray(AnalyticsConstants.PROCESS_KEY)
+								      .getString(0);
+						JSONObject o = new JSONObject();
+						o.put(AnalyticsConstants.PROCESS_KEY, processKey);
+						resultArray.put(o);
+					}
+					processKeyList = resultArray.toString();
+				}
+
+				if (log.isDebugEnabled()) {
+					log.debug("Process Key List Result:" + processKeyList);
+				}
+				log.info("Process Key List Result:" + processKeyList);
+			}
+		} catch (Exception e) {
+			log.error("PC Analytics core - process key list error.", e);
+		}
+		return processKeyList;
 	}
 }
