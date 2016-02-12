@@ -25,30 +25,36 @@ if (BPSTenant != undefined && BPSTenant.length > 0) {
     CONTEXT = appName;
 }
 
-function viewProcess(renderElement, processName) {
+function viewProcess(renderElement, processName, user) {
     if (processName != null) {
         var body = {
-            'name': processName
+            'filter': processName,
+            'userName':user,
+            'filterType':"name"
+
         };
-        var url = "/" + CONTEXT + "/search_process_by_name";
+        var url = "/pc/process-center/process/byName";
         $.ajax({
             type: 'POST',
             url: httpUrl + url,
-            data: {'filters': JSON.stringify(body)},
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(body),
             success: function (data) {
-                var dataStr = JSON.parse(data);
-                if (!$.isEmptyObject(dataStr)) {
+                if (!$.isEmptyObject(data)) {
                     var dataset = [];
-                    for (var i = 0; i < dataStr.length; i++) {
+                    for (var i = 0; i < data.length; i++) {
                         dataset.push({
-                            "processname": dataStr[i].processname,
-                            "processversion": dataStr[i].processversion,
-                            "path": dataStr[i].path,
-                            "processid": dataStr[i].processid,
-                            "bpmnpath": dataStr[i].bpmnpath,
-                            "bpmnid": dataStr[i].bpmnid,
-                            "processtextpath": dataStr[i].processtextpath
+                            "processname": data[i].name,
+                            "processversion": data[i].version,
+                            "path": data[i].path,
+                            "processid": data[i].processid,
+                            "bpmnpath": data[i].bpmnpath,
+                            "bpmnid": data[i].bpmnid,
+                            "processtextpath": data[i].processtextpath
                         });
+
+                        createCookie(data[i].processid, data[i].bookmarked);
                     }
                     render(renderElement, dataset);
                 }else{
@@ -76,7 +82,7 @@ $('#search').click(function () {
     if ($('#advanced-search').is(':visible'))
         $('#advanced-search').toggle();
 });
-//
+
 $('#search-button').click(function() {
     if (!jQuery.isEmptyObject(document.getElementById("search").value)) {
         var url = "processes?q=" + "\"name\":\"" + document.getElementById("search").value + "\"";
@@ -139,7 +145,7 @@ $('#search-button2').click(function () {
     window.location = getUrl();
 });
 
-function invokeAdvanceSearch(){
+function invokeAdvanceSearch(user){
     var expression = location.search;
     var data = [];
     var labels = ["overview_owner", "overview_name", "overview_version", "overview_createdtime", "properties_bpmnpath", "properties_bpmnid", "properties_processtextpath"];
@@ -154,11 +160,11 @@ function invokeAdvanceSearch(){
                 data[i] = "";
             }
         }
-        advanceSearch(data);
+        advanceSearch(data, user);
     }
 }
 
-function advanceSearch(dataList){
+function advanceSearch(dataList, user){
     var body = {
         'owner':dataList[0],
         'name':dataList[1],
@@ -166,30 +172,33 @@ function advanceSearch(dataList){
         'createdtime':dataList[3],
         'bpmnpath':dataList[4],
         'bpmnid':dataList[5],
-        'processtextpath':dataList[6]
+        'processtextpath':dataList[6],
+        'userName':user
     };
 
-    var url = "/" + CONTEXT + "/advance_search";
+    var url = "/pc/process-center/process/filters";
     $.ajax({
         type: 'POST',
         url: httpUrl + url,
-        data: {'filters': JSON.stringify(body)},
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify(body),
         success: function (data) {
-            var dataStr = JSON.parse(data);
-            if (!$.isEmptyObject(dataStr)) {
+            if (!$.isEmptyObject(data)) {
                 var dataset = [];
-                for (var i = 0; i < dataStr.length; i++) {
+                for (var i = 0; i < data.length; i++) {
                     dataset.push({
-                        "processname": dataStr[i].name,
-                        "processversion": dataStr[i].version,
-                        "processowner":dataStr[i].owner,
-                        "path": dataStr[i].path,
-                        "processid": dataStr[i].processid,
-                        "createdtime":dataStr[i].createdtime,
-                        "bpmnpath": dataStr[i].bpmnpath,
-                        "bpmnid": dataStr[i].bpmnid,
-                        "processtextpath": dataStr[i].processtextpath
+                        "processname": data[i].name,
+                        "processversion": data[i].version,
+                        "processowner":data[i].owner,
+                        "path": data[i].path,
+                        "processid": data[i].processid,
+                        "createdtime":data[i].createdtime,
+                        "bpmnpath": data[i].bpmnpath,
+                        "bpmnid": data[i].bpmnid,
+                        "processtextpath": data[i].processtextpath
                     });
+                    createCookie(data[i].processid, data[i].bookmarked);
                 }
                 render('#section', dataset);
             }else{
@@ -207,6 +216,11 @@ function advanceSearch(dataList){
         }
     });
 }
+
+$('#sub-bookmark-id').click(function () {
+    var processID = document.URL.split("=")[1];
+    bookMarkProcess(processID);
+});
 
 function render(renderElementID, dataset) {
     if (dataset.length > 0) {
@@ -234,7 +248,7 @@ function render(renderElementID, dataset) {
             element += "                    <\/a>";
             element += "                    <ul role=\"menu\" class=\"dropdown-menu\">";
             element += "                        <li>";
-            element += "                            <a class=\"btn js_bookmark left\"";
+            element += "                            <a id=\"sub-bookmark-id\" class=\"btn js_bookmark left\"";
             element += "                            href='#'";
             element += "                            data-aid=\""+ dataset[i].processid +"\" data-type=\"process\">";
             element += "                                <span id=\"main-bookmark\">";
@@ -295,33 +309,36 @@ function getUrl(){
     return url;
 }
 
-function getProcessByProcessID(processID){
+function getProcessByProcessID(processID, user){
     if (processID != null) {
         var body = {
-            'processid': processID
+            'filter': processID,
+            'userName':user,
+            'filterType':"processid"
         };
-        var url = "/" + CONTEXT + "/search_process_by_name";
+        var url = "/pc/process-center/process/byName";
         $.ajax({
             type: 'POST',
             url: httpUrl + url,
-            data: {'filters': JSON.stringify(body)},
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(body),
             success: function (data) {
-                var dataStr = JSON.parse(data);
-                if (!$.isEmptyObject(dataStr)) {
+                if (!$.isEmptyObject(data)) {
                     var dataset = [];
-                    for (var i = 0; i < dataStr.length; i++) {
+                    for (var i = 0; i < data.length; i++) {
                         dataset.push({
-                            "processname": dataStr[i].processname,
-                            "processversion": dataStr[i].processversion,
-                            "path": dataStr[i].path,
-                            "processid": dataStr[i].processid,
-                            "bpmnpath": dataStr[i].bpmnpath,
-                            "bpmnid": dataStr[i].bpmnid,
-                            "processtextpath": dataStr[i].processtextpath,
-                            "processowner":dataStr[i].processowner
+                            "processname": data[i].name,
+                            "processversion": data[i].version,
+                            "path": data[i].path,
+                            "processid": data[i].processid,
+                            "bpmnpath": data[i].bpmnpath,
+                            "bpmnid": data[i].bpmnid,
+                            "processtextpath": data[i].processtextpath,
+                            "processowner":data[i].owner
                         });
+                        createCookie(data[i].processid, data[i].bookmarked);
                     }
-
                     renderProcess('#desc-div', dataset);
                 }else{
                     var element="";
@@ -354,5 +371,111 @@ function renderProcess(renderElementID, dataset){
 
     }
 }
+
+$('#btn-add-gadget').click(function () {
+    bookMarkProcess(document.URL.split("=")[1]);
+});
+
+$('#btn-remove-subscribe').click(function () {
+    bookMarkProcess(document.URL.split("=")[1]);
+});
+
+function bookMarkProcess(processID){
+    var url = "/pc/process-center/process/bookmark";
+    $.ajax({
+        type: 'POST',
+        url: httpUrl + url,
+        contentType: "application/json",
+        dataType: "json",
+        data: {"processID":processID},
+        success: function (data) {
+            createCookie(processID, data[0]);
+            window.location = document.URL;
+        },
+
+        error: function (xhr, status, error) {
+            var errorJson = eval("(" + xhr.responseText + ")");
+            alert(errorJson.message);
+        }
+    });
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+}
+
+function createCookie(cname, cvalue){
+    var cookies = document.cookie;
+    if(cookies.indexOf(cname) > 0){
+        var cookies = document.cookie;
+        document.cookie = cname + "=" + "; expires=-1";
+    }
+    document.cookie = cname + "=" + cvalue;
+}
+
+function getBookmarkedProcessList(user){
+    var url = "/pc/process-center/process/bookmarkedProcesses";
+    $.ajax({
+        type: 'POST',
+        url: httpUrl + url,
+        contentType: "application/json",
+        dataType: "json",
+        data: {"user":user},
+        success: function (data) {
+            if(data.length > 0){
+                var dataset = [];
+                for (var i = 0; i < data.length; i++) {
+                    dataset.push({
+                        "processname": data[i].name,
+                        "processid": data[i].processid
+                    });
+                }
+                renderBookmarkedProcess(dataset);
+            }
+        },
+
+        error: function (xhr, status, error) {
+            var errorJson = eval("(" + xhr.responseText + ")");
+            alert(errorJson.message);
+        }
+    });
+}
+
+function renderBookmarkedProcess(dataset){
+    if(dataset.length > 0){
+        for(var i = 0; i < dataset.length; i++){
+            var element="";
+            element += "<div class=\"ctrl-wr-asset margin-top-lg\">";
+            element += "    <div class=\"itm-ast\">";
+            element += "        <a class=\"ast-img \" href=\"details?q="+ dataset[i].processid +"\">";
+            element += "            <img alt=\"thumbnail\" src=\"images\/default-thumbnail.png\" class=\"img-responsive\">";
+            element += "        <\/a>";
+            element += "        <div class=\"ast-content\">";
+            element += "            <div class=\"ast-title padding\">";
+            element += "                <a class=\"ast-name truncate\" href=\"details?q="+ dataset[i].processid +"\" title=\""+ dataset[i].processname +"\">"+ dataset[i].processname +"<\/a>";
+            element += "                <span class=\"ast-auth\" title=\"\"><\/span>";
+            element += "            <\/div>";
+            element += "            <div class=\"pull-left asset-rating-container\">";
+            element += "                <span class=\"asset-rating\">";
+            element += "                    <div style=\"width:0px\"><\/div>";
+            element += "                <\/span>";
+            element += "            <\/div>";
+            element += "            <div class=\"clearfix padding-bottom-sm\"><\/div>";
+            element += "        <\/div>";
+            element += "    <\/div>";
+            element += "<\/div>";
+
+            $('#bookmark-container').append(element);
+        }
+    }
+}
+
 
 

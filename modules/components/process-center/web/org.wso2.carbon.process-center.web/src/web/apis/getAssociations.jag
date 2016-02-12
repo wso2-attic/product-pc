@@ -23,7 +23,7 @@ if (log.isDebugEnabled()) {
 }
 
 log.info("################");
-var ps = new Packages.org.wso2.carbon.pc.core.ProcessInformationViewer;
+var ps = new Packages.org.wso2.carbon.pc.core.org.wso2.carbon.processCenter.api.ProcessInformationViewer;
 
 var processPath = String(request.getParameter("processPath"));
 log.info("Retrieving associations for: " + processPath);

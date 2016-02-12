@@ -24,6 +24,54 @@
         <jackson.version>1.8.6</jackson.version>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>commons-io.wso2</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jaggeryjs</groupId>
+            <artifactId>org.jaggeryjs.hostobjects.stream</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </dependency>
+<!--        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr</artifactId>
+        </dependency>-->
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.registry.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.json.wso2</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.governance</groupId>
+            <artifactId>org.wso2.carbon.governance.api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.osgi</groupId>
+            <artifactId>org.eclipse.osgi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+            <artifactId>axiom</artifactId>
+            <version>1.2.11.wso2v9</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -64,6 +112,7 @@
                             org.wso2.carbon.processCenter.core.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
+                            <!--*;resolution:=optional-->
                             org.xml.sax,
                             org.wso2.carbon.registry.core.session; version=${carbon.registry.core.version},
                             org.wso2.carbon.registry.core.service; version=${carbon.registry.core.version},
@@ -74,56 +123,17 @@
                             org.osgi.service.component; version=${osgi.service.component.version},
                             org.json,
                             org.apache.commons.logging,
-                            javax.xml.parsers,
                             org.jaggeryjs.hostobjects.stream,
                             javax.xml.transform.stream,
                             javax.xml.transform.dom,
                             javax.xml.transform
                         </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>
             </plugin>
 
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>commons-io.wso2</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jaggeryjs</groupId>
-            <artifactId>org.jaggeryjs.hostobjects.stream</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.scr</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.json.wso2</groupId>
-            <artifactId>json</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.governance</groupId>
-            <artifactId>org.wso2.carbon.governance.api</artifactId>
-        </dependency>
-    </dependencies>
 
 </project>

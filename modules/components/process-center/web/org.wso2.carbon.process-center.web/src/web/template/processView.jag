@@ -1,3 +1,16 @@
+<script type="text/javascript">
+    var expression = location.search;
+    var processID = expression.split("=")[1];
+    var cookie = getCookie(processID);
+    alert("in view" + cookie);
+    if(cookie == "true"){
+        $('#btn-add-gadget').hide();
+        $('#btn-remove-subscribe').show();
+    }else if(cookie == "false"){
+        $('#btn-add-gadget').show();
+        $('#btn-remove-subscribe').hide();
+    }
+</script>
 <div class="container-fluid body-container">
     <div id="assets-container">
         <div class="ast-container " id="ast-container">
@@ -31,8 +44,13 @@
                             </span>
                             <div class="action-container right float-right">
                                 <a class="gray-button blue-button margin-left float-left" id="viewProcess" href="" target="_blank" data-placement="bottom" data-toggle="tooltip" title="" data-original-title="View"><span class="fa fa-code" style="margin-top: 4px"></span></a>
-                                <a id="btn-add-gadget" class="blue-button margin-left float-left" href="#modal-add-gadget" data-toggle="modal" data-aid="" data-type="process"> <span id="main-bookmark">
+                                <a style="display: none" id="btn-add-gadget" class="blue-button margin-left float-left" href="#modal-add-gadget" data-toggle="modal" data-aid="" data-type="process"> <span id="main-bookmark">
                                     Bookmark
+                                    <span class="sub-bookmark"></span>
+                                    </span>
+                                </a>
+                                <a style="display: none;" id="btn-remove-subscribe" class="blue-button disabled-button margin-left float-left" href="#modal-add-gadget" data-toggle="modal" data-aid="7045e172-f1a5-43c0-b35b-f28815173f1c" data-type="process"> <span id="main-bookmark">
+                                    Bookmarked
                                     <span class="sub-bookmark"></span>
                                     </span>
                                 </a>

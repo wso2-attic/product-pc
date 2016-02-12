@@ -19,12 +19,14 @@ var log = new Log();
 if(log.isDebugEnabled()){
  log.debug("Process information viewer getProcessByName logic");
 }
-var processInformationViewerInstance = new Packages.org.wso2.carbon.pc.core.processcenter.ProcessInformationViewer;
 var filters = String(request.getParameter("filters"));
 if(log.isDebugEnabled()){
  log.debug("Process information using :" + filters);
 }
 var loggedUser = session.get("user");
-var processInformation = processInformationViewerInstance.getProcessInformationByName(filters, loggedUser);
+log.info("###########" + loggedUser);
+var headers = {"Authorization":"No Auth"};
+log.info(headers);
+var processInformation = get("https://10.100.4.99:9443/pc/process-center/process/byName/" + filters + "/" + loggedUser, null, headers, "json" ).data;
 print(processInformation);
 %>

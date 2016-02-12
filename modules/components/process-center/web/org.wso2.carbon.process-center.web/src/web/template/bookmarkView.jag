@@ -18,6 +18,17 @@
     <div id="assets-container">
         <div id="myasset-container">
             <h2 class="padding-top-lg">My bookmarks</h2>
+            <div class="ast-container">
+                <div class="container-fluid ">
+                    <div class="title">
+                        <a class="asset-type-" href="processes">Processes</a>
+                    </div><!--title-->
+                    <hr>
+                </div>
+            </div>
+            <div id="bookmark-container">
+
+            </div>
         </div>
     </div>
 </div>
