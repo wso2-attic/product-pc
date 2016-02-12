@@ -23,7 +23,7 @@ if (request.isSecure()) {//check whether the request is secure or not
     var password = request.getParameter("password");
     var requestUrl = request.getHeader("Referer").split("requestUrl=")[1];
     if(requestUrl != null && requestUrl != "null"){
-        requestUrl = requestUrl.replace("%3F", "?");
+        requestUrl = requestUrl.replace("3F", "?");
 	}
 	if(requestUrl == null || requestUrl == "null" || requestUrl == ""){
 		requestUrl = "login";

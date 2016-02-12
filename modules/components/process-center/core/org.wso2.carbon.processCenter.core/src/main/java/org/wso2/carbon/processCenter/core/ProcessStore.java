@@ -1,3 +1,18 @@
+/*
+ * Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.wso2.carbon.processCenter.core;
 
 /**
@@ -26,6 +41,18 @@ import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.apache.commons.io.IOUtils;
+
+
+import org.apache.commons.logging.*;
+import org.jaggeryjs.hostobjects.stream.StreamHostObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.processCenter.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.processCenter.core.models.*;
 import org.wso2.carbon.processCenter.core.models.Process;
@@ -49,7 +76,6 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import java.io.StringWriter;
-import java.lang.reflect.Field;
 import java.util.Hashtable;
 import java.util.Iterator;
 
@@ -58,29 +84,22 @@ import java.util.Iterator;
  */
 
 public class ProcessStore {
+   private static final Log log = LogFactory.getLog(ProcessStore.class);
 
-    private Log log = LogFactory.getLog(ProcessStore.class);
     private static final String mns = "http://www.wso2.org/governance/metadata";
+    private static final String OK = "OK";
 
-    public ProcessStore(){
-
+    private Element append(Document doc, Element parent, String childName, String childNS) {
+        Element childElement = doc.createElementNS(childNS, childName);
+        parent.appendChild(childElement);
+        return childElement;
     }
 
-    private Document stringToXML(String xmlString){
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder;
-            builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new InputSource(new StringReader(xmlString)));
-            return document;
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    private Element appendText(Document doc, Element parent, String childName, String childNS, String text) {
+        Element childElement = doc.createElementNS(childNS, childName);
+        childElement.setTextContent(text);
+        parent.appendChild(childElement);
+        return childElement;
     }
 
     private String xmlToString(Document doc) throws TransformerException {
@@ -93,18 +112,12 @@ public class ProcessStore {
         return output;
     }
 
-    private Element append(Document doc, Element parent, String childName, String childNS) {
-        Element childElement = doc.createElementNS(childNS, childName);
-        parent.appendChild(childElement);
-        return childElement;
-    }
-
-    private Element appendText(Document doc, Element parent, String childName, String childNS,
-                               String text) {
-        Element childElement = doc.createElementNS(childNS, childName);
-        childElement.setTextContent(text);
-        parent.appendChild(childElement);
-        return childElement;
+    private Document stringToXML(String xmlString) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder;
+        builder = factory.newDocumentBuilder();
+        Document document = builder.parse(new InputSource(new StringReader(xmlString)));
+        return document;
     }
 
     public JSONArray getProcessInformationByName(String filter, String filterType, String loggedUser){
@@ -117,7 +130,6 @@ public class ProcessStore {
                 UserRegistry reg = null;
                 reg = registryService.getGovernanceSystemRegistry();
                 String[] processPaths = GovernanceUtils.findGovernanceArtifacts("application/vnd.wso2-process+xml", reg);
-
                 for (String processPath : processPaths) {
                     Resource processResource = reg.get(processPath);
                     String processContent = new String((byte[]) processResource.getContent());
@@ -244,6 +256,8 @@ public class ProcessStore {
             log.error(e);
         } catch (JSONException e) {
             log.error(e.getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
         return "{}";
     }
@@ -309,6 +323,8 @@ public class ProcessStore {
             log.error(e.getMessage(), e);
         } catch (TransformerException e) {
             log.error(e.getMessage(), e);
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
         return result;
     }
@@ -432,6 +448,8 @@ public class ProcessStore {
             log.error(e.getMessage(), e);
         } catch (JSONException e) {
             log.error(e.getMessage(), e);
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
         return null;
     }
