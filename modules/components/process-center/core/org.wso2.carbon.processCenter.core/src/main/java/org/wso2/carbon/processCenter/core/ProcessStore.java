@@ -13,12 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.wso2.carbon.processCenter.core;
 
+/**
+ * Created by sathya on 2/8/16.
+ */
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-
-
-import org.apache.commons.logging.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,13 +51,34 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.activiti.bpmn.converter.BpmnXMLConverter;
+import org.activiti.bpmn.converter.util.InputStreamProvider;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.image.ProcessDiagramGenerator;
+import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 
+
+
+
+//@Path("/processcenter/")
 public class ProcessStore {
 
-   private static final Log log = LogFactory.getLog(ProcessStore.class);
+    private static final Log log = LogFactory.getLog(ProcessStore.class);
 
     private static final String mns = "http://www.wso2.org/governance/metadata";
     private static final String OK = "OK";
+
+
+//singleton process store class
+    private static ProcessStore processStore = new ProcessStore();
+
+
+    private ProcessStore() {}
+
+    public static ProcessStore getInstance() {
+        return processStore;
+    }
+
 
     private Element append(Document doc, Element parent, String childName, String childNS) {
         Element childElement = doc.createElementNS(childNS, childName);
@@ -87,6 +114,7 @@ public class ProcessStore {
 
     public String createProcess(String processDetails) {
 
+        log.info(processDetails);
         String processId = "FAILED TO ADD PROCESS";
 
         try {
@@ -308,12 +336,12 @@ public class ProcessStore {
         }
     }
 
-    public String createBPMN(String bpmnName, String bpmnVersion, Object o) {
+    public String createBPMN(String bpmnName, String bpmnVersion, /*Object o*/ InputStream inputStream) {
         String processId = "FAILED TO CREATE BPMN";
         log.debug("Creating BPMN resource...");
         try {
-            StreamHostObject s = (StreamHostObject) o;
-            InputStream bpmnStream = s.getStream();
+          // StreamHostObject s = (StreamHostObject) o;
+            InputStream bpmnStream = inputStream;//s.getStream();
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
@@ -322,6 +350,8 @@ public class ProcessStore {
                 Resource bpmnContentResource = reg.newResource();
                 byte[] bpmnContent = IOUtils.toByteArray(bpmnStream);
                 String bpmnText = new String(bpmnContent);
+
+                log.info(("!!!!!!!!!!!!!!!!!!!!!!!!!! "+bpmnText));
                 bpmnContentResource.setContent(bpmnText);
                 bpmnContentResource.setMediaType("application/xml");
                 String bpmnContentPath = "bpmncontent/" + bpmnName + "/" + bpmnVersion;
@@ -605,8 +635,8 @@ public class ProcessStore {
                 Element contentElement = (Element) document.getElementsByTagName("content").item(0);
                 String contentPath = contentElement.getElementsByTagName("contentpath").item(0).getTextContent();
                 bpmn.put("contentpath", contentPath);
-               // String encodedBPMNImage = getEncodedBPMNImage(contentPath);
-               // bpmn.put("bpmnImage", encodedBPMNImage);
+                String encodedBPMNImage = getEncodedBPMNImage(contentPath);
+                bpmn.put("bpmnImage", encodedBPMNImage);
 
                 bpmnString = bpmn.toString();
             }
@@ -617,13 +647,75 @@ public class ProcessStore {
         return bpmnString;
     }
 
-    public String getProcesses() throws ProcessCenterException {
+    public String getEncodedBPMNImage(String path) throws ProcessCenterException {
+        byte[] encoded = Base64.encodeBase64(getBPMNImage(path));
+        String imageString = new String(encoded);
+        return imageString;
+    }
 
-        String processDetails = "{}";
+    public byte[] getBPMNImage(String path) throws ProcessCenterException {
 
         try {
-            JSONArray result = new JSONArray();
+            RegistryService registryService =
+                    ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                Resource bpmnXMLResource = reg.get(path);
+                byte[] bpmnContent = (byte[]) bpmnXMLResource.getContent();
+                InputStreamProvider inputStreamProvider = new PCInputStreamProvider(bpmnContent);
 
+                BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
+                BpmnModel bpmnModel =
+                        bpmnXMLConverter.convertToBpmnModel(inputStreamProvider, false, false);
+
+                ProcessDiagramGenerator generator = new DefaultProcessDiagramGenerator();
+                InputStream imageStream = generator.generatePngDiagram(bpmnModel);
+
+                byte[] imageContent = IOUtils.toByteArray(imageStream);
+                return imageContent;
+            } else {
+                String msg = "Registry service not available for fetching the BPMN image.";
+                throw new ProcessCenterException(msg);
+            }
+        } catch (Exception e) {
+            String msg = "Failed to fetch BPMN model: " + path;
+            log.error(msg, e);
+            throw new ProcessCenterException(msg, e);
+        }
+    }
+
+    public byte[] getBPMNImage2(String path) throws ProcessCenterException {
+
+        try {
+            byte[] bpmnContent = FileUtils.readFileToByteArray(new File(path));
+            InputStreamProvider inputStreamProvider = new PCInputStreamProvider(bpmnContent);
+
+            BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
+            BpmnModel bpmnModel =
+                    bpmnXMLConverter.convertToBpmnModel(inputStreamProvider, false, false);
+
+            ProcessDiagramGenerator generator = new DefaultProcessDiagramGenerator();
+            InputStream imageStream = generator.generatePngDiagram(bpmnModel);
+
+            byte[] imageContent = IOUtils.toByteArray(imageStream);
+            return imageContent;
+        } catch (Exception e) {
+            String msg = "Failed to fetch BPMN model: " + path;
+            log.error(msg, e);
+            throw new ProcessCenterException(msg, e);
+        }
+    }
+
+    public String getProcesses() {
+
+        String processDetails = "{}";
+        JSONArray result = null;
+        //List<JSONObject> result2 = null;
+
+        try {
+            result = new JSONArray();
+
+            //result2 = new ArrayList();
             log.info("creating JSON objects...");
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
@@ -642,25 +734,33 @@ public class ProcessStore {
                     processJSON.put("processid", processResource.getUUID());
                     processJSON.put("processname", processName);
                     processJSON.put("processversion", processVersion);
-                    result.put(processJSON);
+                   result.put(processJSON);
+
+                    //result2.add(processJSON);
                 }
 
                 processDetails = result.toString();
 
-                int a = 1;
+                //int a = 1;
 
             } else {
                 String msg = "Registry service not available for retrieving processes.";
                 log.error("Registry service not available for retrieving processes.");
-                throw new ProcessCenterException(msg);
+                //throw new ProcessCenterException(msg);
+                return processDetails;
+
             }
         } catch (Exception e) {
             String msg = "Failed";
             log.error(msg, e);
-            throw new ProcessCenterException(msg, e);
+            //throw new ProcessCenterException(msg, e);
+            return processDetails;
+
         }
 
+        //return processDetails;
         return processDetails;
+
     }
 
 
@@ -925,7 +1025,7 @@ public class ProcessStore {
                                 subprocessElement.getElementsByTagName("id").item(0).getTextContent();
 
                         if(subprocessName.equals(subprocess.getString("name")) && subprocessPath.equals(subprocess.getString("path")) &&
-                           subprocessId.equals(subprocess.getString("id"))) {
+                                subprocessId.equals(subprocess.getString("id"))) {
                             subprocessElement.getParentNode().removeChild(subprocessElement);
                             break;
                         }
@@ -969,7 +1069,7 @@ public class ProcessStore {
                                 successorElement.getElementsByTagName("id").item(0).getTextContent();
 
                         if(successorName.equals(successor.getString("name")) && successorPath.equals(successor.getString("path")) &&
-                           successorId.equals(successor.getString("id"))) {
+                                successorId.equals(successor.getString("id"))) {
                             successorElement.getParentNode().removeChild(successorElement);
                             break;
                         }
@@ -1013,7 +1113,7 @@ public class ProcessStore {
                                 predecessorElement.getElementsByTagName("id").item(0).getTextContent();
 
                         if(predecessorName.equals(predecessor.getString("name")) && predecessorPath.equals(predecessor.getString("path")) &&
-                           predecessorId.equals(predecessor.getString("id"))) {
+                                predecessorId.equals(predecessor.getString("id"))) {
                             predecessorElement.getParentNode().removeChild(predecessorElement);
                             break;
                         }
@@ -1044,25 +1144,25 @@ public class ProcessStore {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
 
-                    Resource processResource = reg.get(processPath);
-                    String processContent = new String((byte[]) processResource.getContent());
-                    Document processXML = stringToXML(processContent);
-                    String processName = processXML.getElementsByTagName("name").item(0).getTextContent();
-                    String processVersion = processXML.getElementsByTagName("version").item(0).getTextContent();
-                    String processOwner = processXML.getElementsByTagName("owner").item(0).getTextContent();
-                    String bpmnPath = processXML.getElementsByTagName("bpmnpath").item(0).getTextContent();
-                    String bpmnId = processXML.getElementsByTagName("bpmnid").item(0).getTextContent();
-                    String processTextPath = processXML.getElementsByTagName("processtextpath").item(0).getTextContent();
+                Resource processResource = reg.get(processPath);
+                String processContent = new String((byte[]) processResource.getContent());
+                Document processXML = stringToXML(processContent);
+                String processName = processXML.getElementsByTagName("name").item(0).getTextContent();
+                String processVersion = processXML.getElementsByTagName("version").item(0).getTextContent();
+                String processOwner = processXML.getElementsByTagName("owner").item(0).getTextContent();
+                String bpmnPath = processXML.getElementsByTagName("bpmnpath").item(0).getTextContent();
+                String bpmnId = processXML.getElementsByTagName("bpmnid").item(0).getTextContent();
+                String processTextPath = processXML.getElementsByTagName("processtextpath").item(0).getTextContent();
 
-                    JSONObject processJSON = new JSONObject();
-                    processJSON.put("path", processPath);
-                    processJSON.put("processid", processResource.getUUID());
-                    processJSON.put("processname", processName);
-                    processJSON.put("processversion", processVersion);
-                    processJSON.put("owner", processOwner);
-                    processJSON.put("bpmnpath", bpmnPath);
-                    processJSON.put("bpmnid", bpmnId);
-                    processJSON.put("processtextpath", processTextPath);
+                JSONObject processJSON = new JSONObject();
+                processJSON.put("path", processPath);
+                processJSON.put("processid", processResource.getUUID());
+                processJSON.put("processname", processName);
+                processJSON.put("processversion", processVersion);
+                processJSON.put("owner", processOwner);
+                processJSON.put("bpmnpath", bpmnPath);
+                processJSON.put("bpmnid", bpmnId);
+                processJSON.put("processtextpath", processTextPath);
 
                 result.put(processJSON);
 
@@ -1129,6 +1229,54 @@ public class ProcessStore {
             e.printStackTrace();
         }
         return processes;
+    }
+
+
+
+    public String updateVersion(String processPath, String updatedVersion){
+
+        String processId = "";
+
+        try {
+            JSONArray result = new JSONArray();
+
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+
+                Resource processResource = reg.get(processPath);
+                String processContent = new String((byte[]) processResource.getContent());
+                Document processXML = stringToXML(processContent);
+                String processName = processXML.getElementsByTagName("name").item(0).getTextContent();
+                processXML.getElementsByTagName("version").item(0).setTextContent(updatedVersion);
+
+
+                String updatedProcess = xmlToString(processXML);
+
+
+                Resource processAsset = reg.newResource();
+                processAsset.setContent(updatedProcess);
+                processAsset.setMediaType("application/vnd.wso2-process+xml");
+                String processAssetPath = "processes/" + processName + "/" + updatedVersion;
+                reg.put(processAssetPath, processAsset);
+
+                // associate lifecycle with the process asset, so that it can be promoted to published state
+                GovernanceUtils.associateAspect(processAssetPath, "SampleLifeCycle2", reg);
+
+                // apply tags to the resource
+
+
+                Resource storedProcess = reg.get(processAssetPath);
+                processId = storedProcess.getUUID();
+            }
+        } catch (Exception e) {
+            log.error(e);
+        }
+
+        return processId;
+
+
     }
 
 

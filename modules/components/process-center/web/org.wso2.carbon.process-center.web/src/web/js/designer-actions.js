@@ -25,6 +25,9 @@ if (BPSTenant != undefined && BPSTenant.length > 0) {
 
 var processNames = [];
 var processListObj;
+var processPath;
+var processTextPath;
+var bpmnPath;
 
 
 /**
@@ -42,7 +45,7 @@ function search(renderElement, searchString) {  //render element = list-assets-c
   searchAssetString = searchString;
  }
  if (searchAssetString != "") {
- // var link = '/apis/normalSearch.jag' + searchPrefix + '/?query=' + searchAssetString;
+  // var link = '/apis/normalSearch.jag' + searchPrefix + '/?query=' + searchAssetString;
   //window.location = link;
 
 
@@ -51,7 +54,7 @@ function search(renderElement, searchString) {  //render element = list-assets-c
 //#div3
   var body = "";
 
-  var url = "/" + CONTEXT + "/get_process_list";
+  var url = "/" + CONTEXT + "/processcenterservice/getprocesses/";
   $.ajax({
    type: 'POST',
    url: httpUrl + url,
@@ -63,13 +66,13 @@ function search(renderElement, searchString) {  //render element = list-assets-c
      for (var i = 0; i < dataStr.length; i++) {
 
       if(dataStr[i].processname.toString() == searchAssetString){
-      dataset.push({
-       "name": dataStr[i].processname,
-       "version": dataStr[i].processversion
+       dataset.push({
+        "name": dataStr[i].processname,
+        "version": dataStr[i].processversion
 
-      });
+       });
+      }
      }
-    }
      render(renderElementID, dataset);
 
     }},
@@ -79,7 +82,7 @@ function search(renderElement, searchString) {  //render element = list-assets-c
    }
   });
  }
- }
+}
 
 
 
@@ -96,18 +99,18 @@ function search(renderElement, searchString) {  //render element = list-assets-c
  */
 function getProcessList(renderElement) {
 
-//#div3
- var body = "";
+ var url = httpUrl+"/pc/processcenterservice/getprocesses/";
 
-
- var url = "/" + CONTEXT + "/get_process_list";
 
  $.ajax({
   type: 'POST',
-  url: httpUrl + url,
-  data: {'filters': JSON.stringify(body)},
+  url:url,
+  dataType: "json",
+  //data: {'filters': JSON.stringify(body)},
   success: function (data) {
-   processListObj = JSON.parse(data);
+   processListObj = data;
+   //alert(processListObj);
+
    if (!$.isEmptyObject(processListObj)) {
     var dataset = [];
 
@@ -133,6 +136,7 @@ function getProcessList(renderElement) {
    }
   },
   error: function (xhr, status, error) {
+   alert("error "+ xhr.responseText);
    var errorJson = eval("(" + xhr.responseText + ")");
    alert(errorJson.message);
   }
@@ -162,27 +166,27 @@ function render(renderElementID, dataset) {
  var arrayLength = dataset.length;
  for (var i = 0; i < arrayLength; i++) {
   //log.info(dataset[i].name);
- // log.info(dataset[i].version);
+  // log.info(dataset[i].version);
 
 
- $(renderElementID).append('<div class="ctrl-wr-asset">'
-  +'<div class="itm-ast">'
-  +'<a class="ast-img" href="process-details?q='+dataset[i].pid.toString()+'">'
- +'<img alt="thumbnail" src="images/default-thumbnail.png" style="top:0px; left:0px; height:100%; width:100%;" '
- +'class="img-responsive">'
- +'</a>'
- +'<div class="ast-desc">'
- +'<a href="process-details?q='+dataset[i].pid.toString()+'">'
- +'<h3 class="ast-name" title="process1">'+dataset[i].name.toString()+'</h3>'
- +'</a>'
-     +'<span class="ast-ver">V'+dataset[i].version.toString()+', </span><span class="ast-auth" title=""></span>'
-     +'<span class="ast-published"></span>'
-     +'<span class="lifecycle-state"><small><i class="icon-circle lc-state-Initial"></i> Initial</small></span>'
-     +'</div>'+
-     +'<br class="c-both">'+
-     +'</div><br class="c-both">'+
-     +'</div>'
- );
+  $(renderElementID).append('<div class="ctrl-wr-asset">'
+      +'<div class="itm-ast">'
+      +'<a class="ast-img" href="process-details?q='+dataset[i].pid.toString()+'">'
+      +'<img alt="thumbnail" src="images/default-thumbnail.png" style="top:0px; left:0px; height:100%; width:100%;" '
+      +'class="img-responsive">'
+      +'</a>'
+      +'<div class="ast-desc">'
+      +'<a href="process-details?q='+dataset[i].pid.toString()+'">'
+      +'<h3 class="ast-name" title="process1">'+dataset[i].name.toString()+'</h3>'
+      +'</a>'
+      +'<span class="ast-ver">V'+dataset[i].version.toString()+', </span><span class="ast-auth" title=""></span>'
+      +'<span class="ast-published"></span>'
+      +'<span class="lifecycle-state"><small><i class="icon-circle lc-state-Initial"></i> Initial</small></span>'
+      +'</div>'+
+      +'<br class="c-both">'+
+      +'</div><br class="c-both">'+
+      +'</div>'
+  );
   //Do something
  }
 
@@ -192,24 +196,24 @@ function render(renderElementID, dataset) {
 
 
 
- $('#searchButton').click(function(){
+$('#searchButton').click(function(){
 
  var search = $('#inp_searchAsset').val();
 
-  //alert(window.location.href);
-  //window.location.assign(window.location.href+="?q=\"name\":"+search+"\"");
+ //alert(window.location.href);
+ //window.location.assign(window.location.href+="?q=\"name\":"+search+"\"");
 
-    if(!jQuery.isEmptyObject(search)){ // true)
-     window.location.assign("designer?q=\"name\":\"" + search + "\"");
-    }
-  else{
-     window.location.assign("designer");
-    }
-  //var url = window.location.href;
-  //
-  //window.location.href = url+ "=q?'name':"+search+"'";
+ if(!jQuery.isEmptyObject(search)){ // true)
+  window.location.assign("designer?q=\"name\":\"" + search + "\"");
+ }
+ else{
+  window.location.assign("designer");
+ }
+ //var url = window.location.href;
+ //
+ //window.location.href = url+ "=q?'name':"+search+"'";
 
- });
+});
 
 function insertParam2(key,value)
 {
@@ -286,26 +290,32 @@ function saveProcess(currentElement) {
   alertify.error('please fill the required fields.');
  } else {
   // save the process
-  var url = "/" + CONTEXT + "/create_process";
+  var url = httpUrl+ "/pc/processcenterservice/createprocess/";
   var processInfoString = getProcessInfo();
   //var processInfoObj = JSON.parse(processInfoString); // parse a string into JSON
 
-  var e = Base64.encode(processInfoString); //base64-encode the JSON object
-  var d = Base64.decode(e);
+//  var e = Base64.encode(processInfoString); //base64-encode the JSON object
+  //var d = Base64.decode(e);
+  //var value = "{"++"}";
   $.ajax({
-   url:  httpUrl + url,
+   url:  url,
    type: 'POST',
+   dataType: "text",
+   contentType: "application/json",
    data: { 'processInfo': processInfoString },
    success: function (response) {
-    $("#processTextOverviewLink").attr("href", "/process-details#" + e);
-    https://10.100.4.122:9445/carbon/$("#bpmnhttps://10.100.4.122:9445/carbon/wLink").attr("href", "/process-details" + response);
+
+    var processid = JSON.stringify(response).slice(1,-1);
+    $("#processTextOverviewLink").attr("href", "/process-details?q=" + processid);
+    //https://10.100.4.122:9445/carbon/$("#bpmnhttps://10.100.4.122:9445/carbon/wLink").attr("href", "/process-details" + response);
 
     if($(currentElement).attr('id') == 'saveProcessBtn'){
-     window.location = "process-details#" + e;
+     window.location = "process-details?q=" + processid;
     }
    },
-   error: function () {
-    alert.error('Process saving error');
+   error: function (xhr, status, error) {
+    alert("error"+ xhr.responseText);
+    alertify.error('Process saving error');
    }
   });
 
@@ -354,7 +364,10 @@ function saveProcessText(currentElement) {
 
 function updateProcessText(currentElement) {
 
+
  var textContent = tinyMCE.get('processContent').getContent();
+ var name = document.getElementById("view-header").innerHTML;
+ var version = document.getElementById("process-version").innerHTML;
  if (textContent == "") {
   if($(currentElement).attr('id') == 'processTextSaveBtn'){
    alertify.error('Process content is empty.');
@@ -362,19 +375,23 @@ function updateProcessText(currentElement) {
  } else {
   // save the process
 
-
-  var url = "/" + CONTEXT + "/save_process_text";
+  var body = { "processName": name, "processVersion" : version, "processText" : textContent};
+//alert("saving.........");
+  var url = httpUrl+"/pc/processcenterservice/saveprocesstext";
+  alert(url);
   $.ajax({
-   url:  httpUrl + url,
+   url:  url,
    type: 'POST',
-   data: { 'processName': document.getElementById("view-header").innerHTML, 'processVersion' : document.getElementById("process-version").innerHTML, 'processText' : textContent},
-   success: function (response) {
+   contentType: 'application/json',
+   data: JSON.stringify(body),
+   success: function (data) {
 
     if($(currentElement).attr('id') == 'processTextSaveBtn'){
      alertify.success("Successfully saved the process content.");
     }
    },
-   error: function () {
+   error: function (xhr, status, error) {
+    alert(error);
     alertify.error('Process text saving error');
    }
   });
@@ -562,7 +579,7 @@ function readUpdatedSubprocess(currentObj){
  }else if(subprocessInput == getMainProcess()){
   alertify.warning('You cannot assign the process name as its subprocess.');
  }else{
- // $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='subprocess_Name' class='subprocess_Name'>"+subprocessInput+"</span>");
+  // $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='subprocess_Name' class='subprocess_Name'>"+subprocessInput+"</span>");
   $(currentObj).parent().closest("tr").hide();
 
   $("#subprocesstablebody").append('<tr><td valign="top" style="width: 90%;">'+
@@ -908,100 +925,85 @@ function getMainProcess(){
  return mainProcess;
 }
 
-
-
-
-function viewText() {
- loadProcessText();
-
- $("#overviewDiv").hide();
- $("#processTextContainer").show();
- $("#processTextEditDiv").hide();
- $("#bpmnViewDiv").hide();
- $("#bpmnEditDiv").hide();
-}
-
 function editText() {
  $("#processContent").val($("#processTextDiv").html());
  showTextEditor();
 }
 
-function loadProcessText(pPath) {
-alert(pPath.slice(10));
-  var url = "/" + CONTEXT + "/get_process_text?process_text_path=/processText" + pPath.slice(10);
 
- //var ppath = 'apis/get_process_text?process_text_path=NA';
+function showBPMNUploader() {
+ $("#overviewDiv").hide();
+ $("#processTextContainer").hide();
+ $("#processTextEditDiv").hide();
+ $("#bpmnViewDiv").hide();
+ $("#bpmnEditDiv").show();
+}
+
+function showBPMN() {
+
+ $("#overviewDiv").hide();
+ $("#processTextContainer").hide();
+ $("#processTextEditDiv").hide();
+ $("#bpmnViewDiv").show();
+ $("#bpmnEditDiv").hide();
+
 
  $.ajax({
-  url: httpUrl+url,
-  type: 'GET',
-  success: function (response) {
+  url: httpUrl+"/pc/processcenterservice/getbpmn/",
+  type: 'POST',
+  contentType:'application/json',
+  dataType: 'json',
+  data: {'bpmnPath': "/_system/governance/"+bpmnPath},
+  success: function (data) {
+   alert(JSON.stringify(data));
 
-    if (!$.trim(response)){  
-    alert("What follows is blank: " + response);
-//add text editor button
-    }
-    else{
-   $("#processTextDiv").html(response);
-   //add view text button
-   alert('what folows is not blank' + response);
- }
+   var bpmnObject = data;
+   $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
   },
   error: function () {
-   alertify.error('Text editor error');
+   alertify.error('BPMN diagram showing error');
   }
  });
 }
 
+function loadBPMN(){
+
+ var url = httpUrl+"/pc/processcenterservice/getbpmn/";
+ $.ajax({
+  url: url,
+  type: 'POST',
+  contentType:'application/json',
+  dataType: 'text',
+  data: {'bpmnPath': bpmnPath},
+  success: function (data) {
+   alert(JSON.stringify(data));
+   var bpmnObject = data;
+   $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
+  },
+  error: function () {
+   alertify.error('BPMN diagram showing error');
+  }
+ });
+}
+
+function uploadBPMN(){
 
 
+ var url = httpUrl + "/pc/processcenterservice/uploadbpmn/";
 
-    function showTextEditorWithoutSave() {
-        $("#overviewDiv").hide();
-        $("#processTextContainer").hide();
-        $("#processTextEditDiv").show();
-        $("#bpmnViewDiv").hide();
-        $("#bpmnEditDiv").hide();
+ var bpmnName = $("#bpmnProcessName").attr("value");
+ var bpmnVersion = $("#bpmnProcessVersion").attr("value");
+ alert(bpmnName+ bpmnVersion);
 
-        tinymce.init({
-            selector: "#processContent"
-        });
-    }
-
-    function showBPMNUploader() {
-        $("#overviewDiv").hide();
-        $("#processTextContainer").hide();
-        $("#processTextEditDiv").hide();
-        $("#bpmnViewDiv").hide();
-        $("#bpmnEditDiv").show();
-    }
-
-    function showBPMN() {
-
-        $("#overviewDiv").hide();
-        $("#processTextContainer").hide();
-        $("#processTextEditDiv").hide();
-        $("#bpmnViewDiv").show();
-        $("#bpmnEditDiv").hide();
+ var processid = "NA";
 
 
-    }
+//var files = request.getAllFiles();
+//for (var name in files) {
+ // processid = ps.createBPMN(bpmnName, bpmnVersion, files[name].getStream());
+//}
 
-    function loadBPMN(processPath){
-
- var url = "/" + CONTEXT + "/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn" + processPath.slice(10);
-        $.ajax({
-            url: httpUrl+url,
-            type: 'GET',
-            success: function (response) {
-                var bpmnObject = JSON.parse(response);
-                $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
-            },
-            error: function () {
-                alertify.error('BPMN diagram showing error');
-            }
-        });
-    }
+}
 
 
 
@@ -1029,118 +1031,131 @@ function editProcessOwner(e){
 
 function loadProcessById(processid){
 
-var processtest = null;
 
-     //getProcessList();
+ //getProcessList();
 
-    // var hash = window.location.hash;  //retreives the encoded json object
-     //var d = Base64.decode(hash.slice(1));
-     //var processInfoObj = JSON.parse(d); // this is how you parse a string into JSON
+ // var hash = window.location.hash;  //retreives the encoded json object
+ //var d = Base64.decode(hash.slice(1));
+ //var processInfoObj = JSON.parse(d); // this is how you parse a string into JSON
 
-     //alert(d);
+ //alert(d);
 
-     //var pid = hash.slice(1);
-    // alert(pid);
-    //var segment_str = window.location.pathname; // return segment1/segment2/segment3/segment4
-    //var segment_array = segment_str.split( '/' );
-    //var last_segment = segment_array.pop();
-   // alert(last_segment);
-var url = "/" + CONTEXT + "/get_process_list";
- var processObj = null;
-$.ajax({
-  url: httpUrl+url,
-  type: 'GET',
-  success: function (response) {
-   processListObj = JSON.parse(response);
+ //var pid = hash.slice(1);
+ // alert(pid);
+ //var segment_str = window.location.pathname; // return segment1/segment2/segment3/segment4
+ //var segment_array = segment_str.split( '/' );
+ //var last_segment = segment_array.pop();
+ // alert(last_segment);
+ var url = httpUrl+"/pc/processcenterservice/getprocesses/";
+ $.ajax({
+  url: url,
+  type: 'POST',
+  dataType: "json",
+
+  success: function (data) {
+   processListObj = data;
+   alert(JSON.stringify(processListObj));
    for(var i = 0 ; i < processListObj.length ; i++){
     processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
     if(processListObj[i].processid == processid ){
 
-    var processPath = processListObj[i].path;
-    document.getElementById('view-header').innerHTML = processListObj[i].processname.toString();
+     document.getElementById('view-header').innerHTML = processListObj[i].processname.toString();
      document.getElementById('process-version').innerHTML = processListObj[i].processversion.toString();
-    // document.getElementById('process-owner').innerHTML = processListObj[i].processowner.toString();
+     // document.getElementById('process-owner').innerHTML = processListObj[i].processowner.toString();
 
-    //fetching the subprocesses, successors, predecessors
-     getProcessDetails(processPath);
+     $("#bpmnProcessName").attr("value", processListObj[i].processname.toString());
+     $("#bpmnProcessVersion").attr("value", processListObj[i].processversion.toString());
+     processPath = processListObj[i].path.toString();
+     $("#Version").attr("href", "process_version?Url="+processListObj[i].path.toString());
+     $("#Edit").attr("href", "process_update?Url="+processListObj[i].path.toString());
+
+
+     //fetching the subprocesses, successors, predecessors
      getAssociationsByProcessPath(processListObj[i].path);
-     
+
+     //fetching all the process details of process i and loading the process text, and bpmn
+     getProcessDetails(processListObj[i].path);
+
     }
    }
   },
   error: function () {
    alertify.error('Process List error');
   }
-});
+ });
 
-     //processtest = getProcessById('c401d9b7-c3a5-435d-aa57-8c3d925bb578');
+ //processtest = getProcessById('c401d9b7-c3a5-435d-aa57-8c3d925bb578');
 }
 
 function getAssociationsByProcessPath(resourcePath){
 
 
- var url = "/" + CONTEXT + "/get_associations";
+
+ var url = httpUrl+"/pc/processcenterservice/getassociations/";
 
  $.ajax({
-                url: httpUrl+url,
-                type: 'POST',
-                data: { 'processPath': '/_system/governance/'+resourcePath},
-                success: function (response) {
+  url: url,
+  type: 'POST',
+  dataType: "json",
+  contentType: "application/json",
+  //processData: false,
+  data: { 'processPath': '/_system/governance'+resourcePath},
+  success: function (data) {
 
-                  var processInfoObj = JSON.parse(response);
-                    // if($(e).attr('id') == 'processTextSaveBtn'){
-                    //     alertify.success("Successfully saved the process content.");
-                    // }
-                    // $("#viewTextButton").show();
-                    // $("#addTextButton").hide();
+   var processInfoObj = data;
+   // if($(e).attr('id') == 'processTextSaveBtn'){
+   //     alertify.success("Successfully saved the process content.");
+   // }
+   // $("#viewTextButton").show();
+   // $("#addTextButton").hide();
 
 
 //load sub process table
-for(var i=0 ; i<processInfoObj.subprocesses.length; i++){
+   for(var i=0 ; i<processInfoObj.subprocesses.length; i++){
 
-var name = processInfoObj.subprocesses[i].name;
+    var name = processInfoObj.subprocesses[i].name;
 //var version = processInfoObj.subprocesses[i].path.split(/[/ ]+/).pop();
-var version = processInfoObj.subprocesses[i].version;
+    var version = processInfoObj.subprocesses[i].version;
     $("#subprocesstablebody").append('<tr><td valign="top" style="width: 90%;"><span id="subprocess_Name" class="subprocess_Name">'+name+'-'+version+'</span></td>'+
-                                '<td style="width: 5%;"></td><td style="width: 5%;"><a class="js-remove-row" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></a> </td>'+
-                                '</tr>');
+    '<td style="width: 5%;"></td><td style="width: 5%;"><a class="js-remove-row" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></a> </td>'+
+    '</tr>');
 
-    }
+   }
 
 //load successor table        process9-9.0
-for(var i=0 ; i<processInfoObj.successors.length; i++){
+   for(var i=0 ; i<processInfoObj.successors.length; i++){
 
-var name = processInfoObj.successors[i].name;
-var version = processInfoObj.successors[i].path.split(/[/ ]+/).pop();
+    var name = processInfoObj.successors[i].name;
+    var version = processInfoObj.successors[i].path.split(/[/ ]+/).pop();
     $("#successortablebody").append('<tr><td valign="top" style="width: 90%;"><span id="successor_Name" class="successor_Name">'+name+'-'+version+'</span></td>'+
-                                '<td style="width: 5%;"></td>'+
-                                '<td style="width: 5%;"><a class="js-remove-row" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></a> </td>'+
-                            '</tr>');
+    '<td style="width: 5%;"></td>'+
+    '<td style="width: 5%;"><a class="js-remove-row" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></a> </td>'+
+    '</tr>');
 
-    }
+   }
 
 //load predecessor table
-    for(var i=0 ; i<processInfoObj.predecessors.length; i++){
-var name = processInfoObj.predecessors[i].name;
-var version = processInfoObj.predecessors[i].path.split(/[/ ]+/).pop();
+   for(var i=0 ; i<processInfoObj.predecessors.length; i++){
+    var name = processInfoObj.predecessors[i].name;
+    var version = processInfoObj.predecessors[i].path.split(/[/ ]+/).pop();
     $("#predecessortablebody").append('<tr><td valign="top" style="width: 90%;"><span id="predecessor_Name" class="predecessor_Name">'+name+'-'+version+'</span></td>'+
-                                '<td style="width: 5%;"></td>'+
-                                '<td style="width: 5%;"><a class="js-remove-row" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></a> </td>'+
-                            '</tr>');
-    }
-                },
-                error: function () {
-                    alertify.error('Process text error');
-                }
-            });
+    '<td style="width: 5%;"></td>'+
+    '<td style="width: 5%;"><a class="js-remove-row" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></a> </td>'+
+    '</tr>');
+   }
+  },
+  error: function () {
+   alertify.error('Process text error');
+  }
+ });
 }
 
 //set the selected file name to the text box value
 function setfilename(val)
-  {
-    var fileName = val.substr(val.lastIndexOf("\\")+1, val.length);
-   document.getElementById("filename").value = fileName;
-  }
+{
+ var fileName = val.substr(val.lastIndexOf("\\")+1, val.length);
+ document.getElementById("filename").value = fileName;
+}
 
 // $('#form-bar-create').submit(function(e){
 
@@ -1159,9 +1174,235 @@ function setfilename(val)
 
 function getProcessDetails(processPath){
 
-//call to api :  get_process_details
+ var url = httpUrl+"/pc/processcenterservice/processdetails/";
+ $.ajax({
+  url: url,
+  type: 'POST',
+  dataType: "json",
+  contentType: "application/json",
+  //processData: false,
+  data: {"processPath": processPath},
+  success: function (data) {
 
-//call these two methods inside the success function of the ajax request
-//loadProcessText(process text path);
-    // loadBPMN(bpmn path);
+   processTextPath = data[0].processtextpath.toString();
+   bpmnPath = data[0].bpmnpath.toString();
+
+   if(data[0].processtextpath.toString() != "NA"){
+//loadProcessText(data[0].processtextpath.toString());
+    $("#viewTextButton").show();
+    $("#addTextButton").hide();
+   }
+   else{
+    $("#viewTextButton").hide();
+    $("#addTextButton").show();
+   }
+
+   if(data[0].bpmnpath.toString() != "NA"){
+    $("#bpmnviewer").show();
+    $("#bpmnuploader").hide();
+   }
+   else{
+    $("#bpmnviewer").hide();
+    $("#bpmnuploader").show();
+   }
+//loadBPMN(data[0].bpmnpath);
+   //loadProcessText(data)
+//load bpmn
+
+
+  },
+  error: function () {
+   alertify.error('Process List error');
+  }
+ });
+
+}
+
+function viewText() {
+ loadProcessText();
+
+ $("#overviewDiv").hide();
+ $("#processTextContainer").show();
+ $("#processTextEditDiv").hide();
+ $("#bpmnViewDiv").hide();
+ $("#bpmnEditDiv").hide();
+}
+
+
+function loadProcessText() {
+ var url = httpUrl+"/pc/processcenterservice/getprocesstext/";
+
+ //var ppath = 'apis/get_process_text?process_text_path=NA';
+
+ $.ajax({
+  url: url,
+  type: 'POST',
+  dataType:'text',
+  contentType:'application/json',
+  data: { 'textPath': processTextPath},
+  //processData: false,
+  success: function (data) {
+   $("#processTextDiv").html(data);
+
+  },
+  error: function (xhr, status, error) {
+   alert(xhr.responseText);
+   alertify.error('Text editor error');
+  }
+ });
+}
+
+
+
+
+// function saveProcessText(e) {
+//  var textContent = tinyMCE.get('processContent').getContent();
+//  if (textContent == "") {
+//   if($(e).attr('id') == 'processTextSaveBtn'){
+//    alertify.error('Process content is empty.');
+//   }
+//  } else {
+//   // save the process
+
+//   $.ajax({
+//    url: 'https://localhost:9443/publisher/assets/process/apis/save_process_text',
+//    type: 'POST',
+//    data: { 'processName': $("#textProcessName").val(), 'processVersion' : $("#textProcessVersion").val(), 'processText' : textContent},
+//    success: function (response) {
+//     if($(e).attr('id') == 'processTextSaveBtn'){
+//      alertify.success("Successfully saved the process content.");
+//     }
+//     $("#viewTextButton").show();
+//     $("#addTextButton").hide();
+//    },
+//    error: function () {
+//     alertify.error('Process text error');
+//    }
+//   });
+//  }
+// }
+
+function showTextEditor() {
+ $("#overviewDiv").hide();
+ $("#processTextContainer").hide();
+ $("#processTextEditDiv").show();
+ $("#bpmnViewDiv").hide();
+ $("#bpmnEditDiv").hide();
+
+ tinymce.init({
+  selector: "#processContent"
+ });
+}
+
+
+
+function validateForm(oForm) {
+
+
+ var _validFileExtensions = [".xml", ".bpmn"];
+
+ var arrInputs = oForm.getElementsByTagName("input");
+ for (var i = 0; i < arrInputs.length; i++) {
+  var oInput = arrInputs[i];
+  if (oInput.type == "file") {
+   var sFileName = oInput.value;
+   if (sFileName.length > 0) {
+    var blnValid = false;
+    for (var j = 0; j < _validFileExtensions.length; j++) {
+     var sCurExtension = _validFileExtensions[j];
+     if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+      blnValid = true;
+      break;
+     }
+    }
+
+    if (!blnValid) {
+     alertify.error("Sorry, " + sFileName + " is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+     return false;
+    }
+   }
+   else{
+    alertify.error("no files added");
+    return false;
+   }
+  }
+ }
+
+ return true;
+}
+
+function updateVersion() {
+ var url = httpUrl+"/pc/processcenterservice/updateversion/";
+
+ //var ppath = 'apis/get_process_text?process_text_path=NA';
+ var newVersion = $('#new-version').val();
+ if(newVersion){
+ }
+
+ var processId = $('#asset-id').val();
+ var processPath =$('#asset-path').val();
+     $('#btn-create-version').addClass('disabled');
+ $('#new-version-loading').removeClass('hide');
+  var body = { "processPath": processPath, "updatedVersion" : newVersion};
+
+ $.ajax({
+  url: url,
+  type: 'POST',
+  contentType:'application/json',
+  dataType: 'text',
+  data: JSON.stringify(body),
+  success : function(data) {
+    var redirect = "process-details?q="+data;
+   $('.alert-success').html('Asset version created successfully! <a href='+redirect+'> View </a>');
+   $('.alert-success').removeClass('hide');
+   $('#btn-create-version').removeClass('disabled');
+   $('#new-version-loading').addClass('hide');
+  },
+  error : function(xhr, status, error) {
+   $('.alert-success').text('Error while creating the version!');
+   $('.alert-success').removeClass('hide');
+   $('#btn-create-version').removeClass('disabled');
+   $('#new-version-loading').addClass('hide');
+  }
+ });
+ //$("#newVersionModal").modal('hide');
+
+}
+
+function renderProcessDetails(processPath){
+
+ var url = httpUrl+"/pc/processcenterservice/processdetails/";
+ $.ajax({
+  url: url,
+  type: 'POST',
+  dataType: "json",
+  contentType: "application/json",
+  //processData: false,
+  data: {"processPath": processPath},
+  success: function (data) {
+
+    alert(JSON.stringify(data));
+    alert(data[0].processversion.toString());
+    $(".asset-name").html(data[0].proceessname);
+    $("#overview_owner").attr("value", data[0].processowner);
+    $("#overview_name").attr("value", data[0].processname);
+    $("#overview_version").attr("value", data[0].processversion);
+    $("#overview_description").attr("value","" );
+    $("#properties_bpmnpath").attr("value", data[0].bpmnpath);
+    $("#properties_bpmnid").attr("value", data[0].bpmnid);
+    $("#properties_processtextpath").attr("value", data[0].processtextpath);
+    $("#properties_server").attr("value", data[0].server );
+
+
+
+    
+
+
+
+  },
+  error: function () {
+   alertify.error('Process List error');
+  }
+ });
+
 }

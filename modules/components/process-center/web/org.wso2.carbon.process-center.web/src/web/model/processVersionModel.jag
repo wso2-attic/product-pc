@@ -25,12 +25,21 @@ window.onload = function() {
 
    //alert("calling api from model");
 
+
   var queryParameter = window.location.search;
-  var pid = queryParameter.slice(3);
+  alert(queryParameter);
+  var path = queryParameter.slice(5);
+  processPath = path;
+
+    $("#Edit").attr("value", "process_update?Url="+path);
+  $("#Overview").attr("value", "process_details?url="+path);
+   $("#Lifecycle").attr("value", "process_lifecycle?url="+path);
+
+  $("#asset-path").attr("value", path);
 
 
-   getProcessList();
-   loadProcessById(pid);
+  // getProcessList();
+
    //loadProcessText();
 
 

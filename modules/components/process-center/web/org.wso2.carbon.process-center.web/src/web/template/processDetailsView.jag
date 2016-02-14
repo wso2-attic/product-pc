@@ -5,8 +5,8 @@
 <header>
     <div class="row wr-global-header">
         <div class="col-xs-8 col-sm-8 app-logo">
-            <a href='/publisher/assets/process/list'>
-                <img src="/publisher/themes/default/img/logo.png" />
+            <a href='designer'>
+                <img src="images/logo.png"/>
                 <h2 class="app-title">Process Center - Designer</h2>
             </a>
         </div>
@@ -26,7 +26,7 @@
         			<div class="dropdown-menu">
         				<div class="cu-arrow"></div>
         				<div class="dropdown-menu-content">
-        					<a class="filter-item" onclick="window.location.href='/publisher/logout'" href="#">Sign out</a>
+        					<a class="filter-item" onclick="window.location.href='logout'" href="#">Sign out</a>
         				</div>
         			</div>
         		</div>
@@ -57,7 +57,7 @@
                     <ul class="tiles clearfix">
 
                             <li>
-                                <a target="_self" href='/publisher/assets/process/list'>
+                                <a target="_self" href='designer'>
                                     <i class="icon fw fw-resource"></i>
                                     <span class="name">Process</span>
                                 </a>
@@ -66,7 +66,7 @@
                     </ul>
                 </div>
             </div>
-            <a class="pull-left switcher-link" href='/publisher/assets/process/list'>Processes</a>
+            <a class="pull-left switcher-link" href='designer'>Processes</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
 
@@ -74,31 +74,31 @@
                 <ul class="nav navbar-nav">
 
                     <li>
-                        <a id="Edit" href='/publisher/assets/process/update/e07607f9-5166-4378-9e0b-7697b2e3c022' class="cu-btn btn-edit">
+                        <a id="Edit" href='process_update' class="cu-btn btn-edit">
                             Edit
                         </a>
                     </li>
 
                     <li>
-                        <a id="Version" href='/publisher/assets/process/copy/e07607f9-5166-4378-9e0b-7697b2e3c022' class="cu-btn btn-copy">
+                        <a id="Version" href='process_version' class="cu-btn btn-copy">
                             Version
                         </a>
                     </li>
 
                     <li>
-                        <a id="Overview" href='/publisher/assets/process/details/e07607f9-5166-4378-9e0b-7697b2e3c022' class="cu-btn btn-overview">
+                        <a id="Overview" href='processdetails' class="cu-btn btn-overview">
                             Overview
                         </a>
                     </li>
 
                     <li>
-                        <a id="LifeCycle" href='/publisher/assets/process/lifecycle/e07607f9-5166-4378-9e0b-7697b2e3c022' class="cu-btn btn-lifecycle">
+                        <a id="LifeCycle" href='process_lifecycle' class="cu-btn btn-lifecycle">
                             Life Cycle
                         </a>
                     </li>
 
                     <li>
-                        <a id="Delete" href='/publisher/assets/process/delete/e07607f9-5166-4378-9e0b-7697b2e3c022' class="cu-btn btn-delete">
+                        <a id="Delete" href='process_delete' class="cu-btn btn-delete">
                             Delete
                         </a>
                     </li>
@@ -129,7 +129,7 @@
 </div>
     </div>
     <div class="container-fluid wr-main-content">
-<script src='https://javascriptbase64.googlecode.com/files/base64.js' type='text/javascript'></script>
+<!--script src='https://javascriptbase64.googlecode.com/files/base64.js' type='text/javascript'></script-->
 
 <h2 id="view-header">p11</h2>
 <br/>
@@ -151,13 +151,14 @@
             <div class="control-group" style="display: inline-block">
 
                     <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View/Edit Process Text</button></div>
-                    <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditorWithoutSave()">Describe process in text</button></div>
+                    <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button></div>
 
             </div>
 
             <div class="control-group" style="display: inline-block">
 
-                    <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
+                    <button id="bpmnuploader" class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
+                    <button id="bpmnviewer" class="btn btn-primary" onclick="showBPMN()" style="display: none">Show BPMN</button>
 
             </div>
             <br /><br />
@@ -274,12 +275,12 @@
 
 <div id="bpmnEditDiv" style="display:none">
     <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button>
-<form method="post" action="upload_bpmn" enctype="multipart/form-data" class="form-horizontal" id="form-bar-create">
+<form method="post" action="/pc/processcenterservice/uploadbpmn/"  enctype="multipart/form-data" class="form-horizontal" id="form-bar-create">
         <br>
         <div style="float:left;width:15cm">
             <input type="file" onchange="setfilename(this.value);" class="filestyle" data-buttonname="btn-primary" data-placeholder="Enter archive" name="bpmn" id="bpmnFile" data-buttontext="BPMN file" accept=".xml,.bpmn" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
             <div class="bootstrap-filestyle input-group">
-            <input type="text" class="form-control " placeholder="Enter archive" disabled="" id="filename"> 
+            <input type="text" class="form-control " placeholder="Enter archive" disabled="" id="filename">
             <span class="group-span-filestyle input-group-btn" tabindex="0"><label for="bpmnFile" class="btn btn-primary ">
             <span class="icon-span-filestyle glyphicon glyphicon-folder-open"></span> <span class="buttonText">BPMN file</span>
             </label>

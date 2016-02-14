@@ -17,7 +17,11 @@ package org.wso2.carbon.processCenter.core.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.processCenter.core.ProcessStore;
+import org.wso2.carbon.processCenter.core.ProcessStoreService;
+import org.wso2.carbon.processCenter.core.ProcessStoreServiceImpl;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 /**
@@ -32,7 +36,11 @@ public class ProcessCenterServiceComponent {
     protected void activate(ComponentContext ctxt) {
         log.info("Initializing the PC core component...");
         try {
+            BundleContext bundleContext = ctxt.getBundleContext();
             ProcessCenterServerHolder holder = ProcessCenterServerHolder.getInstance();
+            ProcessStoreServiceImpl processStoreService = new ProcessStoreServiceImpl();
+            processStoreService.setProcessStore(ProcessStore.getInstance());
+            bundleContext.registerService(ProcessStoreServiceImpl.class.getName(), processStoreService, null);
 
         }catch (Throwable e) {
             log.error("Failed to initialize the BPMN core component.", e);

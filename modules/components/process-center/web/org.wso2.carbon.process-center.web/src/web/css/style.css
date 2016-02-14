@@ -1003,6 +1003,11 @@ rect:hover {
     fill: orange;
 }
 
+.container-fluid {
+    padding-right: 0px !important; 
+    padding-left: 0px !important; 
+}
+
 .d3-tip {
     background: #eee;
     border-radius: 5px;

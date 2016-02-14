@@ -16,7 +16,7 @@
 
     <artifactId>org.wso2.carbon.processCenter.core</artifactId>
     <name>WSO2 Process Center - Core</name>
-    <description>bpmn rest api</description>
+    <description>process center core</description>
     <packaging>bundle</packaging>
     <url>http://wso2.org</url>
 
@@ -64,6 +64,8 @@
                             org.wso2.carbon.processCenter.core.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
+                            !javax.xml.parsers,
+
                             *;resolution:=optional
 
                             <!--org.xml.sax,-->
@@ -76,7 +78,7 @@
                             <!--org.osgi.service.component; version=${osgi.service.component.version},-->
                             <!--org.json,-->
                             <!--org.apache.commons.logging,-->
-                            <!--javax.xml.parsers,-->
+                            !javax.xml.parsers
                             <!--org.jaggeryjs.hostobjects.stream,-->
                             <!--javax.xml.transform.stream,-->
                             <!--javax.xml.transform.dom,-->
@@ -125,6 +127,19 @@
         <dependency>
             <groupId>org.wso2.carbon.governance</groupId>
             <artifactId>org.wso2.carbon.governance.api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-bpmn-converter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-image-generator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+            <artifactId>axiom</artifactId>
+            <version>1.2.11.wso2v9</version>
         </dependency>
     </dependencies>
 
