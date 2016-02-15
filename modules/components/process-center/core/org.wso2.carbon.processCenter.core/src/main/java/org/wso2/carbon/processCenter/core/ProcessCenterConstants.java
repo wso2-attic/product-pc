@@ -31,6 +31,10 @@ public class ProcessCenterConstants {
     public static final String VALUE = "value";
     public static final String OVERVIEW = "overview_";
     public static final String PROPERTY = "properties_";
+    public static final String BOOKMARK_NODE = "bookmarked";
+
+    public static final String TRUE = "true";
+    public static final String FALSE = "false";
     public static final String GREG_PATH = "/_system/governance/";
     public static final String PROCESS_ASSET_ROOT = "processes/";
 }

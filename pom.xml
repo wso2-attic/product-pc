@@ -43,7 +43,7 @@
         <module>modules/components/analytics/web/org.wso2.carbon.pc.analytics.web</module>
         <module>modules/components/process-center/core/org.wso2.carbon.processCenter.core</module>
         <module>modules/components/process-center/web/org.wso2.carbon.process-center.web</module>
-        <module>modules/components/process-center/web/org.wso2.carbon.process-center.api</module>
+        <module>modules/components/process-center/web/org.wso2.carbon.processCenter.api</module>
         <module>modules/components/analytics/udf/org.wso2.carbon.pc.analytics.udf</module>
         <module>modules/components/analytics/capp/org.wso2.carbon.pc.analytics.capp</module>
         <module>modules/features/core/org.wso2.carbon.pc.core.feature</module>
@@ -327,6 +327,34 @@
                 <artifactId>org.wso2.carbon.core</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.springframework.ws.wso2</groupId>
+                <artifactId>spring.framework</artifactId>
+                <version>${orbit.version.spring}</version>
+            </dependency>
+
+            <!--CXF runtime environment-->
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons.lang.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache-core</artifactId>
+                <version>${ehcache.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpasyncclient</artifactId>
+                <version>${httpasyncclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
             <!--<dependency>-->
             <!--<groupId>org.wso2.carbon</groupId>-->
             <!--<artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>-->
@@ -417,6 +445,22 @@
                 <groupId>com.h2database.wso2</groupId>
                 <artifactId>h2-database-engine</artifactId>
                 <version>${h2.wso2.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.eclipse.osgi</groupId>
+                        <artifactId>org.eclipse.osgi</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.osgi</groupId>
+                <artifactId>org.eclipse.osgi</artifactId>
+                <version>${org.eclipse.osgi.version}</version>
             </dependency>
 
             <!--Dependency for Integration Tests-->
@@ -545,6 +589,11 @@
                 <artifactId>org.wso2.carbon.registry.resource.stub</artifactId>
                 <version>${carbon.registry.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.utils</artifactId>
+                <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
@@ -721,7 +770,7 @@
         <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <carbon.kernel.version>4.4.1</carbon.kernel.version>
+        <carbon.kernel.version>4.4.3</carbon.kernel.version>
         <carbon.social.version>2.3.8</carbon.social.version>
         <carbon.store.version>2.3.8</carbon.store.version>
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
@@ -730,6 +779,8 @@
         <test.framework.version>4.4.2</test.framework.version>
         <automation.utils.version>4.4.2</automation.utils.version>
         <ciphertool.version>1.0.0-wso2v3</ciphertool.version>
+
+        <org.eclipse.osgi.version>3.7.1</org.eclipse.osgi.version>
 
         <!--repo versions-->
         <carbon.commons.version>4.4.6</carbon.commons.version>
@@ -787,6 +838,11 @@
         <sso.hostobjects.version>1.0.1</sso.hostobjects.version>
         <httpcomponents-httpclient.wso2.version>4.1.1-wso2v1</httpcomponents-httpclient.wso2.version>
         <httpcomponents-httpcore.wso2.version>4.1.0-wso2v1</httpcomponents-httpcore.wso2.version>
+
+        <commons.lang.version>2.6</commons.lang.version>
+        <ehcache.core.version>2.5.1</ehcache.core.version>
+        <httpasyncclient.version>4.0-beta3</httpasyncclient.version>
+        <httpclient.version>4.2.5</httpclient.version>
 
         <javax.mail.version>1.4.4</javax.mail.version>
         <log4j.version>1.2.17</log4j.version>

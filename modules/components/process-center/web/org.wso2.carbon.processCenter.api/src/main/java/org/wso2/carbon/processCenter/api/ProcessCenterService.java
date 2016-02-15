@@ -16,27 +16,22 @@
 package org.wso2.carbon.processCenter.api;
 
 
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
-import org.apache.openjpa.persistence.jest.JSONObject;
-import org.json.JSONArray;
 import org.wso2.carbon.processCenter.core.ProcessStore;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.*;
-import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.List;
-import org.apache.cxf.jaxrs.ext.multipart.Attachment;
-import  javax.activation.DataHandler;
 
 //@Path("/processcenter/")
 public class ProcessCenterService {
@@ -51,20 +46,20 @@ public class ProcessCenterService {
     @POST
     @Path("/getprocesses/")
     @Produces({"application/xml", "application/json"})
-    public javax.ws.rs.core.Response getProcesses() {
+    public Response getProcesses() {
 
 
         String result = org.wso2.carbon.processCenter.core.ProcessStore.getInstance().getProcesses();
         if (result != null) {
 
-            return javax.ws.rs.core.Response.ok(result).build();
+            return Response.ok(result).build();
             //   return javax.ws.rs.core.Response.status(200)
             // .header(Endpoint.SESSION_TOKEN, session.getToken())
             //   .entity(new GenericEntity<List<org.json.JSONObject>>(result) {}).build();
             // javax.ws.rs.core.Response.getWriter
 
         } else {
-            return javax.ws.rs.core.Response.status(javax.ws.rs.core.Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
 
         }
 
@@ -76,7 +71,7 @@ public class ProcessCenterService {
     @Path("/getassociations/")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public javax.ws.rs.core.Response getSucessorPredecessorSubprocessList(String processPath) {
+    public Response getSucessorPredecessorSubprocessList(String processPath) {
 
         log.info(processPath + "################################");
         String path = (processPath.split("="))[1];
@@ -86,12 +81,12 @@ public class ProcessCenterService {
         String result = org.wso2.carbon.processCenter.core.ProcessStore.getInstance().getSucessorPredecessorSubprocessList(actualPath);
         if (result != "") {
 
-            return javax.ws.rs.core.Response.ok(result).build();
+            return Response.ok(result).build();
 
         } else {
 
             //no associations
-            return javax.ws.rs.core.Response.ok().build();
+            return Response.ok().build();
 
         }
 
@@ -102,15 +97,15 @@ public class ProcessCenterService {
     @Path("/processdetails/")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public javax.ws.rs.core.Response getProcessDetails(String processPath) {
+    public Response getProcessDetails(String processPath) {
 
         String result = org.wso2.carbon.processCenter.core.ProcessStore.getInstance().getProcessDetails((processPath.split("=")[1]).replaceAll("%2F", "/"));
         if (result != null) {
 
-            return javax.ws.rs.core.Response.ok(result).build();
+            return Response.ok(result).build();
 
         } else {
-            return javax.ws.rs.core.Response.status(javax.ws.rs.core.Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
 
         }
     }
@@ -120,7 +115,7 @@ public class ProcessCenterService {
     @Path("/createprocess/")
     @Produces({MediaType.APPLICATION_XML, "text/plain"})
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public javax.ws.rs.core.Response createProcess(String processInfo) {
+    public Response createProcess(String processInfo) {
 
         //processInfo=%7B%22processName%22%3A%22sda%22%2C%22processVersion%22%3A%22asdda%22%2C%22processOwner%22%3A%22admin%22%2C%22processTags%22%3A%22%22%2C%22subprocess%22%3A%5B%5D%2C%22successor%22%3A%5B%5D%2C%22predecessor%22%3A%5B%5D%7D
         String p = (processInfo.split("="))[1];
@@ -131,10 +126,10 @@ public class ProcessCenterService {
         log.info(result + "$$$$$$$$$$$$$$$$$$$$$$$$$$");
         if (result != null) {
 
-            return javax.ws.rs.core.Response.ok(result).build();
+            return Response.ok(result).build();
 
         } else {
-            return javax.ws.rs.core.Response.status(javax.ws.rs.core.Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
 
         }
     }
@@ -143,14 +138,14 @@ public class ProcessCenterService {
     @Path("/saveprocesstext/")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public javax.ws.rs.core.Response saveProcessText(Process process) {
-        String result = org.wso2.carbon.processCenter.core.ProcessStore.getInstance().saveProcessText(process.getProcessName(), process.getProcessVersion(), process.getProcessText());
-        if (result == "OK") {
+    public Response saveProcessText(Process process) {
+        boolean result = org.wso2.carbon.processCenter.core.ProcessStore.getInstance().saveProcessText(process.getProcessName(), process.getProcessVersion(), process.getProcessText());
+        if (result) {
 
-            return javax.ws.rs.core.Response.ok().build();
+            return Response.ok().build();
 
         } else {
-            return javax.ws.rs.core.Response.status(javax.ws.rs.core.Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
 
         }
 
@@ -161,12 +156,12 @@ public class ProcessCenterService {
     @Path("/getprocesstext/")
     @Produces({MediaType.APPLICATION_XML, "text/plain"})
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public javax.ws.rs.core.Response getProcessText(String textPath) {
+    public Response getProcessText(String textPath) {
 
         String result = org.wso2.carbon.processCenter.core.ProcessStore.getInstance().getProcessText((textPath.split("=")[1]).replaceAll("%2F", "/"));
         if (result != "FAILED TO GET TEXT CONTENT") {
 
-            return javax.ws.rs.core.Response.ok(result).build();
+            return Response.ok(result).build();
 
         } else {
             return Response.serverError().build();
@@ -180,15 +175,15 @@ public class ProcessCenterService {
     @Path("/getbpmn/")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public javax.ws.rs.core.Response getBPMN(String bpmnPath) {
+    public Response getBPMN(String bpmnPath) {
 
         String result = org.wso2.carbon.processCenter.core.ProcessStore.getInstance().getBPMN((bpmnPath.split("=")[1]).replaceAll("%2F", "/"));
         if (result != null) {
 
-            return javax.ws.rs.core.Response.ok(result).build();
+            return Response.ok(result).build();
 
         } else {
-            return javax.ws.rs.core.Response.status(javax.ws.rs.core.Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
 
         }
 //
@@ -281,7 +276,7 @@ public class ProcessCenterService {
             }
 
         } else {
-            return Response.status(javax.ws.rs.core.Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
 
         }
     }

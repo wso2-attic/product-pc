@@ -3,9 +3,6 @@ package org.wso2.carbon.processCenter.api;
 /**
  * Created by sathya on 2/9/16.
  */
-import javax.ws.rs.*;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 public class Process {
 
