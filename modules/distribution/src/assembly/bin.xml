@@ -343,6 +343,13 @@
             </outputDirectory>
         </fileSet>
 
+
+        <!--<fileSet>-->
+            <!--<directory>../components/process-center/web/org.wso2.carbon.process-center.core/src/main/webapp</directory>-->
+            <!--<outputDirectory>-->
+                <!--${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/bpmn-process-center-rest-->
+            <!--</outputDirectory>-->
+        <!--</fileSet>-->
         <fileSet>
             <directory>../components/process-center/web/org.wso2.carbon.processCenter.api/target/</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>

@@ -16,7 +16,7 @@
 
     <artifactId>org.wso2.carbon.processCenter.core</artifactId>
     <name>WSO2 Process Center - Core</name>
-    <description>bpmn rest api</description>
+    <description>process center core</description>
     <packaging>bundle</packaging>
     <url>http://wso2.org</url>
 
@@ -37,10 +37,10 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
         </dependency>
-<!--        <dependency>
+        <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.scr</artifactId>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.registry.core</artifactId>
@@ -120,6 +120,25 @@
                             org.wso2.carbon.processCenter.core.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
+                            <!--!javax.xml.parsers,-->
+
+                            <!--*;resolution:=optional-->
+
+                            <!--org.xml.sax,-->
+                            <!--org.wso2.carbon.registry.core.session; version=${carbon.registry.core.version},-->
+                            <!--org.wso2.carbon.registry.core.service; version=${carbon.registry.core.version},-->
+                            <!--org.wso2.carbon.registry.core.exceptions; version=${carbon.registry.core.version},-->
+                            <!--org.wso2.carbon.registry.core; version=${carbon.registry.core.version},-->
+                            <!--org.wso2.carbon.governance.api.util,-->
+                            <!--org.w3c.dom,-->
+                            <!--org.osgi.service.component; version=${osgi.service.component.version},-->
+                            <!--org.json,-->
+                            <!--org.apache.commons.logging,-->
+                            <!--!javax.xml.parsers-->
+                            <!--org.jaggeryjs.hostobjects.stream,-->
+                            <!--javax.xml.transform.stream,-->
+                            <!--javax.xml.transform.dom,-->
+                            <!--javax.xml.transform-->
                             <!--*;resolution:=optional-->
                             org.xml.sax,
                             org.wso2.carbon.registry.core.session; version=${carbon.registry.core.version},
@@ -143,5 +162,4 @@
 
         </plugins>
     </build>
-
 </project>

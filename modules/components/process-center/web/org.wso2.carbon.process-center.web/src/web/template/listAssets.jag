@@ -89,6 +89,8 @@
             </div>
             <a class="pull-left switcher-link" href='designer'>Processes</a>
             <a id="Addprocess" href='add' class="cu-btn btn-add-new">Add Process</a>
+            <a id="stats" href='statistics' class="cu-btn btn-stats">Statistics</a>
+
         </div>
     </div>
 </nav>

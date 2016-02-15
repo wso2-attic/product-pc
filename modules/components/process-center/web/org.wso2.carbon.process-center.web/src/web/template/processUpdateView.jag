@@ -1,0 +1,344 @@
+
+
+<div class="wrapper">
+    <div class="container-fluid">
+        <!-- header -->
+<header>
+    <div class="row wr-global-header">
+        <div class="col-xs-8 col-sm-8 app-logo">
+            <a href='designer'>
+                <img src="images/logo.png" />
+                <h2 class="app-title">Process Center - Designer</h2>
+            </a>
+        </div>
+        <div class="col-xs-4 col-sm-4 wr-auth-container">
+        		<div class="wr-auth pull-right">
+                    <a href="/process-center">
+                        <div class="auth-img">
+                            <h2 class="app-title" style="padding-top:8px"><i style="margin-right:10px;" class="fa fa-bars fa-1g"></i>Process Center</h2>
+                        </div>
+                    </a>
+
+        			<a href="#" data-toggle="dropdown" class="">
+        				<div class="auth-img">
+        					<span>admin</span>&nbsp;&nbsp;<i class="fw fw-user fw-lg"></i>
+        				</div>
+        			</a>
+        			<div class="dropdown-menu">
+        				<div class="cu-arrow"></div>
+        				<div class="dropdown-menu-content">
+        					<a class="filter-item" onclick="window.location.href='logout'" href="#">Sign out</a>
+        				</div>
+        			</div>
+        		</div>
+        </div>
+    </div>
+</header>
+<!-- /header -->
+
+    </div>
+    <div class="ribbon-container">
+        <!-- secondary header - app bar -->
+
+<nav class="navbar navbar-themed">
+    <div>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="wr-asset-type-switcher">
+            <a id="popoverExampleTwo" data-placement="bottom" class="ctrl-asset-type-switcher pull-left" href="javascript:void(0)" data-click-event="popover">
+                <span class="btn-asset"></span>
+            </a>
+            <div class="popover bottom right fade clearfix">
+                <div class="arrow left"></div>
+                <div class="popover-content">
+                    <ul class="tiles clearfix">
+                        
+                            <li>
+                                <a target="_self" href='designer'>
+                                    <i class="icon fw fw-resource"></i>
+                                    <span class="name">Process</span>
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+            <a class="pull-left switcher-link" href='designer'>Processes</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            
+            <div class="wr-action-btn-bar">
+                <ul class="nav navbar-nav">
+                    
+                    <li>
+                        <a id="Edit" href='process_update' class="cu-btn btn-edit">
+                            Edit
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a id="Version" href='process_version' class="cu-btn btn-copy">
+                            Version
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a id="Overview" href='#' class="cu-btn btn-overview">
+                            Overview
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a id="LifeCycle" href='process_lifecycle' class="cu-btn btn-lifecycle">
+                            Life Cycle
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a id="Delete" href='process_delete' class="cu-btn btn-delete">
+                            Delete
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div> 
+
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div id="modal-redirect" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-body">
+        <div class="modal-loading"></div>
+        <p>
+            Redirecting you to the new Asset Version...
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary">
+            Redirect now
+        </button>
+    </div>
+</div>
+    </div>
+    <div class="container-fluid wr-main-content">
+        
+<div class="well asset-well">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-2">
+                
+	<img alt='thumbnail' src='images/default-thumbnail.png' style="top:0px; left:0px; height:100%; width:100%;" class="img-responsive" >
+
+
+            </div>
+            <div class="col-lg-10">
+                <h1 class="asset-name" style="padding-left: 1cm">we</h1>
+                <i class="fa fa-circle" style="padding-left: 1cm"></i> Initial
+                <div class="well-description padding-bottom-lg" style="padding-left: 1cm">Invalid Date</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+ <form class="form-horizontal" id='form-asset-update' method='post' action='/publisher/apis/assets/fd48caff-f156-4efc-8eaf-d5c297b41828?type=process' data-redirect-url='/publisher/assets/process/details/' >
+    <div class="control-group">
+             
+                    <h2 class="field-title">
+    <a data-toggle="collapse" href="#collapseoverview" aria-expanded="false" class="collapsing-h2" >
+        <i class="cu-btn-exp-col btn-collapsed">Overview</i>
+    </a>
+</h2>
+
+<div class="collapse in responsive-form-container" id="collapseoverview">
+
+    <div class="form-group">
+        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Owner<sup class="required-field">*</sup></label><div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12"><input type="text" class="form-control" value="admin""  name="overview_owner"  id="overview_owner"  class="input-large" required ></div>
+    </div>
+
+    <div class="form-group">
+        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Name<sup class="required-field">*</sup></label><div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12"><input type="text" class="form-control" value="we""  name="overview_name"  id="overview_name"  class="input-large" readonly required ></div>
+    </div>
+
+    <div class="form-group">
+        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Version<sup class="required-field">*</sup></label><div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12"><input type="text" class="form-control" value="12""  name="overview_version"  id="overview_version"  class="input-large" readonly required ></div>
+    </div>
+
+    <div class="form-group">
+        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Description</label><div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12"><textarea row="3" style="width:100%; height:70px" name="overview_description"  id="overview_description"  class="input-large"></textarea></div>
+    </div>
+
+</div>
+            
+                    <h2 class="field-title">
+    <a data-toggle="collapse" href="#collapseproperties" aria-expanded="false" class="collapsing-h2" >
+        <i class="cu-btn-exp-col btn-collapsed">Properties</i>
+    </a>
+</h2>
+
+<div class="collapse in responsive-form-container" id="collapseproperties">
+
+    <div class="form-group">
+        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">bpmnpath</label><div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12"><input type="text" class="form-control" value="bpmn/we/12""  name="properties_bpmnpath"  id="properties_bpmnpath"  class="input-large" ></div>
+    </div>
+
+    <div class="form-group">
+        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">bpmnid</label><div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12"><input type="text" class="form-control" value="5991b639-8276-40cb-875a-7a56c94f826a""  name="properties_bpmnid"  id="properties_bpmnid"  class="input-large" ></div>
+    </div>
+
+    <div class="form-group">
+        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">processtextpath</label><div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12"><input type="text" class="form-control" value="processText/we/12""  name="properties_processtextpath"  id="properties_processtextpath"  class="input-large" ></div>
+    </div>
+
+    <div class="form-group">
+        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">server</label><div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12"><input type="text" class="form-control" value="""  name="properties_server"  id="properties_server"  class="input-large" ></div>
+    </div>
+
+</div>
+            
+                    <h2 class="field-title">
+    <a class="collapsing-h2" aria-expanded="true" href="#collapsesubprocess" data-toggle="collapse">
+        <i class="cu-btn-exp-col btn-collapsed">Subprocess</i>
+    </a>
+</h2>
+
+    <div class="collapse in responsive-form-container" id="collapsesubprocess">
+        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+            &nbsp;
+        </div>
+        <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+            <div class="add-unbounded-row"><a class="js-add-unbounded-row" data-name="subprocess"><i class="fa fa-plus-circle"></i> Add Subprocess</a></div>
+            <table class='tablex cu-data-table js-unbounded-table' id="table_subprocess">
+                <thead style="display: none;">
+                
+                <th></th>
+                </thead>
+                <tbody id="subprocesstablebody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <table style="display: none;" class="tmp_refernceTableForOptionText">
+        <tr id="table_reference_subprocess"><td valign="top"><input type="text" class="form-control" value="""  name="subprocess_Name"  id="subprocess_Name"  class="input-large" required ></td><td valign="top"><input type="text" class="form-control" value="""  name="subprocess_Path"  id="subprocess_Path"  class="input-large" required ></td><td valign="top"><input type="text" class="form-control" value="""  name="subprocess_Id"  id="subprocess_Id"  class="input-large" required ></td><td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td></tr>
+    </table>
+
+            
+                    <h2 class="field-title">
+    <a class="collapsing-h2" aria-expanded="true" href="#collapsesuccessor" data-toggle="collapse">
+        <i class="cu-btn-exp-col btn-collapsed">Successor</i>
+    </a>
+</h2>
+
+    <div class="collapse in responsive-form-container" id="collapsesuccessor">
+        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+            &nbsp;
+        </div>
+        <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+            <div class="add-unbounded-row"><a class="js-add-unbounded-row" data-name="successor"><i class="fa fa-plus-circle"></i> Add Successor</a></div>
+            <table class='tablex cu-data-table js-unbounded-table' id="table_successor">
+                <thead style="display: none;">
+                
+                <th></th>
+                </thead>
+                <tbody id="successortablebody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <table style="display: none;" class="tmp_refernceTableForOptionText">
+        <tr id="table_reference_successor"><td valign="top"><input type="text" class="form-control" value="""  name="successor_Name"  id="successor_Name"  class="input-large" required ></td><td valign="top"><input type="text" class="form-control" value="""  name="successor_Path"  id="successor_Path"  class="input-large" required ></td><td valign="top"><input type="text" class="form-control" value="""  name="successor_Id"  id="successor_Id"  class="input-large" required ></td><td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td></tr>
+    </table>
+
+            
+                    <h2 class="field-title">
+    <a class="collapsing-h2" aria-expanded="true" href="#collapsepredecessor" data-toggle="collapse">
+        <i class="cu-btn-exp-col btn-collapsed">Predecessor</i>
+    </a>
+</h2>
+
+    <div class="collapse in responsive-form-container" id="collapsepredecessor">
+        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+            &nbsp;
+        </div>
+        <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+            <div class="add-unbounded-row"><a class="js-add-unbounded-row" data-name="predecessor"><i class="fa fa-plus-circle"></i> Add Predecessor</a></div>
+            <table class='tablex cu-data-table js-unbounded-table' id="table_predecessor">
+                <thead style="display: none;">
+                
+                <th></th>
+                </thead>
+                <tbody id="predecessortablebody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <table style="display: none;" class="tmp_refernceTableForOptionText">
+        <tr id="table_reference_predecessor"><td valign="top"><input type="text" class="form-control" value="""  name="predecessor_Name"  id="predecessor_Name"  class="input-large" required ></td><td valign="top"><input type="text" class="form-control" value="""  name="predecessor_Path"  id="predecessor_Path"  class="input-large" required ></td><td valign="top"><input type="text" class="form-control" value="""  name="predecessor_Id"  id="predecessor_Id"  class="input-large" required ></td><td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td></tr>
+    </table>
+
+            
+                    <h2 class="field-title">
+    <a data-toggle="collapse" href="#collapseimages" aria-expanded="false" class="collapsing-h2" >
+        <i class="cu-btn-exp-col btn-collapsed">Images</i>
+    </a>
+</h2>
+
+<div class="collapse in responsive-form-container" id="collapseimages">
+
+    <div class="form-group">
+        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Thumbnail<sup class="required-field">*</sup></label><div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12"><input type="file" class="form-control" value=""  name="images_thumbnail"  id="images_thumbnail"  class="input-large" ></div>
+    </div>
+
+    <div class="form-group">
+        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Banner<sup class="required-field">*</sup></label><div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12"><input type="file" class="form-control" value=""  name="images_banner"  id="images_banner"  class="input-large" ></div>
+    </div>
+
+</div>
+            
+    </div>
+    
+     <div id='tag-ui-container'>
+         <h2 class="field-title">
+             <a data-toggle="collapse" href="#collapseTags" aria-expanded="false" class="collapsing-h2" >
+                 <i class="cu-btn-exp-col btn-collapsed">Tags</i>
+             </a>
+         </h2>
+         <div id="collapseTags" class="collapse in responsive-form-container">
+             <div id='tag-ui'>
+    <div class="form-group">
+        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Tags</label>
+        <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+            <select class='tag-ui-selectbox form-control' multiple name='_tags'>
+                
+            </select>
+        </div>
+    </div>
+</div>
+
+         </div>
+     </div>
+     <div class="clearfix"></div>
+     <div id="updateButtons" class="form-actions">
+     <div class="form-group">
+         <div class="col-sm-offset-2 col-sm-10">
+             <input type="submit" value="Update" class="btn btn-primary" name="editAssetButton" id="editAssetButton">
+             <input type="reset" value="Reset" class="btn btn-default">
+             <input type="hidden" value="process" name="process" id="meta-asset-type">
+         </div>
+     </div>
+     </div>
+
+
+
+</form>
+    </div>
+</div>
+
+
+

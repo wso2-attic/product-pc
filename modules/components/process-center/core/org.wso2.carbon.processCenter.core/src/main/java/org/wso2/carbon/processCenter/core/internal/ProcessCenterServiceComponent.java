@@ -38,10 +38,10 @@ public class ProcessCenterServiceComponent {
         try {
             BundleContext bundleContext = ctxt.getBundleContext();
             ProcessCenterServerHolder holder = ProcessCenterServerHolder.getInstance();
-
             ProcessStoreServiceImpl processStoreService = new ProcessStoreServiceImpl();
-            processStoreService.setProcessStore(new ProcessStore());
-            bundleContext.registerService(ProcessStoreService.class, processStoreService, null);
+            processStoreService.setProcessStore(ProcessStore.getInstance());
+            bundleContext.registerService(ProcessStoreServiceImpl.class.getName(), processStoreService, null);
+
 
         }catch (Throwable e) {
             log.error("Failed to initialize the BPMN core component.", e);
