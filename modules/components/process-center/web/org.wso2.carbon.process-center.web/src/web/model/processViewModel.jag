@@ -13,6 +13,7 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
 -->
+
 <script type="text/javascript">
 var user = '<%= session.get("user") %>';
     window.onload = function() {
@@ -20,11 +21,10 @@ var user = '<%= session.get("user") %>';
         var processID = expression.split("=")[1];
         getProcessByProcessID(processID, user);
         var bookmarked = getCookie(processID);
-        alert(document.cookie);
         if(bookmarked == "true"){
             $('#btn-add-gadget').hide();
             $('#btn-remove-subscribe').show();
-        }else if(bookmarked == "false"){
+        }else{
             $('#btn-add-gadget').show();
             $('#btn-remove-subscribe').hide();
         }

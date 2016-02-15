@@ -31,6 +31,12 @@ package org.wso2.carbon.processCenter.core;
  * limitations under the License.
  */
 
+import org.activiti.bpmn.converter.BpmnXMLConverter;
+import org.activiti.bpmn.converter.util.InputStreamProvider;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.image.ProcessDiagramGenerator;
+import org.activiti.image.impl.DefaultProcessDiagramGenerator;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
@@ -73,6 +79,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 
 import java.io.StringWriter;
@@ -171,7 +178,7 @@ public class ProcessStore {
         if(list.getLength() > 0)
             bookmarked = list.item(0).getTextContent();
 
-        String keys[] = {"owner", "name", "version", "createdtime", "bpmnpath", "bpmnid", "processtextpath"};
+        String keys[] = {"owner", "name", "version", "createdtime", "bpmnpath", "bpmnid", "processtextpath", "bookmarked"};
         JSONObject processJSON = new JSONObject();
         for (int i = 0; i < keys.length; i++) {
             if(processXML.getElementsByTagName(keys[i]).getLength() > 0) {
@@ -452,5 +459,90 @@ public class ProcessStore {
             log.error(e.getMessage());
         }
         return null;
+    }
+
+    public byte[] getBPMNImage(String path) throws ProcessCenterException {
+
+        try {
+            RegistryService registryService =
+                    ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                Resource bpmnXMLResource = reg.get(path);
+                byte[] bpmnContent = (byte[]) bpmnXMLResource.getContent();
+                InputStreamProvider inputStreamProvider = new PCInputStreamProvider(bpmnContent);
+
+                BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
+                BpmnModel bpmnModel =
+                        bpmnXMLConverter.convertToBpmnModel(inputStreamProvider, false, false);
+
+                ProcessDiagramGenerator generator = new DefaultProcessDiagramGenerator();
+                InputStream imageStream = generator.generatePngDiagram(bpmnModel);
+
+                byte[] imageContent = IOUtils.toByteArray(imageStream);
+                return imageContent;
+            } else {
+                String msg = "Registry service not available for fetching the BPMN image.";
+                throw new ProcessCenterException(msg);
+            }
+        } catch (Exception e) {
+            String msg = "Failed to fetch BPMN model: " + path;
+            log.error(msg, e);
+            throw new ProcessCenterException(msg, e);
+        }
+    }
+
+    public String getBPMN(String bpmnPath) {
+
+        String bpmnString = "";
+
+        try {
+            RegistryService registryService =
+                    ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                bpmnPath = bpmnPath.substring("/_system/governance/".length());
+                Resource bpmnAsset = reg.get(bpmnPath);
+                String bpmnContent = new String((byte[]) bpmnAsset.getContent());
+                JSONObject bpmn = new JSONObject();
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                Document document = builder.parse(new InputSource(new StringReader(bpmnContent)));
+                Element overviewElement =
+                        (Element) document.getElementsByTagName("overview").item(0);
+                String bpmnName =
+                        overviewElement.getElementsByTagName("name").item(0).getTextContent();
+                String bpmnVersion =
+                        overviewElement.getElementsByTagName("version").item(0).getTextContent();
+                String bpmnDescription = overviewElement.getElementsByTagName("description").item(0)
+                        .getTextContent();
+                String processPath = overviewElement.getElementsByTagName("processpath").item(0)
+                        .getTextContent();
+
+                bpmn.put("name", bpmnName);
+                bpmn.put("version", bpmnVersion);
+                bpmn.put("description", bpmnDescription);
+                bpmn.put("processPath", processPath);
+
+                Element contentElement = (Element) document.getElementsByTagName("content").item(0);
+                String contentPath =
+                        contentElement.getElementsByTagName("contentpath").item(0).getTextContent();
+                bpmn.put("contentpath", contentPath);
+                String encodedBPMNImage = getEncodedBPMNImage(contentPath);
+                bpmn.put("bpmnImage", encodedBPMNImage);
+
+                bpmnString = bpmn.toString();
+            }
+        } catch (Exception e) {
+            log.error("Failed to fetch BPMN model: " + bpmnPath);
+        }
+
+        return bpmnString;
+    }
+
+    public String getEncodedBPMNImage(String path) throws ProcessCenterException {
+        byte[] encoded = Base64.encodeBase64(getBPMNImage(path));
+        String imageString = new String(encoded);
+        return imageString;
     }
 }

@@ -1,9 +1,9 @@
 package org.wso2.carbon.processCenter.api;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.processCenter.core.ProcessStore;
-import org.wso2.carbon.processCenter.core.ProcessStoreService;
 import org.wso2.carbon.processCenter.core.models.*;
 
 import javax.ws.rs.*;
@@ -15,6 +15,9 @@ import javax.ws.rs.core.Response;
  */
 @Path("/process")
 public class ProcessInformationViewer {
+
+    private Log log = LogFactory.getLog(ProcessInformationViewer.class);
+
     @POST
     @Path("/byName")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -79,6 +82,54 @@ public class ProcessInformationViewer {
         String result = store.getBookmarkedProcessList(user);
         if(result != null){
             return Response.ok(result).status(Response.Status.CREATED).build();
+        }else{
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+
+    @POST
+    @Path("processText")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response getProcessText(String processTextPath){
+        ProcessStore store = new ProcessStore();
+        processTextPath = processTextPath.split("=")[1];
+        processTextPath = processTextPath.replaceAll("%2F", "/");
+        String result = store.getProcessText(processTextPath);
+        if(!"FAILED TO GET TEXT CONTENT".equals(result)){
+            return Response.ok(new JSONArray().put(result).toString()).status(Response.Status.CREATED).build();
+        }else{
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+
+    @POST
+    @Path("associations")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response getAssociations(String resourcePath){
+        ProcessStore store = new ProcessStore();
+        resourcePath = resourcePath.split("=")[1];
+        resourcePath = resourcePath.replaceAll("%2F", "/");
+        String result = store.getSuccessorPredecessorSubProcessList(resourcePath);
+        if(!"".equals(result)){
+            return Response.ok(new JSONArray().put(result).toString()).status(Response.Status.CREATED).build();
+        }else{
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+
+    @POST
+    @Path("bpmnModel")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response getBPMNModel(String bpmnPath){
+        ProcessStore store = new ProcessStore();
+        bpmnPath = bpmnPath.split("=")[1];
+        bpmnPath = bpmnPath.replaceAll("%2F", "/");
+        String result = store.getBPMN(bpmnPath);
+        if(!"".equals(result)){
+            return Response.ok(new JSONArray().put(result).toString()).status(Response.Status.CREATED).build();
         }else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }

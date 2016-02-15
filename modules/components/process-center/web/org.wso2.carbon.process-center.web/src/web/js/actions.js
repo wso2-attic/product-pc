@@ -335,11 +335,12 @@ function getProcessByProcessID(processID, user){
                             "bpmnpath": data[i].bpmnpath,
                             "bpmnid": data[i].bpmnid,
                             "processtextpath": data[i].processtextpath,
-                            "processowner":data[i].owner
+                            "processowner":data[i].owner,
+                            "bookmarked": data[i].bookmarked
                         });
                         createCookie(data[i].processid, data[i].bookmarked);
                     }
-                    renderProcess('#desc-div', dataset);
+                    renderProcess(dataset);
                 }else{
                     var element="";
                     element += "<div class=\"assets-container margin-top-double\">";
@@ -357,18 +358,20 @@ function getProcessByProcessID(processID, user){
     }
 }
 
-function renderProcess(renderElementID, dataset){
+function renderProcess(dataset){
     if(dataset.length > 0){
-        for(var i=0; i<dataset.length; i++){
-            $('#processname').text(dataset[i].processname);
-            $('#processversion').text("Version " + dataset[i].processversion);
-            $('#processowner').text("by " + dataset[i].processowner);
-            $('#btn-add-gadget').attr('data-aid', dataset[i].processid);
-            $('#divProcessName').text(dataset[i].processname);
-            $('#colProcess').text(dataset[i].processname + " - " + dataset[i].processversion);
-            $('#viewProcess').attr("href", "details?q=" + dataset[i].processid);
-        }
-
+        $('#processname').text(dataset[0].processname);
+        $('#processversion').text("Version " + dataset[0].processversion);
+        $('#processowner').text("by " + dataset[0].processowner);
+        $('#btn-add-gadget').attr('data-aid', dataset[0].processid);
+        $('#divProcessName').text(dataset[0].processname);
+        $('#colProcess').text(dataset[0].processname + " - " + dataset[0].processversion);
+        $('#viewProcess').attr("href", "details?q=" + dataset[0].processid);
+        $('#assetp-tabs').attr('data-aid', "/_system/governance/processes/" + dataset[0].processname +
+        "/" + dataset[0].processversion);
+        setProcessText(dataset[0].processtextpath);
+        setAssociations("/_system/governance/processes/" + dataset[0].processname +"/" + dataset[0].processversion);
+        setBPMNModel("/_system/governance/" + dataset[0].bpmnpath);
     }
 }
 
@@ -377,6 +380,7 @@ $('#btn-add-gadget').click(function () {
 });
 
 $('#btn-remove-subscribe').click(function () {
+    alert("clicked");
     bookMarkProcess(document.URL.split("=")[1]);
 });
 
@@ -477,5 +481,31 @@ function renderBookmarkedProcess(dataset){
     }
 }
 
+function getProcessText(processTextPath){
+    var url = "/pc/process-center/process/processText";
+    $.ajax({
+        type: 'POST',
+        url: httpUrl + url,
+        contentType: "application/json",
+        dataType: "json",
+        data: {"user":user},
+        success: function (data) {
+            if(data.length > 0){
+                var dataset = [];
+                for (var i = 0; i < data.length; i++) {
+                    dataset.push({
+                        "processname": data[i].name,
+                        "processid": data[i].processid
+                    });
+                }
+                renderBookmarkedProcess(dataset);
+            }
+        },
 
+        error: function (xhr, status, error) {
+            var errorJson = eval("(" + xhr.responseText + ")");
+            alert(errorJson.message);
+        }
+    });
+}
 

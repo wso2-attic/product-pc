@@ -70,6 +70,14 @@
             <artifactId>axiom</artifactId>
             <version>1.2.11.wso2v9</version>
         </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-bpmn-converter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-image-generator</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
