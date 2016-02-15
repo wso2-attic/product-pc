@@ -44,6 +44,7 @@
         <module>modules/components/process-center/core/org.wso2.carbon.processCenter.core</module>
         <module>modules/components/process-center/web/org.wso2.carbon.process-center.web</module>
         <module>modules/components/process-center/web/org.wso2.carbon.processCenter.api</module>
+        <module>modules/components/process-center/web/org.wso2.carbon.process-center.api</module>
         <module>modules/components/analytics/udf/org.wso2.carbon.pc.analytics.udf</module>
         <module>modules/components/analytics/capp/org.wso2.carbon.pc.analytics.capp</module>
         <module>modules/features/core/org.wso2.carbon.pc.core.feature</module>
@@ -638,12 +639,12 @@
                 <version>${commons-httpclient.version}</version>
             </dependency>
 
-            <!--CXF runtime environment-->
-            <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>${commons.lang.version}</version>
-            </dependency>
+            <!--&lt;!&ndash;CXF runtime environment&ndash;&gt;-->
+            <!--<dependency>-->
+                <!--<groupId>commons-lang</groupId>-->
+                <!--<artifactId>commons-lang</artifactId>-->
+                <!--<version>${commons.lang.version}</version>-->
+            <!--</dependency>-->
 
         </dependencies>
     </dependencyManagement>

@@ -1,3 +1,4 @@
+package org.wso2.carbon.processCenter.core;
 /*
  * Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
  *
@@ -27,15 +28,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wso2.carbon.processCenter.core.PCInputStreamProvider;
-import org.wso2.carbon.processCenter.core.ProcessCenterConstants;
-import org.wso2.carbon.processCenter.core.ProcessCenterException;
 import org.wso2.carbon.processCenter.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -66,9 +63,6 @@ import java.util.zip.ZipInputStream;
 /**
  * Created by sathya on 2/8/16.
  */
-
-
-
 
 public class ProcessStore {
 
@@ -564,7 +558,7 @@ public class ProcessStore {
                     ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                barPath = barPath.substring("/_system/governance/".length());
+                barPath = barPath.substring(ProcessCenterConstants.GREG_PATH.length());
                 Resource barAsset = reg.get(barPath);
                 String barContent = new String((byte[]) barAsset.getContent());
 
@@ -646,7 +640,7 @@ public class ProcessStore {
                     ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                bpmnPath = bpmnPath.substring("/_system/governance/".length());
+                bpmnPath = bpmnPath.substring(ProcessCenterConstants.GREG_PATH.length());
                 Resource bpmnAsset = reg.get(bpmnPath);
                 String bpmnContent = new String((byte[]) bpmnAsset.getContent());
                 JSONObject bpmn = new JSONObject();
@@ -738,7 +732,7 @@ public class ProcessStore {
         return processDetails;
     }
 
-    public String getSucessorPredecessorSubprocessList(String resourcePath) {
+    public String getSuccessorPredecessorSubProcessList(String resourcePath) {
         String resourceString = "";
         try {
             RegistryService registryService =
