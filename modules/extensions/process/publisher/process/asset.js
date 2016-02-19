@@ -65,7 +65,13 @@ asset.server = function(ctx) {
             }, {
                 url: 'delete_Predecessor',
                 path: 'delete_Predecessor.jag'
+            },{
+                url: 'get_process_tags',
+                path: 'get_process_tags.jag'
             }, {
+                url: 'upload_pdf',
+                path: 'upload_pdf.jag'
+            },{
                 url: 'update_owner',
                 path: 'update_owner.jag'
             }]

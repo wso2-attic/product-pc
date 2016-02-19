@@ -9,6 +9,12 @@
         return mainProcess;
     }
 
+    function showInfoContent(){
+        $("#overviewDiv").hide();
+        $("#infocontentDiv").hide();
+
+    }
+
     function showBPMN() {
 
         $("#overviewDiv").hide();
@@ -499,7 +505,9 @@
                 </tr>
                 </tbody>
             </table>
+    <button onclick="showInfoContent()">show process info</button>
 
+    <div id="infocontentDiv" style="display: none">
             <div class="control-group" style="display: inline-block">
                 {{#if processTextAvaliable}}
                     <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View/Edit Process Text</button></div>
@@ -518,6 +526,8 @@
                     <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
                 {{/if}}
             </div>
+
+    </div>
             <br /><br />
 
     <form class="form-horizontal">
