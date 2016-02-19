@@ -80,6 +80,20 @@
                 <name>Id</name>
             </field>
         </table>
+        <table name="Document">
+            <field type="text" required="true">
+                <name>Name</name>
+            </field>
+            <field type="text" required="false">
+                <name>Summary</name>
+            </field>
+            <field type="text" readonly="true">
+                <name>Url</name>
+            </field>
+            <field type="text" readonly="true">
+                <name>Path</name>
+            </field>
+        </table>
         <table name="Images">
             <field type="text" required="true">
                 <name>Thumbnail</name>
