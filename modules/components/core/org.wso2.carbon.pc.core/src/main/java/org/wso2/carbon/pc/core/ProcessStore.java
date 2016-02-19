@@ -1191,6 +1191,56 @@ public class ProcessStore {
 		return true;
 	}
 
+	public String uploadDocument(String processName, String processVersion, String docName, String docSummary, String docUrl, Object docObject) {
+		String processId = "FAILED TO UPLOAD DOCUMENT";
+		log.info("Uploading documents to the registry.");
+		try {
+			StreamHostObject s = (StreamHostObject) docObject;
+			InputStream docStream = s.getStream();
+			RegistryService registryService =
+					ProcessCenterServerHolder.getInstance().getRegistryService();
+			if (registryService != null) {
+				UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+				// store doc content as a registry resource
+				Resource docContentResource = reg.newResource();
+				byte[] docContent = IOUtils.toByteArray(docStream);
+				String docContentPath = null;
+				if(docContent.length != 0) {
+					String docText = new String(docContent);
+					docContentResource.setContent(docText);
+					docContentPath = "doccontent/" + processName + "/" + processVersion;
+					reg.put(docContentPath, docContentResource);
+				}
+
+				String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
+				Resource resource = reg.get(processAssetPath);
+				String processContent = new String((byte[]) resource.getContent());
+				Document doc = stringToXML(processContent);
+
+				Element rootElement = doc.getDocumentElement();
+				Element documentElement = append(doc, rootElement, "document", mns);
+				appendText(doc, documentElement, "name", mns, docName);
+				appendText(doc, documentElement, "summary", mns, docSummary);
+				if((docUrl != null) && (!docUrl.isEmpty())) {
+					appendText(doc, documentElement, "url", mns, docUrl);
+				}
+				if(docContentPath != null) {
+					appendText(doc, documentElement, "path", mns, docContentPath);
+				}
+				String newProcessContent = xmlToString(doc);
+				resource.setContent(newProcessContent);
+				reg.put(processAssetPath, resource);
+
+				Resource storedProcessAsset = reg.get(processAssetPath);
+				processId = storedProcessAsset.getUUID();
+			}
+		} catch(Exception e) {
+			log.error("Upload documentation error.");
+		}
+		return processId;
+	}
+
 	//    public static void main(String[] args) {
 	//        String path = "/home/chathura/temp/t5/TestProcess1.bpmn";
 	//        String outpath = "/home/chathura/temp/t5/TestProcess1image.png";

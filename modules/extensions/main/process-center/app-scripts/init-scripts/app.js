@@ -35,7 +35,7 @@ Finished the parsing stuff
  */
 caramel.configs({
     context: '/process-center',
-    analyticsContext: '/bpmn-analytics-explorer',
+    //analyticsContext: '/bpmn-analytics-explorer',
     cache: true,
     negotiation: true,
     themer: function () {
@@ -102,7 +102,7 @@ if(log.isDebugEnabled()){
 var  processCenterUrl = function() {
 	var log = new Log();
 	log.info("Process Center URL : " + configs.server.http + caramel.configs().context);
-    log.info("Analytics Explorer URL : " + configs.server.http + caramel.configs().analyticsContext);
+    //log.info("Analytics Explorer URL : " + configs.server.http + caramel.configs().analyticsContext);
 };
 
 setTimeout(processCenterUrl, 7000);
