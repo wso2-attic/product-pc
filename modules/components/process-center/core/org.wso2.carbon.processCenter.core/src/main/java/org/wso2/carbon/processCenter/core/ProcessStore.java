@@ -1,4 +1,3 @@
-package org.wso2.carbon.processCenter.core;
 /*
  * Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
  *
@@ -15,25 +14,29 @@ package org.wso2.carbon.processCenter.core;
  * limitations under the License.
  */
 
+
+package org.wso2.carbon.processCenter.core;
+
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.converter.util.InputStreamProvider;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.image.ProcessDiagramGenerator;
 import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.wso2.carbon.governance.api.util.GovernanceUtils;
-
-import org.apache.commons.io.IOUtils;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.processCenter.core.internal.ProcessCenterServerHolder;
+import org.wso2.carbon.processCenter.core.models.*;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -48,12 +51,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import java.io.InputStream;
-import java.io.StringReader;
-
-import java.io.StringWriter;
-
 import java.io.*;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -64,18 +61,24 @@ import java.util.zip.ZipInputStream;
  * Created by sathya on 2/8/16.
  */
 
+
+
+
 public class ProcessStore {
 
     private static ProcessStore processStore = new ProcessStore();
-    private static final Log log = LogFactory.getLog(ProcessStore.class);
-    private static final String mns = "http://www.wso2.org/governance/metadata";
-    private static final String OK = "OK";
+
 
 
     public static ProcessStore getInstance(){
         return processStore;
     }
+    private static final Log log = LogFactory.getLog(ProcessStore.class);
 
+
+
+    private static final String mns = "http://www.wso2.org/governance/metadata";
+    private static final String OK = "OK";
 
     private Element append(Document doc, Element parent, String childName, String childNS) {
         Element childElement = doc.createElementNS(childNS, childName);
@@ -558,7 +561,7 @@ public class ProcessStore {
                     ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                barPath = barPath.substring(ProcessCenterConstants.GREG_PATH.length());
+                barPath = barPath.substring("/_system/governance/".length());
                 Resource barAsset = reg.get(barPath);
                 String barContent = new String((byte[]) barAsset.getContent());
 
@@ -640,7 +643,7 @@ public class ProcessStore {
                     ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                bpmnPath = bpmnPath.substring(ProcessCenterConstants.GREG_PATH.length());
+                bpmnPath = bpmnPath.substring("/_system/governance/".length());
                 Resource bpmnAsset = reg.get(bpmnPath);
                 String bpmnContent = new String((byte[]) bpmnAsset.getContent());
                 JSONObject bpmn = new JSONObject();
@@ -732,7 +735,60 @@ public class ProcessStore {
         return processDetails;
     }
 
-    public String getSuccessorPredecessorSubProcessList(String resourcePath) {
+    public byte[] getBPMNImage(String path) throws ProcessCenterException {
+
+        try {
+            RegistryService registryService =
+                    ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                Resource bpmnXMLResource = reg.get(path);
+                byte[] bpmnContent = (byte[]) bpmnXMLResource.getContent();
+                InputStreamProvider inputStreamProvider = new PCInputStreamProvider(bpmnContent);
+
+                BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
+                BpmnModel bpmnModel =
+                        bpmnXMLConverter.convertToBpmnModel(inputStreamProvider, false, false);
+
+                ProcessDiagramGenerator generator = new DefaultProcessDiagramGenerator();
+                InputStream imageStream = generator.generatePngDiagram(bpmnModel);
+
+                byte[] imageContent = IOUtils.toByteArray(imageStream);
+                return imageContent;
+            } else {
+                String msg = "Registry service not available for fetching the BPMN image.";
+                throw new ProcessCenterException(msg);
+            }
+        } catch (Exception e) {
+            String msg = "Failed to fetch BPMN model: " + path;
+            log.error(msg, e);
+            throw new ProcessCenterException(msg, e);
+        }
+    }
+
+    public byte[] getBPMNImage2(String path) throws ProcessCenterException {
+
+        try {
+            byte[] bpmnContent = FileUtils.readFileToByteArray(new File(path));
+            InputStreamProvider inputStreamProvider = new PCInputStreamProvider(bpmnContent);
+
+            BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
+            BpmnModel bpmnModel =
+                    bpmnXMLConverter.convertToBpmnModel(inputStreamProvider, false, false);
+
+            ProcessDiagramGenerator generator = new DefaultProcessDiagramGenerator();
+            InputStream imageStream = generator.generatePngDiagram(bpmnModel);
+
+            byte[] imageContent = IOUtils.toByteArray(imageStream);
+            return imageContent;
+        } catch (Exception e) {
+            String msg = "Failed to fetch BPMN model: " + path;
+            log.error(msg, e);
+            throw new ProcessCenterException(msg, e);
+        }
+    }
+
+    public String getSucessorPredecessorSubprocessList(String resourcePath) {
         String resourceString = "";
         try {
             RegistryService registryService =
@@ -928,7 +984,7 @@ public class ProcessStore {
                 JSONObject successor = processInfo.getJSONObject("successor");
 
                 String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
-                                processVersion;
+                        processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
@@ -1144,6 +1200,23 @@ public class ProcessStore {
         }
         return true;
     }
+
+    //    public static void main(String[] args) {
+    //        String path = "/home/chathura/temp/t5/TestProcess1.bpmn";
+    //        String outpath = "/home/chathura/temp/t5/TestProcess1image.png";
+    //        try {
+    ////            byte[] image = new ProcessStore().getBPMNImage2(path);
+    ////            FileUtils.writeByteArrayToFile(new File(outpath), image);
+    //
+    //            String imageString = new ProcessStore().getEncodedBPMNImage(path, null);
+    //            FileUtils.write(new File(outpath), imageString);
+    //
+    //        } catch (Exception e) {
+    //            e.printStackTrace();
+    //        }
+    //    }
+
+
 
     public String getProcessDetails(String processPath) throws ProcessCenterException{
 
@@ -1473,35 +1546,5 @@ public class ProcessStore {
         return null;
     }
 
-    public byte[] getBPMNImage(String path) throws ProcessCenterException {
 
-        try {
-            RegistryService registryService =
-                    ProcessCenterServerHolder.getInstance().getRegistryService();
-            if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                Resource bpmnXMLResource = reg.get(path);
-                byte[] bpmnContent = (byte[]) bpmnXMLResource.getContent();
-                InputStreamProvider inputStreamProvider = new PCInputStreamProvider(bpmnContent);
-
-                BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
-                BpmnModel bpmnModel =
-                        bpmnXMLConverter.convertToBpmnModel(inputStreamProvider, false, false);
-
-                ProcessDiagramGenerator generator = new DefaultProcessDiagramGenerator();
-                InputStream imageStream = generator.generatePngDiagram(bpmnModel);
-
-                byte[] imageContent = IOUtils.toByteArray(imageStream);
-                return imageContent;
-            } else {
-                String msg = "Registry service not available for fetching the BPMN image.";
-                throw new ProcessCenterException(msg);
-            }
-        } catch (Exception e) {
-            String msg = "Failed to fetch BPMN model: " + path;
-            log.error(msg, e);
-            throw new ProcessCenterException(msg, e);
-        }
-    }
 }
-
