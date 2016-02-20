@@ -19,7 +19,7 @@ window.onload = function() {
         style: 'btn',
         size: 4
     });
-    loadProcessList('processVersionAvgExecTimeProcessList', 'processVersionAvgTimeBarChart', drawAvgExecuteTimeVsProcessVersionResult);
+    loadProcessKeyList('processVersionAvgExecTimeProcessList', 'processVersionAvgTimeBarChart', drawAvgExecuteTimeVsProcessVersionResult);
 };
 </script>
 

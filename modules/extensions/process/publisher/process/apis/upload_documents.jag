@@ -1,0 +1,22 @@
+<%
+importPackage(org.wso2.carbon.pc.core);
+var log = new Log();
+log.info("INSIDE UPLOAD DOCUMENTS");
+var ps = new ProcessStore();
+log.info("LOADED PROCESS STORE");
+
+var docName = String(request.getParameter("docName"));
+var docSummary = String(request.getParameter("summaryDoc"));
+var docUrl = String(request.getParameter("docUrl"));
+var docProcessName = String(request.getParameter("docProcessName"));
+var docProcessVersion = String(request.getParameter("docProcessVersion"));
+
+var processid = "NA";
+var files = request.getAllFiles();
+for (var name in files) {
+    log.info("files loop");
+    processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, files[name].getStream());
+}
+
+response.sendRedirect('https://localhost:9443/publisher/assets/process/details/' + processid);
+%>

@@ -24,7 +24,8 @@ public class AnalyticsUDFConstants {
 	public static final String MONTH_FORMAT = "MMM";
 	public static final String DATE_SEPARATOR = "-";
 	public static final String SPACE_SEPARATOR = " ";
-	public static final String COLON_SEPARATOR = ":\\d*$";
+	public static final String LAST_COLON_SEPARATOR = ":\\d*$";
+	public static final String COLON_SEPARATOR = ":";
 	public static final int SECOND = 1000;
 	public static final int MINUTE = 60 * SECOND;
 	public static final int HOUR = 60 * MINUTE;

@@ -182,11 +182,11 @@ function drawProcessInstanceCountVsProcessIdResult(renderElement, currentObj) {
  */
 function drawAvgExecuteTimeVsProcessVersionResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
-    var processId = $('#processVersionAvgExecTimeProcessList').val();
+    var processKey = $('#processVersionAvgExecTimeProcessList').val();
 
-    if (processId != '') {
+    if (processKey != '') {
         var body = {
-            'processId': processId,
+            'processKey': processKey,
             'order': $('#processVersionAvgExecTimeOrder').val(),
             'count': parseInt($('#processVersionAvgExecTimeCount').val())
         };
@@ -226,11 +226,11 @@ function drawAvgExecuteTimeVsProcessVersionResult(renderElement, currentObj) {
  */
 function drawProcessInstanceCountVsProcessVersionResult(renderElement, currentObj) {
     var renderElementID = '#' + renderElement;
-    var processId = $('#processInstanceCountProcessVersionProcessList').val();
+    var processKey = $('#processInstanceCountProcessVersionProcessList').val();
 
-    if (processId != '') {
+    if (processKey != '') {
         var body = {
-            'processId': processId,
+            'processKey': processKey,
             'order': $('#processInstanceCountProcessVersionOrder').val(),
             'count': parseInt($('#processInstanceCountProcessVersionCount').val())
         };
@@ -979,6 +979,41 @@ function loadProcessList(dropdownId, barChartId, callback) {
             if (!$.isEmptyObject(dataStr)) {
                 for (var i = 0; i < dataStr.length; i++) {
                     var opt = dataStr[i].processDefKey;
+                    var el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    $(dropdownElementID).append(el);
+                }
+                $(dropdownElementID).selectpicker("refresh");
+                if (callback != null) {
+                    callback(barChartId, null);
+                }
+            }
+        },
+        error: function (xhr, status, error) {
+            var errorJson = eval("(" + xhr.responseText + ")");
+            alert(errorJson.message);
+        }
+    });
+}
+
+/**
+ * Function to load the Process Key List
+ * @param dropdownId is the id of the drop down list
+ * @param barChartId is the id of the rendering element
+ * @param callback is to hold a given rendering function
+ */
+function loadProcessKeyList(dropdownId, barChartId, callback) {
+    var dropdownElementID = '#' + dropdownId;
+    var url = "/" + CONTEXT + "/process_key_list";
+    $.ajax({
+        type: 'POST',
+        url: httpUrl + url,
+        success: function (data) {
+            var dataStr = JSON.parse(data);
+            if (!$.isEmptyObject(dataStr)) {
+                for (var i = 0; i < dataStr.length; i++) {
+                    var opt = dataStr[i].processKey;
                     var el = document.createElement("option");
                     el.textContent = opt;
                     el.value = opt;

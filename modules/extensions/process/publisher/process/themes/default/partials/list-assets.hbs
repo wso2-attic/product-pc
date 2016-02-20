@@ -15,12 +15,15 @@
   -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
 <script>
-    var processNames = [];
-    var processListObj;
+
     var processTagsObj;
 
     window.onload = getProcessTags();
 
+    function showProcesses(){
+        $("#list_assets_content").show();
+        $("#list_tagged_processes").hide();
+    }
 
     function getProcessTags(){
         $.ajax({
@@ -47,14 +50,19 @@
 
     function searchProcessesByTag(currentElement){  //tagName
 
+
         var tagName = $(currentElement).attr("id");
-        $('#list_assets_content').empty();
+        $('#list_tagged_processes').empty();
+
+        $("#list_assets_content").hide();
+        $("#list_tagged_processes").show();
+
 
         var processArray = processTagsObj[tagName];
 
         for (var process in processArray){
 
-            $('#list_assets_content').append('<div class="ctrl-wr-asset">'+
+            $('#list_tagged_processes').append('<div class="ctrl-wr-asset">'+
             '<div class="itm-ast">'+
             '<a class="ast-img" href="/publisher/assets/process/details/'+processArray[process].processid+'">'+
             '<img alt="thumbnail" src="/publisher/themes/default/img/default-thumbnail.png" style="top:0px; left:0px; height:100%; width:100%;" class="img-responsive">'+
@@ -147,6 +155,9 @@
     .sidebar .search-tags a:hover .fa{color:#999999}
     .sidebar .search-tags a:hover{background-color:#237bd5}
     .sidebar .search-tags h3{padding-right:10px}
+    .sidebar .search-tags a.viewall{background-color:#D8D8D8;color:#151515;border-color:#424242}
+    .sidebar .search-tags a.viewall:hover{text-decoration:none;color:white}
+    .sidebar .search-tags a.viewall:hover{background-color:#424242}
 
 
 </style>
@@ -192,7 +203,7 @@
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-3 wr-filters">
         <div class="dropdown pull-right">
             <a class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                <span class="sort-asset-info"><span>( <span class="hidden-xs">{{sorting.selected.help}}</span> <i class="fa {{sorting.selected.helpIcon}}"></i> )</span> <img src="{{url "/themes/default/img/icons/ico-sort.png"}}" />
+                <span class="sort-asset-info"><span>( <span class="hidden-xs">{{sorting.selected.help}}</span> <i class="fa {{sorting.selected.helpIcon}}"></i> )</span> <img src="{{url "/themes/default/img/icons/ico-sort.png"}}" /></span>
             </a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" id="ul-sort-assets">
                 {{#each sorting.list}}
@@ -210,15 +221,7 @@
 
 </div>
 
-    <!--div class="sidebar-box search-tags">
-  <h3>Search by process tags</h3>
-                                        <a href="/search/gigs?filter=rating&amp;query=logo+design" class="js-gtm-event-auto" data-gtm-action="click" data-gtm-category="hp-search-tags" data-gtm-label="logo design">logo design</a>
-                                        <a href="/search/gigs?filter=rating&amp;query=photoshop" class="js-gtm-event-auto" data-gtm-action="click" data-gtm-category="hp-search-tags" data-gtm-label="photoshop">photoshop</a>
-                                        <a href="/search/gigs?filter=rating&amp;query=portrait" class="js-gtm-event-auto" data-gtm-action="click" data-gtm-category="hp-search-tags" data-gtm-label="portrait">portrait</a>
-                                        <a href="/search/gigs?filter=rating&amp;query=vintage+logo" class="js-gtm-event-auto" data-gtm-action="click" data-gtm-category="hp-search-tags" data-gtm-label="vintage logo">vintage logo</a>
-                                        <a href="/search/gigs?filter=rating&amp;query=voice+over" class="js-gtm-event-auto" data-gtm-action="click" data-gtm-category="hp-search-tags" data-gtm-label="voice over">voice over</a>
-                                        <a href="/search/gigs?filter=rating&amp;query=flyer" class="js-gtm-event-auto" data-gtm-action="click" data-gtm-category="hp-search-tags" data-gtm-label="flyer">flyer</a>
-                                </div-->
+
 
 <div class="right_side">
 
@@ -229,12 +232,9 @@
             <h3>
                 <i class="fa fw-tag"></i>
                 Search Tags</h3>
-            <!--<a href="#">logo design</a>-->
-            <!--<a href="#">photoshop</a>-->
-            <!--<a href="#">portrait</a>-->
-            <!--<a href="#">vintage logo</a>-->
-            <!--<a href="#">voice over</a>-->
-            <!--<a href="#">flyer</a>-->
+            <a class="viewall" onclick="showProcesses()">View All</a>
+
+
         </div>
     </aside>
 
@@ -257,6 +257,7 @@
 
             </div>
         {{/if}}
+        <div id="list_tagged_processes" style="display: none"></div>
     </div>
 </div>
 
