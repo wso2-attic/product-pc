@@ -3,9 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-
-
     <parent>
         <groupId>org.wso2.pc</groupId>
         <artifactId>wso2pc-parent</artifactId>
@@ -23,8 +20,6 @@
     <properties>
         <jackson.version>1.8.6</jackson.version>
     </properties>
-
-
 
     <build>
         <plugins>
@@ -123,8 +118,8 @@
             <artifactId>commons-logging</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.scr</artifactId>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>org.apache.felix.scr</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -147,17 +142,21 @@
             <artifactId>org.wso2.carbon.governance.api</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.eclipse.osgi</groupId>
+            <artifactId>org.eclipse.osgi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+            <artifactId>axiom</artifactId>
+            <version>1.2.11.wso2v9</version>
+        </dependency>
+        <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-bpmn-converter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-image-generator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
-            <artifactId>axiom</artifactId>
-            <version>1.2.11.wso2v9</version>
         </dependency>
     </dependencies>
 

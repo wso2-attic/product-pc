@@ -1,16 +1,3 @@
-<script type="text/javascript">
-    var expression = location.search;
-    var processID = expression.split("=")[1];
-    var cookie = getCookie(processID);
-    alert("in view" + cookie);
-    if(cookie == "true"){
-        $('#btn-add-gadget').hide();
-        $('#btn-remove-subscribe').show();
-    }else if(cookie == "false"){
-        $('#btn-add-gadget').show();
-        $('#btn-remove-subscribe').hide();
-    }
-</script>
 <div class="container-fluid body-container">
     <div id="assets-container">
         <div class="ast-container " id="ast-container">
@@ -95,7 +82,7 @@
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="tab-properties">No text content available</div>
+                    <div class="tab-pane active" id="tab-properties"></div>
                     <!--Associations-->
 
                     <div class="tab-pane" id="tab-associations">
@@ -141,7 +128,8 @@
                     </div>
 
                     <div class="tab-pane" id="tab-reviews">
-                        <iframe name="socialIfr" id="socialIfr" src="https://localhost:9443/social?target=process:f77cf4b9-dc20-43a4-a54a-661520cf037f&amp;user=admin&amp;urlDomain=carbon.super" width="100%" height="100%" style="min-height: 500px;" data-script="https://10.100.4.99:9443/social/export-js/social.js" data-script-type="text/javascript"></iframe>
+                        <iframe name="socialIfr" id="socialIfr" src="https://localhost:9443/social?target=process:f77cf4b9-dc20-43a4-a54a-661520cf037f&amp;user=admin&amp;urlDomain=carbon.super" width="100%" height="100%" style="min-height: 500px;" data-script="" data-script-type="text/javascript"></iframe>
+                        <!--https://10.100.4.99:9443/social/export-js/social.js-->
                         <div id="comment-content" class="content user-review"></div>
                     </div>
                 </div>

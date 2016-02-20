@@ -37,4 +37,6 @@ public class ProcessCenterConstants {
     public static final String FALSE = "false";
     public static final String GREG_PATH = "/_system/governance/";
     public static final String PROCESS_ASSET_ROOT = "processes/";
+
+    public static final String NO_TEXT_CONTENT = "FAILED TO GET TEXT CONTENT";
 }
