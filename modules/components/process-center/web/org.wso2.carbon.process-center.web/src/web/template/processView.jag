@@ -1,0 +1,139 @@
+<div class="container-fluid body-container">
+    <div id="assets-container">
+        <div class="ast-container " id="ast-container">
+            <br>
+            <div class="col-lg-12 white-bg left ">
+                <div class="title bottom-none"><a class="asset-type-process" href="/processes">Process Details</a></div><!--title-->
+                <hr class="margin-bottom-quarter">
+            </div>
+
+            <div id="collapsedProcessName" style="display: none;"><h4 id="colProcess" class="custom-padding-left"></h4></div>
+            <div class="asset-description" style="display: block;">
+                <div class="asset-description-header" id="desc-div">
+
+                    <div class="main-div">
+                        <div class="div-1">
+                            <div class=" details-image white-bg">
+                                <img alt="thumbnail" src="images/default-thumbnail.png" class="img-descriptive">
+                            </div>
+                        </div>
+                        <div class="div-1">
+                            <div class="custom-padding">
+                                <h4 id="processname" class="margin-none "></h4>
+                                <p id="processversion" class="grey padding-none margin-none"></p>
+                                <p id="processowner" class="light-blue padding-none margin-none"></p>
+                            </div>
+                        </div>
+                        <div class="div-2">
+                            <span class="pull-right rating-count"> ( <i class="fa fa-users"></i> 0 )</span>
+                            <span class="asset-rating pull-right">
+                                <div style="width:0px"></div>
+                            </span>
+                            <div class="action-container right float-right">
+                                <a class="gray-button blue-button margin-left float-left" id="viewProcess" href="" target="_blank" data-placement="bottom" data-toggle="tooltip" title="" data-original-title="View"><span class="fa fa-code" style="margin-top: 4px"></span></a>
+                                <a style="display: none" id="btn-add-gadget" class="blue-button margin-left float-left" href="#modal-add-gadget" data-toggle="modal" data-aid="" data-type="process"> <span id="main-bookmark">
+                                    Bookmark
+                                    <span class="sub-bookmark"></span>
+                                    </span>
+                                </a>
+                                <a style="display: none;" id="btn-remove-subscribe" class="blue-button disabled-button margin-left float-left" href="#modal-add-gadget" data-toggle="modal" data-aid="7045e172-f1a5-43c0-b35b-f28815173f1c" data-type="process"> <span id="main-bookmark">
+                                    Bookmarked
+                                    <span class="sub-bookmark"></span>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="div-3">
+                            <div class="white-bg asset-details-wrapper ">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <h4>Summary</h4>
+                                    <p></p>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+            <div class="assetp-properties">
+                <hr class="margin-bottom-double">
+                <div class="margin-top-double"></div>
+                <button type="button" id="btnView">View</button>
+                <button type="button" id="btnCollapse" style="display: none;">Collapse</button>
+                <ul class="nav nav-tabs" id="assetp-tabs" data-aid="######## full path">
+                    <li class="active">
+                        <a href="#tab-properties" id="tab-text" data-toggle="tab" data-type="basic">Text</a>
+                    </li>
+                    <li>
+                        <a href="#tab-bpmn" data-toggle="tab" id="tab-model" data-type="basic">BPMN Model </a>
+                    </li>
+                    <li>
+                        <a href="#tab-associations" data-toggle="tab" id="tab-relations" data-type="basic">Associations </a>
+                    </li>
+
+                    <li>
+                        <a href="#tab-reviews" data-toggle="tab" data-type="comments">User Reviews</a>
+                    </li>
+
+                    <li>
+                        <a href="#tab-share" data-toggle="tab" data-type="basic">Share</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-properties"></div>
+                    <!--Associations-->
+
+                    <div class="tab-pane" id="tab-associations">
+                        <div id="divProcessName" style="display: none;">
+
+                        </div>
+                        <label>Predecessors </label>
+                        <div id="preContent">
+                        </div>
+                        <label>Successors </label>
+                        <div id="sucContent">
+                        </div>
+                        <label>Sub Processes </label>
+                        <div id="subContent">
+                        </div>
+                    </div>
+
+                    <!--BPMN-->
+                    <div class="tab-pane" id="tab-bpmn">
+                    <div id="divBpmnPath" style="display: none;">
+                     NA
+                    </div>
+                        <div class="content">
+                           <img id="bpmnImage">
+                        </div>
+                    </div>
+
+
+                     <div class="tab-pane" id="tab-share">
+                        <div class="content">
+                            <div class="tabbable">
+                                <div id="social-buttons">
+                                    <h4>Social Sites</h4>
+                                    <div id="social-button-div" class="span3">
+                                        <a href="https://facebook.com/sharer.php?u=http://10.100.4.99:9763/store/t/carbon.super/assets/process/details/f77cf4b9-dc20-43a4-a54a-661520cf037f" target="_blank"><img class="social-button" src="/store/themes/store/img/facebook.png"></a>
+                                        <a href="https://twitter.com/share?text=No description&amp;url=http://10.100.4.99:9763/store/t/carbon.super/assets/process/details/f77cf4b9-dc20-43a4-a54a-661520cf037f" target="_blank"><img class="social-button" src="/store/themes/store/img/twitter.png"></a>
+                                        <a href="https://plus.google.com/share?url=http://10.100.4.99:9763/store/t/carbon.super/assets/process/details/f77cf4b9-dc20-43a4-a54a-661520cf037f" target="_blank"><img class="social-button" src="/store/themes/store/img/google.png"></a>
+                                        <a href="https://digg.com/submit?url=http://10.100.4.99:9763/store/t/carbon.super/assets/process/details/f77cf4b9-dc20-43a4-a54a-661520cf037f" target="_blank"><img class="social-button" src="/store/themes/store/img/diggit.png"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="tab-reviews">
+                        <iframe name="socialIfr" id="socialIfr" src="https://localhost:9443/social?target=process:f77cf4b9-dc20-43a4-a54a-661520cf037f&amp;user=admin&amp;urlDomain=carbon.super" width="100%" height="100%" style="min-height: 500px;" data-script="" data-script-type="text/javascript"></iframe>
+                        <!--https://10.100.4.99:9443/social/export-js/social.js-->
+                        <div id="comment-content" class="content user-review"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

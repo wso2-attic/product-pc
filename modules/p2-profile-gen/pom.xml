@@ -73,6 +73,7 @@
                             <featureArtifacts>
 
                                 <featureArtifactDef>org.wso2.pc:org.wso2.carbon.pc.core.feature:${pc.version}</featureArtifactDef>
+
                                 <!--<featureArtifactDef>org.wso2.pc:org.wso2.carbon.pc.analytics.core.feature:${pc.version}</featureArtifactDef>-->
                                 <!-- Features of ES -->
 
@@ -80,6 +81,12 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt.server.feature:${carbon.deployment.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt.feature:${carbon.deployment.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.deployment:org.wso2.carbon.as.runtimes.cxf.feature:${carbon.deployment.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>org.jaggeryjs.modules:caramel.feature:${caramel.feature.version}
                                 </featureArtifactDef>
@@ -348,11 +355,11 @@
                                     <id>org.wso2.carbon.pc.core.feature.group</id>
                                     <version>${pc.version}</version>
                                 </feature>
-
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.pc.analytics.core.feature.group</id>-->
                                     <!--<version>${pc.version}</version>-->
                                 <!--</feature>-->
+
                                 <!-- Features of ES -->
 
                                 <feature>
@@ -364,7 +371,15 @@
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.as.runtimes.cxf.feature.group</id>
+                                    <version>${carbon.deployment.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.module.mgt.server.feature.group</id>
+                                    <version>${carbon.deployment.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.as.runtimes.cxf.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
                                 <feature>

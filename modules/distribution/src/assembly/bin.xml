@@ -336,6 +336,28 @@
             <!--</includes>-->
         <!--</fileSet>-->
 
+        <fileSet>
+            <directory>../components/process-center/web/org.wso2.carbon.process-center.web/src/web</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/bpmn-process-center-explorer
+            </outputDirectory>
+        </fileSet>
+
+
+        <!--<fileSet>-->
+            <!--<directory>../components/process-center/web/org.wso2.carbon.process-center.core/src/main/webapp</directory>-->
+            <!--<outputDirectory>-->
+                <!--${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/bpmn-process-center-rest-->
+            <!--</outputDirectory>-->
+        <!--</fileSet>-->
+        <fileSet>
+            <directory>../components/process-center/web/org.wso2.carbon.processCenter.api/target/</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>pc.war</include>
+            </includes>
+        </fileSet>
+
         <!--fileSet>
             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0001</directory>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/components/patches/</outputDirectory>
@@ -714,6 +736,33 @@
         <file>
             <source>../extensions/process/publisher/default/asset.js</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets/default</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/catalina-server.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/tomcat/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/tomcat/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/webapp-classloading.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/tomcat/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/webapp-classloading-environments.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/tomcat/</outputDirectory>
+            <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
     </files>

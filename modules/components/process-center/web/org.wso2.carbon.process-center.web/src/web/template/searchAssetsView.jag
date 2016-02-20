@@ -1,0 +1,35 @@
+<div class="container-fluid navigation-container">
+    <div id="assets-container">
+        <div class="ast-container " id="ast-container">
+            <div class="container-fluid ">
+                <div class="title"><a class="asset-type-process" href="/processes">Processes</a></div><!--title-->
+                <div class="pull-right sort-asset-container">
+
+                    <a aria-expanded="false" data-toggle="dropdown" id="sortDropdown" type="button" class="dropdown-toggle" href="#">
+                        <span class="sort-asset-info">(  <i class="fa fa-arrow-down"></i> )</span>
+                        <img src="/publisher/themes/default/img/icons/ico-sort.png">
+                    </a>
+                    <ul aria-labelledby="dropdownMenu1" role="menu" class="dropdown-menu" id="ul-sort-assets" data-type="gadget">
+                        <li role="presentation" class="">
+                            <a href='/store/assets/process/list?sort=popular' class="filter-item"><span class="pull-left">Popular</span> </a>
+                        </li>
+                        <li role="presentation" class="">
+                            <a href='/store/assets/process/list?sortBy=overview_name&sort=DESC' title='Sort by Alphabetical Order'><span class="pull-left">Name</span> <i class="fa fa-arrow-down pull-right"></i></a>
+                        </li>
+                        <li role="presentation" class="">
+                            <a href='/store/assets/process/list?sortBy=overview_createdtime&sort=DESC' data-toggle="tooltip" data-sort="overview_createdtime" title='Sort by Created Date'><span class="pull-left">Date/Time Created</span> <i class="fa fa-arrow-down pull-right"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <hr>
+
+            </div>
+            <div id="search-null">
+
+            </div>
+        </div>
+    </div>
+</div>
+<section id="section" style="padding-left: 15px; margin-top: 15px">
+
+</section>

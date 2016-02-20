@@ -1,0 +1,78 @@
+<!--
+ ~ Copyright 2005-2015 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+<%
+include("/model/common.jag");
+var log = new Log("###test");
+if (request.isSecure()) {//check whether the request is secure or not
+
+    var authSuccess = session.get("authSuccess");
+    //Check whether the user has already logged-in
+    if (authSuccess) {
+        //If already logged-in, redirect to the dashboard
+        session.put("title", "Store | Top Assets");
+        var run = request.getMethod(),
+                result = null,
+                auth = session.get('auth'),
+                contentType = request.getContentType(),
+                headers = {
+                    "Content-Type": contentType,
+                    "Authorization":"Basic " + auth,
+                    "Accept" : "application/json"
+                };
+        //httpUrl = "https:" + "//" + "10.100.4.99:9443";
+
+        if (run == "POST") {
+            req = request.getParameter("req");
+            url = req;
+            data = request.getContent();
+            result = post(httpUrl + url, JSON.stringify(data), headers, "json");
+            if (log.isDebugEnabled()){
+                log.debug("BPMN Rest POST results: " + stringify(result));
+            }
+        }
+
+        if (run == "GET") {
+            req = request.getParameter("req");
+            url = req;
+            result = get(httpUrl + url, null, headers, "json");
+            if (log.isDebugEnabled()){
+                log.debug("BPMN Rest PUT results: " + stringify(result));
+            }
+        }
+
+        response.status = result.xhr.status;
+
+        if ( result.data != null ) {
+            response.content = result.data;
+        }
+
+    } else {
+        //If not show login page
+        if(session.get("user") != null) {
+            session.put("user", null);
+        }
+        response.sendRedirect("login");
+    }
+
+} else {
+    //request is not secured, therefore need redirect to the secure channel
+    var queryStr = '';
+    if (request.getQueryString() != null) {
+        queryStr = '?' + request.getQueryString();
+    }
+    response.sendRedirect(application.get('serverAddress') + request.getRequestURI() + queryStr);
+}
+%>

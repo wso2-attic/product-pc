@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+<head>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Asset | WSO2 Enterprise Store Publisher</title>
+    
+    <link rel="icon" href="/publisher/themes/default/img/favicon.png" type="image/x-icon" />
+    
+    <!-- Bootstrap -->
+    <link href="/publisher/themes/default/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+    <!-- fontawesome -->
+    <link rel="stylesheet" href="/publisher/themes/default/css/font-awesome.min.css">
+	
+    <!-- fontwso2 -->
+    <link rel="stylesheet" href="/publisher/themes/default/css/fontwso2.css">
+    <link rel="stylesheet" href="/publisher/themes/default/css/fontwso2-extend.css">
+
+    <!-- Token input -->
+    <link rel="stylesheet" href="/publisher/themes/default/js/token.input/css/token-input-facebook.css">
+    <!-- Helper css injections -->
+    
+    <!-- Custom css -->
+    <link href="/publisher/themes/default/css/custom.css" rel="stylesheet">
+    <link href="/publisher/themes/default/css/custom-theme.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/publisher/themes/default/css/lifecycle-styles.css"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/publisher/themes/default/js/html5shiv.min.js"></script>
+    <script src="/publisher/themes/default/js/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+<div class="wrapper">
+    <div class="container-fluid">
+        <!-- header -->
+<header>
+    <div class="row wr-global-header">
+        <div class="col-xs-8 col-sm-8 app-logo">
+            <a href='designer'>
+                <img src="images/logo.png" />
+                <h2 class="app-title">Process Center - Designer</h2>
+            </a>
+        </div>
+        <div class="col-xs-4 col-sm-4 wr-auth-container">
+        		<div class="wr-auth pull-right">
+                    <a href="/process-center">
+                        <div class="auth-img">
+                            <h2 class="app-title" style="padding-top:8px"><i style="margin-right:10px;" class="fa fa-bars fa-1g"></i>Process Center</h2>
+                        </div>
+                    </a>
+
+        			<a href="#" data-toggle="dropdown" class="">
+        				<div class="auth-img">
+        					<span>admin</span>&nbsp;&nbsp;<i class="fw fw-user fw-lg"></i>
+        				</div>
+        			</a>
+        			<div class="dropdown-menu">
+        				<div class="cu-arrow"></div>
+        				<div class="dropdown-menu-content">
+        					<a class="filter-item" onclick="window.location.href='logout'" href="#">Sign out</a>
+        				</div>
+        			</div>
+        		</div>
+        </div>
+    </div>
+</header>
+<!-- /header -->
+
+    </div>
+    <div class="container-fluid ribbon-container">
+        <!-- secondary header - app bar -->
+
+<nav class="navbar navbar-default navbar-themed">
+    <div>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="wr-asset-type-switcher">
+            <a id="popoverExampleTwo" data-placement="bottom" class="ctrl-asset-type-switcher pull-left" href="javascript:void(0)" data-click-event="popover">
+                <span class="btn-asset"></span>
+            </a>
+            <div class="popover bottom right fade clearfix">
+                <div class="arrow left"></div>
+                <div class="popover-content">
+                    <ul class="tiles clearfix">
+                        
+                            <li>
+                                <a target="_self" href='designer'>
+                                    <i class="icon fw fw-resource"></i>
+                                    <span class="name">Process</span>
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+            <a class="pull-left switcher-link" href='designer'>Processes</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            
+            <div class="wr-action-btn-bar">
+                <ul class="nav navbar-nav">
+                    
+                    <li>
+                        <a id="Overview" href='#' class="cu-btn btn-overview">
+                            Overview
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a id="LifeCycle" href='process_lifecycle' class="cu-btn btn-lifecycle">
+                            Life Cycle
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a id="Delete" href='process_delete' class="cu-btn btn-delete">
+                            Delete
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div> 
+
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div id="modal-redirect" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-body">
+        <div class="modal-loading"></div>
+        <p>
+            Redirecting you to the new Asset Version...
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary">
+            Redirect now
+        </button>
+    </div>
+</div>
+    </div>
+    <div class="container-fluid wr-main-content">
+        <div class="row">
+    <div id='lifecycle-information' class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <h1>Current lifecycle: <span class="text-muted"></span> </h1>
+<h4>State: <span class="text-muted"></span></h4>
+    </div>
+    <div id='lifecycle-global-notifications' class="col-xs-12 col-sm-12 col-md-12 col-lg-12"></div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div>
+
+
+</div>
+
+    </div>
+    
+    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
+        <div id='lifecycle-rendering-area' class='lifecycle-rendering-area'>
+            <svg></svg>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
+        <div id='lifecycle-checklist-container'>
+            <div id='lifecycle-checklist'>
+            </div>
+            <div id='lifecycle-checklist-overlay'></div>
+        </div>
+        <div id='lifecycle-actions-container' class="form-horizontal">
+            <div id='lifecycle-comments'>
+                <div class='form-group'>
+                    <label class="custom-form-label col-xs-12 col-sm-12 col-md-2 col-lg-2">Comment</label>
+                    <div class="custom-form-right col-xs-12 col-sm-12 col-md-10 col-lg-10">
+                        <textarea id='lifecycle-comment' class='form-control' placeholder='This comment will be recored with the state transition'></textarea>
+                        <div id='lifecycle-notifications'></div>
+                    </div>
+                </div>
+            </div>
+            <div id='lifecycle-transition-inputs-ui'>
+                <div id='lifecycle-transition-inputs-form'>
+	<div id='lifecycle-transition-inputs-fields-container'></div>
+	<div id='lifecycle-transition-inputs-actions-container'></div>
+</div>
+            </div>
+            <div id='lifecycle-actions' class="col-xs-12 col-sm-8 col-md-8 col-lg-8 col-sm-offset-2 col-md-offset-2 col-lg-offset-2"></div>
+            <div id='lifecycle-actions-overlay'></div>
+            <div class="clearfix"></div>
+        </div>
+        <div id='lifecycle-history-container'>
+            <h5>History</h5>
+            <div id='lifecycle-history'>
+                <img src='/publisher/themes/default/img/preloader-40x40.gif'/> Loading history details ...
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>&copy; 2015 WSO2 Inc. All Rights Reserved</p>
+</footer>
+
+<script src="/publisher/themes/default/js/jquery-1.10.2.min.js"></script>
+<script src="/publisher/themes/default/js/libs/jquery.form.min.js"></script>
+<script src="/publisher/themes/default/js/bootstrap.min.js"></script>
+<script src="/publisher/themes/default/js/async.min.js"></script>
+<script src="/publisher/themes/default/js/publisher.commons.js"></script>
+<script src="/publisher/themes/default/js/lc.processor.js"></script>
+<script src="/publisher/themes/default/js/sugyama.js"></script>
+<script src="/publisher/themes/default/js/raphael-min.js"></script>
+<script src="/publisher/themes/default/js/graph.js"></script>
+<script src="/publisher/themes/default/js/token.input/jquery.tokeninput.js"></script>
+<script src="/publisher/themes/default/js/handlebars.js"></script>
+<script src="/publisher/themes/default/js/notify.min.js"></script>
+<script src="/publisher/themes/default/js/messages.js"></script>
+<!-- Helper files js injector -->
+<script>var caramel = caramel || {}; caramel.context = "/publisher"; caramel.themer = "default";caramel.url = function (path) { return this.context + (path.charAt(0) !== '/' ? '/' : '') + path; };var store = {"user" : "admin"}</script>
+<script src="/publisher/themes/default/js/popover.js"></script>
+<script src="/publisher/themes/default/js/delete-asset.js"></script>
+<script src="/publisher/themes/default/js/libs/d3.min.js"></script>
+<script src="/publisher/themes/default/js/lifecycle/lodash.min.js"></script>
+<script src="/publisher/themes/default/js/lifecycle/graphlib.core.min.js"></script>
+<script src="/publisher/themes/default/js/lifecycle/dagre-d3.min.js"></script>
+<script src="/publisher/themes/default/js/lifecycle/lifecycle-core.js"></script>
+<script src="/publisher/themes/default/js/lifecycle/lifecycle-configs.js"></script>
+<script src="/publisher/themes/default/js/lifecycle/lifecycle-init.js"></script>
+<!--
+  ~ Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<script type="text/javascript">
+    if (!store.publisher) {
+        store.publisher = {};
+    }
+    if(!store.publisher.lifecycle){
+    	store.publisher.lifecycle ={};
+    }
+    store.publisher.lifecycle = { 
+        id: "dc2379e8-b02c-43ef-90e7-c50f4e2661e8",
+        currentState: "Initial",
+        activeLifecycle: "SampleLifeCycle2",    
+        type: "process",
+        deletableStates:"Unpublished"
+    };
+</script>
+<!--
+  ~ Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<script type="text/javascript">
+    if (!store.publisher) {
+        store.publisher = {};
+    }
+    if(!store.publisher.lifecycle){
+    	store.publisher.lifecycle ={};
+    }
+    store.publisher.lifecycle = { 
+        id: "dc2379e8-b02c-43ef-90e7-c50f4e2661e8",
+        currentState: "Initial",
+        activeLifecycle: "SampleLifeCycle2",    
+        type: "process",
+        deletableStates:"Unpublished"
+    };
+</script>
+
+
+<script src="/publisher/themes/default/js/caramel.handlebars.client.js"></script>
+<script src="/publisher/themes/default/js/caramel-client.js"></script>
+
+<script type="text/javascript">
+
+$( document ).ready(function() {
+    $("[data-toggle=popover]").popover();
+
+    $('.ribbon-container').affix({
+        offset: {
+            top: $('header').height()
+        }
+    });
+});
+
+</script>
+</body>
+</html>
+

@@ -27,28 +27,20 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
-import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -56,8 +48,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -1197,6 +1189,7 @@ public class ProcessStore {
 		try {
 			StreamHostObject s = (StreamHostObject) docObject;
 			InputStream docStream = s.getStream();
+
 			RegistryService registryService =
 					ProcessCenterServerHolder.getInstance().getRegistryService();
 			if (registryService != null) {
@@ -1238,6 +1231,158 @@ public class ProcessStore {
 		} catch(Exception e) {
 			log.error("Upload documentation error.");
 		}
+		return processId;
+	}
+
+
+	public String getProcessTags() throws ProcessCenterException{
+
+		String textContent = "FAILED TO GET PROCESS TAGS";
+
+		try {
+			JSONObject tagsObj = new JSONObject();
+
+			RegistryService registryService =
+					ProcessCenterServerHolder.getInstance().getRegistryService();
+			if (registryService != null) {
+				UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+				String[] processPaths = GovernanceUtils
+						.findGovernanceArtifacts("application/vnd.wso2-process+xml", reg);
+				for (String processPath : processPaths) {
+					Resource processResource = reg.get(processPath);
+
+					String processContent = new String((byte[]) processResource.getContent());
+					Document processXML = stringToXML(processContent);
+					String processName =
+							processXML.getElementsByTagName("name").item(0).getTextContent();
+					String processVersion =
+							processXML.getElementsByTagName("version").item(0).getTextContent();
+
+					JSONObject processJSON = new JSONObject();
+					processJSON.put("path", processPath);
+					processJSON.put("processid", processResource.getUUID());
+					processJSON.put("processname", processName);
+					processJSON.put("processversion", processVersion);
+					Tag[] tags = reg.getTags(processPath);
+
+					for(Tag tag : tags){
+
+						Iterator<String> keys = tagsObj.keys();
+
+						if(!keys.hasNext()  || keys == null){
+							JSONArray newTagArray = new JSONArray();
+							newTagArray.put(processJSON);
+							tagsObj.put(tag.getTagName(), newTagArray);
+							continue;
+						}
+
+
+						while(keys.hasNext()){
+							String temp = (keys.next());
+
+							if(temp == tag.getTagName()){
+								JSONArray processArray = ((JSONArray) tagsObj.get(temp));
+								processArray = processArray.put(processJSON);
+								tagsObj.put(temp, processArray);
+								break;
+
+							}
+							if(!keys.hasNext()){
+								JSONArray newTagArray = new JSONArray();
+								newTagArray.put(processJSON);
+								tagsObj.put(tag.getTagName(), newTagArray);
+							}
+						}
+					}
+				}
+
+				textContent = tagsObj.toString();
+
+			} else {
+				String msg = "Registry service not available for retrieving processes.";
+				throw new ProcessCenterException(msg);
+			}
+		} catch (Exception e) {
+			String msg = "Failed";
+			log.error(msg, e);
+			throw new ProcessCenterException(msg, e);
+		}
+
+		return textContent;
+
+	}
+
+	public String associatePDF(String processName, String processVersion, Object object){
+
+		String processId = "FAILED TO ADD PDF";
+		log.debug("Creating PDF resource...");
+		try {
+			StreamHostObject s = (StreamHostObject) object;
+			InputStream pdfStream = s.getStream();
+			RegistryService registryService =
+					ProcessCenterServerHolder.getInstance().getRegistryService();
+			if (registryService != null) {
+				UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+				// store pdf content as a registry resource
+				Resource pdfContentResource = reg.newResource();
+				byte[] pdfContent = IOUtils.toByteArray(pdfStream);
+				String pdfText = new String(pdfContent);
+				pdfContentResource.setContent(pdfText);
+				pdfContentResource.setMediaType("application/xml");
+				String pdfContentPath = "pdf/" + processName + "/" + processVersion;
+				reg.put(pdfContentPath, pdfContentResource);
+
+				DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+				// add pdf asset pointing to above content
+				String mns = "http://www.wso2.org/governance/metadata";
+				Document doc = docBuilder.newDocument();
+
+				Element rootElement = doc.createElementNS(mns, "metadata");
+				doc.appendChild(rootElement);
+
+				Element overviewElement = append(doc, rootElement, "overview", mns);
+				appendText(doc, overviewElement, "name", mns, processName);
+				appendText(doc, overviewElement, "version", mns, processVersion);
+				appendText(doc, overviewElement, "description", mns, "");
+				String processPath = "processes/" + processName + "/" + processVersion;
+				appendText(doc, overviewElement, "processpath", mns, processPath);
+
+				Element contentElement = append(doc, rootElement, "content", mns);
+				appendText(doc, contentElement, "contentpath", mns, pdfContentPath);
+
+				String pdfAssetContent = xmlToString(doc);
+				Resource pdfAsset = reg.newResource();
+				pdfAsset.setContent(pdfAssetContent);
+				pdfAsset.setMediaType("application/vnd.wso2-bpmn+xml");
+
+				String pdfAssetPath = "bpmn/" + processName + "/" + processVersion;
+				reg.put(pdfAssetPath, pdfAsset);
+				Resource storedPDFAsset = reg.get(pdfAssetPath);
+				String bpmnAssetID = storedPDFAsset.getUUID();
+
+				// update process by linking the bpmn asset
+
+				Resource processAsset = reg.get(processPath);
+				byte[] processContentBytes = (byte[]) processAsset.getContent();
+				String processContent = new String(processContentBytes);
+				Document pdoc = stringToXML(processContent);
+				pdoc.getElementsByTagName("bpmnpath").item(0).setTextContent(pdfAssetPath);
+				pdoc.getElementsByTagName("bpmnid").item(0).setTextContent(bpmnAssetID);
+				String newProcessContent = xmlToString(pdoc);
+				processAsset.setContent(newProcessContent);
+				reg.put(processPath, processAsset);
+
+				Resource storedProcessAsset = reg.get(processPath);
+				processId = storedProcessAsset.getUUID();
+			}
+		} catch (Exception e) {
+			log.error(e);
+		}
+
 		return processId;
 	}
 
