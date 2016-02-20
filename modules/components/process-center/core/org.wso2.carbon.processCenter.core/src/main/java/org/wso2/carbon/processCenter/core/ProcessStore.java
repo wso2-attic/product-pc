@@ -1218,13 +1218,15 @@ public class ProcessStore {
 
 
 
-    public String getProcessDetails(String processPath) {
+    public String getProcessDetails(String processPath) throws ProcessCenterException{
 
         String processDetails = "{}";
-        JSONArray result = null;
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
+
+                JSONArray result = new JSONArray();
+
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
                 Resource processResource = reg.get(processPath);
                 String processContent = new String((byte[]) processResource.getContent());
@@ -1259,6 +1261,7 @@ public class ProcessStore {
         } catch (Exception e) {
             String msg = "Failed";
             log.error(msg, e);
+            throw new ProcessCenterException(msg);
         }
 
         return processDetails;
