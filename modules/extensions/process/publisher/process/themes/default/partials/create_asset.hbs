@@ -32,6 +32,17 @@
         }
     }
 
+    function associateFlowChart(element) {
+        if($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == ""){
+            alertify.error('please fill the required fields.');
+        }else{
+            $('#flow-chart-view-header').text($('#pName').val());
+            $("#overviewDiv").hide();
+            $("#flowChartView").show();
+            init();
+        }
+    }
+
     function showMain() {
         $("#mainView").show();
         $("#bpmnView").hide();
@@ -294,6 +305,7 @@
                     <div class="col-sm-offset-2 col-sm-10">
                         <button class="btn btn-primary" onclick="showTextEditor(this)">Describe process in text</button>
                         <button class="btn btn-primary" onclick="associateBPMN(this)">Associate BPMN model</button>
+                        <button class="btn btn-primary" onclick="associateFlowChart(this)">Associate a Flow Chart</button>
                     </div>
                 </div>
 
@@ -422,6 +434,41 @@
                    id="meta-asset-type">
         </div>
     </form>
+</div>
+
+<div ng-app="" id="flowChartView" style="display:none">
+    <h4 id="flow-chart-view-header">How to?</h4>
+    <div>
+        <ul>
+            <li>Click on a symbol in the palette to get a copy of it.</li>
+            <li>Connectors are shown around the symbols. Starting point is shown by a green hollow circle and ending point is
+                shown by a green filled circle.</li>
+            <li>Right click on the symbol to edit text</li>
+        </ul>
+    </div>
+    <div style="width:100%; height: 50%; white-space:nowrap;">
+        <span style="display: inline-block; vertical-align: top; padding: 5px; width:15%">
+            <div id="myPalette" style="border: solid 1px gray; height: auto"><p><center><strong>Palette</strong></center></p>
+                <div class="jtk-demo-main" style="margin-top: 20px;">
+                    <div class="jtk-demo-canvas canvas-wide flowchart-demo" id="canvas1">
+                        <div class="window start jsplumb-connected" id="startEv"><strong><p>start</p></strong></div>
+                        <div class="window step jsplumb-connected-step" id="stepEv"><strong><p>step</p></strong></div>
+                        <div class="window diamond jsplumb-connected-step" id="descEv"><strong><p class="desc-text">decision</p></strong></div>
+                        <div class="window start jsplumb-connected-end" id="endEv"><strong><p>end</p></strong></div>
+                    </div>
+                </div>
+            </div>
+        </span>
+
+        <span style="display: inline-block; vertical-align: top; padding: 5px; width:85%">
+          <div id="myDiagram" style="border: solid 1px gray;;"><p><center><strong>Drawing</strong></center></p>
+              <div class="jtk-demo-main" style="margin-top: 20px;">
+                  <div class="jtk-demo-canvas canvas-wide flowchart-demo jtk-surface  jtk-surface-nopan" id="canvas">
+                  </div>
+              </div>
+          </div>
+        </span>
+    </div>
 </div>
 
 <table style="display: none;" class="refernceTableForUnbounded">
