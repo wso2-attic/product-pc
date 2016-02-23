@@ -1,12 +1,24 @@
 <script>
     var processNames = [];
     var processListObj;
+    var pid;
 
-    window.onload = getProcessList;
+    window.onload = function(){
+
+        var url = window.location.toString();
+        pid = url.substr(url.lastIndexOf('/') + 1);
+        getProcessList();
+    }
 
     function getMainProcess(){
         var mainProcess = $('#view-header').text() + "-" + $('#process-version').text();
         return mainProcess;
+    }
+
+    function showInfoContent(){
+        $("#overviewDiv").hide();
+        $("#infocontentDiv").show();
+
     }
 
     function showBPMN() {
@@ -117,6 +129,11 @@
         $("#processTextEditDiv").hide();
         $("#bpmnViewDiv").hide();
         $("#bpmnEditDiv").hide();
+        $("#infocontentDiv").hide();
+        $("#holder").hide();
+
+
+
     }
 
     function editProcessOwner(e){
@@ -153,6 +170,19 @@
                 processListObj = JSON.parse(response);
                 for(var i = 0 ; i < processListObj.length ; i++){
                     processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
+                    if(processListObj[i].processid == pid){
+                        if(processListObj[i].pdfpath == "NA"){
+                            //show pdf uploader
+                            $("#pdfUploader").show();
+                            $("#pdfViewer").hide();
+                        }
+                        else{
+                            //show pdf view button
+                            $("#pdfUploader").hide();
+                            $("#pdfViewer").show();
+                        }
+
+                    }
                 }
             },
             error: function () {
@@ -168,6 +198,26 @@
             }
         }
         return true;
+    }
+
+    function isPdfAvailable(pid){
+        for(var i = 0 ; i < processListObj.length ; i++){
+            if(processListObj[i].processid == pid){
+                        if(processListObj[i].pdfpath == "NA"){
+                            //show pdf uploader
+                            $("#pdfUploader").show();
+                            $("#pdfViewer").hide();
+                            return false;
+                        }
+                        else{
+                            //show pdf view button
+                            $("#pdfUploader").hide();
+                            $("#pdfViewer").show();
+                            return true;
+                        }
+
+                    }
+        }
     }
 
     function readUpdatedSubprocess(currentObj){
@@ -481,44 +531,155 @@
         }
     }
 
+    //****************************PDF rendering*************************************************
+
+    function showPDF(){
+
+        $("#overviewDiv").hide();
+        $("#processTextContainer").hide();
+        $("#processTextEditDiv").hide();
+        $("#bpmnViewDiv").hide();
+        $("#bpmnEditDiv").hide();
+        $("#holder").show();
+        loadPdf();
+
+    }
+
+    function loadPdf() {
+        var ppath = 'apis/get_process_pdf?process_pdf_path=/_system/governance/pdf/{{assets.tables.[0].fields.name.value}}/{{assets.tables.[0].fields.version.value}}';
+
+        $.ajax({
+            url: 'https://localhost:9443/publisher/assets/process/apis/get_process_pdf?process_pdf_path=/_system/governance/pdf/{{assets.tables.[0].fields.name.value}}/{{assets.tables.[0].fields.version.value}}',
+            type: 'GET',
+            dataType: 'text',
+            success: function (data) {
+                //renderPDF(base64ToUint8Array(data), document.getElementById("holder"));
+                renderPDF(base64ToUint8Array(data));
+
+            },
+            error: function () {
+                alertify.error('pdf retrieving error');
+            }
+        });
+    }
+
+    var pdfDoc = null;
+    var pageNum ;
+    scale = 1.5;
+    canvas = document.getElementById('the-canvas');
+    var ctx;
+    //
+    // Go to previous page
+    //
+    function goPrevious() {
+        if (pageNum <= 1)
+            return;
+        pageNum--;
+        renderPage(pageNum);
+    }
+
+    //
+    // Go to next page
+    //
+    function goNext() {
+        if (pageNum >= pdfDoc.numPages)
+            return;
+        pageNum++;
+        renderPage(pageNum);
+    }
+
+
+    function renderPDF(url) {
+
+        pdfDoc = null;
+        pageNum = 1;
+        scale = 1.5;
+        canvas = document.getElementById('the-canvas');
+        ctx = canvas.getContext('2d');
+        PDFJS.disableWorker = true;
+
+        PDFJS.getDocument(url).then(function getPdf(_pdfDoc) {
+            pdfDoc = _pdfDoc;
+            renderPage(pageNum);
+
+        });
+    }
+
+    // Get page info from document, resize canvas accordingly, and render page
+
+    function renderPage(num) {
+        // Using promise to fetch the page
+        pdfDoc.getPage(num).then(function(page) {
+            var viewport = page.getViewport(scale);
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            // Render PDF page into canvas context
+            var renderContext = {
+                canvasContext: ctx,
+                viewport: viewport
+            };
+            page.render(renderContext);
+        });
+
+        // Update page counters
+        document.getElementById('page_num').textContent = pageNum;
+        document.getElementById('page_count').textContent = pdfDoc.numPages;
+    }
+    // }
+
+    function base64ToUint8Array(base64) {//base64 is an byte Array sent from server-side
+
+        var raw = atob(base64); //This is a native function that decodes a base64-encoded string.
+        var uint8Array = new Uint8Array(new ArrayBuffer(raw.length));
+        for (var i = 0; i < raw.length; i++) {
+            uint8Array[i] = raw.charCodeAt(i);
+        }
+        return uint8Array;
+    }
+
 </script>
 
 <h2 id="view-header">{{assets.tables.[0].fields.name.value}}</h2>
 <br/>
 <div id="overviewDiv">
-            <table class="table table-responsive" style="width: 8cm;border-bottom:0px !important;">
-                <tbody>
-                <tr>
-                    <td width="40%" style="border: 0px !important;">Version:</td>
-                    <td width="60%" id="process-version" style="border: 0px !important;">{{assets.tables.[0].fields.version.value}}</td>
-                </tr>
-                <tr>
-                    <td width="40%" style="border: 0px !important;">Owner:</td>
-                    <td width="40%" style="border: 0px !important;" contenteditable="true" onblur="editProcessOwner(this)">{{assets.tables.[0].fields.owner.value}}</td>
-                    <td width="20%" style="border: 0px !important;"><span id="processOwnerUpdateBtn" class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Click here to update the value" style="color:#0081c2;cursor: pointer;display: none;" onclick="updateProcessOwner(this)"></span></td>
-                </tr>
-                </tbody>
-            </table>
+    <table class="table table-responsive" style="width: 8cm;border-bottom:0px !important;">
+        <tbody>
+        <tr>
+            <td width="40%" style="border: 0px !important;">Version:</td>
+            <td width="60%" id="process-version" style="border: 0px !important;">{{assets.tables.[0].fields.version.value}}</td>
+        </tr>
+        <tr>
+            <td width="40%" style="border: 0px !important;">Owner:</td>
+            <td width="40%" style="border: 0px !important;" contenteditable="true" onblur="editProcessOwner(this)">{{assets.tables.[0].fields.owner.value}}</td>
+            <td width="20%" style="border: 0px !important;"><span id="processOwnerUpdateBtn" class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Click here to update the value" style="color:#0081c2;cursor: pointer;display: none;" onclick="updateProcessOwner(this)"></span></td>
+        </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-primary" onclick="showInfoContent()">show process info</button>
+    <button id="pdfViewer" class="btn btn-primary" style="display: none" onclick="showPDF()">Show PDF</button>
+    <br><br><hr>
+    <div id="pdfUploader" class="form-group" style="display: none">
 
-            <div class="control-group" style="display: inline-block">
-                {{#if processTextAvaliable}}
-                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View/Edit Process Text</button></div>
-                    <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()" style="display: none">Describe process in text</button></div>
-                {{else}}
-                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View/Edit Process Text</button></div>
-                    <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button></div>
-                {{/if}}
-            </div>
+        <form method="post" action="apis/upload_pdf"  onsubmit="" enctype="multipart/form-data" class="form-horizontal" id="form-bar-create">
+            <br>
+            <div style="float:left;width:15cm">
+                <input type="file" onchange="setfilename(this.value);" class="filestyle" data-buttonname="btn-primary" data-placeholder="Associate pdf/text file" name="pdfFile" id="pdfFile" data-buttontext="PDF file" accept=".txt,.doc,.pdf" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
 
-            <div class="control-group" style="display: inline-block">
-                {{#if bpmnAvaliable}}
-                    <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
-                    <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
-                {{else}}
-                    <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
-                {{/if}}
+            </div><br><br>
+            <input type="hidden" id="ProcessName" name="ProcessName" value="p">
+            <input type="hidden" id="ProcessVersion" name="ProcessVersion" value="p">
+
+            <div id="saveButtons" class="form-actions">
+                <input type="submit" id="btn-create-asset-bar" class="btn btn-primary" name="addNewAssetButton" value="Upload pdf">
+                <button class="btn" type="reset">Reset</button>
+                <input type="hidden" value="process" name="process" id="meta-asset-type">
             </div>
-            <br /><br />
+        </form>
+    </div>
+
+
+    <br /><br />
 
     <form class="form-horizontal">
         <div class="control-group">
@@ -617,6 +778,28 @@
     </form>
 </div>
 
+<div id="infocontentDiv" style="display: none">
+    <div class="control-group" style="display: inline-block">
+        {{#if processTextAvaliable}}
+            <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View/Edit Process Text</button></div>
+            <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()" style="display: none">Describe process in text</button></div>
+        {{else}}
+            <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View/Edit Process Text</button></div>
+            <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button></div>
+        {{/if}}
+    </div>
+
+    <div class="control-group" style="display: inline-block">
+        {{#if bpmnAvaliable}}
+            <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
+        {{else}}
+            <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
+
+        {{/if}}
+    </div>
+
+</div>
+
 <div id="processTextContainer" style="display: none">
     <div class="form-group">
         <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button>
@@ -642,11 +825,27 @@
               style="width:80em"></textarea>
 </div>
 
+<div id="holder" style="display:none">
+    <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button><br /><br />
+    <hr>
+    <div>
+        <button id="prev" class="btn btn-primary" onclick="goPrevious()">Previous</button>
+        <button id="next" class="btn btn-primary" onclick="goNext()">Next</button>
+        &nbsp; &nbsp;
+        <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+    </div>
+
+    <div>
+        <canvas id="the-canvas" style="border:1px solid black"></canvas>
+    </div>
+
+</div>
+
 <div id="bpmnViewDiv" style="display: none">
     <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button><br /><br />
-<div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
-    <img id="bpmnImage" src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
-</div>
+    <div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
+        <img id="bpmnImage" src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
+    </div>
 </div>
 
 <div id="bpmnEditDiv" style="display:none">

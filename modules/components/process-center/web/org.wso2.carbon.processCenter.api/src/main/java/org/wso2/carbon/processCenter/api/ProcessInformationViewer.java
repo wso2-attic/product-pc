@@ -111,7 +111,7 @@ public class ProcessInformationViewer {
         ProcessStore store = new ProcessStore();
         resourcePath = resourcePath.split("=")[1];
         resourcePath = resourcePath.replaceAll("%2F", "/");
-        String result = store.getSuccessorPredecessorSubProcessList(resourcePath);
+        String result = store.getSucessorPredecessorSubprocessList(resourcePath);
         if(!"".equals(result)){
             return Response.ok(new JSONArray().put(result).toString()).status(Response.Status.CREATED).build();
         }else{

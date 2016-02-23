@@ -8,6 +8,8 @@ CREATE TEMPORARY TABLE BPMNProcessInstances USING CarbonAnalytics OPTIONS (table
 CREATE TEMPORARY TABLE PROCESS_USAGE_SUMMARY USING CarbonAnalytics OPTIONS (tableName "PROCESS_USAGE_SUMMARY_DATA",
 schema "processDefinitionId string -i,
 processDefKey facet -i,
+processKeyName string -i,
+processKey facet -i,
 processVersion string -i,
 processVer facet -i,
 processInstanceId string -i,
@@ -20,8 +22,9 @@ primaryKeys "processInstanceId,processDefinitionId"
 );
 
 INSERT OVERWRITE TABLE PROCESS_USAGE_SUMMARY 
-SELECT DISTINCT processDefinitionId, processDefinitionId, getProcessVersion(processDefinitionId) AS processVersion, 
-getProcessVersion(processDefinitionId) AS processVersion, processInstanceId, getTime(startTime) AS startedTime, 
+SELECT DISTINCT processDefinitionId, processDefinitionId, getProcessKey(processDefinitionId) AS processKeyName,
+getProcessKey(processDefinitionId) AS processKey, getProcessVersion(processDefinitionId) AS processVersion,
+getProcessVersion(processDefinitionId) AS processVer, processInstanceId, getTime(startTime) AS startedTime,
 getTime(startTime) AS startTime, getTime(endTime) AS finishedTime, getTime(endTime) AS finishTime, duration 
 FROM BPMNProcessInstances;
 
@@ -46,8 +49,7 @@ INSERT OVERWRITE TABLE TASK_USAGE_SUMMARY
 SELECT DISTINCT taskDefinitionKey, taskDefinitionKey, taskInstanceId, processInstanceId, getTime(startTime) AS startedTime, 
 getTime(startTime) AS startTime, getTime(endTime) AS finishedTime, getTime(endTime) AS finishTime, duration, assignee, assignee 
 FROM BPMNTaskInstances;            
-       
-       
+
 CREATE TEMPORARY TABLE USER_INVOLVE_SUMMARY USING CarbonAnalytics OPTIONS (tableName "USER_INVOLVE_SUMMARY_DATA",
 schema "processDefinitionId string -i,
 processDefKey facet -i,

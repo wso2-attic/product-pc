@@ -98,6 +98,16 @@ public class AnalyticsUDF {
 	 * @return version of the process
 	 */
 	public String getProcessVersion(String processName) {
+		return processName.split(AnalyticsUDFConstants.LAST_COLON_SEPARATOR)[0];
+	}
+
+	/**
+	 * Get process key
+	 *
+	 * @param processName
+	 * @return key of the process
+	 */
+	public String getProcessKey(String processName) {
 		return processName.split(AnalyticsUDFConstants.COLON_SEPARATOR)[0];
 	}
 

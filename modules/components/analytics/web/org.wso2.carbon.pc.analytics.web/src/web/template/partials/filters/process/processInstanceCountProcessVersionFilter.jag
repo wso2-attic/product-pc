@@ -19,7 +19,7 @@ window.onload = function() {
         style: 'btn',
         size: 4
     });
-    loadProcessList('processInstanceCountProcessVersionProcessList', 'processInstanceCountProcessVersionBarChart', drawProcessInstanceCountVsProcessVersionResult);
+    loadProcessKeyList('processInstanceCountProcessVersionProcessList', 'processInstanceCountProcessVersionBarChart', drawProcessInstanceCountVsProcessVersionResult);
 };
 </script>
 

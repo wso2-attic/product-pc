@@ -23,16 +23,16 @@
          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
          http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
-    <jaxrs:server id="processInformationViewer" address="/process-center">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.processCenter.api.ProcessInformationViewer"/>
-            <bean class="org.wso2.carbon.processCenter.api.ProcessCenterService"/>
+    <!--<jaxrs:server id="processInformationViewer" address="/process-center">-->
+        <!--<jaxrs:serviceBeans>-->
+            <!--<bean class="org.wso2.carbon.processCenter.api.ProcessInformationViewer"/>-->
+            <!--<bean class="org.wso2.carbon.processCenter.api.ProcessCenterService"/>-->
 
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="jacksonBean"/>
-        </jaxrs:providers>
-    </jaxrs:server>
+        <!--</jaxrs:serviceBeans>-->
+        <!--<jaxrs:providers>-->
+            <!--<ref bean="jacksonBean"/>-->
+        <!--</jaxrs:providers>-->
+    <!--</jaxrs:server>-->
 
     <bean id="jacksonBean" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
 </beans>

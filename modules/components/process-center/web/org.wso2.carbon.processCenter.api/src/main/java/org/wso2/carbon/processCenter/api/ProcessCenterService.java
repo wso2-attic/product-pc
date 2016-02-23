@@ -19,17 +19,24 @@ package org.wso2.carbon.processCenter.api;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.cxf.attachment.DelegatingInputStream;
+import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
+import org.apache.cxf.jaxrs.ext.multipart.ContentDisposition;
+import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
 import org.wso2.carbon.processCenter.core.ProcessStore;
 
+import javax.activation.DataHandler;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.List;
 
@@ -99,12 +106,18 @@ public class ProcessCenterService {
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getProcessDetails(String processPath) {
 
-        String result = org.wso2.carbon.processCenter.core.ProcessStore.getInstance().getProcessDetails((processPath.split("=")[1]).replaceAll("%2F", "/"));
-        if (result != null) {
+        try {
+            String result = org.wso2.carbon.processCenter.core.ProcessStore.getInstance().getProcessDetails((processPath.split("=")[1]).replaceAll("%2F", "/"));
+            if (result != "{}") {
 
-            return Response.ok(result).build();
+                return Response.ok(result).build();
 
-        } else {
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+
+            }
+        }catch (Exception ex){
+            log.error(ex.getMessage(), ex);
             return Response.status(Response.Status.BAD_REQUEST).build();
 
         }
@@ -199,26 +212,36 @@ public class ProcessCenterService {
     @Path("/uploadbpmn/")
     public void createBPMN(@FormParam("bpmnProcessName") String bpmnName,
                              @FormParam("bpmnProcessVersion") String bpmnVersion,
-                             MultipartBody multipartBody,
+                             //MultipartBody multipartBody,
+                             @Multipart(value = "bpmnFile") @NotNull Attachment attachment2,
                              @Context HttpServletResponse servletResponse) {
 
         log.info(bpmnName+bpmnVersion+"***********************");
 
-        List<Attachment> attachments = multipartBody.getAllAttachments();
-        Attachment file = multipartBody.getAttachment("file");
-       // DataHandler dataHandler = attachments.get(0).getDataHandler();
+        //Attachment a = multipartBody.getAttachmentById("file");
+        ContentDisposition cd = attachment2.getContentDisposition();
 
         try {
-            //InputStream inputStream = dataHandler.getInputStream();
+            byte[] attachmentArray = new byte[0];
 
-            InputStream inputStream = file.getObject(InputStream.class);
+            DelegatingInputStream is1 = (DelegatingInputStream)attachment2.getDataHandler().getDataSource().getInputStream();
+            InputStream is2 = ((DelegatingInputStream)(is1).getInputStream()).getInputStream();
+            log.info(is2.toString());
+           // attachmentArray = IOUtils.toByteArray(datasource);
+
+         //   OutputStream out = getAttachmentStream(datasource);
+          //  String content = out.toString();
+           // log.info("content is" +content);
+            log.info("byte array"+ new String(attachmentArray));
+            //   InputStream inputStream = dataHandler.getInputStream();
+           // InputStream inputStream2 = attachment.getObject(InputStream.class);
 
             StringWriter writer = new StringWriter();
-            IOUtils.copy(inputStream, writer);
+          //  IOUtils.copy(datasource, writer);
             String theString = writer.toString();
 
             log.info(theString);
-            String result = org.wso2.carbon.processCenter.core.ProcessStore.getInstance().createBPMN(bpmnName, bpmnVersion, inputStream);
+            String result = org.wso2.carbon.processCenter.core.ProcessStore.getInstance().createBPMN(bpmnName, bpmnVersion, is2);
 
             if (result != "FAILED TO CREATE BPMN") {
                 //return Response.ok(result).build();
@@ -243,10 +266,20 @@ public class ProcessCenterService {
         }
 
     }
-        // IncomingFile incomingFile = attachment.getObject(IncomingFile.class);
-        //  InputStream inputStream = attachment.getObject(InputStream.class);
 
 
+    public static OutputStream getAttachmentStream(InputStream inputStream) throws IOException {
+
+        if (inputStream != null) {
+            CachedOutputStream cachedOutputStream = new CachedOutputStream();
+            IOUtils.copy(inputStream, cachedOutputStream);
+            cachedOutputStream.close();
+
+            return cachedOutputStream.getOut();
+        }
+
+        return null;
+    }
 
 
 //    return Response.status(200)
