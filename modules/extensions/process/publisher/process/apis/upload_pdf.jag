@@ -3,8 +3,8 @@ importPackage(org.wso2.carbon.pc.core);
 var log = new Log();
 var ps = new ProcessStore();
 
-var pName = String(request.getParameter("processName"));
-var pVersion = String(request.getParameter("processVersion"));
+var pName = String(request.getParameter("ProcessName"));
+var pVersion = String(request.getParameter("ProcessVersion"));
 
 var processid = "NA";
 var files = request.getAllFiles();

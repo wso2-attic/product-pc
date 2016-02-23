@@ -49,6 +49,25 @@
         }
     }
 
+
+    function associatePdf(element) {
+        if($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == ""){
+            alertify.error('please fill the required fields.');
+        }else{
+            $('#create-view-header').text($('#pName').val());
+            $("#ProcessName").attr("value", $("#pName").val());
+            $("#ProcessVersion").attr("value", $("#pVersion").val());
+
+            saveProcess(element);
+            //completeBPMNDetails();
+            $("#overviewDiv").hide();
+            $("#processTextView").hide();
+            $("#bpmnView").hide();
+            $("#docView").hide();
+            $("#pdfUploader").show();
+        }
+    }
+
     function newDocFormToggle() {
         $("#addNewDoc").toggle("slow");
     }
@@ -341,34 +360,11 @@
                         <button class="btn btn-primary" onclick="showTextEditor(this)">Describe process in text</button>
                         <button class="btn btn-primary" onclick="associateBPMN(this)">Associate BPMN model</button>
                         <button class="btn btn-primary" onclick="associateDocument(this)">Documents</button>
+                        <button class="btn btn-primary" onclick="associatePdf(this)">PDF</button>
                     </div>
                 </div>
                 <br><br><hr>
-                <div class="form-group">
 
-                <form method="post" action="#"  enctype="multipart/form-data" class="form-horizontal" id="form-bar-create">
-                            <br>
-                            <div style="float:left;width:15cm">
-                                <input type="file" onchange="setfilename(this.value);" class="filestyle" data-buttonname="btn-primary" data-placeholder="Associate pdf/text file" name="pdfFile" id="pdfFile" data-buttontext="PDF file" accept=".txt,.doc,.pdf" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
-                                <!--div class="bootstrap-filestyle input-group">
-                                    <input type="text" class="form-control " placeholder="Associate pdf/text file" disabled="" id="filename">
-            <span class="group-span-filestyle input-group-btn" tabindex="0"><label for="pdfFile" class="btn btn-primary ">
-                <span class="icon-span-filestyle glyphicon glyphicon-folder-open"></span> <span class="buttonText">PDF file</span>
-            </label>
-            </span>
-                                </div-->
-                            </div><br><br>
-                            <input type="hidden" id="ProcessName" name="nProcessName" value="">
-                            <input type="hidden" id="ProcessVersion" name="ProcessVersion" value="">
-
-                            <div id="saveButtons" class="form-actions">
-                                <input type="submit" id="btn-create-asset-bar" class="btn btn-primary" name="addNewAssetButton" value="Upload pdf">
-                                <button class="btn" type="reset">Reset</button>
-                                <input type="hidden" value="process" name="process" id="meta-asset-type">
-                            </div>
-
-                        </form>
-</div>
             </div>
 
             <h2 class="field-title">
@@ -459,6 +455,32 @@
                 </div>
             </div>
         </div>
+</div>
+
+<div id="pdfUploader" class="form-group">
+
+    <form method="post" action="apis/upload_pdf"  onsubmit="" enctype="multipart/form-data" class="form-horizontal" id="form-bar-create">
+        <br>
+        <div style="float:left;width:15cm">
+            <input type="file" onchange="setfilename(this.value);" class="filestyle" data-buttonname="btn-primary" data-placeholder="Associate pdf/text file" name="pdfFile" id="pdfFile" data-buttontext="PDF file" accept=".txt,.doc,.pdf" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
+            <!--div class="bootstrap-filestyle input-group">
+                <input type="text" class="form-control " placeholder="Associate pdf/text file" disabled="" id="filename">
+<span class="group-span-filestyle input-group-btn" tabindex="0"><label for="pdfFile" class="btn btn-primary ">
+<span class="icon-span-filestyle glyphicon glyphicon-folder-open"></span> <span class="buttonText">PDF file</span>
+</label>
+</span>
+            </div-->
+        </div><br><br>
+        <input type="hidden" id="ProcessName" name="ProcessName" value="">
+        <input type="hidden" id="ProcessVersion" name="ProcessVersion" value="">
+
+        <div id="saveButtons" class="form-actions">
+            <input type="submit" id="btn-create-asset-bar" class="btn btn-primary" name="addNewAssetButton" value="Upload pdf">
+            <button class="btn" type="reset">Reset</button>
+            <input type="hidden" value="process" name="process" id="meta-asset-type">
+        </div>
+
+    </form>
 </div>
 
 <div id="processTextDiv" style="display: none">
@@ -660,3 +682,4 @@
         <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td></tr>
     </tbody>
 </table>
+</div>

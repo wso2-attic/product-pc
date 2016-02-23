@@ -129,22 +129,9 @@ public class ProcessStore {
 				Element propertiesElement = append(doc, rootElement, "properties", mns);
 				appendText(doc, propertiesElement, "processtextpath", mns, "NA");
 
-				//                if (processText != null && processText.length() > 0) {
-				//                    Resource processTextResource = reg.newResource();
-				//                    processTextResource.setContent(processText);
-				//                    processTextResource.setMediaType("text/html");
-				//                    String processTextResourcePath = "processText/" + processName + "/" + processVersion;
-				//                    reg.put(processTextResourcePath, processTextResource);
-				//                    appendText(doc, propertiesElement, "processtextpath", mns, processTextResourcePath);
-				//                } else {
-				//                    String processTextResourcePath = "processText/" + processName + "/" + processVersion;
-				//                    reg.delete(processTextResourcePath);
-				//                    appendText(doc, propertiesElement, "processtextpath", mns, "NA");
-				//                }
-
-				// fill bpmn properties with NA values
 				appendText(doc, propertiesElement, "bpmnpath", mns, "NA");
 				appendText(doc, propertiesElement, "bpmnid", mns, "NA");
+				appendText(doc, propertiesElement, "pdfpath", mns, "NA");
 
 				if (subprocess.length() != 0) {
 					for (int i = 0; i < subprocess.length(); i++) {
@@ -545,7 +532,6 @@ public class ProcessStore {
 				Resource barAsset = reg.get(barPath);
 				String barContent = new String((byte[]) barAsset.getContent());
 
-				//                String barContent = "<metadata xmlns=\"http://www.wso2.org/governance/metadata\"><overview><name>b4444</name><version>1.0.0</version><description>hfrefgygeofyure</description></overview><content><contentPath>bpmn_archives_binary/b4444/1.0.0</contentPath></content><bpmn><Name>test_name</Name><Path>bpmn/b4444.TestProcess1.bpmn/1.0.0</Path><Id>815fe296-9363-4895-b386-23162b78bec4</Id></bpmn></metadata>";
 
 				JSONObject bar = new JSONObject();
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -690,12 +676,16 @@ public class ProcessStore {
 							processXML.getElementsByTagName("name").item(0).getTextContent();
 					String processVersion =
 							processXML.getElementsByTagName("version").item(0).getTextContent();
+					String processPdf =
+							processXML.getElementsByTagName("pdfpath").item(0).getTextContent();
+
 
 					JSONObject processJSON = new JSONObject();
 					processJSON.put("path", processPath);
 					processJSON.put("processid", processResource.getUUID());
 					processJSON.put("processname", processName);
 					processJSON.put("processversion", processVersion);
+					processJSON.put("pdfpath", processPdf);
 					result.put(processJSON);
 				}
 
@@ -1328,50 +1318,55 @@ public class ProcessStore {
 				// store pdf content as a registry resource
 				Resource pdfContentResource = reg.newResource();
 				byte[] pdfContent = IOUtils.toByteArray(pdfStream);
-				String pdfText = new String(pdfContent);
-				pdfContentResource.setContent(pdfText);
-				pdfContentResource.setMediaType("application/xml");
+
+//				OutputStream out2 = new FileOutputStream("/home/sathya/Desktop/out2.pdf");
+//				out2.write(pdfContent);
+//				out2.close();
+
+				pdfContentResource.setContent(pdfContent);
+				pdfContentResource.setMediaType("application/pdf");
 				String pdfContentPath = "pdf/" + processName + "/" + processVersion;
 				reg.put(pdfContentPath, pdfContentResource);
-
-				DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-
-				// add pdf asset pointing to above content
-				String mns = "http://www.wso2.org/governance/metadata";
-				Document doc = docBuilder.newDocument();
-
-				Element rootElement = doc.createElementNS(mns, "metadata");
-				doc.appendChild(rootElement);
-
-				Element overviewElement = append(doc, rootElement, "overview", mns);
-				appendText(doc, overviewElement, "name", mns, processName);
-				appendText(doc, overviewElement, "version", mns, processVersion);
-				appendText(doc, overviewElement, "description", mns, "");
 				String processPath = "processes/" + processName + "/" + processVersion;
-				appendText(doc, overviewElement, "processpath", mns, processPath);
 
-				Element contentElement = append(doc, rootElement, "content", mns);
-				appendText(doc, contentElement, "contentpath", mns, pdfContentPath);
+//				DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+//				DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+//
+//				// add pdf asset pointing to above content
+//				String mns = "http://www.wso2.org/governance/metadata";
+//				Document doc = docBuilder.newDocument();
+//
+//				Element rootElement = doc.createElementNS(mns, "metadata");
+//				doc.appendChild(rootElement);
+//
+//				Element overviewElement = append(doc, rootElement, "overview", mns);
+//				appendText(doc, overviewElement, "name", mns, processName);
+//				appendText(doc, overviewElement, "version", mns, processVersion);
+//				appendText(doc, overviewElement, "description", mns, "");
+//				String processPath = "processes/" + processName + "/" + processVersion;
+//				appendText(doc, overviewElement, "processpath", mns, processPath);
+//
+//				Element contentElement = append(doc, rootElement, "content", mns);
+//				appendText(doc, contentElement, "contentpath", mns, pdfContentPath);
+//
+//				String pdfAssetContent = xmlToString(doc);
+//				Resource pdfAsset = reg.newResource();
+//				pdfAsset.setContent(pdfAssetContent);
+//				pdfAsset.setMediaType("application/vnd.wso2-bpmn+xml");
+//
+//				String pdfAssetPath = "pdfasset/" + processName + "/" + processVersion;
+//				reg.put(pdfAssetPath, pdfAsset);
+//				Resource storedPDFAsset = reg.get(pdfAssetPath);
+//				String storedPDFAssetUUID = storedPDFAsset.getUUID();
 
-				String pdfAssetContent = xmlToString(doc);
-				Resource pdfAsset = reg.newResource();
-				pdfAsset.setContent(pdfAssetContent);
-				pdfAsset.setMediaType("application/vnd.wso2-bpmn+xml");
-
-				String pdfAssetPath = "bpmn/" + processName + "/" + processVersion;
-				reg.put(pdfAssetPath, pdfAsset);
-				Resource storedPDFAsset = reg.get(pdfAssetPath);
-				String bpmnAssetID = storedPDFAsset.getUUID();
-
-				// update process by linking the bpmn asset
+				// update process by linking the pdf asset
 
 				Resource processAsset = reg.get(processPath);
 				byte[] processContentBytes = (byte[]) processAsset.getContent();
 				String processContent = new String(processContentBytes);
 				Document pdoc = stringToXML(processContent);
-				pdoc.getElementsByTagName("bpmnpath").item(0).setTextContent(pdfAssetPath);
-				pdoc.getElementsByTagName("bpmnid").item(0).setTextContent(bpmnAssetID);
+				pdoc.getElementsByTagName("pdfpath").item(0).setTextContent(pdfContentPath);
+			//	pdoc.getElementsByTagName("pdfid").item(0).setTextContent(storedPDFAssetUUID);
 				String newProcessContent = xmlToString(pdoc);
 				processAsset.setContent(newProcessContent);
 				reg.put(processPath, processAsset);
@@ -1383,7 +1378,36 @@ public class ProcessStore {
 			log.error(e);
 		}
 
+		log.info("successfully added pdf asset");
 		return processId;
+	}
+
+	public String getPDF(String pdfPath) {
+
+		String pdfString = "FAILED TO GET PDF";
+
+		try {
+			RegistryService registryService =
+					ProcessCenterServerHolder.getInstance().getRegistryService();
+			if (registryService != null) {
+				UserRegistry reg = registryService.getGovernanceSystemRegistry();
+				pdfPath = pdfPath.substring("/_system/governance/".length());
+				Resource pdfAsset = reg.get(pdfPath);
+				byte[]  pdfContent = (byte[]) pdfAsset.getContent();
+				//String base64 = new sun.misc.BASE64Encoder().encode(pdfContent);
+
+				//JSONObject pdf = new JSONObject();
+
+				//pdf.put("pdfByteArray", base64);
+
+				pdfString = new sun.misc.BASE64Encoder().encode(pdfContent);
+
+			}
+		} catch (Exception e) {
+			log.error("Failed to fetch BPMN model: " + pdfPath);
+		}
+
+		return pdfString;
 	}
 
 	//    public static void main(String[] args) {
