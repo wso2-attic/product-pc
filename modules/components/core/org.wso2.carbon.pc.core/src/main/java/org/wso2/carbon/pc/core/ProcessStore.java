@@ -1319,45 +1319,12 @@ public class ProcessStore {
 				Resource pdfContentResource = reg.newResource();
 				byte[] pdfContent = IOUtils.toByteArray(pdfStream);
 
-//				OutputStream out2 = new FileOutputStream("/home/sathya/Desktop/out2.pdf");
-//				out2.write(pdfContent);
-//				out2.close();
-
 				pdfContentResource.setContent(pdfContent);
 				pdfContentResource.setMediaType("application/pdf");
 				String pdfContentPath = "pdf/" + processName + "/" + processVersion;
 				reg.put(pdfContentPath, pdfContentResource);
 				String processPath = "processes/" + processName + "/" + processVersion;
 
-//				DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-//				DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-//
-//				// add pdf asset pointing to above content
-//				String mns = "http://www.wso2.org/governance/metadata";
-//				Document doc = docBuilder.newDocument();
-//
-//				Element rootElement = doc.createElementNS(mns, "metadata");
-//				doc.appendChild(rootElement);
-//
-//				Element overviewElement = append(doc, rootElement, "overview", mns);
-//				appendText(doc, overviewElement, "name", mns, processName);
-//				appendText(doc, overviewElement, "version", mns, processVersion);
-//				appendText(doc, overviewElement, "description", mns, "");
-//				String processPath = "processes/" + processName + "/" + processVersion;
-//				appendText(doc, overviewElement, "processpath", mns, processPath);
-//
-//				Element contentElement = append(doc, rootElement, "content", mns);
-//				appendText(doc, contentElement, "contentpath", mns, pdfContentPath);
-//
-//				String pdfAssetContent = xmlToString(doc);
-//				Resource pdfAsset = reg.newResource();
-//				pdfAsset.setContent(pdfAssetContent);
-//				pdfAsset.setMediaType("application/vnd.wso2-bpmn+xml");
-//
-//				String pdfAssetPath = "pdfasset/" + processName + "/" + processVersion;
-//				reg.put(pdfAssetPath, pdfAsset);
-//				Resource storedPDFAsset = reg.get(pdfAssetPath);
-//				String storedPDFAssetUUID = storedPDFAsset.getUUID();
 
 				// update process by linking the pdf asset
 
@@ -1366,7 +1333,6 @@ public class ProcessStore {
 				String processContent = new String(processContentBytes);
 				Document pdoc = stringToXML(processContent);
 				pdoc.getElementsByTagName("pdfpath").item(0).setTextContent(pdfContentPath);
-			//	pdoc.getElementsByTagName("pdfid").item(0).setTextContent(storedPDFAssetUUID);
 				String newProcessContent = xmlToString(pdoc);
 				processAsset.setContent(newProcessContent);
 				reg.put(processPath, processAsset);
@@ -1394,12 +1360,6 @@ public class ProcessStore {
 				pdfPath = pdfPath.substring("/_system/governance/".length());
 				Resource pdfAsset = reg.get(pdfPath);
 				byte[]  pdfContent = (byte[]) pdfAsset.getContent();
-				//String base64 = new sun.misc.BASE64Encoder().encode(pdfContent);
-
-				//JSONObject pdf = new JSONObject();
-
-				//pdf.put("pdfByteArray", base64);
-
 				pdfString = new sun.misc.BASE64Encoder().encode(pdfContent);
 
 			}
