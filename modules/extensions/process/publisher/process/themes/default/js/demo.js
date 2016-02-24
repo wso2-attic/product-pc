@@ -3,19 +3,6 @@ $(document).ready(function() {
 });
 
 jsPlumb.ready(function () {
-    //jsPlumb.makeSource($('.item'), {
-    //    connector:"StateMachine",
-    //    paintStyle: { strokeStyle: "#216477", lineWidth: 4 },
-    //    hoverPaintStyle: { strokeStyle: "blue" },
-    //    endpoint:["Dot", { width:40, height:20 }],
-    //    maxConnections:3
-    //});
-    //var endpointOptions = {
-    //    isTarget:true,
-    //    endpoint:"Dot",
-    //    paintStyle:{ fillStyle:"green" }
-    //};
-    //jsPlumb.makeTarget("state3", endpointOptions);
     var elementCount = 0;
     var instance = window.jsp = jsPlumb.getInstance({
         // default drag options
@@ -109,18 +96,18 @@ jsPlumb.ready(function () {
             connection.getOverlay("label").setLabel(myLabel);
         };
 
-    var _addEndpoints = function (toId, sourceAnchors, targetAnchors) {
-        for (var i = 0; i < sourceAnchors.length; i++) {
-            var sourceUUID = toId + sourceAnchors[i];
-            instance.addEndpoint("flowchart" + toId, sourceEndpoint, {
-                anchor: sourceAnchors[i], uuid: sourceUUID
-            });
-        }
-        for (var j = 0; j < targetAnchors.length; j++) {
-            var targetUUID = toId + targetAnchors[j];
-            instance.addEndpoint("flowchart" + toId, targetEndpoint, { anchor: targetAnchors[j], uuid: targetUUID });
-        }
-    };
+    //var _addEndpoints = function (toId, sourceAnchors, targetAnchors) {
+    //    for (var i = 0; i < sourceAnchors.length; i++) {
+    //        var sourceUUID = toId + sourceAnchors[i];
+    //        instance.addEndpoint("flowchart" + toId, sourceEndpoint, {
+    //            anchor: sourceAnchors[i], uuid: sourceUUID
+    //        });
+    //    }
+    //    for (var j = 0; j < targetAnchors.length; j++) {
+    //        var targetUUID = toId + targetAnchors[j];
+    //        instance.addEndpoint("flowchart" + toId, targetEndpoint, { anchor: targetAnchors[j], uuid: targetUUID });
+    //    }
+    //};
     // suspend drawing and initialise.
     instance.batch(function () {
         // listen for new connections; initialise them the same way we initialise the connections at startup.
@@ -174,10 +161,13 @@ jsPlumb.ready(function () {
             $('#canvas').append(element);
             element = "";
             var name = "Window" + elementCount;
-            _addEndpoints(name, startpoints, endpoints);
+            //_addEndpoints(name, startpoints, endpoints);
             instance.draggable(jsPlumb.getSelector(".jtk-node"), { grid: [20, 20] });
         }
     });
+
+    //jsPlumb.makeSource($('#flowchartWindow1'), sourceEndpoint);
+    //jsPlumb.makeTarget($('#flowchartWindow2'), targetEndpoint);
 
     $('#stepEv').click(function(){
         elementCount++;
@@ -233,7 +223,7 @@ jsPlumb.ready(function () {
         $('.start').not(this).css({'border-color':'green'});
         $('.window.jsplumb-connected-end').not(this).css({'border-color':'orangered'});
         $(this).css({'border-color':'red'});
-    })
+    });
 
     jsPlumb.fire("jsPlumbDemoLoaded", instance);
 
