@@ -1,7 +1,0 @@
-
-<div class="space"></div>
-<div class="selectOption">
-    <div class="txt"><strong><i class="fa fa-bars fa-1g"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SELECT AN ACTION </strong></div><br/>
-    <a href="designer" class="mainViewLink"><div class="mainViewBtn"><i class="fa fa-pencil fa-2x"></i>&nbsp;&nbsp;&nbsp;&nbsp; Process Designer</div></a>
-    <a href="processes" class="mainViewLink"><div class="mainViewBtn"><i class="fa fa-eye fa-2x"></i>&nbsp;&nbsp;&nbsp; Process Explorer</div></a>
-</div>
