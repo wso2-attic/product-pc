@@ -1,0 +1,33 @@
+<!--
+ ~ Copyright 2005-2015 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+<script type="text/javascript">
+    var user = '<%= session.get("user") %>';
+    window.onload = function() {
+        var expression = location.search;
+        if((expression.indexOf("overview_") > -1) || (expression.indexOf("properties_") > -1)){
+            invokeAdvanceSearch(user);
+        }else if(expression.indexOf("name") > -1){
+            var words = expression.split("\%22");
+            viewProcess("#section", words[3], user);
+        }else{
+            var element="";
+            element += "<div class=\"assets-container margin-top-double\">";
+            element += "   <div class=\"top-assets-empty-assert\">We couldn&#x27;t find anything for you.<\/div>";
+            element += "<\/div>";
+            $('#search-null').append(element);
+        }
+    };
+</script>

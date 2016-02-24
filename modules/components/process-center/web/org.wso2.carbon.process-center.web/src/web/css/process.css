@@ -1,0 +1,49 @@
+.bottom-none{
+    border-bottom: 0px;
+}
+
+.img-descriptive{
+    width: 140px;
+    height: 140px;
+    display: block;
+}
+
+.div-1{
+    width: 11%;
+    float: left;
+}
+
+.div-2{
+    width: 18%;
+    float: left;
+}
+
+.div-3{
+    width: 60%;
+    float: left;
+}
+
+.custom-padding{
+    padding-left: 10px;
+}
+
+.margin-bottom-none{
+    margin-bottom: 0px;
+}
+
+.margin-top-double{
+    margin-top: 20px;
+}
+
+.margin-bottom-quarter{
+    margin-bottom: 15px;
+}
+
+.custom-padding-left{
+    padding-left: 15px;
+}
+
+.main-div{
+    padding-left: 15px;
+    width: 100%;
+}

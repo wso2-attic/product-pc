@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.wso2.pc</groupId>
+        <artifactId>wso2pc-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../../../../pom.xml</relativePath>
+    </parent>
+
+
+    <artifactId>org.wso2.carbon.processCenter.core</artifactId>
+    <name>WSO2 Process Center - Core</name>
+    <description>process center core</description>
+    <packaging>bundle</packaging>
+    <url>http://wso2.org</url>
+
+    <properties>
+        <jackson.version>1.8.6</jackson.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+                <version>1.7.2</version>
+                <executions>
+                    <execution>
+                        <id>generate-scr-scrdescriptor</id>
+                        <goals>
+                            <goal>scr</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <sourceExcludes>
+                        **/package-info.java
+                    </sourceExcludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.3.5</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-Vendor>WSO2</Bundle-Vendor>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Private-Package>
+                            org.wso2.carbon.processCenter.core.internal
+                        </Private-Package>
+                        <Export-Package>
+                            !org.wso2.carbon.processCenter.core.internal,
+                            org.wso2.carbon.processCenter.core;version=${project.version},
+                            org.wso2.carbon.processCenter.core.*;version=${project.version}
+                        </Export-Package>
+                        <Import-Package>
+                            <!--!javax.xml.parsers,-->
+
+                            <!--*;resolution:=optional-->
+
+                            <!--org.xml.sax,-->
+                            <!--org.wso2.carbon.registry.core.session; version=${carbon.registry.core.version},-->
+                            <!--org.wso2.carbon.registry.core.service; version=${carbon.registry.core.version},-->
+                            <!--org.wso2.carbon.registry.core.exceptions; version=${carbon.registry.core.version},-->
+                            <!--org.wso2.carbon.registry.core; version=${carbon.registry.core.version},-->
+                            <!--org.wso2.carbon.governance.api.util,-->
+                            <!--org.w3c.dom,-->
+                            <!--org.osgi.service.component; version=${osgi.service.component.version},-->
+                            <!--org.json,-->
+                            <!--org.apache.commons.logging,-->
+                            <!--!javax.xml.parsers-->
+                            <!--org.jaggeryjs.hostobjects.stream,-->
+                            <!--javax.xml.transform.stream,-->
+                            <!--javax.xml.transform.dom,-->
+                            <!--javax.xml.transform-->
+                            <!--*;resolution:=optional-->
+                            org.xml.sax,
+                            org.wso2.carbon.registry.core.session; version=${carbon.registry.core.version},
+                            org.wso2.carbon.registry.core.service; version=${carbon.registry.core.version},
+                            org.wso2.carbon.registry.core.exceptions; version=${carbon.registry.core.version},
+                            org.wso2.carbon.registry.core; version=${carbon.registry.core.version},
+                            org.wso2.carbon.governance.api.util,
+                            org.w3c.dom,
+                            org.osgi.service.component; version=${osgi.service.component.version},
+                            org.json,
+                            org.apache.commons.logging,
+                            org.jaggeryjs.hostobjects.stream,
+                            javax.xml.transform.stream,
+                            javax.xml.transform.dom,
+                            javax.xml.transform
+                        </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>commons-io.wso2</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jaggeryjs</groupId>
+            <artifactId>org.jaggeryjs.hostobjects.stream</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </dependency>
+        <dependency>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>org.apache.felix.scr</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.registry.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.json.wso2</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.governance</groupId>
+            <artifactId>org.wso2.carbon.governance.api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.osgi</groupId>
+            <artifactId>org.eclipse.osgi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+            <artifactId>axiom</artifactId>
+            <version>1.2.11.wso2v9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-bpmn-converter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-image-generator</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -21,7 +21,7 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 /**
- * @scr.component name="org.wso2.carbon.pc.core.internal.ProcessCenterServiceComponent" immediate="true"
+ * @scr.component name="ProcessCenterServiceComponent" immediate="true"
  * @scr.reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService"
  * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
  */

@@ -1,0 +1,125 @@
+<!--
+  ~ Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!-- secondary header - app bar -->
+<div class="container-fluid navigation-container" style="background-color: #237bd5">
+    <div id="nav" class="row wr-app-bar">
+        <div class="wr-action-container">
+            <div class="wr-asset-type-switcher">
+                <!--a id="popoverExampleTwo" data-placement="bottom" class="ctrl-asset-type-switcher pull-left" href="javascript:void(0)" data-click-event="popover">
+                    <span class="btn-asset"></span>
+                </a-->
+                <div class="popover bottom right fade clearfix">
+                    <div class="arrow left"></div>
+                    <div class="popover-content">
+                        <ul class="tiles clearfix">
+                            <li>
+                                <a target="_self" href='/store/assets/process/list'>
+                                    <i class="icon fw fw-resource"></i>
+                                    <span class="name">Process</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="search">
+                <input id="search" class="search-area" placeholder="Search by Asset Name..." type="text" >
+
+                <button id="advanced-search-btn"  data-placement="bottom" class="btn btn-default float-left advanced-search-btn" data-original-title="" title="" style="width: 40px"></button>
+
+                <div id="advanced-search" class="search-advance-container padding" style="display: none;">
+                    <div class="search-title">Search Processes</div>
+                    <div class="row">
+                        <div class="search-data-field col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label class="black uppercase padding-top">Owner</label>
+                            <input type="text" class="search-input" name="overview_owner">
+                        </div>
+
+                        <div class="search-data-field col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label class="black uppercase padding-top">Name</label>
+                            <input type="text" class="search-input" name="overview_name">
+                        </div>
+
+                        <div class="search-data-field col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label class="black uppercase padding-top">Version</label>
+                            <input type="text" class="search-input" name="overview_version">
+                        </div>
+
+                        <div class="search-data-field col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label class="black uppercase padding-top">Createdtime</label>
+                            <input type="text" class="search-input" name="overview_createdtime">
+                        </div>
+
+                        <div class="search-data-field col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label class="black uppercase padding-top">bpmnpath</label>
+                            <input type="text" class="search-input" name="properties_bpmnpath">
+                        </div>
+
+                        <div class="search-data-field col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label class="black uppercase padding-top">bpmnid</label>
+                            <input type="text" class="search-input" name="properties_bpmnid">
+                        </div>
+
+                        <div class="search-data-field col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label class="black uppercase padding-top">processtextpath</label>
+                            <input type="text" class="search-input" name="properties_processtextpath">
+                        </div>
+
+                        <div class="search-data-field col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label class="black uppercase padding-top">server</label>
+                            <input type="text" class="search-input" name="properties_server">
+                        </div>
+
+                        <div class="search-data-field col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label class="black uppercase padding-top">Name</label>
+                            <input type="text" class="search-input" name="subprocess_Name">
+                        </div>
+
+                        <div class="search-data-field col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label class="black uppercase padding-top">Path</label>
+                            <input type="text" class="search-input" name="subprocess_Path">
+                        </div>
+
+                        <div class="search-data-field col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label class="black uppercase padding-top">Id</label>
+                            <input type="text" class="search-input" name="subprocess_Id">
+                        </div>
+                    </div>
+
+                    <div>
+                    <button id="search-button2" class="btn btn-primary">
+                        <i class="fa fa-search"></i>&nbsp;Search
+                    </button>
+                    </div>
+                </div>
+        <!-- Search Filter -->
+
+                <div class="wr-filter-category">
+                    <button class="back-button uppercase float-left" id="search-button">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div><!--wr-filter-category-->
+
+                <a href="" class="pull-left advance-search-btn" title="Advanced Search - All Assets"><span class="fa fa-cog advanced-search-icons"></span><span class="advanced-search-text">Search All Assets</span></a>
+            </div><!--search--->
+            <div class="site-wide-menu">
+               <div class="inline-block margin-top-sm">
+                   <a href="bookmarks" class="bookmark-link" title="My bookmarks " id="abc"><span class="bookmark-link-text">My bookmarks </span><i class="fw fw-bookmark fw-inverse fw-lg bookmark-link-icon"></i></a>
+               </div>
+            </div>
+        </div>
+    </div>
+</div>
