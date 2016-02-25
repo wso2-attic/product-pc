@@ -551,7 +551,6 @@
             type: 'GET',
             dataType: 'text',
             success: function (data) {
-                //renderPDF(base64ToUint8Array(data), document.getElementById("holder"));
                 renderPDF(base64ToUint8Array(data));
 
             },
@@ -622,7 +621,7 @@
     }
     // }
 
-    function base64ToUint8Array(base64) {//base64 is an byte Array sent from server-side
+    function base64ToUint8Array(base64) {//base64 is an encoded byte Array sent from server-side
 
         var raw = atob(base64); //This is a native function that decodes a base64-encoded string.
         var uint8Array = new Uint8Array(new ArrayBuffer(raw.length));
