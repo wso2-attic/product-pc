@@ -94,6 +94,15 @@
                 <name>Path</name>
             </field>
         </table>
+
+                <table name="PDF">
+                    <field type="text" required="true">
+                        <name>Name</name>
+                    </field>
+                    <field type="text" readonly="true">
+                        <name>Path</name>
+                    </field>
+                </table>
         <table name="Images">
             <field type="text" required="true">
                 <name>Thumbnail</name>
