@@ -69,15 +69,6 @@ asset.server = function(ctx) {
                 url: 'update_owner',
                 path: 'update_owner.jag'
             }, {
-                url: 'get_process_tags',
-                path: 'get_process_tags.jag'
-            }, {
-                url: 'upload_pdf',
-                path: 'upload_pdf.jag'
-            },{
-                url: 'get_process_pdf',
-                path: 'get_process_pdf.jag'
-            },{
                 url: 'upload_documents',
                 path: 'upload_documents.jag'
             }]
