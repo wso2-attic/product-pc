@@ -919,13 +919,8 @@
             <span data-l10n-id="zoom_in_label"></span>
             <span class="glyphicon glyphicon-plus"></span>
         </button>
-                  <span style="min-width: 120px; max-width: 120px;" id="scaleSelectContainer" class="selectpicker">
+                  <span style="min-width: 120px; max-width: 120px;" id="scaleSelectContainer">
                      <select style="min-width: 142px;" class="selectpicker" data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="zoom" onclick="zoomSelect()">
-                         <!--<option id="pageAutoOption" title="" value="auto" selected="selected" data-l10n-id="page_scale_auto">Automatic Zoom</option>-->
-                         <!--<option id="pageActualOption" title="" value="page-actual" data-l10n-id="page_scale_actual">Actual Size</option>-->
-                         <!--<option id="pageFitOption" title="" value="page-fit" data-l10n-id="page_scale_fit">Page Fit</option>-->
-                         <!--<option id="pageWidthOption" title="" value="page-width" data-l10n-id="page_scale_width">Page Width</option>-->
-                         <!--<option id="customScaleOption" title="" value="custom"></option>-->
                          <option title="" value="0.5" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 50 }">50%</option>
                          <option title="" value="0.75" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 75 }">75%</option>
                          <option title="" value="1" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 100 }">100%</option>
@@ -939,7 +934,7 @@
                   </span>
     </div>
 
-    <div style="height:700px;/* background-color:#CCC; */overflow-y:auto;overflow-x:auto;float:left;position:relative;margin-left:-5px;">
+    <div style="height:700px;overflow-y:auto;overflow-x:auto;float:left;position:relative;margin-left:-5px;">
         <canvas id="the-canvas" style="border:1px solid black"></canvas>
     </div>
 
