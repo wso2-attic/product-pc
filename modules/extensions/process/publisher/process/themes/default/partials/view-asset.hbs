@@ -1,8 +1,18 @@
 <script>
     var processNames = [];
     var processListObj;
+    var pid;
+    var pdfDoc = null;
+    var pageNum ;
+    var ctx;
 
-    window.onload = getProcessList;
+
+    window.onload = function(){
+
+        var url = window.location.toString();
+        pid = url.substr(url.lastIndexOf('/') + 1);
+        getProcessList();
+    }
 
     function getMainProcess(){
         var mainProcess = $('#view-header').text() + "-" + $('#process-version').text();
@@ -16,6 +26,8 @@
         $("#processTextEditDiv").hide();
         $("#bpmnViewDiv").show();
         $("#bpmnEditDiv").hide();
+        $("#pdfUploaderView").hide();
+        $("#holder").hide();
 
         $.ajax({
             url: 'https://localhost:9443/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/{{assets.tables.[0].fields.name.value}}/{{assets.tables.[0].fields.version.value}}',
@@ -39,6 +51,8 @@
         $("#processTextEditDiv").hide();
         $("#bpmnViewDiv").hide();
         $("#bpmnEditDiv").hide();
+        $("#pdfUploaderView").hide();
+        $("#holder").hide();
     }
 
     function editText() {
@@ -94,6 +108,8 @@
         $("#processTextEditDiv").show();
         $("#bpmnViewDiv").hide();
         $("#bpmnEditDiv").hide();
+        $("#pdfUploaderView").hide();
+        $("holder").hide();
 
         tinymce.init({
             selector: "#processContent"
@@ -106,6 +122,8 @@
         $("#processTextEditDiv").hide();
         $("#bpmnViewDiv").hide();
         $("#bpmnEditDiv").show();
+        $("#pdfUploaderView").hide();
+        $("#holder").hide();
     }
 
     function showOverview(e) {
@@ -117,6 +135,8 @@
         $("#processTextEditDiv").hide();
         $("#bpmnViewDiv").hide();
         $("#bpmnEditDiv").hide();
+        $("#pdfUploaderView").hide();
+        $("#holder").hide();
     }
 
     function editProcessOwner(e){
@@ -153,7 +173,21 @@
                 processListObj = JSON.parse(response);
                 for(var i = 0 ; i < processListObj.length ; i++){
                     processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
+                    if(processListObj[i].processid == pid){
+                        if(processListObj[i].pdfpath == "NA"){
+                            //show pdf upload button
+                            $("#pdfUploader").show();
+                            $("#pdfViewer").hide();
+                        }
+                        else{
+                            //show pdf view button
+                            $("#pdfUploader").hide();
+                            $("#pdfViewer").show();
+                        }
+
+                    }
                 }
+                
             },
             error: function () {
                 alertify.error('Process list returning error');
@@ -481,6 +515,170 @@
         }
     }
 
+    //****************************PDF rendering*************************************************
+
+    function showPDF(){
+
+        $("#overviewDiv").hide();
+        $("#processTextContainer").hide();
+        $("#processTextEditDiv").hide();
+        $("#bpmnViewDiv").hide();
+        $("#bpmnEditDiv").hide();
+        $("#holder").show();
+        $("#pdfUploaderView").hide();
+
+        if(pdfDoc == null) {
+            loadPdf();
+        }
+
+    }
+
+    function associatePdf(element) {
+
+        $("#overviewDiv").hide();
+        $("#processTextView").hide();
+        $("#bpmnView").hide();
+        $("#docView").hide();
+        $("#pdfUploaderView").show();
+
+    }
+
+    function loadPdf() {
+        var ppath = 'apis/get_process_pdf?process_pdf_path=/_system/governance/pdf/{{assets.tables.[0].fields.name.value}}/{{assets.tables.[0].fields.version.value}}';
+
+        $.ajax({
+            url: 'https://localhost:9443/publisher/assets/process/apis/get_process_pdf?process_pdf_path=/_system/governance/pdf/{{assets.tables.[0].fields.name.value}}/{{assets.tables.[0].fields.version.value}}',
+            type: 'GET',
+            dataType: 'text',
+            success: function (data) {
+                //renderPDF(base64ToUint8Array(data), document.getElementById("holder"));
+                renderPDF(base64ToUint8Array(data));
+
+            },
+            error: function () {
+                alertify.error('pdf retrieving error');
+            }
+        });
+    }
+
+
+    //
+    // Go to previous page
+    //
+    function goPrevious() {
+        if (pageNum <= 1)
+            return;
+        pageNum--;
+        renderPage(pageNum);
+    }
+
+    //
+    // Go to next page
+    //
+    function goNext() {
+        if (pageNum >= pdfDoc.numPages)
+            return;
+        pageNum++;
+        renderPage(pageNum);
+    }
+
+
+    function renderPDF(url) {
+
+        pdfDoc = null;
+        pageNum = 1;
+        scale = 1.5;
+        canvas = document.getElementById('the-canvas');
+        ctx = canvas.getContext('2d');
+        PDFJS.disableWorker = true;
+
+        PDFJS.getDocument(url).then(function getPdf(_pdfDoc) {
+            pdfDoc = _pdfDoc;
+            renderPage(pageNum);
+
+        });
+    }
+
+    // Get page info from document, resize canvas accordingly, and render page
+
+    function renderPage(num) {
+        // Using promise to fetch the page
+        pdfDoc.getPage(num).then(function(page) {
+            var viewport = page.getViewport(scale);
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            // Render PDF page into canvas context
+            var renderContext = {
+                canvasContext: ctx,
+                viewport: viewport
+            };
+            page.render(renderContext);
+        });
+
+        // Update page counters
+        document.getElementById('page_num').textContent = pageNum;
+        document.getElementById('page_count').textContent = pdfDoc.numPages;
+    }
+    // }
+
+    function base64ToUint8Array(base64) {//base64 is an byte Array sent from server-side
+
+        var raw = atob(base64); //This is a native function that decodes a base64-encoded string.
+        var uint8Array = new Uint8Array(new ArrayBuffer(raw.length));
+        for (var i = 0; i < raw.length; i++) {
+            uint8Array[i] = raw.charCodeAt(i);
+        }
+        return uint8Array;
+    }
+
+    function zoom(newScale){
+        // Using promise to fetch the page
+        pdfDoc.getPage(pageNum).then(function(page) {
+            var viewport = page.getViewport(newScale);
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            // Render PDF page into canvas context
+            var renderContext = {
+                canvasContext: ctx,
+                viewport: viewport
+            };
+            page.render(renderContext);
+        });
+
+    }
+
+    function zoomIn(){
+        var scaleSelect = document.getElementById("scaleSelect");
+        var last = scaleSelect.options.length - 1;
+
+        if(scaleSelect.selectedIndex < last) {
+            scale = scaleSelect.options[scaleSelect.selectedIndex + 1].value;
+            scaleSelect.selectedIndex += 1;
+            zoom(scale);
+        }
+    }
+
+    function zoomOut(){
+        var scaleSelect = document.getElementById("scaleSelect");
+        var last = scaleSelect.options.length - 1;
+
+        if(scaleSelect.selectedIndex > 0) {
+            scale = scaleSelect.options[scaleSelect.selectedIndex - 1].value;
+            scaleSelect.selectedIndex -= 1;
+
+            zoom(scale);
+        }
+    }
+
+    function zoomSelect(){
+
+        var scaleSelect = document.getElementById("scaleSelect");
+        scale = scaleSelect.options[scaleSelect.selectedIndex].value;
+        zoom(scale);
+    }
+
 </script>
 
 <h2 id="view-header">{{assets.tables.[0].fields.name.value}}</h2>
@@ -518,7 +716,13 @@
                     <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
                 {{/if}}
             </div>
-            <br /><br />
+    <div class="control-group" style="display: inline-block">
+
+        <button id="pdfViewer" class="btn btn-primary" style="display: none" onclick="showPDF()">Show PDF</button>
+        <button id="pdfUploader" class="btn btn-primary" style="display:none" onclick="associatePdf()">Associate PDF</button>
+    </div>
+
+    <br /><br />
 
     <form class="form-horizontal">
         <div class="control-group">
@@ -698,6 +902,72 @@
     </tr>
     </tbody>
 </table>
+
+<div id="holder" style="display:none">
+    <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button><br /><br />
+    <hr>
+    <div>
+        <button id="prev" class="btn btn-primary" onclick="goPrevious()"><span class="glyphicon glyphicon-circle-arrow-left"></span>Prev</button>
+        <button id="next" class="btn btn-primary" onclick="goNext()"><span class="glyphicon glyphicon-circle-arrow-right"></span>Next</button>
+        &nbsp; &nbsp;
+        <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+        &nbsp; &nbsp;
+        <button id="zoomOut" class="toolbarButton zoomOut btn btn-primary" title="Zoom Out" tabindex="21" data-l10n-id="zoom_out" onclick="zoomOut()">
+            <span data-l10n-id="zoom_out_label"></span>
+            <span class="glyphicon glyphicon-minus"></span>
+        </button>
+        <button id="zoomIn" class="toolbarButton zoomIn btn btn-primary" title="Zoom In" tabindex="22" data-l10n-id="zoom_in" onclick="zoomIn()">
+            <span data-l10n-id="zoom_in_label"></span>
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+                  <span style="min-width: 120px; max-width: 120px;" id="scaleSelectContainer" class="selectpicker">
+                     <select style="min-width: 142px;" class="selectpicker" data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="zoom" onclick="zoomSelect()">
+                         <!--<option id="pageAutoOption" title="" value="auto" selected="selected" data-l10n-id="page_scale_auto">Automatic Zoom</option>-->
+                         <!--<option id="pageActualOption" title="" value="page-actual" data-l10n-id="page_scale_actual">Actual Size</option>-->
+                         <!--<option id="pageFitOption" title="" value="page-fit" data-l10n-id="page_scale_fit">Page Fit</option>-->
+                         <!--<option id="pageWidthOption" title="" value="page-width" data-l10n-id="page_scale_width">Page Width</option>-->
+                         <!--<option id="customScaleOption" title="" value="custom"></option>-->
+                         <option title="" value="0.5" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 50 }">50%</option>
+                         <option title="" value="0.75" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 75 }">75%</option>
+                         <option title="" value="1" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 100 }">100%</option>
+                         <option title="" value="1.25" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 125 }">125%</option>
+                         <option title="" value="1.5" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 150 }" selected="selected">150%</option>
+                         <option title="" value="2" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 200 }">200%</option>
+                         <option title="" value="3" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 300 }">300%</option>
+                         <option title="" value="4" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 400 }">400%</option>
+                     </select>
+
+                  </span>
+    </div>
+
+    <div style="height:700px;/* background-color:#CCC; */overflow-y:auto;overflow-x:auto;float:left;position:relative;margin-left:-5px;">
+        <canvas id="the-canvas" style="border:1px solid black"></canvas>
+    </div>
+
+</div>
+
+<div id="pdfUploaderView" class="form-group" style="display: none">
+
+    <h2 id="create-view-header"></h2>
+    <br /><a id="bpmnOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
+
+    <form method="post" action="../apis/upload_pdf"  onsubmit="" enctype="multipart/form-data" class="form-horizontal" id="form-bar-create">
+        <br>
+        <div style="float:left;width:15cm">
+            <input type="file" onchange="setfilename(this.value);" class="filestyle" data-buttonname="btn-primary" data-placeholder="Associate pdf/text file" name="pdfFile" id="pdfFile" data-buttontext="PDF file" accept=".pdf" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
+
+        </div><br><br>
+        <input type="hidden" id="ProcessName" name="ProcessName" value="{{assets.tables.[0].fields.name.value}}">
+        <input type="hidden" id="ProcessVersion" name="ProcessVersion" value="{{assets.tables.[0].fields.version.value}}">
+
+        <div id="saveButtons" class="form-actions">
+            <input type="submit" id="btn-create-asset-bar" class="btn btn-primary" name="addNewAssetButton" value="Upload pdf">
+            <button class="btn" type="reset">Reset</button>
+            <input type="hidden" value="process" name="process" id="meta-asset-type">
+        </div>
+
+    </form>
+</div>
 
 
 
