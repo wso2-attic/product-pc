@@ -93,6 +93,7 @@
         $("#processTextContainer").hide();
         $("#processTextEditDiv").show();
         $("#bpmnViewDiv").hide();
+        $("analyticsConfigDiv").hide();
         $("#bpmnEditDiv").hide();
 
         tinymce.init({
@@ -105,7 +106,18 @@
         $("#processTextContainer").hide();
         $("#processTextEditDiv").hide();
         $("#bpmnViewDiv").hide();
+        $("analyticsConfigDiv").hide();
         $("#bpmnEditDiv").show();
+    }
+
+    function showAnalyticsConfigurer() {
+        $("#overviewDiv").hide();
+        $("#processTextContainer").hide();
+        $("#processTextEditDiv").hide();
+        $("#bpmnViewDiv").hide();
+        $("#analyticsConfigDiv").show();
+      //  $("#analyticsConfigDiv").getElementsByTagName("TR").index(0).hide();
+
     }
 
     function showOverview(e) {
@@ -117,6 +129,7 @@
         $("#processTextEditDiv").hide();
         $("#bpmnViewDiv").hide();
         $("#bpmnEditDiv").hide();
+        $("analyticsConfigDiv").hide();
     }
 
     function editProcessOwner(e){
@@ -146,6 +159,7 @@
     }
 
     function getProcessList(){
+        $("analyticsConfigDiv").hide();
         $.ajax({
             url: '/publisher/assets/process/apis/get_process_list',
             type: 'GET',
@@ -481,6 +495,79 @@
         }
     }
 
+    function addProcessVariableRow(element) {
+
+
+        var tableName = $(element).attr('data-name');
+        var table = $('#table_' + tableName);
+
+        if (!isInputFieldEmpty(tableName)) {
+            var referenceRow = $('#table_reference_' + tableName);
+            var newRow = referenceRow.clone().removeAttr('id');
+            $('input[type="text"]', newRow).val('');
+            table.show().append(newRow);
+        } else {
+            alertify.error('Please fill the empty ' + tableName + ' field.');
+        }
+    }
+
+    ///
+    function addProcessVariable(tableID) {
+
+        var table = document.getElementById(tableID);
+
+        var rowCount = table.rows.length;
+        var row = table.insertRow(rowCount);
+
+        var colCount =3;// table.rows[0].cells.length;
+
+        for (var i = 0; i < colCount; i++) {
+
+            var newcell = row.insertCell(i);
+
+            newcell.innerHTML = table.rows[0].cells[i].innerHTML;
+            //alert(newcell.childNodes);
+            switch (newcell.childNodes[0].type) {
+                case "text":
+                    newcell.childNodes[0].value = "";
+                    break;
+                case "checkbox":
+                    newcell.childNodes[0].checked = false;
+                    break;
+                case "select-one":
+                    newcell.childNodes[0].selectedIndex = 0;
+                    break;
+            }
+        }
+    }
+
+    function deleteProcessVariable(tableID,rowToDelete) {
+        try {
+            var table = document.getElementById(tableID);
+            var rowCount = table.rows.length;
+
+          //  for (var i = 0; i < rowCount; i++) {
+           //     var row = table.rows[i];
+                //var chkbox = row.cells[0].childNodes[0];
+                //if (null != chkbox && true == chkbox.checked) {
+                    if (rowCount <= 1) {
+                        alert("Cannot delete all the rows.");
+                        //break;
+                    }
+            if(rowToDelete>=1) {
+                table.deleteRow(rowToDelete);
+            }
+                 //   rowCount--;
+                   // i--;
+               // }
+
+
+
+        } catch (e) {
+            alert(e);
+        }
+    }
+
 </script>
 
 <h2 id="view-header">{{assets.tables.[0].fields.name.value}}</h2>
@@ -516,6 +603,7 @@
                     <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
                 {{else}}
                     <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
+	            <button class="btn btn-primary" onclick="showAnalyticsConfigurer()">Config Analytics</button>
                 {{/if}}
             </div>
             <br /><br />

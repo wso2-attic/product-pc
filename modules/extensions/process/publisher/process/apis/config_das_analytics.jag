@@ -1,0 +1,15 @@
+<%
+importPackage(org.wso2.carbon.pc.analytics.config);
+
+var log = new Log();
+if(log.isDebugEnabled()){
+    log.debug("DAS Configuration");
+}
+
+<!--var ps = new ProcessStore();
+var processDetails = String(request.getParameter("processInfo"));
+var status = ps.createProcess(processDetails);
+print(status);-->
+
+var dasConfig=new DasConfigClient();
+%>
