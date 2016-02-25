@@ -18,5 +18,5 @@ for (var name in files) {
     processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, files[name].getStream());
 }
 
-response.sendRedirect('https://localhost:9443/publisher/assets/process/details/' + processid);
+response.sendRedirect('/publisher/assets/process/details/' + processid);
 %>
