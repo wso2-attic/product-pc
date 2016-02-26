@@ -19,7 +19,7 @@
 
 var resources = function(){
     return {
-        js:['select2.min.js','tags/tags-common.js','update_asset.js','jquery-file-upload/jquery-ui.js','jquery-file-upload/alertify.js','jquery-file-upload/bootstrap-filestyle.js','tags/tags-init-view-asset.js','tinymce/tinymce.min.js','view-asset-functions.js'],
+        js:['select2.min.js','tags/tags-common.js','update_asset.js','jquery-file-upload/jquery-ui.js','jquery-file-upload/alertify.js','jquery-file-upload/bootstrap-filestyle.js','tags/tags-init-view-asset.js','tinymce/tinymce.min.js','view-asset-functions.js','pdf.js','pdf.worker.js'],
         css:['select2.min.css','alertify.css','default.css','jquery-ui.css']
     }
 };
