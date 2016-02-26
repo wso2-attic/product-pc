@@ -155,7 +155,6 @@ public class ProcessStore {
 				// fill bpmn properties with NA values
 				appendText(doc, propertiesElement, "bpmnpath", mns, "NA");
 				appendText(doc, propertiesElement, "bpmnid", mns, "NA");
-				appendText(doc, propertiesElement, "pdfpath", mns, "NA");
 
 				if (subprocess.length() != 0) {
 					for (int i = 0; i < subprocess.length(); i++) {
@@ -701,15 +700,12 @@ public class ProcessStore {
 							processXML.getElementsByTagName("name").item(0).getTextContent();
 					String processVersion =
 							processXML.getElementsByTagName("version").item(0).getTextContent();
-					String processPdf =
-							processXML.getElementsByTagName("pdfpath").item(0).getTextContent();
 
 					JSONObject processJSON = new JSONObject();
 					processJSON.put("path", processPath);
 					processJSON.put("processid", processResource.getUUID());
 					processJSON.put("processname", processName);
 					processJSON.put("processversion", processVersion);
-					processJSON.put("pdfpath", processPdf);
 					result.put(processJSON);
 				}
 
@@ -1197,7 +1193,7 @@ public class ProcessStore {
 		return true;
 	}
 
-	public String uploadDocument(String processName, String processVersion, String docName, String docSummary, String docUrl, Object docObject) {
+	public String uploadDocument(String processName, String processVersion, String docName, String docSummary, String docUrl, Object docObject, String docExtension) {
 		String processId = "FAILED TO UPLOAD DOCUMENT";
 		log.info("Uploading documents to the registry.");
 		try {
@@ -1213,9 +1209,8 @@ public class ProcessStore {
 				byte[] docContent = IOUtils.toByteArray(docStream);
 				String docContentPath = null;
 				if(docContent.length != 0) {
-					String docText = new String(docContent);
-					docContentResource.setContent(docText);
-					docContentPath = "doccontent/" + processName + "/" + processVersion;
+					docContentResource.setContent(docContent);
+					docContentPath = "doccontent/" + processName + "/" + processVersion + "/" + docName + "." + docExtension;
 					reg.put(docContentPath, docContentResource);
 				}
 
@@ -1354,7 +1349,10 @@ public class ProcessStore {
 				byte[] processContentBytes = (byte[]) processAsset.getContent();
 				String processContent = new String(processContentBytes);
 				Document pdoc = stringToXML(processContent);
-				pdoc.getElementsByTagName("pdfpath").item(0).setTextContent(pdfContentPath);
+
+				Element rootElement = pdoc.getDocumentElement();
+				Element documentElement = append(pdoc, rootElement, "pdf", mns);
+				appendText(pdoc, documentElement, "path", mns, pdfContentPath);
 				String newProcessContent = xmlToString(pdoc);
 				processAsset.setContent(newProcessContent);
 				reg.put(processPath, processAsset);
@@ -1383,10 +1381,10 @@ public class ProcessStore {
 				Resource pdfAsset = reg.get(pdfPath);
 				byte[]  pdfContent = (byte[]) pdfAsset.getContent();
 				pdfString = new sun.misc.BASE64Encoder().encode(pdfContent);
-
+				log.info("PDF PATH:" + pdfPath);
 			}
 		} catch (Exception e) {
-			log.error("Failed to fetch BPMN model: " + pdfPath);
+			log.error("Failed to fetch pdf: " + pdfPath);
 		}
 
 		return pdfString;
