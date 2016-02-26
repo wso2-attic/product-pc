@@ -245,6 +245,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.wso2.pc</groupId>
+                <artifactId>org.wso2.carbon.pc.analytics.config</artifactId>
+                <version>${pc.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.activiti</groupId>
                 <artifactId>activiti-bpmn-converter</artifactId>
                 <version>5.16.1</version>

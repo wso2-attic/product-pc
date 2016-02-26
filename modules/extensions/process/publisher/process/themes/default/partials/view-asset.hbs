@@ -787,7 +787,81 @@
     </tbody>
 </table>
 
+<!--<div id="analyticsConfigDiv" style="display: none">
+    <form class="form-horizontal">
+        <div class="control-group">
 
+            <h2 class="field-title">
+                <a class="collapsing-h2" aria-expanded="true" href="#subprocess" data-toggle="collapse" rel="tooltip" title="List of subprocesses for a given process">
+                    <i class="cu-btn-exp-col btn-collapsed">Subprocess</i>
+                </a>
+            </h2>
+
+            <div id="subprocess" class="responsive-form-container collapse in" aria-expanded="true" style="">
+                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+                    &nbsp;
+                </div>
+                <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                    <div class="add-unbounded-row"><a data-name="process_variable" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Process Variable</a></div>
+                    <table class="tablex cu-data-table js-unbounded-table" id="table_process_variable">
+                        <thead>
+
+                        <tr><th></th>
+                        </tr></thead>
+                        <tbody>
+                        {{#each involveProcessList.subprocesses}}
+                            <tr>
+                                <td valign="top" style="width: 90%;"><span id="subprocess_Name" class="subprocess_Name">{{this.name}}-{{this.version}}</span></td>
+                                <td style="width: 5%;"></td>
+                                <td style="width: 5%;"><a class="js-remove-row" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></a> </td>
+                            </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>-->
+
+<div id="analyticsConfigDiv" style="display:none">
+    <button class="btn btn-primary" onclick="showOverview(this)"><span
+            class="glyphicon glyphicon-circle-arrow-left"></span> Overview
+    </button>
+    </br>
+    </br>
+    <!-- <div class="add-unbounded-row"><a data-name="process_variable" onclick="addProcessVariableRow(this)"><i class="fa fa-plus-circle"></i> Add Process Variable</a></div>-->
+    <!--<INPUT type="button" value="Add Process Variable" onclick="addProcessVariable('dataTable')"/>-->
+    <div class="add-unbounded-row"><a  onclick="addProcessVariable('dataTable')"><i
+            class="fa fa-plus-circle"></i> Add Process Variable</a></div>
+    <!--
+        <INPUT type="button" value="Delete Process Variable" onclick="deleteProcessVariable('dataTable')"/>
+    -->
+    <!--<div class="add-unbounded-row"><a onclick="deleteProcessVariable('dataTable')"><i
+            class="fa fa-plus-circle"></i> Delete Process Variable</a></div>-->
+
+
+
+    <table id="dataTable" width="400px" border="1">
+        <tr>
+            <div style="width:300px; display:table">
+                <!--<TD><INPUT type="checkbox" name="chk"/></TD>-->
+
+                <TD><INPUT type="text" name="txt" style="display:table-cell; width:100%"/></TD>
+                <td>
+                    <select name="country" style="display:table-cell; width:100%">
+                        <option value="int">int</option>
+                        <option value="string">string</option>
+                        <option value="float">float</option>
+                        <option value="boolean">boolean</option>
+                    </select>
+                </td>
+                <td style="width: 5%;"><a class="js-remove-row" onclick="deleteProcessVariable('dataTable', parseInt( $(this).parent().parent().index() ) )"><i class="fa fa-trash"></i></a> </td>
+
+            </div>
+        </tr>
+    </table>
+</div>
 
 
 
