@@ -71,10 +71,18 @@ asset.server = function(ctx) {
             }, {
                 url: 'upload_documents',
                 path: 'upload_documents.jag'
+            }, {
+                url: 'config_das_analtics',
+                path: 'config_das_analytics.jag'
+            }, {
+                url: 'get_process_tags',
+                path: 'get_process_tags.jag'
+            }, {
+                url: 'upload_pdf',
+                path: 'upload_pdf.jag'
             },{
-                url:'config_das_analtics',
-                path:'config_das_analytics.jag'
-
+                url: 'get_process_pdf',
+                path: 'get_process_pdf.jag'
             }]
         }
     }

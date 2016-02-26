@@ -102,6 +102,14 @@
                 <name>Banner</name>
             </field>
         </table>
+        <table name="PDF">
+             <field type="text" required="true">
+                 <name>Name</name>
+              </field>
+             <field type="text" required="true">
+                  <name>Path</name>
+             </field>
+         </table>
 
     </content>
 
