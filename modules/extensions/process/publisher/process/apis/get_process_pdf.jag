@@ -1,0 +1,16 @@
+<%
+
+importPackage(org.wso2.carbon.pc.core);
+var log = new Log();
+if(log.isDebugEnabled()){
+    log.debug("INSIDE get process text...");
+}
+var ps = new ProcessStore();
+
+var processPdfPath = String(request.getParameter("process_pdf_path"));
+if(log.isDebugEnabled()){
+    log.debug("Retrieving process text for: " + processPdfPath);
+}
+var pdf = ps.getPDF(processPdfPath);
+print(pdf);
+%>

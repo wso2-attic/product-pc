@@ -41,6 +41,7 @@ import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -57,6 +58,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -153,6 +155,7 @@ public class ProcessStore {
 				// fill bpmn properties with NA values
 				appendText(doc, propertiesElement, "bpmnpath", mns, "NA");
 				appendText(doc, propertiesElement, "bpmnid", mns, "NA");
+				appendText(doc, propertiesElement, "pdfpath", mns, "NA");
 
 				if (subprocess.length() != 0) {
 					for (int i = 0; i < subprocess.length(); i++) {
@@ -698,12 +701,15 @@ public class ProcessStore {
 							processXML.getElementsByTagName("name").item(0).getTextContent();
 					String processVersion =
 							processXML.getElementsByTagName("version").item(0).getTextContent();
+					String processPdf =
+							processXML.getElementsByTagName("pdfpath").item(0).getTextContent();
 
 					JSONObject processJSON = new JSONObject();
 					processJSON.put("path", processPath);
 					processJSON.put("processid", processResource.getUUID());
 					processJSON.put("processname", processName);
 					processJSON.put("processversion", processVersion);
+					processJSON.put("pdfpath", processPdf);
 					result.put(processJSON);
 				}
 
@@ -1240,6 +1246,152 @@ public class ProcessStore {
 		}
 		return processId;
 	}
+
+	public String getProcessTags() throws ProcessCenterException{
+
+		String textContent = "FAILED TO GET PROCESS TAGS";
+
+		try {
+			JSONObject tagsObj = new JSONObject();
+
+			RegistryService registryService =
+					ProcessCenterServerHolder.getInstance().getRegistryService();
+			if (registryService != null) {
+				UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+				String[] processPaths = GovernanceUtils
+						.findGovernanceArtifacts("application/vnd.wso2-process+xml", reg);
+				for (String processPath : processPaths) {
+					Resource processResource = reg.get(processPath);
+
+					String processContent = new String((byte[]) processResource.getContent());
+					Document processXML = stringToXML(processContent);
+					String processName =
+							processXML.getElementsByTagName("name").item(0).getTextContent();
+					String processVersion =
+							processXML.getElementsByTagName("version").item(0).getTextContent();
+
+					JSONObject processJSON = new JSONObject();
+					processJSON.put("path", processPath);
+					processJSON.put("processid", processResource.getUUID());
+					processJSON.put("processname", processName);
+					processJSON.put("processversion", processVersion);
+					Tag[] tags = reg.getTags(processPath);
+
+					for(Tag tag : tags){
+
+						Iterator<String> keys = tagsObj.keys();
+
+						if(!keys.hasNext()  || keys == null){
+							JSONArray newTagArray = new JSONArray();
+							newTagArray.put(processJSON);
+							tagsObj.put(tag.getTagName(), newTagArray);
+							continue;
+						}
+
+
+						while(keys.hasNext()){
+							String temp = (keys.next());
+
+							if(temp == tag.getTagName()){
+								JSONArray processArray = ((JSONArray) tagsObj.get(temp));
+								processArray = processArray.put(processJSON);
+								tagsObj.put(temp, processArray);
+								break;
+
+							}
+							if(!keys.hasNext()){
+								JSONArray newTagArray = new JSONArray();
+								newTagArray.put(processJSON);
+								tagsObj.put(tag.getTagName(), newTagArray);
+							}
+						}
+					}
+				}
+
+				textContent = tagsObj.toString();
+
+			} else {
+				String msg = "Registry service not available for retrieving processes.";
+				throw new ProcessCenterException(msg);
+			}
+		} catch (Exception e) {
+			String msg = "Failed";
+			log.error(msg, e);
+			throw new ProcessCenterException(msg, e);
+		}
+
+		return textContent;
+
+	}
+
+	public String associatePDF(String processName, String processVersion, Object object){
+
+		String processId = "FAILED TO ADD PDF";
+		log.debug("Creating PDF resource...");
+		try {
+			StreamHostObject s = (StreamHostObject) object;
+			InputStream pdfStream = s.getStream();
+			RegistryService registryService =
+					ProcessCenterServerHolder.getInstance().getRegistryService();
+			if (registryService != null) {
+				UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+				// store pdf content as a registry resource
+				Resource pdfContentResource = reg.newResource();
+				byte[] pdfContent = IOUtils.toByteArray(pdfStream);
+
+				pdfContentResource.setContent(pdfContent);
+				pdfContentResource.setMediaType("application/pdf");
+				String pdfContentPath = "pdf/" + processName + "/" + processVersion;
+				reg.put(pdfContentPath, pdfContentResource);
+				String processPath = "processes/" + processName + "/" + processVersion;
+
+
+				// update process by linking the pdf asset
+
+				Resource processAsset = reg.get(processPath);
+				byte[] processContentBytes = (byte[]) processAsset.getContent();
+				String processContent = new String(processContentBytes);
+				Document pdoc = stringToXML(processContent);
+				pdoc.getElementsByTagName("pdfpath").item(0).setTextContent(pdfContentPath);
+				String newProcessContent = xmlToString(pdoc);
+				processAsset.setContent(newProcessContent);
+				reg.put(processPath, processAsset);
+
+				Resource storedProcessAsset = reg.get(processPath);
+				processId = storedProcessAsset.getUUID();
+			}
+		} catch (Exception e) {
+			log.error(e);
+		}
+
+		log.info("successfully added pdf asset");
+		return processId;
+	}
+
+	public String getPDF(String pdfPath) {
+
+		String pdfString = "FAILED TO GET PDF";
+
+		try {
+			RegistryService registryService =
+					ProcessCenterServerHolder.getInstance().getRegistryService();
+			if (registryService != null) {
+				UserRegistry reg = registryService.getGovernanceSystemRegistry();
+				pdfPath = pdfPath.substring("/_system/governance/".length());
+				Resource pdfAsset = reg.get(pdfPath);
+				byte[]  pdfContent = (byte[]) pdfAsset.getContent();
+				pdfString = new sun.misc.BASE64Encoder().encode(pdfContent);
+
+			}
+		} catch (Exception e) {
+			log.error("Failed to fetch BPMN model: " + pdfPath);
+		}
+
+		return pdfString;
+	}
+
 
 	//    public static void main(String[] args) {
 	//        String path = "/home/chathura/temp/t5/TestProcess1.bpmn";
