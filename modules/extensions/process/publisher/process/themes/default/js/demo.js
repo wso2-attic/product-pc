@@ -77,6 +77,9 @@ jsPlumb.ready(function () {
                 } ]
             ]
         },
+    //    var sourceEndpoint = {
+    //        maxConnections: -1
+    //    };
     // the definition of target endpoints (will appear when the user drags a connection)
         targetEndpoint = {
             endpoint: "Dot",
@@ -102,13 +105,14 @@ jsPlumb.ready(function () {
             ep = instance.addEndpoint("flowchart" + toId, sourceEndpoint, {
                 anchor: sourceAnchors[i], uuid: sourceUUID
             });
-            endpointList.push(["flowchart" + toId, ep]);
+            sourcepointList.push(["flowchart" + toId, ep]);
             ep = null;
         }
         for (var j = 0; j < targetAnchors.length; j++) {
             var targetUUID = toId + targetAnchors[j];
-            ep = instance.addEndpoint("flowchart" + toId, targetEndpoint, { anchor: targetAnchors[j], uuid: targetUUID });
-            sourcepointList.push(["flowchart" + toId, ep]);
+            ep = instance.addEndpoint("flowchart" + toId, targetEndpoint, {
+                anchor: targetAnchors[j], uuid: targetUUID });
+            endpointList.push(["flowchart" + toId, ep]);
             ep = null;
         }
     };
@@ -149,6 +153,7 @@ jsPlumb.ready(function () {
     var startpoints = [];
     var to_delete = "";
     $('#startEv').click(function(){
+        element = "";
         elementCount++;
         var id = "flowchartWindow" + elementCount;
         element += "<div class=\"window start custom jtk-node jsplumb-connected\" id=\"" + id + "\">";
@@ -166,30 +171,48 @@ jsPlumb.ready(function () {
             element = "";
             var name = "Window" + elementCount;
             _addEndpoints(name, startpoints, endpoints);
+            startpoints = []; endpoints = [];
+            var elements = document.getElementById("flowchartWindow1");
+            //makeResizable('.custom.step', elements);
+            //jsPlumb.selectEndpoints({source:"flowchartWindow1"}).css({top: 150, left: 345});
+            //jsPlumb.repaintEverything();
+            //makeResizable('.custom.step');
+            //
+            //$(".custom.step").resizable({
+            //    resize : function(event, ui) {
+            //        jsPlumb.repaint(ui.helper);
+            //    },
+            //    handles: "all"
+            //});
             instance.draggable(jsPlumb.getSelector(".jtk-node"), { grid: [20, 20] });
         }
     });
-    //
-    //jsPlumb.makeSource($('.start .custom'), sourceEndpoint);
-    //jsPlumb.makeTarget($('.custom'), targetEndpoint);
+
+    //_addEndpoints("Window11", ["BottomCenter"], []);
+    //function makeResizable(classname, element){
+    //    $(classname).resizable({
+    //        resize : function(event, ui) {
+    //            jsPlumb.repaint(ui.helper);
+    //        }
+    //    });
+    //}
 
     $('#stepEv').click(function(){
+        element = "";
         elementCount++;
         var id = "flowchartWindow" + elementCount;
         element += "<div class=\"window step custom jtk-node jsplumb-connected-step\" id=\""+ id +"\" style=\"top: 13em; left: 5em;\"><strong>" +
-        "<p contenteditable='true' ondblclick='$(this).focus();'>step</p><\/strong><br\/><br\/><\/div>"
+        "<p contenteditable='true' ondblclick='$(this).focus();'>step</p><\/strong><br\/><br\/><\/div>";
         clicked = true;
         startpoints = ["BottomCenter", "RightMiddle"];
         endpoints = ["TopCenter", "LeftMiddle"];
     });
-    //
+    //<div class="ui-resizable-handle ui-resizable-se ui-icon ui-icon-gripsmall-diagonal-se" style="z-index: 1000;"></div>
     $('#descEv').click(function(){
+        element = "";
         elementCount++;
         var id = "flowchartWindow" + elementCount;
-        ////var ep = jsPlumb.addEndpoint("Window1", ["TopCenter"], []);
-        //to_delete = "";
-        //}wchartWindow" + elementCount;
-        element += "<div class=\"window diamond jtk-node jsplumb-connected-step\" id=\""+ id +"\" style=\"top: 23em; left: 5em;\">" +
+        element += "<div class=\"window diamond custom jtk-node jsplumb-connected-step\" id=\""+ id +"\" style=\"top: 23em; left: 5em;\">" +
         "<strong><p class=\"desc-text\" contenteditable=\"true\" ondblclick='$(this).focus();'>decision<\/p><\/strong><br\/><br\/><\/div>";
         clicked = true;
         startpoints = ["LeftMiddle", "RightMiddle", "BottomCenter"];
@@ -197,6 +220,7 @@ jsPlumb.ready(function () {
     });
     //
     $('#endEv').click(function(){
+        element = "";
         elementCount++;
         var id = "flowchartWindow" + elementCount;
         element += "<div class=\"window start jtk-node jsplumb-connected-end\" id=\""+ id +"\" style=\"top: 23em; left: 15em;\">" +
@@ -210,7 +234,7 @@ jsPlumb.ready(function () {
         if(e.which == 127){
             if(to_delete != ""){
                 jsPlumb.remove(to_delete);
-                for(var i = 0; i<endpointList.length; i++){
+                for(var i = 0; i< endpointList.length; i++){
                     if(endpointList[i][0] == to_delete){
                         for(var j = 0; j < endpointList[i].length; j++){
                             jsPlumb.deleteEndpoint(endpointList[i][j]);
@@ -227,11 +251,17 @@ jsPlumb.ready(function () {
                         }
                     }
                 }
-                //var ep = jsPlumb.addEndpoint("Window1", ["TopCenter"], []);
                 to_delete = "";
             }
         }
     });
+    //
+    //$('#canvas').on('keyup', '[id^="flowchartWindow"]', function(e){
+    //    //alert($(this).width());
+    //    //$('#mydiv').css({'width':$(this).text().length + 80});
+    //    $(this).css({'width':$(this).width() + 30 + 'px'});
+    //    jsPlumb.repaintEverything();
+    //});
 
     $('#canvas').on('click', '[id^="flowchartWindow"]', function(){
         to_delete = $(this).attr("id");
@@ -240,6 +270,7 @@ jsPlumb.ready(function () {
         $('.start').not(this).css({'border-color':'green'});
         $('.window.jsplumb-connected-end').not(this).css({'border-color':'orangered'});
         $(this).css({'border-color':'red'});
+        //alert($('[id^="flowchartWindow"]').next().next().text());
     });
 
     jsPlumb.fire("jsPlumbDemoLoaded", instance);

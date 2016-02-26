@@ -11,7 +11,7 @@
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
+ *  KIND, either express or implied.w   See the License for the
  *  specific language governing permissions and limitations
  *  under the License.
  *
@@ -23,11 +23,7 @@ var resources = function (page, meta) {
             'jquery-file-upload/alertify.js','jquery-file-upload/bootstrap-filestyle.js','jquery.cookie.js','common/option_text.js',
             "tinymce/tinymce.min.js",'tags/tags-init-create-asset.js','notify.min.js','messages.js',
             'jquery-file-upload/jquery.iframe-transport.js','jquery-file-upload/jquery.fileupload.js',
-            'jquery-file-upload/vendor/jquery.ui.widget.js',
-            'lib/jsBezier-0.7.js','lib/biltong-0.2.js','lib/katavorio-0.13.0.js','src/util.js','src/browser-util.js',
-            'src/jsPlumb.js','src/dom-adapter.js','src/jsPlumb.js','src/dom-adapter.js','src/overlay-component.js','src/endpoint.js',
-            'src/connection.js','src/anchors.js','src/defaults.js','src/connectors-bezier.js','src/connectors-statemachine.js',
-            'src/connectors-flowchart.js','src/renderers-svg.js','src/base-library-adapter.js','src/dom.jsPlumb.js','demo.js','demo-list.js'],
+            'jquery-file-upload/vendor/jquery.ui.widget.js','demo.js','demo-list.js'],
         css:['jsPlumbToolkit-defaults.css',
             'jsPlumbToolkit-demo.css','bootstrap-select.min.css','alertify.css','default.css','datepick/smoothness.datepick.css','grid.css',
             'select2.min.css','jquery-ui.css','demo.css','font-awesome.css'],
