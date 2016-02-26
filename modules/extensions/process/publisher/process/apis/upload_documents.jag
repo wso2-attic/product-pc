@@ -10,12 +10,13 @@ var docSummary = String(request.getParameter("summaryDoc"));
 var docUrl = String(request.getParameter("docUrl"));
 var docProcessName = String(request.getParameter("docProcessName"));
 var docProcessVersion = String(request.getParameter("docProcessVersion"));
+var docExtension = String(request.getParameter("docExtension"));
 
 var processid = "NA";
 var files = request.getAllFiles();
 for (var name in files) {
     log.info("files loop");
-    processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, files[name].getStream());
+    processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, files[name].getStream(), docExtension);
 }
 
 response.sendRedirect('/publisher/assets/process/details/' + processid);
