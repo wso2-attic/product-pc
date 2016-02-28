@@ -1,3 +1,22 @@
+/*
+ *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.w   See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+
 jsPlumb.ready(function () {
     var elementCount = 0;
     var instance = window.jsp = jsPlumb.getInstance({
@@ -27,9 +46,6 @@ jsPlumb.ready(function () {
         connector: "StateMachine",
         paintStyle: { strokeStyle: "#216477", lineWidth: 4 },
         hoverPaintStyle: { strokeStyle: "blue" }
-        //overlays: [
-        //    "Arrow"
-        //]
     };
     instance.registerConnectionType("basic", basicType);
 
@@ -67,19 +83,8 @@ jsPlumb.ready(function () {
             hoverPaintStyle: endpointHoverStyle,
             connectorHoverStyle: connectorHoverStyle,
             maxConnections: -1,
-            dragOptions: {},
-            overlays: [
-                [ "Label", {
-                    location: [0.5, 1.5],
-                    label: "Drag",
-                    cssClass: "endpointSourceLabel",
-                    visible:false
-                } ]
-            ]
+            dragOptions: {}
         },
-    //    var sourceEndpoint = {
-    //        maxConnections: -1
-    //    };
     // the definition of target endpoints (will appear when the user drags a connection)
         targetEndpoint = {
             endpoint: "Dot",
@@ -87,10 +92,7 @@ jsPlumb.ready(function () {
             hoverPaintStyle: endpointHoverStyle,
             maxConnections: -1,
             dropOptions: { hoverClass: "hover", activeClass: "active" },
-            isTarget: true,
-            overlays: [
-                [ "Label", { location: [0.5, -0.5], label: "Drop", cssClass: "endpointTargetLabel", visible:false } ]
-            ]
+            isTarget: true
         },
         init = function (connection, myLabel) {
             connection.getOverlay("label").setLabel(myLabel);
@@ -128,7 +130,7 @@ jsPlumb.ready(function () {
         //
         // listen for clicks on connections, and offer to delete connections on click.
         //
-        instance.bind("click", function (conn, originalEvent) {
+        instance.bind("dblclick", function (conn, originalEvent) {
             // if (confirm("Delete connection from " + conn.sourceId + " to " + conn.targetId + "?"))
             instance.detach(conn);
             conn.toggleType("basic");
@@ -173,46 +175,34 @@ jsPlumb.ready(function () {
             _addEndpoints(name, startpoints, endpoints);
             startpoints = []; endpoints = [];
             var elements = document.getElementById("flowchartWindow1");
-            //makeResizable('.custom.step', elements);
-            //jsPlumb.selectEndpoints({source:"flowchartWindow1"}).css({top: 150, left: 345});
-            //jsPlumb.repaintEverything();
             //makeResizable('.custom.step');
-            //
-            //$(".custom.step").resizable({
-            //    resize : function(event, ui) {
-            //        jsPlumb.repaint(ui.helper);
-            //    },
-            //    handles: "all"
-            //});
             instance.draggable(jsPlumb.getSelector(".jtk-node"), { grid: [20, 20] });
         }
     });
 
-    //_addEndpoints("Window11", ["BottomCenter"], []);
-    //function makeResizable(classname, element){
-    //    $(classname).resizable({
-    //        resize : function(event, ui) {
-    //            jsPlumb.repaint(ui.helper);
-    //        }
-    //    });
-    //}
+    function makeResizable(classname){
+        $(classname).resizable({
+            resize : function(event, ui) {
+                instance.repaint(ui.helper);
+            },
+                handles: "all"
+        });
+    }
 
     $('#stepEv').click(function(){
-        element = "";
         elementCount++;
         var id = "flowchartWindow" + elementCount;
-        element += "<div class=\"window step custom jtk-node jsplumb-connected-step\" id=\""+ id +"\" style=\"top: 13em; left: 5em;\"><strong>" +
+        element = "<div class=\"window step custom jtk-node jsplumb-connected-step\" id=\""+ id +"\" style=\"top: 13em; left: 5em;\"><strong>" +
         "<p contenteditable='true' ondblclick='$(this).focus();'>step</p><\/strong><br\/><br\/><\/div>";
         clicked = true;
         startpoints = ["BottomCenter", "RightMiddle"];
         endpoints = ["TopCenter", "LeftMiddle"];
     });
-    //<div class="ui-resizable-handle ui-resizable-se ui-icon ui-icon-gripsmall-diagonal-se" style="z-index: 1000;"></div>
+
     $('#descEv').click(function(){
-        element = "";
         elementCount++;
         var id = "flowchartWindow" + elementCount;
-        element += "<div class=\"window diamond custom jtk-node jsplumb-connected-step\" id=\""+ id +"\" style=\"top: 23em; left: 5em;\">" +
+        element = "<div class=\"window diamond custom jtk-node jsplumb-connected-step\" id=\""+ id +"\" style=\"top: 23em; left: 5em;\">" +
         "<strong><p class=\"desc-text\" contenteditable=\"true\" ondblclick='$(this).focus();'>decision<\/p><\/strong><br\/><br\/><\/div>";
         clicked = true;
         startpoints = ["LeftMiddle", "RightMiddle", "BottomCenter"];
@@ -220,10 +210,9 @@ jsPlumb.ready(function () {
     });
     //
     $('#endEv').click(function(){
-        element = "";
         elementCount++;
         var id = "flowchartWindow" + elementCount;
-        element += "<div class=\"window start jtk-node jsplumb-connected-end\" id=\""+ id +"\" style=\"top: 23em; left: 15em;\">" +
+        element = "<div class=\"window start jtk-node jsplumb-connected-end\" id=\""+ id +"\" style=\"top: 23em; left: 15em;\">" +
         "<strong><p>end<\/p><\/strong><br\/><br\/><\/div>";
         clicked = true;
         startpoints = [];
@@ -270,7 +259,6 @@ jsPlumb.ready(function () {
         $('.start').not(this).css({'border-color':'green'});
         $('.window.jsplumb-connected-end').not(this).css({'border-color':'orangered'});
         $(this).css({'border-color':'red'});
-        //alert($('[id^="flowchartWindow"]').next().next().text());
     });
 
     jsPlumb.fire("jsPlumbDemoLoaded", instance);

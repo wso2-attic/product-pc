@@ -335,3 +335,12 @@ function associatePdf(element) {
         $("#pdfUploader").show();
     }
 }
+
+function saveFlowChart(){
+    html2canvas($("#canvas"), {
+        onrendered: function(canvas) {
+            var image = Canvas2Image.convertToPNG(canvas);
+            $("#img-out").append(image);
+        }
+    });
+}

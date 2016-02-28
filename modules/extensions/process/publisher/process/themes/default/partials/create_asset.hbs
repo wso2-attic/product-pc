@@ -320,9 +320,9 @@
 
 <div id="flowChartView" style="display:none">
     <h2 id="flowchart-view-header"></h2>
-    <br /><a id="bpmnOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
-    <div>
-    </div>
+    <br />
+    <a id="bpmnOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
+    <button class="btn btn-primary" id="processTxtSaveBtn" onclick="saveFlowChart()">Save</button><br /><br />
     <div style="width:100%; height: 50%; white-space:nowrap;">
         <span style="display: inline-block; vertical-align: top; padding: 5px; width:15%">
             <div id="myPalette" style="border: solid 1px gray; height: auto"><p><center><strong>Palette</strong></center></p>
@@ -346,5 +346,9 @@
           </div>
         </span>
     </div>
+    <div id="img-out">
+        <h2>saved image</h2>
+    </div>
+    <canvas id="hiddenCanvas"></canvas>
 </div>
 
