@@ -27,29 +27,20 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
-import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -57,9 +48,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -138,19 +127,6 @@ public class ProcessStore {
 
 				Element propertiesElement = append(doc, rootElement, "properties", mns);
 				appendText(doc, propertiesElement, "processtextpath", mns, "NA");
-
-				//                if (processText != null && processText.length() > 0) {
-				//                    Resource processTextResource = reg.newResource();
-				//                    processTextResource.setContent(processText);
-				//                    processTextResource.setMediaType("text/html");
-				//                    String processTextResourcePath = "processText/" + processName + "/" + processVersion;
-				//                    reg.put(processTextResourcePath, processTextResource);
-				//                    appendText(doc, propertiesElement, "processtextpath", mns, processTextResourcePath);
-				//                } else {
-				//                    String processTextResourcePath = "processText/" + processName + "/" + processVersion;
-				//                    reg.delete(processTextResourcePath);
-				//                    appendText(doc, propertiesElement, "processtextpath", mns, "NA");
-				//                }
 
 				// fill bpmn properties with NA values
 				appendText(doc, propertiesElement, "bpmnpath", mns, "NA");
@@ -1193,9 +1169,10 @@ public class ProcessStore {
 		return true;
 	}
 
-	public String uploadDocument(String processName, String processVersion, String docName, String docSummary, String docUrl, Object docObject, String docExtension) {
+	public String uploadDocument(String processName, String processVersion, String docName,
+	                             String docSummary, String docUrl, Object docObject,
+	                             String docExtension) {
 		String processId = "FAILED TO UPLOAD DOCUMENT";
-		log.info("Uploading documents to the registry.");
 		try {
 			StreamHostObject s = (StreamHostObject) docObject;
 			InputStream docStream = s.getStream();
@@ -1208,13 +1185,17 @@ public class ProcessStore {
 				Resource docContentResource = reg.newResource();
 				byte[] docContent = IOUtils.toByteArray(docStream);
 				String docContentPath = null;
-				if(docContent.length != 0) {
+				if (docContent.length != 0) {
 					docContentResource.setContent(docContent);
-					docContentPath = "doccontent/" + processName + "/" + processVersion + "/" + docName + "." + docExtension;
+					docContentPath =
+							"doccontent/" + processName + "/" + processVersion + "/" + docName +
+							"." + docExtension;
 					reg.put(docContentPath, docContentResource);
 				}
 
-				String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
+				String processAssetPath =
+						ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+						processVersion;
 				Resource resource = reg.get(processAssetPath);
 				String processContent = new String((byte[]) resource.getContent());
 				Document doc = stringToXML(processContent);
@@ -1223,10 +1204,10 @@ public class ProcessStore {
 				Element documentElement = append(doc, rootElement, "document", mns);
 				appendText(doc, documentElement, "name", mns, docName);
 				appendText(doc, documentElement, "summary", mns, docSummary);
-				if((docUrl != null) && (!docUrl.isEmpty())) {
+				if ((docUrl != null) && (!docUrl.isEmpty())) {
 					appendText(doc, documentElement, "url", mns, docUrl);
 				}
-				if(docContentPath != null) {
+				if (docContentPath != null) {
 					appendText(doc, documentElement, "path", mns, docContentPath);
 				}
 				String newProcessContent = xmlToString(doc);
@@ -1236,13 +1217,13 @@ public class ProcessStore {
 				Resource storedProcessAsset = reg.get(processAssetPath);
 				processId = storedProcessAsset.getUUID();
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			log.error("Upload documentation error.");
 		}
 		return processId;
 	}
 
-	public String getProcessTags() throws ProcessCenterException{
+	public String getProcessTags() throws ProcessCenterException {
 
 		String textContent = "FAILED TO GET PROCESS TAGS";
 
@@ -1273,29 +1254,28 @@ public class ProcessStore {
 					processJSON.put("processversion", processVersion);
 					Tag[] tags = reg.getTags(processPath);
 
-					for(Tag tag : tags){
+					for (Tag tag : tags) {
 
 						Iterator<String> keys = tagsObj.keys();
 
-						if(!keys.hasNext()  || keys == null){
+						if (!keys.hasNext() || keys == null) {
 							JSONArray newTagArray = new JSONArray();
 							newTagArray.put(processJSON);
 							tagsObj.put(tag.getTagName(), newTagArray);
 							continue;
 						}
 
-
-						while(keys.hasNext()){
+						while (keys.hasNext()) {
 							String temp = (keys.next());
 
-							if(temp == tag.getTagName()){
+							if (temp == tag.getTagName()) {
 								JSONArray processArray = ((JSONArray) tagsObj.get(temp));
 								processArray = processArray.put(processJSON);
 								tagsObj.put(temp, processArray);
 								break;
 
 							}
-							if(!keys.hasNext()){
+							if (!keys.hasNext()) {
 								JSONArray newTagArray = new JSONArray();
 								newTagArray.put(processJSON);
 								tagsObj.put(tag.getTagName(), newTagArray);
@@ -1320,7 +1300,7 @@ public class ProcessStore {
 
 	}
 
-	public String associatePDF(String processName, String processVersion, Object object){
+	public String associatePDF(String processName, String processVersion, Object object) {
 
 		String processId = "FAILED TO ADD PDF";
 		log.debug("Creating PDF resource...");
@@ -1341,7 +1321,6 @@ public class ProcessStore {
 				String pdfContentPath = "pdf/" + processName + "/" + processVersion;
 				reg.put(pdfContentPath, pdfContentResource);
 				String processPath = "processes/" + processName + "/" + processVersion;
-
 
 				// update process by linking the pdf asset
 
@@ -1379,9 +1358,11 @@ public class ProcessStore {
 				UserRegistry reg = registryService.getGovernanceSystemRegistry();
 				pdfPath = pdfPath.substring("/_system/governance/".length());
 				Resource pdfAsset = reg.get(pdfPath);
-				byte[]  pdfContent = (byte[]) pdfAsset.getContent();
+				byte[] pdfContent = (byte[]) pdfAsset.getContent();
 				pdfString = new sun.misc.BASE64Encoder().encode(pdfContent);
-				log.info("PDF PATH:" + pdfPath);
+				if(log.isDebugEnabled()) {
+					log.debug("PDF PATH:" + pdfPath);
+				}
 			}
 		} catch (Exception e) {
 			log.error("Failed to fetch pdf: " + pdfPath);
@@ -1390,19 +1371,4 @@ public class ProcessStore {
 		return pdfString;
 	}
 
-
-	//    public static void main(String[] args) {
-	//        String path = "/home/chathura/temp/t5/TestProcess1.bpmn";
-	//        String outpath = "/home/chathura/temp/t5/TestProcess1image.png";
-	//        try {
-	////            byte[] image = new ProcessStore().getBPMNImage2(path);
-	////            FileUtils.writeByteArrayToFile(new File(outpath), image);
-	//
-	//            String imageString = new ProcessStore().getEncodedBPMNImage(path, null);
-	//            FileUtils.write(new File(outpath), imageString);
-	//
-	//        } catch (Exception e) {
-	//            e.printStackTrace();
-	//        }
-	//    }
 }

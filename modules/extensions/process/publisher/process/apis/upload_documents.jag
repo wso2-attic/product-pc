@@ -1,9 +1,10 @@
 <%
 importPackage(org.wso2.carbon.pc.core);
 var log = new Log();
-log.info("INSIDE UPLOAD DOCUMENTS");
+if(log.isDebugEnabled()){
+    log.debug("INSIDE UPLOAD DOCUMENTS");
+}
 var ps = new ProcessStore();
-log.info("LOADED PROCESS STORE");
 
 var docName = String(request.getParameter("docName"));
 var docSummary = String(request.getParameter("summaryDoc"));
@@ -12,10 +13,17 @@ var docProcessName = String(request.getParameter("docProcessName"));
 var docProcessVersion = String(request.getParameter("docProcessVersion"));
 var docExtension = String(request.getParameter("docExtension"));
 
+if(docSummary == '') {
+    docSummary = "NA";
+}
+
+if(docUrl == '') {
+    docUrl = "NA";
+}
+
 var processid = "NA";
 var files = request.getAllFiles();
 for (var name in files) {
-    log.info("files loop");
     processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, files[name].getStream(), docExtension);
 }
 
