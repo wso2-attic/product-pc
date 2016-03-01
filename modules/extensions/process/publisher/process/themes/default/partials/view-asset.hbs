@@ -1,18 +1,7 @@
 <script>
     var processNames = [];
     var processListObj;
-    var pid;
-    var pdfDoc = null;
-    var pageNum ;
-    var ctx;
 
-
-    window.onload = function(){
-
-        var url = window.location.toString();
-        pid = url.substr(url.lastIndexOf('/') + 1);
-        getProcessList();
-    }
 
     function getMainProcess(){
         var mainProcess = $('#view-header').text() + "-" + $('#process-version').text();
@@ -26,8 +15,6 @@
         $("#processTextEditDiv").hide();
         $("#bpmnViewDiv").show();
         $("#bpmnEditDiv").hide();
-        $("#pdfUploaderView").hide();
-        $("#holder").hide();
 
         $.ajax({
             url: 'https://localhost:9443/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/{{assets.tables.[0].fields.name.value}}/{{assets.tables.[0].fields.version.value}}',
@@ -51,8 +38,6 @@
         $("#processTextEditDiv").hide();
         $("#bpmnViewDiv").hide();
         $("#bpmnEditDiv").hide();
-        $("#pdfUploaderView").hide();
-        $("#holder").hide();
     }
 
     function editText() {
@@ -107,9 +92,8 @@
         $("#processTextContainer").hide();
         $("#processTextEditDiv").show();
         $("#bpmnViewDiv").hide();
+        $("analyticsConfigDiv").hide();
         $("#bpmnEditDiv").hide();
-        $("#pdfUploaderView").hide();
-        $("holder").hide();
 
         tinymce.init({
             selector: "#processContent"
@@ -121,9 +105,18 @@
         $("#processTextContainer").hide();
         $("#processTextEditDiv").hide();
         $("#bpmnViewDiv").hide();
+        $("analyticsConfigDiv").hide();
         $("#bpmnEditDiv").show();
-        $("#pdfUploaderView").hide();
-        $("#holder").hide();
+    }
+
+    function showAnalyticsConfigurer() {
+        $("#overviewDiv").hide();
+        $("#processTextContainer").hide();
+        $("#processTextEditDiv").hide();
+        $("#bpmnViewDiv").hide();
+        $("#analyticsConfigDiv").show();
+        //  $("#analyticsConfigDiv").getElementsByTagName("TR").index(0).hide();
+
     }
 
     function showOverview(e) {
@@ -135,8 +128,7 @@
         $("#processTextEditDiv").hide();
         $("#bpmnViewDiv").hide();
         $("#bpmnEditDiv").hide();
-        $("#pdfUploaderView").hide();
-        $("#holder").hide();
+        $("analyticsConfigDiv").hide();
     }
 
     function editProcessOwner(e){
@@ -166,6 +158,7 @@
     }
 
     function getProcessList(){
+        $("analyticsConfigDiv").hide();
         $.ajax({
             url: '/publisher/assets/process/apis/get_process_list',
             type: 'GET',
@@ -173,21 +166,7 @@
                 processListObj = JSON.parse(response);
                 for(var i = 0 ; i < processListObj.length ; i++){
                     processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
-                    if(processListObj[i].processid == pid){
-                        if(processListObj[i].pdfpath == "NA"){
-                            //show pdf upload button
-                            $("#pdfUploader").show();
-                            $("#pdfViewer").hide();
-                        }
-                        else{
-                            //show pdf view button
-                            $("#pdfUploader").hide();
-                            $("#pdfViewer").show();
-                        }
-
-                    }
                 }
-                
             },
             error: function () {
                 alertify.error('Process list returning error');
@@ -515,212 +494,174 @@
         }
     }
 
-    //****************************PDF rendering*************************************************
+    function addProcessVariableRow(tableID) {
 
-    function showPDF(){
+        var table = document.getElementById(tableID);
 
-        $("#overviewDiv").hide();
-        $("#processTextContainer").hide();
-        $("#processTextEditDiv").hide();
-        $("#bpmnViewDiv").hide();
-        $("#bpmnEditDiv").hide();
-        $("#holder").show();
-        $("#pdfUploaderView").hide();
+        var rowCount = table.rows.length;
+        var row = table.insertRow(rowCount);
 
-        if(pdfDoc == null) {
-            loadPdf();
+        var colCount =3;// table.rows[0].cells.length;
+
+
+        row.innerHTML=
+            //'<div style="width:300px; display:table">'+
+                '<td><input type="checkbox" name="chk"/></td>'+
+
+                '<td><input type="text" name="txt" style="display:table-cell; width:100%"/></td>'+
+                '<td>'+
+                '<select name="country" style="display:table-cell; width:100%">'+
+                '<option value="int">int</option>'+
+                '<option value="string">string</option>'+
+                '<option value="float">float</option>'+
+                '<option value="boolean">boolean</option>'+
+                '</select>'+
+                '</td>';//+
+        // '</div>';
+
+
+        /* for (var i = 0; i < colCount; i++) {
+
+             var newcell = row.insertCell(i);
+
+             newcell.innerHTML = table.rows[1].cells[i].innerHTML;
+             console.log(newcell.childNodes[0].type);
+             //alert(newcell.childNodes);
+             switch (newcell.childNodes[0].type) {
+                 case "text":
+                     newcell.childNodes[0].value = "";
+                     break;
+                 case "checkbox":
+                     newcell.childNodes[0].checked = false;
+                     break;
+                 case "select-one":
+                     newcell.childNodes[0].selectedIndex = 0;
+                     break;
+             }
+         }*/
+    }
+
+    function deleteProcessVariableRow(tableID) {
+        try {
+            var table = document.getElementById(tableID);
+            var rowCount = table.rows.length;
+
+            for (var i = 0; i < rowCount; i++) {
+                var row = table.rows[i];
+                var chkbox = row.cells[0].childNodes[0];
+                if (null != chkbox && true == chkbox.checked) {
+                    if (rowCount <= 1) {
+                        alert("No rows to delete.");
+                        break;
+                    }
+                    //if (rowCount > 1) {
+                    table.deleteRow(i);
+
+                    rowCount--;
+                    i--;
+                }
+
+            }
+
+        } catch (e) {
+            alert(e);
+        }
+    }
+
+    function saveProcessVariables(tableID){
+        var table=document.getElementById(tableID);
+        var rowCount=table.rows.length;
+
+        if (rowCount <= 0) {
+            alert("No rows to save.");
+            return;
         }
 
-    }
+        var processVariablesInfo={};
+        var processVariables={};
 
-    function associatePdf(element) {
+        var processName= $('#view-header').text();
+        var processVersion=$('#process-version').text();
+        processVariablesInfo["processName"]=processName;
+        processVariablesInfo["processVersion"]=processVersion;
 
-        $("#overviewDiv").hide();
-        $("#processTextView").hide();
-        $("#bpmnView").hide();
-        $("#docView").hide();
-        $("#pdfUploaderView").show();
+        for (var i = 1; i < rowCount; i++) {
+            var row = table.rows[i];
+            //processVariable
+            //var chkbox = row.cells[0].childNodes[0];
+            var variableName=row.cells[1].children[0].value;
+            var variableType=row.cells[2].children[0].value;
 
-    }
 
-    function loadPdf() {
-        var ppath = 'apis/get_process_pdf?process_pdf_path=/_system/governance/pdf/{{assets.tables.[0].fields.name.value}}/{{assets.tables.[0].fields.version.value}}';
+            if (null != variableName && null!=variableType) {
+                processVariables[variableName]=variableType;
+                //processVariable.name=variableName;
+                //processVariable.type=variableType;
+            }
+            //processVariables.push(processVariable);
+
+        }
+        processVariablesInfo["processVariables"]=processVariables;
 
         $.ajax({
-            url: 'https://localhost:9443/publisher/assets/process/apis/get_process_pdf?process_pdf_path=/_system/governance/pdf/{{assets.tables.[0].fields.name.value}}/{{assets.tables.[0].fields.version.value}}',
-            type: 'GET',
-            dataType: 'text',
-            success: function (data) {
-                renderPDF(base64ToUint8Array(data));
+            url: '/publisher/assets/process/apis/save_process_variables',
+            type: 'POST',
+            data: {'processVariablesInfo': JSON.stringify(processVariablesInfo) },
+            /*success: function (response) {
+                $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response);
+                $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response);
+                $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response);
 
-            },
+
+                if($(currentElement).attr('id') == 'saveProcessBtn'){
+                    window.location = "../../assets/process/details/" + response;
+                }
+            },*/
             error: function () {
-                alertify.error('pdf retrieving error');
+                alertify.error('Process variables saving error');
             }
         });
     }
 
-
-    //
-    // Go to previous page
-    //
-    function goPrevious() {
-        if (pageNum <= 1)
-            return;
-        pageNum--;
-        renderPage(pageNum);
-    }
-
-    //
-    // Go to next page
-    //
-    function goNext() {
-        if (pageNum >= pdfDoc.numPages)
-            return;
-        pageNum++;
-        renderPage(pageNum);
-    }
-
-
-    function renderPDF(url) {
-
-        pdfDoc = null;
-        pageNum = 1;
-        scale = 1.5;
-        canvas = document.getElementById('the-canvas');
-        ctx = canvas.getContext('2d');
-        PDFJS.disableWorker = true;
-
-        PDFJS.getDocument(url).then(function getPdf(_pdfDoc) {
-            pdfDoc = _pdfDoc;
-            renderPage(pageNum);
-
-        });
-    }
-
-    // Get page info from document, resize canvas accordingly, and render page
-
-    function renderPage(num) {
-        // Using promise to fetch the page
-        pdfDoc.getPage(num).then(function(page) {
-            var viewport = page.getViewport(scale);
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-
-            // Render PDF page into canvas context
-            var renderContext = {
-                canvasContext: ctx,
-                viewport: viewport
-            };
-            page.render(renderContext);
-        });
-
-        // Update page counters
-        document.getElementById('page_num').textContent = pageNum;
-        document.getElementById('page_count').textContent = pdfDoc.numPages;
-    }
-    // }
-
-    function base64ToUint8Array(base64) {//base64 is an encoded byte Array sent from server-side
-
-        var raw = atob(base64); //This is a native function that decodes a base64-encoded string.
-        var uint8Array = new Uint8Array(new ArrayBuffer(raw.length));
-        for (var i = 0; i < raw.length; i++) {
-            uint8Array[i] = raw.charCodeAt(i);
-        }
-        return uint8Array;
-    }
-
-    function zoom(newScale){
-        // Using promise to fetch the page
-        pdfDoc.getPage(pageNum).then(function(page) {
-            var viewport = page.getViewport(newScale);
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-
-            // Render PDF page into canvas context
-            var renderContext = {
-                canvasContext: ctx,
-                viewport: viewport
-            };
-            page.render(renderContext);
-        });
-
-    }
-
-    function zoomIn(){
-        var scaleSelect = document.getElementById("scaleSelect");
-        var last = scaleSelect.options.length - 1;
-
-        if(scaleSelect.selectedIndex < last) {
-            scale = scaleSelect.options[scaleSelect.selectedIndex + 1].value;
-            scaleSelect.selectedIndex += 1;
-            zoom(scale);
-        }
-    }
-
-    function zoomOut(){
-        var scaleSelect = document.getElementById("scaleSelect");
-        var last = scaleSelect.options.length - 1;
-
-        if(scaleSelect.selectedIndex > 0) {
-            scale = scaleSelect.options[scaleSelect.selectedIndex - 1].value;
-            scaleSelect.selectedIndex -= 1;
-
-            zoom(scale);
-        }
-    }
-
-    function zoomSelect(){
-
-        var scaleSelect = document.getElementById("scaleSelect");
-        scale = scaleSelect.options[scaleSelect.selectedIndex].value;
-        zoom(scale);
-    }
 
 </script>
 
 <h2 id="view-header">{{assets.tables.[0].fields.name.value}}</h2>
 <br/>
 <div id="overviewDiv">
-            <table class="table table-responsive" style="width: 8cm;border-bottom:0px !important;">
-                <tbody>
-                <tr>
-                    <td width="40%" style="border: 0px !important;">Version:</td>
-                    <td width="60%" id="process-version" style="border: 0px !important;">{{assets.tables.[0].fields.version.value}}</td>
-                </tr>
-                <tr>
-                    <td width="40%" style="border: 0px !important;">Owner:</td>
-                    <td width="40%" style="border: 0px !important;" contenteditable="true" onblur="editProcessOwner(this)">{{assets.tables.[0].fields.owner.value}}</td>
-                    <td width="20%" style="border: 0px !important;"><span id="processOwnerUpdateBtn" class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Click here to update the value" style="color:#0081c2;cursor: pointer;display: none;" onclick="updateProcessOwner(this)"></span></td>
-                </tr>
-                </tbody>
-            </table>
+    <table class="table table-responsive" style="width: 8cm;border-bottom:0px !important;">
+        <tbody>
+        <tr>
+            <td width="40%" style="border: 0px !important;">Version:</td>
+            <td width="60%" id="process-version" style="border: 0px !important;">{{assets.tables.[0].fields.version.value}}</td>
+        </tr>
+        <tr>
+            <td width="40%" style="border: 0px !important;">Owner:</td>
+            <td width="40%" style="border: 0px !important;" contenteditable="true" onblur="editProcessOwner(this)">{{assets.tables.[0].fields.owner.value}}</td>
+            <td width="20%" style="border: 0px !important;"><span id="processOwnerUpdateBtn" class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Click here to update the value" style="color:#0081c2;cursor: pointer;display: none;" onclick="updateProcessOwner(this)"></span></td>
+        </tr>
+        </tbody>
+    </table>
 
-            <div class="control-group" style="display: inline-block">
-                {{#if processTextAvaliable}}
-                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View/Edit Process Text</button></div>
-                    <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()" style="display: none">Describe process in text</button></div>
-                {{else}}
-                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View/Edit Process Text</button></div>
-                    <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button></div>
-                {{/if}}
-            </div>
-
-            <div class="control-group" style="display: inline-block">
-                {{#if bpmnAvaliable}}
-                    <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
-                    <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
-                {{else}}
-                    <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
-                {{/if}}
-            </div>
     <div class="control-group" style="display: inline-block">
-
-        <button id="pdfViewer" class="btn btn-primary" style="display: none" onclick="showPDF()">Show PDF</button>
-        <button id="pdfUploader" class="btn btn-primary" style="display:none" onclick="associatePdf()">Associate PDF</button>
+        {{#if processTextAvaliable}}
+            <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View/Edit Process Text</button></div>
+            <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()" style="display: none">Describe process in text</button></div>
+        {{else}}
+            <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View/Edit Process Text</button></div>
+            <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button></div>
+        {{/if}}
     </div>
 
+    <div class="control-group" style="display: inline-block">
+        {{#if bpmnAvaliable}}
+            <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
+            <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
+        {{else}}
+            <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
+            <button class="btn btn-primary" onclick="showAnalyticsConfigurer()">Config Analytics</button>
+        {{/if}}
+    </div>
     <br /><br />
 
     <form class="form-horizontal">
@@ -847,9 +788,9 @@
 
 <div id="bpmnViewDiv" style="display: none">
     <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button><br /><br />
-<div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
-    <img id="bpmnImage" src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
-</div>
+    <div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
+        <img id="bpmnImage" src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
+    </div>
 </div>
 
 <div id="bpmnEditDiv" style="display:none">
@@ -902,68 +843,55 @@
     </tbody>
 </table>
 
-<div id="holder" style="display:none">
-    <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button><br /><br />
-    <hr>
-    <div>
-        <button id="prev" class="btn btn-primary" onclick="goPrevious()"><span class="glyphicon glyphicon-circle-arrow-left"></span>Prev</button>
-        <button id="next" class="btn btn-primary" onclick="goNext()"><span class="glyphicon glyphicon-circle-arrow-right"></span>Next</button>
-        &nbsp; &nbsp;
-        <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
-        &nbsp; &nbsp;
-        <button id="zoomOut" class="toolbarButton zoomOut btn btn-primary" title="Zoom Out" tabindex="21" data-l10n-id="zoom_out" onclick="zoomOut()">
-            <span data-l10n-id="zoom_out_label"></span>
-            <span class="glyphicon glyphicon-minus"></span>
-        </button>
-        <button id="zoomIn" class="toolbarButton zoomIn btn btn-primary" title="Zoom In" tabindex="22" data-l10n-id="zoom_in" onclick="zoomIn()">
-            <span data-l10n-id="zoom_in_label"></span>
-            <span class="glyphicon glyphicon-plus"></span>
-        </button>
-                  <span style="min-width: 120px; max-width: 120px;" id="scaleSelectContainer">
-                     <select style="min-width: 142px;" class="selectpicker" data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="zoom" onclick="zoomSelect()">
-                         <option title="" value="0.5" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 50 }">50%</option>
-                         <option title="" value="0.75" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 75 }">75%</option>
-                         <option title="" value="1" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 100 }">100%</option>
-                         <option title="" value="1.25" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 125 }">125%</option>
-                         <option title="" value="1.5" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 150 }" selected="selected">150%</option>
-                         <option title="" value="2" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 200 }">200%</option>
-                         <option title="" value="3" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 300 }">300%</option>
-                         <option title="" value="4" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 400 }">400%</option>
-                     </select>
+<div id="analyticsConfigDiv" style="display:none">
+    <button class="btn btn-primary" onclick="showOverview(this)"><span
+            class="glyphicon glyphicon-circle-arrow-left"></span> Overview
+    </button>
+    </br>
+    </br>
+    <!-- <div class="add-unbounded-row"><a data-name="process_variable" onclick="addProcessVariableRow(this)"><i class="fa fa-plus-circle"></i> Add Process Variable</a></div>-->
+    <!--<INPUT type="button" value="Add Process Variable" onclick="addProcessVariable('dataTable')"/>-->
 
-                  </span>
-    </div>
 
-    <div style="height:700px;overflow-y:auto;overflow-x:auto;float:left;position:relative;margin-left:-5px;">
-        <canvas id="the-canvas" style="border:1px solid black"></canvas>
-    </div>
+    <div  class="add-unbounded-row" float="left" width="100%"  style="width:auto; float:left;"><a  onclick="addProcessVariableRow('dataTable')"><i
+            class="fa fa-plus-circle"></i> Add Process Variable</a></div>
+    <!--
+        <INPUT type="button" value="Delete Process Variable" onclick="deleteProcessVariableRow('dataTable')"/>
+    -->
+    <div class="add-unbounded-row" style="width:auto;padding-left: 25pt; margin-left:10%;"><a onclick="deleteProcessVariableRow('dataTable')"><i
+            class="fa fa-plus-circle"></i> Delete Process Variable</a></div>
+
+
+    <br>
+    <table id="dataTable"  border="1" width="25%">
+        <thead>
+
+        <th width="4%"></th>
+        <th>Variable Name</th>
+        <th>Type</th>
+
+
+        </thead>
+        <tr>
+            <td><input type="checkbox" name="chk"/></td>
+
+            <td><input type="text" name="txt" style="display:table-cell; width:100%"/></td>
+            <td>
+                <select name="country" style="display:table-cell; width:100%">
+                    <option value="int">int</option>
+                    <option value="string">string</option>
+                    <option value="float">float</option>
+                    <option value="boolean">boolean</option>
+                </select>
+            </td>
+            <!--<td style="width: 5%;"><a class="js-remove-row" onclick="deleteProcessVariableRow('dataTable', parseInt( $(this).parent().parent().index() ) )"><i class="fa fa-trash"></i></a> </td>-->
+
+        </tr>
+    </table>
+</div>
+<br>
+<button onclick="saveProcessVariables('dataTable')" class="btn btn-primary">Save</button>
 
 </div>
-
-<div id="pdfUploaderView" class="form-group" style="display: none">
-
-    <h2 id="create-view-header"></h2>
-    <br /><a id="bpmnOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
-
-    <form method="post" action="../apis/upload_pdf"  onsubmit="" enctype="multipart/form-data" class="form-horizontal" id="form-bar-create">
-        <br>
-        <div style="float:left;width:15cm">
-            <input type="file" onchange="setfilename(this.value);" class="filestyle" data-buttonname="btn-primary" data-placeholder="Associate pdf/text file" name="pdfFile" id="pdfFile" data-buttontext="PDF file" accept=".pdf" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
-
-        </div><br><br>
-        <input type="hidden" id="ProcessName" name="ProcessName" value="{{assets.tables.[0].fields.name.value}}">
-        <input type="hidden" id="ProcessVersion" name="ProcessVersion" value="{{assets.tables.[0].fields.version.value}}">
-
-        <div id="saveButtons" class="form-actions">
-            <input type="submit" id="btn-create-asset-bar" class="btn btn-primary" name="addNewAssetButton" value="Upload pdf">
-            <button class="btn" type="reset">Reset</button>
-            <input type="hidden" value="process" name="process" id="meta-asset-type">
-        </div>
-
-    </form>
-</div>
-
-
-
 
 

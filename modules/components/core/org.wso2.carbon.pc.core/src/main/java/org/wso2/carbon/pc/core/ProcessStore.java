@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.pc.core;
 
+//import com.sun.javafx.scene.web.Debugger;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.converter.util.InputStreamProvider;
 import org.activiti.bpmn.model.BpmnModel;
@@ -25,14 +26,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.impl.IteratorImpl;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -57,9 +56,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -965,6 +962,57 @@ public class ProcessStore {
 		return true;
 	}
 
+	public boolean saveProcessVariables(String processVariableDetails){
+		try {
+			RegistryService registryService =
+					ProcessCenterServerHolder.getInstance().getRegistryService();
+
+			if (registryService != null) {
+				UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+				JSONObject processInfo = new JSONObject(processVariableDetails);
+				String processName = processInfo.getString("processName");
+				String processVersion = processInfo.getString("processVersion");
+				String processAssetPath =
+						ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+								processVersion;
+				Resource resource = reg.get(processAssetPath);
+				String processContent = new String((byte[]) resource.getContent());
+				Document doc = stringToXML(processContent);
+
+				JSONObject processVariablesJOb = processInfo.getJSONObject("processVariables");
+
+				//Map<String, Object> map = (Map<String,Object>)processVariablesJOb;
+				 Iterator<?> keys = processVariablesJOb.keys();
+
+				while (	keys.hasNext()){
+					String variableName = (String)keys.next();
+					//if (Debugger.isEnabled())
+						log.debug(variableName);
+					String variableType=processVariablesJOb.get(variableName).toString();
+					//JSONObject processVariableJOb= (JSONObject) processVariablesArray.get(i);
+					Element rootElement = doc.getDocumentElement();
+
+					Element variableElement=append(doc,rootElement,"variable",mns);
+					variableElement.setAttribute("name",variableName);
+					variableElement.setAttribute("type",variableType);
+					//variableElement.setNodeValue("My value");
+					variableElement.setTextContent("My value 2");
+
+					//appendText(doc,rootElement,"name",mns,variableName);
+					//appendText(doc,rootElement,"type",mns,processVariablesJOb.get(variableName).toString());
+
+					String newProcessContent = xmlToString(doc);
+					resource.setContent(newProcessContent);
+					reg.put(processAssetPath, resource);
+				}
+			}
+		}catch (Exception e){
+			log.error("Failed to save processVariables", e);
+		}
+		return true;
+	}
+
 	public boolean addSuccessor(String successorDetails) {
 		try {
 			RegistryService registryService =
@@ -1407,4 +1455,5 @@ public class ProcessStore {
 	//            e.printStackTrace();
 	//        }
 	//    }
+
 }
