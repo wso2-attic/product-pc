@@ -169,8 +169,7 @@ public class ProcessStore {
 				}
 
 				Element pdfElement = append(doc, rootElement, "pdf", mns);
-				Element pdfPathElement = append(doc, pdfElement, "path", mns);
-				appendText(doc, pdfPathElement, "path", mns, "NA");
+				appendText(doc, pdfElement, "path", mns, "NA");
 
 				String processAssetContent = xmlToString(doc);
 				Resource processAsset = reg.newResource();
