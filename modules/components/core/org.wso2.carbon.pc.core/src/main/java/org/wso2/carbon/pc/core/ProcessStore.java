@@ -168,6 +168,10 @@ public class ProcessStore {
 					}
 				}
 
+				Element pdfElement = append(doc, rootElement, "pdf", mns);
+				Element pdfPathElement = append(doc, pdfElement, "path", mns);
+				appendText(doc, pdfPathElement, "path", mns, "NA");
+
 				String processAssetContent = xmlToString(doc);
 				Resource processAsset = reg.newResource();
 				processAsset.setContent(processAssetContent);
@@ -676,12 +680,14 @@ public class ProcessStore {
 							processXML.getElementsByTagName("name").item(0).getTextContent();
 					String processVersion =
 							processXML.getElementsByTagName("version").item(0).getTextContent();
+					String pdfPath = processXML.getElementsByTagName("pdf").item(0).getFirstChild().getTextContent();
 
 					JSONObject processJSON = new JSONObject();
 					processJSON.put("path", processPath);
 					processJSON.put("processid", processResource.getUUID());
 					processJSON.put("processname", processName);
 					processJSON.put("processversion", processVersion);
+					processJSON.put("pdfpath", pdfPath);
 					result.put(processJSON);
 				}
 
@@ -1329,9 +1335,7 @@ public class ProcessStore {
 				String processContent = new String(processContentBytes);
 				Document pdoc = stringToXML(processContent);
 
-				Element rootElement = pdoc.getDocumentElement();
-				Element documentElement = append(pdoc, rootElement, "pdf", mns);
-				appendText(pdoc, documentElement, "path", mns, pdfContentPath);
+				pdoc.getElementsByTagName("pdf").item(0).getFirstChild().setTextContent(pdfContentPath);
 				String newProcessContent = xmlToString(pdoc);
 				processAsset.setContent(newProcessContent);
 				reg.put(processPath, processAsset);
