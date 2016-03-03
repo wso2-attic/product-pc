@@ -31,6 +31,11 @@
     text-align: center;
 }
 
+.end{
+    border-radius: 40px;
+    text-align: center;
+}
+
 .step{
     border-radius: 0.5em;
     width: 80px;

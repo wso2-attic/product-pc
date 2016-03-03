@@ -28,6 +28,7 @@ function showBPMN() {
     $("#bpmnEditDiv").hide();
     $("#pdfUploaderView").hide();
     $("#holder").hide();
+    $("#flowChartEditorView").hide();
 
     $.ajax({
         url: '/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/' + fieldsName + "/" + fieldsVersion,
@@ -53,6 +54,7 @@ function viewText() {
     $("#bpmnEditDiv").hide();
     $("#pdfUploaderView").hide();
     $("#holder").hide();
+    $("#flowChartEditorView").hide();
 }
 
 function editText() {
@@ -112,6 +114,7 @@ function showTextEditor() {
     $("#bpmnEditDiv").hide();
     $("#pdfUploaderView").hide();
     $("holder").hide();
+    $("#flowChartEditorView").hide();
 
     tinymce.init({
         selector: "#processContent"
@@ -126,6 +129,7 @@ function showBPMNUploader() {
     $("#bpmnEditDiv").show();
     $("#pdfUploaderView").hide();
     $("#holder").hide();
+    $("#flowChartEditorView").hide();
 }
 
 function showOverview(e) {
@@ -139,6 +143,7 @@ function showOverview(e) {
     $("#bpmnEditDiv").hide();
     $("#pdfUploaderView").hide();
     $("#holder").hide();
+    $("#flowChartEditorView").hide();
 }
 
 function editProcessOwner(e) {
@@ -527,6 +532,7 @@ function showPDF() {
     $("#bpmnEditDiv").hide();
     $("#holder").show();
     $("#pdfUploaderView").hide();
+    $("#flowChartEditorView").hide();
 
     if (pdfDoc == null) {
         loadPdf();
@@ -540,6 +546,7 @@ function associatePdf(element) {
     $("#bpmnView").hide();
     $("#docView").hide();
     $("#pdfUploaderView").show();
+    $("#flowChartEditorView").hide();
 
 }
 
@@ -572,7 +579,6 @@ function goNext() {
     pageNum++;
     renderPage(pageNum);
 }
-
 
 function renderPDF(url) {
     pdfDoc = null;
@@ -663,4 +669,32 @@ function zoomSelect() {
     var scaleSelect = document.getElementById("scaleSelect");
     scale = scaleSelect.options[scaleSelect.selectedIndex].value;
     zoom(scale);
+}
+
+//******************************Flowchart Editor***********************************
+function associateEditorFlowChart(name){
+    $('#flowchart-editor-header').text(name);
+    $("#overviewDiv").hide();
+    $("#flowChartEditorView").show();
+    $("#pdfUploader").hide();
+    $("#docView").hide();
+    $("#bpmnView").hide();
+    $("#processTextView").hide();
+}
+
+function showFlowchartEditor(name, flowchartString){
+    $('#flowchart-editor-header').text(name);
+    $("#overviewDiv").hide();
+    $("#flowChartEditorView").show();
+    $("#pdfUploader").hide();
+    $("#docView").hide();
+    $("#bpmnView").hide();
+    $("#processTextView").hide();
+    _loadEditableFlowChart(flowchartString, '#editor_canvas');
+}
+
+function redirectTo(element){
+    _saveEditedFlowchart();
+    $("#fcEditorOverviewLink").attr("href", "../../assets/process/details/" + response);
+    element.click();
 }
