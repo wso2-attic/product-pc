@@ -1,7 +1,47 @@
 var processNames = [];
 var processListObj;
+var tagList = [];
 
-window.onload = getProcessList;
+window.onload = function(){
+    getProcessList();
+
+    $('#span').click(function() {
+        $("#tag-box").focus()
+    });
+
+    $("#tag-box").keyup(function(e) {
+
+        var tagValue = $("#tag-box").val().trim();
+        var duplicate = $.inArray(tagValue, tagList);
+
+        if(duplicate >= 0){
+            $("#select2-results__option--highlighted").hide();
+            $("#select2-results__option").hide();
+            $('#tag-box').val('');
+        }
+
+        if(e.which == 13 && tagValue.length>=2) {
+            addNewTag();
+            $("#select2-results__option").hide();
+            $("#select2-results__option--highlighted").hide();
+        }
+        else{
+            updateTextBox(tagValue);
+        }
+    });
+
+    $( "#tag-box" ).focusin(function() {
+
+        var tagValue = $("#tag-box").val().trim();
+        updateTextBox(tagValue);
+    });
+
+
+    $("#span").focusout(function(){
+        $("#select2-results__option").hide();
+        $("#select2-results__option--highlighted").hide();
+    });
+}
 
 function showTextEditor(element) {
     if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
@@ -111,11 +151,12 @@ function saveProcess(currentElement) {
 }
 
 function getProcessInfo() {
+    var tags = tagList.toString();
     var processDetails = {
         'processName': $("#pName").val(),
         'processVersion': $("#pVersion").val(),
         'processOwner': $("#pOwner").val(),
-        'processTags': $("#pTags").val(),
+        'processTags': tags,
         'subprocess': readSubprocessTable(),
         'successor': readSuccessorTable(),
         'predecessor': readPredecessorTable()
@@ -341,6 +382,61 @@ function associatePdf(element) {
     }
 }
 
-function redirectToProcess(element){
+function redirectToProcess(element) {
     element.click();
+}
+
+function updateTextBox(tagValue){
+
+    if(tagValue.length == 0){
+        $("#select2-results__option--highlighted").hide();
+        $("#select2-results__option").text("Please enter 2 or more characters");
+        $("#select2-results__option").show();
+
+
+    }
+    else if(tagValue.length == 1){
+        $("#select2-results__option--highlighted").hide();
+        $("#select2-results__option").text("Please enter 1 or more characters");
+        $("#select2-results__option").show();
+    }
+    else{
+        $("#select2-results__option").hide();
+        $("#select2-results__option--highlighted").text(tagValue);
+        $("#select2-results__option--highlighted").show();
+
+
+    }
+}
+
+function addNewTag(){
+    var tagValue = $("#tag-box").val().trim();
+
+    if(tagValue) {
+        tagList.push(tagValue);
+        $('#_tags').append($("<option></option>").attr("value", tagValue).text(tagValue));
+
+        $("#tag-box-list").before('<li class="select2-selection__choice" title="' + tagValue + '">' +
+        '<span class="select2-selection__choice__remove" role="presentation" onclick="removeTag(this)">×</span>' + tagValue + '</li>');
+        $('#tag-box').val('');
+    }
+}
+
+function removeTag(currentElement){
+
+    var parent = $(currentElement).parent();
+    var tagName = parent.attr("title");
+
+    $('#_tags option').each(function() {
+        if ( $(this).val() == tagName ) {
+            $(this).remove();
+        }
+    })
+    $(parent).remove();
+
+    var index = jQuery.inArray( tagName, tagList );
+    alert(index);
+    if (index > -1) {
+        tagList.splice(index, 1);
+    }
 }
