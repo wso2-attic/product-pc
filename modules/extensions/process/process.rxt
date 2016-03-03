@@ -33,6 +33,7 @@
                 <name>Createdtime</name>
             </field>
         </table>
+
         <table name="Properties">
             <field type="text" required="false">
                 <name>bpmnpath</name>
@@ -78,6 +79,14 @@
             </field>
             <field type="text" required="true">
                 <name>Id</name>
+            </field>
+        </table>
+        <table name="Process_Variable" maxoccurs="unbounded">
+            <field type="text" required="true">
+                <name>name</name>
+            </field>
+            <field type="text" required="true">
+                <name>type</name>
             </field>
         </table>
         <table name="Document">

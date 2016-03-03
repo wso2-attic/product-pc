@@ -623,6 +623,9 @@
         });
     }
 
+    function createEventStreamAndReceiver(){
+
+    }
 
 </script>
 
@@ -849,8 +852,64 @@
     </button>
     </br>
     </br>
-    <!-- <div class="add-unbounded-row"><a data-name="process_variable" onclick="addProcessVariableRow(this)"><i class="fa fa-plus-circle"></i> Add Process Variable</a></div>-->
-    <!--<INPUT type="button" value="Add Process Variable" onclick="addProcessVariable('dataTable')"/>-->
+
+
+    <h2 class="field-title">
+        <a class="collapsing-h2" aria-expanded="true" href="#collapseprocessinfo" data-toggle="collapse">
+            <i class="cu-btn-exp-col btn-collapsed">Event Stream Information</i>
+        </a>
+    </h2>
+    <div class="collapse in responsive-form-container" id="collapseeventstreaminfo">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Event Stream Name<sup class="required-field">*</sup></label>
+                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                    <input onblur="blurIt()" type="text" placeholder="Enter Event Stream Name" name="event_stream_name" id="eventStreamName" class="form-control" required="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Version<sup class="required-field">*</sup></label>
+                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                    <input onblur="blurIt()" type="text" placeholder="Enter Process Version" name="overview_version" id="pVersion" class="form-control" required="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Owner<sup class="required-field">*</sup></label>
+                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                    <input onblur="blurIt()" type="text" placeholder="Enter Process Owner" name="overview_owner" id="pOwner" class="form-control" required="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Tags</label>
+                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                    <input onblur="blurIt()" type="text" placeholder="Enter Tags" name="overview_tags" id="pTags" class="form-control">
+                </div>
+            </div>
+        </form>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-primary" onclick="showTextEditor(this)">Describe process in text</button>
+                <button class="btn btn-primary" onclick="associateBPMN(this)">Associate BPMN model</button>
+                <button class="btn btn-primary" onclick="associateFlowChart(this)">Associate Flow Chart</button>
+                <button class="btn btn-primary" onclick="associateDocument(this)">Documents</button>
+                <button class="btn btn-primary" onclick="associatePdf(this)">Associate PDF</button>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
 
 
     <div  class="add-unbounded-row" float="left" width="100%"  style="width:auto; float:left;"><a  onclick="addProcessVariableRow('dataTable')"><i
@@ -888,9 +947,13 @@
 
         </tr>
     </table>
+
+
 </div>
 <br>
 <button onclick="saveProcessVariables('dataTable')" class="btn btn-primary">Save</button>
+<button onclick="createEventStreamAndReceiver()" class="btn btn-primary">Create Event Stream & Receiver</button>
+
 
 </div>
 

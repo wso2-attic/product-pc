@@ -8,6 +8,7 @@ import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
 import org.wso2.carbon.pc.analytics.config.clients.LoginAdminServiceClient;
 import org.wso2.carbon.pc.analytics.config.clients.ReceiverAdminServiceClient;
+import org.wso2.carbon.pc.analytics.config.clients.StreamAdminServiceClient;
 
 import java.rmi.RemoteException;
 
@@ -16,7 +17,7 @@ public class DASConfigClient {
             LoginAuthenticationExceptionException,
             LogoutAuthenticationExceptionException {*/
 
-    public DASConfigClient() {
+    public void configDAS() {
 
 
     System.setProperty(
@@ -43,11 +44,15 @@ public class DASConfigClient {
         }
         System.out.println(session);
 
-		/*StreamAdminServiceClient streamAdminServiceClient = new StreamAdminServiceClient(
-				backEndUrl, session);
-		System.out.println("getEventStreamNames::"
+        StreamAdminServiceClient streamAdminServiceClient = null;
+        try {
+            streamAdminServiceClient = new StreamAdminServiceClient(backEndUrl, session);
+        } catch (AxisFault axisFault) {
+            axisFault.printStackTrace();
+        }
+        System.out.println("getEventStreamNames::"
 				+ streamAdminServiceClient.getGG());
-		streamAdminServiceClient.doSomeTestingTasks();*/
+		streamAdminServiceClient.doSomeTestingTasks();
 
 
         ReceiverAdminServiceClient receiverAdminServiceClient= null;

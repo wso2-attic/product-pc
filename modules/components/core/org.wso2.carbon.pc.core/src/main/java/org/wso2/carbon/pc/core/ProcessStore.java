@@ -26,29 +26,22 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.impl.IteratorImpl;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.mozilla.javascript.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
-import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -890,6 +883,59 @@ public class ProcessStore {
 		return resourceString;
 	}
 
+	public String getProcessVariablesList(String resourcePath) {
+		//String resourceString = "";
+		//Element variableElementsArray[] = null;
+		JSONArray variablesJobArray = new JSONArray();
+		try {
+			RegistryService registryService =
+					ProcessCenterServerHolder.getInstance().getRegistryService();
+			if (registryService != null) {
+				UserRegistry reg = registryService.getGovernanceSystemRegistry();
+				resourcePath = resourcePath.substring(ProcessStoreConstants.GREG_PATH.length());
+				Resource resourceAsset = reg.get(resourcePath);
+				String resourceContent = new String((byte[]) resourceAsset.getContent());
+
+				JSONObject conObj = new JSONObject();
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder builder;
+				builder = factory.newDocumentBuilder();
+				Document document =
+						builder.parse(new InputSource(new StringReader(resourceContent)));
+
+
+
+				//conObj.put("variable", variablesArray);
+
+				NodeList variableElements =
+						((Element) document.getFirstChild()).getElementsByTagName("variable");
+				//variableElementsArray= new Element[variableElements.getLength()];
+
+				if (variableElements.getLength() != 0) {
+					for (int i = 0; i < variableElements.getLength(); i++) {
+						Element variableElement = (Element) variableElements.item(i);
+						String variableName=variableElement.getAttribute("name");
+						String variableType=variableElement.getAttribute("type");
+
+						JSONObject processVariabeJob = new JSONObject();
+						processVariabeJob.put("name", variableName);
+						processVariabeJob.put("path", variableType);
+						//processVariabeJob.put("id", subprocessId);
+						//processVariabeJob.put("version", subprocessVersion);
+						variablesJobArray.put(processVariabeJob);
+
+						//variableElementsArray[i]= (Element) variableElements.item(i);
+					}
+				}
+
+			}
+		} catch (Exception e) {
+			log.error("Failed to get the process variables list");
+		}
+		return variablesJobArray.toString();
+	}
+
+
 	public boolean updateOwner(String ownerDetails) {
 		try {
 			RegistryService registryService =
@@ -985,6 +1031,7 @@ public class ProcessStore {
 				//Map<String, Object> map = (Map<String,Object>)processVariablesJOb;
 				 Iterator<?> keys = processVariablesJOb.keys();
 
+				/*//saving pracess variable name,type as element attributes
 				while (	keys.hasNext()){
 					String variableName = (String)keys.next();
 					//if (Debugger.isEnabled())
@@ -993,11 +1040,11 @@ public class ProcessStore {
 					//JSONObject processVariableJOb= (JSONObject) processVariablesArray.get(i);
 					Element rootElement = doc.getDocumentElement();
 
-					Element variableElement=append(doc,rootElement,"variable",mns);
+					Element variableElement=append(doc,rootElement,"processVariable",mns);
 					variableElement.setAttribute("name",variableName);
 					variableElement.setAttribute("type",variableType);
 					//variableElement.setNodeValue("My value");
-					variableElement.setTextContent("My value 2");
+					//variableElement.setTextContent("My value 2");
 
 					//appendText(doc,rootElement,"name",mns,variableName);
 					//appendText(doc,rootElement,"type",mns,processVariablesJOb.get(variableName).toString());
@@ -1005,7 +1052,24 @@ public class ProcessStore {
 					String newProcessContent = xmlToString(doc);
 					resource.setContent(newProcessContent);
 					reg.put(processAssetPath, resource);
+				}*/
+				//saving pracess variable name,type as sub elements
+				while (	keys.hasNext()){
+					String variableName = (String)keys.next();
+					//if (Debugger.isEnabled())
+					log.debug(variableName);
+					String variableType=processVariablesJOb.get(variableName).toString();
+					//JSONObject processVariableJOb= (JSONObject) processVariablesArray.get(i);
+					Element rootElement = doc.getDocumentElement();
+					Element variableElement=append(doc,rootElement,"process_variable",mns);
+					appendText(doc,variableElement,"name",mns,variableName);
+					appendText(doc,variableElement,"type",mns,variableType);
+
+					String newProcessContent = xmlToString(doc);
+					resource.setContent(newProcessContent);
+					reg.put(processAssetPath, resource);
 				}
+
 			}
 		}catch (Exception e){
 			log.error("Failed to save processVariables", e);

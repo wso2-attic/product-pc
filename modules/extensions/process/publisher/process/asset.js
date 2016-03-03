@@ -86,6 +86,9 @@ asset.server = function(ctx) {
             }, {
                 url: 'save_process_variables',
                 path: 'save_process_variables.jag'
+            }, {
+                url: 'get_process_variables_list',
+                path: 'get_process_variables_list.jag'
             }]
         }
     }
