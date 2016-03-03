@@ -174,7 +174,7 @@ jsPlumb.ready(function() {
     function drawEditorElement(element, canvasId, name){
         $(canvasId).append(element);
         _addEditorEndpoints(name, properties[0].startpoints, properties[0].endpoints);
-        makeResizable('.custom.step'); 
+        makeResizable('.custom.step');
         jsPlumb.draggable(jsPlumb.getSelector(".jtk-node"), { grid: [20, 20] });
     }
 
@@ -194,7 +194,7 @@ jsPlumb.ready(function() {
 
     $('#stepEv').click(function(){
         loadEditorProperties("window step custom jtk-node jsplumb-connected-step", "13em", "5em", "step",
-            ["BottomCenter", "RightMiddle"], ["TopCenter", "LeftMiddle"], true);
+            ["BottomCenter", "RightMiddle", "LeftMiddle"], ["TopCenter"], true);
         clicked = true;
     });
 
@@ -214,6 +214,7 @@ jsPlumb.ready(function() {
         if(clicked){
             clicked = false;
             elementCount++;
+            editableElmCount++;
             var name = "Window" + elementCount;
             var id = "flowchartWindow" + elementCount;
             element = createEditorElement(id);
@@ -226,7 +227,7 @@ jsPlumb.ready(function() {
         if(e.which == 127){
             if(to_delete != ""){
                 jsPlumb.remove(to_delete);
-                elementCount--;
+                editableElmCount--;
                 for(var i = 0; i< editorEndpointList.length; i++){
                     if(editorEndpointList[i][0] == to_delete){
                         for(var j = 0; j < editorEndpointList[i].length; j++){
@@ -257,6 +258,20 @@ jsPlumb.ready(function() {
         $('.window.jsplumb-connected-end').not(this).css({'border-color':'orangered'});
         $(this).css({'border-color':'red'});
     });
+
+    //$('#editor_canvas').on('keyup', '[id^="flowchartWindow"]', function(e){
+    //    alert(e.which);
+    //    if(e.which != 46){
+    //        alert('hi');
+    //        if($(this).attr("class").indexOf("diamond") > -1){
+    //            $(this).outerWidth($(this).outerWidth() + 10);
+    //            $(this).outerHeight($(this).outerHeight() + 10);
+    //            $(this).css("line-height", $(this).text().length + 70 + "px");
+    //            jsPlumb.repaint($(this).attr("id"));
+    //        }
+    //    }
+    //    ////$('#mydiv').css({'width':$(this).text().length + 80});
+    //});
 
     _saveEditedFlowchart = function(){
         if(elementCount > 0) {
@@ -301,7 +316,7 @@ jsPlumb.ready(function() {
             var flowchart = {};
             flowchart.nodes = nodes;
             flowchart.connections = connections;
-            flowchart.numberOfElements = elementCount;
+            flowchart.numberOfElements = editableElmCount;
 
             $.ajax({
                 url: '/publisher/assets/process/apis/upload_flowchart',
@@ -339,7 +354,7 @@ jsPlumb.ready(function() {
                     ["BottomCenter"], [], false, -1, -1);
             }else if(element.nodeType == 'step'){
                 loadEditorProperties(element.clsName.substr(0, 50), element.positionX, element.positionY, element.label,
-                    ["BottomCenter", "RightMiddle"], ["TopCenter", "LeftMiddle"], true, element.width, element.height);
+                    ["BottomCenter", "RightMiddle", "LeftMiddle"], ["TopCenter"], true, element.width, element.height);
             }else if(element.nodeType == 'diamond'){
                 loadEditorProperties(element.clsName.substr(0, 53), element.positionX, element.positionY, element.label,
                     ["LeftMiddle", "RightMiddle", "BottomCenter"], ["TopCenter"], true, -1, -1);
