@@ -1390,6 +1390,66 @@ public class ProcessStore {
 		return pdfString;
 	}
 
+	public String uploadFlowchart(String processName, String processVersion, String flowchartJson){
+		String processId = "NA";
+		log.debug("Creating Flowchart...");
+		try {
+			RegistryService registryService =
+					ProcessCenterServerHolder.getInstance().getRegistryService();
+			if (registryService != null) {
+				UserRegistry reg = registryService.getGovernanceSystemRegistry();
+				Resource flowchartContentResource = reg.newResource();
+				flowchartContentResource.setContent(flowchartJson);
+				flowchartContentResource.setMediaType("application/json");
+				String flowchartContentPath = "flowchart/" + processName + "/" + processVersion;
+				reg.put(flowchartContentPath, flowchartContentResource);
+				String processPath = "processes/" + processName + "/" + processVersion;
+
+				// update process by linking the pdf asset
+				Resource processAsset = reg.get(processPath);
+				byte[] processContentBytes = (byte[]) processAsset.getContent();
+				String processContent = new String(processContentBytes);
+				Document processXMLContent = stringToXML(processContent);
+
+				Element rootElement = processXMLContent.getDocumentElement();
+				Element flowchartElement = append(processXMLContent, rootElement, "flowchart", mns);
+				appendText(processXMLContent, flowchartElement, "path", mns, flowchartContentPath);
+
+				String newProcessContent = xmlToString(processXMLContent);
+				processAsset.setContent(newProcessContent);
+				reg.put(processPath, processAsset);
+
+				Resource storedProcessAsset = reg.get(processPath);
+				processId = storedProcessAsset.getUUID();
+			}
+		} catch (RegistryException e) {
+			log.error(e.getMessage());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+		return processId;
+	}
+
+	public String getFlowchart(String flowchartPath){
+		String flowchartString = "NA";
+
+		try {
+			RegistryService registryService =
+					ProcessCenterServerHolder.getInstance().getRegistryService();
+			if (registryService != null) {
+				UserRegistry reg = registryService.getGovernanceSystemRegistry();
+				flowchartPath = flowchartPath.substring("/_system/governance/".length());
+				Resource flowchartAsset = reg.get(flowchartPath);
+				flowchartString = new String((byte[]) flowchartAsset.getContent());
+			}
+		} catch (Exception e) {
+			log.error("Failed to fetch flowchart: " + flowchartPath);
+		}
+
+		return flowchartString;
+	}
+
+
 
 	//    public static void main(String[] args) {
 	//        String path = "/home/chathura/temp/t5/TestProcess1.bpmn";

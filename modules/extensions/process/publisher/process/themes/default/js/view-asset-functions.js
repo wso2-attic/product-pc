@@ -694,7 +694,5 @@ function showFlowchartEditor(name, flowchartString){
 }
 
 function redirectTo(element){
-    _saveEditedFlowchart();
-    $("#fcEditorOverviewLink").attr("href", "../../assets/process/details/" + response);
     element.click();
 }

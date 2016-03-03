@@ -16,11 +16,9 @@
  *  under the License.
  *
  */
-var editorEndpointList = [];
-var editorSourcepointList = [];
-var elementCount = 0;
-var _saveEditedFlowchart, _loadEditableFlowChart;
-var editable = false, editableElmCount = 0;
+var endpointList = [];
+var sourcepointList = [];
+var _saveFlowchart, elementCount = 0;
 jsPlumb.ready(function() {
     var basicType = {
         connector: "StateMachine",
@@ -30,7 +28,6 @@ jsPlumb.ready(function() {
     jsPlumb.registerConnectionType("basic", basicType);
 
     var properties = [];
-    var hasLabel = true;
     var connectorPaintStyle = {
             lineWidth: 4,
             strokeStyle: "#61B7CF",
@@ -70,7 +67,9 @@ jsPlumb.ready(function() {
                     location: 1,
                     visible:true,
                     id:"ARROW",
-                    direction: 1
+                    events:{
+                        click:function() { alert("you clicked on the arrow overlay")}
+                    }
                 } ],
                 [ "Label", {
                     location: 0.3,
@@ -88,18 +87,14 @@ jsPlumb.ready(function() {
             isTarget: true
         };
 
-    var init = function (connection, label) {
-        if(editable || editableElmCount == 0) {
-            var myLabel = prompt("Enter label text: ", "");
-            if (myLabel != null)
-                connection.getOverlay("label").setLabel(myLabel);
-        }else{
-            connection.getOverlay("label").setLabel(label);
-        }
+    var initConn = function (connection) {
+        var myLabel = prompt("Enter label text: ", "");
+        if (myLabel != null)
+            connection.getOverlay("label").setLabel(myLabel);
     };
 
     jsPlumb.bind("connection", function (connInfo, originalEvent) {
-        init(connInfo.connection);
+        initConn(connInfo.connection);
     });
 
     jsPlumb.bind("dblclick", function (conn, originalEvent) {
@@ -108,20 +103,20 @@ jsPlumb.ready(function() {
     });
 
     var ep;
-    var _addEditorEndpoints = function (toId, sourceAnchors, targetAnchors) {
+    var _addEndpoints = function (toId, sourceAnchors, targetAnchors) {
         for (var i = 0; i < sourceAnchors.length; i++) {
             var sourceUUID = toId + sourceAnchors[i];
             ep = jsPlumb.addEndpoint("flowchart" + toId, sourceEndpoint, {
                 anchor: sourceAnchors[i], uuid: sourceUUID
             });
-            editorSourcepointList.push(["flowchart" + toId, ep]);
+            sourcepointList.push(["flowchart" + toId, ep]);
             ep = null;
         }
         for (var j = 0; j < targetAnchors.length; j++) {
             var targetUUID = toId + targetAnchors[j];
             ep = jsPlumb.addEndpoint("flowchart" + toId, targetEndpoint, {
                 anchor: targetAnchors[j], uuid: targetUUID });
-            editorEndpointList.push(["flowchart" + toId, ep]);
+            endpointList.push(["flowchart" + toId, ep]);
             ep = null;
         }
     };
@@ -129,8 +124,43 @@ jsPlumb.ready(function() {
     var element = "";
     var clicked = false;
     var to_delete = "";
+    $('#startEv').click(function(){
+        loadProperties("window start custom jtk-node jsplumb-connected", "5em", "5em", "start", ["BottomCenter"],
+            [], false);
+        clicked = true;
+    });
 
-    function loadEditorProperties(clsName, left, top, label, startpoints, endpoints, contenteditable, width, height){
+    $('#stepEv').click(function(){
+        loadProperties("window step custom jtk-node jsplumb-connected-step", "13em", "5em", "step",
+            ["BottomCenter", "RightMiddle"], ["TopCenter", "LeftMiddle"], true);
+        clicked = true;
+    });
+
+    $('#descEv').click(function(){
+        loadProperties("window diamond custom jtk-node jsplumb-connected-step", "23em", "5em", "decision",
+            ["LeftMiddle", "RightMiddle", "BottomCenter"], ["TopCenter"], true);
+        clicked = true;
+    });
+
+    $('#endEv').click(function(){
+        loadProperties("window end jtk-node jsplumb-connected-end", "23em", "15em", "end",
+            [], ["TopCenter"], false);
+        clicked = true;
+    });
+
+    $('#myDiagram').click(function () {
+        if(clicked){
+            clicked = false;
+            elementCount++;
+            var name = "Window" + elementCount;
+            var id = "flowchartWindow" + elementCount;
+            element = createElement(id);
+            drawElement(element, "#canvas", name);
+            element = "";
+        }
+    });
+
+    function loadProperties(clsName, left, top, label, startpoints, endpoints, contenteditable){
         properties = [];
         properties.push({
             left: left,
@@ -139,22 +169,17 @@ jsPlumb.ready(function() {
             label: label,
             startpoints: startpoints,
             endpoints: endpoints,
-            contenteditable: contenteditable,
-            width: width,
-            height: height
+            contenteditable: contenteditable
         });
     }
 
-    function createEditorElement(id){
+    function createElement(id){
         var elm = $('<div>').addClass(properties[0].clsName).attr('id', id);
         elm.css({
             'top': properties[0].top,
             'left': properties[0].left
         });
-        if(properties[0].clsName == "window step custom jtk-node jsplumb-connected-step"){
-            elm.outerWidth(properties[0].width);
-            elm.outerHeight(properties[0].height);
-        }
+
         var strong = $('<strong>');
         if(properties[0].clsName == "window diamond custom jtk-node jsplumb-connected-step"){
             var p = "<p class='desc-text' contenteditable='true' ondblclick='$(this).focus();'>" + properties[0].label + "</p>";
@@ -171,10 +196,10 @@ jsPlumb.ready(function() {
         return elm;
     }
 
-    function drawEditorElement(element, canvasId, name){
+    function drawElement(element, canvasId, name){
         $(canvasId).append(element);
-        _addEditorEndpoints(name, properties[0].startpoints, properties[0].endpoints);
-        makeResizable('.custom.step'); 
+        _addEndpoints(name, properties[0].startpoints, properties[0].endpoints);
+        makeResizable('.custom.step');
         jsPlumb.draggable(jsPlumb.getSelector(".jtk-node"), { grid: [20, 20] });
     }
 
@@ -186,40 +211,13 @@ jsPlumb.ready(function() {
         });
     }
 
-    $('#startEv').click(function(){
-        loadEditorProperties("window start custom jtk-node jsplumb-connected", "5em", "5em", "start", ["BottomCenter"],
-            [], false);
-        clicked = true;
-    });
-
-    $('#stepEv').click(function(){
-        loadEditorProperties("window step custom jtk-node jsplumb-connected-step", "13em", "5em", "step",
-            ["BottomCenter", "RightMiddle"], ["TopCenter", "LeftMiddle"], true);
-        clicked = true;
-    });
-
-    $('#descEv').click(function(){
-        loadEditorProperties("window diamond custom jtk-node jsplumb-connected-step", "23em", "5em", "decision",
-            ["LeftMiddle", "RightMiddle", "BottomCenter"], ["TopCenter"], true);
-        clicked = true;
-    });
-
-    $('#endEv').click(function(){
-        loadEditorProperties("window end jtk-node jsplumb-connected-end", "23em", "15em", "end",
-            [], ["TopCenter"], false);
-        clicked = true;
-    });
-
-    $('#editorDiagram').click(function () {
-        if(clicked){
-            clicked = false;
-            elementCount++;
-            var name = "Window" + elementCount;
-            var id = "flowchartWindow" + elementCount;
-            element = createEditorElement(id);
-            drawEditorElement(element, "#editor_canvas", name);
-            element = "";
-        }
+    $('#canvas').on('click', '[id^="flowchartWindow"]', function(){
+        to_delete = $(this).attr("id");
+        $('.step').not(this).css({'border-color':'#29e'});
+        $('.diamond').not(this).css({'border-color':'#29e'});
+        $('.start').not(this).css({'border-color':'green'});
+        $('.window.jsplumb-connected-end').not(this).css({'border-color':'orangered'});
+        $(this).css({'border-color':'red'});
     });
 
     $(document).keypress(function(e){
@@ -249,17 +247,8 @@ jsPlumb.ready(function() {
         }
     });
 
-    $('#editor_canvas').on('click', '[id^="flowchartWindow"]', function(){
-        to_delete = $(this).attr("id");
-        $('.step').not(this).css({'border-color':'#29e'});
-        $('.diamond').not(this).css({'border-color':'#29e'});
-        $('.start').not(this).css({'border-color':'green'});
-        $('.window.jsplumb-connected-end').not(this).css({'border-color':'orangered'});
-        $(this).css({'border-color':'red'});
-    });
-
-    _saveEditedFlowchart = function(){
-        if(elementCount > 0) {
+    _saveFlowchart = function() {
+        if (elementCount > 0) {
             var nodes = [];
             $(".jtk-node").each(function (index, element) {
                 var $element = $(element);
@@ -307,60 +296,22 @@ jsPlumb.ready(function() {
                 url: '/publisher/assets/process/apis/upload_flowchart',
                 type: 'POST',
                 data: {
-                    'processName': $("#fcProcessName").val(),
-                    'processVersion': $("#fcProcessVersion").val(),
+                    'processName': $("#pName").val(),
+                    'processVersion': $("#pVersion").val(),
                     'flowchartJson': JSON.stringify(flowchart)
                 },
                 success: function (response) {
                     alertify.success("Successfully saved the flowchart.");
-                    $("#fcEditorOverviewLink").attr("href", "../../../assets/process/details/" + response);
+                    $("#flowchartOverviewLink").attr("href", "../process/details/" + response);
                 },
                 error: function () {
                     alertify.error('Flowchart saving error');
                 }
             });
 
-        }else{
+        } else {
             alertify.error('Flowchart content is empty.');
         }
-    }
-
-    _loadEditableFlowChart = function (flowchartString, canvasId){
-        var flowchart = JSON.parse(flowchartString);
-        var nodes = flowchart.nodes;
-        var connections = flowchart.connections;
-        var noOfElements = flowchart.numberOfElements;
-        elementCount = noOfElements;
-        editableElmCount = noOfElements;
-        $.each(nodes, function( index, element ) {
-            var name = element.elementId.substring(9);
-            if(element.nodeType == 'start'){
-                loadEditorProperties(element.clsName.substr(0, 46), element.positionX, element.positionY, element.label,
-                    ["BottomCenter"], [], false, -1, -1);
-            }else if(element.nodeType == 'step'){
-                loadEditorProperties(element.clsName.substr(0, 50), element.positionX, element.positionY, element.label,
-                    ["BottomCenter", "RightMiddle"], ["TopCenter", "LeftMiddle"], true, element.width, element.height);
-            }else if(element.nodeType == 'diamond'){
-                loadEditorProperties(element.clsName.substr(0, 53), element.positionX, element.positionY, element.label,
-                    ["LeftMiddle", "RightMiddle", "BottomCenter"], ["TopCenter"], true, -1, -1);
-            }else if(element.nodeType == 'end'){
-                loadEditorProperties(element.clsName.substr(0, 41), element.positionX, element.positionY, element.label,
-                    [], ["TopCenter"], false, -1, -1);
-            }
-            var elm = createEditorElement(element.elementId);
-            drawEditorElement(elm, canvasId, name);
-        });
-
-        $.each(connections, function( index, element ){
-            if(element.label != "undefined") {
-                hasLabel = false;
-                var conn = jsPlumb.connect({ uuids:[element.sourceUUId,element.targetUUId] });
-                init(conn, element.label);
-                hasLabel = true;
-            }
-        });
-
-        editable = true;
     }
 
     jsPlumb.fire("jsPlumbDemoLoaded", jsPlumb);

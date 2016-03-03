@@ -14,6 +14,7 @@ function showTextEditor(element) {
         $("#bpmnView").hide();
         $("#docView").hide();
         $("#pdfUploader").hide();
+        $("#flowChartView").hide();
 
         tinymce.init({
             selector: "#processContent"
@@ -33,6 +34,7 @@ function associateBPMN(element) {
         $("#docView").hide();
         $("#bpmnView").show();
         $("#pdfUploader").hide();
+        $("#flowChartView").hide();
 
     }
 }
@@ -41,6 +43,7 @@ function associateFlowChart(element) {
     if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
         alertify.error('please fill the required fields.');
     } else {
+        saveProcess(element);
         $('#flow-chart-view-header').text($('#pName').val());
         $("#overviewDiv").hide();
         $("#flowChartView").show();
@@ -62,6 +65,7 @@ function associateDocument(element) {
         $("#processTextView").hide();
         $("#bpmnView").hide();
         $("#docView").show();
+        $("#flowChartView").hide();
     }
 }
 
@@ -74,6 +78,7 @@ function showMain() {
     $("#bpmnView").hide();
     $("#processTextView").hide();
     $("#pdfUploader").hide();
+    $("#flowChartView").hide();
 
 }
 
@@ -336,11 +341,6 @@ function associatePdf(element) {
     }
 }
 
-function saveFlowChart(){
-    html2canvas($("#canvas"), {
-        onrendered: function(canvas) {
-            var image = Canvas2Image.convertToPNG(canvas);
-            $("#img-out").append(image);
-        }
-    });
+function redirectToProcess(element){
+    element.click();
 }
