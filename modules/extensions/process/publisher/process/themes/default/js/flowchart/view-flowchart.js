@@ -362,6 +362,4 @@ jsPlumb.ready(function() {
 
         editable = true;
     }
-
-    jsPlumb.fire("jsPlumbDemoLoaded", jsPlumb);
 });

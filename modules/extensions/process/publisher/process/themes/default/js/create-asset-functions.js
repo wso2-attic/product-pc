@@ -435,7 +435,6 @@ function removeTag(currentElement){
     $(parent).remove();
 
     var index = jQuery.inArray( tagName, tagList );
-    alert(index);
     if (index > -1) {
         tagList.splice(index, 1);
     }

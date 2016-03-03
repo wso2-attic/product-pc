@@ -313,6 +313,4 @@ jsPlumb.ready(function() {
             alertify.error('Flowchart content is empty.');
         }
     }
-
-    jsPlumb.fire("jsPlumbDemoLoaded", jsPlumb);
 });
