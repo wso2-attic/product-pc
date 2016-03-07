@@ -19,11 +19,11 @@
 var endpointList = [];
 var sourcepointList = [];
 var _saveFlowchart, elementCount = 0;
-jsPlumb.ready(function() {
+jsPlumb.ready(function () {
     var basicType = {
         connector: "StateMachine",
-        paintStyle: { strokeStyle: "#216477", lineWidth: 4 },
-        hoverPaintStyle: { strokeStyle: "blue" }
+        paintStyle: {strokeStyle: "#216477", lineWidth: 4},
+        hoverPaintStyle: {strokeStyle: "blue"}
     };
     jsPlumb.registerConnectionType("basic", basicType);
 
@@ -56,22 +56,24 @@ jsPlumb.ready(function() {
                 lineWidth: 3
             },
             isSource: true,
-            connector: [ "Flowchart", { stub: [40, 60], gap: 5, cornerRadius: 5, alwaysRespectStubs: true } ],
+            connector: ["Flowchart", {stub: [40, 60], gap: 5, cornerRadius: 5, alwaysRespectStubs: true}],
             connectorStyle: connectorPaintStyle,
             connectorHoverStyle: connectorHoverStyle,
-            EndpointOverlays : [ ],
+            EndpointOverlays: [],
             maxConnections: -1,
             dragOptions: {},
             connectorOverlays: [
-                [ "Arrow", {
+                ["Arrow", {
                     location: 1,
-                    visible:true,
-                    id:"ARROW",
-                    events:{
-                        click:function() { alert("you clicked on the arrow overlay")}
+                    visible: true,
+                    id: "ARROW",
+                    events: {
+                        click: function () {
+                            alert("you clicked on the arrow overlay")
+                        }
                     }
-                } ],
-                [ "Label", {
+                }],
+                ["Label", {
                     location: 0.3,
                     id: "label",
                     cssClass: "aLabel"
@@ -81,9 +83,9 @@ jsPlumb.ready(function() {
 // the definition of target endpoints (will appear when the user drags a connection)
         targetEndpoint = {
             endpoint: "Dot",
-            paintStyle: { fillStyle: "#7AB02C", radius: 11 },
+            paintStyle: {fillStyle: "#7AB02C", radius: 11},
             maxConnections: -1,
-            dropOptions: { hoverClass: "hover", activeClass: "active" },
+            dropOptions: {hoverClass: "hover", activeClass: "active"},
             isTarget: true
         };
 
@@ -115,7 +117,8 @@ jsPlumb.ready(function() {
         for (var j = 0; j < targetAnchors.length; j++) {
             var targetUUID = toId + targetAnchors[j];
             ep = jsPlumb.addEndpoint("flowchart" + toId, targetEndpoint, {
-                anchor: targetAnchors[j], uuid: targetUUID });
+                anchor: targetAnchors[j], uuid: targetUUID
+            });
             endpointList.push(["flowchart" + toId, ep]);
             ep = null;
         }
@@ -124,32 +127,32 @@ jsPlumb.ready(function() {
     var element = "";
     var clicked = false;
     var to_delete = "";
-    $('#startEv').click(function(){
+    $('#startEv').click(function () {
         loadProperties("window start custom jtk-node jsplumb-connected", "5em", "5em", "start", ["BottomCenter"],
             [], false);
         clicked = true;
     });
 
-    $('#stepEv').click(function(){
+    $('#stepEv').click(function () {
         loadProperties("window step custom jtk-node jsplumb-connected-step", "13em", "5em", "step",
             ["BottomCenter", "RightMiddle"], ["TopCenter", "LeftMiddle"], true);
         clicked = true;
     });
 
-    $('#descEv').click(function(){
+    $('#descEv').click(function () {
         loadProperties("window diamond custom jtk-node jsplumb-connected-step", "23em", "5em", "decision",
             ["LeftMiddle", "RightMiddle", "BottomCenter"], ["TopCenter"], true);
         clicked = true;
     });
 
-    $('#endEv').click(function(){
+    $('#endEv').click(function () {
         loadProperties("window end jtk-node jsplumb-connected-end", "23em", "15em", "end",
             [], ["TopCenter"], false);
         clicked = true;
     });
 
     $('#myDiagram').click(function () {
-        if(clicked){
+        if (clicked) {
             clicked = false;
             elementCount++;
             var name = "Window" + elementCount;
@@ -160,7 +163,7 @@ jsPlumb.ready(function() {
         }
     });
 
-    function loadProperties(clsName, left, top, label, startpoints, endpoints, contenteditable){
+    function loadProperties(clsName, left, top, label, startpoints, endpoints, contenteditable) {
         properties = [];
         properties.push({
             left: left,
@@ -173,7 +176,7 @@ jsPlumb.ready(function() {
         });
     }
 
-    function createElement(id){
+    function createElement(id) {
         var elm = $('<div>').addClass(properties[0].clsName).attr('id', id);
         elm.css({
             'top': properties[0].top,
@@ -181,14 +184,14 @@ jsPlumb.ready(function() {
         });
 
         var strong = $('<strong>');
-        if(properties[0].clsName == "window diamond custom jtk-node jsplumb-connected-step"){
+        if (properties[0].clsName == "window diamond custom jtk-node jsplumb-connected-step") {
             var p = "<p class='desc-text' contenteditable='true' ondblclick='$(this).focus();'>" + properties[0].label + "</p>";
             strong.append(p);
         }
-        else if(properties[0].contenteditable){
+        else if (properties[0].contenteditable) {
             var p = "<p contenteditable='true' ondblclick='$(this).focus();'>" + properties[0].label + "</p>";
             strong.append(p);
-        }else{
+        } else {
             var p = $('<p>').text(properties[0].label);
             strong.append(p);
         }
@@ -196,47 +199,47 @@ jsPlumb.ready(function() {
         return elm;
     }
 
-    function drawElement(element, canvasId, name){
+    function drawElement(element, canvasId, name) {
         $(canvasId).append(element);
         _addEndpoints(name, properties[0].startpoints, properties[0].endpoints);
         makeResizable('.custom.step');
-        jsPlumb.draggable(jsPlumb.getSelector(".jtk-node"), { grid: [20, 20] });
+        jsPlumb.draggable(jsPlumb.getSelector(".jtk-node"), {grid: [20, 20]});
     }
 
-    function makeResizable(classname){
+    function makeResizable(classname) {
         $(classname).resizable({
-            resize : function(event, ui) {
+            resize: function (event, ui) {
                 jsPlumb.repaint(ui.helper);
             }
         });
     }
 
-    $('#canvas').on('click', '[id^="flowchartWindow"]', function(){
+    $('#canvas').on('click', '[id^="flowchartWindow"]', function () {
         to_delete = $(this).attr("id");
-        $('.step').not(this).css({'border-color':'#29e'});
-        $('.diamond').not(this).css({'border-color':'#29e'});
-        $('.start').not(this).css({'border-color':'green'});
-        $('.window.jsplumb-connected-end').not(this).css({'border-color':'orangered'});
-        $(this).css({'border-color':'red'});
+        $('.step').not(this).css({'border-color': '#29e'});
+        $('.diamond').not(this).css({'border-color': '#29e'});
+        $('.start').not(this).css({'border-color': 'green'});
+        $('.window.jsplumb-connected-end').not(this).css({'border-color': 'orangered'});
+        $(this).css({'border-color': 'red'});
     });
 
-    $(document).keypress(function(e){
-        if(e.which == 127){
-            if(to_delete != ""){
+    $(document).keypress(function (e) {
+        if (e.which == 127) {
+            if (to_delete != "") {
                 jsPlumb.remove(to_delete);
                 elementCount--;
-                for(var i = 0; i< editorEndpointList.length; i++){
-                    if(editorEndpointList[i][0] == to_delete){
-                        for(var j = 0; j < editorEndpointList[i].length; j++){
+                for (var i = 0; i < editorEndpointList.length; i++) {
+                    if (editorEndpointList[i][0] == to_delete) {
+                        for (var j = 0; j < editorEndpointList[i].length; j++) {
                             jsPlumb.deleteEndpoint(editorEndpointList[i][j]);
                             editorEndpointList[i][j] = null;
                         }
                     }
                 }
 
-                for(var i = 0; i < editorSourcepointList.length; i++){
-                    if(editorSourcepointList[i][0] == to_delete){
-                        for(var j = 0; j < editorSourcepointList[i].length; j++){
+                for (var i = 0; i < editorSourcepointList.length; i++) {
+                    if (editorSourcepointList[i][0] == to_delete) {
+                        for (var j = 0; j < editorSourcepointList[i].length; j++) {
                             jsPlumb.deleteEndpoint(editorSourcepointList[i][j]);
                             editorSourcepointList[i][j] = null;
                         }
@@ -244,15 +247,38 @@ jsPlumb.ready(function() {
                 }
                 to_delete = "";
             }
+        }else if(e.which == 43){
+            var elm = $('.diamond.custom').filter(function(){
+                return $(this).css("border-color") == 'rgb(255, 0, 0)';
+            });
+            if(elm.outerWidth() < 150) {
+                elm.outerWidth(elm.outerWidth() + 5);
+                elm.outerHeight(elm.outerHeight() + 5);
+                var p = elm.children()[0].firstChild;
+                p.style.lineHeight = 110 +  '%';
+                jsPlumb.repaint(elm.attr("id"));
+            }
+        }
+        else if(e.which == 45){
+            var elm = $('.diamond.custom').filter(function(){
+                return $(this).css("border-color") == 'rgb(255, 0, 0)';
+            });
+            if(elm.outerWidth() > 80) {
+                elm.outerWidth(elm.outerWidth() - 5);
+                elm.outerHeight(elm.outerHeight() - 5);
+                jsPlumb.repaint(elm.attr("id"));
+                var p = elm.children()[0].firstChild;
+                p.style.lineHeight = 110 +  '%';
+            }
         }
     });
 
-    _saveFlowchart = function() {
+    _saveFlowchart = function () {
         if (elementCount > 0) {
             var nodes = [];
             $(".jtk-node").each(function (index, element) {
                 var $element = $(element);
-                if($element.attr('class').toString().split(" ")[1] == "step"){
+                if ($element.attr('class').toString().split(" ")[1] == "step") {
                     nodes.push({
                         elementId: $element.attr('id'),
                         nodeType: $element.attr('class').toString().split(" ")[1],
@@ -263,7 +289,7 @@ jsPlumb.ready(function() {
                         width: $element.outerWidth(),
                         height: $element.outerHeight()
                     });
-                }else{
+                } else {
                     nodes.push({
                         elementId: $element.attr('id'),
                         nodeType: $element.attr('class').toString().split(" ")[1],
