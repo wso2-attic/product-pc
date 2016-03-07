@@ -1273,6 +1273,13 @@ public class ProcessStore {
         return pdfString;
     }
 
+    /**
+     *
+     * @param processName
+     * @param processVersion
+     * @param flowchartJson
+     * @return the processId once the flowchart is saved
+     */
     public String uploadFlowchart(String processName, String processVersion, String flowchartJson) {
         String processId = "NA";
         log.debug("Creating Flowchart...");
@@ -1310,6 +1317,11 @@ public class ProcessStore {
         return processId;
     }
 
+    /**
+     *
+     * @param flowchartPath
+     * @return the flowchart string of a process
+     */
     public String getFlowchart(String flowchartPath) {
         String flowchartString = "NA";
 
