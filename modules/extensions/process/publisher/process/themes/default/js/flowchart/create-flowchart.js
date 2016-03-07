@@ -158,7 +158,12 @@ jsPlumb.ready(function () {
             var name = "Window" + elementCount;
             var id = "flowchartWindow" + elementCount;
             element = createElement(id);
-            drawElement(element, "#canvas", name);
+            if(elementCount == 1 && element.attr("class").indexOf("start") == -1){
+                alertify.error("The flowchart diagram should contain a start activity");
+                elementCount = 0;
+            }else{
+                drawElement(element, "#canvas", name);
+            }
             element = "";
         }
     });
@@ -185,11 +190,11 @@ jsPlumb.ready(function () {
 
         var strong = $('<strong>');
         if (properties[0].clsName == "window diamond custom jtk-node jsplumb-connected-step") {
-            var p = "<p class='desc-text' contenteditable='true' ondblclick='$(this).focus();'>" + properties[0].label + "</p>";
+            var p = "<p style='line-height: 110%; margin-top: 25px' class='desc-text' contenteditable='true' ondblclick='$(this).focus();'>" + properties[0].label + "</p>";
             strong.append(p);
         }
         else if (properties[0].contenteditable) {
-            var p = "<p contenteditable='true' ondblclick='$(this).focus();'>" + properties[0].label + "</p>";
+            var p = "<p style='line-height: 110%; margin-top: 25px' contenteditable='true' ondblclick='$(this).focus();'>" + properties[0].label + "</p>";
             strong.append(p);
         } else {
             var p = $('<p>').text(properties[0].label);
@@ -278,7 +283,8 @@ jsPlumb.ready(function () {
             var nodes = [];
             $(".jtk-node").each(function (index, element) {
                 var $element = $(element);
-                if ($element.attr('class').toString().split(" ")[1] == "step") {
+                var type = $element.attr('class').toString().split(" ")[1];
+                if (type == "step" || type == "diamond") {
                     nodes.push({
                         elementId: $element.attr('id'),
                         nodeType: $element.attr('class').toString().split(" ")[1],

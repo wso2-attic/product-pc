@@ -1322,7 +1322,7 @@ public class ProcessStore {
                 flowchartString = new String((byte[]) flowchartAsset.getContent());
             }
         } catch (Exception e) {
-            log.error("Failed to fetch flowchart: " + flowchartPath);
+            log.error(e.getMessage());
         }
 
         return flowchartString;

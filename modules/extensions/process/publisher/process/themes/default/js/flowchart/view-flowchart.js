@@ -30,7 +30,7 @@ jsPlumb.ready(function () {
     jsPlumb.registerConnectionType("basic", basicType);
 
     var properties = [];
-    var hasLabel = true;
+    var loading = false;
     var connectorPaintStyle = {
             lineWidth: 4,
             strokeStyle: "#61B7CF",
@@ -89,17 +89,23 @@ jsPlumb.ready(function () {
         };
 
     var init = function (connection, label) {
-        if (editable || editableElmCount == 0) {
+        if(!editable){//process does not have a flowchart or loading an already existing flowchart
+            if(loading){    //loading an already existing flowchart
+                connection.getOverlay("label").setLabel(label);
+            }else{
+                var myLabel = prompt("Enter label text: ", "");
+                if (myLabel != null)
+                    connection.getOverlay("label").setLabel(myLabel);
+            }
+        }else{  //editing an already existing flowchart
             var myLabel = prompt("Enter label text: ", "");
             if (myLabel != null)
                 connection.getOverlay("label").setLabel(myLabel);
-        } else {
-            connection.getOverlay("label").setLabel(label);
         }
     };
 
     jsPlumb.bind("connection", function (connInfo, originalEvent) {
-        init(connInfo.connection);
+        init(connInfo.connection, "");
     });
 
     jsPlumb.bind("dblclick", function (conn, originalEvent) {
@@ -152,18 +158,31 @@ jsPlumb.ready(function () {
             'top': properties[0].top,
             'left': properties[0].left
         });
-        if (properties[0].clsName == "window step custom jtk-node jsplumb-connected-step") {
+        if (properties[0].clsName.indexOf("step") > -1) {
             elm.outerWidth(properties[0].width);
             elm.outerHeight(properties[0].height);
         }
         var strong = $('<strong>');
+
+        //if the inner label has more than one line
+        var str = properties[0].label;
+        if(properties[0].label.indexOf("div") > -1){
+            var lines = properties[0].label.split("<div>");
+            str = "";
+            for(var i = 0; i < lines.length - 1; i++){
+                lines[i] = lines[i].replace("</div>", "");
+                str += lines[i] + "<br/>";
+            }
+            str += lines[lines.length - 1].replace("</div>", "");
+        }
+
         if (properties[0].clsName == "window diamond custom jtk-node jsplumb-connected-step") {
-            var p = "<p class='desc-text' contenteditable='true' ondblclick='$(this).focus();'>" + properties[0].label
+            var p = "<p style='line-height: 110%; margin-top: 25px' class='desc-text' contenteditable='true' ondblclick='$(this).focus();'>" + str
                 + "</p>";
             strong.append(p);
         }
         else if (properties[0].contenteditable) {
-            var p = "<p contenteditable='true' ondblclick='$(this).focus();'>" + properties[0].label + "</p>";
+            var p = "<p style='line-height: 110%; margin-top: 25px' contenteditable='true' ondblclick='$(this).focus();'>" + str + "</p>";
             strong.append(p);
         } else {
             var p = $('<p>').text(properties[0].label);
@@ -220,7 +239,12 @@ jsPlumb.ready(function () {
             var name = "Window" + elementCount;
             var id = "flowchartWindow" + elementCount;
             element = createEditorElement(id);
-            drawEditorElement(element, "#editor_canvas", name);
+            if(editableElmCount == 1 && element.attr("class").indexOf("start") == -1){
+                alertify.error("The flowchart diagram should have a start element");
+                elementCount = 0;
+            }else{
+                drawEditorElement(element, "#editor_canvas", name);
+            }
             element = "";
         }
     });
@@ -285,18 +309,20 @@ jsPlumb.ready(function () {
     });
 
     _saveEditedFlowchart = function () {
-        if (elementCount > 0) {
+        if (editableElmCount > 0) {
             var nodes = [];
             $(".jtk-node").each(function (index, element) {
                 var $element = $(element);
-                if ($element.attr('class').toString().split(" ")[1] == "step") {
+                var type = $element.attr('class').toString().split(" ")[1];
+                if (type == "step" || type == "diamond") {
+                    //alert($element.children()[0].firstChild.innerHTML);
                     nodes.push({
                         elementId: $element.attr('id'),
                         nodeType: $element.attr('class').toString().split(" ")[1],
                         positionX: parseInt($element.css("left"), 10),
                         positionY: parseInt($element.css("top"), 10),
                         clsName: $element.attr('class').toString(),
-                        label: $element.text(),
+                        label: $element.children()[0].firstChild.innerHTML,
                         width: $element.outerWidth(),
                         height: $element.outerHeight()
                     });
@@ -328,7 +354,6 @@ jsPlumb.ready(function () {
             flowchart.nodes = nodes;
             flowchart.connections = connections;
             flowchart.numberOfElements = editableElmCount;
-
             $.ajax({
                 url: '/publisher/assets/process/apis/upload_flowchart',
                 type: 'POST',
@@ -368,7 +393,7 @@ jsPlumb.ready(function () {
                     ["BottomCenter", "RightMiddle"], ["TopCenter", "LeftMiddle"], true, element.width, element.height);
             } else if (element.nodeType == 'diamond') {
                 loadEditorProperties(element.clsName.substr(0, 53), element.positionX, element.positionY, element.label,
-                    ["LeftMiddle", "RightMiddle", "BottomCenter"], ["TopCenter"], true, -1, -1);
+                    ["LeftMiddle", "RightMiddle", "BottomCenter"], ["TopCenter"], true, element.width, element.height);
             } else if (element.nodeType == 'end') {
                 loadEditorProperties(element.clsName.substr(0, 41), element.positionX, element.positionY, element.label,
                     [], ["TopCenter"], false, -1, -1);
@@ -377,15 +402,12 @@ jsPlumb.ready(function () {
             drawEditorElement(elm, canvasId, name);
         });
 
+        loading = true;
         $.each(connections, function (index, element) {
-            if (element.label != "undefined") {
-                hasLabel = false;
-                var conn = jsPlumb.connect({uuids: [element.sourceUUId, element.targetUUId]});
-                init(conn, element.label);
-                hasLabel = true;
-            }
+            var conn = jsPlumb.connect({uuids: [element.sourceUUId, element.targetUUId]});
+            init(conn, element.label);
         });
-
+        loading = false;
         editable = true;
     }
 });
