@@ -33,8 +33,18 @@
                     <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
                 {{/if}}
             </div>
+            <div class="control-group" style="display: inline-block;">
+                {{#if flowchartAvailable}}
+                    <div id="sfdiv">
+                        <button id="showFlowchartButton" class="btn btn-primary"
+                                onclick="showFlowchartEditor('{{assets.tables.[0].fields.name.value}}', '{{flowchartString}}')">Edit Flowchart</button>
+                    </div>
+                {{else}}
+                    <div id="aFdiv"><button id="addFlowchartButton" class="btn btn-primary" onclick="associateEditorFlowChart('{{assets.tables.[0].fields.name.value}}')">Associate Flowchart</button></div>
+                {{/if}}
+            </div>
     <div class="control-group" style="display: inline-block">
-
+                
         <button id="pdfViewer" class="btn btn-primary" style="display: none" onclick="showPDF()">Show PDF</button>
         <button id="pdfUploader" class="btn btn-primary" style="display:none" onclick="associatePdf()">Associate PDF</button>
     </div>
@@ -281,7 +291,33 @@
     </form>
 </div>
 
+<div id="flowChartEditorView" style="display:none">
+    <br />
+    <a id="fcEditorOverviewLink" class="btn btn-primary" onclick="redirectTo(this)" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
+    <button class="btn btn-primary" id="flowchartSaveBtn" onclick=" _saveEditedFlowchart()">Save</button><br /><br />
+    <input type="hidden" id="fcProcessName" name="fcProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
+    <input type="hidden" id="fcProcessVersion" name="fcProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
+    <div style="width:100%; height: 50%; white-space:nowrap;">
+        <span style="display: inline-block; vertical-align: top; padding: 5px; width:15%">
+            <div id="editorPalette" style="border: solid 1px gray; height: auto"><p><center><strong>Palette</strong></center></p>
+                <div class="jtk-demo-main" style="margin-top: 20px;">
+                    <div class="jtk-demo-canvas canvas-wide flowchart-demo" id="canvas1">
+                        <div class="window start jsplumb-connected" id="startEv"><strong><p>start</p></strong></div>
+                        <div class="window step jsplumb-connected-step" id="stepEv"><strong><p>step</p></strong></div>
+                        <div class="window diamond jsplumb-connected-step" id="descEv"><strong><p class="desc-text">decision</p></strong></div>
+                        <div class="window start jsplumb-connected-end" id="endEv"><strong><p>end</p></strong></div>
+                    </div>
+                </div>
+            </div>
+        </span>
 
-
-
-
+        <span style="display: inline-block; vertical-align: top; padding: 5px; width:85%">
+          <div id="editorDiagram" style="border: solid 1px gray;;"><p><center><strong>Drawing</strong></center></p>
+              <div class="jtk-demo-main" style="margin-top: 20px;">
+                  <div class="jtk-demo-canvas canvas-wide flowchart-demo jtk-surface  jtk-surface-nopan" id="editor_canvas">
+                  </div>
+              </div>
+          </div>
+        </span>
+    </div>
+</div>

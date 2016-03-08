@@ -1,3 +1,22 @@
+/*
+ *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.w   See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+
 var processNames = [];
 var processListObj;
 var pid;
@@ -28,6 +47,7 @@ function showBPMN() {
     $("#bpmnEditDiv").hide();
     $("#pdfUploaderView").hide();
     $("#holder").hide();
+    $("#flowChartEditorView").hide();
 
     $.ajax({
         url: '/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/' + fieldsName + "/" + fieldsVersion,
@@ -53,6 +73,7 @@ function viewText() {
     $("#bpmnEditDiv").hide();
     $("#pdfUploaderView").hide();
     $("#holder").hide();
+    $("#flowChartEditorView").hide();
 }
 
 function editText() {
@@ -112,6 +133,7 @@ function showTextEditor() {
     $("#bpmnEditDiv").hide();
     $("#pdfUploaderView").hide();
     $("holder").hide();
+    $("#flowChartEditorView").hide();
 
     tinymce.init({
         selector: "#processContent"
@@ -126,6 +148,7 @@ function showBPMNUploader() {
     $("#bpmnEditDiv").show();
     $("#pdfUploaderView").hide();
     $("#holder").hide();
+    $("#flowChartEditorView").hide();
 }
 
 function showOverview(e) {
@@ -139,6 +162,7 @@ function showOverview(e) {
     $("#bpmnEditDiv").hide();
     $("#pdfUploaderView").hide();
     $("#holder").hide();
+    $("#flowChartEditorView").hide();
 }
 
 function editProcessOwner(e) {
@@ -527,6 +551,7 @@ function showPDF() {
     $("#bpmnEditDiv").hide();
     $("#holder").show();
     $("#pdfUploaderView").hide();
+    $("#flowChartEditorView").hide();
 
     if (pdfDoc == null) {
         loadPdf();
@@ -540,12 +565,13 @@ function associatePdf(element) {
     $("#bpmnView").hide();
     $("#docView").hide();
     $("#pdfUploaderView").show();
+    $("#flowChartEditorView").hide();
 
 }
 
 function loadPdf() {
     $.ajax({
-        url: '/publisher/assets/process/apis/get_process_pdf?process_pdf_path=/_system/governance/pdf/'+ fieldsName + "/" + fieldsVersion,
+        url: '/publisher/assets/process/apis/get_process_pdf?process_pdf_path=/_system/governance/pdf/' + fieldsName + "/" + fieldsVersion,
         type: 'GET',
         dataType: 'text',
         success: function (data) {
@@ -572,7 +598,6 @@ function goNext() {
     pageNum++;
     renderPage(pageNum);
 }
-
 
 function renderPDF(url) {
     pdfDoc = null;
@@ -663,4 +688,30 @@ function zoomSelect() {
     var scaleSelect = document.getElementById("scaleSelect");
     scale = scaleSelect.options[scaleSelect.selectedIndex].value;
     zoom(scale);
+}
+
+//******************************Flowchart Editor***********************************
+function associateEditorFlowChart(name) {
+    $('#flowchart-editor-header').text(name);
+    $("#overviewDiv").hide();
+    $("#flowChartEditorView").show();
+    $("#pdfUploader").hide();
+    $("#docView").hide();
+    $("#bpmnView").hide();
+    $("#processTextView").hide();
+}
+
+function showFlowchartEditor(name, flowchartString) {
+    $('#flowchart-editor-header').text(name);
+    $("#overviewDiv").hide();
+    $("#flowChartEditorView").show();
+    $("#pdfUploader").hide();
+    $("#docView").hide();
+    $("#bpmnView").hide();
+    $("#processTextView").hide();
+    _loadEditableFlowChart(flowchartString, '#editor_canvas');
+}
+
+function redirectTo(element) {
+    element.click();
 }

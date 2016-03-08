@@ -302,7 +302,7 @@
     <form method="post" action="apis/upload_pdf"  onsubmit="" enctype="multipart/form-data" class="form-horizontal" id="form-bar-create">
         <br>
         <div style="float:left;width:15cm">
-            <input type="file" onchange="setfilename(this.value);" class="filestyle" data-buttonname="btn-primary" data-placeholder="Associate pdf/text file" name="pdfFile" id="pdfFile" data-buttontext="PDF file" accept=".txt,.doc,.pdf" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
+            <input type="file" onchange="setfilename(this.value);" class="filestyle" data-buttonname="btn-primary" data-placeholder="Associate pdf/text file" name="pdfFile" id="pdfFile" data-buttontext="PDF file" accept=".pdf" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
         </div><br><br>
         <input type="hidden" id="ProcessName" name="ProcessName" value="">
         <input type="hidden" id="ProcessVersion" name="ProcessVersion" value="">
@@ -342,10 +342,9 @@
 </table>
 
 <div id="flowChartView" style="display:none">
-    <h2 id="flowchart-view-header"></h2>
-    <br /><a id="bpmnOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
-    <div>
-    </div>
+    <br />
+    <a id="flowchartOverviewLink" class="btn btn-primary" onclick="redirectToProcess(this)" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
+    <button class="btn btn-primary" id="flowchartSaveBtn" onclick=" _saveFlowchart()">Save</button><br /><br />
     <div style="width:100%; height: 50%; white-space:nowrap;">
         <span style="display: inline-block; vertical-align: top; padding: 5px; width:15%">
             <div id="myPalette" style="border: solid 1px gray; height: auto"><p><center><strong>Palette</strong></center></p>
@@ -370,4 +369,3 @@
         </span>
     </div>
 </div>
-
