@@ -1274,7 +1274,6 @@ public class ProcessStore {
     }
 
     /**
-     *
      * @param processName
      * @param processVersion
      * @param flowchartJson
@@ -1318,7 +1317,6 @@ public class ProcessStore {
     }
 
     /**
-     *
      * @param flowchartPath
      * @return the flowchart string of a process
      */

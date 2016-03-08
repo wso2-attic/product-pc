@@ -307,11 +307,11 @@ jsPlumb.ready(function () {
                 if (type == "step" || type == "diamond") {
                     nodes.push({
                         elementId: $element.attr('id'),
-                        nodeType: $element.attr('class').toString().split(" ")[1],
+                        nodeType: type,
                         positionX: parseInt($element.css("left"), 10),
                         positionY: parseInt($element.css("top"), 10),
                         clsName: $element.attr('class').toString(),
-                        label: $element.text(),
+                        label: $element.children()[0].firstChild.innerHTML,
                         width: $element.outerWidth(),
                         height: $element.outerHeight()
                     });
