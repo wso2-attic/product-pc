@@ -135,5 +135,35 @@
     <orderEntry type="library" name="Maven: commons-fileupload.wso2:commons-fileupload:1.2.0.wso2v1" level="project" />
     <orderEntry type="library" name="Maven: commons-codec.wso2:commons-codec:1.4.0.wso2v1" level="project" />
     <orderEntry type="library" name="Maven: org.wso2.carbon.analytics-common:org.wso2.carbon.event.receiver.stub:5.0.8" level="project" />
+    <orderEntry type="library" name="Maven: org.json.wso2:json:2.0.0.wso2v1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm.wso2:maven-scm:1.7.0.wso2v1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-svnexe:1.7.0-wso2v1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-api:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-manager-plexus:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-container-default:1.0-alpha-9" level="project" />
+    <orderEntry type="library" name="Maven: classworlds:classworlds:1.1-alpha-2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-svn-commons:1.7" level="project" />
+    <orderEntry type="library" name="Maven: regexp:regexp:1.3" level="project" />
+    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-utils:2.0.5" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-client:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-accurev:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-bazaar:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-clearcase:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-cvsexe:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-cvs-commons:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-cvsjava:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.netbeans.lib:cvsclient:20060125" level="project" />
+    <orderEntry type="library" name="Maven: ch.ethz.ganymed:ganymed-ssh2:build210" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-gitexe:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-git-commons:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-hg:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-jazz:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-local:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-perforce:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-starteam:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-synergy:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-vss:1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-tfs:1.7" level="project" />
   </component>
 </module>

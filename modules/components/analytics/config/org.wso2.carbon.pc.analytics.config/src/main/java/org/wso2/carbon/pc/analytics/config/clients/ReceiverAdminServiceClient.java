@@ -16,11 +16,22 @@ public class ReceiverAdminServiceClient {
 	//private EventReceiverAdminService eventReceiverAdminServiceStub;
 
 	private String endPoint;
+	private String receiverName;
+	private String streamId;
+	private String eventAdapterType="wso2event";
 
-	public ReceiverAdminServiceClient(String backEndUrl, String sessionCookie)
-			throws AxisFault {
+
+	public ReceiverAdminServiceClient(String backEndUrl, String sessionCookie, String receiverName, String streamId, String wso2event)
+			{
 		this.endPoint = backEndUrl + "/services/" + serviceName;
-		eventReceiverAdminServiceStub = new EventReceiverAdminServiceStub(endPoint);
+				try {
+					eventReceiverAdminServiceStub = new EventReceiverAdminServiceStub(endPoint);
+				} catch (Exception axisFault) {
+					axisFault.printStackTrace();
+				}
+		this.receiverName=receiverName;
+		this.streamId=streamId;
+
 		// Authenticate Your stub from sessionCooke
 		ServiceClient serviceClient;
 		Options option;
@@ -37,7 +48,7 @@ public class ReceiverAdminServiceClient {
 
 	}
 
-	public void deployEventReceiverConfiguration(String eventReceiverName,String streamNameWithVersion,String eventAdapterType) {
+	public void deployEventReceiverConfiguration() {
 		
 		/*try {
 			eventReceiverAdminServiceStub=new EventReceiverAdminServiceStub();
@@ -130,7 +141,7 @@ public class ReceiverAdminServiceClient {
 		props[0].setKey("events.duplicated.in.cluster");
 		props[0].setValue("false");
 		try {
-			eventReceiverAdminServiceStub.deployWso2EventReceiverConfiguration(eventReceiverName,streamNameWithVersion,eventAdapterType,null,null,null,props,false,"");
+			eventReceiverAdminServiceStub.deployWso2EventReceiverConfiguration(receiverName,streamId,eventAdapterType,null,null,null,props,false,"");
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

@@ -3,6 +3,7 @@
     var processListObj;
 
 
+
     function getMainProcess(){
         var mainProcess = $('#view-header').text() + "-" + $('#process-version').text();
         return mainProcess;
@@ -92,7 +93,7 @@
         $("#processTextContainer").hide();
         $("#processTextEditDiv").show();
         $("#bpmnViewDiv").hide();
-        $("analyticsConfigDiv").hide();
+        $("#analyticsConfigDiv").hide();
         $("#bpmnEditDiv").hide();
 
         tinymce.init({
@@ -105,7 +106,7 @@
         $("#processTextContainer").hide();
         $("#processTextEditDiv").hide();
         $("#bpmnViewDiv").hide();
-        $("analyticsConfigDiv").hide();
+        $("#analyticsConfigDiv").hide();
         $("#bpmnEditDiv").show();
     }
 
@@ -128,7 +129,7 @@
         $("#processTextEditDiv").hide();
         $("#bpmnViewDiv").hide();
         $("#bpmnEditDiv").hide();
-        $("analyticsConfigDiv").hide();
+        $("#analyticsConfigDiv").hide();
     }
 
     function editProcessOwner(e){
@@ -567,36 +568,53 @@
             alert(e);
         }
     }
+    var processVariablesInfo={};
+    var processVariables={};
+    var processVariablesObjsArr=[];
+
 
     function saveProcessVariables(tableID){
         var table=document.getElementById(tableID);
         var rowCount=table.rows.length;
 
-        if (rowCount <= 0) {
-            alert("No rows to save.");
-            return;
+        if (rowCount <= 1) {
+            //alert("No rows to save.");
+            alertify.error("No Process Variable To Config..!")
+            return "ERROR";
         }
 
-        var processVariablesInfo={};
-        var processVariables={};
+
 
         var processName= $('#view-header').text();
         var processVersion=$('#process-version').text();
         processVariablesInfo["processName"]=processName;
         processVariablesInfo["processVersion"]=processVersion;
 
+
         for (var i = 1; i < rowCount; i++) {
+            var item={};
             var row = table.rows[i];
             //processVariable
             //var chkbox = row.cells[0].childNodes[0];
+            if(!(row.cells[1].children[0].value)){
+                alertify.error("Process Variable Names Cannot Be Empty");
+                return "ERROR";
+            }
+
+
             var variableName=row.cells[1].children[0].value;
             var variableType=row.cells[2].children[0].value;
 
 
             if (null != variableName && null!=variableType) {
                 processVariables[variableName]=variableType;
+                item["name"]=variableName;
+                item["type"]=variableType;
                 //processVariable.name=variableName;
                 //processVariable.type=variableType;
+                // processVariables["name"]=variableName;
+                // processVariables["type"]=variableType;
+                processVariablesObjsArr.push(item);
             }
             //processVariables.push(processVariable);
 
@@ -623,7 +641,74 @@
         });
     }
 
-    function createEventStreamAndReceiver(){
+    function configAnalytics(){
+
+
+        flagToReturn=false;
+        if(!$('#eventStreamName').val()){
+            alertify.error("Event Stream Name Cannot be Empty");
+            flagToReturn=true;
+        }
+        if(!$('#eventStreamVersion').val()){
+            alertify.error("Event Stream Version Cannot be Empty");
+            flagToReturn=true;
+        }
+        if(!$('#eventReceiverName').val()){
+            alertify.error("Event Receiver Name Cannot be Empty");
+            flagToReturn=true;
+        }
+
+        if(flagToReturn){
+            return;
+        }
+
+        if( saveProcessVariables('dataTable')=="ERROR"){
+            return;
+        }
+
+        var eventStreamName=$('#eventStreamName').val();
+        var eventStreamVersion=$('#eventStreamVersion').val();
+        var eventStreamDescription=$('#eventStreamDescription').val();
+        var eventStreamNickName=$('#eventStreamNickName').val();
+        var eventReceiverName=$('#eventReceiverName').val();
+
+        //var inputEventAdapterType=
+        var eventStreamId=eventStreamName+":"+eventStreamVersion;
+        var dasConfigData={};
+        dasConfigData["eventStreamName"]=eventStreamName;
+        dasConfigData["eventStreamVersion"]=eventStreamVersion;
+        dasConfigData["eventStreamDescription"]=eventStreamDescription;
+        dasConfigData["eventStreamNickName"]=eventStreamNickName;
+        dasConfigData["eventStreamId"]=eventStreamId;
+        dasConfigData["eventReceiverName"]=eventReceiverName;
+        dasConfigData["processVariables"]=processVariablesObjsArr;
+
+        $.ajax({
+            url: '/publisher/assets/process/apis/config_das_analytics',
+            type: 'POST',
+            data: {'dasConfigData': JSON.stringify(dasConfigData) },
+            /*success: function (response) {
+                $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response);
+                $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response);
+                $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response);
+
+
+                if($(currentElement).attr('id') == 'saveProcessBtn'){
+                    window.location = "../../assets/process/details/" + response;
+                }
+            },*/
+            success:function(){
+                showOverview(this);
+                //document.getElementById("btn_config_analytics").hidden=true;
+                // $("#btn_config_analytics").hide();
+                $("#btn_config_analytics").attr('disabled', true);
+
+
+            },
+            error: function () {
+                alertify.error('Process variables saving error');
+            }
+        });
 
     }
 
@@ -662,7 +747,7 @@
             <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
         {{else}}
             <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
-            <button class="btn btn-primary" onclick="showAnalyticsConfigurer()">Config Analytics</button>
+            <button id="btn_config_analytics" class="btn btn-primary" onclick="showAnalyticsConfigurer()">Config Analytics</button>
         {{/if}}
     </div>
     <br /><br />
@@ -855,12 +940,11 @@
 
 
     <h2 class="field-title">
-        <a class="collapsing-h2" aria-expanded="true" href="#collapseprocessinfo" data-toggle="collapse">
-            <i class="cu-btn-exp-col btn-collapsed">Event Stream Information</i>
-        </a>
+        <a class="collapsing-h2" aria-expanded="true" href="#collapseEventStreamInfo" data-toggle="collapse">
+            <i class="cu-btn-exp-col btn-collapsed">Event Stream Information</i>        </a>
     </h2>
-    <div class="collapse in responsive-form-container" id="collapseeventstreaminfo">
-        <form class="form-horizontal">
+    <div class="collapse in responsive-form-container" id="collapseEventStreamInfo">
+        <form id="collapseEventStreamInfoForm" class="form-horizontal">
             <div class="form-group">
                 <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Event Stream Name<sup class="required-field">*</sup></label>
                 <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
@@ -871,88 +955,101 @@
             <div class="form-group">
                 <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Version<sup class="required-field">*</sup></label>
                 <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text" placeholder="Enter Process Version" name="overview_version" id="pVersion" class="form-control" required="">
+                    <input onblur="blurIt()" type="text" placeholder="Enter Event Stream Version" name="event_stream_version" id="eventStreamVersion" class="form-control" required="">
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Owner<sup class="required-field">*</sup></label>
+                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Description</label>
                 <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text" placeholder="Enter Process Owner" name="overview_owner" id="pOwner" class="form-control" required="">
+                    <input onblur="blurIt()" type="text" placeholder="Enter Description for Event Stream" name="event_stream_description" id="eventStreamDescription" class="form-control" required="">
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Tags</label>
+                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Nick Name</label>
                 <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text" placeholder="Enter Tags" name="overview_tags" id="pTags" class="form-control">
+                    <input onblur="blurIt()" type="text" placeholder="Enter a Nick Name for Event Stream" name="event_stream_nick_name" id="eventStreamNickName" class="form-control">
                 </div>
             </div>
         </form>
 
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button class="btn btn-primary" onclick="showTextEditor(this)">Describe process in text</button>
-                <button class="btn btn-primary" onclick="associateBPMN(this)">Associate BPMN model</button>
-                <button class="btn btn-primary" onclick="associateFlowChart(this)">Associate Flow Chart</button>
-                <button class="btn btn-primary" onclick="associateDocument(this)">Documents</button>
-                <button class="btn btn-primary" onclick="associatePdf(this)">Associate PDF</button>
+    </div>
 
+
+    <h2 class="field-title">
+        <a class="collapsing-h2" aria-expanded="true" href="#collapseEventReceiverInfo" data-toggle="collapse">
+            <i class="cu-btn-exp-col btn-collapsed">Event Receiver Information</i>        </a>
+    </h2>
+    <div class="collapse in responsive-form-container" id="collapseEventReceiverInfo">
+        <form id="collapseEventReceiverInfoForm" class="form-horizontal">
+            <div class="form-group">
+                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Event Receiver Name<sup class="required-field">*</sup></label>
+                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                    <input onblur="blurIt()" type="text" placeholder="Enter Event Receiver Name" name="event_receiver_name" id="eventReceiverName" class="form-control" required="">
+                </div>
             </div>
-        </div>
+
+            <div class="form-group">
+                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Input Event Adapter Type<sup class="required-field">*</sup></label>
+                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                    <input onblur="blurIt()" type="text"  name="input_event_adapter_type" id="inputEventAdapterType" class="form-control" required="" value="wso2event" readonly>
+                </div>
+            </div>
+
+        </form>
+
 
     </div>
 
 
 
+    <h2 class="field-title">
+        <a class="collapsing-h2" aria-expanded="true" href="#collapsevariableinfo" data-toggle="collapse">
+            <i class="cu-btn-exp-col btn-collapsed">Process Variables to Config for Analysis</i>        </a>
+    </h2>
+    <div class="collapse in responsive-form-container" id="collapsevariableinfo">
+
+        <div  class="add-unbounded-row" float="left" width="100%"  style="width:auto; float:left;"><a  onclick="addProcessVariableRow('dataTable')"><i
+                class="fa fa-plus-circle"></i> Add Process Variable</a></div>
+        <!--
+            <INPUT type="button" value="Delete Process Variable" onclick="deleteProcessVariableRow('dataTable')"/>
+        -->
+        <div class="add-unbounded-row" style="width:auto;padding-left: 25pt; margin-left:10%;"><a onclick="deleteProcessVariableRow('dataTable')"><i
+                class="fa fa-plus-circle"></i> Delete Process Variable</a></div>
 
 
+        <br>
+        <table id="dataTable"  border="1" width="25%">
+            <thead>
+
+            <th width="4%"></th>
+            <th>Variable Name</th>
+            <th>Type</th>
 
 
+            </thead>
+            <tr>
+                <td><input type="checkbox" name="chk"/></td>
 
+                <td><input type="text" name="txt" style="display:table-cell; width:100%"/></td>
+                <td>
+                    <select name="country" style="display:table-cell; width:100%">
+                        <option value="int">int</option>
+                        <option value="string">string</option>
+                        <option value="float">float</option>
+                        <option value="boolean">boolean</option>
+                    </select>
+                </td>
+                <!--<td style="width: 5%;"><a class="js-remove-row" onclick="deleteProcessVariableRow('dataTable', parseInt( $(this).parent().parent().index() ) )"><i class="fa fa-trash"></i></a> </td>-->
 
+            </tr>
+        </table>
 
-    <div  class="add-unbounded-row" float="left" width="100%"  style="width:auto; float:left;"><a  onclick="addProcessVariableRow('dataTable')"><i
-            class="fa fa-plus-circle"></i> Add Process Variable</a></div>
-    <!--
-        <INPUT type="button" value="Delete Process Variable" onclick="deleteProcessVariableRow('dataTable')"/>
-    -->
-    <div class="add-unbounded-row" style="width:auto;padding-left: 25pt; margin-left:10%;"><a onclick="deleteProcessVariableRow('dataTable')"><i
-            class="fa fa-plus-circle"></i> Delete Process Variable</a></div>
+        <!-- <button onclick="saveProcessVariables('dataTable')" class="btn btn-primary">Save</button>-->
+    </div>
 
-
-    <br>
-    <table id="dataTable"  border="1" width="25%">
-        <thead>
-
-        <th width="4%"></th>
-        <th>Variable Name</th>
-        <th>Type</th>
-
-
-        </thead>
-        <tr>
-            <td><input type="checkbox" name="chk"/></td>
-
-            <td><input type="text" name="txt" style="display:table-cell; width:100%"/></td>
-            <td>
-                <select name="country" style="display:table-cell; width:100%">
-                    <option value="int">int</option>
-                    <option value="string">string</option>
-                    <option value="float">float</option>
-                    <option value="boolean">boolean</option>
-                </select>
-            </td>
-            <!--<td style="width: 5%;"><a class="js-remove-row" onclick="deleteProcessVariableRow('dataTable', parseInt( $(this).parent().parent().index() ) )"><i class="fa fa-trash"></i></a> </td>-->
-
-        </tr>
-    </table>
-
-
-</div>
-<br>
-<button onclick="saveProcessVariables('dataTable')" class="btn btn-primary">Save</button>
-<button onclick="createEventStreamAndReceiver()" class="btn btn-primary">Create Event Stream & Receiver</button>
+    <button onclick="configAnalytics()" class="btn btn-primary">Config Analytics</button>
 
 
 </div>

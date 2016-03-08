@@ -71,6 +71,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>org.wso2.pc:org.wso2.carbon.pc.analytics.config</bundleDef>
+                                <bundleDef>org.wso2.carbon.analytics-common:org.wso2.carbon.event.receiver.stub:5.0.8</bundleDef>
                             </bundles>
                             <importBundles>
                                 <importBundleDef>org.wso2.orbit.org.activiti:activiti-all:5.16.3.wso2v2</importBundleDef>
