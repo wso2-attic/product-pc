@@ -263,7 +263,7 @@ jsPlumb.ready(function () {
             //the diagram should contain a start element
             if (editableElmCount == 1 && element.attr("class").indexOf("start") == -1) {
                 alertify.error("The flowchart diagram should have a start element");
-                elementCount = 0;
+                elementCount = 0; editableElmCount = 0;
             } else {
                 drawEditorElement(element, "#editor_canvas", name);
             }
@@ -277,6 +277,12 @@ jsPlumb.ready(function () {
             if (to_delete != "") {
                 jsPlumb.remove(to_delete);
                 editableElmCount--;
+
+                //if canvas has no element
+                if(editableElmCount == 0){
+                    elementCount = 0;   //ids start from 1
+                }
+
                 for (var i = 0; i < editorEndpointList.length; i++) {
                     if (editorEndpointList[i][0] == to_delete) {
                         for (var j = 0; j < editorEndpointList[i].length; j++) {
@@ -336,63 +342,72 @@ jsPlumb.ready(function () {
     _saveEditedFlowchart = function () {
         if (editableElmCount > 0) {
             var nodes = [];
-            $(".jtk-node").each(function (index, element) {
-                var $element = $(element);
-                var type = $element.attr('class').toString().split(" ")[1];
-                if (type == "step" || type == "diamond") {
-                    nodes.push({
-                        elementId: $element.attr('id'),
-                        nodeType: type,
-                        positionX: parseInt($element.css("left"), 10),
-                        positionY: parseInt($element.css("top"), 10),
-                        clsName: $element.attr('class').toString(),
-                        label: $element.children()[0].firstChild.innerHTML,
-                        width: $element.outerWidth(),
-                        height: $element.outerHeight()
-                    });
-                } else {
-                    nodes.push({
-                        elementId: $element.attr('id'),
-                        nodeType: $element.attr('class').toString().split(" ")[1],
-                        positionX: parseInt($element.css("left"), 10),
-                        positionY: parseInt($element.css("top"), 10),
-                        clsName: $element.attr('class').toString(),
-                        label: $element.text()
-                    });
-                }
-            });
 
-            var connections = [];
-            $.each(jsPlumb.getConnections(), function (index, connection) {
-                connections.push({
-                    connectionId: connection.id,
-                    sourceUUId: connection.endpoints[0].getUuid(),
-                    targetUUId: connection.endpoints[1].getUuid(),
-                    label: connection.getOverlay("label").getLabel()
+            //check whether a start element is there in the diagram
+            var elm = $(".start.jtk-node");
+            if(elm.length == 0){
+                alertify.error("The flowchart diagram should have a start element");
+            }else{
+                $(".jtk-node").each(function (index, element) {
+                    var $element = $(element);
+                    var type = $element.attr('class').toString().split(" ")[1];
+                    if (type == "step" || type == "diamond") {
+                        nodes.push({
+                            elementId: $element.attr('id'),
+                            nodeType: type,
+                            positionX: parseInt($element.css("left"), 10),
+                            positionY: parseInt($element.css("top"), 10),
+                            clsName: $element.attr('class').toString(),
+                            label: $element.children()[0].firstChild.innerHTML,
+                            width: $element.outerWidth(),
+                            height: $element.outerHeight()
+                        });
+                    } else {
+                        nodes.push({
+                            elementId: $element.attr('id'),
+                            nodeType: $element.attr('class').toString().split(" ")[1],
+                            positionX: parseInt($element.css("left"), 10),
+                            positionY: parseInt($element.css("top"), 10),
+                            clsName: $element.attr('class').toString(),
+                            label: $element.text()
+                        });
+                    }
                 });
-            });
 
-            var flowchart = {};
-            flowchart.nodes = nodes;
-            flowchart.connections = connections;
-            flowchart.numberOfElements = editableElmCount;
-            $.ajax({
-                url: '/publisher/assets/process/apis/upload_flowchart',
-                type: 'POST',
-                data: {
-                    'processName': $("#fcProcessName").val(),
-                    'processVersion': $("#fcProcessVersion").val(),
-                    'flowchartJson': JSON.stringify(flowchart)
-                },
-                success: function (response) {
-                    alertify.success("Successfully saved the flowchart.");
-                    $("#fcEditorOverviewLink").attr("href", "../../../assets/process/details/" + response);
-                },
-                error: function () {
-                    alertify.error('Flowchart saving error');
-                }
-            });
+                var connections = [];
+                $.each(jsPlumb.getConnections(), function (index, connection) {
+                    connections.push({
+                        connectionId: connection.id,
+                        sourceUUId: connection.endpoints[0].getUuid(),
+                        targetUUId: connection.endpoints[1].getUuid(),
+                        label: connection.getOverlay("label").getLabel()
+                    });
+                });
 
+                var flowchart = {};
+                flowchart.nodes = nodes;
+                flowchart.connections = connections;
+                flowchart.numberOfElements = editableElmCount;
+                flowchart.lastElementId = elementCount;
+
+                $.ajax({
+                    url: '/publisher/assets/process/apis/upload_flowchart',
+                    type: 'POST',
+                    data: {
+                        'processName': $("#fcProcessName").val(),
+                        'processVersion': $("#fcProcessVersion").val(),
+                        'flowchartJson': JSON.stringify(flowchart)
+                    },
+                    success: function (response) {
+                        alertify.success("Successfully saved the flowchart.");
+                        $("#fcEditorOverviewLink").attr("href", "../../../assets/process/details/" + response);
+                    },
+                    error: function () {
+                        alertify.error('Flowchart saving error');
+                    }
+                });
+
+            }
         } else {
             alertify.error('Flowchart content is empty.');
         }
@@ -403,9 +418,8 @@ jsPlumb.ready(function () {
         var flowchart = JSON.parse(flowchartString);
         var nodes = flowchart.nodes;
         var connections = flowchart.connections;
-        var noOfElements = flowchart.numberOfElements;
-        elementCount = noOfElements;
-        editableElmCount = noOfElements;
+        editableElmCount = flowchart.numberOfElements;
+        elementCount = flowchart.lastElementId;
         $.each(nodes, function (index, element) {
             var name = element.elementId.substring(9);
             if (element.nodeType == 'start') {

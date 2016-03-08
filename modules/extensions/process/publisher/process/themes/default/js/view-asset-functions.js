@@ -571,7 +571,7 @@ function associatePdf(element) {
 
 function loadPdf() {
     $.ajax({
-        url: '/publisher/assets/process/apis/get_process_pdf?process_pdf_path=/_system/governance/pdf/'+ fieldsName + "/" + fieldsVersion,
+        url: '/publisher/assets/process/apis/get_process_pdf?process_pdf_path=/_system/governance/pdf/' + fieldsName + "/" + fieldsVersion,
         type: 'GET',
         dataType: 'text',
         success: function (data) {
@@ -691,7 +691,7 @@ function zoomSelect() {
 }
 
 //******************************Flowchart Editor***********************************
-function associateEditorFlowChart(name){
+function associateEditorFlowChart(name) {
     $('#flowchart-editor-header').text(name);
     $("#overviewDiv").hide();
     $("#flowChartEditorView").show();
@@ -701,7 +701,7 @@ function associateEditorFlowChart(name){
     $("#processTextView").hide();
 }
 
-function showFlowchartEditor(name, flowchartString){
+function showFlowchartEditor(name, flowchartString) {
     $('#flowchart-editor-header').text(name);
     $("#overviewDiv").hide();
     $("#flowChartEditorView").show();
@@ -712,6 +712,6 @@ function showFlowchartEditor(name, flowchartString){
     _loadEditableFlowChart(flowchartString, '#editor_canvas');
 }
 
-function redirectTo(element){
+function redirectTo(element) {
     element.click();
 }

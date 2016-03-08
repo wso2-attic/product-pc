@@ -106,7 +106,7 @@ jsPlumb.ready(function () {
     });
 
     jsPlumb.bind("dblclick", function (conn, originalEvent) {
-        if (confirm("Delete connection from " + conn.sourceId + " to " + conn.targetId + "?"))
+        if (confirm("Do you want to delete the connection from " + conn.sourceId + " to " + conn.targetId + "?"))
             jsPlumb.detach(conn);
     });
 
@@ -251,7 +251,12 @@ jsPlumb.ready(function () {
         if (e.which == 127) {
             if (to_delete != "") {
                 jsPlumb.remove(to_delete);
-                elementCount--;
+
+                //if there are no elements in the canvas, ids start from 1
+                if($(".jtk-node").length == 0){
+                    elementCount = 0;
+                }
+
                 for (var i = 0; i < editorEndpointList.length; i++) {
                     if (editorEndpointList[i][0] == to_delete) {
                         for (var j = 0; j < editorEndpointList[i].length; j++) {
@@ -299,67 +304,77 @@ jsPlumb.ready(function () {
 
     //save the edited flowchart to a json string
     _saveFlowchart = function () {
+        var totalCount = 0;
         if (elementCount > 0) {
             var nodes = [];
-            $(".jtk-node").each(function (index, element) {
-                var $element = $(element);
-                var type = $element.attr('class').toString().split(" ")[1];
-                if (type == "step" || type == "diamond") {
-                    nodes.push({
-                        elementId: $element.attr('id'),
-                        nodeType: type,
-                        positionX: parseInt($element.css("left"), 10),
-                        positionY: parseInt($element.css("top"), 10),
-                        clsName: $element.attr('class').toString(),
-                        label: $element.children()[0].firstChild.innerHTML,
-                        width: $element.outerWidth(),
-                        height: $element.outerHeight()
-                    });
-                } else {
-                    nodes.push({
-                        elementId: $element.attr('id'),
-                        nodeType: $element.attr('class').toString().split(" ")[1],
-                        positionX: parseInt($element.css("left"), 10),
-                        positionY: parseInt($element.css("top"), 10),
-                        clsName: $element.attr('class').toString(),
-                        label: $element.text()
-                    });
-                }
-            });
 
-            var connections = [];
-            $.each(jsPlumb.getConnections(), function (index, connection) {
-                connections.push({
-                    connectionId: connection.id,
-                    sourceUUId: connection.endpoints[0].getUuid(),
-                    targetUUId: connection.endpoints[1].getUuid(),
-                    label: connection.getOverlay("label").getLabel()
+            //check whether the diagram has a start element
+            var elm = $(".start.jtk-node");
+            if(elm.length == 0){
+                alertify.error("The flowchart diagram should have a start element");
+            }else{
+                $(".jtk-node").each(function (index, element) {
+                    totalCount++;
+                    var $element = $(element);
+                    var type = $element.attr('class').toString().split(" ")[1];
+                    if (type == "step" || type == "diamond") {
+                        nodes.push({
+                            elementId: $element.attr('id'),
+                            nodeType: type,
+                            positionX: parseInt($element.css("left"), 10),
+                            positionY: parseInt($element.css("top"), 10),
+                            clsName: $element.attr('class').toString(),
+                            label: $element.children()[0].firstChild.innerHTML,
+                            width: $element.outerWidth(),
+                            height: $element.outerHeight()
+                        });
+                    } else {
+                        nodes.push({
+                            elementId: $element.attr('id'),
+                            nodeType: $element.attr('class').toString().split(" ")[1],
+                            positionX: parseInt($element.css("left"), 10),
+                            positionY: parseInt($element.css("top"), 10),
+                            clsName: $element.attr('class').toString(),
+                            label: $element.text()
+                        });
+                    }
                 });
-            });
 
-            var sourceEps = [];
-            var targetEps = [];
-            var flowchart = {};
-            flowchart.nodes = nodes;
-            flowchart.connections = connections;
-            flowchart.numberOfElements = elementCount;
+                var connections = [];
+                $.each(jsPlumb.getConnections(), function (index, connection) {
+                    connections.push({
+                        connectionId: connection.id,
+                        sourceUUId: connection.endpoints[0].getUuid(),
+                        targetUUId: connection.endpoints[1].getUuid(),
+                        label: connection.getOverlay("label").getLabel()
+                    });
+                });
 
-            $.ajax({
-                url: '/publisher/assets/process/apis/upload_flowchart',
-                type: 'POST',
-                data: {
-                    'processName': $("#pName").val(),
-                    'processVersion': $("#pVersion").val(),
-                    'flowchartJson': JSON.stringify(flowchart)
-                },
-                success: function (response) {
-                    alertify.success("Successfully saved the flowchart.");
-                    $("#flowchartOverviewLink").attr("href", "../process/details/" + response);
-                },
-                error: function () {
-                    alertify.error('Flowchart saving error');
-                }
-            });
+                var sourceEps = [];
+                var targetEps = [];
+                var flowchart = {};
+                flowchart.nodes = nodes;
+                flowchart.connections = connections;
+                flowchart.numberOfElements = totalCount;
+                flowchart.lastElementId = elementCount;
+
+                $.ajax({
+                    url: '/publisher/assets/process/apis/upload_flowchart',
+                    type: 'POST',
+                    data: {
+                        'processName': $("#pName").val(),
+                        'processVersion': $("#pVersion").val(),
+                        'flowchartJson': JSON.stringify(flowchart)
+                    },
+                    success: function (response) {
+                        alertify.success("Successfully saved the flowchart.");
+                        $("#flowchartOverviewLink").attr("href", "../process/details/" + response);
+                    },
+                    error: function () {
+                        alertify.error('Flowchart saving error');
+                    }
+                });
+            }
 
         } else {
             alertify.error('Flowchart content is empty.');

@@ -21,42 +21,42 @@ var processNames = [];
 var processListObj;
 var tagList = [];
 
-window.onload = function(){
+window.onload = function () {
     getProcessList();
 
-    $('#span').click(function() {
+    $('#span').click(function () {
         $("#tag-box").focus()
     });
 
-    $("#tag-box").keyup(function(e) {
+    $("#tag-box").keyup(function (e) {
 
         var tagValue = $("#tag-box").val().trim();
         var duplicate = $.inArray(tagValue, tagList);
 
-        if(duplicate >= 0){
+        if (duplicate >= 0) {
             $("#select2-results__option--highlighted").hide();
             $("#select2-results__option").hide();
             $('#tag-box').val('');
         }
 
-        if(e.which == 13 && tagValue.length>=2) {
+        if (e.which == 13 && tagValue.length >= 2) {
             addNewTag();
             $("#select2-results__option").hide();
             $("#select2-results__option--highlighted").hide();
         }
-        else{
+        else {
             updateTextBox(tagValue);
         }
     });
 
-    $( "#tag-box" ).focusin(function() {
+    $("#tag-box").focusin(function () {
 
         var tagValue = $("#tag-box").val().trim();
         updateTextBox(tagValue);
     });
 
 
-    $("#span").focusout(function(){
+    $("#span").focusout(function () {
         $("#select2-results__option").hide();
         $("#select2-results__option--highlighted").hide();
     });
@@ -405,21 +405,21 @@ function redirectToProcess(element) {
     element.click();
 }
 
-function updateTextBox(tagValue){
+function updateTextBox(tagValue) {
 
-    if(tagValue.length == 0){
+    if (tagValue.length == 0) {
         $("#select2-results__option--highlighted").hide();
         $("#select2-results__option").text("Please enter 2 or more characters");
         $("#select2-results__option").show();
 
 
     }
-    else if(tagValue.length == 1){
+    else if (tagValue.length == 1) {
         $("#select2-results__option--highlighted").hide();
         $("#select2-results__option").text("Please enter 1 or more characters");
         $("#select2-results__option").show();
     }
-    else{
+    else {
         $("#select2-results__option").hide();
         $("#select2-results__option--highlighted").text(tagValue);
         $("#select2-results__option--highlighted").show();
@@ -428,10 +428,10 @@ function updateTextBox(tagValue){
     }
 }
 
-function addNewTag(){
+function addNewTag() {
     var tagValue = $("#tag-box").val().trim();
 
-    if(tagValue) {
+    if (tagValue) {
         tagList.push(tagValue);
         $('#_tags').append($("<option></option>").attr("value", tagValue).text(tagValue));
 
@@ -441,19 +441,19 @@ function addNewTag(){
     }
 }
 
-function removeTag(currentElement){
+function removeTag(currentElement) {
 
     var parent = $(currentElement).parent();
     var tagName = parent.attr("title");
 
-    $('#_tags option').each(function() {
-        if ( $(this).val() == tagName ) {
+    $('#_tags option').each(function () {
+        if ($(this).val() == tagName) {
             $(this).remove();
         }
     })
     $(parent).remove();
 
-    var index = jQuery.inArray( tagName, tagList );
+    var index = jQuery.inArray(tagName, tagList);
     if (index > -1) {
         tagList.splice(index, 1);
     }

@@ -17,15 +17,15 @@
  *
  */
 
-var resources = function(){
+var resources = function () {
     return {
-        js:['flowchart/jquery.jsPlumb-1.4.1-all-min.js','libs/jquery.form.min.js','publisher-utils.js','create_asset.js','jquery-ui.js',
-            'jquery-file-upload/alertify.js','jquery-file-upload/bootstrap-filestyle.js','jquery.cookie.js','common/option_text.js',
-            "tinymce/tinymce.min.js",'tags/tags-init-create-asset.js','notify.min.js','messages.js','pdf.js','pdf.worker.js',
-            'jquery-file-upload/jquery.iframe-transport.js','jquery-file-upload/jquery.fileupload.js',
-            'jquery-file-upload/vendor/jquery.ui.widget.js','view-asset-functions.js','flowchart/view-flowchart.js'],
-        css:['flowchart/jsPlumb-defaults.css','flowchart/jsPlumb-demo.css','bootstrap-select.min.css',
-            'alertify.css','default.css','datepick/smoothness.datepick.css','grid.css',
-            'select2.min.css','jquery-ui.css','flowchart/flowchart.css','font-awesome.css']
+        js: ['flowchart/jquery.jsPlumb-1.4.1-all-min.js', 'libs/jquery.form.min.js', 'publisher-utils.js', 'create_asset.js', 'jquery-ui.js',
+            'jquery-file-upload/alertify.js', 'jquery-file-upload/bootstrap-filestyle.js', 'jquery.cookie.js', 'common/option_text.js',
+            "tinymce/tinymce.min.js", 'tags/tags-init-create-asset.js', 'notify.min.js', 'messages.js', 'pdf.js', 'pdf.worker.js',
+            'jquery-file-upload/jquery.iframe-transport.js', 'jquery-file-upload/jquery.fileupload.js',
+            'jquery-file-upload/vendor/jquery.ui.widget.js', 'view-asset-functions.js', 'flowchart/view-flowchart.js'],
+        css: ['flowchart/jsPlumb-defaults.css', 'flowchart/jsPlumb-demo.css', 'bootstrap-select.min.css',
+            'alertify.css', 'default.css', 'datepick/smoothness.datepick.css', 'grid.css',
+            'select2.min.css', 'jquery-ui.css', 'flowchart/flowchart.css', 'font-awesome.css']
     }
 };
