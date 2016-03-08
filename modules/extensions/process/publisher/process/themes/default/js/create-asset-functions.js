@@ -1,3 +1,22 @@
+/*
+ *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.w   See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+
 var processNames = [];
 var processListObj;
 var tagList = [];
@@ -54,6 +73,7 @@ function showTextEditor(element) {
         $("#bpmnView").hide();
         $("#docView").hide();
         $("#pdfUploader").hide();
+        $("#flowChartView").hide();
 
         tinymce.init({
             selector: "#processContent"
@@ -73,6 +93,7 @@ function associateBPMN(element) {
         $("#docView").hide();
         $("#bpmnView").show();
         $("#pdfUploader").hide();
+        $("#flowChartView").hide();
 
     }
 }
@@ -81,6 +102,7 @@ function associateFlowChart(element) {
     if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
         alertify.error('please fill the required fields.');
     } else {
+        saveProcess(element);
         $('#flow-chart-view-header').text($('#pName').val());
         $("#overviewDiv").hide();
         $("#flowChartView").show();
@@ -102,6 +124,7 @@ function associateDocument(element) {
         $("#processTextView").hide();
         $("#bpmnView").hide();
         $("#docView").show();
+        $("#flowChartView").hide();
     }
 }
 
@@ -114,6 +137,7 @@ function showMain() {
     $("#bpmnView").hide();
     $("#processTextView").hide();
     $("#pdfUploader").hide();
+    $("#flowChartView").hide();
 
 }
 
@@ -375,6 +399,10 @@ function associatePdf(element) {
         $("#docView").hide();
         $("#pdfUploader").show();
     }
+}
+
+function redirectToProcess(element) {
+    element.click();
 }
 
 function updateTextBox(tagValue) {
