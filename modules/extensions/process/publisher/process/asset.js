@@ -83,6 +83,9 @@ asset.server = function(ctx) {
             }, {
                 url: 'upload_flowchart',
                 path: 'upload_flowchart.jag'
+            },{
+                url: 'get_process_flowchart',
+                path: 'get_process_flowchart.jag'
             }]
         }
     }
@@ -123,14 +126,13 @@ asset.renderer = function(ctx) {
                 log.debug(page);
             }
 
-            var flowchartPath = resourcePath.replace("processes", "flowchart");
-            var flowchartString = ps.getFlowchart(flowchartPath);
-            if(flowchartString != "NA"){
+            //var flowchartPath = resourcePath.replace("processes", "flowchart");
+            var flowchartPath = page.assets.tables[8].fields.path.value;
+            if(flowchartPath != "NA"){
                 page.flowchartAvailable = true;
-                page.flowchartString = flowchartString.toString();
+                page.flowchartPath = flowchartPath;
             }else{
                 page.flowchartAvailable = false;
-                page.flowchartString = null;
             }
         }
     };

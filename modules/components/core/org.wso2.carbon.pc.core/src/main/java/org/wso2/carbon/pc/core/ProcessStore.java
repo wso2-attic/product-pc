@@ -162,6 +162,9 @@ public class ProcessStore {
                 Element pdfElement = append(doc, rootElement, "pdf", mns);
                 appendText(doc, pdfElement, "path", mns, "NA");
 
+                Element flowchartElement = append(doc, rootElement, "flowchart", mns);
+                appendText(doc, flowchartElement, "path", mns, "NA");
+
                 String processAssetContent = xmlToString(doc);
                 Resource processAsset = reg.newResource();
                 processAsset.setContent(processAssetContent);
@@ -640,6 +643,7 @@ public class ProcessStore {
                     String processName = processXML.getElementsByTagName("name").item(0).getTextContent();
                     String processVersion = processXML.getElementsByTagName("version").item(0).getTextContent();
                     String pdfPath = processXML.getElementsByTagName("pdf").item(0).getFirstChild().getTextContent();
+                    String flowchartPath = processXML.getElementsByTagName("flowchart").item(0).getFirstChild().getTextContent();
 
                     JSONObject processJSON = new JSONObject();
                     processJSON.put("path", processPath);
@@ -647,6 +651,7 @@ public class ProcessStore {
                     processJSON.put("processname", processName);
                     processJSON.put("processversion", processVersion);
                     processJSON.put("pdfpath", pdfPath);
+                    processJSON.put("flowchartpath", flowchartPath);
                     result.put(processJSON);
                 }
 
@@ -1299,9 +1304,7 @@ public class ProcessStore {
                 String processContent = new String(processContentBytes);
                 Document processXMLContent = stringToXML(processContent);
 
-                Element rootElement = processXMLContent.getDocumentElement();
-                Element flowchartElement = append(processXMLContent, rootElement, "flowchart", mns);
-                appendText(processXMLContent, flowchartElement, "path", mns, flowchartContentPath);
+                processXMLContent.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent(flowchartContentPath);
 
                 String newProcessContent = xmlToString(processXMLContent);
                 processAsset.setContent(newProcessContent);

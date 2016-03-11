@@ -701,7 +701,7 @@ function associateEditorFlowChart(name) {
     $("#processTextView").hide();
 }
 
-function showFlowchartEditor(name, flowchartString) {
+function showFlowchartEditor(name, flowchartPath) {
     $('#flowchart-editor-header').text(name);
     $("#overviewDiv").hide();
     $("#flowChartEditorView").show();
@@ -709,7 +709,20 @@ function showFlowchartEditor(name, flowchartString) {
     $("#docView").hide();
     $("#bpmnView").hide();
     $("#processTextView").hide();
-    _loadEditableFlowChart(flowchartString, '#editor_canvas');
+
+    flowchartPath = "/_system/governance/" + flowchartPath;
+    $.ajax({
+        url: '/publisher/assets/process/apis/get_process_flowchart',
+        type: 'GET',
+        dataType: 'text',
+        data: {'flowchartPath':flowchartPath},
+        success: function (data) {
+            _loadEditableFlowChart(data, '#editor_canvas');
+        },
+        error: function () {
+            alertify.error('Error retrieving flowchart');
+        }
+    });
 }
 
 function redirectTo(element) {

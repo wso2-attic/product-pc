@@ -37,7 +37,7 @@
                 {{#if flowchartAvailable}}
                     <div id="sfdiv">
                         <button id="showFlowchartButton" class="btn btn-primary"
-                                onclick="showFlowchartEditor('{{assets.tables.[0].fields.name.value}}', '{{flowchartString}}')">Edit Flowchart</button>
+                                onclick="showFlowchartEditor('{{assets.tables.[0].fields.name.value}}', '{{flowchartPath}}')">Edit Flowchart</button>
                     </div>
                 {{else}}
                     <div id="aFdiv"><button id="addFlowchartButton" class="btn btn-primary" onclick="associateEditorFlowChart('{{assets.tables.[0].fields.name.value}}')">Associate Flowchart</button></div>
