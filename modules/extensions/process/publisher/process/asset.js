@@ -83,6 +83,12 @@ asset.server = function(ctx) {
             }, {
                 url: 'upload_flowchart',
                 path: 'upload_flowchart.jag'
+            },{
+                url: 'upload_bpmnEditorDiagram',
+                path: 'upload_bpmnEditorDiagram.jag'
+            },{
+                url: 'get_bpmnEditorDiagram',
+                path: 'get_bpmnEditorDiagram.jag'
             }]
         }
     }
@@ -110,6 +116,11 @@ asset.renderer = function(ctx) {
             } else {
                 page.bpmnAvaliable = true;
             }
+            if (page.assets.tables[8].fields.bpmnDesignPath.value == "NA") {
+                page.bpmnDesignAvailable = false;
+            } else {
+                page.bpmnDesignAvailable = true;
+            }
 
             importPackage(org.wso2.carbon.pc.core);
             var ps = new ProcessStore();
@@ -132,6 +143,7 @@ asset.renderer = function(ctx) {
                 page.flowchartAvailable = false;
                 page.flowchartString = null;
             }
+
         }
     };
 };

@@ -712,6 +712,33 @@ function showFlowchartEditor(name, flowchartString) {
     _loadEditableFlowChart(flowchartString, '#editor_canvas');
 }
 
+function showbpmnDesign(name, bpmnDesignString) {
+   /* $('#flowchart-editor-header').text(name);*/
+    $("#overviewDiv").hide();
+    $("#bpmnEditorView").show();
+    $("#pdfUploader").hide();
+    $("#docView").hide();
+    $("#bpmnView").hide();
+    $("#processTextView").hide();
+    $("#flowChartEditorView").hide();
+    console.log(bpmnDesignString);
+   // uploadBPMN(bpmnDesignString);
+
+}
+
+function associatebpmnDesignEditor(name) {
+  /*  $('#flowchart-editor-header').text(name);*/
+    $("#overviewDiv").hide();
+    $("#flowChartEditorView").hide();
+    $("#pdfUploader").hide();
+    $("#docView").hide();
+    $("#bpmnView").hide();
+    $("#processTextView").hide();
+    $("#bpmnEditorView").show();
+}
+
+
 function redirectTo(element) {
     element.click();
 }
+

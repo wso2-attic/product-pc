@@ -107,7 +107,11 @@
                 <name>Banner</name>
             </field>
         </table>
-
+        <table name="bpmnDesign">
+             <field type="text" required="true">
+                   <name>bpmnDesignPath</name>
+             </field>
+        </table>
     </content>
 
 </artifactType>
