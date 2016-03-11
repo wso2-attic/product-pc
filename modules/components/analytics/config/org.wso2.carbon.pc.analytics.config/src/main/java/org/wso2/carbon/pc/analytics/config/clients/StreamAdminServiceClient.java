@@ -103,7 +103,7 @@ public class StreamAdminServiceClient {
 	 * }
 	 */
 
-	public void createEventStream() {
+	public boolean createEventStream() {
 		//String streamId=streamName+":"+streamVersion;
 		/*GetAllEventStreamDefinitionDtoResponse gaesdr = null;
 		try {
@@ -139,11 +139,12 @@ public class StreamAdminServiceClient {
 			addEventStreamDefinitionAsStringResponse = serviceAdminStub
 					.addEventStreamDefinitionAsString(addEventStreamDefinitionAsString);
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		}
 		System.out.println("Stream creation success:"
 				+ addEventStreamDefinitionAsStringResponse.get_return());
+		return true;
 	}
 
 }

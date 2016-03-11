@@ -884,9 +884,8 @@ public class ProcessStore {
 	}
 
 	public String getProcessVariablesList(String resourcePath) {
-		//String resourceString = "";
+		String resourceString = "";
 		//Element variableElementsArray[] = null;
-		JSONArray variablesJobArray = new JSONArray();
 		try {
 			RegistryService registryService =
 					ProcessCenterServerHolder.getInstance().getRegistryService();
@@ -903,36 +902,59 @@ public class ProcessStore {
 				Document document =
 						builder.parse(new InputSource(new StringReader(resourceContent)));
 
+				JSONArray variableArray = new JSONArray();
 
+				conObj.put("processVariables", variableArray);
 
-				//conObj.put("variable", variablesArray);
+				NodeList processVariableElements =
+						((Element) document.getFirstChild()).getElementsByTagName("process_variable");
+
+				if (processVariableElements.getLength() != 0) {
+					for (int i = 0; i < processVariableElements.getLength(); i++) {
+						Element processVariableElement = (Element) processVariableElements.item(i);
+						String processVariableName =
+								processVariableElement.getElementsByTagName("name").item(0)
+										.getTextContent();
+						String processVariableType =
+								processVariableElement.getElementsByTagName("type").item(0)
+										.getTextContent();
+
+						JSONObject processVariable = new JSONObject();
+						processVariable.put("name", processVariableName);
+						processVariable.put("type", processVariableType);
+						variableArray.put(processVariable);
+					}
+				}
+				resourceString = conObj.toString();
+
+				/*//conObj.put("variable", variablesArray);
 
 				NodeList variableElements =
-						((Element) document.getFirstChild()).getElementsByTagName("variable");
+						((Element) document.getFirstChild()).getElementsByTagName("process_variable");
 				//variableElementsArray= new Element[variableElements.getLength()];
 
 				if (variableElements.getLength() != 0) {
 					for (int i = 0; i < variableElements.getLength(); i++) {
 						Element variableElement = (Element) variableElements.item(i);
-						String variableName=variableElement.getAttribute("name");
-						String variableType=variableElement.getAttribute("type");
+						String variableName=variableElement.getFirstChild().getNodeValue(); //getAttribute("name");
+						String variableType=variableElement.getLastChild().getNodeValue();//getAttribute("type");
 
 						JSONObject processVariabeJob = new JSONObject();
 						processVariabeJob.put("name", variableName);
-						processVariabeJob.put("path", variableType);
+						processVariabeJob.put("type", variableType);
 						//processVariabeJob.put("id", subprocessId);
 						//processVariabeJob.put("version", subprocessVersion);
 						variablesJobArray.put(processVariabeJob);
 
 						//variableElementsArray[i]= (Element) variableElements.item(i);
 					}
-				}
+				}*/
 
 			}
 		} catch (Exception e) {
 			log.error("Failed to get the process variables list");
 		}
-		return variablesJobArray.toString();
+		return resourceString;
 	}
 
 

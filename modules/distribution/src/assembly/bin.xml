@@ -499,11 +499,11 @@
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>
-        <!--<file>-->
-            <!--<source>src/repository/conf/pc.xml</source>-->
-            <!--<outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>-->
-            <!--<filtered>true</filtered>-->
-        <!--</file>-->
+        <file>
+            <source>src/repository/conf/pc.xml</source>
+            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
         <!--file>
             <source>src/repository/conf/log4j.properties</source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>

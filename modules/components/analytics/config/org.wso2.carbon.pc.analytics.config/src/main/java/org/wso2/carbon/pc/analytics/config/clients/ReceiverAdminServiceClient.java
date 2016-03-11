@@ -48,7 +48,7 @@ public class ReceiverAdminServiceClient {
 
 	}
 
-	public void deployEventReceiverConfiguration() {
+	public boolean deployEventReceiverConfiguration() {
 		
 		/*try {
 			eventReceiverAdminServiceStub=new EventReceiverAdminServiceStub();
@@ -143,8 +143,9 @@ public class ReceiverAdminServiceClient {
 		try {
 			eventReceiverAdminServiceStub.deployWso2EventReceiverConfiguration(receiverName,streamId,eventAdapterType,null,null,null,props,false,"");
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 	
 }

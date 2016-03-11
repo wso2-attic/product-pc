@@ -117,6 +117,11 @@ asset.renderer = function(ctx) {
                 page.bpmnAvaliable = true;
             }
 
+            var processName=page.assets.tables[0].fields.name.value;
+            var processVersion=page.assets.tables[0].fields.version.value;
+            log.info("Process Name:" + page.assets.tables[0].fields.name.value);
+            log.info("Process Version:" + page.assets.tables[0].fields.version.value);
+
             importPackage(org.wso2.carbon.pc.core);
             var ps = new ProcessStore();
             var conData = ps.getSucessorPredecessorSubprocessList(resourcePath);
@@ -128,6 +133,39 @@ asset.renderer = function(ctx) {
             if(log.isDebugEnabled()){
                 log.debug(page);
             }
+
+            importPackage(org.wso2.carbon.pc.analytics.core.utils);
+            //var au=new AnalyticsUtils();
+            page.DASAnalyticsEnabled = AnalyticsUtils.isDASAnalyticsActivated();
+            log.info("CZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ\n");
+
+            log.info("string list:"+conData);
+            log.info("json object:"+conObject);
+            importPackage(org.wso2.carbon.pc.analytics.config.utils);
+            page.DASAnalyticsConfigured=DASConfigurationUtils.isDASAnalyticsConfigured(processName,processVersion);
+            //log.info(page);
+
+            var processVariablesJObArrStr;
+            if(page.DASAnalyticsConfigured) {
+                processVariablesJObArrStr = ps.getProcessVariablesList(resourcePath);
+
+                var processVariablesJObArr = JSON.parse(processVariablesJObArrStr);
+                page.processVariableList = processVariablesJObArr;
+
+                log.info("arrya sring:" + processVariablesJObArrStr);
+                log.info("Array:" + processVariablesJObArr);
+                log.info("List:" + page.processVariableList);
+                log.info("It is:" + page.processVariableList[1]);
+
+                for (var key in page.processVariableList) {
+                    log.info("PPP");
+                    if (page.processVariableList.hasOwnProperty(key)) {
+                        log.info(key + " -> " + page.processVariableList["name"]);
+                    }
+                }
+            }
+
+            log.info(page);
         }
     };
 };

@@ -7,7 +7,7 @@
           <property key="Bundle-Description" value="WSO2 Process Center" />
           <property key="Bundle-Vendor" value="WSO2" />
           <property key="Bundle-DocURL" value="http://wso2.com" />
-          <property key="Export-Package" value="org.wso2.carbon.pc.analytics.core;version=1.0.0-SNAPSHOT" />
+          <property key="Export-Package" value="org.wso2.carbon.pc.analytics.core.utils;version=1.0.0-SNAPSHOT" />
           <property key="Import-Package" value="*;resolution:=optional" />
           <property key="Bundle-Name" value="WSO2 PC Analytics - Core" />
         </additionalProperties>

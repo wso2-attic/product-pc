@@ -37,7 +37,7 @@ public class DASConfigClient {
 
     }
 
-    public void configDAS(String processVariableDetails) {
+    public boolean configDAS(String processVariableDetails) {
 
         JSONObject processInfo = null;
         try {
@@ -103,15 +103,27 @@ public class DASConfigClient {
             streamAdminServiceClient = new StreamAdminServiceClient(backEndUrl, session,streamName,stremaVersion,streamId,streamNickName,streamDescription, processVariablesJObArr);
         } catch (AxisFault axisFault) {
             axisFault.printStackTrace();
+            return false;
         }
         /*System.out.println("getEventStreamNames::"
 				+ streamAdminServiceClient.getGG());*/
-		streamAdminServiceClient.createEventStream();
+		boolean successCreateStream=streamAdminServiceClient.createEventStream();
+
+        if(!successCreateStream){
+            try {
+                login.logOut();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            } catch (LogoutAuthenticationExceptionException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
 
         //create event receiver
         ReceiverAdminServiceClient receiverAdminServiceClient= null;
         receiverAdminServiceClient = new ReceiverAdminServiceClient(backEndUrl, session,receiverName,streamId,"wso2event");
-        receiverAdminServiceClient.deployEventReceiverConfiguration();
+        boolean receiverConfigSuccess=receiverAdminServiceClient.deployEventReceiverConfiguration();
         //receiverAdminServiceClient.deployEventReceiverConfiguration(eventReceiverName, streamNameWithVersion, eventAdapterType);
         //EventReceiverAdminServiceStub eventReceiverAdminServiceStub=new EventReceiverAdminServiceStub(backEndUrl);
 
@@ -123,5 +135,6 @@ public class DASConfigClient {
         } catch (LogoutAuthenticationExceptionException e) {
             e.printStackTrace();
         }
+        return receiverConfigSuccess;
     }
 }

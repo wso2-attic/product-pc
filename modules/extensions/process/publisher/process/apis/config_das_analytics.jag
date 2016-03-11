@@ -1,5 +1,6 @@
 <%
 importPackage(org.wso2.carbon.pc.analytics.config);
+importPackage(org.wso2.carbon.pc.analytics.config.utils);
 
 var log = new Log();
 if(log.isDebugEnabled()){
@@ -9,6 +10,17 @@ if(log.isDebugEnabled()){
 
 var dasConfigClient=new DASConfigClient();
 var dasConfigData=String(request.getParameter("dasConfigData"));
+var processName=String(request.getParameter("processName"));
+var processVersion=String(request.getParameter("processVersion"));
 
-dasConfigClient.configDAS(dasConfigData);
+
+
+var configurationSuccess= dasConfigClient.configDAS(dasConfigData);
+
+if(configurationSuccess){
+    DASConfigurationUtils.setPropertyDASAnalyticsConfigured(processName,processVersion);
+}
+
+print(configurationSuccess);
+
 %>

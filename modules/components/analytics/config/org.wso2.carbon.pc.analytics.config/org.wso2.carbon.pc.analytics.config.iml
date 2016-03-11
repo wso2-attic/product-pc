@@ -7,7 +7,7 @@
           <property key="Bundle-Description" value="This feature contains the core bundles required for PC to configure the DAS- 1) Create Event Stream 2) Create Event Reciever" />
           <property key="Bundle-Vendor" value="WSO2" />
           <property key="Bundle-DocURL" value="http://wso2.com" />
-          <property key="Export-Package" value="org.wso2.carbon.pc.analytics.config;version=1.0.0-SNAPSHOT" />
+          <property key="Export-Package" value="org.wso2.carbon.pc.analytics.config,org.wso2.carbon.pc.analytics.config.utils;version=1.0.0-SNAPSHOT" />
           <property key="Import-Package" value="*;resolution:=optional" />
           <property key="Bundle-Name" value="WSO2 Carbon - PC Analytics - DAS Configuration" />
         </additionalProperties>
