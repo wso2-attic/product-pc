@@ -155,7 +155,7 @@ function saveProcess(currentElement) {
                 $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response);
                 $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response);
                 $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response);
-
+                $("#docOverviewLink").attr("href", "../../assets/process/details/" + response);
 
                 if ($(currentElement).attr('id') == 'saveProcessBtn') {
                     window.location = "../../assets/process/details/" + response;

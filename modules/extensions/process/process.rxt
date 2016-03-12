@@ -82,16 +82,16 @@
         </table>
         <table name="Document">
             <field type="text" required="true">
-                <name>Name</name>
+                <name>documentname</name>
             </field>
             <field type="text" required="false">
-                <name>Summary</name>
+                <name>summary</name>
             </field>
             <field type="text" readonly="true">
-                <name>Url</name>
+                <name>url</name>
             </field>
             <field type="text" readonly="true">
-                <name>Path</name>
+                <name>path</name>
             </field>
         </table>
         <table name="PDF">
