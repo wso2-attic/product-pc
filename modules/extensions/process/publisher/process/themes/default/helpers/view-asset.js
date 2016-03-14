@@ -27,7 +27,7 @@ var resources = function () {
             'bpmnEditor/drawArrows.js','bpmnEditor/drawNodes.js', 'bpmnEditor/processEditor.js','bpmnEditor/constants.js',
             'bpmnEditor/processEditorFunctions.js','bpmnEditor/mainSVG.js', 'bpmnEditor/svgEventHandler.js',
             'bpmnEditor/activityEventHandler.js', 'bpmnEditor/arrowEventHandler.js', 'bpmnEditor/save.js',
-            'bpmnEditor/removeEvents.js','jquery-file-upload/vendor/jquery.ui.widget.js', 'view-asset-functions.js', 'flowchart/view-flowchart.js', 'FileSaver.min.js'],
+            'bpmnEditor/removeEvents.js','FileSaver.min.js'],
 
         css: ['flowchart/jsPlumb-defaults.css', 'flowchart/jsPlumb-demo.css', 'bootstrap-select.min.css',
             'alertify.css', 'default.css', 'datepick/smoothness.datepick.css', 'grid.css',
