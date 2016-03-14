@@ -1,811 +1,56 @@
-<script>
-    var processNames = [];
-    var processListObj;
-
-
-
-    function getMainProcess(){
-        var mainProcess = $('#view-header').text() + "-" + $('#process-version').text();
-        return mainProcess;
-    }
-
-    function showBPMN() {
-
-        $("#overviewDiv").hide();
-        $("#processTextContainer").hide();
-        $("#processTextEditDiv").hide();
-        $("#bpmnViewDiv").show();
-        $("#bpmnEditDiv").hide();
-
-        $.ajax({
-            url: 'https://localhost:9443/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/{{assets.tables.[0].fields.name.value}}/{{assets.tables.[0].fields.version.value}}',
-            type: 'GET',
-            success: function (response) {
-                var bpmnObject = JSON.parse(response);
-                $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
-            },
-            error: function () {
-                alertify.error('BPMN diagram showing error');
-            }
-        });
-
-    }
-
-    function viewText() {
-        loadProcessText();
-
-        $("#overviewDiv").hide();
-        $("#processTextContainer").show();
-        $("#processTextEditDiv").hide();
-        $("#bpmnViewDiv").hide();
-        $("#bpmnEditDiv").hide();
-    }
-
-    function editText() {
-        $("#processContent").val($("#processTextDiv").html());
-        showTextEditor();
-    }
-
-    function loadProcessText() {
-        var ppath = 'apis/get_process_text?process_text_path={{assets.tables.[1].fields.processtextpath.value}}';
-
-        $.ajax({
-            url: 'https://localhost:9443/publisher/assets/process/apis/get_process_text?process_text_path=/processText/{{assets.tables.[0].fields.name.value}}/{{assets.tables.[0].fields.version.value}}',
-            type: 'GET',
-            success: function (response) {
-                $("#processTextDiv").html(response);
-            },
-            error: function () {
-                alertify.error('Text editor error');
-            }
-        });
-    }
-
-    function saveProcessText(e) {
-        var textContent = tinyMCE.get('processContent').getContent();
-        if (textContent == "") {
-            if($(e).attr('id') == 'processTextSaveBtn'){
-                alertify.error('Process content is empty.');
-            }
-        } else {
-            // save the process
-
-            $.ajax({
-                url: 'https://localhost:9443/publisher/assets/process/apis/save_process_text',
-                type: 'POST',
-                data: { 'processName': $("#textProcessName").val(), 'processVersion' : $("#textProcessVersion").val(), 'processText' : textContent},
-                success: function (response) {
-                    if($(e).attr('id') == 'processTextSaveBtn'){
-                        alertify.success("Successfully saved the process content.");
-                    }
-                    $("#viewTextButton").show();
-                    $("#addTextButton").hide();
-                },
-                error: function () {
-                    alertify.error('Process text error');
-                }
-            });
-        }
-    }
-
-    function showTextEditor() {
-        $("#overviewDiv").hide();
-        $("#processTextContainer").hide();
-        $("#processTextEditDiv").show();
-        $("#bpmnViewDiv").hide();
-        $("#analyticsConfigDiv").hide();
-        $("#bpmnEditDiv").hide();
-
-        tinymce.init({
-            selector: "#processContent"
-        });
-    }
-
-    function showBPMNUploader() {
-        $("#overviewDiv").hide();
-        $("#processTextContainer").hide();
-        $("#processTextEditDiv").hide();
-        $("#bpmnViewDiv").hide();
-        $("#analyticsConfigDiv").hide();
-        $("#bpmnEditDiv").show();
-    }
-
-    function showAnalyticsConfigurer() {
-        $("#overviewDiv").hide();
-        $("#processTextContainer").hide();
-        $("#processTextEditDiv").hide();
-        $("#bpmnViewDiv").hide();
-        $("#analyticsConfigDiv").show();
-        $('#eventStreamName').val($('#view-header').text()+"_"+$('#process-version').text()+"_process_stream");
-        $('#eventStreamName').attr("readonly","true");
-
-        $('#eventStreamVersion').val("1.0.0");
-        $('#eventStreamVersion').attr("readonly","true");
-
-        $('#eventStreamDescription').val("This is the event stream generated to configure process analytics with DAS, for the process"+$('#view-header').text()+"_"+$('#process-version').text());
-        $('#eventStreamDescription').attr("readonly","true");
-
-        $('#eventReceiverName').val($('#view-header').text()+"_"+$('#process-version').text()+"_process_receiver");
-        $('#eventReceiverName').attr("readonly","true");
-
-        $('#eventStreamNickName').val($('#view-header').text()+"_"+$('#process-version').text()+"_process_stream"); //same as eventStreamName
-        $('#eventStreamNickName').attr("readonly","true");
-
-
-    }
-
-    function showOverview(e) {
-        if($(e).attr('id') == 'processTextOverviewBtn'){
-            saveProcessText(e);
-        }
-        $("#overviewDiv").show();
-        $("#processTextContainer").hide();
-        $("#processTextEditDiv").hide();
-        $("#bpmnViewDiv").hide();
-        $("#bpmnEditDiv").hide();
-        $("#analyticsConfigDiv").hide();
-    }
-
-    function editProcessOwner(e){
-        if($(e).text() == ''){
-            alertify.error('Process owner field is empty.');
-        }else{
-            $('#processOwnerUpdateBtn').show();
-        }
-    }
-
-    function subProcessNamesAutoComplete(){
-        $(".subprocess_Name").autocomplete({
-            source: processNames
-        });
-    }
-
-    function successorNameAutoComplete(){
-        $(".successor_Name").autocomplete({
-            source: processNames
-        });
-    }
-
-    function predecessorNameAutoComplete(){
-        $(".predecessor_Name").autocomplete({
-            source: processNames
-        });
-    }
-
-    function getProcessList(){
-        $("analyticsConfigDiv").hide();
-        $.ajax({
-            url: '/publisher/assets/process/apis/get_process_list',
-            type: 'GET',
-            success: function (response) {
-                processListObj = JSON.parse(response);
-                for(var i = 0 ; i < processListObj.length ; i++){
-                    processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
-                }
-            },
-            error: function () {
-                alertify.error('Process list returning error');
-            }
-        });
-    }
-
-    function isProcessNotAvailableInList(processName){
-        for(var i = 0 ; i < processNames.length ; i++){
-            if(processNames[i] == processName){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    function readUpdatedSubprocess(currentObj){
-        var subprocessInput = $(currentObj).parent().closest("tr").find("input").val();
-
-        if(subprocessInput == ''){
-            alertify.error('Subprocess field is empty.');
-        }else if(isProcessNotAvailableInList(subprocessInput)){
-            alertify.warning('Please select a process from the dropdown list.');
-        }else if(subprocessInput == getMainProcess()){
-            alertify.warning('You cannot assign the process name as its subprocess.');
-        }else{
-            $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='subprocess_Name' class='subprocess_Name'>"+subprocessInput+"</span>");
-            $(currentObj).hide();
-            var subprocessPath, subprocessId;
-            for(var i = 0 ; i < processListObj.length ; i++){
-                if(processListObj[i].processname == subprocessInput.split("-")[0] &&
-                        processListObj[i].processversion == subprocessInput.split("-")[1]){
-                    subprocessPath = processListObj[i].path;
-                    subprocessId = processListObj[i].processid;
-                    break;
-                }
-            }
-
-            var subprocessInfo = {
-                name: subprocessInput.split("-")[0],
-                path: subprocessPath,
-                id: subprocessId
-            };
-
-            var subProcessDetails = {
-                'processName': $('#view-header').text(),
-                'processVersion' : $('#process-version').text(),
-                'subprocess' : subprocessInfo
-            };
-
-            $.ajax({
-                url: '/publisher/assets/process/apis/update_subprocess',
-                type: 'POST',
-                data: { 'subprocessDetails': JSON.stringify(subProcessDetails) },
-                success: function (response) {
-                    alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
-                },
-                error: function () {
-                    alertify.error('Subprocess updating error');
-                }
-            });
-        }
-    }
-
-    function readUpdatedSuccessor(currentObj){
-        var successorInput = $(currentObj).parent().closest("tr").find("input").val();
-
-        if(successorInput == ''){
-            alertify.error('Successor field is empty.');
-        }else if(isProcessNotAvailableInList(successorInput)){
-            alertify.warning('Please select a process from the dropdown list.');
-        }else if(successorInput == getMainProcess()){
-            alertify.warning('You cannot assign the process name as its successor.');
-        }else{
-            $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='successor_Name' class='successor_Name'>"+successorInput+"</span>");
-            $(currentObj).hide();
-            var successorPath, successorId;
-            for(var i = 0 ; i < processListObj.length ; i++){
-                if(processListObj[i].processname == successorInput.split("-")[0] &&
-                        processListObj[i].processversion == successorInput.split("-")[1]){
-                    successorPath = processListObj[i].path;
-                    successorId = processListObj[i].processid;
-                    break;
-                }
-            }
-
-            var successorInfo = {
-                name: successorInput.split("-")[0],
-                path: successorPath,
-                id: successorId
-            };
-
-            var successorDetails = {
-                'processName': $('#view-header').text(),
-                'processVersion' : $('#process-version').text(),
-                'successor' : successorInfo
-            };
-
-            $.ajax({
-                url: '/publisher/assets/process/apis/update_successor',
-                type: 'POST',
-                data: { 'successorDetails': JSON.stringify(successorDetails) },
-                success: function (response) {
-                    alertify.success('Process ' + successorInput + ' successfully added to the successor list.');
-                },
-                error: function () {
-                    alertify.error('Successor updating error');
-                }
-            });
-        }
-    }
-
-    function readUpdatedPredecessor(currentObj){
-        var predecessorInput = $(currentObj).parent().closest("tr").find("input").val();
-
-        if(predecessorInput == ''){
-            alertify.error('Predecessor field is empty.');
-        }else if(isProcessNotAvailableInList(predecessorInput)){
-            alertify.warning('Please select a process from the dropdown list.');
-        }else if(predecessorInput == getMainProcess()){
-            alertify.warning('You cannot assign the process name as its predecessor.');
-        }else{
-            $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='predecessor_Name' class='predecessor_Name'>"+predecessorInput+"</span>");
-            $(currentObj).hide();
-            var predecessorPath, predecessorId;
-            for(var i = 0 ; i < processListObj.length ; i++){
-                if(processListObj[i].processname == predecessorInput.split("-")[0] &&
-                        processListObj[i].processversion == predecessorInput.split("-")[1]){
-                    predecessorPath = processListObj[i].path;
-                    predecessorId = processListObj[i].processid;
-                    break;
-                }
-            }
-
-            var predecessorInfo = {
-                name: predecessorInput.split("-")[0],
-                path: predecessorPath,
-                id: predecessorId
-            };
-
-            var predecessorDetails = {
-                'processName': $('#view-header').text(),
-                'processVersion' : $('#process-version').text(),
-                'predecessor' : predecessorInfo
-            };
-
-            $.ajax({
-                url: '/publisher/assets/process/apis/update_predecessor',
-                type: 'POST',
-                data: { 'predecessorDetails': JSON.stringify(predecessorDetails) },
-                success: function (response) {
-                    alertify.success('Process ' + predecessorInput + ' successfully added to the predecessor list.');
-                },
-                error: function () {
-                    alertify.error('Predecessor updating error');
-                }
-            });
-        }
-    }
-
-    function deleteSubprocess(element){
-        var deleteSubInput = $(element).parent().closest("tr").find("span").text();
-        if(! isProcessNotAvailableInList(deleteSubInput)){
-            var deleteSubPath, deleteSubId;
-            for(var i = 0 ; i < processListObj.length ; i++){
-                if(processListObj[i].processname == deleteSubInput.split("-")[0] &&
-                        processListObj[i].processversion == deleteSubInput.split("-")[1]){
-                    deleteSubPath = processListObj[i].path;
-                    deleteSubId = processListObj[i].processid;
-                    break;
-                }
-            }
-
-            var deleteSubInfo = {
-                name: deleteSubInput.split("-")[0],
-                path: deleteSubPath,
-                id: deleteSubId
-            };
-
-            var deleteSubObj = {
-                'processName': $('#view-header').text(),
-                'processVersion' : $('#process-version').text(),
-                'deleteSubprocess' : deleteSubInfo
-            };
-
-            $.ajax({
-                url: '/publisher/assets/process/apis/delete_subprocess',
-                type: 'POST',
-                data: { 'deleteSubprocessDetails': JSON.stringify(deleteSubObj) },
-                success: function (response) {
-                    alertify.success('Successfully deleted ' + deleteSubInput + ' from the subprocess list.');
-                },
-                error: function () {
-                    alertify.error('Subprocess deleting error');
-                }
-            });
-        }
-    }
-
-    function deleteSuccessor(element){
-        var deleteSuccessorInput = $(element).parent().closest("tr").find("span").text();
-        if(! isProcessNotAvailableInList(deleteSuccessorInput)){
-            var deleteSuccessorPath, deleteSuccessorId;
-            for(var i = 0 ; i < processListObj.length ; i++){
-                if(processListObj[i].processname == deleteSuccessorInput.split("-")[0] &&
-                        processListObj[i].processversion == deleteSuccessorInput.split("-")[1]){
-                    deleteSuccessorPath = processListObj[i].path;
-                    deleteSuccessorId = processListObj[i].processid;
-                    break;
-                }
-            }
-
-            var deleteSuccessorInfo = {
-                name: deleteSuccessorInput.split("-")[0],
-                path: deleteSuccessorPath,
-                id: deleteSuccessorId
-            };
-
-            var deleteSuccessorObj = {
-                'processName': $('#view-header').text(),
-                'processVersion' : $('#process-version').text(),
-                'deleteSuccessor' : deleteSuccessorInfo
-            };
-
-            $.ajax({
-                url: '/publisher/assets/process/apis/delete_successor',
-                type: 'POST',
-                data: { 'deleteSuccessorDetails': JSON.stringify(deleteSuccessorObj) },
-                success: function (response) {
-                    alertify.success('Successfully deleted ' + deleteSuccessorInput + ' from the successor list.');
-                },
-                error: function () {
-                    alertify.error('Successor deleting error');
-                }
-            });
-        }
-    }
-
-    function deletePredecessor(element){
-        var deletePredecessorInput = $(element).parent().closest("tr").find("span").text();
-        if(! isProcessNotAvailableInList(deletePredecessorInput)){
-            var deletePredecessorPath, deletePredecessorId;
-            for(var i = 0 ; i < processListObj.length ; i++){
-                if(processListObj[i].processname == deletePredecessorInput.split("-")[0] &&
-                        processListObj[i].processversion == deletePredecessorInput.split("-")[1]){
-                    deletePredecessorPath = processListObj[i].path;
-                    deletePredecessorId = processListObj[i].processid;
-                    break;
-                }
-            }
-
-            var deletePredecessorInfo = {
-                name: deletePredecessorInput.split("-")[0],
-                path: deletePredecessorPath,
-                id: deletePredecessorId
-            };
-
-            var deletePredecessorObj = {
-                'processName': $('#view-header').text(),
-                'processVersion' : $('#process-version').text(),
-                'deletePredecessor' : deletePredecessorInfo
-            };
-
-            $.ajax({
-                url: '/publisher/assets/process/apis/delete_Predecessor',
-                type: 'POST',
-                data: { 'deletePredecessorDetails': JSON.stringify(deletePredecessorObj) },
-                success: function (response) {
-                    alertify.success('Successfully deleted ' + deletePredecessorInput + ' from the predecessor list.');
-                },
-                error: function () {
-                    alertify.error('Predecessor deleting error');
-                }
-            });
-        }
-    }
-
-    function updateProcessOwner(element){
-        var processOwner = $(element).parent().closest("tr").find("td:eq(1)").text();
-        if(processOwner == ''){
-            alertify.error('Process owner field is empty.');
-        }else{
-            var ownerDetails = {
-                'processName': $('#view-header').text(),
-                'processVersion' : $('#process-version').text(),
-                'processOwner' : processOwner
-            };
-
-            $.ajax({
-                url: '/publisher/assets/process/apis/update_owner',
-                type: 'POST',
-                data: { 'ownerDetails': JSON.stringify(ownerDetails) },
-                success: function (response) {
-                    $(element).hide();
-                    alertify.success('Successfully updated the Process owner name.');
-                },
-                error: function () {
-                    alertify.error('Process owner updating error');
-                }
-            });
-        }
-    }
-
-    function isInputFieldEmpty(tableName){
-        var isFieldEmpty = false;
-        $('#table_' + tableName + ' tbody tr').each(function(){
-            if($(this).find('td:eq(0) input').val() == ''){
-                isFieldEmpty = true;
-            }
-        });
-        return isFieldEmpty;
-    }
-
-    function addUnboundedRow(element){
-        var tableName = $(element).attr('data-name');
-        var table = $('#table_'+tableName);
-
-        if(! isInputFieldEmpty(tableName)) {
-            var referenceRow = $('#table_reference_' + tableName);
-            var newRow = referenceRow.clone().removeAttr('id');
-            $('input[type="text"]', newRow).val('');
-            table.show().append(newRow);
-        }else{
-            alertify.error('Please fill the empty ' + tableName + ' field.');
-        }
-    }
-
-    function addProcessVariableRow(tableID) {
-
-        var table = document.getElementById(tableID);
-
-        var rowCount = table.rows.length;
-        var row = table.insertRow(rowCount);
-
-        var colCount =3;// table.rows[0].cells.length;
-
-
-        row.innerHTML=
-            //'<div style="width:300px; display:table">'+
-                '<td><input type="checkbox" name="chk"/></td>'+
-
-                '<td><input type="text" name="txt" style="display:table-cell; width:100%"/></td>'+
-                '<td>'+
-                '<select name="country" style="display:table-cell; width:100%">'+
-                '<option value="int">int</option>'+
-                '<option value="string">string</option>'+
-                '<option value="float">float</option>'+
-                '<option value="boolean">boolean</option>'+
-                '</select>'+
-                '</td>';//+
-        // '</div>';
-
-
-        /* for (var i = 0; i < colCount; i++) {
-
-             var newcell = row.insertCell(i);
-
-             newcell.innerHTML = table.rows[1].cells[i].innerHTML;
-             console.log(newcell.childNodes[0].type);
-             //alert(newcell.childNodes);
-             switch (newcell.childNodes[0].type) {
-                 case "text":
-                     newcell.childNodes[0].value = "";
-                     break;
-                 case "checkbox":
-                     newcell.childNodes[0].checked = false;
-                     break;
-                 case "select-one":
-                     newcell.childNodes[0].selectedIndex = 0;
-                     break;
-             }
-         }*/
-    }
-
-    function deleteProcessVariableRow(tableID) {
-        try {
-            var table = document.getElementById(tableID);
-            var rowCount = table.rows.length;
-
-            for (var i = 0; i < rowCount; i++) {
-                var row = table.rows[i];
-                var chkbox = row.cells[0].childNodes[0];
-                if (null != chkbox && true == chkbox.checked) {
-                    if (rowCount <= 1) {
-                        alert("No rows to delete.");
-                        break;
-                    }
-                    //if (rowCount > 1) {
-                    table.deleteRow(i);
-
-                    rowCount--;
-                    i--;
-                }
-
-            }
-
-        } catch (e) {
-            alert(e);
-        }
-    }
-    var processVariablesInfo={};
-    var processVariables={};
-    var processVariablesObjsArr=[];
-
-
-    function saveProcessVariables(tableID){
-        var table=document.getElementById(tableID);
-        var rowCount=table.rows.length;
-
-        if (rowCount <= 1) {
-            //alert("No rows to save.");
-            alertify.error("No Process Variable To Config..!")
-            return "ERROR";
-        }
-
-
-
-        var processName= $('#view-header').text();
-        var processVersion=$('#process-version').text();
-        processVariablesInfo["processName"]=processName;
-        processVariablesInfo["processVersion"]=processVersion;
-
-
-        for (var i = 1; i < rowCount; i++) {
-            var item={};
-            var row = table.rows[i];
-            //processVariable
-            //var chkbox = row.cells[0].childNodes[0];
-            if(!(row.cells[1].children[0].value)){
-                alertify.error("Process Variable Names Cannot Be Empty");
-                return "ERROR";
-            }
-
-
-            var variableName=row.cells[1].children[0].value;
-            var variableType=row.cells[2].children[0].value;
-
-
-            if (null != variableName && null!=variableType) {
-                processVariables[variableName]=variableType;
-                item["name"]=variableName;
-                item["type"]=variableType;
-                //processVariable.name=variableName;
-                //processVariable.type=variableType;
-                // processVariables["name"]=variableName;
-                // processVariables["type"]=variableType;
-                processVariablesObjsArr.push(item);
-            }
-            //processVariables.push(processVariable);
-
-        }
-        processVariablesInfo["processVariables"]=processVariables;
-
-        $.ajax({
-            url: '/publisher/assets/process/apis/save_process_variables',
-            type: 'POST',
-            data: {'processVariablesInfo': JSON.stringify(processVariablesInfo) },
-            /*success: function (response) {
-                $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response);
-                $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response);
-                $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response);
-
-
-                if($(currentElement).attr('id') == 'saveProcessBtn'){
-                    window.location = "../../assets/process/details/" + response;
-                }
-            },*/
-            error: function () {
-                alertify.error('Process variables saving error');
-            }
-        });
-    }
-
-    function configAnalytics(){
-        var h = $('#hiddenElementIsDASConfiged').val();
-
-        var hh=$('#aa1').val();
-
-        if(h=="false"){
-
-
-
-            flagToReturn=false;
-            if(!$('#eventStreamName').val()){
-                alertify.error("Event Stream Name Cannot be Empty");
-                flagToReturn=true;
-            }
-            if(!$('#eventStreamVersion').val()){
-                alertify.error("Event Stream Version Cannot be Empty");
-                flagToReturn=true;
-            }
-            if(!$('#eventReceiverName').val()){
-                alertify.error("Event Receiver Name Cannot be Empty");
-                flagToReturn=true;
-            }
-
-            if(flagToReturn){
-                return;
-            }
-
-            if( saveProcessVariables('dataTable')=="ERROR"){
-                return;
-            }
-
-            var eventStreamName=$('#eventStreamName').val();
-            var eventStreamVersion=$('#eventStreamVersion').val();
-            var eventStreamDescription=$('#eventStreamDescription').val();
-            var eventStreamNickName=$('#eventStreamNickName').val();
-            var eventReceiverName=$('#eventReceiverName').val();
-
-            //var inputEventAdapterType=
-            var eventStreamId=eventStreamName+":"+eventStreamVersion;
-            var dasConfigData={};
-            dasConfigData["eventStreamName"]=eventStreamName;
-            dasConfigData["eventStreamVersion"]=eventStreamVersion;
-            dasConfigData["eventStreamDescription"]=eventStreamDescription;
-            dasConfigData["eventStreamNickName"]=eventStreamNickName;
-            dasConfigData["eventStreamId"]=eventStreamId;
-            dasConfigData["eventReceiverName"]=eventReceiverName;
-            dasConfigData["processVariables"]=processVariablesObjsArr;
-
-            var processName= $('#view-header').text();
-            var processVersion=$('#process-version').text();
-
-            $.ajax({
-                url: '/publisher/assets/process/apis/config_das_analytics',
-                type: 'POST',
-                data: {'dasConfigData': JSON.stringify(dasConfigData),'processName':processName, 'processVersion':processVersion },
-                /*success: function (response) {
-                    $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response);
-                    $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response);
-                    $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response);
-
-
-                    if($(currentElement).attr('id') == 'saveProcessBtn'){
-                        window.location = "../../assets/process/details/" + response;
-                    }
-                },*/
-                success:function(configurationStatus){
-                    if(configurationStatus=="true"){
-                        showOverview(this);
-                        //document.getElementById("btn_config_analytics").hidden=true;
-                        //$("#btn_config_analytics").hide();
-                        //$("#btn_config_analytics").attr('disabled', true);
-                        document.getElementById("btn_config_analytics").innerHTML = "View Analytics Configs";
-                        //$("#btn_config_analytics").attr("textContent","View Analytics Configs");
-                        //$("#btn_config_analytics").innerHTML = "View Analytics Configs";
-                        $("#btn_save_analytics_configurations").attr("disabled",true);
-                        $("#btn_addProcessVariablesRow").attr("disabled",true);
-                        $("#btn_deleteProcessVariablesRow").attr("disabled",true);
-
-                        ///
-                        $("#dataTable tr").each(function () {
-
-                            $('td', this).each(function () {
-                                $(this).find(":input").attr("disabled",true);
-                                $(this).find(":select-one").attr("disabled",true);
-
-
-                            })
-
-                        });
-                    }else{
-                        alertify.error("Error in creating Event Stream/Reciever in DAS")
-                    }
-
-                },
-                error: function () {
-                    alertify.error('Error in calling jag file');
-                }
-            });
-        }
-    }
-
-</script>
-
 <h2 id="view-header">{{assets.tables.[0].fields.name.value}}</h2>
 <br/>
 <div id="overviewDiv">
-    <table class="table table-responsive" style="width: 8cm;border-bottom:0px !important;">
-        <tbody>
-        <tr>
-            <td width="40%" style="border: 0px !important;">Version:</td>
-            <td width="60%" id="process-version" style="border: 0px !important;">{{assets.tables.[0].fields.version.value}}</td>
-        </tr>
-        <tr>
-            <td width="40%" style="border: 0px !important;">Owner:</td>
-            <td width="40%" style="border: 0px !important;" contenteditable="true" onblur="editProcessOwner(this)">{{assets.tables.[0].fields.owner.value}}</td>
-            <td width="20%" style="border: 0px !important;"><span id="processOwnerUpdateBtn" class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Click here to update the value" style="color:#0081c2;cursor: pointer;display: none;" onclick="updateProcessOwner(this)"></span></td>
-        </tr>
-        </tbody>
-    </table>
+            <table class="table table-responsive" style="width: 8cm;border-bottom:0px !important;">
+                <tbody>
+                <tr>
+                    <td width="40%" style="border: 0px !important;">Version:</td>
+                    <td width="60%" id="process-version" style="border: 0px !important;">{{assets.tables.[0].fields.version.value}}</td>
+                </tr>
+                <tr>
+                    <td width="40%" style="border: 0px !important;">Owner:</td>
+                    <td width="40%" style="border: 0px !important;" contenteditable="true" onblur="editProcessOwner(this)">{{assets.tables.[0].fields.owner.value}}</td>
+                    <td width="20%" style="border: 0px !important;"><span id="processOwnerUpdateBtn" class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Click here to update the value" style="color:#0081c2;cursor: pointer;display: none;" onclick="updateProcessOwner(this)"></span></td>
+                </tr>
+                </tbody>
+            </table>
 
-    <div class="control-group" style="display: inline-block">
-        {{#if processTextAvaliable}}
-            <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View/Edit Process Text</button></div>
-            <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()" style="display: none">Describe process in text</button></div>
-        {{else}}
-            <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View/Edit Process Text</button></div>
-            <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button></div>
-        {{/if}}
-    </div>
-
-
-    <div class="control-group" style="display: inline-block">
-        {{#if bpmnAvaliable}}
-            <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
-            <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
-        {{else}}
-            <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
-            {{#if DASAnalyticsEnabled}}
-                {{#if DASAnalyticsConfigured}}
-                    <button id="btn_config_analytics" class="btn btn-primary" onclick="showAnalyticsConfigurer()">View Analytics Configs</button>
-                    <input type="hidden" id="hiddenElementIsDASConfiged" value="true">
+            <div class="control-group" style="display: inline-block">
+                {{#if processTextAvaliable}}
+                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View/Edit Process Text</button></div>
+                    <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()" style="display: none">Describe process in text</button></div>
                 {{else}}
-                    <button id="btn_config_analytics" class="btn btn-primary" onclick="showAnalyticsConfigurer()">Config Analytics</button>
-                    <input type="hidden" id="hiddenElementIsDASConfiged" value="false">
-
+                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View/Edit Process Text</button></div>
+                    <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button></div>
                 {{/if}}
-            {{/if}}
-
-        {{/if}}
-
             </div>
+
+            <div class="control-group" style="display: inline-block">
+                {{#if bpmnAvaliable}}
+                    <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
+                    <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
+                {{else}}
+                    <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
+		    {{#if DASAnalyticsEnabled}}
+                	{{#if DASAnalyticsConfigured}}
+                    		<button id="btn_config_analytics" class="btn btn-primary" onclick="showAnalyticsConfigurer()">View Analytics Configs</button>
+                    		<input type="hidden" id="hiddenElementIsDASConfiged" value="true">
+                	{{else}}
+                    		<button id="btn_config_analytics" class="btn btn-primary" onclick="showAnalyticsConfigurer()">Config Analytics</button>
+                    		<input type="hidden" id="hiddenElementIsDASConfiged" value="false">
+                	{{/if}}
+            	    {{/if}}                
+		{{/if}}
+            </div>
+
+            <div class="control-group" style="display: inline-block">
+                {{#if documentAvailable}}
+                    <div id="sddiv"><button id="viewDocumentButton" class="btn btn-primary" onclick="showDocument()">View Document</button></div>
+                {{else}}
+                    <div id="addiv"><button id="addDocumentButton" class="btn btn-primary" onclick="associateDoc()">Associate Document</button></div>
+                {{/if}}
+            </div>
+
             <div class="control-group" style="display: inline-block;">
                 {{#if flowchartAvailable}}
                     <div id="sfdiv">
@@ -821,6 +66,7 @@
         <button id="pdfViewer" class="btn btn-primary" style="display: none" onclick="showPDF()">Show PDF</button>
         <button id="pdfUploader" class="btn btn-primary" style="display:none" onclick="associatePdf()">Associate PDF</button>
     </div>
+
     <br /><br />
 
     <form class="form-horizontal">
@@ -947,9 +193,9 @@
 
 <div id="bpmnViewDiv" style="display: none">
     <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button><br /><br />
-    <div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
-        <img id="bpmnImage" src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
-    </div>
+<div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
+    <img id="bpmnImage" src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
+</div>
 </div>
 
 <div id="bpmnEditDiv" style="display:none">
@@ -1002,175 +248,66 @@
     </tbody>
 </table>
 
-<div id="analyticsConfigDiv" style="display:none">
-    <button class="btn btn-primary" onclick="showOverview(this)"><span
-            class="glyphicon glyphicon-circle-arrow-left"></span> Overview
-    </button>
-    </br>
-    </br>
+<div id="holder" style="display:none">
+    <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button><br /><br />
+    <hr>
+    <div>
+        <button id="prev" class="btn btn-primary" onclick="goPrevious()"><span class="glyphicon glyphicon-circle-arrow-left"></span>Prev</button>
+        <button id="next" class="btn btn-primary" onclick="goNext()"><span class="glyphicon glyphicon-circle-arrow-right"></span>Next</button>
+        &nbsp; &nbsp;
+        <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+        &nbsp; &nbsp;
+        <button id="zoomOut" class="toolbarButton zoomOut btn btn-primary" title="Zoom Out" tabindex="21" data-l10n-id="zoom_out" onclick="zoomOut()">
+            <span data-l10n-id="zoom_out_label"></span>
+            <span class="glyphicon glyphicon-minus"></span>
+        </button>
+        <button id="zoomIn" class="toolbarButton zoomIn btn btn-primary" title="Zoom In" tabindex="22" data-l10n-id="zoom_in" onclick="zoomIn()">
+            <span data-l10n-id="zoom_in_label"></span>
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+                  <span style="min-width: 120px; max-width: 120px;" id="scaleSelectContainer">
+                     <select style="min-width: 142px;" class="selectpicker" data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="zoom" onclick="zoomSelect()">
+                         <option title="" value="0.5" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 50 }">50%</option>
+                         <option title="" value="0.75" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 75 }">75%</option>
+                         <option title="" value="1" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 100 }">100%</option>
+                         <option title="" value="1.25" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 125 }">125%</option>
+                         <option title="" value="1.5" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 150 }" selected="selected">150%</option>
+                         <option title="" value="2" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 200 }">200%</option>
+                         <option title="" value="3" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 300 }">300%</option>
+                         <option title="" value="4" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 400 }">400%</option>
+                     </select>
 
-    <h2 class="field-title">
-        <a class="collapsing-h2" aria-expanded="true" href="#collapsevariableinfo" data-toggle="collapse">
-            <i class="cu-btn-exp-col btn-collapsed">Process Variables to Config for Analysis</i>        </a>
-    </h2>
-
-
-    {{#if DASAnalyticsConfigured}}
-        <div class="collapse in responsive-form-container" id="collapsevariableinfo">
-
-            <br>
-            <table id="dataTable"  border="1" width="25%">
-                <thead>
-
-                <!--<th width="4%"></th>-->
-                <th>Variable Name</th>
-                <th>Type</th>
-
-
-                </thead>
-                <!-- <tr>
-                     <td><input type="checkbox" name="chk"/></td>
-
-                     <td><input type="text" name="txt" style="display:table-cell; width:100%"/></td>
-                     <td>
-                         <select name="country" style="display:table-cell; width:100%">
-                             <option value="int">int</option>
-                             <option value="string">string</option>
-                             <option value="float">float</option>
-                             <option value="boolean">boolean</option>
-                         </select>
-                     </td>-->
-                <!--<td style="width: 5%;"><a class="js-remove-row" onclick="deleteProcessVariableRow('dataTable', parseInt( $(this).parent().parent().index() ) )"><i class="fa fa-trash"></i></a> </td>-->
-                {{#each processVariableList.processVariables}}
-                    <tr>
-                        <td style="display:table-cell; width:100%">{{this.name}}</td>
-                        <td style="display:table-cell; width:100%">{{this.type}}</td>
-                        <!--<td valign="top" style="width: 90%;"><span id="predecessor_Name" class="predecessor_Name">{{this.name}}-{{this.version}}</span></td>
-                        <td style="width: 5%;"></td>
-                        <td style="width: 5%;"><a class="js-remove-row" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></a> </td>
-                   --> </tr>
-                {{/each}}
-                </tr>
-            </table>
-
-            <!-- <button onclick="saveProcessVariables('dataTable')" class="btn btn-primary">Save</button>-->
-        </div>
-    {{else}}
-
-        <div class="collapse in responsive-form-container" id="collapsevariableinfo">
-
-            <div  class="add-unbounded-row" float="left" width="100%"  style="width:auto; float:left;"><a  id="btn_addProcessVariablesRow" onclick="addProcessVariableRow('dataTable')"><i
-                    class="fa fa-plus-circle"></i> Add Process Variable</a></div>
-            <div class="add-unbounded-row" style="width:auto;padding-left: 25pt; margin-left:10%;"><a id="btn_deleteProcessVariablesRow" onclick="deleteProcessVariableRow('dataTable')"><i
-                    class="fa fa-plus-circle"></i> Delete Process Variable</a></div>
-
-
-            <br>
-            <table id="dataTable"  border="1" width="25%">
-                <thead>
-
-                <th width="4%"></th>
-                <th>Variable Name</th>
-                <th>Type</th>
-
-
-                </thead>
-                <tr>
-                    <td><input type="checkbox" name="chk"/></td>
-
-                    <td><input type="text" name="txt" style="display:table-cell; width:100%"/></td>
-                    <td>
-                        <select name="country" style="display:table-cell; width:100%">
-                            <option value="int">int</option>
-                            <option value="string">string</option>
-                            <option value="float">float</option>
-                            <option value="boolean">boolean</option>
-                        </select>
-                    </td>
-                    <!--<td style="width: 5%;"><a class="js-remove-row" onclick="deleteProcessVariableRow('dataTable', parseInt( $(this).parent().parent().index() ) )"><i class="fa fa-trash"></i></a> </td>-->
-
-                </tr>
-            </table>
-
-            <!-- <button onclick="saveProcessVariables('dataTable')" class="btn btn-primary">Save</button>-->
-        </div>
-    {{/if}}
-
-    <h2 class="field-title">
-        <a class="collapsing-h2" aria-expanded="true" href="#collapseEventStreamInfo" data-toggle="collapse">
-            <i class="cu-btn-exp-col btn-collapsed">Event Stream Information</i>        </a>
-    </h2>
-    <div class="collapse in responsive-form-container" id="collapseEventStreamInfo">
-        <form id="collapseEventStreamInfoForm" class="form-horizontal">
-            <div class="form-group">
-                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Event Stream Name<sup class="required-field">*</sup></label>
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text"  name="event_stream_name" id="eventStreamName"  class="form-control" required="">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Version<sup class="required-field">*</sup></label>
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text"  name="event_stream_version" id="eventStreamVersion" class="form-control" required="">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Description</label>
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text"  name="event_stream_description" id="eventStreamDescription" class="form-control" required="">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Nick Name</label>
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text"  name="event_stream_nick_name" id="eventStreamNickName" class="form-control">
-                </div>
-            </div>
-        </form>
-
+                  </span>
     </div>
 
-
-    <h2 class="field-title">
-        <a class="collapsing-h2" aria-expanded="true" href="#collapseEventReceiverInfo" data-toggle="collapse">
-            <i class="cu-btn-exp-col btn-collapsed">Event Receiver Information</i>        </a>
-    </h2>
-    <div class="collapse in responsive-form-container" id="collapseEventReceiverInfo">
-        <form id="collapseEventReceiverInfoForm" class="form-horizontal">
-            <div class="form-group">
-                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Event Receiver Name<sup class="required-field">*</sup></label>
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text" placeholder="Enter Event Receiver Name" name="event_receiver_name" id="eventReceiverName" class="form-control" required="">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Input Event Adapter Type<sup class="required-field">*</sup></label>
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text"  name="input_event_adapter_type" id="inputEventAdapterType" class="form-control" required="" value="wso2event" readonly>
-                </div>
-            </div>
-
-        </form>
-
-
+    <div style="height:700px;overflow-y:auto;overflow-x:auto;float:left;position:relative;margin-left:-5px;">
+        <canvas id="the-canvas" style="border:1px solid black"></canvas>
     </div>
 
-
-
-    {{#if DASAnalyticsConfigured}}
-
-    {{else}}
-
-        <button id="btn_save_analytics_configurations" onclick="configAnalytics()" class="btn btn-primary">Save Configurations</button>
-
-    {{/if}}
 </div>
 
+<div id="pdfUploaderView" class="form-group" style="display: none">
 
+    <h2 id="create-view-header"></h2>
+    <br /><a id="bpmnOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
+
+    <form method="post" action="../apis/upload_pdf"  onsubmit="" enctype="multipart/form-data" class="form-horizontal" id="form-bar-create">
+        <br>
+        <div style="float:left;width:15cm">
+            <input type="file" onchange="setfilename(this.value);" class="filestyle" data-buttonname="btn-primary" data-placeholder="Associate pdf/text file" name="pdfFile" id="pdfFile" data-buttontext="PDF file" accept=".pdf" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
+
+        </div><br><br>
+        <input type="hidden" id="ProcessName" name="ProcessName" value="{{assets.tables.[0].fields.name.value}}">
+        <input type="hidden" id="ProcessVersion" name="ProcessVersion" value="{{assets.tables.[0].fields.version.value}}">
+
+        <div id="saveButtons" class="form-actions">
+            <input type="submit" id="btn-create-asset-bar" class="btn btn-primary" name="addNewAssetButton" value="Upload pdf">
+            <button class="btn" type="reset">Reset</button>
+            <input type="hidden" value="process" name="process" id="meta-asset-type">
+        </div>
+
+    </form>
+</div>
 
 <div id="flowChartEditorView" style="display:none">
     <br />
@@ -1201,4 +338,238 @@
           </div>
         </span>
     </div>
+</div>
+
+<div id="docViewDiv" style="display:none">
+    <a id="docOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a><br />
+    <div class="row-fluid">
+        <div class="span12">
+            <table class="table table-bordered" id="docTable">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Summary</th>
+                    <th>Url</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="listDocs">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div id="docUploaderDiv" style="display:none">
+    <a id="docOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a><br /><br />
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="row-fluid">
+                <div class="control-group">
+                    <div id="addDoc">
+                        <a onclick="newDocFormToggle()" href="#">
+                            <i class="fa fa-plus-circle"></i> Add New Document
+                        </a>
+                    </div>
+                    <div id="updateDoc" style="display:none;">
+                        <h4></h4>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Row -->
+            <form id="addNewDoc" enctype="multipart/form-data" action="../apis/upload_documents" onsubmit="return validateDocument()" method="POST" style="margin-left: 20px;">
+                <div class="container-fluid" style="padding-left:0">
+                    <div id="newDoc">
+                        <div class="row-fluid">
+                            <div class="span6 name-column" style="float:left;width:50%;">
+                                <div class="control-group">
+                                    <label class="control-label" for="docName">Name<span class="requiredAstrix" style="color: red;">*</span></label>
+                                    <div class="controls">
+                                        <input type="text" class="required validInput" id="docName" name="docName" style="width:100%">
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label" for="textarea">Summary</label>
+                                    <div class="controls">
+                                        <textarea id="summaryDoc" name="summaryDoc" rows="3" style="width:100%"></textarea>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="docProcessName" name="docProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
+                                <input type="hidden" id="docProcessVersion" name="docProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
+                                <input type="hidden" id="docExtension" name="docExtension" value=""/>
+                            </div>
+
+                            <div class="span6" style="float:right;width:48%;">
+                                <div class="well">
+                                    <div class="control-group">
+                                        <label class="control-label">Source</label>
+                                        <div class="controls">
+                                            <label class="radio" style="margin-left:20px">
+                                                <input type="radio" name="optionsRadios1" id="optionsRadios7" value="url" onclick="javascript:$('#sourceUrlDoc').toggle('slow');$('#sourceFile').hide('slow')">URL (Eg: google doc)
+                                                <a class="icon-question-sign help_popup" data-original-title="" title=""></a>
+                                                <p id="urlDoc_help" class="hide">Link to documentation managed by an external configuration management system</p>
+                                            </label>
+
+                                            <div id="sourceUrlDoc" class="controls" style="display: none;">
+                                                <span class="requiredAstrix" style="color: red;">*</span> <input type="text" class="required" style="width:98%" id="docUrl" name="docUrl">
+                                            </div>
+                                            <label class="radio" style="margin-left:20px">
+                                                <input type="radio" name="optionsRadios1" id="optionsRadios8" value="file" onclick="javascript:$('#sourceFile').toggle('slow');$('#sourceUrlDoc').hide('slow')">Document
+                                                <a class="icon-question-sign help_popup" data-original-title="" title=""></a>
+                                                <p id="fileDoc_help" class="hide">Upload a documentation file</p>
+                                            </label>
+
+                                            <div id="fileNameDiv" style="display:none;"></div>
+                                            <a onclick="javascript:$('#sourceFile').toggle('slow')" id="toggleFileDoc" style="display:none;">
+                                                Change File
+                                            </a>
+                                            <div id="sourceFile" class="controls" style="display:none;">
+                                                <span class="requiredAstrix" style="color: red;">*</span> <input type="file" class="required" style="width:98%" name="docLocation" id="docLocation">
+                                                <p id="fileType_help">eg : .docx, .doc</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="clear:both; font-size:1px;"></div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="control-group">
+                                    <!--<button type="button" class="btn btn-primary" id="saveDocBtn" onclick="saveDoc()">Add Document</button>-->
+                                    <input type="submit" class="btn btn-primary" id="saveDocBtn" value="Add Document">
+                                </div>
+                            </div>
+
+                        </div><!-- Enod of row -->
+                    </div>
+                </div>
+            </form><br /><br />
+        </div>
+    </div>
+</div>
+
+<div id="analyticsConfigDiv" style="display:none">
+    <button class="btn btn-primary" onclick="showOverview(this)"><span
+            class="glyphicon glyphicon-circle-arrow-left"></span> Overview
+    </button>
+    </br>
+    </br>
+
+    <h2 class="field-title">
+        <a class="collapsing-h2" aria-expanded="true" href="#collapsevariableinfo" data-toggle="collapse">
+            <i class="cu-btn-exp-col btn-collapsed">Process Variables to Config for Analysis</i>        </a>
+    </h2>
+
+    {{#if DASAnalyticsConfigured}}
+        <div class="collapse in responsive-form-container" id="collapsevariableinfo">
+
+            <br>
+            <table id="dataTable"  border="1" width="25%">
+                <thead>
+                    <th>Variable Name</th>
+                    <th>Type</th>
+                </thead>
+               {{#each processVariableList.processVariables}}
+                    <tr>
+                        <td style="display:table-cell; width:100%">{{this.name}}</td>
+                        <td style="display:table-cell; width:100%">{{this.type}}</td>
+                   --> </tr>
+                {{/each}}
+                </tr>
+            </table>
+        </div>
+    {{else}}
+        <div class="collapse in responsive-form-container" id="collapsevariableinfo">
+            <div  class="add-unbounded-row" float="left" width="100%"  style="width:auto; float:left;"><a  id="btn_addProcessVariablesRow" onclick="addProcessVariableRow('dataTable')"><i
+                    class="fa fa-plus-circle"></i> Add Process Variable</a></div>
+            <div class="add-unbounded-row" style="width:auto;padding-left: 25pt; margin-left:10%;"><a id="btn_deleteProcessVariablesRow" onclick="deleteProcessVariableRow('dataTable')"><i
+                    class="fa fa-plus-circle"></i> Delete Process Variable</a></div>
+
+            <br>
+            <table id="dataTable"  border="1" width="25%">
+                <thead>
+                    <th width="4%"></th>
+                    <th>Variable Name</th>
+                    <th>Type</th>
+                </thead>
+                <tr>
+                    <td><input type="checkbox" name="chk"/></td>
+
+                    <td><input type="text" name="txt" style="display:table-cell; width:100%"/></td>
+                    <td>
+                        <select name="country" style="display:table-cell; width:100%">
+                            <option value="int">int</option>
+                            <option value="string">string</option>
+                            <option value="float">float</option>
+                            <option value="boolean">boolean</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    {{/if}}
+
+    <h2 class="field-title">
+        <a class="collapsing-h2" aria-expanded="true" href="#collapseEventStreamInfo" data-toggle="collapse">
+            <i class="cu-btn-exp-col btn-collapsed">Event Stream Information</i>        </a>
+    </h2>
+    <div class="collapse in responsive-form-container" id="collapseEventStreamInfo">
+        <form id="collapseEventStreamInfoForm" class="form-horizontal">
+            <div class="form-group">
+                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Event Stream Name<sup class="required-field">*</sup></label>
+                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                    <input onblur="blurIt()" type="text"  name="event_stream_name" id="eventStreamName"  class="form-control" required="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Version<sup class="required-field">*</sup></label>
+                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                    <input onblur="blurIt()" type="text"  name="event_stream_version" id="eventStreamVersion" class="form-control" required="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Description</label>
+                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                    <input onblur="blurIt()" type="text"  name="event_stream_description" id="eventStreamDescription" class="form-control" required="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Nick Name</label>
+                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                    <input onblur="blurIt()" type="text"  name="event_stream_nick_name" id="eventStreamNickName" class="form-control">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <h2 class="field-title">
+        <a class="collapsing-h2" aria-expanded="true" href="#collapseEventReceiverInfo" data-toggle="collapse">
+            <i class="cu-btn-exp-col btn-collapsed">Event Receiver Information</i>        </a>
+    </h2>
+    <div class="collapse in responsive-form-container" id="collapseEventReceiverInfo">
+        <form id="collapseEventReceiverInfoForm" class="form-horizontal">
+            <div class="form-group">
+                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Event Receiver Name<sup class="required-field">*</sup></label>
+                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                    <input onblur="blurIt()" type="text" placeholder="Enter Event Receiver Name" name="event_receiver_name" id="eventReceiverName" class="form-control" required="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Input Event Adapter Type<sup class="required-field">*</sup></label>
+                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                    <input onblur="blurIt()" type="text"  name="input_event_adapter_type" id="inputEventAdapterType" class="form-control" required="" value="wso2event" readonly>
+                </div>
+            </div>
+        </form>
+    </div>
+    {{#if DASAnalyticsConfigured}}
+        <!--do nothing-->
+    {{else}}
+        <button id="btn_save_analytics_configurations" onclick="configAnalytics()" class="btn btn-primary">Save Configurations</button>
+
+    {{/if}}
 </div>

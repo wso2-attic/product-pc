@@ -134,6 +134,7 @@ function showTextEditor() {
     $("#pdfUploaderView").hide();
     $("holder").hide();
     $("#flowChartEditorView").hide();
+    $("#analyticsConfigDiv").hide();
 
     tinymce.init({
         selector: "#processContent"
@@ -149,6 +150,7 @@ function showBPMNUploader() {
     $("#pdfUploaderView").hide();
     $("#holder").hide();
     $("#flowChartEditorView").hide();
+    $("#analyticsConfigDiv").hide();
 }
 
 function showOverview(e) {
@@ -163,8 +165,32 @@ function showOverview(e) {
     $("#pdfUploaderView").hide();
     $("#holder").hide();
     $("#flowChartEditorView").hide();
+    $("#analyticsConfigDiv").hide();
 }
 
+function showAnalyticsConfigurer() {
+        $("#overviewDiv").hide();
+        $("#processTextContainer").hide();
+        $("#processTextEditDiv").hide();
+        $("#bpmnViewDiv").hide();
+        $("#analyticsConfigDiv").show();
+        $('#eventStreamName').val($('#view-header').text()+"_"+$('#process-version').text()+"_process_stream");
+        $('#eventStreamName').attr("readonly","true");
+
+        $('#eventStreamVersion').val("1.0.0");
+        $('#eventStreamVersion').attr("readonly","true");
+
+        $('#eventStreamDescription').val("This is the event stream generated to configure process analytics with DAS, for the process"+$('#view-header').text()+"_"+$('#process-version').text());
+        $('#eventStreamDescription').attr("readonly","true");
+
+        $('#eventReceiverName').val($('#view-header').text()+"_"+$('#process-version').text()+"_process_receiver");
+        $('#eventReceiverName').attr("readonly","true");
+
+        $('#eventStreamNickName').val($('#view-header').text()+"_"+$('#process-version').text()+"_process_stream"); //same as eventStreamName
+        $('#eventStreamNickName').attr("readonly","true");
+
+
+    }
 function editProcessOwner(e) {
     if ($(e).text() == '') {
         alertify.error('Process owner field is empty.');
@@ -541,6 +567,7 @@ function addUnboundedRow(element) {
     }
 }
 
+
 //****************************PDF rendering*************************************************
 
 function showPDF() {
@@ -714,4 +741,185 @@ function showFlowchartEditor(name, flowchartString) {
 
 function redirectTo(element) {
     element.click();
+}
+
+function addProcessVariableRow(tableID) {
+
+    var table = document.getElementById(tableID);
+
+    var rowCount = table.rows.length;
+    var row = table.insertRow(rowCount);
+
+    var colCount =3;// table.rows[0].cells.length;
+
+    row.innerHTML=
+        //'<div style="width:300px; display:table">'+
+        '<td><input type="checkbox" name="chk"/></td>'+
+
+        '<td><input type="text" name="txt" style="display:table-cell; width:100%"/></td>'+
+        '<td>'+
+        '<select name="country" style="display:table-cell; width:100%">'+
+        '<option value="int">int</option>'+
+        '<option value="string">string</option>'+
+        '<option value="float">float</option>'+
+        '<option value="boolean">boolean</option>'+
+        '</select>'+
+        '</td>';//+
+    // '</div>';
+}
+
+function deleteProcessVariableRow(tableID) {
+    try {
+        var table = document.getElementById(tableID);
+        var rowCount = table.rows.length;
+
+        for (var i = 0; i < rowCount; i++) {
+            var row = table.rows[i];
+            var chkbox = row.cells[0].childNodes[0];
+            if (null != chkbox && true == chkbox.checked) {
+                if (rowCount <= 1) {
+                    alert("No rows to delete.");
+                    break;
+                }
+                //if (rowCount > 1) {
+                table.deleteRow(i);
+
+                rowCount--;
+                i--;
+            }
+        }
+
+    } catch (e) {
+        alert(e);
+    }
+}
+
+var processVariablesInfo={};
+var processVariables={};
+var processVariablesObjsArr=[];
+
+function saveProcessVariables(tableID){
+    var table=document.getElementById(tableID);
+    var rowCount=table.rows.length;
+
+    if (rowCount <= 1) {
+        //alert("No rows to save.");
+        alertify.error("No Process Variable To Config..!")
+        return "ERROR";
+    }
+
+    var processName= $('#view-header').text();
+    var processVersion=$('#process-version').text();
+    processVariablesInfo["processName"]=processName;
+    processVariablesInfo["processVersion"]=processVersion;
+
+    for (var i = 1; i < rowCount; i++) {
+        var item={};
+        var row = table.rows[i];
+        if(!(row.cells[1].children[0].value)){
+            alertify.error("Process Variable Names Cannot Be Empty");
+            return "ERROR";
+        }
+        var variableName=row.cells[1].children[0].value;
+        var variableType=row.cells[2].children[0].value;
+
+        if (null != variableName && null!=variableType) {
+            processVariables[variableName]=variableType;
+            item["name"]=variableName;
+            item["type"]=variableType;
+            processVariablesObjsArr.push(item);
+        }
+    }
+    processVariablesInfo["processVariables"]=processVariables;
+
+    $.ajax({
+        url: '/publisher/assets/process/apis/save_process_variables',
+        type: 'POST',
+        data: {'processVariablesInfo': JSON.stringify(processVariablesInfo) },
+        error: function () {
+            alertify.error('Process variables saving error');
+        }
+    });
+}
+
+function configAnalytics(){
+    var isDasConfigedHidEl = $('#hiddenElementIsDASConfiged').val();
+
+    if(isDasConfigedHidEl=="false"){
+        flagToReturn=false;
+        if(!$('#eventStreamName').val()){
+            alertify.error("Event Stream Name Cannot be Empty");
+            flagToReturn=true;
+        }
+        if(!$('#eventStreamVersion').val()){
+            alertify.error("Event Stream Version Cannot be Empty");
+            flagToReturn=true;
+        }
+        if(!$('#eventReceiverName').val()){
+            alertify.error("Event Receiver Name Cannot be Empty");
+            flagToReturn=true;
+        }
+
+        if(flagToReturn){
+            return;
+        }
+
+        if( saveProcessVariables('dataTable')=="ERROR"){
+            return;
+        }
+
+        var eventStreamName=$('#eventStreamName').val();
+        var eventStreamVersion=$('#eventStreamVersion').val();
+        var eventStreamDescription=$('#eventStreamDescription').val();
+        var eventStreamNickName=$('#eventStreamNickName').val();
+        var eventReceiverName=$('#eventReceiverName').val();
+
+        //var inputEventAdapterType=
+        var eventStreamId=eventStreamName+":"+eventStreamVersion;
+        var dasConfigData={};
+        dasConfigData["eventStreamName"]=eventStreamName;
+        dasConfigData["eventStreamVersion"]=eventStreamVersion;
+        dasConfigData["eventStreamDescription"]=eventStreamDescription;
+        dasConfigData["eventStreamNickName"]=eventStreamNickName;
+        dasConfigData["eventStreamId"]=eventStreamId;
+        dasConfigData["eventReceiverName"]=eventReceiverName;
+        dasConfigData["processVariables"]=processVariablesObjsArr;
+
+        var processName= $('#view-header').text();
+        var processVersion=$('#process-version').text();
+
+        $.ajax({
+            url: '/publisher/assets/process/apis/config_das_analytics',
+            type: 'POST',
+            data: {'dasConfigData': JSON.stringify(dasConfigData),'processName':processName, 'processVersion':processVersion },
+            success:function(configurationStatus){
+                if(configurationStatus=="true"){
+                    showOverview(this);
+                    //document.getElementById("btn_config_analytics").hidden=true;
+                    //$("#btn_config_analytics").hide();
+                    //$("#btn_config_analytics").attr('disabled', true);
+                    document.getElementById("btn_config_analytics").innerHTML = "View Analytics Configs";
+                    //$("#btn_config_analytics").attr("textContent","View Analytics Configs");
+                    //$("#btn_config_analytics").innerHTML = "View Analytics Configs";
+                    $("#btn_save_analytics_configurations").attr("disabled",true);
+                    $("#btn_addProcessVariablesRow").attr("disabled",true);
+                    $("#btn_deleteProcessVariablesRow").attr("disabled",true);
+                    ///
+                    /*$("#dataTable tr").each(function () {
+
+                        $('td', this).each(function () {
+                            $(this).find(":input").attr("disabled",true);
+                            $(this).find(":select-one").attr("disabled",true);
+                        })
+
+                    });*/
+                }else{
+                    alertify.error("Error in creating Event Stream/Reciever in DAS")
+                }
+            },
+            error: function () {
+                alertify.error('Error in calling jag file');
+            }
+        });
+    }
 }
