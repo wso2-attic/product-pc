@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-asset.server = function(ctx) {
+asset.server = function (ctx) {
     var type = ctx.type;
     return {
         onUserLoggedIn: function () {
@@ -71,13 +71,13 @@ asset.server = function(ctx) {
             }, {
                 url: 'upload_documents',
                 path: 'upload_documents.jag'
-            },{
+            }, {
                 url: 'get_process_tags',
                 path: 'get_process_tags.jag'
             }, {
                 url: 'upload_pdf',
                 path: 'upload_pdf.jag'
-            },{
+            }, {
                 url: 'get_process_pdf',
                 path: 'get_process_pdf.jag'
             }, {
@@ -89,19 +89,25 @@ asset.server = function(ctx) {
             },{
                 url: 'get_bpmnEditorDiagram',
                 path: 'get_bpmnEditorDiagram.jag'
+            }, {
+                url: 'get_process_doc',
+                path: 'get_process_doc.jag'
+            }, {
+                url: 'download_document',
+                path: 'download_document.jag'
             }]
         }
     }
 };
 
-asset.renderer = function(ctx) {
+asset.renderer = function (ctx) {
 
     return {
-        details: function(page) {
+        details: function (page) {
             var log = new Log();
 
             var resourcePath = page.assets.path;
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug(resourcePath);
             }
 
@@ -122,24 +128,30 @@ asset.renderer = function(ctx) {
                 page.bpmnDesignAvailable = true;
             }
 
+            if (page.assets.tables[5].fields.documentname.value == "NA") {
+                page.documentAvailable = false;
+            } else {
+                page.documentAvailable = true;
+            }
+
             importPackage(org.wso2.carbon.pc.core);
             var ps = new ProcessStore();
             var conData = ps.getSucessorPredecessorSubprocessList(resourcePath);
             var conObject = JSON.parse(conData);
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug(conObject);
             }
             page.involveProcessList = conObject;
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug(page);
             }
 
             var flowchartPath = resourcePath.replace("processes", "flowchart");
             var flowchartString = ps.getFlowchart(flowchartPath);
-            if(flowchartString != "NA"){
+            if (flowchartString != "NA") {
                 page.flowchartAvailable = true;
                 page.flowchartString = flowchartString.toString();
-            }else{
+            } else {
                 page.flowchartAvailable = false;
                 page.flowchartString = null;
             }
