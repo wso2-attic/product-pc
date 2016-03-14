@@ -19,14 +19,14 @@
 
 var resources = function (page, meta) {
     return {
-        js:['jsPlumb-2.0.7.js','libs/jquery.form.min.js','publisher-utils.js','create_asset.js','jquery-ui.js',
+        js:['flowchart/jquery.jsPlumb-1.4.1-all-min.js','libs/jquery.form.min.js','publisher-utils.js','create_asset.js','jquery-ui.js',
             'jquery-file-upload/alertify.js','jquery-file-upload/bootstrap-filestyle.js','jquery.cookie.js','common/option_text.js',
             "tinymce/tinymce.min.js",'tags/tags-init-create-asset.js','notify.min.js','messages.js',
             'jquery-file-upload/jquery.iframe-transport.js','jquery-file-upload/jquery.fileupload.js',
-            'jquery-file-upload/vendor/jquery.ui.widget.js','demo.js','demo-list.js'],
-        css:['jsPlumbToolkit-defaults.css',
-            'jsPlumbToolkit-demo.css','bootstrap-select.min.css','alertify.css','default.css','datepick/smoothness.datepick.css','grid.css',
-            'select2.min.css','jquery-ui.css','demo.css','font-awesome.css'],
+            'jquery-file-upload/vendor/jquery.ui.widget.js','create-asset-functions.js','flowchart/create-flowchart.js'],
+        css:['flowchart/jsPlumb-defaults.css','flowchart/jsPlumb-demo.css','bootstrap-select.min.css',
+            'alertify.css','default.css','datepick/smoothness.datepick.css','grid.css',
+            'select2.min.css','jquery-ui.css','flowchart/flowchart.css','font-awesome.css'],
         code: ['publisher.assets.hbs']
     };
 };

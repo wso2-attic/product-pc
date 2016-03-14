@@ -1,7 +1,66 @@
+/*
+ *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.w   See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+
 var processNames = [];
 var processListObj;
+var tagList = [];
 
-window.onload = getProcessList;
+window.onload = function () {
+    getProcessList();
+
+    $('#span').click(function () {
+        $("#tag-box").focus()
+    });
+
+    $("#tag-box").keyup(function (e) {
+
+        var tagValue = $("#tag-box").val().trim();
+        var duplicate = $.inArray(tagValue, tagList);
+
+        if (duplicate >= 0) {
+            $("#select2-results__option--highlighted").hide();
+            $("#select2-results__option").hide();
+            $('#tag-box').val('');
+        }
+
+        if (e.which == 13 && tagValue.length >= 2) {
+            addNewTag();
+            $("#select2-results__option").hide();
+            $("#select2-results__option--highlighted").hide();
+        }
+        else {
+            updateTextBox(tagValue);
+        }
+    });
+
+    $("#tag-box").focusin(function () {
+
+        var tagValue = $("#tag-box").val().trim();
+        updateTextBox(tagValue);
+    });
+
+
+    $("#span").focusout(function () {
+        $("#select2-results__option").hide();
+        $("#select2-results__option--highlighted").hide();
+    });
+}
 
 function showTextEditor(element) {
     if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
@@ -13,6 +72,9 @@ function showTextEditor(element) {
         $("#overviewDiv").hide();
         $("#bpmnView").hide();
         $("#docView").hide();
+        $("#pdfUploader").hide();
+        $("#flowChartView").hide();
+
         tinymce.init({
             selector: "#processContent"
         });
@@ -30,6 +92,24 @@ function associateBPMN(element) {
         $("#processTextView").hide();
         $("#docView").hide();
         $("#bpmnView").show();
+        $("#pdfUploader").hide();
+        $("#flowChartView").hide();
+
+    }
+}
+
+function associateFlowChart(element) {
+    if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
+        alertify.error('please fill the required fields.');
+    } else {
+        saveProcess(element);
+        $('#flow-chart-view-header').text($('#pName').val());
+        $("#overviewDiv").hide();
+        $("#flowChartView").show();
+        $("#pdfUploader").hide();
+        $("#docView").hide();
+        $("#bpmnView").hide();
+        $("#processTextView").hide();
     }
 }
 
@@ -44,6 +124,7 @@ function associateDocument(element) {
         $("#processTextView").hide();
         $("#bpmnView").hide();
         $("#docView").show();
+        $("#flowChartView").hide();
     }
 }
 
@@ -55,6 +136,9 @@ function showMain() {
     $("#mainView").show();
     $("#bpmnView").hide();
     $("#processTextView").hide();
+    $("#pdfUploader").hide();
+    $("#flowChartView").hide();
+
 }
 
 function saveProcess(currentElement) {
@@ -70,6 +154,8 @@ function saveProcess(currentElement) {
             success: function (response) {
                 $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response);
                 $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response);
+                $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response);
+
 
                 if ($(currentElement).attr('id') == 'saveProcessBtn') {
                     window.location = "../../assets/process/details/" + response;
@@ -84,11 +170,12 @@ function saveProcess(currentElement) {
 }
 
 function getProcessInfo() {
+    var tags = tagList.toString();
     var processDetails = {
         'processName': $("#pName").val(),
         'processVersion': $("#pVersion").val(),
         'processOwner': $("#pOwner").val(),
-        'processTags': $("#pTags").val(),
+        'processTags': tags,
         'subprocess': readSubprocessTable(),
         'successor': readSuccessorTable(),
         'predecessor': readPredecessorTable()
@@ -296,4 +383,78 @@ function validateDocs() {
         $("#docExtension").val(ext);
     }
     return true;
+}
+
+function associatePdf(element) {
+    if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
+        alertify.error('please fill the required fields.');
+    } else {
+        $('#pdf-create-view-header').text($('#pName').val());
+        $("#ProcessName").attr("value", $("#pName").val());
+        $("#ProcessVersion").attr("value", $("#pVersion").val());
+        saveProcess(element);
+        $("#overviewDiv").hide();
+        $("#processTextView").hide();
+        $("#bpmnView").hide();
+        $("#docView").hide();
+        $("#pdfUploader").show();
+    }
+}
+
+function redirectToProcess(element) {
+    element.click();
+}
+
+function updateTextBox(tagValue) {
+
+    if (tagValue.length == 0) {
+        $("#select2-results__option--highlighted").hide();
+        $("#select2-results__option").text("Please enter 2 or more characters");
+        $("#select2-results__option").show();
+
+
+    }
+    else if (tagValue.length == 1) {
+        $("#select2-results__option--highlighted").hide();
+        $("#select2-results__option").text("Please enter 1 or more characters");
+        $("#select2-results__option").show();
+    }
+    else {
+        $("#select2-results__option").hide();
+        $("#select2-results__option--highlighted").text(tagValue);
+        $("#select2-results__option--highlighted").show();
+
+
+    }
+}
+
+function addNewTag() {
+    var tagValue = $("#tag-box").val().trim();
+
+    if (tagValue) {
+        tagList.push(tagValue);
+        $('#_tags').append($("<option></option>").attr("value", tagValue).text(tagValue));
+
+        $("#tag-box-list").before('<li class="select2-selection__choice" title="' + tagValue + '">' +
+        '<span class="select2-selection__choice__remove" role="presentation" onclick="removeTag(this)">×</span>' + tagValue + '</li>');
+        $('#tag-box').val('');
+    }
+}
+
+function removeTag(currentElement) {
+
+    var parent = $(currentElement).parent();
+    var tagName = parent.attr("title");
+
+    $('#_tags option').each(function () {
+        if ($(this).val() == tagName) {
+            $(this).remove();
+        }
+    })
+    $(parent).remove();
+
+    var index = jQuery.inArray(tagName, tagList);
+    if (index > -1) {
+        tagList.splice(index, 1);
+    }
 }

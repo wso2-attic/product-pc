@@ -89,6 +89,9 @@ asset.server = function(ctx) {
             }, {
                 url: 'get_process_variables_list',
                 path: 'get_process_variables_list.jag'
+            },{
+                url: 'upload_flowchart',
+                path: 'upload_flowchart.jag'
             }]
         }
     }
@@ -165,7 +168,18 @@ asset.renderer = function(ctx) {
                 }
             }
 
+            var flowchartPath = resourcePath.replace("processes", "flowchart");
+            var flowchartString = ps.getFlowchart(flowchartPath);
+            if(flowchartString != "NA"){
+                page.flowchartAvailable = true;
+                page.flowchartString = flowchartString.toString();
+            }else{
+                page.flowchartAvailable = false;
+                page.flowchartString = null;
+            }
+
             log.info(page);
+
         }
     };
 };
