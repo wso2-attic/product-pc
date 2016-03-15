@@ -1,0 +1,74 @@
+/*
+ *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.w   See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+
+.textBox{
+     text-align: center; 
+    
+}
+
+#toolbox input{
+    width: 45px;
+    height: 45px;
+    opacity:1;
+}
+
+
+#file-upload{
+    display: none;
+}
+
+#download-input{
+    margin: 0 0.5em;
+}
+
+
+marker{
+    fill: #333;
+}
+
+path.link {
+    fill: none;
+    stroke: #333;
+    stroke-width: 5px;
+    cursor: default;
+}
+
+path.link:hover{
+    stroke: rgb(94, 196, 204);
+}
+
+g.connect-node rect{
+    fill: #BEFFFF;
+}
+
+path.link.hidden{
+    stroke-width: 0;
+}
+
+path.link.selected {
+    stroke: rgb(229, 172, 247);
+}
+
+#mainSvg{
+    border: 2px solid black; 
+}
+.selected {
+    fill: red;
+    cursor: pointer;
+}

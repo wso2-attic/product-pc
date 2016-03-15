@@ -67,6 +67,17 @@
                     <div id="aFdiv"><button id="addFlowchartButton" class="btn btn-primary" onclick="associateEditorFlowChart('{{assets.tables.[0].fields.name.value}}')">Associate Flowchart</button></div>
                 {{/if}}
             </div>
+
+    <div class="control-group" style="display: inline-block;">
+        {{#if bpmnDesignAvailable}}
+            <div id="editordiv">
+                <button id="showBPMNDesign" class="btn btn-primary"
+                        >Edit BPMN Diagram</button>
+            </div>
+        {{else}}
+            <div id="aFdiv"><button id="addbpmnDesign" class="btn btn-primary" onclick="associatebpmnDesignEditor('{{assets.tables.[0].fields.name.value}}')">Design BPMN</button></div>
+        {{/if}}
+    </div>
     <div class="control-group" style="display: inline-block">
                 
         <button id="pdfViewer" class="btn btn-primary" style="display: none" onclick="showPDF()">Show PDF</button>
@@ -346,6 +357,86 @@
     </div>
 </div>
 
+<div id="bpmnEditorView" style="display: none;">
+    <input type="hidden" id="beProcessName" name="beProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
+    <input type="hidden" id="beProcessVersion" name="beProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
+    <a id="beOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
+    <br /><br />
+    <div style="display: inline-block;vertical-align: top;border: 3px solid; padding:15px; height: 790px; overflow:scroll; max-width: 8%;">
+
+        <div id="start" onclick="update('circle',this.id)" style="text-align:center;">
+            <svg height="60" width="60">
+                <circle id="c1" cx="30" cy="30" r="20" stroke="black" stroke-width="2" fill="white">
+                    <title>Create Start Event</title>
+                </circle>
+            </svg>
+        </div>
+
+        <div id="task" onclick="update('task',this.id)" style="text-align:center;">
+            <svg width="60" height="35">
+                <rect id="r1" width="60" height="35" rx="12" ry="12" stroke="black" stroke-width="3"
+                      fill="white">
+                    <title>Create Task</title>
+                </rect>
+            </svg>
+        </div>
+
+        <div id="gateway" onclick="update('gateway',this.id)" style="text-align:center;">
+            <svg height="50" width="50">
+                <polygon id="p1" points="0,25, 25,50, 50,25, 25,0" stroke="black" stroke-width="2" fill="white">
+                    <title>Create Gateway</title>
+                </polygon>
+            </svg>
+        </div>
+
+        <div id="xor" onclick="update('xor',this.id)" style="text-align:center;">
+            <svg height="50" width="50">
+                <polygon id="p2" points="0,25, 25,50, 50,25, 25,0"stroke="black" stroke-width="2" fill="white">
+                    <title>Create ExclusiveGateway</title>
+                </polygon>
+                <line x1="12.5" y1="12.5" x2="37.5" y2="37.5" style="stroke:black;stroke-width:2" />
+                <line x1="37.5" y1="12.5" x2="12.5" y2="37.5" style="stroke:black;stroke-width:2" />
+            </svg>
+        </div>
+
+        <div id="throw" onclick="update('throw',this.id)" style="text-align:center;">
+            <svg height="60" width="60">
+                <circle id="c2" cx="30" cy="30" r="20" stroke="black" stroke-width="3" fill="none">
+                    <title>Create IntermediateThrowEvent</title>
+                </circle>
+                <circle cx="30" cy="30" r="15" stroke="black" stroke-width="2" fill="none">
+                    <title>Create IntermediateThrowEvent</title>
+                </circle>
+            </svg>
+        </div>
+
+        <div id="end" onclick="update('end',this.id)" style="text-align:center;">
+            <svg height="55" width="55">
+                <circle id="c3" cx="28" cy="28" r="18" stroke="black" stroke-width="7" fill="none">
+                    <title>Create EndEvent</title>
+                </circle>
+
+            </svg>
+        </div>
+
+        <div id="toolbox" style="display: inline-block;vertical-align: top;border: 1px solid blue; padding:10px;">
+            <input type="image" id="downloadView" title="Save BPMN Diagram" src="/publisher/extensions/assets/process/themes/default/images/save.png" alt="Save BPMN Diagram" style="display: block; margin-left: auto;
+                 margin-right: auto;" width="45px" height="45px">
+            <br>
+            <input type="image" id="save-image" title="Save As Image" src="/publisher/extensions/assets/process/themes/default/images/asImage.png" alt="Save As Image" style="display: block; margin-left: auto;
+                 margin-right: auto;" width="45px" height="45px">
+        </div>
+
+    </div>
+
+    <div id="canvas" style="width:92%; float:right;">
+
+        <div id="svgM"> </div>
+        <canvas id="hiddenCanvas" style="display:none;"></canvas>
+
+    </div>
+ </div>
+
 <div id="docViewDiv" style="display:none">
     <a id="docOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a><br />
     <div class="row-fluid">
@@ -476,14 +567,14 @@
             <br>
             <table id="dataTable"  border="1" width="25%">
                 <thead>
-                    <th>Variable Name</th>
-                    <th>Type</th>
+                <th>Variable Name</th>
+                <th>Type</th>
                 </thead>
-               {{#each processVariableList.processVariables}}
+                {{#each processVariableList.processVariables}}
                     <tr>
                         <td style="display:table-cell; width:100%">{{this.name}}</td>
                         <td style="display:table-cell; width:100%">{{this.type}}</td>
-                   --> </tr>
+                        --> </tr>
                 {{/each}}
                 </tr>
             </table>
@@ -498,9 +589,9 @@
             <br>
             <table id="dataTable"  border="1" width="25%">
                 <thead>
-                    <th width="4%"></th>
-                    <th>Variable Name</th>
-                    <th>Type</th>
+                <th width="4%"></th>
+                <th>Variable Name</th>
+                <th>Type</th>
                 </thead>
                 <tr>
                     <td><input type="checkbox" name="chk"/></td>

@@ -93,6 +93,12 @@ asset.server = function (ctx) {
                 url: 'upload_flowchart',
                 path: 'upload_flowchart.jag'
             },{
+                url: 'upload_bpmnEditorDiagram',
+                path: 'upload_bpmnEditorDiagram.jag'
+            }, {
+                url: 'get_bpmnEditorDiagram',
+                path: 'get_bpmnEditorDiagram.jag'
+            },{
                 url: 'get_process_flowchart',
                 path: 'get_process_flowchart.jag'
             }, {
@@ -127,6 +133,11 @@ asset.renderer = function (ctx) {
                 page.bpmnAvaliable = false;
             } else {
                 page.bpmnAvaliable = true;
+            }
+            if (page.assets.tables[9].fields.bpmnDesignPath.value == "NA") {
+                page.bpmnDesignAvailable = false;
+            } else {
+                page.bpmnDesignAvailable = true;
             }
 
             var processName = page.assets.tables[0].fields.name.value;
@@ -172,6 +183,7 @@ asset.renderer = function (ctx) {
                 }
                 //log.info(page);
             }
+
         }
     };
 };

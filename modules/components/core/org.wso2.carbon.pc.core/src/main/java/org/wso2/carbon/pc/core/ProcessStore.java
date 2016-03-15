@@ -308,8 +308,12 @@ public class ProcessStore {
                 Element pdfElement = append(doc, rootElement, "pdf", mns);
                 appendText(doc, pdfElement, "path", mns, "NA");
 
+                Element bpmnDesignElement = append(doc, rootElement, "bpmnDesign", mns);
+                appendText(doc, bpmnDesignElement, "bpmnDesignPath", mns, "NA");
+
                 Element flowchartElement = append(doc, rootElement, "flowchart", mns);
                 appendText(doc, flowchartElement, "path", mns, "NA");
+
                 Element documentElement = append(doc, rootElement, "document", mns);
                 appendText(doc, documentElement, "documentname", mns, "NA");
                 appendText(doc, documentElement, "summary", mns, "NA");
@@ -1562,6 +1566,70 @@ public class ProcessStore {
         }
 
         return flowchartString;
+    }
+
+    /**
+     *
+     * @param processName
+     * @param processVersion
+     * @param bpmndesignJson
+     * @return the bpmn diagram json string for a process
+     */
+    public String uploadBpmnDesign(String processName, String processVersion, String bpmndesignJson) {
+        String processId = "NA";
+        log.debug("Creating bpmn design...");
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                Resource bpmnDesignContentResource = reg.newResource();
+                bpmnDesignContentResource.setContent(bpmndesignJson);
+                bpmnDesignContentResource.setMediaType("application/json");
+                String bpmnDesignContentPath = "bpmnDesign/" + processName + "/" + processVersion;
+                reg.put(bpmnDesignContentPath, bpmnDesignContentResource);
+                String processPath = "processes/" + processName + "/" + processVersion;
+
+                // update process by linking the pdf asset
+                Resource processAsset = reg.get(processPath);
+                byte[] processContentBytes = (byte[]) processAsset.getContent();
+                String processContent = new String(processContentBytes);
+                Document processXMLContent = stringToXML(processContent);
+                processXMLContent.getElementsByTagName("bpmnDesign").item(0).getFirstChild().setTextContent(bpmnDesignContentPath);
+
+                String newProcessContent = xmlToString(processXMLContent);
+                processAsset.setContent(newProcessContent);
+                reg.put(processPath, processAsset);
+
+                Resource storedProcessAsset = reg.get(processPath);
+                processId = storedProcessAsset.getUUID();
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return processId;
+    }
+
+    /**
+     *
+     * @param bpmnDiagramPath
+     * @return the bpmn digram path of a process
+     */
+    public String getbpmnDesign(String bpmnDiagramPath) {
+        String bpmnDiagramString = "NA";
+
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                bpmnDiagramPath = bpmnDiagramPath.substring("/_system/governance/".length());
+                Resource bpmnDiagramAsset = reg.get(bpmnDiagramPath);
+                bpmnDiagramString = new String((byte[]) bpmnDiagramAsset.getContent());
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
+        return bpmnDiagramString;
     }
 
     //    public static void main(String[] args) {
