@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-asset.server = function(ctx) {
+asset.server = function (ctx) {
     var type = ctx.type;
     return {
         onUserLoggedIn: function () {
@@ -80,7 +80,7 @@ asset.server = function(ctx) {
             }, {
                 url: 'upload_pdf',
                 path: 'upload_pdf.jag'
-            },{
+            }, {
                 url: 'get_process_pdf',
                 path: 'get_process_pdf.jag'
             }, {
@@ -92,19 +92,28 @@ asset.server = function(ctx) {
             },{
                 url: 'upload_flowchart',
                 path: 'upload_flowchart.jag'
+            },{
+                url: 'get_process_flowchart',
+                path: 'get_process_flowchart.jag'
+            }, {
+                url: 'get_process_doc',
+                path: 'get_process_doc.jag'
+            }, {
+                url: 'download_document',
+                path: 'download_document.jag'
             }]
         }
     }
 };
 
-asset.renderer = function(ctx) {
+asset.renderer = function (ctx) {
 
     return {
-        details: function(page) {
+        details: function (page) {
             var log = new Log();
 
             var resourcePath = page.assets.path;
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug(resourcePath);
             }
 
@@ -120,53 +129,49 @@ asset.renderer = function(ctx) {
                 page.bpmnAvaliable = true;
             }
 
-            var processName=page.assets.tables[0].fields.name.value;
-            var processVersion=page.assets.tables[0].fields.version.value;
-            log.info("Process Name:" + page.assets.tables[0].fields.name.value);
-            log.info("Process Version:" + page.assets.tables[0].fields.version.value);
+            var processName = page.assets.tables[0].fields.name.value;
+            var processVersion = page.assets.tables[0].fields.version.value;
+            if (log.isDebugEnabled()) {
+                log.debug("Viewing Process (Name):" + page.assets.tables[0].fields.name.value + ": (Version)" + page.assets.tables[0].fields.version.value);
+            }
+            if (page.assets.tables[5].fields.documentname.value == "NA") {
+                page.documentAvailable = false;
+            } else {
+                page.documentAvailable = true;
+            }
 
             importPackage(org.wso2.carbon.pc.core);
             var ps = new ProcessStore();
             var conData = ps.getSucessorPredecessorSubprocessList(resourcePath);
             var conObject = JSON.parse(conData);
-            if(log.isDebugEnabled()){
-                log.debug(conObject);
-            }
+
             page.involveProcessList = conObject;
-            if(log.isDebugEnabled()){
-                log.debug(page);
-            }
 
             importPackage(org.wso2.carbon.pc.analytics.core.utils);
             page.DASAnalyticsEnabled = AnalyticsUtils.isDASAnalyticsActivated();
             importPackage(org.wso2.carbon.pc.analytics.config.utils);
-            page.DASAnalyticsConfigured=DASConfigurationUtils.isDASAnalyticsConfigured(processName,processVersion);
+            page.DASAnalyticsConfigured = DASConfigurationUtils.isDASAnalyticsConfigured(processName, processVersion);
 
             var processVariablesJObArrStr;
-            if(page.DASAnalyticsConfigured) {
+            if (page.DASAnalyticsConfigured) {
                 processVariablesJObArrStr = ps.getProcessVariablesList(resourcePath);
 
                 var processVariablesJObArr = JSON.parse(processVariablesJObArrStr);
                 page.processVariableList = processVariablesJObArr;
-
-                /*for (var key in page.processVariableList) {
-                    log.info("PPP");
-                    if (page.processVariableList.hasOwnProperty(key)) {
-                        log.info(key + " -> " + page.processVariableList["name"]);
-                    }
-                }*/
             }
 
             var flowchartPath = resourcePath.replace("processes", "flowchart");
             var flowchartString = ps.getFlowchart(flowchartPath);
-            if(flowchartString != "NA"){
-                page.flowchartAvailable = true;
-                page.flowchartString = flowchartString.toString();
-            }else{
-                page.flowchartAvailable = false;
-                page.flowchartString = null;
+            if (flowchartString != "NA") {
+                var flowchartPath = page.assets.tables[8].fields.path.value;
+                if (flowchartPath != "NA") {
+                    page.flowchartAvailable = true;
+                    page.flowchartPath = flowchartPath;
+                } else {
+                    page.flowchartAvailable = false;
+                }
+                //log.info(page);
             }
-            //log.info(page);
         }
     };
 };

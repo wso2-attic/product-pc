@@ -155,7 +155,7 @@ function saveProcess(currentElement) {
                 $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response);
                 $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response);
                 $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response);
-
+                $("#docOverviewLink").attr("href", "../../assets/process/details/" + response);
 
                 if ($(currentElement).attr('id') == 'saveProcessBtn') {
                     window.location = "../../assets/process/details/" + response;
@@ -364,20 +364,20 @@ function validateDocs() {
     $("#docProcessName").val($("#pName").val());
     $("#docProcessVersion").val($("#pVersion").val());
     if (document.getElementById('docName').value.length == 0) {
-        alert('Please enter doc name.');
+        alertify.error('Please enter doc name.');
         return false;
     } else if ((!document.getElementById('optionsRadios7').checked) && (!document.getElementById('optionsRadios8').checked)) {
-        alert('Please select a source.');
+        alertify.error('Please select a source.');
         return false;
     } else if (document.getElementById('optionsRadios7').checked) {
         if (document.getElementById('docUrl').value.length == 0) {
-            alert('Please give the doc url.');
+            alertify.error('Please give the doc url.');
             return false;
         }
     } else if (document.getElementById('optionsRadios8').checked) {
         var ext = $('#docLocation').val().split('.').pop().toLowerCase();
         if ($.inArray(ext, ['docx', 'doc']) == -1) {
-            alert('invalid extension!');
+            alertify.error('invalid extension!');
             return false;
         }
         $("#docExtension").val(ext);

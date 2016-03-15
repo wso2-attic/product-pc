@@ -50,12 +50,18 @@
                     <div id="addiv"><button id="addDocumentButton" class="btn btn-primary" onclick="associateDoc()">Associate Document</button></div>
                 {{/if}}
             </div>
-
+            <div class="control-group" style="display: inline-block">
+                {{#if documentAvailable}}
+                    <div id="sddiv"><button id="viewDocumentButton" class="btn btn-primary" onclick="showDocument()">View Document</button></div>
+                {{else}}
+                    <div id="addiv"><button id="addDocumentButton" class="btn btn-primary" onclick="associateDoc()">Associate Document</button></div>
+                {{/if}}
+            </div>
             <div class="control-group" style="display: inline-block;">
                 {{#if flowchartAvailable}}
                     <div id="sfdiv">
                         <button id="showFlowchartButton" class="btn btn-primary"
-                                onclick="showFlowchartEditor('{{assets.tables.[0].fields.name.value}}', '{{flowchartString}}')">Edit Flowchart</button>
+                                onclick="showFlowchartEditor('{{assets.tables.[0].fields.name.value}}', '{{flowchartPath}}')">Edit Flowchart</button>
                     </div>
                 {{else}}
                     <div id="aFdiv"><button id="addFlowchartButton" class="btn btn-primary" onclick="associateEditorFlowChart('{{assets.tables.[0].fields.name.value}}')">Associate Flowchart</button></div>

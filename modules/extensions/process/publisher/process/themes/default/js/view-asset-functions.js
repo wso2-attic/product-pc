@@ -48,6 +48,8 @@ function showBPMN() {
     $("#pdfUploaderView").hide();
     $("#holder").hide();
     $("#flowChartEditorView").hide();
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").hide();
 
     $.ajax({
         url: '/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/' + fieldsName + "/" + fieldsVersion,
@@ -74,6 +76,8 @@ function viewText() {
     $("#pdfUploaderView").hide();
     $("#holder").hide();
     $("#flowChartEditorView").hide();
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").hide();
 }
 
 function editText() {
@@ -135,6 +139,8 @@ function showTextEditor() {
     $("holder").hide();
     $("#flowChartEditorView").hide();
     $("#analyticsConfigDiv").hide();
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").hide();
 
     tinymce.init({
         selector: "#processContent"
@@ -151,6 +157,8 @@ function showBPMNUploader() {
     $("#holder").hide();
     $("#flowChartEditorView").hide();
     $("#analyticsConfigDiv").hide();
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").hide();
 }
 
 function showOverview(e) {
@@ -166,6 +174,108 @@ function showOverview(e) {
     $("#holder").hide();
     $("#flowChartEditorView").hide();
     $("#analyticsConfigDiv").hide();
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").hide();
+}
+
+function downloadDocument(relativePath) {
+    $.ajax({
+        url: '/publisher/assets/process/apis/download_document?process_doc_path=' + relativePath,
+        type: 'GET',
+        success: function (response) {
+            var docNameWithExt = relativePath.substr(relativePath.lastIndexOf('/') + 1);
+            var byteCharacters = atob(response);
+
+            var byteNumbers = new Array(byteCharacters.length);
+            for (var i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            var contentType = 'application/msword';
+            var byteArray = new Uint8Array(byteNumbers);
+            var blob = new Blob([byteArray], {type: contentType});
+            saveAs(blob, docNameWithExt);
+        },
+        error: function () {
+            alertify.error('Text editor error');
+        }
+    });
+}
+
+function showDocument() {
+    $("#overviewDiv").hide();
+    $("#processTextContainer").hide();
+    $("#processTextEditDiv").hide();
+    $("#bpmnViewDiv").hide();
+    $("#bpmnEditDiv").hide();
+    $("#pdfUploaderView").hide();
+    $("#holder").hide();
+    $("#flowChartEditorView").hide();
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").show();
+
+    $.ajax({
+        url: '/publisher/assets/process/apis/get_process_doc?process_path=/_system/governance/processes/' + fieldsName + "/" + fieldsVersion,
+        type: 'GET',
+        success: function (data) {
+            var response = JSON.parse(data);
+            for(var i = 0; i < response.length; i++){
+                var table = document.getElementById("docTable");
+                var rowCount = table.rows.length;
+                var row = table.insertRow(rowCount);
+                var cellDocName = row.insertCell(0);
+                var cellDocSummary = row.insertCell(1);
+                var cellDocUrl = row.insertCell(2);
+                var cellDocPath = row.insertCell(3);
+                cellDocName.innerHTML = response[i].documentname;
+                cellDocSummary.innerHTML = response[i].summary;
+
+                if(response[i].url != "NA") {
+                    var anchorUrlElement = document.createElement("a");
+                    anchorUrlElement.setAttribute("id", "documentUrl" + i);
+                    anchorUrlElement.setAttribute("href", response[i].url);
+                    anchorUrlElement.setAttribute('target', '_blank');
+                    anchorUrlElement.innerHTML = "open";
+                    cellDocUrl.appendChild(anchorUrlElement);
+                } else {
+                    cellDocUrl.innerHTML = response[i].url;
+                }
+
+                if(response[i].path != "NA") {
+                    var anchorElement = document.createElement("a");
+                    anchorElement.setAttribute("id", "document" + i);
+                    var path = response[i].path;
+                    anchorElement.onclick = function() {
+                        var currentPath = path;
+                        downloadDocument(currentPath);
+                    };
+                    anchorElement.innerHTML = "download";
+                    cellDocPath.appendChild(anchorElement);
+                } else {
+                    cellDocPath.innerHTML = response[i].path;
+                }
+            }
+        },
+        error: function () {
+            alertify.error('document retrieving error');
+        }
+    });
+}
+
+function associateDoc() {
+    $("#overviewDiv").hide();
+    $("#processTextContainer").hide();
+    $("#processTextEditDiv").hide();
+    $("#bpmnViewDiv").hide();
+    $("#bpmnEditDiv").hide();
+    $("#pdfUploaderView").hide();
+    $("#holder").hide();
+    $("#flowChartEditorView").hide();
+    $("#docUploaderDiv").show();
+    $("#docViewDiv").hide();
+}
+
+function newDocFormToggle() {
+    $("#addNewDoc").toggle("slow");
 }
 
 function showAnalyticsConfigurer() {
@@ -578,6 +688,8 @@ function showPDF() {
     $("#holder").show();
     $("#pdfUploaderView").hide();
     $("#flowChartEditorView").hide();
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").hide();
 
     if (pdfDoc == null) {
         loadPdf();
@@ -592,7 +704,8 @@ function associatePdf(element) {
     $("#docView").hide();
     $("#pdfUploaderView").show();
     $("#flowChartEditorView").hide();
-
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").hide();
 }
 
 function loadPdf() {
@@ -727,7 +840,7 @@ function associateEditorFlowChart(name) {
     $("#processTextView").hide();
 }
 
-function showFlowchartEditor(name, flowchartString) {
+function showFlowchartEditor(name, flowchartPath) {
     $('#flowchart-editor-header').text(name);
     $("#overviewDiv").hide();
     $("#flowChartEditorView").show();
@@ -735,13 +848,27 @@ function showFlowchartEditor(name, flowchartString) {
     $("#docView").hide();
     $("#bpmnView").hide();
     $("#processTextView").hide();
-    _loadEditableFlowChart(flowchartString, '#editor_canvas');
+
+    flowchartPath = "/_system/governance/" + flowchartPath;
+    $.ajax({
+        url: '/publisher/assets/process/apis/get_process_flowchart',
+        type: 'GET',
+        dataType: 'text',
+        data: {'flowchartPath':flowchartPath},
+        success: function (data) {
+            _loadEditableFlowChart(data, '#editor_canvas');
+        },
+        error: function () {
+            alertify.error('Error retrieving flowchart');
+        }
+    });
 }
 
 function redirectTo(element) {
     element.click();
 }
 
+//******************************DAS Analytics Configuration***********************************
 function addProcessVariableRow(tableID) {
 
     var table = document.getElementById(tableID);
@@ -841,78 +968,79 @@ function saveProcessVariables(tableID){
     });
 }
 
-function configAnalytics(){
-    var isDasConfigedHidEl = $('#hiddenElementIsDASConfiged').val();
+function configAnalytics() {
+    var hiddenElementIsDASConfiged = $('#hiddenElementIsDASConfiged').val();
 
-    if(isDasConfigedHidEl=="false"){
-        flagToReturn=false;
-        if(!$('#eventStreamName').val()){
+    if (hiddenElementIsDASConfiged == "false") {
+        flagToReturn = false;
+        if (!$('#eventStreamName').val()) {
             alertify.error("Event Stream Name Cannot be Empty");
-            flagToReturn=true;
+            flagToReturn = true;
         }
-        if(!$('#eventStreamVersion').val()){
+        if (!$('#eventStreamVersion').val()) {
             alertify.error("Event Stream Version Cannot be Empty");
-            flagToReturn=true;
+            flagToReturn = true;
         }
-        if(!$('#eventReceiverName').val()){
+        if (!$('#eventReceiverName').val()) {
             alertify.error("Event Receiver Name Cannot be Empty");
-            flagToReturn=true;
+            flagToReturn = true;
         }
 
-        if(flagToReturn){
+        if (flagToReturn) {
             return;
         }
 
-        if( saveProcessVariables('dataTable')=="ERROR"){
+        if (saveProcessVariables('dataTable') == "ERROR") {
             return;
         }
 
-        var eventStreamName=$('#eventStreamName').val();
-        var eventStreamVersion=$('#eventStreamVersion').val();
-        var eventStreamDescription=$('#eventStreamDescription').val();
-        var eventStreamNickName=$('#eventStreamNickName').val();
-        var eventReceiverName=$('#eventReceiverName').val();
+        var eventStreamName = $('#eventStreamName').val();
+        var eventStreamVersion = $('#eventStreamVersion').val();
+        var eventStreamDescription = $('#eventStreamDescription').val();
+        var eventStreamNickName = $('#eventStreamNickName').val();
+        var eventReceiverName = $('#eventReceiverName').val();
 
         //var inputEventAdapterType=
-        var eventStreamId=eventStreamName+":"+eventStreamVersion;
-        var dasConfigData={};
-        dasConfigData["eventStreamName"]=eventStreamName;
-        dasConfigData["eventStreamVersion"]=eventStreamVersion;
-        dasConfigData["eventStreamDescription"]=eventStreamDescription;
-        dasConfigData["eventStreamNickName"]=eventStreamNickName;
-        dasConfigData["eventStreamId"]=eventStreamId;
-        dasConfigData["eventReceiverName"]=eventReceiverName;
-        dasConfigData["processVariables"]=processVariablesObjsArr;
+        var eventStreamId = eventStreamName + ":" + eventStreamVersion;
+        var dasConfigData = {};
+        dasConfigData["eventStreamName"] = eventStreamName;
+        dasConfigData["eventStreamVersion"] = eventStreamVersion;
+        dasConfigData["eventStreamDescription"] = eventStreamDescription;
+        dasConfigData["eventStreamNickName"] = eventStreamNickName;
+        dasConfigData["eventStreamId"] = eventStreamId;
+        dasConfigData["eventReceiverName"] = eventReceiverName;
+        dasConfigData["processVariables"] = processVariablesObjsArr;
 
-        var processName= $('#view-header').text();
-        var processVersion=$('#process-version').text();
+        var processName = $('#view-header').text();
+        var processVersion = $('#process-version').text();
 
         $.ajax({
             url: '/publisher/assets/process/apis/config_das_analytics',
             type: 'POST',
-            data: {'dasConfigData': JSON.stringify(dasConfigData),'processName':processName, 'processVersion':processVersion },
-            success:function(configurationStatus){
-                if(configurationStatus=="true"){
+            data: {
+                'dasConfigData': JSON.stringify(dasConfigData),
+                'processName': processName,
+                'processVersion': processVersion
+            },
+            success: function (configurationStatus) {
+                if (configurationStatus == "true") {
                     showOverview(this);
-                    //document.getElementById("btn_config_analytics").hidden=true;
-                    //$("#btn_config_analytics").hide();
-                    //$("#btn_config_analytics").attr('disabled', true);
                     document.getElementById("btn_config_analytics").innerHTML = "View Analytics Configs";
                     //$("#btn_config_analytics").attr("textContent","View Analytics Configs");
                     //$("#btn_config_analytics").innerHTML = "View Analytics Configs";
-                    $("#btn_save_analytics_configurations").attr("disabled",true);
-                    $("#btn_addProcessVariablesRow").attr("disabled",true);
-                    $("#btn_deleteProcessVariablesRow").attr("disabled",true);
+                    $("#btn_save_analytics_configurations").attr("disabled", true);
+                    $("#btn_addProcessVariablesRow").attr("disabled", true);
+                    $("#btn_deleteProcessVariablesRow").attr("disabled", true);
                     ///
                     /*$("#dataTable tr").each(function () {
 
-                        $('td', this).each(function () {
-                            $(this).find(":input").attr("disabled",true);
-                            $(this).find(":select-one").attr("disabled",true);
-                        })
+                     $('td', this).each(function () {
+                     $(this).find(":input").attr("disabled",true);
+                     $(this).find(":select-one").attr("disabled",true);
+                     })
 
-                    });*/
-                }else{
+                     });*/
+                } else {
                     alertify.error("Error in creating Event Stream/Reciever in DAS")
                 }
             },
@@ -921,4 +1049,27 @@ function configAnalytics(){
             }
         });
     }
+}
+
+function validateDocument() {
+    if (document.getElementById('docName').value.length == 0) {
+        alertify.error('Please enter document name.');
+        return false;
+    } else if ((!document.getElementById('optionsRadios7').checked) && (!document.getElementById('optionsRadios8').checked)) {
+        alertify.error('Please select a source.');
+        return false;
+    } else if (document.getElementById('optionsRadios7').checked) {
+        if (document.getElementById('docUrl').value.length == 0) {
+            alertify.error('Please give the document url.');
+            return false;
+        }
+    } else if (document.getElementById('optionsRadios8').checked) {
+        var ext = $('#docLocation').val().split('.').pop().toLowerCase();
+        if ($.inArray(ext, ['docx', 'doc']) == -1) {
+            alertify.error('invalid document extension!');
+            return false;
+        }
+        $("#docExtension").val(ext);
+    }
+    return true;
 }
