@@ -107,11 +107,20 @@
                 <name>Banner</name>
             </field>
         </table>
+
         <table name="Flowchart">
-            <field type="text" required="false">
-               <name>Path</name>
-            </field>
+             <field type="text" required="false">
+                <name>Path</name>
+             </field>
         </table>
+
+        <table name="bpmnDesign">
+             <field type="text" required="true">
+                   <name>bpmnDesignPath</name>
+             </field>
+        </table>
+
+
 
     </content>
 

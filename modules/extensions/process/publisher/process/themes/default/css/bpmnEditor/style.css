@@ -1,0 +1,55 @@
+.textBox{
+     text-align: center; 
+    
+}
+
+#toolbox input{
+    width: 45px;
+    height: 45px;
+    opacity:1;
+}
+
+
+#file-upload{
+    display: none;
+}
+
+#download-input{
+    margin: 0 0.5em;
+}
+
+
+marker{
+    fill: #333;
+}
+
+path.link {
+    fill: none;
+    stroke: #333;
+    stroke-width: 5px;
+    cursor: default;
+}
+
+path.link:hover{
+    stroke: rgb(94, 196, 204);
+}
+
+g.connect-node rect{
+    fill: #BEFFFF;
+}
+
+path.link.hidden{
+    stroke-width: 0;
+}
+
+path.link.selected {
+    stroke: rgb(229, 172, 247);
+}
+
+#mainSvg{
+    border: 2px solid black; 
+}
+.selected {
+    fill: red;
+    cursor: pointer;
+}
