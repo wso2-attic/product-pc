@@ -86,9 +86,12 @@ asset.server = function (ctx) {
             },{
                 url: 'upload_bpmnEditorDiagram',
                 path: 'upload_bpmnEditorDiagram.jag'
-            },{
+            }, {
                 url: 'get_bpmnEditorDiagram',
                 path: 'get_bpmnEditorDiagram.jag'
+            },{
+                url: 'get_process_flowchart',
+                path: 'get_process_flowchart.jag'
             }, {
                 url: 'get_process_doc',
                 path: 'get_process_doc.jag'
@@ -122,7 +125,7 @@ asset.renderer = function (ctx) {
             } else {
                 page.bpmnAvaliable = true;
             }
-            if (page.assets.tables[8].fields.bpmnDesignPath.value == "NA") {
+            if (page.assets.tables[9].fields.bpmnDesignPath.value == "NA") {
                 page.bpmnDesignAvailable = false;
             } else {
                 page.bpmnDesignAvailable = true;
@@ -146,14 +149,12 @@ asset.renderer = function (ctx) {
                 log.debug(page);
             }
 
-            var flowchartPath = resourcePath.replace("processes", "flowchart");
-            var flowchartString = ps.getFlowchart(flowchartPath);
-            if (flowchartString != "NA") {
+            var flowchartPath = page.assets.tables[8].fields.path.value;
+            if(flowchartPath != "NA"){
                 page.flowchartAvailable = true;
-                page.flowchartString = flowchartString.toString();
-            } else {
+                page.flowchartPath = flowchartPath;
+            }else{
                 page.flowchartAvailable = false;
-                page.flowchartString = null;
             }
 
         }
