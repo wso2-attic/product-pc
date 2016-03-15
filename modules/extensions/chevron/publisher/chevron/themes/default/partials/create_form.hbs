@@ -1,0 +1,58 @@
+<!--
+~ Copyright (c) 2014 WSO2 Inc. (http://wso2.com) All Rights Reserved.
+~
+~   Licensed under the Apache License, Version 2.0 (the "License");
+~   you may not use this file except in compliance with the License.
+~   You may obtain a copy of the License at
+~
+~        http://www.apache.org/licenses/LICENSE-2.0
+~
+~   Unless required by applicable law or agreed to in writing, software
+~   distributed under the License is distributed on an "AS IS" BASIS,
+~   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~   See the License for the specific language governing permissions and
+~   limitations under the License.
+-->
+{{#with assets}}
+<form  method='post' action='{{url ""}}/apis/assets?type={{../rxt.shortName}}' class="form-horizontal" id="form-asset-create" data-redirect-url='{{url ""}}/asts/{{../rxt.shortName}}/list' >
+    <div class="control-group">
+        <div class="toolbox">
+            <div class="chevron-toolbox" id="cId">
+            <!--<div id = "descriptor" class ="descriptor"></div> -->
+                <textarea  class="text-edit"name="0"></textarea>
+            </div>
+
+            <button type="button" class="createConnectionsBtn btn-primary" id="connectionVisibility">Hide Connections</button>
+         <button type="button" class="removeDiagramBtn btn-primary" id="removeDiagram">Reset Canvas</button>
+         <button type="button" class="removeElementBtn btn-primary" id="btn-delete">Remove Element</button>
+            
+        </div>
+        <div id="testDiv" style="display: none">
+  <div>This is your div content</div>
+</div>
+        
+        <div id="dropArea">
+
+        </div>
+        <div>
+            {{> create_main_properties .}}
+        </div>
+        <div>
+            {{> create_element_properties .}}
+        </div>
+        <hr width="800px" />
+        <div id="images">
+            <table>
+                <tbody><tr>
+                    <td><b><label class="control-label">Thumbnail</label></b></td><td><input type="file" value="" name="images_thumbnail" class="input-large"></td>
+                </tr>
+            </tbody></table>
+        </div>
+    </div>
+    <div id="saveButtons" class="form-actions">
+        <input type="submit" id="btn-create-asset" class="btn btn-primary" name="addNewAssetButton" value='{{t "Create"}}'>
+        <button class="btn" type="reset">{{t "Reset"}}</button>
+        <input type="hidden" value="{{rxt.shortName}}" name="{{rxt.shortName}}" id="meta-asset-type">
+    </div>
+</form>
+{{/with}}

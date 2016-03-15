@@ -1,0 +1,47 @@
+<script>
+    var isSocial = ('{{features.social.enabled}}' == 'true');
+</script>
+{{#with assets}}
+{{#with attributes}}
+<div class="widget-content">
+     <button type="button" class="viewConnectionsBtn" id="connectionVisibility">Hide Connections</button>
+    <div id="canvasArea">
+    </div>
+</div>
+<div id = "ast-properties">
+    <div id="viewMainProps" name= "propTable">
+        <hr width="800">
+        <table id="htmlgrid" class="testgrid" >
+            <tr>
+                <th>Properties</th>
+                <th>Value</th>
+            </tr>
+            <tr id="tr_name">
+                <td>Name</td>
+                <td id = "td_name" class="processName">{{overview_name}}</td>
+            </tr>
+            <tr id="tr_owner">
+                <td>Owner</td>
+                <td id = "td_owner">{{properties_owner}}</td>
+            </tr>
+            <tr id="R1">
+                <td>Predecessors</td>
+                <td id = "td_pre">{{properties_predecessors}}</td>
+            </tr>
+            <tr id="R2">
+                <td>Successors</td>
+                <td id = "td_suc">{{properties_successors}}</td>
+            </tr>
+            <tr id="R5">
+                <td>Description</td>
+                <td id = "td_desc">{{overview_description}}</td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        {{> view-element-properties .}}
+    </div>
+</div>
+</div>
+{{/with}}
+{{/with}}

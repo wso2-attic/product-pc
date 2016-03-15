@@ -1,0 +1,63 @@
+<%/*<!--
+ ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+ -->*/%>
+<div class="row">
+    <div class="panel-inbox">
+        <!-- Default panel contents -->
+        <div class=" margin-left-double table-title">Process Level Analysis</div>
+        <div class="table-body margin-left-double">
+            <div class="col-sm-3 col-md-3 col-lg-3 sidebar table-status-column ">
+              <ul class="nav nav-sidebar nav-pills nav-stacked margin-bottom-double margin-top-double">
+                <%
+function updateActiveStatusNavTab(status, button) {
+    if (status != button) {
+        return "";
+    }
+    return "class=\"active\"";
+}
+%>
+                <li <%=updateActiveStatusNavTab(statusQuery, "processIdVsAvgExecutionTime")%>><a href="processes?status_query=processIdVsAvgExecutionTime">PROCESS ID VS AVERAGE EXECUTION TIME</a></li>
+                <br/>
+                <li <%=updateActiveStatusNavTab(statusQuery, "processInstanceCountVsProcessId")%>><a href="processes?status_query=processInstanceCountVsProcessId">PROCESS INSTANCE COUNT VS PROCESS ID</a></li>
+                <br/>
+                <li <%=updateActiveStatusNavTab(statusQuery, "processVersionVsAvgExecutionTime")%>><a href="processes?status_query=processVersionVsAvgExecutionTime">PROCESS VERSION VS AVERAGE EXECUTION TIME</a></li>
+                <br/>
+                <li <%=updateActiveStatusNavTab(statusQuery, "processInstanceCountVsProcessVersion")%>><a href="processes?status_query=processInstanceCountVsProcessVersion">PROCESS INSTANCE COUNT VS PROCESS VERSION</a></li>
+                <br/>
+                <li <%=updateActiveStatusNavTab(statusQuery, "processInstanceIdVsExecutionTime")%>><a href="processes?status_query=processInstanceIdVsExecutionTime">PROCESS INSTANCE ID VS EXECUTION TIME</a></li>
+                <br/>
+                <li <%=updateActiveStatusNavTab(statusQuery, "processInstanceCountVsDate")%>><a href="processes?status_query=processInstanceCountVsDate">PROCESS INSTANCE COUNT VS DATE</a></li>
+              </ul>
+            </div>
+
+            <div class="col-sm-9 col-md-9 col-lg-9 main padding-none">
+<%if (statusQuery == "processIdVsAvgExecutionTime") {
+    include("partials/filters/process/avgTimeProcessIdFilter.jag");
+} else if (statusQuery == "processInstanceCountVsProcessId") {
+    include("partials/filters/process/processInstanceCountProcessIdFilter.jag");
+} else if (statusQuery == "processVersionVsAvgExecutionTime") {
+    include("partials/filters/process/processVersionAvgExecTimeFilter.jag");
+} else if (statusQuery == "processInstanceCountVsProcessVersion") {
+    include("partials/filters/process/processInstanceCountProcessVersionFilter.jag");
+} else if (statusQuery == "processInstanceIdVsExecutionTime") {
+    include("partials/filters/process/processInstanceIdExecTimeFilter.jag");
+} else if (statusQuery == "processInstanceCountVsDate") {
+    include("partials/filters/process/completedProcessInstanceCountDateFilter.jag");
+}
+%>
+</div>
+</div>
+</div>
+</div>

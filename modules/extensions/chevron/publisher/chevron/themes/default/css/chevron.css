@@ -1,0 +1,181 @@
+
+.descriptor {
+    width:17px;
+    height:17px;
+    border:1px;
+    position: absolute;
+    left: 10px;
+    top:0px;
+    cursor:pointer;
+    
+    background-image: url(../img/showDescriptionIcon.png);
+}
+.createConnectionsBtn{
+position: absolute;
+    top: 150px;
+    right:620px;
+    background: #2d9dee;
+    color:#FFFFFF;
+}
+.createViewConnectionsBtn{
+  position: absolute;
+    top: 120px;
+    right:620px;
+    background: #2d9dee;
+    color:#FFFFFF;
+  
+}
+.connectionsBtn{
+    position: absolute;
+    top: 120px;
+    right:620px;
+    background: #2d9dee;
+    color:#FFFFFF;
+}
+.viewConnectionsBtn{
+    position: absolute;
+    top: 120px;
+    right:620px;
+    background:#2d9dee;
+    color:#FFFFFF;
+}
+
+.removeDiagramBtn{
+     position: absolute;
+    top: 150px;
+    right:775px;
+    background: #2d9dee;
+    color:#FFFFFF;
+
+}
+.removeElementBtn{
+     position: absolute;
+    top: 150px;
+    right:900px;
+    background: #2d9dee;
+    color:#FFFFFF;
+
+}
+.removeElementEditBtn{
+     position: absolute;
+    top: 120px;
+    right:800px;
+    background: #2d9dee;
+    color:#FFFFFF;
+
+}
+.chevronEndPoint{
+    fillStyle:transparent;
+}
+
+td.T {
+    width: 100%;
+}
+td.canvasCell{
+
+height:80px;
+width:100px;
+ border:solid 1px gray;
+
+}
+.testgrid input {
+    width: 98%;
+  
+}
+#canvasGrid{
+    width:1000px;
+    height: 400px;
+    border:solid 1px gray;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+#dropArea {
+    cursor: pointer;
+    border: solid 1px gray;
+    height: 400px;
+    width: 800px;
+    position:relative;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    
+}
+#canvasArea{
+     cursor: pointer;
+    border: solid 1px gray;
+    height: 400px;
+    width: 800px;
+    position:relative;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    background-color:rgba(255, 255, 255,0.8);
+        
+}
+.chevron-text {
+    height: 5px;
+    width: 10px;
+
+}
+.description-main {
+    resize: none;
+    width: 40em;
+    height: 3em;
+}
+.toolbox {
+    border: solid 1px gray;
+    height: 80px;
+    width: 80px;
+}
+.text-edit {
+    position: relative;
+    resize: none;
+    width: 6em;
+    height: 3em;
+    top: 19.9340209960938px;
+    left: 35.5728759765625px;
+    background-color: #FFCC33;
+    text-align: center;
+    font-family: Arial;
+    visibility: hidden;
+    border: 0px solid #000000;
+}
+.chevron {
+    position:absolute;
+    cursor:pointer;
+    width: 165px;
+    height: 80px;
+   
+    background-image: url(../img/chevron-icon.jpg);
+
+}
+._jsPlumb_drag_select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;    
+}
+#propTable{
+    padding-bottom:10px; 
+    margin-left: 10px;
+}
+#viewMainProps {
+    padding-bottom: 10px;
+    margin-left: 10px;
+}
+
+
+#default-canvas {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-top: 30px;
+}
+.chevron-toolbox {
+    position: absolute;
+    width: 72px;
+    height: 80px;
+
+   
+    background-image: url(../img/chevron-toolbox.png);
+}

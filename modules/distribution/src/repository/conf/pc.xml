@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WSO2PC xmlns:ns2="http://wso2.org/pc/config">
+    <analytics>
+        <analyticsEnabled>true</analyticsEnabled>
+        <dasBaseUrl>https://localhost:9445/</dasBaseUrl>
+        <dasUsername>admin</dasUsername>
+        <dasPassword>admin</dasPassword>
+    </analytics>
+</WSO2PC>
