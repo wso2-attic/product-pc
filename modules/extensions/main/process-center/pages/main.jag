@@ -13,6 +13,7 @@ if (server.current(session) == null) {
 else {
 var publisherUrl = configs.apps.publisher;
 var storeUrl = configs.apps.store;
+var analyticsUrl = configs.apps.analyticsExplorer;
 var logoutUrl = caramel.configs().context + '/logout';
 
 %>
@@ -111,6 +112,7 @@ a{
 <div class="txt"><strong><i class="fa fa-bars fa-1g"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SELECT AN ACTION </strong></div><br/>
 <a href=<%=publisherUrl%>><div class="btn"><i class="fa fa-pencil fa-2x"></i>&nbsp;&nbsp;&nbsp;&nbsp; Process Designer</div></a>
 <a href=<%=storeUrl%>><div class="btn"><i class="fa fa-eye fa-2x"></i>&nbsp;&nbsp;&nbsp; Process Explorer</div></a>
+<a href=<%=analyticsUrl%>><div class="btn"><i class="fa fa-bar-chart fa-2x"></i>&nbsp;&nbsp;&nbsp; BPMN Analytics Explorer</div></a>
 </div>
 
 
