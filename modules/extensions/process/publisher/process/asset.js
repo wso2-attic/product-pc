@@ -155,6 +155,9 @@ asset.renderer = function (ctx) {
             var ps = new ProcessStore();
             var conData = ps.getSucessorPredecessorSubprocessList(resourcePath);
             var conObject = JSON.parse(conData);
+            if (log.isDebugEnabled()) {
+                log.debug(conObject);
+            }
 
             page.involveProcessList = conObject;
 
@@ -184,6 +187,9 @@ asset.renderer = function (ctx) {
                 //log.info(page);
             }
 
+            if (log.isDebugEnabled()) {
+                log.debug(page);
+            }
         }
     };
 };

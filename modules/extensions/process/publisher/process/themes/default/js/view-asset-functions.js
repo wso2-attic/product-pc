@@ -298,9 +298,8 @@ function showAnalyticsConfigurer() {
 
         $('#eventStreamNickName').val($('#view-header').text()+"_"+$('#process-version').text()+"_process_stream"); //same as eventStreamName
         $('#eventStreamNickName').attr("readonly","true");
+}
 
-
-    }
 function editProcessOwner(e) {
     if ($(e).text() == '') {
         alertify.error('Process owner field is empty.');

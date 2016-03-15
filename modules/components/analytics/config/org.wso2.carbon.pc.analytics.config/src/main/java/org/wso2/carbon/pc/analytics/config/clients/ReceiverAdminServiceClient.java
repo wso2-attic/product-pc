@@ -1,25 +1,39 @@
+/*
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.wso2.carbon.pc.analytics.config.clients;
 
 import java.rmi.RemoteException;
-
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.event.receiver.stub.EventReceiverAdminServiceStub;
 import org.wso2.carbon.event.receiver.stub.types.BasicInputAdapterPropertyDto;
 
-//import das.config.service.stubs.EventReceiverAdminServiceStub;
-
+/**
+ * Access DAS EventReceiverAdminService and creates the event receiver.
+ */
 public class ReceiverAdminServiceClient {
 	private final String serviceName = "EventReceiverAdminService";
 	private EventReceiverAdminServiceStub eventReceiverAdminServiceStub;
-	//private EventReceiverAdminService eventReceiverAdminServiceStub;
-
 	private String endPoint;
 	private String receiverName;
 	private String streamId;
 	private String eventAdapterType="wso2event";
-
+	private static final Log log = LogFactory.getLog(ReceiverAdminServiceClient.class);
 
 	public ReceiverAdminServiceClient(String backEndUrl, String sessionCookie, String receiverName, String streamId, String wso2event)
 			{
@@ -27,20 +41,17 @@ public class ReceiverAdminServiceClient {
 				try {
 					eventReceiverAdminServiceStub = new EventReceiverAdminServiceStub(endPoint);
 				} catch (Exception axisFault) {
-					axisFault.printStackTrace();
+					log.error("Error in connecting to DAS EventReceiverAdmin Service");
 				}
 		this.receiverName=receiverName;
 		this.streamId=streamId;
 
-		// Authenticate Your stub from sessionCooke
+		// Authenticate stub from sessionCooke
 		ServiceClient serviceClient;
 		Options option;
 
 		serviceClient = eventReceiverAdminServiceStub._getServiceClient();
 		option = serviceClient.getOptions();
-		// option.setAction("urn:listServices");
-		// System.out.println(option.getAction());
-		// option.setTo(new EndpointReference(endPoint));
 		option.setManageSession(true);
 		option.setProperty(
 				org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
@@ -49,93 +60,6 @@ public class ReceiverAdminServiceClient {
 	}
 
 	public boolean deployEventReceiverConfiguration() {
-		
-		/*try {
-			eventReceiverAdminServiceStub=new EventReceiverAdminServiceStub();
-		} catch (AxisFault e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		/*DeployTextEventReceiverConfiguration textEventReceiverConfiguration=new DeployTextEventReceiverConfiguration();
-
-		textEventReceiverConfiguration.setEventReceiverName(eventReceiverName);
-		textEventReceiverConfiguration.setStreamNameWithVersion(streamNameWithVersion);
-		textEventReceiverConfiguration.setEventAdapterType(eventAdapterType);
-		//textEventReceiverConfiguration.setMappingEnabled(false);
-		
-		BasicInputAdapterPropertyDto props[]=new BasicInputAdapterPropertyDto[1];
-		props[0]=new BasicInputAdapterPropertyDto();	
-		props[0].setKey("events.duplicated.in.cluster");
-		props[0].setValue("false");
-		
-		textEventReceiverConfiguration.setInputPropertyConfiguration(props);
-		
-		*//*
-		EventMappingPropertyDto[] mappingProps= new EventMappingPropertyDto[1];
-		mappingProps[0]=new EventMappingPropertyDto();
-		mappingProps[0].setName("customMapping");
-		//mappingProps[0].setDefaultValue("disable");
-		mappingProps[0].setType("wso2event");	
-		mappingProps[0].setValueOf("disable");
-		textEventReceiverConfiguration.setInputMappings(mappingProps); *//*
-		
-		//textEventReceiverConfiguration.setInputMappings();
-		try {
-			eventReceiverAdminServiceStub.deployTextEventReceiverConfiguration(textEventReceiverConfiguration);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-
-		//////////////////////////////////
-
-		/*DeployXmlEventReceiverConfiguration xmlEventReceiverConfiguration=new DeployXmlEventReceiverConfiguration();
-		xmlEventReceiverConfiguration.setEventAdapterType(eventAdapterType);
-		xmlEventReceiverConfiguration.setEventReceiverName(eventReceiverName);
-		xmlEventReceiverConfiguration.setStreamNameWithVersion(streamNameWithVersion);
-		xmlEventReceiverConfiguration.setEventAdapterType(eventAdapterType);
-		EventMappingPropertyDto[] x= new EventMappingPropertyDto[1];
-		x[0]=new EventMappingPropertyDto();
-		x[0].setName("customMapping");
-		x[0].setDefaultValue("disable");
-		x[0].setType("wso2event");
-		
-		xmlEventReceiverConfiguration.setInputMappings(x);
-		//textEventReceiverConfiguration.setInputMappings();
-		try {
-			eventReceiverAdminServiceStub.deployXmlEventReceiverConfiguration(xmlEventReceiverConfiguration);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}*/
-
-		//////////////////////
-		/*EventReceiverAdminServiceStub.DeployWso2EventReceiverConfiguration wso2EventReceiverConfiguration=new EventReceiverAdminServiceStub.DeployWso2EventReceiverConfiguration();
-		wso2EventReceiverConfiguration.setEventReceiverName(eventReceiverName);
-		wso2EventReceiverConfiguration.setEventAdapterType(eventAdapterType);
-		wso2EventReceiverConfiguration.setFromStreamNameWithVersion(streamNameWithVersion);
-		wso2EventReceiverConfiguration.setMappingEnabled(false);
-		wso2EventReceiverConfiguration.setFromStreamNameWithVersion("");
-
-		*//*BasicInputAdapterPropertyDto props[]=new BasicInputAdapterPropertyDto[1];
-		props[0]=new BasicInputAdapterPropertyDto();
-		props[0].setKey("events.duplicated.in.cluster");
-		props[0].setValue("false");
-
-		wso2EventReceiverConfiguration.setInputPropertyConfiguration(props);*//*
-
-		*//*WSO2EventInputMapping wso2EventInputMapping = new WSO2EventInputMapping();
-		wso2EventInputMapping.setCustomMappingEnabled(mappingEnabled);*//*
-
-		EventReceiverAdminServiceStub.DeployWso2EventReceiverConfigurationResponse deployWso2EventReceiverConfigurationResponse;
-		try {
-			deployWso2EventReceiverConfigurationResponse=eventReceiverAdminServiceStub.deployWso2EventReceiverConfiguration(wso2EventReceiverConfiguration);
-
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}*/
-
-
-		///////////
 		BasicInputAdapterPropertyDto props[]=new BasicInputAdapterPropertyDto[1];
 		props[0]=new BasicInputAdapterPropertyDto();
 		props[0].setKey("events.duplicated.in.cluster");
@@ -143,6 +67,7 @@ public class ReceiverAdminServiceClient {
 		try {
 			eventReceiverAdminServiceStub.deployWso2EventReceiverConfiguration(receiverName,streamId,eventAdapterType,null,null,null,props,false,"");
 		} catch (RemoteException e) {
+			log.error("Error in deploying event receiver");
 			return false;
 		}
 		return true;

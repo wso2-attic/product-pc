@@ -8,7 +8,6 @@ if(log.isDebugEnabled()){
 
 var ps = new ProcessStore();
 var variableDetails = String(request.getParameter("processVariablesInfo"));
-//var variableDetails = String(request.getContent());
 var status = ps.saveProcessVariables(variableDetails);
 print(status);
 %>

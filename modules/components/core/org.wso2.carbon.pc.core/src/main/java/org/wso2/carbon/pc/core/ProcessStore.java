@@ -62,7 +62,6 @@ public class ProcessStore {
 
 	public String getProcessVariablesList(String resourcePath) {
 		String resourceString = "";
-		//Element variableElementsArray[] = null;
 		try {
 			RegistryService registryService =
 					ProcessCenterServerHolder.getInstance().getRegistryService();
@@ -103,38 +102,12 @@ public class ProcessStore {
 					}
 				}
 				resourceString = conObj.toString();
-
-				/*//conObj.put("variable", variablesArray);
-
-				NodeList variableElements =
-						((Element) document.getFirstChild()).getElementsByTagName("process_variable");
-				//variableElementsArray= new Element[variableElements.getLength()];
-
-				if (variableElements.getLength() != 0) {
-					for (int i = 0; i < variableElements.getLength(); i++) {
-						Element variableElement = (Element) variableElements.item(i);
-						String variableName=variableElement.getFirstChild().getNodeValue(); //getAttribute("name");
-						String variableType=variableElement.getLastChild().getNodeValue();//getAttribute("type");
-
-						JSONObject processVariabeJob = new JSONObject();
-						processVariabeJob.put("name", variableName);
-						processVariabeJob.put("type", variableType);
-						//processVariabeJob.put("id", subprocessId);
-						//processVariabeJob.put("version", subprocessVersion);
-						variablesJobArray.put(processVariabeJob);
-
-						//variableElementsArray[i]= (Element) variableElements.item(i);
-					}
-				}*/
-
 			}
 		} catch (Exception e) {
 			log.error("Failed to get the process variables list");
 		}
 		return resourceString;
 	}
-
-
 
 	public boolean saveProcessVariables(String processVariableDetails){
 		try {
@@ -156,8 +129,7 @@ public class ProcessStore {
 
 				JSONObject processVariablesJOb = processInfo.getJSONObject("processVariables");
 
-				//Map<String, Object> map = (Map<String,Object>)processVariablesJOb;
-				 Iterator<?> keys = processVariablesJOb.keys();
+                Iterator<?> keys = processVariablesJOb.keys();
 
 				/*//saving pracess variable name,type as element attributes
 				while (	keys.hasNext()){
@@ -197,7 +169,6 @@ public class ProcessStore {
 					resource.setContent(newProcessContent);
 					reg.put(processAssetPath, resource);
 				}
-
 			}
 		}catch (Exception e){
 			log.error("Failed to save processVariables", e);

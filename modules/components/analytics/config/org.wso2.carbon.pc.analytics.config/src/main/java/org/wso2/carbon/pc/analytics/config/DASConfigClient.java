@@ -20,6 +20,8 @@ package org.wso2.carbon.pc.analytics.config;
  * (initiator class in the module)
  */
 import org.apache.axis2.AxisFault;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,9 +42,11 @@ public class DASConfigClient {
     String streamNickName;
     String receiverName;
     JSONArray processVariablesJObArr;
+    private static final Log log = LogFactory.getLog(DASConfigClient.class);
 
     public boolean configDAS(String processVariableDetails) {
 
+        log.info("Configuring WSO2 DAS for analytics of WSO2 PC...");
         JSONObject processInfo = null;
         try {
             processInfo = new JSONObject(processVariableDetails);
@@ -54,7 +58,7 @@ public class DASConfigClient {
             receiverName=processInfo.getString("eventReceiverName");
             processVariablesJObArr = processInfo.getJSONArray("processVariables");
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Error in extracting data from JSON string");
         }
 
     System.setProperty(
@@ -69,29 +73,18 @@ public class DASConfigClient {
         try {
             login = new LoginAdminServiceClient(backEndUrl);
         } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();
+            log.error("Error in connecting to DAS AuthenticationAdmin Services");
         }
         String session = null;
         try {
             session = login.authenticate("admin", "admin");
         } catch (RemoteException e) {
-            e.printStackTrace();
+            log.error("Remote exception in login to DAS AuthenticationAdmin service");
         } catch (LoginAuthenticationExceptionException e) {
-            e.printStackTrace();
+            log.error("Authentication error in login to DAS AuthenticationAdmin service");
         }
-        System.out.println(session);
 
-        ////////////////
-        /*try {
-            EventReceiverAdminServiceStub eventReceiverAdminServiceStub = new EventReceiverAdminServiceStub("https://localhost:9448/services/EventReceiverAdminService");
-            EventReceiverAdminServiceStub eventReceiverAdminServiceStub2 = new EventReceiverAdminServiceStub("https://localhost:9448/services/EventReceiverAdminService");
 
-            //eventReceiverAdminServiceStub.
-        } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();
-        }*/
-
-        ///////////////
         //create event stream
         StreamAdminServiceClient streamAdminServiceClient = null;
         try {
@@ -100,17 +93,14 @@ public class DASConfigClient {
             axisFault.printStackTrace();
             return false;
         }
-        /*System.out.println("getEventStreamNames::"
-				+ streamAdminServiceClient.getGG());*/
 		boolean successCreateStream=streamAdminServiceClient.createEventStream();
-
         if(!successCreateStream){
             try {
                 login.logOut();
             } catch (RemoteException e) {
-                e.printStackTrace();
+                log.error("Remote exception in login out from DAS AuthenticationAdmin service");
             } catch (LogoutAuthenticationExceptionException e) {
-                e.printStackTrace();
+                log.error("Authentication error in login out from DAS AuthenticationAdmin service");
             }
             return false;
         }
@@ -119,16 +109,14 @@ public class DASConfigClient {
         ReceiverAdminServiceClient receiverAdminServiceClient= null;
         receiverAdminServiceClient = new ReceiverAdminServiceClient(backEndUrl, session,receiverName,streamId,"wso2event");
         boolean receiverConfigSuccess=receiverAdminServiceClient.deployEventReceiverConfiguration();
-        //receiverAdminServiceClient.deployEventReceiverConfiguration(eventReceiverName, streamNameWithVersion, eventAdapterType);
-        //EventReceiverAdminServiceStub eventReceiverAdminServiceStub=new EventReceiverAdminServiceStub(backEndUrl);
 
-
+        //logging out
         try {
             login.logOut();
         } catch (RemoteException e) {
-            e.printStackTrace();
+            log.error("Remote exception in login out from DAS AuthenticationAdmin service");
         } catch (LogoutAuthenticationExceptionException e) {
-            e.printStackTrace();
+            log.error("Authentication error in login out from DAS AuthenticationAdmin service");
         }
         return receiverConfigSuccess;
     }

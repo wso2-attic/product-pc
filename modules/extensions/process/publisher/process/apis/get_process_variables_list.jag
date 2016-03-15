@@ -7,11 +7,12 @@ if(log.isDebugEnabled()){
 }
 
 var ps = new ProcessStore();
-
 var processResourcePath = String(request.getParameter("process_resource_path"));
+
 if(log.isDebugEnabled()){
     log.debug("Retrieving process variables for " + processResourcePath);
 }
+
 var processVariablesList = ps.getProcessVariablesList(processResourcePath);
 print(processVariablesList);
 
