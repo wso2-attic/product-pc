@@ -107,6 +107,11 @@
                 <name>Banner</name>
             </field>
         </table>
+        <table name="Flowchart">
+            <field type="text" required="false">
+               <name>Path</name>
+            </field>
+        </table>
 
     </content>
 
