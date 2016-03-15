@@ -50,13 +50,6 @@
                     <div id="addiv"><button id="addDocumentButton" class="btn btn-primary" onclick="associateDoc()">Associate Document</button></div>
                 {{/if}}
             </div>
-            <div class="control-group" style="display: inline-block">
-                {{#if documentAvailable}}
-                    <div id="sddiv"><button id="viewDocumentButton" class="btn btn-primary" onclick="showDocument()">View Document</button></div>
-                {{else}}
-                    <div id="addiv"><button id="addDocumentButton" class="btn btn-primary" onclick="associateDoc()">Associate Document</button></div>
-                {{/if}}
-            </div>
             <div class="control-group" style="display: inline-block;">
                 {{#if flowchartAvailable}}
                     <div id="sfdiv">
@@ -574,7 +567,7 @@
                     <tr>
                         <td style="display:table-cell; width:100%">{{this.name}}</td>
                         <td style="display:table-cell; width:100%">{{this.type}}</td>
-                        --> </tr>
+                    </tr>
                 {{/each}}
                 </tr>
             </table>

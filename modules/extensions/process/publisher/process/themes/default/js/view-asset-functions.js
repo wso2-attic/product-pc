@@ -1049,6 +1049,7 @@ function configAnalytics() {
             },
             success: function (configurationStatus) {
                 if (configurationStatus == "true") {
+                    alertify.success("Analytics Configuration Success");
                     showOverview(this);
                     document.getElementById("btn_config_analytics").innerHTML = "View Analytics Configs";
                     //$("#btn_config_analytics").attr("textContent","View Analytics Configs");

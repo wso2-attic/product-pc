@@ -58,7 +58,8 @@ public class DASConfigClient {
             receiverName=processInfo.getString("eventReceiverName");
             processVariablesJObArr = processInfo.getJSONArray("processVariables");
         } catch (JSONException e) {
-            log.error("Error in extracting data from JSON string");
+            String errMsg="Error in extracting data from JSON string";
+            log.error(errMsg,e);
         }
 
     System.setProperty(
@@ -72,25 +73,27 @@ public class DASConfigClient {
         LoginAdminServiceClient login = null;
         try {
             login = new LoginAdminServiceClient(backEndUrl);
-        } catch (AxisFault axisFault) {
-            log.error("Error in connecting to DAS AuthenticationAdmin Services");
+        } catch (AxisFault e) {
+            String errMsg="Error in connecting to DAS AuthenticationAdmin Services";
+            log.error(errMsg,e);
         }
         String session = null;
         try {
             session = login.authenticate("admin", "admin");
         } catch (RemoteException e) {
-            log.error("Remote exception in login to DAS AuthenticationAdmin service");
+            String errMsg="Remote exception in login to DAS AuthenticationAdmin service";
+            log.error(errMsg,e);
         } catch (LoginAuthenticationExceptionException e) {
-            log.error("Authentication error in login to DAS AuthenticationAdmin service");
+            String errMsg="Authentication error in login to DAS AuthenticationAdmin service";
+            log.error(errMsg,e);
         }
-
 
         //create event stream
         StreamAdminServiceClient streamAdminServiceClient = null;
         try {
             streamAdminServiceClient = new StreamAdminServiceClient(backEndUrl, session,streamName,stremaVersion,streamId,streamNickName,streamDescription, processVariablesJObArr);
         } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();
+            log.error(axisFault.getMessage());
             return false;
         }
 		boolean successCreateStream=streamAdminServiceClient.createEventStream();
@@ -98,25 +101,33 @@ public class DASConfigClient {
             try {
                 login.logOut();
             } catch (RemoteException e) {
-                log.error("Remote exception in login out from DAS AuthenticationAdmin service");
+                String errMsg="Remote exception in login out from DAS AuthenticationAdmin service";
+                log.error(errMsg,e);
             } catch (LogoutAuthenticationExceptionException e) {
-                log.error("Authentication error in login out from DAS AuthenticationAdmin service");
+                String errMsg="Authentication error in login out from DAS AuthenticationAdmin service";
+                log.error(errMsg,e);
             }
             return false;
         }
+        log.info("Created the Event Stream: "+streamId+" in WSO2 DAS");
 
         //create event receiver
         ReceiverAdminServiceClient receiverAdminServiceClient= null;
         receiverAdminServiceClient = new ReceiverAdminServiceClient(backEndUrl, session,receiverName,streamId,"wso2event");
         boolean receiverConfigSuccess=receiverAdminServiceClient.deployEventReceiverConfiguration();
+        if(receiverConfigSuccess){
+            log.info("Created the Event Receiver: "+receiverName+"for the "+streamId+" in WSO2 DAS");
+        }
 
         //logging out
         try {
             login.logOut();
         } catch (RemoteException e) {
-            log.error("Remote exception in login out from DAS AuthenticationAdmin service");
+            String errMsg="Remote exception in login out from DAS AuthenticationAdmin service";
+            log.error(errMsg,e);
         } catch (LogoutAuthenticationExceptionException e) {
-            log.error("Authentication error in login out from DAS AuthenticationAdmin service");
+            String errMsg="Authentication error in login out from DAS AuthenticationAdmin service";
+            log.error(errMsg,e);
         }
         return receiverConfigSuccess;
     }

@@ -40,8 +40,9 @@ public class ReceiverAdminServiceClient {
 		this.endPoint = backEndUrl + "/services/" + serviceName;
 				try {
 					eventReceiverAdminServiceStub = new EventReceiverAdminServiceStub(endPoint);
-				} catch (Exception axisFault) {
-					log.error("Error in connecting to DAS EventReceiverAdmin Service");
+				} catch (Exception e) {
+					String errMsg="Error in connecting to DAS EventReceiverAdmin Service";
+					log.error(errMsg,e);
 				}
 		this.receiverName=receiverName;
 		this.streamId=streamId;
@@ -67,10 +68,10 @@ public class ReceiverAdminServiceClient {
 		try {
 			eventReceiverAdminServiceStub.deployWso2EventReceiverConfiguration(receiverName,streamId,eventAdapterType,null,null,null,props,false,"");
 		} catch (RemoteException e) {
-			log.error("Error in deploying event receiver");
+			String errMsg="Error in deploying event receiver";
+			log.error(errMsg,e);
 			return false;
 		}
 		return true;
 	}
-	
 }

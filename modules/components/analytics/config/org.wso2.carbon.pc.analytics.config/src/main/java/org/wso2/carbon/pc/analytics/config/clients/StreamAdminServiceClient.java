@@ -68,7 +68,8 @@ public class StreamAdminServiceClient {
 			streamDefinitionJsonOb.put("payloadData", processVariablesJObArr);
 			log.debug(streamDefinitionJsonOb.toString());
 		} catch (JSONException e) {
-			log.error("Error in creating event stream Definition Json object ");
+			String errMsg="Error in creating event stream Definition Json object";
+			log.error(errMsg,e);
 		}
 	}
 
@@ -83,9 +84,15 @@ public class StreamAdminServiceClient {
 			addEventStreamDefinitionAsStringResponse = serviceAdminStub
 					.addEventStreamDefinitionAsString(addEventStreamDefinitionAsString);
 		} catch (RemoteException e) {
-			log.error("Error in creating event stream in DAS");
+			String errMsg="Error in creating event stream in DAS";
+			log.error(errMsg,e);
 			return false;
 		}
+		/*try {
+			log.info("Created the Event Stream: "+streamDefinitionJsonOb.getString("name"));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}*/
 		return true;
 	}
 

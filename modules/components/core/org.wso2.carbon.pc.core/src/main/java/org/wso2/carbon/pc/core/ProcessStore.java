@@ -49,7 +49,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.util.*;
 import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -104,7 +103,8 @@ public class ProcessStore {
 				resourceString = conObj.toString();
 			}
 		} catch (Exception e) {
-			log.error("Failed to get the process variables list");
+            String errMsg="Failed to get the process variables list";
+			log.error(errMsg,e);
 		}
 		return resourceString;
 	}
@@ -169,9 +169,11 @@ public class ProcessStore {
 					resource.setContent(newProcessContent);
 					reg.put(processAssetPath, resource);
 				}
+                log.info("Saved process variables to configure analytics");
 			}
 		}catch (Exception e){
-			log.error("Failed to save processVariables", e);
+            String errMsg="Failed to save processVariables";
+			log.error(errMsg, e);
 		}
 		return true;
 	}
