@@ -48,6 +48,8 @@ function showBPMN() {
     $("#pdfUploaderView").hide();
     $("#holder").hide();
     $("#flowChartEditorView").hide();
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").hide();
 
     $.ajax({
         url: '/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/' + fieldsName + "/" + fieldsVersion,
@@ -74,6 +76,8 @@ function viewText() {
     $("#pdfUploaderView").hide();
     $("#holder").hide();
     $("#flowChartEditorView").hide();
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").hide();
 }
 
 function editText() {
@@ -134,6 +138,8 @@ function showTextEditor() {
     $("#pdfUploaderView").hide();
     $("holder").hide();
     $("#flowChartEditorView").hide();
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").hide();
 
     tinymce.init({
         selector: "#processContent"
@@ -149,6 +155,8 @@ function showBPMNUploader() {
     $("#pdfUploaderView").hide();
     $("#holder").hide();
     $("#flowChartEditorView").hide();
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").hide();
 }
 
 function showOverview(e) {
@@ -163,6 +171,108 @@ function showOverview(e) {
     $("#pdfUploaderView").hide();
     $("#holder").hide();
     $("#flowChartEditorView").hide();
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").hide();
+}
+
+function downloadDocument(relativePath) {
+    $.ajax({
+        url: '/publisher/assets/process/apis/download_document?process_doc_path=' + relativePath,
+        type: 'GET',
+        success: function (response) {
+            var docNameWithExt = relativePath.substr(relativePath.lastIndexOf('/') + 1);
+            var byteCharacters = atob(response);
+
+            var byteNumbers = new Array(byteCharacters.length);
+            for (var i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            var contentType = 'application/msword';
+            var byteArray = new Uint8Array(byteNumbers);
+            var blob = new Blob([byteArray], {type: contentType});
+            saveAs(blob, docNameWithExt);
+        },
+        error: function () {
+            alertify.error('Text editor error');
+        }
+    });
+}
+
+function showDocument() {
+    $("#overviewDiv").hide();
+    $("#processTextContainer").hide();
+    $("#processTextEditDiv").hide();
+    $("#bpmnViewDiv").hide();
+    $("#bpmnEditDiv").hide();
+    $("#pdfUploaderView").hide();
+    $("#holder").hide();
+    $("#flowChartEditorView").hide();
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").show();
+
+    $.ajax({
+        url: '/publisher/assets/process/apis/get_process_doc?process_path=/_system/governance/processes/' + fieldsName + "/" + fieldsVersion,
+        type: 'GET',
+        success: function (data) {
+            var response = JSON.parse(data);
+            for(var i = 0; i < response.length; i++){
+                var table = document.getElementById("docTable");
+                var rowCount = table.rows.length;
+                var row = table.insertRow(rowCount);
+                var cellDocName = row.insertCell(0);
+                var cellDocSummary = row.insertCell(1);
+                var cellDocUrl = row.insertCell(2);
+                var cellDocPath = row.insertCell(3);
+                cellDocName.innerHTML = response[i].documentname;
+                cellDocSummary.innerHTML = response[i].summary;
+
+                if(response[i].url != "NA") {
+                    var anchorUrlElement = document.createElement("a");
+                    anchorUrlElement.setAttribute("id", "documentUrl" + i);
+                    anchorUrlElement.setAttribute("href", response[i].url);
+                    anchorUrlElement.setAttribute('target', '_blank');
+                    anchorUrlElement.innerHTML = "open";
+                    cellDocUrl.appendChild(anchorUrlElement);
+                } else {
+                    cellDocUrl.innerHTML = response[i].url;
+                }
+
+                if(response[i].path != "NA") {
+                    var anchorElement = document.createElement("a");
+                    anchorElement.setAttribute("id", "document" + i);
+                    var path = response[i].path;
+                    anchorElement.onclick = function() {
+                        var currentPath = path;
+                        downloadDocument(currentPath);
+                    };
+                    anchorElement.innerHTML = "download";
+                    cellDocPath.appendChild(anchorElement);
+                } else {
+                    cellDocPath.innerHTML = response[i].path;
+                }
+            }
+        },
+        error: function () {
+            alertify.error('document retrieving error');
+        }
+    });
+}
+
+function associateDoc() {
+    $("#overviewDiv").hide();
+    $("#processTextContainer").hide();
+    $("#processTextEditDiv").hide();
+    $("#bpmnViewDiv").hide();
+    $("#bpmnEditDiv").hide();
+    $("#pdfUploaderView").hide();
+    $("#holder").hide();
+    $("#flowChartEditorView").hide();
+    $("#docUploaderDiv").show();
+    $("#docViewDiv").hide();
+}
+
+function newDocFormToggle() {
+    $("#addNewDoc").toggle("slow");
 }
 
 function editProcessOwner(e) {
@@ -552,6 +662,8 @@ function showPDF() {
     $("#holder").show();
     $("#pdfUploaderView").hide();
     $("#flowChartEditorView").hide();
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").hide();
 
     if (pdfDoc == null) {
         loadPdf();
@@ -566,7 +678,8 @@ function associatePdf(element) {
     $("#docView").hide();
     $("#pdfUploaderView").show();
     $("#flowChartEditorView").hide();
-
+    $("#docUploaderDiv").hide();
+    $("#docViewDiv").hide();
 }
 
 function loadPdf() {
@@ -727,4 +840,27 @@ function showFlowchartEditor(name, flowchartPath) {
 
 function redirectTo(element) {
     element.click();
+}
+
+function validateDocument() {
+    if (document.getElementById('docName').value.length == 0) {
+        alertify.error('Please enter document name.');
+        return false;
+    } else if ((!document.getElementById('optionsRadios7').checked) && (!document.getElementById('optionsRadios8').checked)) {
+        alertify.error('Please select a source.');
+        return false;
+    } else if (document.getElementById('optionsRadios7').checked) {
+        if (document.getElementById('docUrl').value.length == 0) {
+            alertify.error('Please give the document url.');
+            return false;
+        }
+    } else if (document.getElementById('optionsRadios8').checked) {
+        var ext = $('#docLocation').val().split('.').pop().toLowerCase();
+        if ($.inArray(ext, ['docx', 'doc']) == -1) {
+            alertify.error('invalid document extension!');
+            return false;
+        }
+        $("#docExtension").val(ext);
+    }
+    return true;
 }
