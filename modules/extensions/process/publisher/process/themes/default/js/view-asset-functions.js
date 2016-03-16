@@ -50,6 +50,8 @@ function showBPMN() {
     $("#flowChartEditorView").hide();
     $("#docUploaderDiv").hide();
     $("#docViewDiv").hide();
+    $("#analyticsConfigDiv").hide();
+
 
     $.ajax({
         url: '/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/' + fieldsName + "/" + fieldsVersion,
@@ -78,6 +80,8 @@ function viewText() {
     $("#flowChartEditorView").hide();
     $("#docUploaderDiv").hide();
     $("#docViewDiv").hide();
+    $("#analyticsConfigDiv").hide();
+
 }
 
 function editText() {
@@ -212,6 +216,7 @@ function showDocument() {
     $("#flowChartEditorView").hide();
     $("#docUploaderDiv").hide();
     $("#docViewDiv").show();
+    $("#analyticsConfigDiv").hide();
 
     $.ajax({
         url: '/publisher/assets/process/apis/get_process_doc?process_path=/_system/governance/processes/' + fieldsName + "/" + fieldsVersion,
@@ -272,6 +277,7 @@ function associateDoc() {
     $("#flowChartEditorView").hide();
     $("#docUploaderDiv").show();
     $("#docViewDiv").hide();
+    $("#analyticsConfigDiv").hide();
 }
 
 function newDocFormToggle() {
@@ -689,6 +695,7 @@ function showPDF() {
     $("#flowChartEditorView").hide();
     $("#docUploaderDiv").hide();
     $("#docViewDiv").hide();
+    $("#analyticsConfigDiv").hide();
 
     if (pdfDoc == null) {
         loadPdf();
@@ -705,6 +712,7 @@ function associatePdf(element) {
     $("#flowChartEditorView").hide();
     $("#docUploaderDiv").hide();
     $("#docViewDiv").hide();
+    $("#analyticsConfigDiv").hide();
 }
 
 function loadPdf() {
@@ -837,6 +845,7 @@ function associateEditorFlowChart(name) {
     $("#docView").hide();
     $("#bpmnView").hide();
     $("#processTextView").hide();
+    $("#analyticsConfigDiv").hide();
 }
 
 function showFlowchartEditor(name, flowchartPath) {
@@ -847,6 +856,7 @@ function showFlowchartEditor(name, flowchartPath) {
     $("#docView").hide();
     $("#bpmnView").hide();
     $("#processTextView").hide();
+    $("#analyticsConfigDiv").hide();
 
     flowchartPath = "/_system/governance/" + flowchartPath;
     $.ajax({
@@ -872,6 +882,7 @@ function showbpmnDesign(name, bpmnDesignString) {
     $("#bpmnView").hide();
     $("#processTextView").hide();
     $("#flowChartEditorView").hide();
+    $("#analyticsConfigDiv").hide();
     console.log(bpmnDesignString);
     // uploadBPMN(bpmnDesignString);
 
@@ -886,6 +897,7 @@ function associatebpmnDesignEditor(name) {
     $("#bpmnView").hide();
     $("#processTextView").hide();
     $("#bpmnEditorView").show();
+    $("#analyticsConfigDiv").hide();
 }
 
 
