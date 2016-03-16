@@ -174,17 +174,12 @@ asset.renderer = function (ctx) {
                 page.processVariableList = processVariablesJObArr;
             }
 
-            var flowchartPath = resourcePath.replace("processes", "flowchart");
-            var flowchartString = ps.getFlowchart(flowchartPath);
-            if (flowchartString != "NA") {
-                var flowchartPath = page.assets.tables[9].fields.path.value;
-                if (flowchartPath != "NA") {
-                    page.flowchartAvailable = true;
-                    page.flowchartPath = flowchartPath;
-                } else {
-                    page.flowchartAvailable = false;
-                }
-                //log.info(page);
+            var flowchartPath = page.assets.tables[9].fields.path.value;
+            if(flowchartPath != "NA"){
+                page.flowchartAvailable = true;
+                page.flowchartPath = flowchartPath;
+            }else{
+                page.flowchartAvailable = false;
             }
 
             if (log.isDebugEnabled()) {

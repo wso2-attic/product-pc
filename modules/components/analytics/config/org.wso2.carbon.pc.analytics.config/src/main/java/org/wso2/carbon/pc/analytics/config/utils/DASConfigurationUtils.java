@@ -58,9 +58,7 @@ public class DASConfigurationUtils {
         try {
             if(registry.resourceExists(processAssetPath)){
                 resource=registry.get(processAssetPath);
-                System.out.println(Boolean.parseBoolean(resource.getProperty("sss")));
                 return Boolean.parseBoolean(resource.getProperty("isDASConfiguredForAnalytics"));
-
             }else{
                 return false;
             }
