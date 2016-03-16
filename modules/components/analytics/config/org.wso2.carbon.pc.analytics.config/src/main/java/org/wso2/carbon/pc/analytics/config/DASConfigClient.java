@@ -19,6 +19,7 @@ package org.wso2.carbon.pc.analytics.config;
  * Configure DAS configurations to publish data to DAS an do the analytics
  * (initiator class in the module)
  */
+
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,17 +53,17 @@ public class DASConfigClient {
             processInfo = new JSONObject(processVariableDetails);
             streamName = processInfo.getString("eventStreamName");
             stremaVersion = processInfo.getString("eventStreamVersion");
-            streamId=processInfo.getString("eventStreamId");
-            streamDescription=processInfo.getString("eventStreamDescription");
-            streamNickName=processInfo.getString("eventStreamNickName");
-            receiverName=processInfo.getString("eventReceiverName");
+            streamId = processInfo.getString("eventStreamId");
+            streamDescription = processInfo.getString("eventStreamDescription");
+            streamNickName = processInfo.getString("eventStreamNickName");
+            receiverName = processInfo.getString("eventReceiverName");
             processVariablesJObArr = processInfo.getJSONArray("processVariables");
         } catch (JSONException e) {
-            String errMsg="Error in extracting data from JSON string";
-            log.error(errMsg,e);
+            String errMsg = "Error in extracting data from JSON string";
+            log.error(errMsg, e);
         }
 
-    System.setProperty(
+        System.setProperty(
                 "javax.net.ssl.trustStore",
                 "/home/samithac/wso2-products/wso2das-3.0.0-SNAPSHOT/repository/resources/security/wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
@@ -74,60 +75,60 @@ public class DASConfigClient {
         try {
             login = new LoginAdminServiceClient(backEndUrl);
         } catch (AxisFault e) {
-            String errMsg="Error in connecting to DAS AuthenticationAdmin Services";
-            log.error(errMsg,e);
+            String errMsg = "Error in connecting to DAS AuthenticationAdmin Services";
+            log.error(errMsg, e);
         }
         String session = null;
         try {
             session = login.authenticate("admin", "admin");
         } catch (RemoteException e) {
-            String errMsg="Remote exception in login to DAS AuthenticationAdmin service";
-            log.error(errMsg,e);
+            String errMsg = "Remote exception in login to DAS AuthenticationAdmin service";
+            log.error(errMsg, e);
         } catch (LoginAuthenticationExceptionException e) {
-            String errMsg="Authentication error in login to DAS AuthenticationAdmin service";
-            log.error(errMsg,e);
+            String errMsg = "Authentication error in login to DAS AuthenticationAdmin service";
+            log.error(errMsg, e);
         }
 
         //create event stream
         StreamAdminServiceClient streamAdminServiceClient = null;
         try {
-            streamAdminServiceClient = new StreamAdminServiceClient(backEndUrl, session,streamName,stremaVersion,streamId,streamNickName,streamDescription, processVariablesJObArr);
+            streamAdminServiceClient = new StreamAdminServiceClient(backEndUrl, session, streamName, stremaVersion, streamId, streamNickName, streamDescription, processVariablesJObArr);
         } catch (AxisFault axisFault) {
             log.error(axisFault.getMessage());
             return false;
         }
-		boolean successCreateStream=streamAdminServiceClient.createEventStream();
-        if(!successCreateStream){
+        boolean successCreateStream = streamAdminServiceClient.createEventStream();
+        if (!successCreateStream) {
             try {
                 login.logOut();
             } catch (RemoteException e) {
-                String errMsg="Remote exception in login out from DAS AuthenticationAdmin service";
-                log.error(errMsg,e);
+                String errMsg = "Remote exception in login out from DAS AuthenticationAdmin service";
+                log.error(errMsg, e);
             } catch (LogoutAuthenticationExceptionException e) {
-                String errMsg="Authentication error in login out from DAS AuthenticationAdmin service";
-                log.error(errMsg,e);
+                String errMsg = "Authentication error in login out from DAS AuthenticationAdmin service";
+                log.error(errMsg, e);
             }
             return false;
         }
-        log.info("Created the Event Stream: "+streamId+" in WSO2 DAS");
+        log.info("Created the Event Stream: " + streamId + " in WSO2 DAS");
 
         //create event receiver
-        ReceiverAdminServiceClient receiverAdminServiceClient= null;
-        receiverAdminServiceClient = new ReceiverAdminServiceClient(backEndUrl, session,receiverName,streamId,"wso2event");
-        boolean receiverConfigSuccess=receiverAdminServiceClient.deployEventReceiverConfiguration();
-        if(receiverConfigSuccess){
-            log.info("Created the Event Receiver: "+receiverName+"for the "+streamId+" in WSO2 DAS");
+        ReceiverAdminServiceClient receiverAdminServiceClient = null;
+        receiverAdminServiceClient = new ReceiverAdminServiceClient(backEndUrl, session, receiverName, streamId, "wso2event");
+        boolean receiverConfigSuccess = receiverAdminServiceClient.deployEventReceiverConfiguration();
+        if (receiverConfigSuccess) {
+            log.info("Created the Event Receiver: " + receiverName + "for the " + streamId + " in WSO2 DAS");
         }
 
         //logging out
         try {
             login.logOut();
         } catch (RemoteException e) {
-            String errMsg="Remote exception in login out from DAS AuthenticationAdmin service";
-            log.error(errMsg,e);
+            String errMsg = "Remote exception in login out from DAS AuthenticationAdmin service";
+            log.error(errMsg, e);
         } catch (LogoutAuthenticationExceptionException e) {
-            String errMsg="Authentication error in login out from DAS AuthenticationAdmin service";
-            log.error(errMsg,e);
+            String errMsg = "Authentication error in login out from DAS AuthenticationAdmin service";
+            log.error(errMsg, e);
         }
         return receiverConfigSuccess;
     }

@@ -30,41 +30,41 @@ import org.wso2.carbon.registry.api.Resource;
 public class DASConfigurationUtils {
     private static final Log log = LogFactory.getLog(DASConfigurationUtils.class);
 
-    public static void setPropertyDASAnalyticsConfigured(String processName,String processVersion){
-       PrivilegedCarbonContext context = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-       Registry registry = context.getRegistry(RegistryType.SYSTEM_GOVERNANCE);
-       Resource resource;
-       String processAssetPath = "processes/" + processName + "/" + processVersion;
-
-       try {
-           if(registry.resourceExists(processAssetPath)){
-               resource=registry.get(processAssetPath);
-               if(resource.getProperty("isDASConfiguredForAnalytics")==null) {
-                   resource.addProperty("isDASConfiguredForAnalytics", "true");
-                   registry.put(processAssetPath, resource);
-               }
-           }
-       } catch (RegistryException e) {
-           log.error("Error working with SYSTEM_GOVERNANCE registry property -isDASConfiguredForAnalytics");
-       }
-   }
-
-    public static boolean isDASAnalyticsConfigured(String processName,String processVersion){
+    public static void setPropertyDASAnalyticsConfigured(String processName, String processVersion) {
         PrivilegedCarbonContext context = PrivilegedCarbonContext.getThreadLocalCarbonContext();
         Registry registry = context.getRegistry(RegistryType.SYSTEM_GOVERNANCE);
         Resource resource;
         String processAssetPath = "processes/" + processName + "/" + processVersion;
 
         try {
-            if(registry.resourceExists(processAssetPath)){
-                resource=registry.get(processAssetPath);
+            if (registry.resourceExists(processAssetPath)) {
+                resource = registry.get(processAssetPath);
+                if (resource.getProperty("isDASConfiguredForAnalytics") == null) {
+                    resource.addProperty("isDASConfiguredForAnalytics", "true");
+                    registry.put(processAssetPath, resource);
+                }
+            }
+        } catch (RegistryException e) {
+            log.error("Error working with SYSTEM_GOVERNANCE registry property -isDASConfiguredForAnalytics");
+        }
+    }
+
+    public static boolean isDASAnalyticsConfigured(String processName, String processVersion) {
+        PrivilegedCarbonContext context = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        Registry registry = context.getRegistry(RegistryType.SYSTEM_GOVERNANCE);
+        Resource resource;
+        String processAssetPath = "processes/" + processName + "/" + processVersion;
+
+        try {
+            if (registry.resourceExists(processAssetPath)) {
+                resource = registry.get(processAssetPath);
                 return Boolean.parseBoolean(resource.getProperty("isDASConfiguredForAnalytics"));
-            }else{
+            } else {
                 return false;
             }
         } catch (RegistryException e) {
             log.error("Error in getting SYSTEM_GOVERNANCE registry property- isDASConfiguredForAnalytics ");
         }
-        return  true;
+        return true;
     }
 }

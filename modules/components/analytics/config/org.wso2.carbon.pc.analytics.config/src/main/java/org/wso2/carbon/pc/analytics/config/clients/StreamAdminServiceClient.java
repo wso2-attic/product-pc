@@ -18,6 +18,7 @@ package org.wso2.carbon.pc.analytics.config.clients;
 /**
  * Access DAS EventStreamAdminService and creates the event stream.
  */
+
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -29,71 +30,71 @@ import org.json.JSONObject;
 import org.wso2.carbon.pc.analytics.config.stubs.EventStreamAdminServiceStub;
 import org.wso2.carbon.pc.analytics.config.stubs.EventStreamAdminServiceStub.AddEventStreamDefinitionAsString;
 import org.wso2.carbon.pc.analytics.config.stubs.EventStreamAdminServiceStub.AddEventStreamDefinitionAsStringResponse;
-import org.wso2.carbon.pc.analytics.config.stubs.EventStreamAdminServiceStub.GetStreamNames;
+
 import java.rmi.RemoteException;
 
 public class StreamAdminServiceClient {
-	private final String serviceName = "EventStreamAdminService";
-	private EventStreamAdminServiceStub serviceAdminStub;
-	private String endPoint;
-	ServiceClient serviceClient;
-	Options option;
-	private static final Log log = LogFactory.getLog(StreamAdminServiceClient.class);
-	JSONObject streamDefinitionJsonOb;
+    private final String serviceName = "EventStreamAdminService";
+    private EventStreamAdminServiceStub serviceAdminStub;
+    private String endPoint;
+    ServiceClient serviceClient;
+    Options option;
+    private static final Log log = LogFactory.getLog(StreamAdminServiceClient.class);
+    JSONObject streamDefinitionJsonOb;
 
 
-	public StreamAdminServiceClient(String backEndUrl, String session, String streamName, String streamVersion, String streamId, String streamNickName, String streamDescription, JSONArray processVariablesJObArr)
-			throws AxisFault {
-		this.endPoint = backEndUrl + "/services/" + serviceName;
-		serviceAdminStub = new EventStreamAdminServiceStub(endPoint);
+    public StreamAdminServiceClient(String backEndUrl, String session, String streamName, String streamVersion, String streamId, String streamNickName, String streamDescription, JSONArray processVariablesJObArr)
+            throws AxisFault {
+        this.endPoint = backEndUrl + "/services/" + serviceName;
+        serviceAdminStub = new EventStreamAdminServiceStub(endPoint);
 
-		// Authenticate stub from sessionCooke
-		serviceClient = serviceAdminStub._getServiceClient();
-		option = serviceClient.getOptions();
-		option.setManageSession(true);
-		option.setProperty(
-				org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
-				session);
+        // Authenticate stub from sessionCooke
+        serviceClient = serviceAdminStub._getServiceClient();
+        option = serviceClient.getOptions();
+        option.setManageSession(true);
+        option.setProperty(
+                org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
+                session);
 
-		streamDefinitionJsonOb=new JSONObject();
-		try {
-			streamDefinitionJsonOb.put("streamId",streamId) ;
-			streamDefinitionJsonOb.put("name",streamName);
-			streamDefinitionJsonOb.put("version",streamVersion);
-			streamDefinitionJsonOb.put("nickName",streamNickName);
-			streamDefinitionJsonOb.put("description",streamDescription);
-			JSONArray processVariablesJArr=new JSONArray();
+        streamDefinitionJsonOb = new JSONObject();
+        try {
+            streamDefinitionJsonOb.put("streamId", streamId);
+            streamDefinitionJsonOb.put("name", streamName);
+            streamDefinitionJsonOb.put("version", streamVersion);
+            streamDefinitionJsonOb.put("nickName", streamNickName);
+            streamDefinitionJsonOb.put("description", streamDescription);
+            JSONArray processVariablesJArr = new JSONArray();
 
-			//setting process variables as payloadData into the eventStream definition
-			streamDefinitionJsonOb.put("payloadData", processVariablesJObArr);
-			log.debug(streamDefinitionJsonOb.toString());
-		} catch (JSONException e) {
-			String errMsg="Error in creating event stream Definition Json object";
-			log.error(errMsg,e);
-		}
-	}
+            //setting process variables as payloadData into the eventStream definition
+            streamDefinitionJsonOb.put("payloadData", processVariablesJObArr);
+            log.debug(streamDefinitionJsonOb.toString());
+        } catch (JSONException e) {
+            String errMsg = "Error in creating event stream Definition Json object";
+            log.error(errMsg, e);
+        }
+    }
 
-	public boolean createEventStream() {
+    public boolean createEventStream() {
 
-		AddEventStreamDefinitionAsString addEventStreamDefinitionAsString = new AddEventStreamDefinitionAsString();
-		AddEventStreamDefinitionAsStringResponse addEventStreamDefinitionAsStringResponse = null;
-		//addEventStreamDefinitionAsString
-		//		.setStreamStringDefinition("{ \"streamId\": \"streamId\",  			  \"name\": \"org.wso2.test1\",    			  \"version\": \"1.0.0\",    			  \"nickName\": \"TestStream\",    			  \"description\": \"Test Stream\", \"metaData\": [    {      \"name\": \"ip\",      \"type\": \"STRING\"    }  ],  \"correlationData\": [    {      \"name\": \"id\",      \"type\": \"LONG\"    }  ],  \"payloadData\": [    {      \"name\": \"testMessage\",    \"type\": \"STRING\"   }  ]}");
-		addEventStreamDefinitionAsString.setStreamStringDefinition(streamDefinitionJsonOb.toString());
-		try {
-			addEventStreamDefinitionAsStringResponse = serviceAdminStub
-					.addEventStreamDefinitionAsString(addEventStreamDefinitionAsString);
-		} catch (RemoteException e) {
-			String errMsg="Error in creating event stream in DAS";
-			log.error(errMsg,e);
-			return false;
-		}
-		/*try {
-			log.info("Created the Event Stream: "+streamDefinitionJsonOb.getString("name"));
+        AddEventStreamDefinitionAsString addEventStreamDefinitionAsString = new AddEventStreamDefinitionAsString();
+        AddEventStreamDefinitionAsStringResponse addEventStreamDefinitionAsStringResponse = null;
+        //addEventStreamDefinitionAsString
+        //		.setStreamStringDefinition("{ \"streamId\": \"streamId\",  			  \"name\": \"org.wso2.test1\",    			  \"version\": \"1.0.0\",    			  \"nickName\": \"TestStream\",    			  \"description\": \"Test Stream\", \"metaData\": [    {      \"name\": \"ip\",      \"type\": \"STRING\"    }  ],  \"correlationData\": [    {      \"name\": \"id\",      \"type\": \"LONG\"    }  ],  \"payloadData\": [    {      \"name\": \"testMessage\",    \"type\": \"STRING\"   }  ]}");
+        addEventStreamDefinitionAsString.setStreamStringDefinition(streamDefinitionJsonOb.toString());
+        try {
+            addEventStreamDefinitionAsStringResponse = serviceAdminStub
+                    .addEventStreamDefinitionAsString(addEventStreamDefinitionAsString);
+        } catch (RemoteException e) {
+            String errMsg = "Error in creating event stream in DAS";
+            log.error(errMsg, e);
+            return false;
+        }
+        /*try {
+            log.info("Created the Event Stream: "+streamDefinitionJsonOb.getString("name"));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}*/
-		return true;
-	}
+        return true;
+    }
 
 }

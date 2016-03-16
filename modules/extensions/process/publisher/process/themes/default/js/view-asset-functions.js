@@ -218,7 +218,7 @@ function showDocument() {
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
-            for(var i = 0; i < response.length; i++){
+            for (var i = 0; i < response.length; i++) {
                 var table = document.getElementById("docTable");
                 var rowCount = table.rows.length;
                 var row = table.insertRow(rowCount);
@@ -229,7 +229,7 @@ function showDocument() {
                 cellDocName.innerHTML = response[i].documentname;
                 cellDocSummary.innerHTML = response[i].summary;
 
-                if(response[i].url != "NA") {
+                if (response[i].url != "NA") {
                     var anchorUrlElement = document.createElement("a");
                     anchorUrlElement.setAttribute("id", "documentUrl" + i);
                     anchorUrlElement.setAttribute("href", response[i].url);
@@ -240,11 +240,11 @@ function showDocument() {
                     cellDocUrl.innerHTML = response[i].url;
                 }
 
-                if(response[i].path != "NA") {
+                if (response[i].path != "NA") {
                     var anchorElement = document.createElement("a");
                     anchorElement.setAttribute("id", "document" + i);
                     var path = response[i].path;
-                    anchorElement.onclick = function() {
+                    anchorElement.onclick = function () {
                         var currentPath = path;
                         downloadDocument(currentPath);
                     };
@@ -279,25 +279,25 @@ function newDocFormToggle() {
 }
 
 function showAnalyticsConfigurer() {
-        $("#overviewDiv").hide();
-        $("#processTextContainer").hide();
-        $("#processTextEditDiv").hide();
-        $("#bpmnViewDiv").hide();
-        $("#analyticsConfigDiv").show();
-        $('#eventStreamName').val($('#view-header').text()+"_"+$('#process-version').text()+"_process_stream");
-        $('#eventStreamName').attr("readonly","true");
+    $("#overviewDiv").hide();
+    $("#processTextContainer").hide();
+    $("#processTextEditDiv").hide();
+    $("#bpmnViewDiv").hide();
+    $("#analyticsConfigDiv").show();
+    $('#eventStreamName').val($('#view-header').text() + "_" + $('#process-version').text() + "_process_stream");
+    $('#eventStreamName').attr("readonly", "true");
 
-        $('#eventStreamVersion').val("1.0.0");
-        $('#eventStreamVersion').attr("readonly","true");
+    $('#eventStreamVersion').val("1.0.0");
+    $('#eventStreamVersion').attr("readonly", "true");
 
-        $('#eventStreamDescription').val("This is the event stream generated to configure process analytics with DAS, for the process"+$('#view-header').text()+"_"+$('#process-version').text());
-        $('#eventStreamDescription').attr("readonly","true");
+    $('#eventStreamDescription').val("This is the event stream generated to configure process analytics with DAS, for the process" + $('#view-header').text() + "_" + $('#process-version').text());
+    $('#eventStreamDescription').attr("readonly", "true");
 
-        $('#eventReceiverName').val($('#view-header').text()+"_"+$('#process-version').text()+"_process_receiver");
-        $('#eventReceiverName').attr("readonly","true");
+    $('#eventReceiverName').val($('#view-header').text() + "_" + $('#process-version').text() + "_process_receiver");
+    $('#eventReceiverName').attr("readonly", "true");
 
-        $('#eventStreamNickName').val($('#view-header').text()+"_"+$('#process-version').text()+"_process_stream"); //same as eventStreamName
-        $('#eventStreamNickName').attr("readonly","true");
+    $('#eventStreamNickName').val($('#view-header').text() + "_" + $('#process-version').text() + "_process_stream"); //same as eventStreamName
+    $('#eventStreamNickName').attr("readonly", "true");
 }
 
 function editProcessOwner(e) {
@@ -853,7 +853,7 @@ function showFlowchartEditor(name, flowchartPath) {
         url: '/publisher/assets/process/apis/get_process_flowchart',
         type: 'GET',
         dataType: 'text',
-        data: {'flowchartPath':flowchartPath},
+        data: {'flowchartPath': flowchartPath},
         success: function (data) {
             _loadEditableFlowChart(data, '#editor_canvas');
         },
@@ -864,7 +864,7 @@ function showFlowchartEditor(name, flowchartPath) {
 }
 
 function showbpmnDesign(name, bpmnDesignString) {
-   /* $('#flowchart-editor-header').text(name);*/
+    /* $('#flowchart-editor-header').text(name);*/
     $("#overviewDiv").hide();
     $("#bpmnEditorView").show();
     $("#pdfUploader").hide();
@@ -873,12 +873,12 @@ function showbpmnDesign(name, bpmnDesignString) {
     $("#processTextView").hide();
     $("#flowChartEditorView").hide();
     console.log(bpmnDesignString);
-   // uploadBPMN(bpmnDesignString);
+    // uploadBPMN(bpmnDesignString);
 
 }
 
 function associatebpmnDesignEditor(name) {
-  /*  $('#flowchart-editor-header').text(name);*/
+    /*  $('#flowchart-editor-header').text(name);*/
     $("#overviewDiv").hide();
     $("#flowChartEditorView").hide();
     $("#pdfUploader").hide();
@@ -901,20 +901,20 @@ function addProcessVariableRow(tableID) {
     var rowCount = table.rows.length;
     var row = table.insertRow(rowCount);
 
-    var colCount =3;// table.rows[0].cells.length;
+    var colCount = 3;// table.rows[0].cells.length;
 
-    row.innerHTML=
+    row.innerHTML =
         //'<div style="width:300px; display:table">'+
-        '<td><input type="checkbox" name="chk"/></td>'+
+        '<td><input type="checkbox" name="chk"/></td>' +
 
-        '<td><input type="text" name="txt" style="display:table-cell; width:100%"/></td>'+
-        '<td>'+
-        '<select name="country" style="display:table-cell; width:100%">'+
-        '<option value="int">int</option>'+
-        '<option value="string">string</option>'+
-        '<option value="float">float</option>'+
-        '<option value="boolean">boolean</option>'+
-        '</select>'+
+        '<td><input type="text" name="txt" style="display:table-cell; width:100%"/></td>' +
+        '<td>' +
+        '<select name="country" style="display:table-cell; width:100%">' +
+        '<option value="int">int</option>' +
+        '<option value="string">string</option>' +
+        '<option value="float">float</option>' +
+        '<option value="boolean">boolean</option>' +
+        '</select>' +
         '</td>';//+
     // '</div>';
 }
@@ -945,13 +945,13 @@ function deleteProcessVariableRow(tableID) {
     }
 }
 
-var processVariablesInfo={};
-var processVariables={};
-var processVariablesObjsArr=[];
+var processVariablesInfo = {};
+var processVariables = {};
+var processVariablesObjsArr = [];
 
-function saveProcessVariables(tableID){
-    var table=document.getElementById(tableID);
-    var rowCount=table.rows.length;
+function saveProcessVariables(tableID) {
+    var table = document.getElementById(tableID);
+    var rowCount = table.rows.length;
 
     if (rowCount <= 1) {
         //alert("No rows to save.");
@@ -959,34 +959,34 @@ function saveProcessVariables(tableID){
         return "ERROR";
     }
 
-    var processName= $('#view-header').text();
-    var processVersion=$('#process-version').text();
-    processVariablesInfo["processName"]=processName;
-    processVariablesInfo["processVersion"]=processVersion;
+    var processName = $('#view-header').text();
+    var processVersion = $('#process-version').text();
+    processVariablesInfo["processName"] = processName;
+    processVariablesInfo["processVersion"] = processVersion;
 
     for (var i = 1; i < rowCount; i++) {
-        var item={};
+        var item = {};
         var row = table.rows[i];
-        if(!(row.cells[1].children[0].value)){
+        if (!(row.cells[1].children[0].value)) {
             alertify.error("Process Variable Names Cannot Be Empty");
             return "ERROR";
         }
-        var variableName=row.cells[1].children[0].value;
-        var variableType=row.cells[2].children[0].value;
+        var variableName = row.cells[1].children[0].value;
+        var variableType = row.cells[2].children[0].value;
 
-        if (null != variableName && null!=variableType) {
-            processVariables[variableName]=variableType;
-            item["name"]=variableName;
-            item["type"]=variableType;
+        if (null != variableName && null != variableType) {
+            processVariables[variableName] = variableType;
+            item["name"] = variableName;
+            item["type"] = variableType;
             processVariablesObjsArr.push(item);
         }
     }
-    processVariablesInfo["processVariables"]=processVariables;
+    processVariablesInfo["processVariables"] = processVariables;
 
     $.ajax({
         url: '/publisher/assets/process/apis/save_process_variables',
         type: 'POST',
-        data: {'processVariablesInfo': JSON.stringify(processVariablesInfo) },
+        data: {'processVariablesInfo': JSON.stringify(processVariablesInfo)},
         error: function () {
             alertify.error('Process variables saving error');
         }
@@ -1052,8 +1052,6 @@ function configAnalytics() {
                     alertify.success("Analytics Configuration Success");
                     showOverview(this);
                     document.getElementById("btn_config_analytics").innerHTML = "View Analytics Configs";
-                    //$("#btn_config_analytics").attr("textContent","View Analytics Configs");
-                    //$("#btn_config_analytics").innerHTML = "View Analytics Configs";
                     $("#btn_save_analytics_configurations").attr("disabled", true);
                     $("#btn_addProcessVariablesRow").attr("disabled", true);
                     $("#btn_deleteProcessVariablesRow").attr("disabled", true);

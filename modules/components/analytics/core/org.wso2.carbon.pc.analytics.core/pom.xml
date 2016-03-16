@@ -62,6 +62,7 @@
                         <Bundle-Vendor>WSO2</Bundle-Vendor>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Export-Package>
+                            org.wso2.carbon.pc.analytics.core;version=${project.version},
                             org.wso2.carbon.pc.analytics.core.utils;version=${project.version}
                         </Export-Package>
                         <Import-Package>

@@ -18,6 +18,7 @@ package org.wso2.carbon.pc.analytics.config.clients;
 /**
  * Connects with DAS's LoginAdminService
  */
+
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
@@ -26,6 +27,7 @@ import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
 import org.apache.axis2.context.ServiceContext;
+
 import java.rmi.RemoteException;
 
 public class LoginAdminServiceClient {
@@ -45,7 +47,7 @@ public class LoginAdminServiceClient {
 
         String sessionCookie = null;
 
-        if (authenticationAdminStub.login(userName, password,"localhost")){
+        if (authenticationAdminStub.login(userName, password, "localhost")) {
             log.info("Login successful to DAS Admin Services");
 
             ServiceContext serviceContext = authenticationAdminStub.

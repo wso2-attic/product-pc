@@ -16,6 +16,7 @@
 package org.wso2.carbon.pc.analytics.config.clients;
 
 import java.rmi.RemoteException;
+
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.logging.Log;
@@ -27,51 +28,50 @@ import org.wso2.carbon.event.receiver.stub.types.BasicInputAdapterPropertyDto;
  * Access DAS EventReceiverAdminService and creates the event receiver.
  */
 public class ReceiverAdminServiceClient {
-	private final String serviceName = "EventReceiverAdminService";
-	private EventReceiverAdminServiceStub eventReceiverAdminServiceStub;
-	private String endPoint;
-	private String receiverName;
-	private String streamId;
-	private String eventAdapterType="wso2event";
-	private static final Log log = LogFactory.getLog(ReceiverAdminServiceClient.class);
+    private final String serviceName = "EventReceiverAdminService";
+    private EventReceiverAdminServiceStub eventReceiverAdminServiceStub;
+    private String endPoint;
+    private String receiverName;
+    private String streamId;
+    private String eventAdapterType = "wso2event";
+    private static final Log log = LogFactory.getLog(ReceiverAdminServiceClient.class);
 
-	public ReceiverAdminServiceClient(String backEndUrl, String sessionCookie, String receiverName, String streamId, String wso2event)
-			{
-		this.endPoint = backEndUrl + "/services/" + serviceName;
-				try {
-					eventReceiverAdminServiceStub = new EventReceiverAdminServiceStub(endPoint);
-				} catch (Exception e) {
-					String errMsg="Error in connecting to DAS EventReceiverAdmin Service";
-					log.error(errMsg,e);
-				}
-		this.receiverName=receiverName;
-		this.streamId=streamId;
+    public ReceiverAdminServiceClient(String backEndUrl, String sessionCookie, String receiverName, String streamId, String wso2event) {
+        this.endPoint = backEndUrl + "/services/" + serviceName;
+        try {
+            eventReceiverAdminServiceStub = new EventReceiverAdminServiceStub(endPoint);
+        } catch (Exception e) {
+            String errMsg = "Error in connecting to DAS EventReceiverAdmin Service";
+            log.error(errMsg, e);
+        }
+        this.receiverName = receiverName;
+        this.streamId = streamId;
 
-		// Authenticate stub from sessionCooke
-		ServiceClient serviceClient;
-		Options option;
+        // Authenticate stub from sessionCooke
+        ServiceClient serviceClient;
+        Options option;
 
-		serviceClient = eventReceiverAdminServiceStub._getServiceClient();
-		option = serviceClient.getOptions();
-		option.setManageSession(true);
-		option.setProperty(
-				org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
-				sessionCookie);
+        serviceClient = eventReceiverAdminServiceStub._getServiceClient();
+        option = serviceClient.getOptions();
+        option.setManageSession(true);
+        option.setProperty(
+                org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
+                sessionCookie);
 
-	}
+    }
 
-	public boolean deployEventReceiverConfiguration() {
-		BasicInputAdapterPropertyDto props[]=new BasicInputAdapterPropertyDto[1];
-		props[0]=new BasicInputAdapterPropertyDto();
-		props[0].setKey("events.duplicated.in.cluster");
-		props[0].setValue("false");
-		try {
-			eventReceiverAdminServiceStub.deployWso2EventReceiverConfiguration(receiverName,streamId,eventAdapterType,null,null,null,props,false,"");
-		} catch (RemoteException e) {
-			String errMsg="Error in deploying event receiver";
-			log.error(errMsg,e);
-			return false;
-		}
-		return true;
-	}
+    public boolean deployEventReceiverConfiguration() {
+        BasicInputAdapterPropertyDto props[] = new BasicInputAdapterPropertyDto[1];
+        props[0] = new BasicInputAdapterPropertyDto();
+        props[0].setKey("events.duplicated.in.cluster");
+        props[0].setValue("false");
+        try {
+            eventReceiverAdminServiceStub.deployWso2EventReceiverConfiguration(receiverName, streamId, eventAdapterType, null, null, null, props, false, "");
+        } catch (RemoteException e) {
+            String errMsg = "Error in deploying event receiver";
+            log.error(errMsg, e);
+            return false;
+        }
+        return true;
+    }
 }
