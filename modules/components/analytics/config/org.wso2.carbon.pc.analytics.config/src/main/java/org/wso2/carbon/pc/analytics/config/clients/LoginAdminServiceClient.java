@@ -36,14 +36,13 @@ public class LoginAdminServiceClient {
     private String endPoint;
     private static final Log log = LogFactory.getLog(LoginAdminServiceClient.class);
 
-
     public LoginAdminServiceClient(String backEndUrl) throws AxisFault {
         this.endPoint = backEndUrl + "/services/" + serviceName;
         authenticationAdminStub = new AuthenticationAdminStub(endPoint);
     }
 
-    public String authenticate(String userName, String password) throws RemoteException,
-            LoginAuthenticationExceptionException {
+    public String authenticate(String userName, String password)
+            throws RemoteException, LoginAuthenticationExceptionException {
 
         String sessionCookie = null;
 

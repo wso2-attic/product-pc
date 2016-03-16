@@ -42,8 +42,8 @@ public class StreamAdminServiceClient {
     private static final Log log = LogFactory.getLog(StreamAdminServiceClient.class);
     JSONObject streamDefinitionJsonOb;
 
-
-    public StreamAdminServiceClient(String backEndUrl, String session, String streamName, String streamVersion, String streamId, String streamNickName, String streamDescription, JSONArray processVariablesJObArr)
+    public StreamAdminServiceClient(String backEndUrl, String session, String streamName, String streamVersion,
+            String streamId, String streamNickName, String streamDescription, JSONArray processVariablesJObArr)
             throws AxisFault {
         this.endPoint = backEndUrl + "/services/" + serviceName;
         serviceAdminStub = new EventStreamAdminServiceStub(endPoint);
@@ -52,9 +52,7 @@ public class StreamAdminServiceClient {
         serviceClient = serviceAdminStub._getServiceClient();
         option = serviceClient.getOptions();
         option.setManageSession(true);
-        option.setProperty(
-                org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
-                session);
+        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, session);
 
         streamDefinitionJsonOb = new JSONObject();
         try {

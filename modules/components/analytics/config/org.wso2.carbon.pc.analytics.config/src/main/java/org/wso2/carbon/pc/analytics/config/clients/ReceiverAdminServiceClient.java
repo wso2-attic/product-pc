@@ -36,7 +36,8 @@ public class ReceiverAdminServiceClient {
     private String eventAdapterType = "wso2event";
     private static final Log log = LogFactory.getLog(ReceiverAdminServiceClient.class);
 
-    public ReceiverAdminServiceClient(String backEndUrl, String sessionCookie, String receiverName, String streamId, String wso2event) {
+    public ReceiverAdminServiceClient(String backEndUrl, String sessionCookie, String receiverName, String streamId,
+            String wso2event) {
         this.endPoint = backEndUrl + "/services/" + serviceName;
         try {
             eventReceiverAdminServiceStub = new EventReceiverAdminServiceStub(endPoint);
@@ -54,9 +55,7 @@ public class ReceiverAdminServiceClient {
         serviceClient = eventReceiverAdminServiceStub._getServiceClient();
         option = serviceClient.getOptions();
         option.setManageSession(true);
-        option.setProperty(
-                org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
-                sessionCookie);
+        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, sessionCookie);
 
     }
 
@@ -66,7 +65,9 @@ public class ReceiverAdminServiceClient {
         props[0].setKey("events.duplicated.in.cluster");
         props[0].setValue("false");
         try {
-            eventReceiverAdminServiceStub.deployWso2EventReceiverConfiguration(receiverName, streamId, eventAdapterType, null, null, null, props, false, "");
+            eventReceiverAdminServiceStub
+                    .deployWso2EventReceiverConfiguration(receiverName, streamId, eventAdapterType, null, null, null,
+                            props, false, "");
         } catch (RemoteException e) {
             String errMsg = "Error in deploying event receiver";
             log.error(errMsg, e);

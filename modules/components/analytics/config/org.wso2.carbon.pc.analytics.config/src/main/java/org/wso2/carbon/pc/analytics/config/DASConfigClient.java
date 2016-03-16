@@ -63,8 +63,7 @@ public class DASConfigClient {
             log.error(errMsg, e);
         }
 
-        System.setProperty(
-                "javax.net.ssl.trustStore",
+        System.setProperty("javax.net.ssl.trustStore",
                 "/home/samithac/wso2-products/wso2das-3.0.0-SNAPSHOT/repository/resources/security/wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
@@ -92,7 +91,8 @@ public class DASConfigClient {
         //create event stream
         StreamAdminServiceClient streamAdminServiceClient = null;
         try {
-            streamAdminServiceClient = new StreamAdminServiceClient(backEndUrl, session, streamName, stremaVersion, streamId, streamNickName, streamDescription, processVariablesJObArr);
+            streamAdminServiceClient = new StreamAdminServiceClient(backEndUrl, session, streamName, stremaVersion,
+                    streamId, streamNickName, streamDescription, processVariablesJObArr);
         } catch (AxisFault axisFault) {
             log.error(axisFault.getMessage());
             return false;
@@ -114,7 +114,8 @@ public class DASConfigClient {
 
         //create event receiver
         ReceiverAdminServiceClient receiverAdminServiceClient = null;
-        receiverAdminServiceClient = new ReceiverAdminServiceClient(backEndUrl, session, receiverName, streamId, "wso2event");
+        receiverAdminServiceClient = new ReceiverAdminServiceClient(backEndUrl, session, receiverName, streamId,
+                "wso2event");
         boolean receiverConfigSuccess = receiverAdminServiceClient.deployEventReceiverConfiguration();
         if (receiverConfigSuccess) {
             log.info("Created the Event Receiver: " + receiverName + "for the " + streamId + " in WSO2 DAS");
