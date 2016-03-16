@@ -16,7 +16,7 @@
 package org.wso2.carbon.pc.analytics.config.clients;
 
 /**
- * Created by samithac on 13/2/16.
+ * Access DAS EventStreamAdminService and creates the event stream.
  */
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
