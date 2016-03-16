@@ -16,13 +16,24 @@
 
 package org.wso2.carbon.pc.analytics.config.utils;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.context.RegistryType;
+import org.wso2.carbon.pc.analytics.config.AnalyticsConfigConstants;
 import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.api.Resource;
+import org.wso2.carbon.utils.CarbonUtils;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import java.io.File;
+import java.io.IOException;
+
 
 /**
  * Utils file for DAS configuration related properties
@@ -66,5 +77,39 @@ public class DASConfigurationUtils {
             log.error("Error in getting SYSTEM_GOVERNANCE registry property- isDASConfiguredForAnalytics ");
         }
         return true;
+    }
+
+    /**
+     * Get content of pc.xml file as a string
+     *
+     * @return the content of pc.xml file as a String
+     * @throws IOException
+     * @throws XMLStreamException
+     */
+    private static OMElement getConfigElement() throws IOException, XMLStreamException {
+        String carbonConfigDirPath = CarbonUtils.getCarbonConfigDirPath();
+        String pcConfigPath = carbonConfigDirPath + File.separator +
+                AnalyticsConfigConstants.PC_CONFIGURATION_FILE_NAME;
+        File configFile = new File(pcConfigPath);
+        String configContent = FileUtils.readFileToString(configFile);
+        return AXIOMUtil.stringToOM(configContent);
+    }
+
+    public static String getURL() throws IOException, XMLStreamException {
+        OMElement configElement = getConfigElement();
+        OMElement analyticsElement =
+                configElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.ANALYTICS));
+        if (analyticsElement != null) {
+            String baseUrl = analyticsElement
+                    .getFirstChildWithName(new QName(AnalyticsConfigConstants.CONFIG_BASE_URL)).getText();
+            if (baseUrl != null && !baseUrl.isEmpty()) {
+                if (baseUrl.endsWith(File.separator)) {
+                    //baseUrl += File.separator;
+                    return baseUrl.substring(0, baseUrl.length()-1);
+                }
+                return baseUrl;
+            }
+        }
+        return null;
     }
 }

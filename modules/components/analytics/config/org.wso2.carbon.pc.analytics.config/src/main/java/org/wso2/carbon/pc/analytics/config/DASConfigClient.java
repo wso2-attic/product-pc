@@ -31,7 +31,10 @@ import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException
 import org.wso2.carbon.pc.analytics.config.clients.LoginAdminServiceClient;
 import org.wso2.carbon.pc.analytics.config.clients.ReceiverAdminServiceClient;
 import org.wso2.carbon.pc.analytics.config.clients.StreamAdminServiceClient;
+import org.wso2.carbon.pc.analytics.config.utils.DASConfigurationUtils;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 public class DASConfigClient {
@@ -67,7 +70,14 @@ public class DASConfigClient {
                 "/home/samithac/wso2-products/wso2das-3.0.0-SNAPSHOT/repository/resources/security/wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
-        String backEndUrl = "https://localhost:9448";
+        String backEndUrl = null;//"https://localhost:9448";
+        try {
+            backEndUrl = DASConfigurationUtils.getURL();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } catch (XMLStreamException e) {
+            log.error(e.getMessage());
+        }
 
         // login to DAS as admin
         LoginAdminServiceClient login = null;
