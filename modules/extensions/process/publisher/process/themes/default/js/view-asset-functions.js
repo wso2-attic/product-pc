@@ -215,14 +215,13 @@ function showDocument() {
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
-            for(var i = 0; i < response.length; i++){
+            for(var i = 0; i < response.length; i++) {
                 var table = document.getElementById("docTable");
                 var rowCount = table.rows.length;
                 var row = table.insertRow(rowCount);
                 var cellDocName = row.insertCell(0);
                 var cellDocSummary = row.insertCell(1);
-                var cellDocUrl = row.insertCell(2);
-                var cellDocPath = row.insertCell(3);
+                var cellDocAction = row.insertCell(2);
                 cellDocName.innerHTML = response[i].documentname;
                 cellDocSummary.innerHTML = response[i].summary;
 
@@ -232,12 +231,8 @@ function showDocument() {
                     anchorUrlElement.setAttribute("href", response[i].url);
                     anchorUrlElement.setAttribute('target', '_blank');
                     anchorUrlElement.innerHTML = "open";
-                    cellDocUrl.appendChild(anchorUrlElement);
-                } else {
-                    cellDocUrl.innerHTML = response[i].url;
-                }
-
-                if(response[i].path != "NA") {
+                    cellDocAction.appendChild(anchorUrlElement);
+                } else if(response[i].path != "NA") {
                     var anchorElement = document.createElement("a");
                     anchorElement.setAttribute("id", "document" + i);
                     var path = response[i].path;
@@ -246,9 +241,9 @@ function showDocument() {
                         downloadDocument(currentPath);
                     };
                     anchorElement.innerHTML = "download";
-                    cellDocPath.appendChild(anchorElement);
+                    cellDocAction.appendChild(anchorElement);
                 } else {
-                    cellDocPath.innerHTML = response[i].path;
+                    cellDocAction.innerHTML = "Not Available";
                 }
             }
         },
