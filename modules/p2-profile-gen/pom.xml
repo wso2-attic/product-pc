@@ -75,7 +75,7 @@
                                 <featureArtifactDef>org.wso2.pc:org.wso2.carbon.pc.core.feature:${pc.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.pc:org.wso2.carbon.pc.analytics.core.feature:${pc.version}</featureArtifactDef>
                                 <!-- Features of ES -->
-                                <featureArtifactDef>org.wso2.pc:org.wso2.carbon.pc.analytics.config.feature:${pc.version}</featureArtifactDef>
+
                                 <featureArtifactDef>org.jaggeryjs:org.jaggeryjs.feature:${jaggery.feature.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -348,10 +348,7 @@
                                     <id>org.wso2.carbon.pc.core.feature.group</id>
                                     <version>${pc.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.pc.analytics.config.feature.group</id>
-                                    <version>${pc.version}</version>
-                                </feature>
+
                                 <feature>
                                     <id>org.wso2.carbon.pc.analytics.core.feature.group</id>
                                     <version>${pc.version}</version>

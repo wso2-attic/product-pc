@@ -31,16 +31,7 @@
                     <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
                 {{else}}
                     <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
-		            {{#if DASAnalyticsEnabled}}
-                	    {{#if DASAnalyticsConfigured}}
-                    		<button id="btn_config_analytics" class="btn btn-primary" onclick="showAnalyticsConfigurer()">View Analytics Configs</button>
-                    		<input type="hidden" id="hiddenElementIsDASConfiged" value="true">
-                	    {{else}}
-                    		<button id="btn_config_analytics" class="btn btn-primary" onclick="showAnalyticsConfigurer()">Config Analytics</button>
-                    		<input type="hidden" id="hiddenElementIsDASConfiged" value="false">
-                	    {{/if}}
-            	    {{/if}}                
-		        {{/if}}
+                {{/if}}
             </div>
 
             <div class="control-group" style="display: inline-block">
@@ -50,6 +41,7 @@
                     <div id="addiv"><button id="addDocumentButton" class="btn btn-primary" onclick="associateDoc()">Associate Document</button></div>
                 {{/if}}
             </div>
+
             <div class="control-group" style="display: inline-block;">
                 {{#if flowchartAvailable}}
                     <div id="sfdiv">
@@ -540,126 +532,4 @@
             </form><br /><br />
         </div>
     </div>
-</div>
-
-<div id="analyticsConfigDiv" style="display:none">
-    <button class="btn btn-primary" onclick="showOverview(this)"><span
-            class="glyphicon glyphicon-circle-arrow-left"></span> Overview
-    </button>
-    </br>
-    </br>
-
-    <h2 class="field-title">
-        <a class="collapsing-h2" aria-expanded="true" href="#collapsevariableinfo" data-toggle="collapse">
-            <i class="cu-btn-exp-col btn-collapsed">Process Variables to Config for Analysis</i>        </a>
-    </h2>
-
-    {{#if DASAnalyticsConfigured}}
-        <div class="collapse in responsive-form-container" id="collapsevariableinfo">
-
-            <br>
-            <table id="dataTable"  border="1" width="25%">
-                <thead>
-                <th>Variable Name</th>
-                <th>Type</th>
-                </thead>
-                {{#each processVariableList.processVariables}}
-                    <tr>
-                        <td style="display:table-cell; width:100%">{{this.name}}</td>
-                        <td style="display:table-cell; width:100%">{{this.type}}</td>
-                    </tr>
-                {{/each}}
-                </tr>
-            </table>
-        </div>
-    {{else}}
-        <div class="collapse in responsive-form-container" id="collapsevariableinfo">
-            <div  class="add-unbounded-row" float="left" width="100%"  style="width:auto; float:left;"><a  id="btn_addProcessVariablesRow" onclick="addProcessVariableRow('dataTable')"><i
-                    class="fa fa-plus-circle"></i> Add Process Variable</a></div>
-            <div class="add-unbounded-row" style="width:auto;padding-left: 25pt; margin-left:10%;"><a id="btn_deleteProcessVariablesRow" onclick="deleteProcessVariableRow('dataTable')"><i
-                    class="fa fa-plus-circle"></i> Delete Process Variable</a></div>
-
-            <br>
-            <table id="dataTable"  border="1" width="25%">
-                <thead>
-                <th width="4%"></th>
-                <th>Variable Name</th>
-                <th>Type</th>
-                </thead>
-                <tr>
-                    <td><input type="checkbox" name="chk"/></td>
-
-                    <td><input type="text" name="txt" style="display:table-cell; width:100%"/></td>
-                    <td>
-                        <select name="country" style="display:table-cell; width:100%">
-                            <option value="int">int</option>
-                            <option value="string">string</option>
-                            <option value="float">float</option>
-                            <option value="boolean">boolean</option>
-                        </select>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    {{/if}}
-
-    <h2 class="field-title">
-        <a class="collapsing-h2" aria-expanded="true" href="#collapseEventStreamInfo" data-toggle="collapse">
-            <i class="cu-btn-exp-col btn-collapsed">Event Stream Information</i>        </a>
-    </h2>
-    <div class="collapse in responsive-form-container" id="collapseEventStreamInfo">
-        <form id="collapseEventStreamInfoForm" class="form-horizontal">
-            <div class="form-group">
-                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Event Stream Name<sup class="required-field">*</sup></label>
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text"  name="event_stream_name" id="eventStreamName"  class="form-control" required="">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Version<sup class="required-field">*</sup></label>
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text"  name="event_stream_version" id="eventStreamVersion" class="form-control" required="">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Description</label>
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text"  name="event_stream_description" id="eventStreamDescription" class="form-control" required="">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Nick Name</label>
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text"  name="event_stream_nick_name" id="eventStreamNickName" class="form-control">
-                </div>
-            </div>
-        </form>
     </div>
-
-    <h2 class="field-title">
-        <a class="collapsing-h2" aria-expanded="true" href="#collapseEventReceiverInfo" data-toggle="collapse">
-            <i class="cu-btn-exp-col btn-collapsed">Event Receiver Information</i>        </a>
-    </h2>
-    <div class="collapse in responsive-form-container" id="collapseEventReceiverInfo">
-        <form id="collapseEventReceiverInfoForm" class="form-horizontal">
-            <div class="form-group">
-                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Event Receiver Name<sup class="required-field">*</sup></label>
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text" placeholder="Enter Event Receiver Name" name="event_receiver_name" id="eventReceiverName" class="form-control" required="">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Input Event Adapter Type<sup class="required-field">*</sup></label>
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text"  name="input_event_adapter_type" id="inputEventAdapterType" class="form-control" required="" value="wso2event" readonly>
-                </div>
-            </div>
-        </form>
-    </div>
-    {{#if DASAnalyticsConfigured}}
-        <!--do nothing-->
-    {{else}}
-        <button id="btn_save_analytics_configurations" onclick="configAnalytics()" class="btn btn-primary">Save Configurations</button>
-
-    {{/if}}
-</div>
