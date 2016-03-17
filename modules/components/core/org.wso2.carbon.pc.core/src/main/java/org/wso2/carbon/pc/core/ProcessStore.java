@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.pc.core;
 
+//import com.sun.javafx.scene.web.Debugger;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.converter.util.InputStreamProvider;
 import org.activiti.bpmn.model.BpmnModel;
@@ -53,11 +54,129 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class ProcessStore {
+	private static final Log log = LogFactory.getLog(ProcessStore.class);
 
-    private static final Log log = LogFactory.getLog(ProcessStore.class);
+	private static final String mns = "http://www.wso2.org/governance/metadata";
+	private static final String OK = "OK";
 
-    private static final String mns = "http://www.wso2.org/governance/metadata";
-    private static final String OK = "OK";
+	public String getProcessVariablesList(String resourcePath) {
+		String resourceString = "";
+		try {
+			RegistryService registryService =
+					ProcessCenterServerHolder.getInstance().getRegistryService();
+			if (registryService != null) {
+				UserRegistry reg = registryService.getGovernanceSystemRegistry();
+				resourcePath = resourcePath.substring(ProcessStoreConstants.GREG_PATH.length());
+				Resource resourceAsset = reg.get(resourcePath);
+				String resourceContent = new String((byte[]) resourceAsset.getContent());
+
+				JSONObject conObj = new JSONObject();
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder builder;
+				builder = factory.newDocumentBuilder();
+				Document document =
+						builder.parse(new InputSource(new StringReader(resourceContent)));
+
+				JSONArray variableArray = new JSONArray();
+
+				conObj.put("processVariables", variableArray);
+
+				NodeList processVariableElements =
+						((Element) document.getFirstChild()).getElementsByTagName("process_variable");
+
+				if (processVariableElements.getLength() != 0) {
+					for (int i = 0; i < processVariableElements.getLength(); i++) {
+						Element processVariableElement = (Element) processVariableElements.item(i);
+						String processVariableName =
+								processVariableElement.getElementsByTagName("name").item(0)
+										.getTextContent();
+						String processVariableType =
+								processVariableElement.getElementsByTagName("type").item(0)
+										.getTextContent();
+
+						JSONObject processVariable = new JSONObject();
+						processVariable.put("name", processVariableName);
+						processVariable.put("type", processVariableType);
+						variableArray.put(processVariable);
+					}
+				}
+				resourceString = conObj.toString();
+			}
+		} catch (Exception e) {
+            String errMsg="Failed to get the process variables list";
+			log.error(errMsg,e);
+		}
+		return resourceString;
+	}
+
+	public boolean saveProcessVariables(String processVariableDetails){
+		try {
+			RegistryService registryService =
+					ProcessCenterServerHolder.getInstance().getRegistryService();
+
+			if (registryService != null) {
+				UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+				JSONObject processInfo = new JSONObject(processVariableDetails);
+				String processName = processInfo.getString("processName");
+				String processVersion = processInfo.getString("processVersion");
+				String processAssetPath =
+						ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+								processVersion;
+				Resource resource = reg.get(processAssetPath);
+				String processContent = new String((byte[]) resource.getContent());
+				Document doc = stringToXML(processContent);
+
+				JSONObject processVariablesJOb = processInfo.getJSONObject("processVariables");
+
+                Iterator<?> keys = processVariablesJOb.keys();
+
+				/*//saving pracess variable name,type as element attributes
+				while (	keys.hasNext()){
+					String variableName = (String)keys.next();
+					//if (Debugger.isEnabled())
+						log.debug(variableName);
+					String variableType=processVariablesJOb.get(variableName).toString();
+					//JSONObject processVariableJOb= (JSONObject) processVariablesArray.get(i);
+					Element rootElement = doc.getDocumentElement();
+
+					Element variableElement=append(doc,rootElement,"processVariable",mns);
+					variableElement.setAttribute("name",variableName);
+					variableElement.setAttribute("type",variableType);
+					//variableElement.setNodeValue("My value");
+					//variableElement.setTextContent("My value 2");
+
+					//appendText(doc,rootElement,"name",mns,variableName);
+					//appendText(doc,rootElement,"type",mns,processVariablesJOb.get(variableName).toString());
+
+					String newProcessContent = xmlToString(doc);
+					resource.setContent(newProcessContent);
+					reg.put(processAssetPath, resource);
+				}*/
+				//saving pracess variable name,type as sub elements
+				while (	keys.hasNext()){
+					String variableName = (String)keys.next();
+					//if (Debugger.isEnabled())
+					log.debug(variableName);
+					String variableType=processVariablesJOb.get(variableName).toString();
+					//JSONObject processVariableJOb= (JSONObject) processVariablesArray.get(i);
+					Element rootElement = doc.getDocumentElement();
+					Element variableElement=append(doc,rootElement,"process_variable",mns);
+					appendText(doc,variableElement,"name",mns,variableName);
+					appendText(doc,variableElement,"type",mns,variableType);
+
+					String newProcessContent = xmlToString(doc);
+					resource.setContent(newProcessContent);
+					reg.put(processAssetPath, resource);
+				}
+                log.info("Saved process variables to configure analytics");
+			}
+		}catch (Exception e){
+            String errMsg="Failed to save processVariables";
+			log.error(errMsg, e);
+		}
+		return true;
+	}
 
     private Element append(Document doc, Element parent, String childName, String childNS) {
         Element childElement = doc.createElementNS(childNS, childName);

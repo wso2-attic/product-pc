@@ -43,7 +43,9 @@
         <module>modules/components/analytics/web/org.wso2.carbon.pc.analytics.web</module>
         <module>modules/components/analytics/udf/org.wso2.carbon.pc.analytics.udf</module>
         <module>modules/components/analytics/capp/org.wso2.carbon.pc.analytics.capp</module>
+        <module>modules/components/analytics/config/org.wso2.carbon.pc.analytics.config</module>
         <module>modules/features/core/org.wso2.carbon.pc.core.feature</module>
+        <module>modules/features/analytics-config/org.wso2.carbon.pc.analytics.config.feature</module>
         <module>modules/features/analytics-core/org.wso2.carbon.pc.analytics.core.feature</module>
         <module>modules/p2-profile-gen</module>
         <module>modules/distribution</module>
@@ -239,6 +241,12 @@
             <dependency>
                 <groupId>org.wso2.pc</groupId>
                 <artifactId>org.wso2.carbon.pc.analytics.core</artifactId>
+                <version>${pc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.pc</groupId>
+                <artifactId>org.wso2.carbon.pc.analytics.config</artifactId>
                 <version>${pc.version}</version>
             </dependency>
 
@@ -772,5 +780,6 @@
         <commons-io.version>2.2</commons-io.version>
         <google.guava.version>16.0.1</google.guava.version>
         <testng.version>6.8.5</testng.version>
+        <org.wso2.carbon.authenticator.stub.version>4.0.0</org.wso2.carbon.authenticator.stub.version>
     </properties>
 </project>
