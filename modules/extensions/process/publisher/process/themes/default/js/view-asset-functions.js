@@ -198,6 +198,32 @@ function downloadDocument(relativePath) {
     });
 }
 
+function viewGoogleDocument(googleDocUrl, heading, iteration) {
+    var googleDocDivElement = document.getElementById("googleDocViewer");
+    var customGoogleDocUrl = googleDocUrl + "&embedded=true";
+    var customHeading = "Document Name : " + heading;
+    var modal = '<div id="docViewModal' + iteration + '" class="modal fade" role="dialog">';
+    modal += '<div class="modal-dialog" style="width:840px;height:600px">';
+    modal += '<div class="modal-content">';
+    modal += '<div class="modal-header">';
+    modal += '<a class="close" data-dismiss="modal">×</a>';
+    modal += '<h4>' + customHeading + '</h4>'
+    modal += '</div>';
+    modal += '<div class="modal-body">';
+    modal += '<iframe src="' + customGoogleDocUrl + '" style="width:800px;height:600px" frameborder="0">';
+    modal += '</iframe>';
+    modal += '</div>';
+    modal += '<div class="modal-footer">';
+    modal += '<span class="btn" data-dismiss="modal">';
+    modal += 'Close';
+    modal += '</span>'; // close button
+    modal += '</div>';  // footer
+    modal += '</div>'; //modal-content
+    modal += '</div>'; //modal-header
+    modal += '</div>';  // modalWindow
+    googleDocDivElement.innerHTML += modal;
+}
+
 function showDocument() {
     $("#overviewDiv").hide();
     $("#processTextContainer").hide();
@@ -215,8 +241,8 @@ function showDocument() {
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
-            for(var i = 0; i < response.length; i++) {
-                var table = document.getElementById("docTable");
+            for (var i = 0; i < response.length; i++) {
+                var table = document.getElementById("listDocs");
                 var rowCount = table.rows.length;
                 var row = table.insertRow(rowCount);
                 var cellDocName = row.insertCell(0);
@@ -225,18 +251,28 @@ function showDocument() {
                 cellDocName.innerHTML = response[i].documentname;
                 cellDocSummary.innerHTML = response[i].summary;
 
-                if(response[i].url != "NA") {
+                if (response[i].url != "NA") {
                     var anchorUrlElement = document.createElement("a");
                     anchorUrlElement.setAttribute("id", "documentUrl" + i);
                     anchorUrlElement.setAttribute("href", response[i].url);
                     anchorUrlElement.setAttribute('target', '_blank');
+                    anchorUrlElement.style.marginRight = "15px";
                     anchorUrlElement.innerHTML = "open";
+
+                    viewGoogleDocument(response[i].url, response[i].documentname, i);
+                    var anchorGoogleDocViewElement = document.createElement("a");
+                    anchorGoogleDocViewElement.setAttribute("id", "googleDocumentView" + i);
+                    anchorGoogleDocViewElement.setAttribute("data-toggle", "modal");
+                    anchorGoogleDocViewElement.setAttribute("data-target", "#docViewModal" + i);
+                    anchorGoogleDocViewElement.innerHTML = "view";
+
                     cellDocAction.appendChild(anchorUrlElement);
-                } else if(response[i].path != "NA") {
+                    cellDocAction.appendChild(anchorGoogleDocViewElement);
+                } else if (response[i].path != "NA") {
                     var anchorElement = document.createElement("a");
                     anchorElement.setAttribute("id", "document" + i);
                     var path = response[i].path;
-                    anchorElement.onclick = function() {
+                    anchorElement.onclick = function () {
                         var currentPath = path;
                         downloadDocument(currentPath);
                     };
@@ -823,7 +859,7 @@ function showFlowchartEditor(name, flowchartPath) {
         url: '/publisher/assets/process/apis/get_process_flowchart',
         type: 'GET',
         dataType: 'text',
-        data: {'flowchartPath':flowchartPath},
+        data: {'flowchartPath': flowchartPath},
         success: function (data) {
             _loadEditableFlowChart(data, '#editor_canvas');
         },
