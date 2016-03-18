@@ -805,7 +805,6 @@ function zoomSelect() {
 
 //******************************Flowchart Editor***********************************
 function associateEditorFlowChart(name) {
-    $('#flowchart-editor-header').text(name);
     $("#overviewDiv").hide();
     $("#flowChartEditorView").show();
     $("#pdfUploader").hide();
@@ -815,7 +814,6 @@ function associateEditorFlowChart(name) {
 }
 
 function showFlowchartEditor(name, flowchartPath) {
-    $('#flowchart-editor-header').text(name);
     $("#overviewDiv").hide();
     $("#flowChartEditorView").show();
     $("#pdfUploader").hide();
