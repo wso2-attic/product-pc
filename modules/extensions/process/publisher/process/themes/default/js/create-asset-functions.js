@@ -175,6 +175,7 @@ function getProcessInfo() {
         'processName': $("#pName").val(),
         'processVersion': $("#pVersion").val(),
         'processOwner': $("#pOwner").val(),
+        'processDescription': $("#overview_description").val(),
         'processTags': tags,
         'subprocess': readSubprocessTable(),
         'successor': readSuccessorTable(),
