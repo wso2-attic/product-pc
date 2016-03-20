@@ -99,6 +99,7 @@ public class ProcessStore {
             String processName = processInfo.getString("processName");
             String processVersion = processInfo.getString("processVersion");
             String processOwner = processInfo.getString("processOwner");
+            String processDescription = processInfo.getString("processDescription");
             String processTags = processInfo.getString("processTags");
             JSONArray subprocess = processInfo.getJSONArray("subprocess");
             JSONArray successor = processInfo.getJSONArray("successor");
@@ -122,6 +123,10 @@ public class ProcessStore {
                 appendText(doc, overviewElement, "name", mns, processName);
                 appendText(doc, overviewElement, "version", mns, processVersion);
                 appendText(doc, overviewElement, "owner", mns, processOwner);
+
+                if ((processDescription != null) && (!processDescription.isEmpty())) {
+                    appendText(doc, overviewElement, "description", mns, processDescription);
+                }
 
                 Element propertiesElement = append(doc, rootElement, "properties", mns);
                 appendText(doc, propertiesElement, "processtextpath", mns, "NA");
