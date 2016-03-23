@@ -80,7 +80,7 @@
                 <name>Id</name>
             </field>
         </table>
-        <table name="Document">
+        <table name="Document" maxoccurs="unbounded">
             <field type="text" required="true">
                 <name>documentname</name>
             </field>

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -31,7 +31,7 @@ window.onload = function () {
     var url = window.location.toString();
     pid = url.substr(url.lastIndexOf('/') + 1);
     getProcessList();
-}
+};
 
 function getMainProcess() {
     var mainProcess = $('#view-header').text() + "-" + $('#process-version').text();
@@ -198,6 +198,37 @@ function downloadDocument(relativePath) {
     });
 }
 
+function removeDocument(processName, processVersion, documentName, documentSummary, documentUrl, documentPath, idVal) {
+    var currentElementId = "#" + idVal;
+    $(currentElementId).parent().closest("tr").remove();
+
+    var removeDocInfo = {
+        'name':documentName,
+        'summary':documentSummary,
+        'url':documentUrl,
+        'path':documentPath
+    };
+
+    var removeDocObj = {
+        'processName':processName,
+        'processVersion':processVersion,
+        'removeDocument':removeDocInfo
+    };
+
+    $.ajax({
+        url: '/publisher/assets/process/apis/delete_document',
+        type: 'POST',
+        data: {'removeDocumentDetails': JSON.stringify(removeDocObj)},
+        success: function (response) {
+            alertify.success('Successfully deleted ' + documentName + ' from the document list.');
+        },
+        error: function () {
+            alertify.error('Document deleting error');
+        }
+    });
+
+}
+
 function viewGoogleDocument(googleDocUrl, heading, iteration) {
     var googleDocDivElement = document.getElementById("googleDocViewer");
     var customGoogleDocUrl = googleDocUrl + "&embedded=true";
@@ -233,53 +264,69 @@ function showDocument() {
     $("#pdfUploaderView").hide();
     $("#holder").hide();
     $("#flowChartEditorView").hide();
-    $("#docUploaderDiv").hide();
+    $("#docUploaderDiv").show();
     $("#docViewDiv").show();
+    $("#addNewDoc").toggle();
 
     $.ajax({
         url: '/publisher/assets/process/apis/get_process_doc?process_path=/_system/governance/processes/' + fieldsName + "/" + fieldsVersion,
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
-            for (var i = 0; i < response.length; i++) {
-                var table = document.getElementById("listDocs");
-                var rowCount = table.rows.length;
-                var row = table.insertRow(rowCount);
-                var cellDocName = row.insertCell(0);
-                var cellDocSummary = row.insertCell(1);
-                var cellDocAction = row.insertCell(2);
-                cellDocName.innerHTML = response[i].documentname;
-                cellDocSummary.innerHTML = response[i].summary;
+            if (response.length != 0) {
+                for (var i = 0; i < response.length; i++) {
+                    var table = document.getElementById("listDocs");
+                    var rowCount = table.rows.length;
+                    var row = table.insertRow(rowCount);
+                    var cellDocName = row.insertCell(0);
+                    var cellDocSummary = row.insertCell(1);
+                    var cellDocAction = row.insertCell(2);
+                    cellDocName.innerHTML = response[i].documentname;
+                    cellDocSummary.innerHTML = response[i].summary;
 
-                if (response[i].url != "NA") {
-                    var anchorUrlElement = document.createElement("a");
-                    anchorUrlElement.setAttribute("id", "documentUrl" + i);
-                    anchorUrlElement.setAttribute("href", response[i].url);
-                    anchorUrlElement.setAttribute('target', '_blank');
-                    anchorUrlElement.style.marginRight = "15px";
-                    anchorUrlElement.innerHTML = "open";
+                    if (response[i].url != "NA") {
+                        var anchorUrlElement = document.createElement("a");
+                        anchorUrlElement.setAttribute("id", "documentUrl" + i);
+                        anchorUrlElement.setAttribute("href", response[i].url);
+                        anchorUrlElement.setAttribute('target', '_blank');
+                        anchorUrlElement.style.marginRight = "15px";
+                        anchorUrlElement.innerHTML = "open";
 
-                    viewGoogleDocument(response[i].url, response[i].documentname, i);
-                    var anchorGoogleDocViewElement = document.createElement("a");
-                    anchorGoogleDocViewElement.setAttribute("id", "googleDocumentView" + i);
-                    anchorGoogleDocViewElement.setAttribute("data-toggle", "modal");
-                    anchorGoogleDocViewElement.setAttribute("data-target", "#docViewModal" + i);
-                    anchorGoogleDocViewElement.innerHTML = "view";
+                        viewGoogleDocument(response[i].url, response[i].documentname, i);
+                        var anchorGoogleDocViewElement = document.createElement("a");
+                        anchorGoogleDocViewElement.setAttribute("id", "googleDocumentView" + i);
+                        anchorGoogleDocViewElement.setAttribute("data-toggle", "modal");
+                        anchorGoogleDocViewElement.setAttribute("data-target", "#docViewModal" + i);
+                        anchorGoogleDocViewElement.style.marginRight = "15px";
+                        anchorGoogleDocViewElement.innerHTML = "view";
 
-                    cellDocAction.appendChild(anchorUrlElement);
-                    cellDocAction.appendChild(anchorGoogleDocViewElement);
-                } else if (response[i].path != "NA") {
-                    var anchorElement = document.createElement("a");
-                    anchorElement.setAttribute("id", "document" + i);
-                    var path = response[i].path;
-                    anchorElement.onclick = function () {
-                        var currentPath = path;
-                        downloadDocument(currentPath);
-                    };
-                    anchorElement.innerHTML = "download";
-                    cellDocAction.appendChild(anchorElement);
-                } else {
-                    cellDocAction.innerHTML = "Not Available";
+                        cellDocAction.appendChild(anchorUrlElement);
+                        cellDocAction.appendChild(anchorGoogleDocViewElement);
+                    } else if (response[i].path != "NA") {
+                        var anchorElement = document.createElement("a");
+                        anchorElement.setAttribute("id", "document" + i);
+                        anchorElement.onclick = (function (currentPath) {
+                            return function () {
+                                downloadDocument(currentPath);
+                            };
+                        })(response[i].path);
+                        anchorElement.innerHTML = "download";
+                        anchorElement.style.marginRight = "15px";
+                        cellDocAction.appendChild(anchorElement);
+                    } else {
+                        cellDocAction.innerHTML = "Not Available";
+                    }
+                    if (response[i].url != "NA" || response[i].path != "NA") {
+                        var removeDocElement = document.createElement("a");
+                        removeDocElement.setAttribute("id", "removeDocElement" + i);
+                        removeDocElement.onclick = (function (processName, processVersion, docName, docSummary, docUrl, docPath, idVal) {
+                            return function () {
+                                removeDocument(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
+                            };
+                        })(fieldsName, fieldsVersion, response[i].documentname, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
+                        removeDocElement.innerHTML = "remove";
+                        cellDocAction.appendChild(removeDocElement);
+                    }
                 }
             }
         },
