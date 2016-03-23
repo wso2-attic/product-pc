@@ -92,6 +92,9 @@ asset.server = function (ctx) {
             }, {
                 url: 'download_document',
                 path: 'download_document.jag'
+            }, {
+                url: 'delete_document',
+                path: 'delete_document.jag'
             }]
         }
     }
@@ -120,14 +123,17 @@ asset.renderer = function (ctx) {
                 page.bpmnAvaliable = true;
             }
 
-            if (page.assets.tables[5].fields.documentname.value == "NA") {
-                page.documentAvailable = false;
-            } else {
-                page.documentAvailable = true;
-            }
-
             importPackage(org.wso2.carbon.pc.core);
             var ps = new ProcessStore();
+            var isDocumentAvailableStr = ps.isDocumentAvailable(resourcePath);
+            var isDocumentAvailable = JSON.parse(isDocumentAvailableStr);
+
+            if (isDocumentAvailable == true) {
+                page.documentAvailable = true;
+            } else {
+                page.documentAvailable = false;
+            }
+
             var conData = ps.getSucessorPredecessorSubprocessList(resourcePath);
             var conObject = JSON.parse(conData);
             if (log.isDebugEnabled()) {
