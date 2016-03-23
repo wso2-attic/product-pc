@@ -202,6 +202,10 @@ function removeDocument(processName, processVersion, documentName, documentSumma
     var currentElementId = "#" + idVal;
     $(currentElementId).parent().closest("tr").remove();
 
+    if(document.getElementById("listDocs").rows.length == 0) {
+        $('#listDocs').append('<tr><td colspan="6">No documentation associated with this process</td></tr>');
+    }
+
     var removeDocInfo = {
         'name':documentName,
         'summary':documentSummary,
@@ -347,6 +351,7 @@ function associateDoc() {
     $("#flowChartEditorView").hide();
     $("#docUploaderDiv").show();
     $("#docViewDiv").hide();
+    $("#toggleAnchor").hide();
 }
 
 function newDocFormToggle() {
