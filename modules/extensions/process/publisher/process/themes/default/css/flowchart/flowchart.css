@@ -50,6 +50,13 @@
     transform: rotate(45deg);
 }
 
+.parallelogram {
+    height: 100px;
+    -webkit-transform: skew(-10deg);
+    -moz-transform: skew(-10deg);
+    -o-transform: skew(-10deg);
+}
+
 .desc-text{
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
@@ -58,8 +65,16 @@
     transform: rotate(-45deg);
 }
 
+.overlayText{
+
+}
+
+.input-text{
+    -webkit-transform: skew(10deg);
+}
+
 .flowchart-demo .window {
-    border: 1px solid #346789;
+    border: 2px solid #346789;
     box-shadow: 2px 2px 19px #aaa;
     -o-box-shadow: 2px 2px 19px #aaa;
     -webkit-box-shadow: 2px 2px 19px #aaa;
@@ -96,7 +111,7 @@
 }
 
 .flowchart-demo .hover {
-    border: 1px dotted red;
+    border: 2px solid red;
 }
 
 #startEv{
@@ -110,12 +125,17 @@
 }
 
 #descEv{
-    top: 20em;
+    top: 19em;
     left: 3em;
 }
 
 #endEv{
-    top: 30em;
+    top: 36em;
+    left: 3em;
+}
+
+#inpEv{
+    top: 28em;
     left: 3em;
 }
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -8,11 +8,12 @@
  *
  *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.w   See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
  *
  */
 var endpointList = [];
@@ -27,6 +28,7 @@ jsPlumb.ready(function () {
     jsPlumb.registerConnectionType("basic", basicType);
 
     var properties = [];
+    var deleteConnection = null;
 
     //style for the connector
     var connectorPaintStyle = {
@@ -75,11 +77,6 @@ jsPlumb.ready(function () {
                             alert("you clicked on the arrow overlay")
                         }
                     }
-                }],
-                ["Label", {
-                    location: 0.3,
-                    id: "label",
-                    cssClass: "aLabel"
                 }]
             ]
         },
@@ -93,21 +90,56 @@ jsPlumb.ready(function () {
             isTarget: true
         };
 
+    //to make the text field resizable when typing the input text.
+    $.fn.textWidth = function(text, font){//get width of text with font.  usage: $("div").textWidth();
+        var temp = $('<span>').hide().appendTo(document.body).text(text || this.val() || this.text()).css('font', font || this.css('font')),
+            width = temp.width();
+        temp.remove();
+        return width;
+    };
+
+    $.fn.autoresize = function(options){//resizes elements based on content size.  usage: $('input').autoresize({padding:10,minWidth:0,maxWidth:100});
+        options = $.extend({padding:10,minWidth:0,maxWidth:10000}, options||{});
+        $(this).on('input', function() {
+            $(this).css('width', Math.min(options.maxWidth,Math.max(options.minWidth,$(this).textWidth() + options.padding)));
+        }).trigger('input');
+        return this;
+    }
+
+    //resize the label text field when typing
+    $('#canvas').on('keyup', '._jsPlumb_overlay.aLabel', function () {
+        $(this).css('font-weight', 'bold');
+        $(this).css('text-align', 'center');
+        $(this).autoresize({padding:20,minWidth:20,maxWidth:100});
+    });
+
     //set the label of the connector
     var initConn = function (connection) {
-        var myLabel = prompt("Enter label text: ", "");
-        if (myLabel != null)
-            connection.getOverlay("label").setLabel(myLabel);
+        connection.addOverlay(["Custom", {
+            create:function(component) {
+                return $("<input type=\"text\" value=\"\" autofocus style=\"position:absolute; width: 20px\"\/>");
+            },
+            location: 0.5,
+            id: "label",
+            cssClass: "aLabel"
+        }]);
     };
 
     jsPlumb.bind("connection", function (connInfo, originalEvent) {
         initConn(connInfo.connection);
     });
 
-    jsPlumb.bind("dblclick", function (conn, originalEvent) {
-        if (confirm("Do you want to delete the connection from " + conn.sourceId + " to " + conn.targetId + "?"))
-            jsPlumb.detach(conn);
+    jsPlumb.bind("click", function (conn, originalEvent) {
+        to_delete = "";
+        jsPlumb.select().setPaintStyle({lineWidth: 4, strokeStyle: "#61B7CF"});
+        conn.setPaintStyle({strokeStyle:"red", lineWidth:4});
+        $('.step').css({'border-color': '#29e'});
+        $('.diamond').css({'border-color': '#29e'});
+        $('.start').css({'border-color': 'green'});
+        $('.window.jsplumb-connected-end').css({'border-color': 'orangered'});
+        deleteConnection = conn;
     });
+
 
     //add the endpoints for the elements
     var ep;
@@ -155,6 +187,14 @@ jsPlumb.ready(function () {
         clicked = true;
     });
 
+    //load properties of a decision element once the input/output element in the palette is clicked
+    $('#inpEv').click(function () {
+        loadProperties("window parallelogram step custom jtk-node jsplumb-connected-step", "23em", "5em", "i/o",
+            ["BottomCenter", "RightMiddle"], ["TopCenter", "LeftMiddle"], true);
+        clicked = true;
+    });
+
+
     //load properties of a end element once the end element in the palette is clicked
     $('#endEv').click(function () {
         loadProperties("window end jtk-node jsplumb-connected-end", "23em", "15em", "end",
@@ -194,6 +234,17 @@ jsPlumb.ready(function () {
         });
     }
 
+    //take the x, y coordinates of the current mouse position
+    var x, y;
+    $( document ).on( "mousemove", function( event ) {
+        x = event.pageX;
+        y = event.pageY;
+        if(clicked){
+            properties[0].top = y - 358;
+            properties[0].left = x - 308;
+        }
+    });
+
     //create an element to be drawn on the canvas
     function createElement(id) {
         var elm = $('<div>').addClass(properties[0].clsName).attr('id', id);
@@ -205,6 +256,11 @@ jsPlumb.ready(function () {
         var strong = $('<strong>');
         if (properties[0].clsName == "window diamond custom jtk-node jsplumb-connected-step") {
             var p = "<p style='line-height: 110%; margin-top: 25px' class='desc-text' contenteditable='true' ondblclick='$(this).focus();'>" + properties[0].label + "</p>";
+            strong.append(p);
+        }
+        else if (properties[0].clsName == "window parallelogram step custom jtk-node jsplumb-connected-step") {
+            var p = "<p style='line-height: 110%; margin-top: 25px' class='input-text' contenteditable='true' ondblclick='$(this).focus();'>" + properties[0].label
+                + "</p>";
             strong.append(p);
         }
         else if (properties[0].contenteditable) {
@@ -238,6 +294,8 @@ jsPlumb.ready(function () {
     //select the current element and make its boarder red.
     $('#canvas').on('click', '[id^="flowchartWindow"]', function () {
         to_delete = $(this).attr("id");
+        deleteConnection = null;
+        jsPlumb.select().setPaintStyle({lineWidth: 4, strokeStyle: "#61B7CF"});
         $('.step').not(this).css({'border-color': '#29e'});
         $('.diamond').not(this).css({'border-color': '#29e'});
         $('.start').not(this).css({'border-color': 'green'});
@@ -274,6 +332,9 @@ jsPlumb.ready(function () {
                     }
                 }
                 to_delete = "";
+            }else if(deleteConnection != null){
+                jsPlumb.detach(deleteConnection);
+                deleteConnection = null;
             }
         } else if (e.which == 43) {
             var elm = $('.diamond.custom').filter(function () {
@@ -316,7 +377,7 @@ jsPlumb.ready(function () {
                     totalCount++;
                     var $element = $(element);
                     var type = $element.attr('class').toString().split(" ")[1];
-                    if (type == "step" || type == "diamond") {
+                    if (type == "step" || type == "diamond" || type == "parallelogram") {
                         nodes.push({
                             elementId: $element.attr('id'),
                             nodeType: type,
@@ -345,7 +406,8 @@ jsPlumb.ready(function () {
                         connectionId: connection.id,
                         sourceUUId: connection.endpoints[0].getUuid(),
                         targetUUId: connection.endpoints[1].getUuid(),
-                        label: connection.getOverlay("label").getLabel()
+                        label: connection.getOverlay("label").getElement().value,
+                        labelWidth: connection.getOverlay("label").getElement().style.width
                     });
                 });
 
