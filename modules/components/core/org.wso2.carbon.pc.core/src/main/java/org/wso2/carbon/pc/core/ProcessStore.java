@@ -1164,7 +1164,7 @@ public class ProcessStore {
 
                 Element rootElement = doc.getDocumentElement();
                 Element docElement = append(doc, rootElement, "document", mns);
-                appendText(doc, docElement, "documentname", mns, docName);
+                appendText(doc, docElement, "name", mns, docName);
                 appendText(doc, docElement, "summary", mns, docSummary);
                 if ((docUrl != null) && (!docUrl.isEmpty())) {
                     appendText(doc, docElement, "url", mns, docUrl);
@@ -1216,13 +1216,13 @@ public class ProcessStore {
                 if (documentElements.getLength() != 0) {
                     for (int i = 0; i < documentElements.getLength(); i++) {
                         Element documentElement = (Element) documentElements.item(i);
-                        String docName = documentElement.getElementsByTagName("documentname").item(0).getTextContent();
+                        String docName = documentElement.getElementsByTagName("name").item(0).getTextContent();
                         String docSummary = documentElement.getElementsByTagName("summary").item(0).getTextContent();
                         String docUrl = documentElement.getElementsByTagName("url").item(0).getTextContent();
                         String docPath = documentElement.getElementsByTagName("path").item(0).getTextContent();
 
                         JSONObject processDoc = new JSONObject();
-                        processDoc.put("documentname", docName);
+                        processDoc.put("name", docName);
                         processDoc.put("summary", docSummary);
                         processDoc.put("url", docUrl);
                         processDoc.put("path", docPath);
@@ -1288,7 +1288,7 @@ public class ProcessStore {
                     NodeList documentElements = ((Element) doc.getFirstChild()).getElementsByTagName("document");
                     for (int i = 0; i < documentElements.getLength(); i++) {
                         Element documentElement = (Element) documentElements.item(i);
-                        String documentName = documentElement.getElementsByTagName("documentname").item(0)
+                        String documentName = documentElement.getElementsByTagName("name").item(0)
                                                                    .getTextContent();
                         String documentSummary = documentElement.getElementsByTagName("summary").item(0)
                                                                 .getTextContent();
