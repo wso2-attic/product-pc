@@ -309,6 +309,34 @@ function viewPDF(pdfUrl, heading, iteration) {
     pdfDocDivElement.innerHTML += pdfModal;
 }
 
+function confirmDialog(processName, processVersion, documentName, documentSummary, documentUrl, documentPath, idVal) {
+    var question = "Are you sure you want to delete this document permanently?";
+    var confirmModal =
+        $('<div class="modal fade">' +
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header">' +
+            '<a class="close" data-dismiss="modal" >&times;</a>' +
+            '<h3>Confirm delete</h3>' +
+            '</div>' +
+            '<div class="modal-body">' +
+            '<p>' + question + '</p>' +
+            '</div>' +
+            '<div class="modal-footer">' +
+            '<a href="#!" class="btn" data-dismiss="modal">cancel</a>' +
+            '<a href="#!" id="okButton" class="btn btn-primary">delete</a>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>');
+
+    confirmModal.find('#okButton').click(function(event) {
+        removeDocument(processName, processVersion, documentName, documentSummary, documentUrl, documentPath, idVal);
+        confirmModal.modal('hide');
+    });
+    confirmModal.modal('show');
+}
+
 function showDocument() {
     $("#overviewDiv").hide();
     $("#processTextContainer").hide();
@@ -386,7 +414,7 @@ function showDocument() {
                         removeDocElement.setAttribute("id", "removeDocElement" + i);
                         removeDocElement.onclick = (function (processName, processVersion, docName, docSummary, docUrl, docPath, idVal) {
                             return function () {
-                                removeDocument(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
+                                confirmDialog(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
                             };
                         })(fieldsName, fieldsVersion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
                         removeDocElement.innerHTML = "remove";
