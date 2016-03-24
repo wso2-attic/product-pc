@@ -378,7 +378,7 @@
                                         <label class="control-label">Source</label>
                                         <div class="controls">
                                             <label class="radio" style="margin-left:20px">
-                                                <input type="radio" name="optionsRadios1" id="optionsRadios7" value="url" onclick="javascript:$('#sourceUrlDoc').toggle('slow');$('#sourceFile').hide('slow')">URL (Eg: google doc)
+                                                <input type="radio" name="optionsRadios1" id="optionsRadios7" value="url" onclick="javascript:$('#sourceUrlDoc').toggle('slow');$('#sourceFile').hide('slow')">URL (Eg: google document)
                                                 <a class="icon-question-sign help_popup" data-original-title="" title=""></a>
                                                 <p id="urlDoc_help" class="hide">Link to documentation managed by an external configuration management system</p>
                                             </label>
@@ -387,7 +387,7 @@
                                                 <span class="requiredAstrix" style="color: red;">*</span> <input type="text" class="required" style="width:98%" id="docUrl" name="docUrl">
                                             </div>
                                             <label class="radio" style="margin-left:20px">
-                                                <input type="radio" name="optionsRadios1" id="optionsRadios8" value="file" onclick="javascript:$('#sourceFile').toggle('slow');$('#sourceUrlDoc').hide('slow')">Document
+                                                <input type="radio" name="optionsRadios1" id="optionsRadios8" value="file" onclick="javascript:$('#sourceFile').toggle('slow');$('#sourceUrlDoc').hide('slow')">Document/pdf
                                                 <a class="icon-question-sign help_popup" data-original-title="" title=""></a>
                                                 <p id="fileDoc_help" class="hide">Upload a documentation file</p>
                                             </label>
@@ -398,7 +398,7 @@
                                             </a>
                                             <div id="sourceFile" class="controls" style="display:none;">
                                                 <span class="requiredAstrix" style="color: red;">*</span> <input type="file" class="required" style="width:98%" name="docLocation" id="docLocation">
-                                                <p id="fileType_help">eg : .docx, .doc</p>
+                                                <p id="fileType_help">eg : .docx, .doc, .pdf</p>
                                             </div>
                                         </div>
                                     </div>
@@ -409,7 +409,6 @@
                         <div class="row-fluid">
                             <div class="span12">
                                 <div class="control-group">
-                                    <!--<button type="button" class="btn btn-primary" id="saveDocBtn" onclick="saveDoc()">Add Document</button>-->
                                     <input type="submit" class="btn btn-primary" id="saveDocBtn" value="Add Document">
                                 </div>
                             </div>
@@ -423,7 +422,6 @@
 </div>
 
 <div id="docViewDiv" style="display:none">
-    <!--<a id="docOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a><br />-->
     <div id="docUploaderDivContainer"></div>
     <div class="row-fluid">
         <div class="span12">
@@ -440,6 +438,8 @@
             </table>
         </div>
         <div id="googleDocViewer">
+        </div>
+        <div id="pdfDocViewer">
         </div>
     </div>
 </div>

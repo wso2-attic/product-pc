@@ -181,6 +181,7 @@ function downloadDocument(relativePath) {
         type: 'GET',
         success: function (response) {
             var docNameWithExt = relativePath.substr(relativePath.lastIndexOf('/') + 1);
+            var extension = docNameWithExt.split('.').pop().toLowerCase();
             var byteCharacters = atob(response);
 
             var byteNumbers = new Array(byteCharacters.length);
@@ -188,6 +189,9 @@ function downloadDocument(relativePath) {
                 byteNumbers[i] = byteCharacters.charCodeAt(i);
             }
             var contentType = 'application/msword';
+            if(extension == "pdf") {
+                contentType = 'application/pdf';
+            }
             var byteArray = new Uint8Array(byteNumbers);
             var blob = new Blob([byteArray], {type: contentType});
             saveAs(blob, docNameWithExt);
@@ -233,6 +237,28 @@ function removeDocument(processName, processVersion, documentName, documentSumma
 
 }
 
+function viewPDFDocument(relativePath, heading, iteration) {
+    $.ajax({
+        url: '/publisher/assets/process/apis/download_document?process_doc_path=' + relativePath,
+        type: 'GET',
+        success: function (response) {
+            var byteCharacters = atob(response);
+            var byteNumbers = new Array(byteCharacters.length);
+            for (var i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            var contentType = 'application/pdf';
+            var byteArray = new Uint8Array(byteNumbers);
+            var file = new Blob([byteArray], {type: contentType});
+            var fileURL = URL.createObjectURL(file);
+            viewPDF(fileURL, heading, iteration);
+        },
+        error: function () {
+            alertify.error('Text editor error');
+        }
+    });
+}
+
 function viewGoogleDocument(googleDocUrl, heading, iteration) {
     var googleDocDivElement = document.getElementById("googleDocViewer");
     var customGoogleDocUrl = googleDocUrl + "&embedded=true";
@@ -242,7 +268,7 @@ function viewGoogleDocument(googleDocUrl, heading, iteration) {
     modal += '<div class="modal-content">';
     modal += '<div class="modal-header">';
     modal += '<a class="close" data-dismiss="modal">×</a>';
-    modal += '<h4>' + customHeading + '</h4>'
+    modal += '<h4>' + customHeading + '</h4>';
     modal += '</div>';
     modal += '<div class="modal-body">';
     modal += '<iframe src="' + customGoogleDocUrl + '" style="width:800px;height:600px" frameborder="0">';
@@ -257,6 +283,30 @@ function viewGoogleDocument(googleDocUrl, heading, iteration) {
     modal += '</div>'; //modal-header
     modal += '</div>';  // modalWindow
     googleDocDivElement.innerHTML += modal;
+}
+
+function viewPDF(pdfUrl, heading, iteration) {
+    var pdfDocDivElement = document.getElementById("pdfDocViewer");
+    var customHeading = "PDF Name : " + heading;
+    var pdfModal = '<div id="pdfViewModal' + iteration + '" aria-labelledby="pdfModalLabel' + iteration + '" class="modal fade" role="dialog" aria-hidden="true">';
+    pdfModal += '<div class="modal-dialog" style="width:840px;height:600px">';
+    pdfModal += '<div class="modal-content">';
+    pdfModal += '<div class="modal-header">';
+    pdfModal += '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+    pdfModal += '<h4 class="modal-title" id="pdfModalLabel' + iteration + '">' + customHeading + '</h4>';
+    pdfModal += '</div>';
+    pdfModal += '<div class="modal-body">';
+    pdfModal += '<object type="application/pdf" data="' + pdfUrl + '" width="800" height="600">this is not working as expected</object>';
+    pdfModal += '</div>';
+    pdfModal += '<div class="modal-footer">';
+    pdfModal += '<span class="btn" data-dismiss="modal">';
+    pdfModal += 'Close';
+    pdfModal += '</span>'; // close button
+    pdfModal += '</div>'; // footer
+    pdfModal += '</div>'; //modal-content
+    pdfModal += '</div>'; //modal-header
+    pdfModal += '</div>'; //modal window
+    pdfDocDivElement.innerHTML += pdfModal;
 }
 
 function showDocument() {
@@ -285,7 +335,7 @@ function showDocument() {
                     var cellDocName = row.insertCell(0);
                     var cellDocSummary = row.insertCell(1);
                     var cellDocAction = row.insertCell(2);
-                    cellDocName.innerHTML = response[i].documentname;
+                    cellDocName.innerHTML = response[i].name;
                     cellDocSummary.innerHTML = response[i].summary;
 
                     if (response[i].url != "NA") {
@@ -296,7 +346,7 @@ function showDocument() {
                         anchorUrlElement.style.marginRight = "15px";
                         anchorUrlElement.innerHTML = "open";
 
-                        viewGoogleDocument(response[i].url, response[i].documentname, i);
+                        viewGoogleDocument(response[i].url, response[i].name, i);
                         var anchorGoogleDocViewElement = document.createElement("a");
                         anchorGoogleDocViewElement.setAttribute("id", "googleDocumentView" + i);
                         anchorGoogleDocViewElement.setAttribute("data-toggle", "modal");
@@ -317,6 +367,17 @@ function showDocument() {
                         anchorElement.innerHTML = "download";
                         anchorElement.style.marginRight = "15px";
                         cellDocAction.appendChild(anchorElement);
+
+                        if(response[i].path.split('.').pop().toLowerCase() == "pdf") {
+                            viewPDFDocument(response[i].path, response[i].name, i);
+                            var anchorPdfViewElement = document.createElement("a");
+                            anchorPdfViewElement.setAttribute("id", "pdfDocumentView" + i);
+                            anchorPdfViewElement.setAttribute("data-toggle", "modal");
+                            anchorPdfViewElement.setAttribute("data-target", "#pdfViewModal" + i);
+                            anchorPdfViewElement.style.marginRight = "15px";
+                            anchorPdfViewElement.innerHTML = "view";
+                            cellDocAction.appendChild(anchorPdfViewElement);
+                        }
                     } else {
                         cellDocAction.innerHTML = "Not Available";
                     }
@@ -327,7 +388,7 @@ function showDocument() {
                             return function () {
                                 removeDocument(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
                             };
-                        })(fieldsName, fieldsVersion, response[i].documentname, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
+                        })(fieldsName, fieldsVersion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
                         removeDocElement.innerHTML = "remove";
                         cellDocAction.appendChild(removeDocElement);
                     }
@@ -939,7 +1000,7 @@ function validateDocument() {
         }
     } else if (document.getElementById('optionsRadios8').checked) {
         var ext = $('#docLocation').val().split('.').pop().toLowerCase();
-        if ($.inArray(ext, ['docx', 'doc']) == -1) {
+        if ($.inArray(ext, ['docx', 'doc', 'pdf']) == -1) {
             alertify.error('invalid document extension!');
             return false;
         }

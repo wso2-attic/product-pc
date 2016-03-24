@@ -82,7 +82,7 @@
         </table>
         <table name="Document" maxoccurs="unbounded">
             <field type="text" required="true">
-                <name>documentname</name>
+                <name>name</name>
             </field>
             <field type="text" required="false">
                 <name>summary</name>
