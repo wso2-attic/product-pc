@@ -303,7 +303,8 @@
 <div id="flowChartEditorView" style="display:none">
     <br />
     <a id="fcEditorOverviewLink" class="btn btn-primary" onclick="redirectTo(this)" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
-    <button class="btn btn-primary" id="flowchartSaveBtn" onclick=" _saveEditedFlowchart()">Save</button><br /><br />
+    <button class="btn btn-primary" id="flowchartSaveBtn" onclick=" _saveEditedFlowchart()">Save</button>
+    <button class="btn btn-primary" id="flowchartDltBtn" onclick="_deleteFlowchart()">Delete</button><br /><br />
     <input type="hidden" id="fcProcessName" name="fcProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
     <input type="hidden" id="fcProcessVersion" name="fcProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
     <div style="width:100%; height: 50%; white-space:nowrap;">

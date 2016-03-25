@@ -19,7 +19,7 @@
 var editorEndpointList = [];
 var editorSourcepointList = [];
 var elementCount = 0; // keeps the total element count when creating the element ids
-var _saveEditedFlowchart, _loadEditableFlowChart;
+var _saveEditedFlowchart, _loadEditableFlowChart, _deleteFlowchart;
 var editable = false,
     editableElmCount = 0; //counts the number of elements on the canvas at any given time
 jsPlumb.ready(function () {
@@ -505,5 +505,35 @@ jsPlumb.ready(function () {
             init(conn, element.label, element.labelWidth);
         });
         editable = true;
+    }
+
+    _deleteFlowchart = function(){
+        if (editableElmCount > 0) {
+            var name = $("#fcProcessName").val();
+            var version = $("#fcProcessVersion").val();
+            if(confirm("Do you want to delete the flowchart of process " + name + " " + version + "?")) {
+                $.ajax({
+                    url: '/publisher/assets/process/apis/delete_flowchart',
+                    type: 'POST',
+                    data: {
+                        'processName': name,
+                        'processVersion': version
+                    },
+                    success: function (response) {
+                        alertify.success("Successfully deleted the flowchart.");
+                        var node = document.getElementById("editor_canvas");
+                        while (node.hasChildNodes()) {
+                            node.removeChild(node.lastChild);
+                        }
+                        editableElmCount = 0;
+                    },
+                    error: function () {
+                        alertify.error('Flowchart deleting error');
+                    }
+                });
+            }
+        }else{
+            alertify.error('Flowchart content is empty.');
+        }
     }
 });

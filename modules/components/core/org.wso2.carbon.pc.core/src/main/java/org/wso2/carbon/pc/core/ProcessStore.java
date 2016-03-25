@@ -35,6 +35,8 @@ import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.exceptions.ResourceNotFoundException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.xml.sax.InputSource;
@@ -1408,14 +1410,49 @@ public class ProcessStore {
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
                 flowchartPath = flowchartPath.substring("/_system/governance/".length());
-                Resource flowchartAsset = reg.get(flowchartPath);
-                flowchartString = new String((byte[]) flowchartAsset.getContent());
+                try {
+                    Resource flowchartAsset = reg.get(flowchartPath);
+                    flowchartString = new String((byte[]) flowchartAsset.getContent());
+                }catch (ResourceNotFoundException e){
+                    flowchartString = "NA";
+                }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
 
         return flowchartString;
+    }
+
+    /**
+     *
+     * @param name
+     * @param version
+     */
+    public void deleteFlowchart(String name, String version){
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            String flowchartContentPath = "flowchart/" + name + "/" +version;
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                reg.delete(flowchartContentPath);
+
+                String processPath = "processes/" + name + "/" + version;
+                Resource processResource = reg.get(processPath);
+
+                String processContent = new String((byte[]) processResource.getContent());
+                Document processXML = stringToXML(processContent);
+                processXML.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent("NA");
+
+                String newProcessContent = xmlToString(processXML);
+                processResource.setContent(newProcessContent);
+                reg.put(processPath, processResource);
+            }
+        } catch (RegistryException e) {
+            log.error(e.getMessage(), e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     //    public static void main(String[] args) {
