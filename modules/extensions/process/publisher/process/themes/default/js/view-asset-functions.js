@@ -309,8 +309,7 @@ function viewPDF(pdfUrl, heading, iteration) {
     pdfDocDivElement.innerHTML += pdfModal;
 }
 
-function confirmDialog(processName, processVersion, documentName, documentSummary, documentUrl, documentPath, idVal) {
-    var question = "Are you sure you want to delete this document permanently?";
+function confirmDialog(question) {
     var confirmModal =
         $('<div class="modal fade">' +
             '<div class="modal-dialog">' +
@@ -329,7 +328,12 @@ function confirmDialog(processName, processVersion, documentName, documentSummar
             '</div>' +
             '</div>' +
             '</div>');
+    return confirmModal;
+}
 
+function removeDocumentConfirmListener(processName, processVersion, documentName, documentSummary, documentUrl, documentPath, idVal) {
+    var question = "Are you sure you want to delete " + documentName + " document permanently ?";
+    var confirmModal = confirmDialog(question);
     confirmModal.find('#okButton').click(function(event) {
         removeDocument(processName, processVersion, documentName, documentSummary, documentUrl, documentPath, idVal);
         confirmModal.modal('hide');
@@ -414,7 +418,7 @@ function showDocument() {
                         removeDocElement.setAttribute("id", "removeDocElement" + i);
                         removeDocElement.onclick = (function (processName, processVersion, docName, docSummary, docUrl, docPath, idVal) {
                             return function () {
-                                confirmDialog(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
+                                removeDocumentConfirmListener(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
                             };
                         })(fieldsName, fieldsVersion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
                         removeDocElement.innerHTML = "remove";
