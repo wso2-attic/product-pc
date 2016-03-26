@@ -45,20 +45,19 @@ public class LoginAdminServiceClient {
             throws RemoteException, LoginAuthenticationExceptionException {
 
         String sessionCookie = null;
-
         if (authenticationAdminStub.login(userName, password, "localhost")) {
-            log.info("Login successful to DAS Admin Services");
-
+            if(log.isDebugEnabled()) {
+                log.debug("Login successful to DAS Admin Services");
+            }
             ServiceContext serviceContext = authenticationAdminStub.
                     _getServiceClient().getLastOperationContext().getServiceContext();
             sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
         }
-
         return sessionCookie;
     }
 
     public void logOut() throws RemoteException, LogoutAuthenticationExceptionException {
-        log.info("Loggout from DAS Admin Services");
+        log.debug("Logout from DAS Admin Services");
         authenticationAdminStub.logout();
     }
 }

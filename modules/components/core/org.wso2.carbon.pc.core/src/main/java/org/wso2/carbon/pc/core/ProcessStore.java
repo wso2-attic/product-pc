@@ -16,6 +16,7 @@
 package org.wso2.carbon.pc.core;
 
 //import com.sun.javafx.scene.web.Debugger;
+
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.converter.util.InputStreamProvider;
 import org.activiti.bpmn.model.BpmnModel;
@@ -28,6 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,6 +38,7 @@ import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.xml.sax.InputSource;
@@ -54,85 +57,83 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class ProcessStore {
-	private static final Log log = LogFactory.getLog(ProcessStore.class);
+    private static final Log log = LogFactory.getLog(ProcessStore.class);
 
-	private static final String mns = "http://www.wso2.org/governance/metadata";
-	private static final String OK = "OK";
+    private static final String mns = "http://www.wso2.org/governance/metadata";
+    private static final String OK = "OK";
 
-	public String getProcessVariablesList(String resourcePath) {
-		String resourceString = "";
-		try {
-			RegistryService registryService =
-					ProcessCenterServerHolder.getInstance().getRegistryService();
-			if (registryService != null) {
-				UserRegistry reg = registryService.getGovernanceSystemRegistry();
-				resourcePath = resourcePath.substring(ProcessStoreConstants.GREG_PATH.length());
-				Resource resourceAsset = reg.get(resourcePath);
-				String resourceContent = new String((byte[]) resourceAsset.getContent());
+    public String getProcessVariablesList(String resourcePath) {
+        String resourceString = "";
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                resourcePath = resourcePath.substring(ProcessStoreConstants.GREG_PATH.length());
+                Resource resourceAsset = reg.get(resourcePath);
+                String resourceContent = new String((byte[]) resourceAsset.getContent());
 
-				JSONObject conObj = new JSONObject();
-				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder builder;
-				builder = factory.newDocumentBuilder();
-				Document document =
-						builder.parse(new InputSource(new StringReader(resourceContent)));
+                JSONObject conObj = new JSONObject();
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder;
+                builder = factory.newDocumentBuilder();
+                Document document = builder.parse(new InputSource(new StringReader(resourceContent)));
 
-				JSONArray variableArray = new JSONArray();
+                JSONArray variableArray = new JSONArray();
 
-				conObj.put("processVariables", variableArray);
+                conObj.put("processVariables", variableArray);
 
-				NodeList processVariableElements =
-						((Element) document.getFirstChild()).getElementsByTagName("process_variable");
+                NodeList processVariableElements = ((Element) document.getFirstChild())
+                        .getElementsByTagName("process_variable");
 
-				if (processVariableElements.getLength() != 0) {
-					for (int i = 0; i < processVariableElements.getLength(); i++) {
-						Element processVariableElement = (Element) processVariableElements.item(i);
-						String processVariableName =
-								processVariableElement.getElementsByTagName("name").item(0)
-										.getTextContent();
-						String processVariableType =
-								processVariableElement.getElementsByTagName("type").item(0)
-										.getTextContent();
+                if (processVariableElements.getLength() != 0) {
+                    for (int i = 0; i < processVariableElements.getLength(); i++) {
+                        Element processVariableElement = (Element) processVariableElements.item(i);
+                        String processVariableName = processVariableElement.getElementsByTagName("name").item(0)
+                                .getTextContent();
+                        String processVariableType = processVariableElement.getElementsByTagName("type").item(0)
+                                .getTextContent();
 
-						JSONObject processVariable = new JSONObject();
-						processVariable.put("name", processVariableName);
-						processVariable.put("type", processVariableType);
-						variableArray.put(processVariable);
-					}
-				}
-				resourceString = conObj.toString();
-			}
-		} catch (Exception e) {
-            String errMsg="Failed to get the process variables list";
-			log.error(errMsg,e);
-		}
-		return resourceString;
-	}
+                        JSONObject processVariable = new JSONObject();
+                        processVariable.put("name", processVariableName);
+                        processVariable.put("type", processVariableType);
+                        variableArray.put(processVariable);
+                    }
+                }
+                resourceString = conObj.toString();
+            }
+        } catch (Exception e) {
+            String errMsg = "Failed to get the process variables list";
+            log.error(errMsg, e);
+        }
+        return resourceString;
+    }
 
-	public boolean saveProcessVariables(String processVariableDetails){
-		try {
-			RegistryService registryService =
-					ProcessCenterServerHolder.getInstance().getRegistryService();
+    /**
+     * @param processVariableDetails
+     * @return
+     */
+    public boolean saveProcessVariables(String processVariableDetails) {
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
-			if (registryService != null) {
-				UserRegistry reg = registryService.getGovernanceSystemRegistry();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
-				JSONObject processInfo = new JSONObject(processVariableDetails);
-				String processName = processInfo.getString("processName");
-				String processVersion = processInfo.getString("processVersion");
-				String processAssetPath =
-						ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
-								processVersion;
-				Resource resource = reg.get(processAssetPath);
-				String processContent = new String((byte[]) resource.getContent());
-				Document doc = stringToXML(processContent);
+                JSONObject processInfo = new JSONObject(processVariableDetails);
+                String processName = processInfo.getString("processName");
+                String processVersion = processInfo.getString("processVersion");
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                        processVersion;
+                Resource resource = reg.get(processAssetPath);
+                String processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
 
-				JSONObject processVariablesJOb = processInfo.getJSONObject("processVariables");
+                JSONObject processVariablesJOb = processInfo.getJSONObject("processVariables");
 
                 Iterator<?> keys = processVariablesJOb.keys();
 
 				/*//saving pracess variable name,type as element attributes
-				while (	keys.hasNext()){
+                while (	keys.hasNext()){
 					String variableName = (String)keys.next();
 					//if (Debugger.isEnabled())
 						log.debug(variableName);
@@ -153,30 +154,31 @@ public class ProcessStore {
 					resource.setContent(newProcessContent);
 					reg.put(processAssetPath, resource);
 				}*/
-				//saving pracess variable name,type as sub elements
-				while (	keys.hasNext()){
-					String variableName = (String)keys.next();
-					//if (Debugger.isEnabled())
-					log.debug(variableName);
-					String variableType=processVariablesJOb.get(variableName).toString();
-					//JSONObject processVariableJOb= (JSONObject) processVariablesArray.get(i);
-					Element rootElement = doc.getDocumentElement();
-					Element variableElement=append(doc,rootElement,"process_variable",mns);
-					appendText(doc,variableElement,"name",mns,variableName);
-					appendText(doc,variableElement,"type",mns,variableType);
+                //saving pracess variable name,type as sub elements
+                while (keys.hasNext()) {
+                    String variableName = (String) keys.next();
+                    //if (Debugger.isEnabled())
+                    log.debug(variableName);
+                    String variableType = processVariablesJOb.get(variableName).toString();
+                    //JSONObject processVariableJOb= (JSONObject) processVariablesArray.get(i);
+                    Element rootElement = doc.getDocumentElement();
+                    Element variableElement = append(doc, rootElement, "process_variable", mns);
+                    appendText(doc, variableElement, "name", mns, variableName);
+                    appendText(doc, variableElement, "type", mns, variableType);
 
-					String newProcessContent = xmlToString(doc);
-					resource.setContent(newProcessContent);
-					reg.put(processAssetPath, resource);
-				}
+                    String newProcessContent = xmlToString(doc);
+                    resource.setContent(newProcessContent);
+                    reg.put(processAssetPath, resource);
+                }
                 log.info("Saved process variables to configure analytics");
-			}
-		}catch (Exception e){
-            String errMsg="Failed to save processVariables";
-			log.error(errMsg, e);
-		}
-		return true;
-	}
+            }
+        } catch (TransformerException | JSONException e) {
+            String errMsg = "Failed to save processVariables";
+            log.error(errMsg, e);
+            return  false;
+        }
+        return true;
+    }
 
     private Element append(Document doc, Element parent, String childName, String childNS) {
         Element childElement = doc.createElementNS(childNS, childName);
@@ -771,7 +773,8 @@ public class ProcessStore {
                     String processName = processXML.getElementsByTagName("name").item(0).getTextContent();
                     String processVersion = processXML.getElementsByTagName("version").item(0).getTextContent();
                     String pdfPath = processXML.getElementsByTagName("pdf").item(0).getFirstChild().getTextContent();
-                    String flowchartPath = processXML.getElementsByTagName("flowchart").item(0).getFirstChild().getTextContent();
+                    String flowchartPath = processXML.getElementsByTagName("flowchart").item(0).getFirstChild()
+                            .getTextContent();
 
                     JSONObject processJSON = new JSONObject();
                     processJSON.put("path", processPath);
@@ -874,11 +877,9 @@ public class ProcessStore {
                 conObj.put("successors", successorArray);
                 conObj.put("predecessors", predecessorArray);
 
-                NodeList subprocessElements = ((Element) document.getFirstChild()).getElementsByTagName(
-                        "subprocess");
+                NodeList subprocessElements = ((Element) document.getFirstChild()).getElementsByTagName("subprocess");
                 NodeList successorElements = ((Element) document.getFirstChild()).getElementsByTagName("successor");
-                NodeList predecessorElements = ((Element) document.getFirstChild()).getElementsByTagName(
-                        "predecessor");
+                NodeList predecessorElements = ((Element) document.getFirstChild()).getElementsByTagName("predecessor");
 
                 if (subprocessElements.getLength() != 0) {
                     for (int i = 0; i < subprocessElements.getLength(); i++) {
@@ -1247,17 +1248,17 @@ public class ProcessStore {
                 int numOfDocAttrs = doc.getElementsByTagName("document").item(0).getChildNodes().getLength();
                 NodeList nodeList = doc.getElementsByTagName("document").item(0).getChildNodes();
 
-                if(numOfDocAttrs != 0) {
-                    for(int i = 0; i < numOfDocAttrs; i++) {
-                        if(nodeList.item(i).getNodeName().equals("documentname")) {
+                if (numOfDocAttrs != 0) {
+                    for (int i = 0; i < numOfDocAttrs; i++) {
+                        if (nodeList.item(i).getNodeName().equals("documentname")) {
                             nodeList.item(i).setTextContent(docName);
-                        }else if(nodeList.item(i).getNodeName().equals("summary")){
+                        } else if (nodeList.item(i).getNodeName().equals("summary")) {
                             nodeList.item(i).setTextContent(docSummary);
-                        }else if(nodeList.item(i).getNodeName().equals("url")){
+                        } else if (nodeList.item(i).getNodeName().equals("url")) {
                             if ((docUrl != null) && (!docUrl.isEmpty())) {
                                 nodeList.item(i).setTextContent(docUrl);
                             }
-                        }else if(nodeList.item(i).getNodeName().equals("path")){
+                        } else if (nodeList.item(i).getNodeName().equals("path")) {
                             if (docContentPath != null) {
                                 nodeList.item(i).setTextContent(docContentPath);
                             }
@@ -1312,7 +1313,7 @@ public class ProcessStore {
                 }
                 documentString = documentArray.toString();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Failed to fetch document: " + resourcePath);
         }
         return documentString;
@@ -1504,7 +1505,8 @@ public class ProcessStore {
                 String processContent = new String(processContentBytes);
                 Document processXMLContent = stringToXML(processContent);
 
-                processXMLContent.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent(flowchartContentPath);
+                processXMLContent.getElementsByTagName("flowchart").item(0).getFirstChild()
+                        .setTextContent(flowchartContentPath);
 
                 String newProcessContent = xmlToString(processXMLContent);
                 processAsset.setContent(newProcessContent);
@@ -1542,7 +1544,6 @@ public class ProcessStore {
     }
 
     /**
-     *
      * @param processName
      * @param processVersion
      * @param bpmndesignJson
@@ -1567,7 +1568,8 @@ public class ProcessStore {
                 byte[] processContentBytes = (byte[]) processAsset.getContent();
                 String processContent = new String(processContentBytes);
                 Document processXMLContent = stringToXML(processContent);
-                processXMLContent.getElementsByTagName("bpmnDesign").item(0).getFirstChild().setTextContent(bpmnDesignContentPath);
+                processXMLContent.getElementsByTagName("bpmnDesign").item(0).getFirstChild()
+                        .setTextContent(bpmnDesignContentPath);
 
                 String newProcessContent = xmlToString(processXMLContent);
                 processAsset.setContent(newProcessContent);
@@ -1583,7 +1585,6 @@ public class ProcessStore {
     }
 
     /**
-     *
      * @param bpmnDiagramPath
      * @return the bpmn digram path of a process
      */

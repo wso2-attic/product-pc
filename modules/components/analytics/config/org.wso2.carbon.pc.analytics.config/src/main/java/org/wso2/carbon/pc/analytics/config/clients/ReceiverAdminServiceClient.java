@@ -41,10 +41,7 @@ public class ReceiverAdminServiceClient {
         this.endPoint = backEndUrl + "/services/" + serviceName;
         try {
             eventReceiverAdminServiceStub = new EventReceiverAdminServiceStub(endPoint);
-        } catch (Exception e) {
-            String errMsg = "Error in connecting to DAS EventReceiverAdmin Service";
-            log.error(errMsg, e);
-        }
+
         this.receiverName = receiverName;
         this.streamId = streamId;
 
@@ -56,6 +53,11 @@ public class ReceiverAdminServiceClient {
         option = serviceClient.getOptions();
         option.setManageSession(true);
         option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, sessionCookie);
+
+        } catch (Exception e) {
+            String errMsg = "Error in connecting to DAS EventReceiverAdmin Service";
+            log.error(errMsg, e);
+        }
 
     }
 

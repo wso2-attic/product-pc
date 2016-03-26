@@ -22,4 +22,9 @@ public class AnalyticsConfigConstants {
     public static final String ANALYTICS = "analytics";
     public static final String CONFIG_BASE_URL = "dasBaseUrl";
     public static final String PC_CONFIGURATION_FILE_NAME = "pc.xml";
+    public static final String CONFIG_USER_NAME = "bpsUsername";
+    public static final String CONFIG_PASSWORD = "bpsPassword";
+    public static final String SECRET_ALIAS = "PC.Analytics.Password";
+
+
 }

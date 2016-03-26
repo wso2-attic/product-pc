@@ -31,16 +31,20 @@
                     <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
                 {{else}}
                     <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
-		            {{#if DASAnalyticsEnabled}}
-                	    {{#if DASAnalyticsConfigured}}
-                    		<button id="btn_config_analytics" class="btn btn-primary" onclick="showAnalyticsConfigurer()">View Analytics Configs</button>
-                    		<input type="hidden" id="hiddenElementIsDASConfiged" value="true">
-                	    {{else}}
-                    		<button id="btn_config_analytics" class="btn btn-primary" onclick="showAnalyticsConfigurer()">Config Analytics</button>
-                    		<input type="hidden" id="hiddenElementIsDASConfiged" value="false">
-                	    {{/if}}
-            	    {{/if}}                
+
 		        {{/if}}
+            </div>
+
+            <div class="control-group" style="display: inline-block">
+                {{#if DASAnalyticsEnabled}}
+                    {{#if DASAnalyticsConfigured}}
+                        <button id="btn_config_analytics" class="btn btn-primary" onclick="showAnalyticsConfigurer()">View Analytics Configs</button>
+                        <input type="hidden" id="hiddenElementIsDASConfiged" value="true">
+                    {{else}}
+                        <button id="btn_config_analytics" class="btn btn-primary" onclick="showAnalyticsConfigurer()">Config Analytics</button>
+                        <input type="hidden" id="hiddenElementIsDASConfiged" value="false">
+                    {{/if}}
+                {{/if}}
             </div>
 
             <div class="control-group" style="display: inline-block">

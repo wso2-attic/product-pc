@@ -976,6 +976,10 @@ function saveProcessVariables(tableID) {
     processVariablesInfo["processName"] = processName;
     processVariablesInfo["processVersion"] = processVersion;
 
+    //put processInstanceId as a compulsory field in the stream
+    processVariables["processInstanceId"] = "string";
+
+
     for (var i = 1; i < rowCount; i++) {
         var item = {};
         var row = table.rows[i];
@@ -1008,7 +1012,7 @@ function saveProcessVariables(tableID) {
 function configAnalytics() {
     var hiddenElementIsDASConfiged = $('#hiddenElementIsDASConfiged').val();
 
-    if (hiddenElementIsDASConfiged == "false") {
+    if (hiddenElementIsDASConfiged == "false") { //remove this check
         flagToReturn = false;
         if (!$('#eventStreamName').val()) {
             alertify.error("Event Stream Name Cannot be Empty");
@@ -1037,7 +1041,6 @@ function configAnalytics() {
         var eventStreamNickName = $('#eventStreamNickName').val();
         var eventReceiverName = $('#eventReceiverName').val();
 
-        //var inputEventAdapterType=
         var eventStreamId = eventStreamName + ":" + eventStreamVersion;
         var dasConfigData = {};
         dasConfigData["eventStreamName"] = eventStreamName;
@@ -1047,6 +1050,9 @@ function configAnalytics() {
         dasConfigData["eventStreamId"] = eventStreamId;
         dasConfigData["eventReceiverName"] = eventReceiverName;
         dasConfigData["processVariables"] = processVariablesObjsArr;
+
+        var bpsConfigData={};
+       // bpsConfigData["processVariables"]=processVariablesObjsArr;
 
         var processName = $('#view-header').text();
         var processVersion = $('#process-version').text();
@@ -1059,8 +1065,8 @@ function configAnalytics() {
                 'processName': processName,
                 'processVersion': processVersion
             },
-            success: function (configurationStatus) {
-                if (configurationStatus == "true") {
+            success: function (DASconfigurationStatus) {
+                if (DASconfigurationStatus == "true") {
                     alertify.success("Analytics Configuration Success");
                     showOverview(this);
                     document.getElementById("btn_config_analytics").innerHTML = "View Analytics Configs";
@@ -1076,6 +1082,27 @@ function configAnalytics() {
                      })
 
                      });*/
+                    //config BPS for variable analytics
+                    /*$.ajax({
+                        url:'/publisher/assets/process/apis/config_bps_for_var_analytics',
+                        type:'post',
+                        data:{
+                            'processVariables':JSON.stringify(processVariablesObjsArr),
+                            'processName': processName,
+                        },
+                       // success:
+                    });*/
+                    $.ajax({
+                        url:'',
+                        type:'post',
+                        data:{
+                            'processVariables':JSON.stringify(processVariablesObjsArr),
+                            'processName': processName,
+                        },
+                        // success:
+                    });
+
+
                 } else {
                     alertify.error("Error in creating Event Stream/Reciever in DAS")
                 }

@@ -28,15 +28,17 @@ import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.securevault.SecretResolver;
+import org.wso2.securevault.SecretResolverFactory;
 
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
 
-
 /**
- * Utils file for DAS configuration related properties
+ * Utils file for Analytics configuration related properties
  */
 public class DASConfigurationUtils {
     private static final Log log = LogFactory.getLog(DASConfigurationUtils.class);
@@ -97,18 +99,50 @@ public class DASConfigurationUtils {
 
     public static String getURL() throws IOException, XMLStreamException {
         OMElement configElement = getConfigElement();
-        OMElement analyticsElement =
-                configElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.ANALYTICS));
+        OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.ANALYTICS));
         if (analyticsElement != null) {
-            String baseUrl = analyticsElement
-                    .getFirstChildWithName(new QName(AnalyticsConfigConstants.CONFIG_BASE_URL)).getText();
+            String baseUrl = analyticsElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.CONFIG_BASE_URL))
+                    .getText();
             if (baseUrl != null && !baseUrl.isEmpty()) {
                 if (baseUrl.endsWith(File.separator)) {
                     //baseUrl += File.separator;
-                    return baseUrl.substring(0, baseUrl.length()-1);
+                    return baseUrl.substring(0, baseUrl.length() - 1);
                 }
                 return baseUrl;
             }
+        }
+        return null;
+    }
+
+    public static String getAuthorizationHeader() throws IOException, XMLStreamException {
+        String requestHeader = "Basic ";
+        OMElement configElement = getConfigElement();
+        SecretResolver secretResolver = SecretResolverFactory.create(configElement, false);
+        OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.ANALYTICS));
+
+        String userName = null;
+        String password = null;
+        if (analyticsElement != null) {
+            userName = analyticsElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.CONFIG_USER_NAME))
+                    .getText();
+            if (secretResolver != null && secretResolver.isInitialized()) {
+                if (secretResolver.isTokenProtected(AnalyticsConfigConstants.SECRET_ALIAS)) {
+                    password = secretResolver.resolve(AnalyticsConfigConstants.SECRET_ALIAS);
+                } else {
+                    password = analyticsElement
+                            .getFirstChildWithName(new QName(AnalyticsConfigConstants.CONFIG_PASSWORD)).getText();
+                }
+            } else {
+                password = analyticsElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.CONFIG_PASSWORD))
+                        .getText();
+            }
+        }
+        if (userName != null && password != null) {
+            String headerPortion = userName + ":" + password;
+            byte[] encodedBytes = headerPortion.getBytes("UTF-8");
+            String encodedString = DatatypeConverter.printBase64Binary(encodedBytes);
+            requestHeader += encodedString;
+            return requestHeader;
         }
         return null;
     }

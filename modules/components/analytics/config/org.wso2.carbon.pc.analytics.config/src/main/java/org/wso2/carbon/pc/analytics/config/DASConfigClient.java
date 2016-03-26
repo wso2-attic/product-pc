@@ -48,12 +48,12 @@ public class DASConfigClient {
     JSONArray processVariablesJObArr;
     private static final Log log = LogFactory.getLog(DASConfigClient.class);
 
-    public boolean configDAS(String processVariableDetails) {
+    public boolean configDAS(String DASconfigDetails) {
 
-        log.info("Configuring WSO2 DAS for analytics of WSO2 PC...");
+        log.info("Configuring WSO2 DAS for analytics of WSO2 PC...");//log process name,url
         JSONObject processInfo = null;
         try {
-            processInfo = new JSONObject(processVariableDetails);
+            processInfo = new JSONObject(DASconfigDetails);
             streamName = processInfo.getString("eventStreamName");
             stremaVersion = processInfo.getString("eventStreamVersion");
             streamId = processInfo.getString("eventStreamId");
@@ -70,7 +70,7 @@ public class DASConfigClient {
                 "/home/samithac/wso2-products/wso2das-3.0.0-SNAPSHOT/repository/resources/security/wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
-        String backEndUrl = null;//"https://localhost:9448";
+        String backEndUrl = null;
         try {
             backEndUrl = DASConfigurationUtils.getURL();
         } catch (IOException e) {
@@ -83,13 +83,8 @@ public class DASConfigClient {
         LoginAdminServiceClient login = null;
         try {
             login = new LoginAdminServiceClient(backEndUrl);
-        } catch (AxisFault e) {
-            String errMsg = "Error in connecting to DAS AuthenticationAdmin Services";
-            log.error(errMsg, e);
-        }
-        String session = null;
-        try {
-            session = login.authenticate("admin", "admin");
+
+            String session = login.authenticate("admin", "admin");
         } catch (RemoteException e) {
             String errMsg = "Remote exception in login to DAS AuthenticationAdmin service";
             log.error(errMsg, e);
@@ -128,7 +123,7 @@ public class DASConfigClient {
                 "wso2event");
         boolean receiverConfigSuccess = receiverAdminServiceClient.deployEventReceiverConfiguration();
         if (receiverConfigSuccess) {
-            log.info("Created the Event Receiver: " + receiverName + "for the " + streamId + " in WSO2 DAS");
+            log.debug("Created the Event Receiver: " + receiverName + "for the " + streamId + " in WSO2 DAS");
         }
 
         //logging out
