@@ -72,6 +72,9 @@ asset.server = function (ctx) {
                 url: 'upload_documents',
                 path: 'upload_documents.jag'
             }, {
+                url: 'config_das_analytics',
+                path: 'config_das_analytics.jag'
+            }, {
                 url: 'get_process_tags',
                 path: 'get_process_tags.jag'
             }, {
@@ -81,6 +84,12 @@ asset.server = function (ctx) {
                 url: 'get_process_pdf',
                 path: 'get_process_pdf.jag'
             }, {
+                url: 'save_process_variables',
+                path: 'save_process_variables.jag'
+            }, {
+                url: 'get_process_variables_list',
+                path: 'get_process_variables_list.jag'
+            },{
                 url: 'upload_flowchart',
                 path: 'upload_flowchart.jag'
             },{
@@ -125,13 +134,18 @@ asset.renderer = function (ctx) {
             } else {
                 page.bpmnAvaliable = true;
             }
-            if (page.assets.tables[9].fields.bpmnDesignPath.value == "NA") {
+            if (page.assets.tables[10].fields.bpmnDesignPath.value == "NA") {
                 page.bpmnDesignAvailable = false;
             } else {
                 page.bpmnDesignAvailable = true;
             }
 
-            if (page.assets.tables[5].fields.documentname.value == "NA") {
+            var processName = page.assets.tables[0].fields.name.value;
+            var processVersion = page.assets.tables[0].fields.version.value;
+            if (log.isDebugEnabled()) {
+                log.debug("Viewing Process (Name):" + page.assets.tables[0].fields.name.value + ": (Version)" + page.assets.tables[0].fields.version.value);
+            }
+            if (page.assets.tables[6].fields.documentname.value == "NA") {
                 page.documentAvailable = false;
             } else {
                 page.documentAvailable = true;
@@ -144,12 +158,23 @@ asset.renderer = function (ctx) {
             if (log.isDebugEnabled()) {
                 log.debug(conObject);
             }
+
             page.involveProcessList = conObject;
-            if (log.isDebugEnabled()) {
-                log.debug(page);
+
+            importPackage(org.wso2.carbon.pc.analytics.core.utils);
+            page.DASAnalyticsEnabled = AnalyticsUtils.isDASAnalyticsActivated();
+            importPackage(org.wso2.carbon.pc.analytics.config.utils);
+            page.DASAnalyticsConfigured = DASConfigurationUtils.isDASAnalyticsConfigured(processName, processVersion);
+
+            var processVariablesJObArrStr;
+            if (page.DASAnalyticsConfigured) {
+                processVariablesJObArrStr = ps.getProcessVariablesList(resourcePath);
+
+                var processVariablesJObArr = JSON.parse(processVariablesJObArrStr);
+                page.processVariableList = processVariablesJObArr;
             }
 
-            var flowchartPath = page.assets.tables[8].fields.path.value;
+            var flowchartPath = page.assets.tables[9].fields.path.value;
             if(flowchartPath != "NA"){
                 page.flowchartAvailable = true;
                 page.flowchartPath = flowchartPath;
@@ -157,6 +182,9 @@ asset.renderer = function (ctx) {
                 page.flowchartAvailable = false;
             }
 
+            if (log.isDebugEnabled()) {
+                log.debug(page);
+            }
         }
     };
 };

@@ -1,0 +1,4 @@
+var log = new Log();
+if (log.isDebugEnabled()) {
+    log.debug("BPS configuration");
+}

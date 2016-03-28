@@ -2,8 +2,13 @@
 <WSO2PC xmlns:ns2="http://wso2.org/pc/config">
     <analytics>
         <analyticsEnabled>false</analyticsEnabled>
-        <dasBaseUrl>https://localhost:9445/</dasBaseUrl>
+        <dasBaseUrl>https://localhost:9448/</dasBaseUrl>
         <dasUsername>admin</dasUsername>
         <dasPassword>admin</dasPassword>
+
+        <bpsBaseUrl>https://localhost:9447/</bpsBaseUrl>
+        <bpsUsername>admin</bpsUsername>
+        <bpsPassword>admin</bpsPassword>
+
     </analytics>
 </WSO2PC>
