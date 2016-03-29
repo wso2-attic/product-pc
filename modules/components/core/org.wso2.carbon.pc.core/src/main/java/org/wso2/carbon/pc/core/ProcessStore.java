@@ -1241,7 +1241,7 @@ public class ProcessStore {
                 documentString = documentArray.toString();
             }
         }catch (Exception e){
-            log.error("Failed to fetch document: " + resourcePath, e);
+            log.error("Failed to fetch document: " + resourcePath);
         }
         return documentString;
     }
@@ -1265,7 +1265,7 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to download document: " + resourcePath, e);
+            log.error("Failed to download document: " + resourcePath);
         }
         return docString;
     }
