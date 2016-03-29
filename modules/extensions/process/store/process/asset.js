@@ -90,6 +90,12 @@ asset.server = function(ctx) {
             }, {
                 url: 'rate',
                 path: 'rate.jag'
+            }, {
+                url: 'get_process_doc',
+                path: 'get_process_doc.jag'
+            }, {
+                url: 'download_document',
+                path: 'download_document.jag'
             }],
             pages: [{
                 title: 'Store |  ' + typeSingularLabel,

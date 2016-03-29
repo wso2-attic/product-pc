@@ -18,7 +18,7 @@
  */
 var resources = function (page, meta) {
     return {
-        js: ['jquery.rating.pack.js', 'async.min.js', 'asset-core.js', 'asset.js','porthole.min.js','contentPlacer.js'],
+        js: ['jquery.rating.pack.js', 'async.min.js', 'asset-core.js', 'asset.js', 'porthole.min.js', 'FileSaver.min.js' , 'storeDocumentPlacer.js', 'contentPlacer.js'],
         css: ['jquery.rating.css', 'asset.css'],
         code: ['store.asset.hbs']
     };

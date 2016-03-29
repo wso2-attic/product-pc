@@ -174,7 +174,85 @@
           }
       });
 
+      $("#tab-doc-list").on("click", function() {
+          if(mainProcessPath !== "NA"){
+              $.ajax({
+                  url: '/store/assets/process/apis/get_process_doc?process_path=' + mainProcessPath,
+                  type: 'GET',
+                  success: function (data) {
+                      var response = JSON.parse(data);
+                      if (response.length != 0) {
+                          if(document.getElementById("listDocs").rows.length == 0) {
+                              for (var i = 0; i < response.length; i++) {
+                                  var table = document.getElementById("listDocs");
+                                  var rowCount = table.rows.length;
+                                  var row = table.insertRow(rowCount);
+                                  var cellDocName = row.insertCell(0);
+                                  var cellDocSummary = row.insertCell(1);
+                                  var cellDocAction = row.insertCell(2);
+                                  cellDocName.innerHTML = response[i].name;
+                                  cellDocSummary.innerHTML = response[i].summary;
 
+                                  if (response[i].url != "NA") {
+                                      var anchorUrlElement = document.createElement("a");
+                                      anchorUrlElement.setAttribute("id", "documentUrl" + i);
+                                      anchorUrlElement.setAttribute("href", response[i].url);
+                                      anchorUrlElement.setAttribute('target', '_blank');
+                                      anchorUrlElement.style.marginRight = "15px";
+                                      anchorUrlElement.innerHTML = "open";
+
+                                      viewGoogleDocument(response[i].url, response[i].name, i);
+                                      var anchorGoogleDocViewElement = document.createElement("a");
+                                      anchorGoogleDocViewElement.setAttribute("id", "googleDocumentView" + i);
+                                      anchorGoogleDocViewElement.setAttribute("data-toggle", "modal");
+                                      anchorGoogleDocViewElement.setAttribute("data-target", "#docViewModal" + i);
+                                      anchorGoogleDocViewElement.setAttribute("href", "#");
+                                      anchorGoogleDocViewElement.style.marginRight = "15px";
+                                      anchorGoogleDocViewElement.innerHTML = "view";
+
+                                      cellDocAction.appendChild(anchorUrlElement);
+                                      cellDocAction.appendChild(anchorGoogleDocViewElement);
+                                  } else if (response[i].path != "NA") {
+                                      var anchorElement = document.createElement("a");
+                                      anchorElement.setAttribute("id", "document" + i);
+                                      anchorElement.setAttribute("href", "#");
+                                      anchorElement.onclick = (function (currentPath) {
+                                          return function () {
+                                              downloadDocument(currentPath);
+                                          };
+                                      })(response[i].path);
+                                      anchorElement.innerHTML = "download";
+                                      anchorElement.style.marginRight = "15px";
+                                      cellDocAction.appendChild(anchorElement);
+
+                                      if(response[i].path.split('.').pop().toLowerCase() == "pdf") {
+                                          viewPDFDocument(response[i].path, response[i].name, i);
+                                          var anchorPdfViewElement = document.createElement("a");
+                                          anchorPdfViewElement.setAttribute("id", "pdfDocumentView" + i);
+                                          anchorPdfViewElement.setAttribute("data-toggle", "modal");
+                                          anchorPdfViewElement.setAttribute("data-target", "#pdfViewModal" + i);
+                                          anchorPdfViewElement.setAttribute("href", "#");
+                                          anchorPdfViewElement.style.marginRight = "15px";
+                                          anchorPdfViewElement.innerHTML = "view";
+                                          cellDocAction.appendChild(anchorPdfViewElement);
+                                      }
+                                  } else {
+                                      cellDocAction.innerHTML = "Not Available";
+                                  }
+                              }
+                          }
+                      } else {
+                          if(document.getElementById("listDocs").rows.length == 0) {
+                              $('#listDocs').append('<tr><td colspan="6">No documentation associated with this process</td></tr>');
+                          }
+                      }
+                  },
+                  error: function () {
+                      alertify.error('document retrieving error');
+                  }
+              });
+          }
+      });
      
 
 
