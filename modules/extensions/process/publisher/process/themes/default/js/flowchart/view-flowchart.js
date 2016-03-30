@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -22,17 +22,39 @@ var elementCount = 0; // keeps the total element count when creating the element
 var _saveEditedFlowchart, _loadEditableFlowChart, _deleteFlowchart;
 var editable = false,
     editableElmCount = 0; //counts the number of elements on the canvas at any given time
+var instance; //the jsPlumb instance
+var properties = []; //keeps the properties of each element
+var loading = false;
+var addedOverlay = false;
+
 jsPlumb.ready(function () {
+    var element = "";   //the element which will be appended to the canvas
+    var clicked = false;    //check whether an element from the palette was clicked
+
+    instance = window.jsp = jsPlumb.getInstance({
+        // default drag options
+        DragOptions: {
+            cursor: 'pointer',
+            zIndex: 2000
+        },
+        //the arrow overlay for the connection
+        ConnectionOverlays: [
+            ["Arrow", {
+                location: 1,
+                visible: true,
+                id: "ARROW"
+            }]
+        ],
+        Container: "canvas"
+    });
+
+    //define basic connection type
     var basicType = {
         connector: "StateMachine",
         paintStyle: {strokeStyle: "#216477", lineWidth: 4},
         hoverPaintStyle: {strokeStyle: "blue"}
     };
-    jsPlumb.registerConnectionType("basic", basicType);
-
-    var properties = [];
-    var loading = false;
-    var deleteConnection = null;
+    instance.registerConnectionType("basic", basicType);
 
     //style for the connector
     var connectorPaintStyle = {
@@ -67,6 +89,7 @@ jsPlumb.ready(function () {
             isSource: true,
             connector: ["Flowchart", {stub: [40, 60], gap: 5, cornerRadius: 5, alwaysRespectStubs: true}],
             connectorStyle: connectorPaintStyle,
+            hoverPaintStyle: endpointHoverStyle,
             connectorHoverStyle: connectorHoverStyle,
             EndpointOverlays: [],
             maxConnections: -1,
@@ -84,25 +107,289 @@ jsPlumb.ready(function () {
     //definition of the target endpoint the connector would end
         targetEndpoint = {
             endpoint: "Dot",
-            paintStyle: {fillStyle: "#7AB02C", radius: 11},
+            paintStyle: {fillStyle: "#7AB02C", radius: 9},
             maxConnections: -1,
             dropOptions: {hoverClass: "hover", activeClass: "active"},
             isTarget: true
         };
 
-    //set the label of the connector
+    //set the label of the connector and add the custom close button to the connector
     var init = function (connection, label, width) {
         connection.addOverlay(["Custom", {
             create:function(component) {
-                return $("<input type=\"text\" value=\""+ label +"\" autofocus style=\"position:absolute; width: "+ width +"\"\/>");
+                return $("<input type=\"text\" value=\""+ label +"\" autofocus style=\"position:absolute; width: "+
+                width +"\"\/>");
             },
             location: 0.5,
             id: "label",
             cssClass: "aLabel"
         }]);
-        $("input").css('font-weight', 'bold');
-        $("input").css('text-align', 'center');
+
+        connection.addOverlay(["Custom", {
+            create:function(component) {
+                return $("<button title=\"Delete the connection\"><i class=\"fa fa-trash\"><\/i><\/button>");
+            },
+            location: 0.2,
+            id: "close",
+            cssClass: "close-mark btn btn-danger",
+            events:{
+                click:function(){
+                    instance.detach(connection);
+                    $(".start").css({'border': "2px solid green"})
+                }
+            }
+        }]);
+
+        $("input").css({
+            'font-weight':'bold',
+            'text-align':'center'
+        });
     };
+
+    //initialize the connection and show the close button when clicked on the connector
+    instance.bind("connection", function (connInfo, originalEvent) {
+        if(editable || !loading) {
+            init(connInfo.connection, "", "20px");
+        }
+
+        connInfo.connection.bind("click", function(conn){
+            $(".jtk-node").css({'outline': "none"});
+            conn.showOverlay("close");
+        })
+    });
+
+    //add the endpoints for the elements
+    var ep;
+    var _addEditorEndpoints = function (toId, sourceAnchors, targetAnchors) {
+        for (var i = 0; i < sourceAnchors.length; i++) {
+            var sourceUUID = toId + sourceAnchors[i];
+            ep = instance.addEndpoint("flowchart" + toId, sourceEndpoint, {
+                anchor: sourceAnchors[i], uuid: sourceUUID
+            });
+            editorSourcepointList.push(["flowchart" + toId, ep]);
+            ep.canvas.setAttribute("title", "Drag a connection from here");
+            ep = null;
+        }
+        for (var j = 0; j < targetAnchors.length; j++) {
+            var targetUUID = toId + targetAnchors[j];
+            ep = instance.addEndpoint("flowchart" + toId, targetEndpoint, {
+                anchor: targetAnchors[j], uuid: targetUUID
+            });
+            editorEndpointList.push(["flowchart" + toId, ep]);
+            ep.canvas.setAttribute("title", "Drop a connection here");
+            ep = null;
+        }
+    };
+
+    //load properties of a given element
+    function loadEditorProperties(clsName, left, top, label, startpoints, endpoints, contenteditable, width, height) {
+        properties = [];
+        properties.push({
+            clsName: clsName,
+            left: left,
+            top: top,
+            label: label,
+            startpoints: startpoints,
+            endpoints: endpoints,
+            contenteditable: contenteditable,
+            width: width,
+            height: height
+        });
+    }
+
+    //take the x, y coordinates of the current mouse position
+    var x, y;
+    $( document ).on( "mousemove", function( event ) {
+        x = event.pageX;
+        y = event.pageY;
+        if(clicked){
+            properties[0].top = y - 358;
+            properties[0].left = x - 308;
+        }
+    });
+
+    //create an element to be drawn on the canvas
+    function createEditorElement(id) {
+        var elm = $('<div>').addClass(properties[0].clsName).attr('id', id);//add class an id
+        if (properties[0].width != -1 && properties[0].height != -1) {//set element width and height
+            elm.outerWidth(properties[0].width);
+            elm.outerHeight(properties[0].height);
+        }
+
+        elm.css({   //set element position
+            'top': properties[0].top,
+            'left': properties[0].left
+        });
+
+        var strong = $('<strong>');
+
+        //set the class of the paragraph node within the diamond and the delete_element icon
+        if (properties[0].clsName == "window diamond custom jtk-node jsplumb-connected-step") {
+            elm.append("<i style='display: none; margin-left: -5px; margin-top: -50px' " +
+            "class=\"fa fa-trash fa-lg close-icon desc-text\"><\/i>");
+            var p = "<p style='line-height: 110%; margin-top: 25px; margin-left: -15px' " +
+                "class='desc-text' contenteditable='true' ondblclick='$(this).focus();'>" + properties[0].label
+                + "</p>";
+            strong.append(p);
+        }
+
+        //set the class of the paragraph node within the parallelogram and the delete_element icon
+        else if (properties[0].clsName == "window parallelogram step custom jtk-node jsplumb-connected-step") {
+            elm.append("<i style='display: none' class=\"fa fa-trash fa-lg close-icon input-text\"><\/i>");
+            var p = "<p style='line-height: 110%; margin-top: 25px' class='input-text' " +
+                "contenteditable='true' ondblclick='$(this).focus();'>" + properties[0].label
+                + "</p>";
+            strong.append(p);
+        }
+
+        //set contenteditable and the delete_element icon
+        else if (properties[0].contenteditable) {
+            elm.append("<i style='display: none' class=\"fa fa-trash fa-lg close-icon\"><\/i>");
+            var p = "<p style='line-height: 110%; margin-top: 25px' contenteditable='true' " +
+                "ondblclick='$(this).focus();'>" + properties[0].label + "</p>";
+            strong.append(p);
+        } else {
+            elm.append("<i style='display: none' class=\"fa fa-trash fa-lg close-icon\"><\/i>");
+            var p = $('<p>').text(properties[0].label);
+            strong.append(p);
+        }
+        elm.append(strong);
+        return elm;
+    }
+
+    //draw elements on the canvas
+    function drawEditorElement(element, canvasId, name) {
+        $(canvasId).append(element);
+        _addEditorEndpoints(name, properties[0].startpoints, properties[0].endpoints);
+        makeResizable('.custom.step');
+        instance.draggable(instance.getSelector(".jtk-node"), {
+            grid: [20, 20],
+            filter: ".ui-resizable-handle"
+        });
+    }
+
+    //make an element resizable
+    function makeResizable(classname) {
+        $(classname).resizable({
+            resize: function(event, ui) {
+                instance.revalidate(ui.helper);
+                var marginLeft = $(this).outerWidth() + 8;
+                $(this).find("i").css({'margin-left': marginLeft + "px"});
+            },
+            handles: "all"
+        });
+    }
+
+    //*********** make the elements on the palette draggable ***************
+    function makeDraggable(id, className, text){
+        $(id).draggable({
+            helper: function(){
+                return $("<div/>",{
+                    text: text,
+                    class:className
+                });
+            },
+            stack: ".custom",
+            revert: false
+        });
+    }
+
+    makeDraggable("#startEv", "window start jsplumb-connected custom", "start");
+    makeDraggable("#stepEv", "window step jsplumb-connected-step custom", "step");
+    makeDraggable("#endEv", "window start jsplumb-connected-end custom", "end");
+
+    $("#descEv").draggable({
+        helper: function(){
+            return createEditorElement("");
+        },
+        stack: ".custom",
+        revert: false
+    });
+
+    $("#inpEv").draggable({
+        helper: function(){
+            return createEditorElement("");
+        },
+        stack: ".custom",
+        revert: false
+    });
+
+    //*************************************************************************
+
+    //make the editor canvas droppable
+    $("#editor_canvas").droppable({
+        accept: ".window",
+        drop: function(event, ui) {
+            if(clicked) {
+                clicked = false;
+                elementCount++;
+                editableElmCount++;
+                var name = "Window" + elementCount;
+                var id = "flowchartWindow" + elementCount;
+                element = createEditorElement(id);
+                //the diagram should contain a start element
+                if (editableElmCount == 1 && element.attr("class").indexOf("start") == -1) {
+                    alertify.error("The flowchart diagram should have a start element");
+                    elementCount = 0;
+                    editableElmCount = 0;
+                } else {
+                    drawEditorElement(element, "#editor_canvas", name);
+                }
+                element = "";
+            }
+        }
+    });
+
+    //load properties of a start element once the start element in the palette is clicked
+    $('#startEv').mousedown(function () {
+        loadEditorProperties("window start custom jtk-node jsplumb-connected", "5em", "5em", "start", ["BottomCenter"],
+            [], false);
+        clicked = true;
+    });
+
+    //load properties of a step element once the step element in the palette is clicked
+    $('#stepEv').mousedown(function () {
+        loadEditorProperties("window step custom jtk-node jsplumb-connected-step", "5em", "5em", "step",
+            ["BottomCenter"], ["TopCenter"], true);
+        clicked = true;
+    });
+
+    //load properties of a decision element once the decision element in the palette is clicked
+    $('#descEv').mousedown(function () {
+        loadEditorProperties("window diamond custom jtk-node jsplumb-connected-step", "5em", "5em", "decision",
+            ["LeftMiddle", "RightMiddle", "BottomCenter"], ["TopCenter"], true, 100, 100);
+        clicked = true;
+    });
+
+    //load properties of a decision element once the input/output element in the palette is clicked
+    $('#inpEv').mousedown(function () {
+        loadEditorProperties("window parallelogram step custom jtk-node jsplumb-connected-step", "23em", "5em", "i/o",
+            ["BottomCenter"], ["TopCenter"], true);
+        clicked = true;
+    });
+
+    //load properties of a end element once the end element in the palette is clicked
+    $('#endEv').mousedown(function () {
+        loadEditorProperties("window end custom jtk-node jsplumb-connected-end", "5em", "5em", "end",
+            [], ["TopCenter"], false);
+        clicked = true;
+    });
+
+    //de-select all the selected elements and hide the delete buttons and highlight the selected element
+    $('#editor_canvas').on('click', function (e) {
+        $(".jtk-node").css({'outline':"none"});
+        $(".close-icon").hide();
+        $.each(instance.getConnections(), function (index, connection) {
+            connection.hideOverlay("close");
+        });
+        if(e.target.nodeName == "P") {
+            e.target.parentElement.parentElement.style.outline = "4px solid red";
+        }else if(e.target.nodeName == "STRONG"){
+            e.target.parentElement.style.outline = "4px solid red";
+        }else if(e.target.getAttribute("class") != null && e.target.getAttribute("class").indexOf("jtk-node") > -1){//when clicked the step, decision or i/o elements
+            e.target.style.outline = "4px solid red";
+        }
+    });
 
     //to make the text field resizable when typing the input text.
     $.fn.textWidth = function(text, font){//get width of text with font.  usage: $("div").textWidth();
@@ -121,274 +408,51 @@ jsPlumb.ready(function () {
     }
 
     //resize the label text field when typing
-    $('#editor_canvas').on('keyup', '._jsPlumb_overlay.aLabel', function () {
+    $('#editor_canvas').on('keyup', '.jsplumb-overlay.aLabel', function () {
         $(this).css('font-weight', 'bold');
         $(this).css('text-align', 'center');
         $(this).autoresize({padding:20,minWidth:20,maxWidth:100});
     });
 
-    jsPlumb.bind("connection", function (connInfo, originalEvent) {
-        if(editable || !loading) {
-            init(connInfo.connection, "", "20px");
+    //when an item is selected, highlight it and show the delete icon
+    $(document).on("click", ".custom", function(){
+        if($(this).attr("class").indexOf("diamond") == -1) {
+            var marginLeft = $(this).outerWidth() + 8 + "px";
+            $(".close-icon").prop("title", "Delete the element");
+            $(this).find("i").css({'margin-left': marginLeft, 'margin-top': "-10px"}).show();
+        }else{
+            $(this).find("i").css({'margin-left': "35px", 'margin-top': "-40px"}).show();
         }
     });
 
-    jsPlumb.bind("click", function (conn, originalEvent) {
-        to_delete = "";
-        jsPlumb.select().setPaintStyle({lineWidth: 4, strokeStyle: "#61B7CF"});
-        conn.setPaintStyle({strokeStyle:"red", lineWidth:4});
-        $('.step').css({'border-color': '#29e'});
-        $('.diamond').css({'border-color': '#29e'});
-        $('.start').css({'border-color': 'green'});
-        $('.window.jsplumb-connected-end').css({'border-color': 'orangered'});
-        deleteConnection = conn;
-    });
+    //when the close-icon of an element is clicked, delete that element together with its endpoints
+    $(document).on("click", ".close-icon", function(){
+        instance.remove($(this).parent().attr("id"));
+        $(".start").css({'border-color':"green"});
+        editableElmCount--;
 
-    //add the endpoints for the elements
-    var ep;
-    var _addEditorEndpoints = function (toId, sourceAnchors, targetAnchors) {
-        for (var i = 0; i < sourceAnchors.length; i++) {
-            var sourceUUID = toId + sourceAnchors[i];
-            ep = jsPlumb.addEndpoint("flowchart" + toId, sourceEndpoint, {
-                anchor: sourceAnchors[i], uuid: sourceUUID
-            });
-            editorSourcepointList.push(["flowchart" + toId, ep]);
-            ep = null;
+        //if canvas has no element
+        if (editableElmCount == 0) {
+            elementCount = 0;   //ids start from 1
         }
-        for (var j = 0; j < targetAnchors.length; j++) {
-            var targetUUID = toId + targetAnchors[j];
-            ep = jsPlumb.addEndpoint("flowchart" + toId, targetEndpoint, {
-                anchor: targetAnchors[j], uuid: targetUUID
-            });
-            editorEndpointList.push(["flowchart" + toId, ep]);
-            ep = null;
-        }
-    };
-
-    var element = "";
-    var clicked = false;
-    var to_delete = "";
-
-    //load properties of a given element
-    function loadEditorProperties(clsName, left, top, label, startpoints, endpoints, contenteditable, width, height) {
-        properties = [];
-        properties.push({
-            clsName: clsName,
-            left: left,
-            top: top,
-            label: label,
-            startpoints: startpoints,
-            endpoints: endpoints,
-            contenteditable: contenteditable,
-            width: width,
-            height: height
-        });
-    }
-
-    //create an element to be drawn on the canvas
-    function createEditorElement(id) {
-        var elm = $('<div>').addClass(properties[0].clsName).attr('id', id);
-        if (properties[0].clsName.indexOf("step") > -1) {
-            elm.outerWidth(properties[0].width);
-            elm.outerHeight(properties[0].height);
-        }
-
-        elm.css({
-            'top': properties[0].top,
-            'left': properties[0].left
-        });
-
-        var strong = $('<strong>');
-
-        //if the inner label has more than one line
-        var str = properties[0].label;
-        if (properties[0].label.indexOf("div") > -1) {
-            var lines = properties[0].label.split("<div>");
-            str = "";
-            for (var i = 0; i < lines.length - 1; i++) {
-                lines[i] = lines[i].replace("</div>", "");
-                str += lines[i] + "<br/>";
-            }
-            str += lines[lines.length - 1].replace("</div>", "");
-        }
-        //set the class of the paragraph node within the diamond
-        if (properties[0].clsName == "window diamond custom jtk-node jsplumb-connected-step") {
-            var p = "<p style='line-height: 110%; margin-top: 25px' class='desc-text' contenteditable='true' ondblclick='$(this).focus();'>" + str
-                + "</p>";
-            strong.append(p);
-        }
-
-        else if (properties[0].clsName == "window parallelogram step custom jtk-node jsplumb-connected-step") {
-            var p = "<p style='line-height: 110%; margin-top: 25px' class='input-text' contenteditable='true' ondblclick='$(this).focus();'>" + str
-                + "</p>";
-            strong.append(p);
-        }
-
-        //set contenteditable
-        else if (properties[0].contenteditable) {
-            var p = "<p style='line-height: 110%; margin-top: 25px' contenteditable='true' ondblclick='$(this).focus();'>" + str + "</p>";
-            strong.append(p);
-        } else {
-            var p = $('<p>').text(properties[0].label);
-            strong.append(p);
-        }
-        elm.append(strong);
-        return elm;
-    }
-
-    //draw elements on the canvas
-    function drawEditorElement(element, canvasId, name) {
-        $(canvasId).append(element);
-        _addEditorEndpoints(name, properties[0].startpoints, properties[0].endpoints);
-        makeResizable('.custom.step');
-        jsPlumb.draggable(jsPlumb.getSelector(".jtk-node"), {grid: [20, 20]});
-    }
-
-    //make an element resizable
-    function makeResizable(classname) {
-        $(classname).resizable({
-            resize: function (event, ui) {
-                jsPlumb.repaint(ui.helper);
-            }
-        });
-    }
-
-    //load properties of a start element once the start element in the palette is clicked
-    $('#startEv').click(function () {
-        loadEditorProperties("window start custom jtk-node jsplumb-connected", "5em", "5em", "start", ["BottomCenter"],
-            [], false);
-        clicked = true;
-    });
-
-    //load properties of a step element once the step element in the palette is clicked
-    $('#stepEv').click(function () {
-        loadEditorProperties("window step custom jtk-node jsplumb-connected-step", "5em", "5em", "step",
-            ["BottomCenter", "RightMiddle"], ["TopCenter", "LeftMiddle"], true);
-        clicked = true;
-    });
-
-    //load properties of a decision element once the decision element in the palette is clicked
-    $('#descEv').click(function () {
-        loadEditorProperties("window diamond custom jtk-node jsplumb-connected-step", "5em", "5em", "decision",
-            ["LeftMiddle", "RightMiddle", "BottomCenter"], ["TopCenter"], true);
-        clicked = true;
-    });
-
-    //load properties of a decision element once the input/output element in the palette is clicked
-    $('#inpEv').click(function () {
-        loadEditorProperties("window parallelogram step custom jtk-node jsplumb-connected-step", "23em", "5em", "i/o",
-            ["BottomCenter", "RightMiddle"], ["TopCenter", "LeftMiddle"], true);
-        clicked = true;
-    });
-
-    //load properties of a end element once the end element in the palette is clicked
-    $('#endEv').click(function () {
-        loadEditorProperties("window end jtk-node jsplumb-connected-end", "5em", "5em", "end",
-            [], ["TopCenter"], false);
-        clicked = true;
-    });
-
-    //take the x, y coordinates of the current mouse position
-    var x, y;
-    $( document ).on( "mousemove", function( event ) {
-        x = event.pageX;
-        y = event.pageY;
-        if(clicked){
-            properties[0].top = y - 358;
-            properties[0].left = x - 308;
-        }
-    });
-
-    //once the user clicks on the editor canvas, the element is drawn
-    $('#editorDiagram').not('[id^="flowchartWindow"]').click(function () {
-        if (clicked) {
-            clicked = false;
-            elementCount++;
-            editableElmCount++;
-            var name = "Window" + elementCount;
-            var id = "flowchartWindow" + elementCount;
-            element = createEditorElement(id);
-            //the diagram should contain a start element
-            if (editableElmCount == 1 && element.attr("class").indexOf("start") == -1) {
-                alertify.error("The flowchart diagram should have a start element");
-                elementCount = 0; editableElmCount = 0;
-            } else {
-                drawEditorElement(element, "#editor_canvas", name);
-            }
-            element = "";
-        }
-    });
-
-    //to delete and resize the elements
-    $(document).keypress(function (e) {
-        if (e.which == 127) {
-            if (to_delete != "") {
-                jsPlumb.remove(to_delete);
-                editableElmCount--;
-
-                //if canvas has no element
-                if (editableElmCount == 0) {
-                    elementCount = 0;   //ids start from 1
+        //delete the target endpoints
+        for (var i = 0; i < editorEndpointList.length; i++) {
+            if (editorEndpointList[i][0] == $(this).parent().attr("id")) {
+                for (var j = 0; j < editorEndpointList[i].length; j++) {
+                    instance.deleteEndpoint(editorEndpointList[i][j]);
+                    editorEndpointList[i][j] = null;
                 }
-
-                for (var i = 0; i < editorEndpointList.length; i++) {
-                    if (editorEndpointList[i][0] == to_delete) {
-                        for (var j = 0; j < editorEndpointList[i].length; j++) {
-                            jsPlumb.deleteEndpoint(editorEndpointList[i][j]);
-                            editorEndpointList[i][j] = null;
-                        }
-                    }
-                }
-
-                for (var i = 0; i < editorSourcepointList.length; i++) {
-                    if (editorSourcepointList[i][0] == to_delete) {
-                        for (var j = 0; j < editorSourcepointList[i].length; j++) {
-                            jsPlumb.deleteEndpoint(editorSourcepointList[i][j]);
-                            editorSourcepointList[i][j] = null;
-                        }
-                    }
-                }
-                to_delete = "";
-            }else if(deleteConnection != null){
-                jsPlumb.detach(deleteConnection);
-                deleteConnection = null;
-            }
-        } else if (e.which == 43) {//enlarge diamond when user presses '+' key
-            var elm = $('.diamond.custom').filter(function () {
-                return $(this).css("border-color") == 'rgb(255, 0, 0)';
-            });
-            if (elm.outerWidth() < 150) {
-                elm.outerWidth(elm.outerWidth() + 5);
-                elm.outerHeight(elm.outerHeight() + 5);
-                var p = elm.children()[0].firstChild;
-                p.style.lineHeight = 110 + '%';
-                jsPlumb.repaint(elm.attr("id"));
             }
         }
-        else if (e.which == 45) {//shrink the diamond when user presses '-' key
-            var elm = $('.diamond.custom').filter(function () {
-                return $(this).css("border-color") == 'rgb(255, 0, 0)';
-            });
-            if (elm.outerWidth() > 80) {
-                elm.outerWidth(elm.outerWidth() - 5);
-                elm.outerHeight(elm.outerHeight() - 5);
-                jsPlumb.repaint(elm.attr("id"));
-                var p = elm.children()[0].firstChild;
-                p.style.lineHeight = 110 + '%';
+        //delete the source endpoints
+        for (var i = 0; i < editorSourcepointList.length; i++) {
+            if (editorSourcepointList[i][0] == $(this).parent().attr("id")) {
+                for (var j = 0; j < editorSourcepointList[i].length; j++) {
+                    instance.deleteEndpoint(editorSourcepointList[i][j]);
+                    editorSourcepointList[i][j] = null;
+                }
             }
         }
-    });
-
-    //select the current element and make its boarder red.
-    $('#editor_canvas').on('click', '[id^="flowchartWindow"]', function () {
-        deleteConnection = null;
-        to_delete = $(this).attr("id");
-        $('.step').not(this).css({'border-color': '#29e'});
-        $('.diamond').not(this).css({'border-color': '#29e'});
-        $('.start').not(this).css({'border-color': 'green'});
-        $('.window.jsplumb-connected-end').not(this).css({'border-color': 'orangered'});
-        jsPlumb.select().setPaintStyle({lineWidth: 4, strokeStyle: "#61B7CF"});
-        $(this).css({'border-color': 'red'});
     });
 
     //save the edited flowchart to a json string
@@ -411,7 +475,7 @@ jsPlumb.ready(function () {
                             positionX: parseInt($element.css("left"), 10),
                             positionY: parseInt($element.css("top"), 10),
                             clsName: $element.attr('class').toString(),
-                            label: $element.children()[0].firstChild.innerHTML,
+                            label: $element.text(),
                             width: $element.outerWidth(),
                             height: $element.outerHeight()
                         });
@@ -426,9 +490,8 @@ jsPlumb.ready(function () {
                         });
                     }
                 });
-
                 var connections = [];
-                $.each(jsPlumb.getConnections(), function (index, connection) {
+                $.each(instance.getConnections(), function (index, connection) {
                     connections.push({
                         connectionId: connection.id,
                         sourceUUId: connection.endpoints[0].getUuid(),
@@ -481,16 +544,16 @@ jsPlumb.ready(function () {
                     ["BottomCenter"], [], false, -1, -1);
             } else if (element.nodeType == 'step') {
                 loadEditorProperties(element.clsName.substr(0, 50), element.positionX, element.positionY, element.label,
-                    ["BottomCenter", "RightMiddle"], ["TopCenter", "LeftMiddle"], true, element.width, element.height);
+                    ["BottomCenter"], ["TopCenter"], true, element.width, element.height);
             } else if (element.nodeType == 'diamond') {
                 loadEditorProperties(element.clsName.substr(0, 53), element.positionX, element.positionY, element.label,
                     ["LeftMiddle", "RightMiddle", "BottomCenter"], ["TopCenter"], true, element.width, element.height);
             } else if (element.nodeType == 'parallelogram') {
                 loadEditorProperties(element.clsName.substr(0, 64), element.positionX, element.positionY, element.label,
-                    ["BottomCenter", "RightMiddle"], ["TopCenter", "LeftMiddle"], true, element.width, element.height);
+                    ["BottomCenter"], ["TopCenter"], true, element.width, element.height);
             }
             else if (element.nodeType == 'end') {
-                loadEditorProperties(element.clsName.substr(0, 41), element.positionX, element.positionY, element.label,
+                loadEditorProperties(element.clsName.substr(0, 48), element.positionX, element.positionY, element.label,
                     [], ["TopCenter"], false, -1, -1);
             }
             var elm = createEditorElement(element.elementId);
@@ -501,37 +564,33 @@ jsPlumb.ready(function () {
             var width = element.labelWidth;
             if(width == undefined)
                 width = "20px";
-            var conn = jsPlumb.connect({uuids: [element.sourceUUId, element.targetUUId]});
+            var conn = instance.connect({uuids: [element.sourceUUId, element.targetUUId]});
             init(conn, element.label, element.labelWidth);
         });
         editable = true;
     }
 
-    _deleteFlowchart = function(){
+    _deleteFlowchart = function(name, version){
         if (editableElmCount > 0) {
-            var name = $("#fcProcessName").val();
-            var version = $("#fcProcessVersion").val();
-            if(confirm("Do you want to delete the flowchart of process " + name + " " + version + "?")) {
-                $.ajax({
-                    url: '/publisher/assets/process/apis/delete_flowchart',
-                    type: 'POST',
-                    data: {
-                        'processName': name,
-                        'processVersion': version
-                    },
-                    success: function (response) {
-                        alertify.success("Successfully deleted the flowchart.");
-                        var node = document.getElementById("editor_canvas");
-                        while (node.hasChildNodes()) {
-                            node.removeChild(node.lastChild);
-                        }
-                        editableElmCount = 0;
-                    },
-                    error: function () {
-                        alertify.error('Flowchart deleting error');
+            $.ajax({
+                url: '/publisher/assets/process/apis/delete_flowchart',
+                type: 'POST',
+                data: {
+                    'processName': name,
+                    'processVersion': version
+                },
+                success: function (response) {
+                    alertify.success("Successfully deleted the flowchart.");
+                    var node = document.getElementById("editor_canvas");
+                    while (node.hasChildNodes()) {
+                        node.removeChild(node.lastChild);
                     }
-                });
-            }
+                    editableElmCount = 0;
+                },
+                error: function () {
+                    alertify.error('Flowchart deleting error');
+                }
+            });
         }else{
             alertify.error('Flowchart content is empty.');
         }

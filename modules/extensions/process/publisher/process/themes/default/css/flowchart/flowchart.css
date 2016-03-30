@@ -22,18 +22,52 @@
     touch-action:none;
 }
 
+.basic{
+
+}
+
+textarea{
+    width: 65px;
+    height: 65px;
+    line-height: 110%;
+    position: relative;
+    text-align: center;
+    box-sizing: border-box;
+    font-weight: bold;
+}
+
+p{
+    white-space: pre-wrap;
+}
+
+.start > i{
+    margin-top: -10px;
+}
+
+.step > i{
+
+}
+
+.close-icon{
+    position: absolute;
+    color: maroon;
+}
+
 .custom{
     position: absolute;
+    z-index: 5;
 }
 
 .start{
     border-radius: 40px;
     text-align: center;
+    line-height: 110%;
 }
 
 .end{
     border-radius: 40px;
     text-align: center;
+    line-height: 110%;
 }
 
 .step{
@@ -65,12 +99,24 @@
     transform: rotate(-45deg);
 }
 
-.overlayText{
+.close-mark{
+    cursor:pointer;
+    color: black;
+    z-index: 6;
+    display: none;
+}
 
+.close-mark:hover{
+    opacity: 0.8;
 }
 
 .input-text{
     -webkit-transform: skew(10deg);
+}
+
+#editor_canvas{
+    z-index: 1;
+    position: relative;
 }
 
 .flowchart-demo .window {
@@ -111,7 +157,7 @@
 }
 
 .flowchart-demo .hover {
-    border: 2px solid red;
+    outline: 2px solid red;
 }
 
 #startEv{
@@ -140,7 +186,7 @@
 }
 
 .flowchart-demo .jsplumb-connector {
-    z-index: 4;
+    z-index: 6;
 }
 
 .flowchart-demo .jsplumb-endpoint, .endpointTargetLabel, .endpointSourceLabel {
@@ -151,8 +197,8 @@
 .aLabel {
     background-color: white;
     padding: 0.4em;
-    font: 12px sans-serif;
-    color: #444;
+    font: 13px sans-serif;
+    color: black;
     z-index: 21;
     border: 1px dotted gray;
     opacity: 0.8;
@@ -181,10 +227,14 @@
     outline: 4px solid pink !important;
 }
 
+.jsplumb-drag-selected{
+    outline: 4px solid red !important;
+}
+
 path, .jsplumb-endpoint {
     cursor: pointer;
 }
 
 .jsplumb-overlay {
-    background-color:transparent;
+    background-color:white;
 }

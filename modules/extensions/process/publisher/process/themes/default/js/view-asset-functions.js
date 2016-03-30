@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -31,7 +31,7 @@ window.onload = function () {
     var url = window.location.toString();
     pid = url.substr(url.lastIndexOf('/') + 1);
     getProcessList();
-}
+};
 
 function getMainProcess() {
     var mainProcess = $('#view-header').text() + "-" + $('#process-version').text();
@@ -181,6 +181,7 @@ function downloadDocument(relativePath) {
         type: 'GET',
         success: function (response) {
             var docNameWithExt = relativePath.substr(relativePath.lastIndexOf('/') + 1);
+            var extension = docNameWithExt.split('.').pop().toLowerCase();
             var byteCharacters = atob(response);
 
             var byteNumbers = new Array(byteCharacters.length);
@@ -188,6 +189,9 @@ function downloadDocument(relativePath) {
                 byteNumbers[i] = byteCharacters.charCodeAt(i);
             }
             var contentType = 'application/msword';
+            if(extension == "pdf") {
+                contentType = 'application/pdf';
+            }
             var byteArray = new Uint8Array(byteNumbers);
             var blob = new Blob([byteArray], {type: contentType});
             saveAs(blob, docNameWithExt);
@@ -196,6 +200,145 @@ function downloadDocument(relativePath) {
             alertify.error('Text editor error');
         }
     });
+}
+
+function removeDocument(processName, processVersion, documentName, documentSummary, documentUrl, documentPath, idVal) {
+    var currentElementId = "#" + idVal;
+    $(currentElementId).parent().closest("tr").remove();
+
+    if(document.getElementById("listDocs").rows.length == 0) {
+        $('#listDocs').append('<tr><td colspan="6">No documentation associated with this process</td></tr>');
+    }
+
+    var removeDocInfo = {
+        'name':documentName,
+        'summary':documentSummary,
+        'url':documentUrl,
+        'path':documentPath
+    };
+
+    var removeDocObj = {
+        'processName':processName,
+        'processVersion':processVersion,
+        'removeDocument':removeDocInfo
+    };
+
+    $.ajax({
+        url: '/publisher/assets/process/apis/delete_document',
+        type: 'POST',
+        data: {'removeDocumentDetails': JSON.stringify(removeDocObj)},
+        success: function (response) {
+            alertify.success('Successfully deleted ' + documentName + ' from the document list.');
+        },
+        error: function () {
+            alertify.error('Document deleting error');
+        }
+    });
+
+}
+
+function viewPDFDocument(relativePath, heading, iteration) {
+    $.ajax({
+        url: '/publisher/assets/process/apis/download_document?process_doc_path=' + relativePath,
+        type: 'GET',
+        success: function (response) {
+            var byteCharacters = atob(response);
+            var byteNumbers = new Array(byteCharacters.length);
+            for (var i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            var contentType = 'application/pdf';
+            var byteArray = new Uint8Array(byteNumbers);
+            var file = new Blob([byteArray], {type: contentType});
+            var fileURL = URL.createObjectURL(file);
+            viewPDF(fileURL, heading, iteration);
+        },
+        error: function () {
+            alertify.error('Text editor error');
+        }
+    });
+}
+
+function viewGoogleDocument(googleDocUrl, heading, iteration) {
+    var googleDocDivElement = document.getElementById("googleDocViewer");
+    var customGoogleDocUrl = googleDocUrl + "&embedded=true";
+    var customHeading = "Document Name : " + heading;
+    var modal = '<div id="docViewModal' + iteration + '" class="modal fade" role="dialog">';
+    modal += '<div class="modal-dialog" style="width:840px;height:600px">';
+    modal += '<div class="modal-content">';
+    modal += '<div class="modal-header">';
+    modal += '<a class="close" data-dismiss="modal">×</a>';
+    modal += '<h4>' + customHeading + '</h4>';
+    modal += '</div>';
+    modal += '<div class="modal-body">';
+    modal += '<iframe src="' + customGoogleDocUrl + '" style="width:800px;height:600px" frameborder="0">';
+    modal += '</iframe>';
+    modal += '</div>';
+    modal += '<div class="modal-footer">';
+    modal += '<span class="btn" data-dismiss="modal">';
+    modal += 'Close';
+    modal += '</span>'; // close button
+    modal += '</div>';  // footer
+    modal += '</div>'; //modal-content
+    modal += '</div>'; //modal-header
+    modal += '</div>';  // modalWindow
+    googleDocDivElement.innerHTML += modal;
+}
+
+function viewPDF(pdfUrl, heading, iteration) {
+    var pdfDocDivElement = document.getElementById("pdfDocViewer");
+    var customHeading = "PDF Name : " + heading;
+    var pdfModal = '<div id="pdfViewModal' + iteration + '" aria-labelledby="pdfModalLabel' + iteration + '" class="modal fade" role="dialog" aria-hidden="true">';
+    pdfModal += '<div class="modal-dialog" style="width:840px;height:600px">';
+    pdfModal += '<div class="modal-content">';
+    pdfModal += '<div class="modal-header">';
+    pdfModal += '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+    pdfModal += '<h4 class="modal-title" id="pdfModalLabel' + iteration + '">' + customHeading + '</h4>';
+    pdfModal += '</div>';
+    pdfModal += '<div class="modal-body">';
+    pdfModal += '<object type="application/pdf" data="' + pdfUrl + '" width="800" height="600">this is not working as expected</object>';
+    pdfModal += '</div>';
+    pdfModal += '<div class="modal-footer">';
+    pdfModal += '<span class="btn" data-dismiss="modal">';
+    pdfModal += 'Close';
+    pdfModal += '</span>'; // close button
+    pdfModal += '</div>'; // footer
+    pdfModal += '</div>'; //modal-content
+    pdfModal += '</div>'; //modal-header
+    pdfModal += '</div>'; //modal window
+    pdfDocDivElement.innerHTML += pdfModal;
+}
+
+function confirmDialog(question) {
+    var confirmModal =
+        $('<div class="modal fade">' +
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header">' +
+            '<a class="close" data-dismiss="modal" >&times;</a>' +
+            '<h3>Confirm delete</h3>' +
+            '</div>' +
+            '<div class="modal-body">' +
+            '<p>' + question + '</p>' +
+            '</div>' +
+            '<div class="modal-footer">' +
+            '<a href="#!" class="btn" data-dismiss="modal">cancel</a>' +
+            '<a href="#!" id="okButton" class="btn btn-primary">delete</a>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>');
+    return confirmModal;
+}
+
+function removeDocumentConfirmListener(processName, processVersion, documentName, documentSummary, documentUrl, documentPath, idVal) {
+    var question = "Are you sure you want to delete " + documentName + " document permanently ?";
+    var confirmModal = confirmDialog(question);
+    confirmModal.find('#okButton').click(function(event) {
+        removeDocument(processName, processVersion, documentName, documentSummary, documentUrl, documentPath, idVal);
+        confirmModal.modal('hide');
+    });
+    confirmModal.modal('show');
 }
 
 function showDocument() {
@@ -207,48 +350,80 @@ function showDocument() {
     $("#pdfUploaderView").hide();
     $("#holder").hide();
     $("#flowChartEditorView").hide();
-    $("#docUploaderDiv").hide();
+    $("#docUploaderDiv").show();
     $("#docViewDiv").show();
+    $("#addNewDoc").toggle();
 
     $.ajax({
         url: '/publisher/assets/process/apis/get_process_doc?process_path=/_system/governance/processes/' + fieldsName + "/" + fieldsVersion,
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
-            for(var i = 0; i < response.length; i++){
-                var table = document.getElementById("docTable");
-                var rowCount = table.rows.length;
-                var row = table.insertRow(rowCount);
-                var cellDocName = row.insertCell(0);
-                var cellDocSummary = row.insertCell(1);
-                var cellDocUrl = row.insertCell(2);
-                var cellDocPath = row.insertCell(3);
-                cellDocName.innerHTML = response[i].documentname;
-                cellDocSummary.innerHTML = response[i].summary;
+            if (response.length != 0) {
+                for (var i = 0; i < response.length; i++) {
+                    var table = document.getElementById("listDocs");
+                    var rowCount = table.rows.length;
+                    var row = table.insertRow(rowCount);
+                    var cellDocName = row.insertCell(0);
+                    var cellDocSummary = row.insertCell(1);
+                    var cellDocAction = row.insertCell(2);
+                    cellDocName.innerHTML = response[i].name;
+                    cellDocSummary.innerHTML = response[i].summary;
 
-                if(response[i].url != "NA") {
-                    var anchorUrlElement = document.createElement("a");
-                    anchorUrlElement.setAttribute("id", "documentUrl" + i);
-                    anchorUrlElement.setAttribute("href", response[i].url);
-                    anchorUrlElement.setAttribute('target', '_blank');
-                    anchorUrlElement.innerHTML = "open";
-                    cellDocUrl.appendChild(anchorUrlElement);
-                } else {
-                    cellDocUrl.innerHTML = response[i].url;
-                }
+                    if (response[i].url != "NA") {
+                        var anchorUrlElement = document.createElement("a");
+                        anchorUrlElement.setAttribute("id", "documentUrl" + i);
+                        anchorUrlElement.setAttribute("href", response[i].url);
+                        anchorUrlElement.setAttribute('target', '_blank');
+                        anchorUrlElement.style.marginRight = "15px";
+                        anchorUrlElement.innerHTML = "open";
 
-                if(response[i].path != "NA") {
-                    var anchorElement = document.createElement("a");
-                    anchorElement.setAttribute("id", "document" + i);
-                    var path = response[i].path;
-                    anchorElement.onclick = function() {
-                        var currentPath = path;
-                        downloadDocument(currentPath);
-                    };
-                    anchorElement.innerHTML = "download";
-                    cellDocPath.appendChild(anchorElement);
-                } else {
-                    cellDocPath.innerHTML = response[i].path;
+                        viewGoogleDocument(response[i].url, response[i].name, i);
+                        var anchorGoogleDocViewElement = document.createElement("a");
+                        anchorGoogleDocViewElement.setAttribute("id", "googleDocumentView" + i);
+                        anchorGoogleDocViewElement.setAttribute("data-toggle", "modal");
+                        anchorGoogleDocViewElement.setAttribute("data-target", "#docViewModal" + i);
+                        anchorGoogleDocViewElement.style.marginRight = "15px";
+                        anchorGoogleDocViewElement.innerHTML = "view";
+
+                        cellDocAction.appendChild(anchorUrlElement);
+                        cellDocAction.appendChild(anchorGoogleDocViewElement);
+                    } else if (response[i].path != "NA") {
+                        var anchorElement = document.createElement("a");
+                        anchorElement.setAttribute("id", "document" + i);
+                        anchorElement.onclick = (function (currentPath) {
+                            return function () {
+                                downloadDocument(currentPath);
+                            };
+                        })(response[i].path);
+                        anchorElement.innerHTML = "download";
+                        anchorElement.style.marginRight = "15px";
+                        cellDocAction.appendChild(anchorElement);
+
+                        if(response[i].path.split('.').pop().toLowerCase() == "pdf") {
+                            viewPDFDocument(response[i].path, response[i].name, i);
+                            var anchorPdfViewElement = document.createElement("a");
+                            anchorPdfViewElement.setAttribute("id", "pdfDocumentView" + i);
+                            anchorPdfViewElement.setAttribute("data-toggle", "modal");
+                            anchorPdfViewElement.setAttribute("data-target", "#pdfViewModal" + i);
+                            anchorPdfViewElement.style.marginRight = "15px";
+                            anchorPdfViewElement.innerHTML = "view";
+                            cellDocAction.appendChild(anchorPdfViewElement);
+                        }
+                    } else {
+                        cellDocAction.innerHTML = "Not Available";
+                    }
+                    if (response[i].url != "NA" || response[i].path != "NA") {
+                        var removeDocElement = document.createElement("a");
+                        removeDocElement.setAttribute("id", "removeDocElement" + i);
+                        removeDocElement.onclick = (function (processName, processVersion, docName, docSummary, docUrl, docPath, idVal) {
+                            return function () {
+                                removeDocumentConfirmListener(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
+                            };
+                        })(fieldsName, fieldsVersion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
+                        removeDocElement.innerHTML = "remove";
+                        cellDocAction.appendChild(removeDocElement);
+                    }
                 }
             }
         },
@@ -269,6 +444,7 @@ function associateDoc() {
     $("#flowChartEditorView").hide();
     $("#docUploaderDiv").show();
     $("#docViewDiv").hide();
+    $("#toggleAnchor").hide();
 }
 
 function newDocFormToggle() {
@@ -804,7 +980,8 @@ function zoomSelect() {
 }
 
 //******************************Flowchart Editor***********************************
-function associateEditorFlowChart(name) {
+function associateEditorFlowChart() {
+    $("#flowchartEditorDltBtn").hide();
     $("#overviewDiv").hide();
     $("#flowChartEditorView").show();
     $("#pdfUploader").hide();
@@ -826,7 +1003,7 @@ function showFlowchartEditor(name, flowchartPath) {
         url: '/publisher/assets/process/apis/get_process_flowchart',
         type: 'GET',
         dataType: 'text',
-        data: {'flowchartPath':flowchartPath},
+        data: {'flowchartPath': flowchartPath},
         success: function (data) {
             _loadEditableFlowChart(data, '#editor_canvas');
         },
@@ -834,6 +1011,18 @@ function showFlowchartEditor(name, flowchartPath) {
             alertify.error('Error retrieving flowchart');
         }
     });
+}
+
+function removeFlowchart(){
+    var name = $("#fcProcessName").val();
+    var version = $("#fcProcessVersion").val();
+    var question = "Are you sure you want to delete the flowchart of process " + name + " " + version + " permanently?";
+    var confirmModal = confirmDialog(question);
+    confirmModal.find('#okButton').click(function(event) {
+        _deleteFlowchart(name, version);
+        confirmModal.modal('hide');
+    });
+    confirmModal.modal('show');
 }
 
 function redirectTo(element) {
@@ -854,7 +1043,7 @@ function validateDocument() {
         }
     } else if (document.getElementById('optionsRadios8').checked) {
         var ext = $('#docLocation').val().split('.').pop().toLowerCase();
-        if ($.inArray(ext, ['docx', 'doc']) == -1) {
+        if ($.inArray(ext, ['docx', 'doc', 'pdf']) == -1) {
             alertify.error('invalid document extension!');
             return false;
         }

@@ -175,6 +175,7 @@ function getProcessInfo() {
         'processName': $("#pName").val(),
         'processVersion': $("#pVersion").val(),
         'processOwner': $("#pOwner").val(),
+        'processDescription': $("#overview_description").val(),
         'processTags': tags,
         'subprocess': readSubprocessTable(),
         'successor': readSuccessorTable(),
@@ -364,14 +365,14 @@ function validateDocs() {
     $("#docProcessName").val($("#pName").val());
     $("#docProcessVersion").val($("#pVersion").val());
     if (document.getElementById('docName').value.length == 0) {
-        alertify.error('Please enter doc name.');
+        alertify.error('Please enter document name.');
         return false;
     } else if ((!document.getElementById('optionsRadios7').checked) && (!document.getElementById('optionsRadios8').checked)) {
         alertify.error('Please select a source.');
         return false;
     } else if (document.getElementById('optionsRadios7').checked) {
         if (document.getElementById('docUrl').value.length == 0) {
-            alertify.error('Please give the doc url.');
+            alertify.error('Please give the document url.');
             return false;
         }
     } else if (document.getElementById('optionsRadios8').checked) {

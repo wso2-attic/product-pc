@@ -49,7 +49,7 @@
                                 onclick="showFlowchartEditor('{{assets.tables.[0].fields.name.value}}', '{{flowchartPath}}')">Edit Flowchart</button>
                     </div>
                 {{else}}
-                    <div id="aFdiv"><button id="addFlowchartButton" class="btn btn-primary" onclick="associateEditorFlowChart('{{assets.tables.[0].fields.name.value}}')">Associate Flowchart</button></div>
+                    <div id="aFdiv"><button id="addFlowchartButton" class="btn btn-primary" onclick="associateEditorFlowChart()">Associate Flowchart</button></div>
                 {{/if}}
             </div>
     <div class="control-group" style="display: inline-block">
@@ -185,7 +185,7 @@
 <div id="bpmnViewDiv" style="display: none">
     <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button><br /><br />
 <div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
-    <img id="bpmnImage" src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
+    <img id="bpmnImage" style="position: relative;top: 50%;left: 50%;transform: translateX(-50%) translateY(-50%);" src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
 </div>
 </div>
 
@@ -304,19 +304,23 @@
     <br />
     <a id="fcEditorOverviewLink" class="btn btn-primary" onclick="redirectTo(this)" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
     <button class="btn btn-primary" id="flowchartSaveBtn" onclick=" _saveEditedFlowchart()">Save</button>
-    <button class="btn btn-primary" id="flowchartDltBtn" onclick="_deleteFlowchart()">Delete</button><br /><br />
+    <button class="btn btn-primary" id="flowchartEditorDltBtn" onclick="removeFlowchart()">Delete</button><br /><br />
     <input type="hidden" id="fcProcessName" name="fcProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
     <input type="hidden" id="fcProcessVersion" name="fcProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
     <div style="width:100%; height: 50%; white-space:nowrap;">
         <span style="display: inline-block; vertical-align: top; padding: 5px; width:15%">
-            <div id="editorPalette" style="border: solid 1px gray; height: auto"><p><center><strong>Palette</strong></center></p>
+            <div id="editorPalette" style="border: solid 1px gray; height: 602px">
                 <div class="jtk-demo-main" style="margin-top: 20px;">
-                    <div class="jtk-demo-canvas canvas-wide flowchart-demo" id="canvas1">
-                        <div class="window start jsplumb-connected" id="startEv"><strong><p>start</p></strong></div>
-                        <div class="window step jsplumb-connected-step" id="stepEv"><strong><p>step</p></strong></div>
-                        <div class="window diamond jsplumb-connected-step" id="descEv"><strong><p class="desc-text">decision</p></strong></div>
+                    <div class="jtk-demo-canvas canvas-wide flowchart-demo" id="canvas1" style="border: none;">
+                        <div class="window start jsplumb-connected" id="startEv" title="To start the flowchart"><strong><p>start</p></strong></div>
+                        <div style="border: 1px solid lightgray; width: 150px; top: 8em; position: absolute; left: 0.5em;"></div>
+                        <div class="window step jsplumb-connected-step" id="stepEv" title="To describe a step"><strong><p>step</p></strong></div>
+                        <div style="border: 1px solid lightgray; width: 150px; top: 15.25em; position: absolute; left: 0.5em;"></div>
+                        <div class="window diamond jsplumb-connected-step" id="descEv" title="To describe a decision"><strong><p class="desc-text">decision</p></strong></div>
+                        <div style="border: 1px solid lightgray; width: 150px; top: 24.5em; position: absolute; left: 0.5em;"></div>
                         <div class="window step parallelogram jsplumb-connected-step" id="inpEv" title="To take/give input/output"><strong><p class="input-text">i/o</p></strong></div>
-                        <div class="window start jsplumb-connected-end" id="endEv"><strong><p>end</p></strong></div>
+                        <div style="border: 1px solid lightgray; width: 150px; top: 31.5em; position: absolute; left: 0.5em;"></div>
+                        <div class="window end jsplumb-connected-end" id="endEv" title="To end the flowchart"><strong><p>end</p></strong></div>
                     </div>
                 </div>
             </div>
@@ -333,27 +337,6 @@
     </div>
 </div>
 
-<div id="docViewDiv" style="display:none">
-    <a id="docOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a><br />
-    <div class="row-fluid">
-        <div class="span12">
-            <table class="table table-bordered" id="docTable">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Summary</th>
-                    <th>Url</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody id="listDocs">
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-</div>
-
 <div id="docUploaderDiv" style="display:none">
     <a id="docOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a><br /><br />
     <div class="row-fluid">
@@ -361,7 +344,7 @@
             <div class="row-fluid">
                 <div class="control-group">
                     <div id="addDoc">
-                        <a onclick="newDocFormToggle()" href="#">
+                        <a onclick="newDocFormToggle()" id="toggleAnchor" href="#">
                             <i class="fa fa-plus-circle"></i> Add New Document
                         </a>
                     </div>
@@ -401,7 +384,7 @@
                                         <label class="control-label">Source</label>
                                         <div class="controls">
                                             <label class="radio" style="margin-left:20px">
-                                                <input type="radio" name="optionsRadios1" id="optionsRadios7" value="url" onclick="javascript:$('#sourceUrlDoc').toggle('slow');$('#sourceFile').hide('slow')">URL (Eg: google doc)
+                                                <input type="radio" name="optionsRadios1" id="optionsRadios7" value="url" onclick="javascript:$('#sourceUrlDoc').toggle('slow');$('#sourceFile').hide('slow')">URL (Eg: google document)
                                                 <a class="icon-question-sign help_popup" data-original-title="" title=""></a>
                                                 <p id="urlDoc_help" class="hide">Link to documentation managed by an external configuration management system</p>
                                             </label>
@@ -410,7 +393,7 @@
                                                 <span class="requiredAstrix" style="color: red;">*</span> <input type="text" class="required" style="width:98%" id="docUrl" name="docUrl">
                                             </div>
                                             <label class="radio" style="margin-left:20px">
-                                                <input type="radio" name="optionsRadios1" id="optionsRadios8" value="file" onclick="javascript:$('#sourceFile').toggle('slow');$('#sourceUrlDoc').hide('slow')">Document
+                                                <input type="radio" name="optionsRadios1" id="optionsRadios8" value="file" onclick="javascript:$('#sourceFile').toggle('slow');$('#sourceUrlDoc').hide('slow')">Document/pdf
                                                 <a class="icon-question-sign help_popup" data-original-title="" title=""></a>
                                                 <p id="fileDoc_help" class="hide">Upload a documentation file</p>
                                             </label>
@@ -421,7 +404,7 @@
                                             </a>
                                             <div id="sourceFile" class="controls" style="display:none;">
                                                 <span class="requiredAstrix" style="color: red;">*</span> <input type="file" class="required" style="width:98%" name="docLocation" id="docLocation">
-                                                <p id="fileType_help">eg : .docx, .doc</p>
+                                                <p id="fileType_help">eg : .docx, .doc, .pdf</p>
                                             </div>
                                         </div>
                                     </div>
@@ -432,7 +415,6 @@
                         <div class="row-fluid">
                             <div class="span12">
                                 <div class="control-group">
-                                    <!--<button type="button" class="btn btn-primary" id="saveDocBtn" onclick="saveDoc()">Add Document</button>-->
                                     <input type="submit" class="btn btn-primary" id="saveDocBtn" value="Add Document">
                                 </div>
                             </div>
@@ -441,6 +423,29 @@
                     </div>
                 </div>
             </form><br /><br />
+        </div>
+    </div>
+</div>
+
+<div id="docViewDiv" style="display:none">
+    <div id="docUploaderDivContainer"></div>
+    <div class="row-fluid">
+        <div class="span12">
+            <table class="table table-bordered" id="docTable">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Summary</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="listDocs">
+                </tbody>
+            </table>
+        </div>
+        <div id="googleDocViewer">
+        </div>
+        <div id="pdfDocViewer">
         </div>
     </div>
 </div>
