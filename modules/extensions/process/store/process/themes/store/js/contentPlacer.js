@@ -64,9 +64,9 @@ $(document).ready(function () {
     });
     //get associations on click
     $("#tab-relations").on("click", function () {
-        document.getElementById("subContent").innerHTML = "";
-        document.getElementById("sucContent").innerHTML = "";
-        document.getElementById("preContent").innerHTML = "";
+        document.getElementById("predecessor-list-group").innerHTML = "";
+        document.getElementById("subprocess-list-group").innerHTML = "";
+        document.getElementById("successor-list-group").innerHTML = "";
         if (mainProcessPath !== "NA") {
             $.ajax({
                 type: "GET",
@@ -116,18 +116,24 @@ $(document).ready(function () {
                         var id = preAssets.data[i].id;
                         id = id.trim();
                         // check if predecessor is published
-                        document.getElementById("preContent").innerHTML += '<li><a href = /store/assets/process/details/' + id + '>' + preAssets.data[i].name + '</a></li>';
+                        document.getElementById("predecessor-list-group").innerHTML +=
+                            '<li class="list-group-item"><a href = /store/assets/process/details/' + id + '>' +
+                            '<span class="glyphicon glyphicon-chevron-right"></span> ' + preAssets.data[i].name + '</a></li>';
                     }
                     for (var i = 0; i < subAssets.data.length; i++) {
                         var id = subAssets.data[i].id;
                         id = id.trim();
                         // check if predecessor is published
-                        document.getElementById("subContent").innerHTML += '<li><a href = /store/assets/process/details/' + id + '>' + subAssets.data[i].name + '</a></li>';
+                        document.getElementById("subprocess-list-group").innerHTML +=
+                            '<li class="list-group-item"><a href = /store/assets/process/details/' + id + '>' +
+                            '<span class="glyphicon glyphicon-chevron-right"></span> ' + subAssets.data[i].name + '</a></li>';
                     }
                     for (var i = 0; i < sucAssets.data.length; i++) {
                         var id = sucAssets.data[i].id;
                         id = id.trim();
-                        document.getElementById("sucContent").innerHTML += '<li><a href = /store/assets/process/details/' + id + '>' + sucAssets.data[i].name + '</a></li>';
+                        document.getElementById("successor-list-group").innerHTML +=
+                            '<li class="list-group-item"><a href = /store/assets/process/details/' + id + '>' +
+                            '<span class="glyphicon glyphicon-chevron-right"></span> ' + sucAssets.data[i].name + '</a></li>';
                     }
 
                 }
