@@ -193,7 +193,7 @@ public class ProcessStore {
                 processId = storedProcess.getUUID();
             }
         } catch (Exception e) {
-            log.error(e);
+            log.error("Create process error:" + processDetails, e);
         }
 
         return processId;
@@ -232,7 +232,8 @@ public class ProcessStore {
                 reg.put(processPath, processAsset);
             }
         } catch (Exception e) {
-            log.error(e);
+            log.error("Save process text error for " + processName + " - " + processVersion + " : " + processText, e);
+            return false;
         }
 
         return true;
@@ -380,7 +381,7 @@ public class ProcessStore {
                 processId = storedProcessAsset.getUUID();
             }
         } catch (Exception e) {
-            log.error(e);
+            log.error("Create BPMN error:" + bpmnName + " - " + bpmnVersion, e);
         }
 
         return processId;
@@ -578,7 +579,7 @@ public class ProcessStore {
                 textContent = new String((byte[]) textResource.getContent());
             }
         } catch (Exception e) {
-            log.error(e);
+            log.error("Process text retrieving error: " + textPath, e);
         }
         return textContent;
     }
@@ -846,7 +847,8 @@ public class ProcessStore {
             }
 
         } catch (Exception e) {
-            log.error("Failed to update the process owner", e);
+            log.error("Failed to update the process owner:" + ownerDetails, e);
+            return false;
         }
         return true;
     }
@@ -883,7 +885,8 @@ public class ProcessStore {
             }
 
         } catch (Exception e) {
-            log.error("Failed to add a subprocess", e);
+            log.error("Failed to add subprocess: " + subprocessDetails, e);
+            return false;
         }
         return true;
     }
@@ -920,7 +923,8 @@ public class ProcessStore {
             }
 
         } catch (Exception e) {
-            log.error("Failed to add a successor", e);
+            log.error("Failed to add successor: " + successorDetails, e);
+            return false;
         }
         return true;
     }
@@ -957,7 +961,8 @@ public class ProcessStore {
             }
 
         } catch (Exception e) {
-            log.error("Failed to add a predecessor", e);
+            log.error("Failed to add predecessor: " + predecessorDetails, e);
+            return false;
         }
         return true;
     }
@@ -1001,7 +1006,8 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to delete a subprocess", e);
+            log.error("Failed to delete subprocess: " + deleteSubprocess, e);
+            return false;
         }
         return true;
     }
@@ -1045,7 +1051,8 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to delete a successor", e);
+            log.error("Failed to delete successor: " + deleteSuccessor, e);
+            return false;
         }
         return true;
     }
@@ -1091,7 +1098,8 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to delete a predecessor", e);
+            log.error("Failed to delete predecessor: " + deletePredecessor, e);
+            return false;
         }
         return true;
     }
@@ -1187,7 +1195,8 @@ public class ProcessStore {
                 processId = storedProcessAsset.getUUID();
             }
         } catch (Exception e) {
-            log.error("Document upload error.");
+            String errMsg = docName + "." + docExtension + " document upload error for " + processName + ":" + processVersion;
+            log.error(errMsg, e);
         }
         return processId;
     }
@@ -1258,7 +1267,7 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to fetch document: " + resourcePath);
+            log.error("Failed to download document: " + resourcePath);
         }
         return docString;
     }
@@ -1319,7 +1328,8 @@ public class ProcessStore {
                 }
             }
         } catch(Exception e) {
-            log.error("Failed to delete a document", e);
+            log.error("Failed to delete a document: " + deleteDocument, e);
+            return false;
         }
         return true;
     }
@@ -1389,13 +1399,11 @@ public class ProcessStore {
                 throw new ProcessCenterException(msg);
             }
         } catch (Exception e) {
-            String msg = "Failed";
+            String msg = "Process tags retrieving error";
             log.error(msg, e);
             throw new ProcessCenterException(msg, e);
         }
-
         return textContent;
-
     }
 
     public String associatePDF(String processName, String processVersion, Object object) {
@@ -1503,8 +1511,8 @@ public class ProcessStore {
                 processId = storedProcessAsset.getUUID();
             }
         } catch (Exception e) {
-            String errorMessage = "Failed to upload the flowchart for process " + processName + "-" + processVersion;
-            log.error(errorMessage, e);
+            String errMsg = "Flow-chart uploading error for " + processName + " - " + processVersion + ":" + flowchartJson;
+            log.error(errMsg, e);
         }
         if(log.isDebugEnabled())
             log.debug("Successfully uploaded the flowchart for process " + processName + "-" + processVersion);

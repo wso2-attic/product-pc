@@ -64,12 +64,12 @@
         <div class="control-group">
 
             <h2 class="field-title">
-                <a class="collapsing-h2" aria-expanded="true" href="#subprocess" data-toggle="collapse" rel="tooltip" title="List of subprocesses for a given process">
+                <a class="collapsing-h2 collapsed" aria-expanded="true" href="#subprocess" data-toggle="collapse" rel="tooltip" title="List of subprocesses for a given process">
                     <i class="cu-btn-exp-col btn-collapsed">Subprocess</i>
                 </a>
             </h2>
 
-            <div id="subprocess" class="responsive-form-container collapse in" aria-expanded="true" style="">
+            <div id="subprocess" class="responsive-form-container collapse out" aria-expanded="true" style="">
                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
                     &nbsp;
                 </div>
@@ -77,8 +77,7 @@
                     <div class="add-unbounded-row"><a data-name="subprocess" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Subprocess</a></div>
                     <table class="tablex cu-data-table js-unbounded-table" id="table_subprocess">
                         <thead>
-
-                        <tr><th></th>
+                        <tr><th style="background: none;"></th>
                         </tr></thead>
                         <tbody>
                         {{#each involveProcessList.subprocesses}}
@@ -94,11 +93,11 @@
             </div>
 
             <h2 class="field-title">
-                <a class="collapsing-h2" aria-expanded="true" href="#successor" data-toggle="collapse" rel="tooltip" title="List of successor processes for a given process">
+                <a class="collapsing-h2 collapsed" aria-expanded="true" href="#successor" data-toggle="collapse" rel="tooltip" title="List of successor processes for a given process">
                     <i class="cu-btn-exp-col btn-collapsed">Successor</i>
                 </a>
             </h2>
-            <div id="successor" class="responsive-form-container collapse in" aria-expanded="true" style="">
+            <div id="successor" class="responsive-form-container collapse out" aria-expanded="true" style="">
                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
                     &nbsp;
                 </div>
@@ -106,8 +105,7 @@
                     <div class="add-unbounded-row"><a data-name="successor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Successor</a></div>
                     <table class="tablex cu-data-table js-unbounded-table" id="table_successor">
                         <thead>
-
-                        <tr><th></th>
+                        <tr><th style="background: none;"></th>
                         </tr></thead>
                         <tbody>
                         {{#each involveProcessList.successors}}
@@ -124,12 +122,12 @@
 
 
             <h2 class="field-title">
-                <a class="collapsing-h2" aria-expanded="true" href="#predecessor" data-toggle="collapse" rel="tooltip" title="List of predecessor processes for a given process">
+                <a class="collapsing-h2 collapsed" aria-expanded="true" href="#predecessor" data-toggle="collapse" rel="tooltip" title="List of predecessor processes for a given process">
                     <i class="cu-btn-exp-col btn-collapsed">Predecessor</i>
                 </a>
             </h2>
 
-            <div id="predecessor" class="responsive-form-container collapse in" aria-expanded="true" style="">
+            <div id="predecessor" class="responsive-form-container collapse out" aria-expanded="true" style="">
                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
                     &nbsp;
                 </div>
@@ -137,8 +135,7 @@
                     <div class="add-unbounded-row"><a data-name="predecessor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Predecessor</a></div>
                     <table class="tablex cu-data-table js-unbounded-table" id="table_predecessor">
                         <thead>
-
-                        <tr><th></th>
+                        <tr><th style="background: none;"></th>
                         </tr></thead>
                         <tbody>
                         {{#each involveProcessList.predecessors}}

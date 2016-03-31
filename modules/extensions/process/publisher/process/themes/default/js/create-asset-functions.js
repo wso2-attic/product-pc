@@ -20,9 +20,11 @@
 var processNames = [];
 var processListObj;
 var tagList = [];
+var allProcessTags = [];
 
 window.onload = function () {
     getProcessList();
+    getAllProcessTags();
 
     $('#span').click(function () {
         $("#tag-box").focus()
@@ -337,6 +339,26 @@ function getProcessList() {
     });
 }
 
+function getAllProcessTags() {
+    $.ajax({
+        url: '/publisher/assets/process/apis/get_process_tags',
+        type: 'GET',
+        success: function (data) {
+            var processTagsObj = JSON.parse(data);
+            if (!$.isEmptyObject(processTagsObj)) {
+                for (var key in processTagsObj) {
+                    if (processTagsObj.hasOwnProperty(key)) {
+                        allProcessTags.push(key);
+                    }
+                }
+            }
+        },
+        error: function () {
+            alert.error('Process tag list returning error');
+        }
+    });
+}
+
 function isInputFieldEmpty(tableName) {
     var isFieldEmpty = false;
     $('#table_' + tableName + ' tbody tr').each(function () {
@@ -377,7 +399,7 @@ function validateDocs() {
         }
     } else if (document.getElementById('optionsRadios8').checked) {
         var ext = $('#docLocation').val().split('.').pop().toLowerCase();
-        if ($.inArray(ext, ['docx', 'doc']) == -1) {
+        if ($.inArray(ext, ['docx', 'doc', 'pdf']) == -1) {
             alertify.error('invalid extension!');
             return false;
         }
