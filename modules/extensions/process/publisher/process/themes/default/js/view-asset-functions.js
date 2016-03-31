@@ -980,8 +980,8 @@ function zoomSelect() {
 }
 
 //******************************Flowchart Editor***********************************
-function associateEditorFlowChart(name) {
-    $('#flowchart-editor-header').text(name);
+function associateEditorFlowChart() {
+    $("#flowchartEditorDltBtn").hide();
     $("#overviewDiv").hide();
     $("#flowChartEditorView").show();
     $("#pdfUploader").hide();
@@ -991,7 +991,6 @@ function associateEditorFlowChart(name) {
 }
 
 function showFlowchartEditor(name, flowchartPath) {
-    $('#flowchart-editor-header').text(name);
     $("#overviewDiv").hide();
     $("#flowChartEditorView").show();
     $("#pdfUploader").hide();
@@ -1012,6 +1011,18 @@ function showFlowchartEditor(name, flowchartPath) {
             alertify.error('Error retrieving flowchart');
         }
     });
+}
+
+function removeFlowchart(){
+    var name = $("#fcProcessName").val();
+    var version = $("#fcProcessVersion").val();
+    var question = "Are you sure you want to delete the flowchart of process " + name + " " + version + " permanently?";
+    var confirmModal = confirmDialog(question);
+    confirmModal.find('#okButton').click(function(event) {
+        _deleteFlowchart(name, version);
+        confirmModal.modal('hide');
+    });
+    confirmModal.modal('show');
 }
 
 function redirectTo(element) {

@@ -19,30 +19,58 @@
 
 .demo {
     /* for IE10+ touch devices */
-    touch-action:none;
+    touch-action: none;
 }
 
-.custom{
+.basic {
+
+}
+
+.myLabel {
+
+}
+
+.window > strong > p {
+    white-space: pre-wrap;
+}
+
+.start > i {
+    margin-top: -10px;
+}
+
+.step > i {
+
+}
+
+.close-icon {
     position: absolute;
+    color: maroon;
 }
 
-.start{
+.custom {
+    position: absolute;
+    z-index: 5;
+}
+
+.start {
     border-radius: 40px;
     text-align: center;
+    line-height: 110%;
 }
 
-.end{
+.end {
     border-radius: 40px;
     text-align: center;
+    line-height: 110%;
 }
 
-.step{
+.step {
     border-radius: 0.5em;
     width: 80px;
     height: 80px;
 }
 
-.diamond{
+.diamond {
     -webkit-transform: rotate(45deg);
     -moz-transform: rotate(45deg);
     -o-transform: rotate(45deg);
@@ -50,7 +78,14 @@
     transform: rotate(45deg);
 }
 
-.desc-text{
+.parallelogram {
+    height: 100px;
+    -webkit-transform: skew(-10deg);
+    -moz-transform: skew(-10deg);
+    -o-transform: skew(-10deg);
+}
+
+.desc-text {
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
     -o-transform: rotate(-45deg);
@@ -58,8 +93,28 @@
     transform: rotate(-45deg);
 }
 
+.close-mark {
+    cursor: pointer;
+    color: black;
+    z-index: 6;
+    display: none;
+}
+
+.close-mark:hover {
+    opacity: 0.8;
+}
+
+.input-text {
+    -webkit-transform: skew(10deg);
+}
+
+#editor_canvas {
+    z-index: 1;
+    position: relative;
+}
+
 .flowchart-demo .window {
-    border: 1px solid #346789;
+    border: 2px solid #346789;
     box-shadow: 2px 2px 19px #aaa;
     -o-box-shadow: 2px 2px 19px #aaa;
     -webkit-box-shadow: 2px 2px 19px #aaa;
@@ -96,31 +151,36 @@
 }
 
 .flowchart-demo .hover {
-    border: 1px dotted red;
+    outline: 2px solid red;
 }
 
-#startEv{
+#startEv {
     top: 2em;
     left: 3em;
 }
 
-#stepEv{
+#stepEv {
     top: 10em;
     left: 3em;
 }
 
-#descEv{
-    top: 20em;
+#descEv {
+    top: 19em;
     left: 3em;
 }
 
-#endEv{
-    top: 30em;
+#endEv {
+    top: 36em;
+    left: 3em;
+}
+
+#inpEv {
+    top: 28em;
     left: 3em;
 }
 
 .flowchart-demo .jsplumb-connector {
-    z-index: 4;
+    z-index: 6;
 }
 
 .flowchart-demo .jsplumb-endpoint, .endpointTargetLabel, .endpointSourceLabel {
@@ -131,8 +191,8 @@
 .aLabel {
     background-color: white;
     padding: 0.4em;
-    font: 12px sans-serif;
-    color: #444;
+    font: 13px sans-serif;
+    color: black;
     z-index: 21;
     border: 1px dotted gray;
     opacity: 0.8;
@@ -161,10 +221,14 @@
     outline: 4px solid pink !important;
 }
 
+.jsplumb-drag-selected {
+    outline: 4px solid red !important;
+}
+
 path, .jsplumb-endpoint {
     cursor: pointer;
 }
 
 .jsplumb-overlay {
-    background-color:transparent;
+    background-color: white;
 }

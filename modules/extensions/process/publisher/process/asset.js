@@ -92,6 +92,9 @@ asset.server = function (ctx) {
             }, {
                 url: 'download_document',
                 path: 'download_document.jag'
+            },{
+                url: 'delete_flowchart',
+                path: 'delete_flowchart.jag'
             }, {
                 url: 'delete_document',
                 path: 'delete_document.jag'
