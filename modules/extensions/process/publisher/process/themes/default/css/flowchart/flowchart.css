@@ -19,64 +19,58 @@
 
 .demo {
     /* for IE10+ touch devices */
-    touch-action:none;
+    touch-action: none;
 }
 
-.basic{
+.basic {
 
 }
 
-textarea{
-    width: 65px;
-    height: 65px;
-    line-height: 110%;
-    position: relative;
-    text-align: center;
-    box-sizing: border-box;
-    font-weight: bold;
+.myLabel {
+
 }
 
-p{
+.window > strong > p {
     white-space: pre-wrap;
 }
 
-.start > i{
+.start > i {
     margin-top: -10px;
 }
 
-.step > i{
+.step > i {
 
 }
 
-.close-icon{
+.close-icon {
     position: absolute;
     color: maroon;
 }
 
-.custom{
+.custom {
     position: absolute;
     z-index: 5;
 }
 
-.start{
+.start {
     border-radius: 40px;
     text-align: center;
     line-height: 110%;
 }
 
-.end{
+.end {
     border-radius: 40px;
     text-align: center;
     line-height: 110%;
 }
 
-.step{
+.step {
     border-radius: 0.5em;
     width: 80px;
     height: 80px;
 }
 
-.diamond{
+.diamond {
     -webkit-transform: rotate(45deg);
     -moz-transform: rotate(45deg);
     -o-transform: rotate(45deg);
@@ -91,7 +85,7 @@ p{
     -o-transform: skew(-10deg);
 }
 
-.desc-text{
+.desc-text {
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
     -o-transform: rotate(-45deg);
@@ -99,22 +93,22 @@ p{
     transform: rotate(-45deg);
 }
 
-.close-mark{
-    cursor:pointer;
+.close-mark {
+    cursor: pointer;
     color: black;
     z-index: 6;
     display: none;
 }
 
-.close-mark:hover{
+.close-mark:hover {
     opacity: 0.8;
 }
 
-.input-text{
+.input-text {
     -webkit-transform: skew(10deg);
 }
 
-#editor_canvas{
+#editor_canvas {
     z-index: 1;
     position: relative;
 }
@@ -160,27 +154,27 @@ p{
     outline: 2px solid red;
 }
 
-#startEv{
+#startEv {
     top: 2em;
     left: 3em;
 }
 
-#stepEv{
+#stepEv {
     top: 10em;
     left: 3em;
 }
 
-#descEv{
+#descEv {
     top: 19em;
     left: 3em;
 }
 
-#endEv{
+#endEv {
     top: 36em;
     left: 3em;
 }
 
-#inpEv{
+#inpEv {
     top: 28em;
     left: 3em;
 }
@@ -227,7 +221,7 @@ p{
     outline: 4px solid pink !important;
 }
 
-.jsplumb-drag-selected{
+.jsplumb-drag-selected {
     outline: 4px solid red !important;
 }
 
@@ -236,5 +230,5 @@ path, .jsplumb-endpoint {
 }
 
 .jsplumb-overlay {
-    background-color:white;
+    background-color: white;
 }

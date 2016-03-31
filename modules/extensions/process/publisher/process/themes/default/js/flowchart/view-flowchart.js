@@ -116,9 +116,9 @@ jsPlumb.ready(function () {
     //set the label of the connector and add the custom close button to the connector
     var init = function (connection, label, width) {
         connection.addOverlay(["Custom", {
-            create:function(component) {
-                return $("<input type=\"text\" value=\""+ label +"\" autofocus style=\"position:absolute; width: "+
-                width +"\"\/>");
+            create: function (component) {
+                return $("<input type=\"text\" value=\"" + label + "\" autofocus style=\"position:absolute; width: " +
+                width + "\"\/>");
             },
             location: 0.5,
             id: "label",
@@ -126,33 +126,33 @@ jsPlumb.ready(function () {
         }]);
 
         connection.addOverlay(["Custom", {
-            create:function(component) {
+            create: function (component) {
                 return $("<button title=\"Delete the connection\"><i class=\"fa fa-trash\"><\/i><\/button>");
             },
             location: 0.2,
             id: "close",
             cssClass: "close-mark btn btn-danger",
-            events:{
-                click:function(){
+            events: {
+                click: function () {
                     instance.detach(connection);
                     $(".start").css({'border': "2px solid green"})
                 }
             }
         }]);
 
-        $("input").css({
-            'font-weight':'bold',
-            'text-align':'center'
+        $(".aLabel").css({
+            'font-weight': 'bold',
+            'text-align': 'center'
         });
     };
 
     //initialize the connection and show the close button when clicked on the connector
     instance.bind("connection", function (connInfo, originalEvent) {
-        if(editable || !loading) {
+        if (editable || !loading) {
             init(connInfo.connection, "", "20px");
         }
 
-        connInfo.connection.bind("click", function(conn){
+        connInfo.connection.bind("click", function (conn) {
             $(".jtk-node").css({'outline': "none"});
             conn.showOverlay("close");
         })
@@ -199,10 +199,10 @@ jsPlumb.ready(function () {
 
     //take the x, y coordinates of the current mouse position
     var x, y;
-    $( document ).on( "mousemove", function( event ) {
+    $(document).on("mousemove", function (event) {
         x = event.pageX;
         y = event.pageY;
-        if(clicked){
+        if (clicked) {
             properties[0].top = y - 358;
             properties[0].left = x - 308;
         }
@@ -271,7 +271,7 @@ jsPlumb.ready(function () {
     //make an element resizable
     function makeResizable(classname) {
         $(classname).resizable({
-            resize: function(event, ui) {
+            resize: function (event, ui) {
                 instance.revalidate(ui.helper);
                 var marginLeft = $(this).outerWidth() + 8;
                 $(this).find("i").css({'margin-left': marginLeft + "px"});
@@ -281,12 +281,12 @@ jsPlumb.ready(function () {
     }
 
     //*********** make the elements on the palette draggable ***************
-    function makeDraggable(id, className, text){
+    function makeDraggable(id, className, text) {
         $(id).draggable({
-            helper: function(){
-                return $("<div/>",{
+            helper: function () {
+                return $("<div/>", {
                     text: text,
-                    class:className
+                    class: className
                 });
             },
             stack: ".custom",
@@ -299,7 +299,7 @@ jsPlumb.ready(function () {
     makeDraggable("#endEv", "window start jsplumb-connected-end custom", "end");
 
     $("#descEv").draggable({
-        helper: function(){
+        helper: function () {
             return createEditorElement("");
         },
         stack: ".custom",
@@ -307,7 +307,7 @@ jsPlumb.ready(function () {
     });
 
     $("#inpEv").draggable({
-        helper: function(){
+        helper: function () {
             return createEditorElement("");
         },
         stack: ".custom",
@@ -319,8 +319,8 @@ jsPlumb.ready(function () {
     //make the editor canvas droppable
     $("#editor_canvas").droppable({
         accept: ".window",
-        drop: function(event, ui) {
-            if(clicked) {
+        drop: function (event, ui) {
+            if (clicked) {
                 clicked = false;
                 elementCount++;
                 editableElmCount++;
@@ -377,32 +377,32 @@ jsPlumb.ready(function () {
 
     //de-select all the selected elements and hide the delete buttons and highlight the selected element
     $('#editor_canvas').on('click', function (e) {
-        $(".jtk-node").css({'outline':"none"});
+        $(".jtk-node").css({'outline': "none"});
         $(".close-icon").hide();
         $.each(instance.getConnections(), function (index, connection) {
             connection.hideOverlay("close");
         });
-        if(e.target.nodeName == "P") {
+        if (e.target.nodeName == "P") {
             e.target.parentElement.parentElement.style.outline = "4px solid red";
-        }else if(e.target.nodeName == "STRONG"){
+        } else if (e.target.nodeName == "STRONG") {
             e.target.parentElement.style.outline = "4px solid red";
-        }else if(e.target.getAttribute("class") != null && e.target.getAttribute("class").indexOf("jtk-node") > -1){//when clicked the step, decision or i/o elements
+        } else if (e.target.getAttribute("class") != null && e.target.getAttribute("class").indexOf("jtk-node") > -1) {//when clicked the step, decision or i/o elements
             e.target.style.outline = "4px solid red";
         }
     });
 
     //to make the text field resizable when typing the input text.
-    $.fn.textWidth = function(text, font){//get width of text with font.  usage: $("div").textWidth();
+    $.fn.textWidth = function (text, font) {//get width of text with font.  usage: $("div").textWidth();
         var temp = $('<span>').hide().appendTo(document.body).text(text || this.val() || this.text()).css('font', font || this.css('font')),
             width = temp.width();
         temp.remove();
         return width;
     };
 
-    $.fn.autoresize = function(options){//resizes elements based on content size.  usage: $('input').autoresize({padding:10,minWidth:0,maxWidth:100});
-        options = $.extend({padding:10,minWidth:0,maxWidth:10000}, options||{});
-        $(this).on('input', function() {
-            $(this).css('width', Math.min(options.maxWidth,Math.max(options.minWidth,$(this).textWidth() + options.padding)));
+    $.fn.autoresize = function (options) {//resizes elements based on content size.  usage: $('input').autoresize({padding:10,minWidth:0,maxWidth:100});
+        options = $.extend({padding: 10, minWidth: 0, maxWidth: 10000}, options || {});
+        $(this).on('input', function () {
+            $(this).css('width', Math.min(options.maxWidth, Math.max(options.minWidth, $(this).textWidth() + options.padding)));
         }).trigger('input');
         return this;
     }
@@ -411,24 +411,24 @@ jsPlumb.ready(function () {
     $('#editor_canvas').on('keyup', '.jsplumb-overlay.aLabel', function () {
         $(this).css('font-weight', 'bold');
         $(this).css('text-align', 'center');
-        $(this).autoresize({padding:20,minWidth:20,maxWidth:100});
+        $(this).autoresize({padding: 20, minWidth: 20, maxWidth: 100});
     });
 
     //when an item is selected, highlight it and show the delete icon
-    $(document).on("click", ".custom", function(){
-        if($(this).attr("class").indexOf("diamond") == -1) {
+    $(document).on("click", ".custom", function () {
+        if ($(this).attr("class").indexOf("diamond") == -1) {
             var marginLeft = $(this).outerWidth() + 8 + "px";
             $(".close-icon").prop("title", "Delete the element");
             $(this).find("i").css({'margin-left': marginLeft, 'margin-top': "-10px"}).show();
-        }else{
+        } else {
             $(this).find("i").css({'margin-left': "35px", 'margin-top': "-40px"}).show();
         }
     });
 
     //when the close-icon of an element is clicked, delete that element together with its endpoints
-    $(document).on("click", ".close-icon", function(){
+    $(document).on("click", ".close-icon", function () {
         instance.remove($(this).parent().attr("id"));
-        $(".start").css({'border-color':"green"});
+        $(".start").css({'border-color': "green"});
         editableElmCount--;
 
         //if canvas has no element
@@ -462,9 +462,9 @@ jsPlumb.ready(function () {
 
             //check whether a start element is there in the diagram
             var elm = $(".start.jtk-node");
-            if(elm.length == 0){
+            if (elm.length == 0) {
                 alertify.error("The flowchart diagram should have a start element");
-            }else{
+            } else {
                 $(".jtk-node").each(function (index, element) {
                     var $element = $(element);
                     var type = $element.attr('class').toString().split(" ")[1];
@@ -562,7 +562,7 @@ jsPlumb.ready(function () {
         loading = true;
         $.each(connections, function (index, element) {
             var width = element.labelWidth;
-            if(width == undefined)
+            if (width == undefined)
                 width = "20px";
             var conn = instance.connect({uuids: [element.sourceUUId, element.targetUUId]});
             init(conn, element.label, element.labelWidth);
@@ -570,7 +570,7 @@ jsPlumb.ready(function () {
         editable = true;
     }
 
-    _deleteFlowchart = function(name, version){
+    _deleteFlowchart = function (name, version) {
         if (editableElmCount > 0) {
             $.ajax({
                 url: '/publisher/assets/process/apis/delete_flowchart',
@@ -591,7 +591,7 @@ jsPlumb.ready(function () {
                     alertify.error('Flowchart deleting error');
                 }
             });
-        }else{
+        } else {
             alertify.error('Flowchart content is empty.');
         }
     }
