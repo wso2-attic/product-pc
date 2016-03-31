@@ -98,6 +98,12 @@ asset.server = function (ctx) {
             }, {
                 url: 'download_document',
                 path: 'download_document.jag'
+            },{
+                url: 'get_bpmnEditorDiagram',
+                path: 'get_bpmnEditorDiagram.jag'
+            },{
+                url: 'delete_bpmnEditorDiagram',
+                path: 'delete_bpmnEditorDiagram.jag'
             }]
         }
     }

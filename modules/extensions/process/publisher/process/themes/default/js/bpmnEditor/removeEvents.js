@@ -85,19 +85,9 @@
    //  deletes the graph
    processEditor.prototype.deleteGraph = function(boolean) {
        var bpmnProcessDiagram = this;
-       if (boolean == true) {
-           bpmnProcessDiagram.activities = [];
-           bpmnProcessDiagram.links = [];
-           bpmnProcessDiagram.drawGraph();
-       } else {
-           if (confirm("Do you want to delete this BPMN diagram?") == true) {
-               bpmnProcessDiagram.activities = [];
-               bpmnProcessDiagram.links = [];
-               bpmnProcessDiagram.drawGraph();
-           } else {}
-       }
-       
-
+       bpmnProcessDiagram.activities = [];
+       bpmnProcessDiagram.links = [];
+       bpmnProcessDiagram.drawGraph();
    };
 
 

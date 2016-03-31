@@ -25,6 +25,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -1484,6 +1485,39 @@ public class ProcessStore {
         }
 
         return bpmnDiagramString;
+    }
+
+    /**
+     * Delete a bpmn process diagram from the registry
+     * @param name
+     * @param version
+     */
+    public void deletebpmnDiagram(String name, String version){
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            String flowchartContentPath = "bpmnDesign/" + name + "/" +version;
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                reg.delete(flowchartContentPath);
+
+                String processPath = "processes/" + name + "/" + version;
+                Resource processResource = reg.get(processPath);
+
+                String processContent = new String((byte[]) processResource.getContent());
+                Document processXML = stringToXML(processContent);
+                processXML.getElementsByTagName("bpmnDesign").item(0).getFirstChild().setTextContent("NA");
+
+                String newProcessContent = xmlToString(processXML);
+                processResource.setContent(newProcessContent);
+                reg.put(processPath, processResource);
+            }
+        } catch (RegistryException e) {
+            String errorMessage = "Failed to upload the bpmn diagram for process " + name + "-" + version;
+            log.error(errorMessage, e);
+        } catch (Exception e) {
+            String errorMessage = "Failed to upload the bpmn diagram for process " + name + "-" + version;
+            log.error(errorMessage, e);
+        }
     }
 
     //    public static void main(String[] args) {
