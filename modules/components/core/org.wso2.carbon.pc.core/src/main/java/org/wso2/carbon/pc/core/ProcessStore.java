@@ -1473,7 +1473,8 @@ public class ProcessStore {
      */
     public String uploadFlowchart(String processName, String processVersion, String flowchartJson) {
         String processId = "NA";
-        log.debug("Creating Flowchart...");
+        if(log.isDebugEnabled())
+            log.debug("Creating Flowchart...");
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
@@ -1485,12 +1486,13 @@ public class ProcessStore {
                 reg.put(flowchartContentPath, flowchartContentResource);
                 String processPath = "processes/" + processName + "/" + processVersion;
 
-                // update process by linking the pdf asset
+                // update process by linking the flowchart asset
                 Resource processAsset = reg.get(processPath);
                 byte[] processContentBytes = (byte[]) processAsset.getContent();
                 String processContent = new String(processContentBytes);
                 Document processXMLContent = stringToXML(processContent);
 
+                //set the flowchart content
                 processXMLContent.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent(flowchartContentPath);
 
                 String newProcessContent = xmlToString(processXMLContent);
@@ -1501,8 +1503,11 @@ public class ProcessStore {
                 processId = storedProcessAsset.getUUID();
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            String errorMessage = "Failed to upload the flowchart for process " + processName + "-" + processVersion;
+            log.error(errorMessage, e);
         }
+        if(log.isDebugEnabled())
+            log.debug("Successfully uploaded the flowchart for process " + processName + "-" + processVersion);
         return processId;
     }
 
@@ -1523,17 +1528,22 @@ public class ProcessStore {
                     flowchartString = new String((byte[]) flowchartAsset.getContent());
                 }catch (ResourceNotFoundException e){
                     flowchartString = "NA";
+                    String errorMessage = "No resource found in path " + flowchartPath;
+                    log.error(errorMessage, e);
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            String values[] = flowchartPath.split("/");
+            String errorMessage = "Failed to retrieve the flowchart for process " + values[1] + "-" + values[2];
+            log.error(errorMessage, e);
         }
-
+        if(log.isDebugEnabled())
+            log.debug("Successfully retrieved the flowchart at path " + flowchartPath);
         return flowchartString;
     }
 
     /**
-     *
+     * Delete a flowchart from the registry
      * @param name
      * @param version
      */
@@ -1557,9 +1567,11 @@ public class ProcessStore {
                 reg.put(processPath, processResource);
             }
         } catch (RegistryException e) {
-            log.error(e.getMessage(), e);
+            String errorMessage = "Failed to upload the flowchart for process " + name + "-" + version;
+            log.error(errorMessage, e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            String errorMessage = "Failed to upload the flowchart for process " + name + "-" + version;
+            log.error(errorMessage, e);
         }
     }
 
