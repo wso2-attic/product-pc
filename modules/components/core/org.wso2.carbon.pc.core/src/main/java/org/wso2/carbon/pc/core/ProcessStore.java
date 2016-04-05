@@ -34,6 +34,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
+import org.wso2.carbon.pc.core.internal.ProcessCenterServiceComponent;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -1594,43 +1595,64 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             int count = 0;
             JSONArray results = new JSONArray();
-            JSONObject object = new JSONObject();
+            JSONObject object;
+            JSONObject filters = new JSONObject(filter);
             if (registryService != null) {
                 UserRegistry reg = null;
                 reg = registryService.getGovernanceSystemRegistry();
                 String[] processPaths = GovernanceUtils.findGovernanceArtifacts("application/vnd.wso2-process+xml", reg);
 
-                String filters[] = filter.split(",");
                 for (String processPath : processPaths) {
                     Resource processResource = reg.get(processPath);
                     String processContent = new String((byte[]) processResource.getContent());
                     Document processXML = stringToXML(processContent);
-                    String values[];
-                    for (int i = 0; i < filters.length; i++) {
-                        values = filters[i].split(":");
-                        if("tags".equals(values[0])){
-                            String tagProcesses = getProcessListByTags(values[1]);
-                            JSONArray processes = new JSONArray(tagProcesses);
-                            for (int j = 0; j < processes.length(); j++) {
-                                JSONObject obj = processes.getJSONObject(j);
-                                object.put("name", obj.getString("processname"));
-                                object.put("version", obj.getString("processversion"));
-                            }
-                        }
-                        else if(processXML.getElementsByTagName(values[0]).item(0) != null){
-                            if(values[1].equals(
-                                processXML.getElementsByTagName(values[0]).item(0).getTextContent())){
+
+                    Iterator<String> keys = filters.keys();
+                    while(keys.hasNext()){
+                        String key = keys.next();
+                        if(processXML.getElementsByTagName(key).item(0) != null){
+                            if(filters.getString(key).equals(
+                                    processXML.getElementsByTagName(key).item(0).getTextContent())){
                                 count++;
                             }
                         }
                     }
 
-                    if(count == filters.length){
+                    if(filter.contains(ProcessStoreConstants.TAGS)){
+                        if(count == (filters.length() - 1)){
+                            String pName = processXML.getElementsByTagName("name").item(0).getTextContent();
+                            String pVersion = processXML.getElementsByTagName("version").item(0).getTextContent();
+                            String tag = filters.getString(ProcessStoreConstants.TAGS);
+                            String tagProcesses = getProcessListByTags(tag);
+                            JSONArray processes = new JSONArray(tagProcesses);
+                            for (int j = 0; j < processes.length(); j++) {
+                                JSONObject obj = processes.getJSONObject(j);
+                                if(pName.equals(obj.getString("processname")) && pVersion.equals(obj.getString("processversion"))){
+                                    count++;
+                                }
+                            }
+                        }
+                    }
+
+                    if(filter.contains(ProcessStoreConstants.LC_STATE)){
+                        String lcState = filters.getString(ProcessStoreConstants.LC_STATE);
+                        String list[] = GovernanceUtils.getAllArtifactPathsByLifecycleState(reg,
+                                ProcessStoreConstants.LC_NAME, lcState, ProcessStoreConstants.PROCESS_MEDIA_TYPE);
+
+                        for (int i = 0; i < list.length; i++) {
+                            if(processPath.equals(list[i])){
+                                count++;
+                            }
+                        }
+                    }
+
+                    if(count == filters.length()){
+                        object = new JSONObject();
                         object.put("name", processXML.getElementsByTagName("name").item(0).getTextContent());
                         object.put("version", processXML.getElementsByTagName("version").item(0).getTextContent());
                         results.put(object);
-                        count = 0;
                     }
+                    count = 0;
                 }
 
                 return results.toString();

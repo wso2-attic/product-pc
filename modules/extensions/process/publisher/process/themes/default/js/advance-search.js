@@ -1,11 +1,17 @@
+var tableName = "subprocess";
 function getFilters(){
     var elements = $('#process-search-form').find(":input");
-    var filters = [];
+    var filters = "{";
+    var count = 0;
     for(var i = 0; i < elements.length; i++){
         if(elements[i].value != ""){
-            filters.push(elements[i].getAttribute("name").substr(8) + ":" + elements[i].value);
+            count++;
+            if(count > 1)
+                filters = filters.concat(",");
+            filters = filters.concat(elements[i].getAttribute("name").substr(8) + ":" + elements[i].value);
         }
     }
+    filters = filters.concat("}");
     return filters;
 }
 
@@ -34,6 +40,7 @@ function searchProcesses(){
                 document.getElementById("process-search-form").reset();
                 $("#process-search-results").ajaxForm();
             }else{
+                $("#process-search-results").html("");
                 $("#process-search-results").append("<p>We are sorry but we could not find any matching assets</p>");
             }
         },
@@ -41,13 +48,12 @@ function searchProcesses(){
             alertify.error('Process retrieving error');
         }
     });
-
 }
 
 $('#process-search-btn').click(function(e){
     e.preventDefault();
     var filters = getFilters();
-    if(filters == ""){
+    if(filters == "{}"){
         alertify.error("You have not entered anything");
     }else{
         searchProcesses();
@@ -61,7 +67,6 @@ $('#okButton').click(function () {
         for(var i = 0; i < $elements.length; i++){
             if($elements[i].checked){
                 selected++;
-                var tableName = "subprocess";
                 var table = $('#table_' + tableName);
                 var referenceRow = $('#table_reference_' + tableName);
                 var newRow = referenceRow.clone().removeAttr('id');
@@ -104,4 +109,8 @@ function isAlreadyExist(value, tableName){
         }
     });
     return matched;
+}
+
+function setTableName(tblName){
+    tableName = tblName;
 }

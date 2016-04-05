@@ -482,7 +482,8 @@ function removeTag(currentElement) {
     }
 }
 
-function showSearchModal(){
+function showSearchModal(tableName){
+    setTableName(tableName);
     $("#process-search-results").html("");
     document.getElementById("process-search-form").reset();
     $("#searchModal").modal("show");
