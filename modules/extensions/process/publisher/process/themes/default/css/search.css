@@ -17,31 +17,31 @@
  *
  */
 
-.search-modal{
+.search-modal {
     width: 800px;
     margin-left: -110px;
 }
 
-.search-form{
+.search-form {
     margin-top: -5px;
 }
 
-.filter{
+.filter {
     margin-top: -5px;
 }
 
-.custom-header{
+.custom-header {
     height: 50px;
 }
 
-.custom-header h3{
+.custom-header h3 {
     margin-top: 5px;
 }
 
-#search-process, #search-process-view{
+#search-process, #search-process-view {
     margin-left: 10px;
 }
 
-.view{
+.view {
 
 }

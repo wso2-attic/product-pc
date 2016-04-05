@@ -189,7 +189,7 @@ function downloadDocument(relativePath) {
                 byteNumbers[i] = byteCharacters.charCodeAt(i);
             }
             var contentType = 'application/msword';
-            if(extension == "pdf") {
+            if (extension == "pdf") {
                 contentType = 'application/pdf';
             }
             var byteArray = new Uint8Array(byteNumbers);
@@ -206,21 +206,21 @@ function removeDocument(processName, processVersion, documentName, documentSumma
     var currentElementId = "#" + idVal;
     $(currentElementId).parent().closest("tr").remove();
 
-    if(document.getElementById("listDocs").rows.length == 0) {
+    if (document.getElementById("listDocs").rows.length == 0) {
         $('#listDocs').append('<tr><td colspan="6">No documentation associated with this process</td></tr>');
     }
 
     var removeDocInfo = {
-        'name':documentName,
-        'summary':documentSummary,
-        'url':documentUrl,
-        'path':documentPath
+        'name': documentName,
+        'summary': documentSummary,
+        'url': documentUrl,
+        'path': documentPath
     };
 
     var removeDocObj = {
-        'processName':processName,
-        'processVersion':processVersion,
-        'removeDocument':removeDocInfo
+        'processName': processName,
+        'processVersion': processVersion,
+        'removeDocument': removeDocInfo
     };
 
     $.ajax({
@@ -334,7 +334,7 @@ function confirmDialog(question) {
 function removeDocumentConfirmListener(processName, processVersion, documentName, documentSummary, documentUrl, documentPath, idVal) {
     var question = "Are you sure you want to delete " + documentName + " document permanently ?";
     var confirmModal = confirmDialog(question);
-    confirmModal.find('#okButton').click(function(event) {
+    confirmModal.find('#okButton').click(function (event) {
         removeDocument(processName, processVersion, documentName, documentSummary, documentUrl, documentPath, idVal);
         confirmModal.modal('hide');
     });
@@ -400,7 +400,7 @@ function showDocument() {
                         anchorElement.style.marginRight = "15px";
                         cellDocAction.appendChild(anchorElement);
 
-                        if(response[i].path.split('.').pop().toLowerCase() == "pdf") {
+                        if (response[i].path.split('.').pop().toLowerCase() == "pdf") {
                             viewPDFDocument(response[i].path, response[i].name, i);
                             var anchorPdfViewElement = document.createElement("a");
                             anchorPdfViewElement.setAttribute("id", "pdfDocumentView" + i);
@@ -1013,12 +1013,12 @@ function showFlowchartEditor(name, flowchartPath) {
     });
 }
 
-function removeFlowchart(){
+function removeFlowchart() {
     var name = $("#fcProcessName").val();
     var version = $("#fcProcessVersion").val();
     var question = "Are you sure you want to delete the flowchart of process " + name + " " + version + " permanently?";
     var confirmModal = confirmDialog(question);
-    confirmModal.find('#okButton').click(function(event) {
+    confirmModal.find('#okButton').click(function (event) {
         _deleteFlowchart(name, version);
         confirmModal.modal('hide');
     });
@@ -1053,7 +1053,7 @@ function validateDocument() {
 }
 
 
-$('.view').click(function(e){
+$('.view').click(function (e) {
     e.preventDefault();
     setTableName($(this).attr("data-name"));
     $("#process-search-results").html("");

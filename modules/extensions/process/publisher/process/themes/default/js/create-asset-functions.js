@@ -482,7 +482,7 @@ function removeTag(currentElement) {
     }
 }
 
-function showSearchModal(tableName){
+function showSearchModal(tableName) {
     setTableName(tableName);
     $("#process-search-results").html("");
     document.getElementById("process-search-form").reset();

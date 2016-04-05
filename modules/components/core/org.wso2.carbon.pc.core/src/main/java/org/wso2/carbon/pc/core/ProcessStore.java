@@ -1591,10 +1591,11 @@ public class ProcessStore {
 
     /**
      * Return a list of processes that match the given filters
+     *
      * @param filter
      * @return
      */
-    public String getAdvanceSearchResults(String filter){
+    public String getAdvanceSearchResults(String filter) {
         try {
 
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
@@ -1605,7 +1606,8 @@ public class ProcessStore {
             if (registryService != null) {
                 UserRegistry reg = null;
                 reg = registryService.getGovernanceSystemRegistry();
-                String[] processPaths = GovernanceUtils.findGovernanceArtifacts("application/vnd.wso2-process+xml", reg);
+                String[] processPaths = GovernanceUtils
+                        .findGovernanceArtifacts("application/vnd.wso2-process+xml", reg);
 
                 //For each process in the registry
                 for (String processPath : processPaths) {
@@ -1615,19 +1617,19 @@ public class ProcessStore {
 
                     //First filter the process by the fields in the process XML file.
                     Iterator<String> keys = filters.keys();
-                    while(keys.hasNext()){
+                    while (keys.hasNext()) {
                         String key = keys.next();
-                        if(processXML.getElementsByTagName(key).item(0) != null){
-                            if(filters.getString(key).equals(
-                                    processXML.getElementsByTagName(key).item(0).getTextContent())){
+                        if (processXML.getElementsByTagName(key).item(0) != null) {
+                            if (filters.getString(key)
+                                    .equals(processXML.getElementsByTagName(key).item(0).getTextContent())) {
                                 count++;
                             }
                         }
                     }
 
                     //Then check whether the filters has a search tag.
-                    if(filter.contains(ProcessStoreConstants.TAGS)){
-                        if(count == (filters.length() - 1)){
+                    if (filter.contains(ProcessStoreConstants.TAGS)) {
+                        if (count == (filters.length() - 1)) {
                             String pName = processXML.getElementsByTagName("name").item(0).getTextContent();
                             String pVersion = processXML.getElementsByTagName("version").item(0).getTextContent();
                             String tag = filters.getString(ProcessStoreConstants.TAGS);
@@ -1635,7 +1637,8 @@ public class ProcessStore {
                             JSONArray processes = new JSONArray(tagProcesses);
                             for (int j = 0; j < processes.length(); j++) {
                                 JSONObject obj = processes.getJSONObject(j);
-                                if(pName.equals(obj.getString("processname")) && pVersion.equals(obj.getString("processversion"))){
+                                if (pName.equals(obj.getString("processname")) && pVersion
+                                        .equals(obj.getString("processversion"))) {
                                     count++;
                                 }
                             }
@@ -1643,20 +1646,21 @@ public class ProcessStore {
                     }
 
                     //Then chekc whether the filters has a lifecycle state
-                    if(filter.contains(ProcessStoreConstants.LC_STATE)){
+                    if (filter.contains(ProcessStoreConstants.LC_STATE)) {
                         String lcState = filters.getString(ProcessStoreConstants.LC_STATE);
-                        String list[] = GovernanceUtils.getAllArtifactPathsByLifecycleState(reg,
-                                ProcessStoreConstants.LC_NAME, lcState, ProcessStoreConstants.PROCESS_MEDIA_TYPE);
+                        String list[] = GovernanceUtils
+                                .getAllArtifactPathsByLifecycleState(reg, ProcessStoreConstants.LC_NAME, lcState,
+                                        ProcessStoreConstants.PROCESS_MEDIA_TYPE);
 
                         for (int i = 0; i < list.length; i++) {
-                            if(processPath.equals(list[i])){
+                            if (processPath.equals(list[i])) {
                                 count++;
                             }
                         }
                     }
 
                     //If all the filters match this process
-                    if(count == filters.length()){
+                    if (count == filters.length()) {
                         object = new JSONObject();
                         object.put("name", processXML.getElementsByTagName("name").item(0).getTextContent());
                         object.put("version", processXML.getElementsByTagName("version").item(0).getTextContent());
@@ -1668,11 +1672,11 @@ public class ProcessStore {
                 return results.toString();
             }
         } catch (RegistryException e) {
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug(e.getMessage(), e);
             }
         } catch (Exception e) {
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug(e.getMessage(), e);
             }
         }
@@ -1681,28 +1685,29 @@ public class ProcessStore {
 
     /**
      * Given a tag value, returns a list of processes having the same tag value.
+     *
      * @param tag
      * @return
      */
-    private String getProcessListByTags(String tag){
+    private String getProcessListByTags(String tag) {
         try {
             String processTags = getProcessTags();
             JSONObject tagsObject = new JSONObject(processTags);
             Iterator<String> keys = tagsObject.keys();
-            while (keys.hasNext()){
+            while (keys.hasNext()) {
                 String key = keys.next();
-                if(tag.equals(key)){
+                if (tag.equals(key)) {
                     return tagsObject.getJSONArray(key).toString();
                 }
             }
 
         } catch (ProcessCenterException e) {
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug(e.getMessage(), e);
             }
         } catch (JSONException e) {
             String errorMsg = "Error in the format of the given JSON string";
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug(errorMsg, e);
             }
         }

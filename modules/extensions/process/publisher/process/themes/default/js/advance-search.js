@@ -20,14 +20,14 @@
 var tableName = "subprocess";
 
 //get the filter values from the search form and combine them to a JSON string
-function getFilters(){
+function getFilters() {
     var elements = $('#process-search-form').find(":input");
     var filters = "{";
     var count = 0;
-    for(var i = 0; i < elements.length; i++){
-        if(elements[i].value != ""){
+    for (var i = 0; i < elements.length; i++) {
+        if (elements[i].value != "") {
             count++;
-            if(count > 1)
+            if (count > 1)
                 filters = filters.concat(",");
             filters = filters.concat(elements[i].getAttribute("name").substr(8) + ":" + elements[i].value);
         }
@@ -37,7 +37,7 @@ function getFilters(){
 }
 
 //Search process using the given filters
-function searchProcesses(){
+function searchProcesses() {
     var filters = [];
     filters = getFilters();
     $.ajax({
@@ -48,20 +48,20 @@ function searchProcesses(){
         },
         success: function (response) {
             var processes = JSON.parse(response);
-            if(processes.length > 0){ //if there is a result, append it as a checkbox to the search result div
+            if (processes.length > 0) { //if there is a result, append it as a checkbox to the search result div
                 $("#process-search-results").html("");
-                for(var i=0; i<processes.length; i++){
+                for (var i = 0; i < processes.length; i++) {
                     var id = "checkbox" + (i + 1);
-                    var checkbox="";
+                    var checkbox = "";
                     checkbox += "<div class=\"checkbox checkbox-primary\">";
                     checkbox += "    <input id=\"" + id + "\" class=\"styled\" type=\"checkbox\">";
-                    checkbox += "    <label for=\""+ id +"\">" + processes[i].name + "-" + processes[i].version + "<\/label>";
+                    checkbox += "    <label for=\"" + id + "\">" + processes[i].name + "-" + processes[i].version + "<\/label>";
                     checkbox += "<\/div>";
                     $("#process-search-results").append(checkbox);
                 }
                 document.getElementById("process-search-form").reset();//reset the form
                 $("#process-search-results").ajaxForm();//to prevent the response from redirecting
-            }else{
+            } else {
                 $("#process-search-results").html("");
                 $("#process-search-results").append("<p>We are sorry but we could not find any matching assets</p>");
             }
@@ -72,42 +72,42 @@ function searchProcesses(){
     });
 }
 
-$('#process-search-btn').click(function(e){
+$('#process-search-btn').click(function (e) {
     e.preventDefault();
     var filters = getFilters();
-    if(filters == "{}"){
+    if (filters == "{}") {
         alertify.error("You have not entered anything");
-    }else{
+    } else {
         searchProcesses();
     }
 });
 
 $('#okButton').click(function () {
     var $elements = $("#process-search-results").find(":input");
-    if($elements.length > 0){
+    if ($elements.length > 0) {
         var selected = 0;
-        for(var i = 0; i < $elements.length; i++){
-            if($elements[i].checked){
+        for (var i = 0; i < $elements.length; i++) {
+            if ($elements[i].checked) {
                 selected++;
                 var table = $('#table_' + tableName);
                 var referenceRow = $('#table_reference_' + tableName);
                 var newRow = referenceRow.clone().removeAttr('id');
-                if(!isAlreadyExist($("label[for='"+ $elements[i].id + "']").text(), tableName)) {
+                if (!isAlreadyExist($("label[for='" + $elements[i].id + "']").text(), tableName)) {
                     $('input[type="text"]', newRow).val($("label[for='" + $elements[i].id + "']").text());
                     table.show().append(newRow);
                 }
             }
         }
-        if(selected == 0){
+        if (selected == 0) {
             alertify.error("You have not selected any process");
-        }else
+        } else
             $("#searchModal").modal("hide");
-    }else{
+    } else {
         alertify.error("You have not selected any process");
     }
 })
 
-$('#form-clear-btn').click(function(e){
+$('#form-clear-btn').click(function (e) {
     e.preventDefault();
     document.getElementById("process-search-form").reset();
     $("#process-search-results").html("");
@@ -123,7 +123,7 @@ function isInputFieldEmpty(tableName) {
     return isFieldEmpty;
 }
 
-function isAlreadyExist(value, tableName){
+function isAlreadyExist(value, tableName) {
     var matched = false;
     $('#table_' + tableName + ' tbody tr').each(function () {
         if ($(this).find('td:eq(0) input').val() == value) {
@@ -133,6 +133,6 @@ function isAlreadyExist(value, tableName){
     return matched;
 }
 
-function setTableName(tblName){
+function setTableName(tblName) {
     tableName = tblName;
 }
