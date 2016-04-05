@@ -1,59 +1,59 @@
 <h2 id="view-header">{{assets.tables.[0].fields.name.value}}</h2>
 <br/>
 <div id="overviewDiv">
-            <table class="table table-responsive" style="width: 8cm;border-bottom:0px !important;">
-                <tbody>
-                <tr>
-                    <td width="40%" style="border: 0px !important;">Version:</td>
-                    <td width="60%" id="process-version" style="border: 0px !important;">{{assets.tables.[0].fields.version.value}}</td>
-                </tr>
-                <tr>
-                    <td width="40%" style="border: 0px !important;">Owner:</td>
-                    <td width="40%" style="border: 0px !important;" contenteditable="true" onblur="editProcessOwner(this)">{{assets.tables.[0].fields.owner.value}}</td>
-                    <td width="20%" style="border: 0px !important;"><span id="processOwnerUpdateBtn" class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Click here to update the value" style="color:#0081c2;cursor: pointer;display: none;" onclick="updateProcessOwner(this)"></span></td>
-                </tr>
-                </tbody>
-            </table>
+    <table class="table table-responsive" style="width: 8cm;border-bottom:0px !important;">
+        <tbody>
+        <tr>
+            <td width="40%" style="border: 0px !important;">Version:</td>
+            <td width="60%" id="process-version" style="border: 0px !important;">{{assets.tables.[0].fields.version.value}}</td>
+        </tr>
+        <tr>
+            <td width="40%" style="border: 0px !important;">Owner:</td>
+            <td width="40%" style="border: 0px !important;" contenteditable="true" onblur="editProcessOwner(this)">{{assets.tables.[0].fields.owner.value}}</td>
+            <td width="20%" style="border: 0px !important;"><span id="processOwnerUpdateBtn" class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Click here to update the value" style="color:#0081c2;cursor: pointer;display: none;" onclick="updateProcessOwner(this)"></span></td>
+        </tr>
+        </tbody>
+    </table>
 
-            <div class="control-group" style="display: inline-block">
-                {{#if processTextAvaliable}}
-                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View/Edit Process Text</button></div>
-                    <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()" style="display: none">Describe process in text</button></div>
-                {{else}}
-                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View/Edit Process Text</button></div>
-                    <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button></div>
-                {{/if}}
-            </div>
-
-            <div class="control-group" style="display: inline-block">
-                {{#if bpmnAvaliable}}
-                    <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
-                    <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
-                {{else}}
-                    <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
-                {{/if}}
-            </div>
-
-            <div class="control-group" style="display: inline-block">
-                {{#if documentAvailable}}
-                    <div id="sddiv"><button id="viewDocumentButton" class="btn btn-primary" onclick="showDocument()">View Document</button></div>
-                {{else}}
-                    <div id="addiv"><button id="addDocumentButton" class="btn btn-primary" onclick="associateDoc()">Associate Document</button></div>
-                {{/if}}
-            </div>
-
-            <div class="control-group" style="display: inline-block;">
-                {{#if flowchartAvailable}}
-                    <div id="sfdiv">
-                        <button id="showFlowchartButton" class="btn btn-primary"
-                                onclick="showFlowchartEditor('{{assets.tables.[0].fields.name.value}}', '{{flowchartPath}}')">Edit Flowchart</button>
-                    </div>
-                {{else}}
-                    <div id="aFdiv"><button id="addFlowchartButton" class="btn btn-primary" onclick="associateEditorFlowChart()">Associate Flowchart</button></div>
-                {{/if}}
-            </div>
     <div class="control-group" style="display: inline-block">
-                
+        {{#if processTextAvaliable}}
+            <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View/Edit Process Text</button></div>
+            <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()" style="display: none">Describe process in text</button></div>
+        {{else}}
+            <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View/Edit Process Text</button></div>
+            <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button></div>
+        {{/if}}
+    </div>
+
+    <div class="control-group" style="display: inline-block">
+        {{#if bpmnAvaliable}}
+            <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
+            <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
+        {{else}}
+            <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
+        {{/if}}
+    </div>
+
+    <div class="control-group" style="display: inline-block">
+        {{#if documentAvailable}}
+            <div id="sddiv"><button id="viewDocumentButton" class="btn btn-primary" onclick="showDocument()">View Document</button></div>
+        {{else}}
+            <div id="addiv"><button id="addDocumentButton" class="btn btn-primary" onclick="associateDoc()">Associate Document</button></div>
+        {{/if}}
+    </div>
+
+    <div class="control-group" style="display: inline-block;">
+        {{#if flowchartAvailable}}
+            <div id="sfdiv">
+                <button id="showFlowchartButton" class="btn btn-primary"
+                        onclick="showFlowchartEditor('{{assets.tables.[0].fields.name.value}}', '{{flowchartPath}}')">Edit Flowchart</button>
+            </div>
+        {{else}}
+            <div id="aFdiv"><button id="addFlowchartButton" class="btn btn-primary" onclick="associateEditorFlowChart()">Associate Flowchart</button></div>
+        {{/if}}
+    </div>
+    <div class="control-group" style="display: inline-block">
+
         <button id="pdfViewer" class="btn btn-primary" style="display: none" onclick="showPDF()">Show PDF</button>
         <button id="pdfUploader" class="btn btn-primary" style="display:none" onclick="associatePdf()">Associate PDF</button>
     </div>
@@ -74,7 +74,12 @@
                     &nbsp;
                 </div>
                 <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                    <div class="add-unbounded-row"><a data-name="subprocess" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Subprocess</a></div>
+                    <div class="add-unbounded-row">
+                        <a data-name="subprocess" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Subprocess</a>
+                        <button class="btn btn-primary view"  data-name="subprocess" id="search-process-view">
+                            <i class="fa fa-search"></i> Search Process
+                        </button>
+                    </div>
                     <table class="tablex cu-data-table js-unbounded-table" id="table_subprocess">
                         <thead>
                         <tr><th style="background: none;"></th>
@@ -102,7 +107,12 @@
                     &nbsp;
                 </div>
                 <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                    <div class="add-unbounded-row"><a data-name="successor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Successor</a></div>
+                    <div class="add-unbounded-row">
+                        <a data-name="successor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Successor</a>
+                        <button class="btn btn-primary view" data-name="successor" id="search-process-view">
+                            <i class="fa fa-search"></i> Search Process
+                        </button>
+                    </div>
                     <table class="tablex cu-data-table js-unbounded-table" id="table_successor">
                         <thead>
                         <tr><th style="background: none;"></th>
@@ -132,7 +142,12 @@
                     &nbsp;
                 </div>
                 <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                    <div class="add-unbounded-row"><a data-name="predecessor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Predecessor</a></div>
+                    <div class="add-unbounded-row">
+                        <a data-name="predecessor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Predecessor</a>
+                        <button class="btn btn-primary view" data-name="predecessor" id="search-process">
+                            <i class="fa fa-search"></i> Search Process
+                        </button>
+                    </div>
                     <table class="tablex cu-data-table js-unbounded-table" id="table_predecessor">
                         <thead>
                         <tr><th style="background: none;"></th>
@@ -181,9 +196,9 @@
 
 <div id="bpmnViewDiv" style="display: none">
     <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button><br /><br />
-<div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
-    <img id="bpmnImage" style="position: relative;top: 50%;left: 50%;transform: translateX(-50%) translateY(-50%);" src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
-</div>
+    <div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
+        <img id="bpmnImage" style="position: relative;top: 50%;left: 50%;transform: translateX(-50%) translateY(-50%);" src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
+    </div>
 </div>
 
 <div id="bpmnEditDiv" style="display:none">
@@ -455,6 +470,71 @@
         <div id="googleDocViewer">
         </div>
         <div id="pdfDocViewer">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="searchModal">
+    <div class="modal-dialog">
+        <div class="modal-content search-modal">
+            <div class="modal-header custom-header">
+                <a class="close" data-dismiss="modal" >&times;</a>
+                <h3>Search Processes</h3>
+            </div>
+            <div class="modal-body">
+                <div class="well asset-well search-form">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12 advanced-search-form-container">
+                                <form id="process-search-form">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="process-name">Name</label>
+                                                <input type="text" class="form-control" id="process-name"  name="process-name" placeholder="Enter an asset name">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-tags">Tags</label>
+                                                <input type="text" class="form-control" id="process-tags" name="process-tags" placeholder="Enter a tag">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-description">Description</label>
+                                                <input type="text" class="form-control" id="process-description" name="process-description" placeholder="Process Description">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-content">Content</label>
+                                                <input type="text" class="form-control" id="process-content" name="process-content" placeholder="PDF Content">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="process-version">Version</label>
+                                                <input type="text" class="form-control" id="process-version" name="process-version" placeholder="Version Eg: 1.0.0">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-lcState">Lifecycle State</label>
+                                                <input type="text" class="form-control" id="process-lcState" name="process-lcState" placeholder="Lifecycle State">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-owner">Owner</label>
+                                                <input type="text" class="form-control" id="process-owner" name="process-owner" placeholder="Process Owner">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button id='process-search-btn' type="submit" class="btn btn-primary">SEARCH</button>
+                                    <button id="form-clear-btn" class="btn btn-default">CLEAR</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="process-search-results" class="well asset-well">
+                    <label>Search Results</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="btn" data-dismiss="modal">Cancel</a>
+                <a href="#!" id="okButton" class="btn btn-primary">Add</a>
+            </div>
         </div>
     </div>
 </div>

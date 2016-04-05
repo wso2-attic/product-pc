@@ -1,4 +1,25 @@
+/*
+ *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+
 var tableName = "subprocess";
+
+//get the filter values from the search form and combine them to a JSON string
 function getFilters(){
     var elements = $('#process-search-form').find(":input");
     var filters = "{";
@@ -15,6 +36,7 @@ function getFilters(){
     return filters;
 }
 
+//Search process using the given filters
 function searchProcesses(){
     var filters = [];
     filters = getFilters();
@@ -26,7 +48,7 @@ function searchProcesses(){
         },
         success: function (response) {
             var processes = JSON.parse(response);
-            if(processes.length > 0){
+            if(processes.length > 0){ //if there is a result, append it as a checkbox to the search result div
                 $("#process-search-results").html("");
                 for(var i=0; i<processes.length; i++){
                     var id = "checkbox" + (i + 1);
@@ -37,8 +59,8 @@ function searchProcesses(){
                     checkbox += "<\/div>";
                     $("#process-search-results").append(checkbox);
                 }
-                document.getElementById("process-search-form").reset();
-                $("#process-search-results").ajaxForm();
+                document.getElementById("process-search-form").reset();//reset the form
+                $("#process-search-results").ajaxForm();//to prevent the response from redirecting
             }else{
                 $("#process-search-results").html("");
                 $("#process-search-results").append("<p>We are sorry but we could not find any matching assets</p>");

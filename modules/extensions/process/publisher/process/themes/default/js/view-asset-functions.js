@@ -312,22 +312,22 @@ function viewPDF(pdfUrl, heading, iteration) {
 function confirmDialog(question) {
     var confirmModal =
         $('<div class="modal fade">' +
-            '<div class="modal-dialog">' +
-            '<div class="modal-content">' +
-            '<div class="modal-header">' +
-            '<a class="close" data-dismiss="modal" >&times;</a>' +
-            '<h3>Confirm delete</h3>' +
-            '</div>' +
-            '<div class="modal-body">' +
-            '<p>' + question + '</p>' +
-            '</div>' +
-            '<div class="modal-footer">' +
-            '<a href="#!" class="btn" data-dismiss="modal">cancel</a>' +
-            '<a href="#!" id="okButton" class="btn btn-primary">delete</a>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>');
+        '<div class="modal-dialog">' +
+        '<div class="modal-content">' +
+        '<div class="modal-header">' +
+        '<a class="close" data-dismiss="modal" >&times;</a>' +
+        '<h3>Confirm delete</h3>' +
+        '</div>' +
+        '<div class="modal-body">' +
+        '<p>' + question + '</p>' +
+        '</div>' +
+        '<div class="modal-footer">' +
+        '<a href="#!" class="btn" data-dismiss="modal">cancel</a>' +
+        '<a href="#!" id="okButton" class="btn btn-primary">delete</a>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>');
     return confirmModal;
 }
 
@@ -1051,3 +1051,12 @@ function validateDocument() {
     }
     return true;
 }
+
+
+$('.view').click(function(e){
+    e.preventDefault();
+    setTableName($(this).attr("data-name"));
+    $("#process-search-results").html("");
+    document.getElementById("process-search-form").reset();
+    $("#searchModal").modal("show");
+});

@@ -1589,6 +1589,11 @@ public class ProcessStore {
         }
     }
 
+    /**
+     * Return a list of processes that match the given filters
+     * @param filter
+     * @return
+     */
     public String getAdvanceSearchResults(String filter){
         try {
 
@@ -1602,11 +1607,13 @@ public class ProcessStore {
                 reg = registryService.getGovernanceSystemRegistry();
                 String[] processPaths = GovernanceUtils.findGovernanceArtifacts("application/vnd.wso2-process+xml", reg);
 
+                //For each process in the registry
                 for (String processPath : processPaths) {
                     Resource processResource = reg.get(processPath);
                     String processContent = new String((byte[]) processResource.getContent());
                     Document processXML = stringToXML(processContent);
 
+                    //First filter the process by the fields in the process XML file.
                     Iterator<String> keys = filters.keys();
                     while(keys.hasNext()){
                         String key = keys.next();
@@ -1618,6 +1625,7 @@ public class ProcessStore {
                         }
                     }
 
+                    //Then check whether the filters has a search tag.
                     if(filter.contains(ProcessStoreConstants.TAGS)){
                         if(count == (filters.length() - 1)){
                             String pName = processXML.getElementsByTagName("name").item(0).getTextContent();
@@ -1634,6 +1642,7 @@ public class ProcessStore {
                         }
                     }
 
+                    //Then chekc whether the filters has a lifecycle state
                     if(filter.contains(ProcessStoreConstants.LC_STATE)){
                         String lcState = filters.getString(ProcessStoreConstants.LC_STATE);
                         String list[] = GovernanceUtils.getAllArtifactPathsByLifecycleState(reg,
@@ -1646,6 +1655,7 @@ public class ProcessStore {
                         }
                     }
 
+                    //If all the filters match this process
                     if(count == filters.length()){
                         object = new JSONObject();
                         object.put("name", processXML.getElementsByTagName("name").item(0).getTextContent());
@@ -1658,13 +1668,22 @@ public class ProcessStore {
                 return results.toString();
             }
         } catch (RegistryException e) {
-            e.printStackTrace();
+            if(log.isDebugEnabled()){
+                log.debug(e.getMessage(), e);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            if(log.isDebugEnabled()){
+                log.debug(e.getMessage(), e);
+            }
         }
         return "NA";
     }
 
+    /**
+     * Given a tag value, returns a list of processes having the same tag value.
+     * @param tag
+     * @return
+     */
     private String getProcessListByTags(String tag){
         try {
             String processTags = getProcessTags();
@@ -1678,9 +1697,14 @@ public class ProcessStore {
             }
 
         } catch (ProcessCenterException e) {
-            e.printStackTrace();
+            if(log.isDebugEnabled()){
+                log.debug(e.getMessage(), e);
+            }
         } catch (JSONException e) {
-            e.printStackTrace();
+            String errorMsg = "Error in the format of the given JSON string";
+            if(log.isDebugEnabled()){
+                log.debug(errorMsg, e);
+            }
         }
         return null;
     }

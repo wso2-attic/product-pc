@@ -11,7 +11,5 @@ public class ProcessStoreConstants {
 	public static final String LC_STATE = "lcState";
 	public static final String PROCESS_MEDIA_TYPE = "application/vnd.wso2-process+xml";
 
-	public static final String LC_INITIAL = "Initial";
-
 	public static final String LC_NAME = "SampleLifeCycle2";
 }
