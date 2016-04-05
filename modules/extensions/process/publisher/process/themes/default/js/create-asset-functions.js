@@ -481,3 +481,9 @@ function removeTag(currentElement) {
         tagList.splice(index, 1);
     }
 }
+
+function showSearchModal(){
+    $("#process-search-results").html("");
+    document.getElementById("process-search-form").reset();
+    $("#searchModal").modal("show");
+}

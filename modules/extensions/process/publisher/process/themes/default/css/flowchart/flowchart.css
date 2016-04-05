@@ -22,24 +22,12 @@
     touch-action: none;
 }
 
-.basic {
-
-}
-
-.myLabel {
-
-}
-
 .window > strong > p {
     white-space: pre-wrap;
 }
 
 .start > i {
     margin-top: -10px;
-}
-
-.step > i {
-
 }
 
 .close-icon {

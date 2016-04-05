@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -1585,6 +1586,81 @@ public class ProcessStore {
             String errorMessage = "Failed to upload the flowchart for process " + name + "-" + version;
             log.error(errorMessage, e);
         }
+    }
+
+    public String getAdvanceSearchResults(String filter){
+        try {
+
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            int count = 0;
+            JSONArray results = new JSONArray();
+            JSONObject object = new JSONObject();
+            if (registryService != null) {
+                UserRegistry reg = null;
+                reg = registryService.getGovernanceSystemRegistry();
+                String[] processPaths = GovernanceUtils.findGovernanceArtifacts("application/vnd.wso2-process+xml", reg);
+
+                String filters[] = filter.split(",");
+                for (String processPath : processPaths) {
+                    Resource processResource = reg.get(processPath);
+                    String processContent = new String((byte[]) processResource.getContent());
+                    Document processXML = stringToXML(processContent);
+                    String values[];
+                    for (int i = 0; i < filters.length; i++) {
+                        values = filters[i].split(":");
+                        if("tags".equals(values[0])){
+                            String tagProcesses = getProcessListByTags(values[1]);
+                            JSONArray processes = new JSONArray(tagProcesses);
+                            for (int j = 0; j < processes.length(); j++) {
+                                JSONObject obj = processes.getJSONObject(j);
+                                object.put("name", obj.getString("processname"));
+                                object.put("version", obj.getString("processversion"));
+                            }
+                        }
+                        else if(processXML.getElementsByTagName(values[0]).item(0) != null){
+                            if(values[1].equals(
+                                processXML.getElementsByTagName(values[0]).item(0).getTextContent())){
+                                count++;
+                            }
+                        }
+                    }
+
+                    if(count == filters.length){
+                        object.put("name", processXML.getElementsByTagName("name").item(0).getTextContent());
+                        object.put("version", processXML.getElementsByTagName("version").item(0).getTextContent());
+                        results.put(object);
+                        count = 0;
+                    }
+                }
+
+                return results.toString();
+            }
+        } catch (RegistryException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "NA";
+    }
+
+    private String getProcessListByTags(String tag){
+        try {
+            String processTags = getProcessTags();
+            JSONObject tagsObject = new JSONObject(processTags);
+            Iterator<String> keys = tagsObject.keys();
+            while (keys.hasNext()){
+                String key = keys.next();
+                if(tag.equals(key)){
+                    return tagsObject.getJSONArray(key).toString();
+                }
+            }
+
+        } catch (ProcessCenterException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     //    public static void main(String[] args) {

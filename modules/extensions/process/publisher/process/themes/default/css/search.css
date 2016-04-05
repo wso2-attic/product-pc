@@ -1,0 +1,24 @@
+.search-modal{
+    width: 800px;
+    margin-left: -110px;
+}
+
+.search-form{
+    margin-top: -5px;
+}
+
+.filter{
+    margin-top: -5px;
+}
+
+.custom-header{
+    height: 50px;
+}
+
+.custom-header h3{
+    margin-top: 5px;
+}
+
+#search-process{
+    margin-left: 10px;
+}
