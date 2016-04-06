@@ -36,36 +36,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Tags</label>
+                        <label  class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Tags</label>
                         <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                            <select id="_tags" class="tag-ui-selectbox form-control select2-hidden-accessible" multiple="" name="_tags" tabindex="-1" aria-hidden="true">
-                            </select>
-                            <span id = "span" class="select2 select2-container select2-container--default select2-container--below" dir="ltr" style="width: 142px;">
-                                <span class="selection">
-                                    <span class="select2-selection select2-selection--multiple" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false" tabindex="0">
-                                        <ul class="select2-selection__rendered">
-                                            <li id="tag-box-list" class="select2-search select2-search--inline">
-                                                <input id="tag-box" class="select2-search__field" type="search" tabindex="-1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="textbox" placeholder="" style="width: 2.25em;">
-                                            </li>
-                                        </ul>
-                                        <span class="select2-container--default select2-container--open select2-container--focus">
-                                            <span class="select2-dropdown select2-dropdown--above" dir="ltr" style="width: 142px">
-                                                <span class="select2-results">
-                                                    <ul class="select2-results__options" role="tree" aria-multiselectable="true" id="select2-_tags-6j-results" aria-expanded="true" aria-hidden="false">
-                                                        <li id="select2-results__option" role="treeitem" class="select2-results__option" style="display: none">Please enter 2 or more characters</li>
-                                                        <li id="select2-results__option--highlighted" class="select2-results__option select2-results__option--highlighted" role="treeitem" aria-selected="false" style="display: none" onclick="addNewTag()"></li>
-                                                    </ul>
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </span>
-                                </span>
-                                <span class="dropdown-wrapper" aria-hidden="true"></span>
-                            </span>
+                            <input type="text" id="tag-box" />
                         </div>
                     </div>
                 </form>
-
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <button class="btn btn-primary" onclick="showTextEditor(this)">Describe process in text</button>
@@ -73,7 +49,6 @@
                         <button class="btn btn-primary" onclick="associateFlowChart(this)">Associate Flow Chart</button>
                         <button class="btn btn-primary" onclick="associateDocument(this)">Documents</button>
                         <button class="btn btn-primary" onclick="associatePdf(this)">Associate PDF</button>
-
                     </div>
                 </div>
 
@@ -215,7 +190,6 @@
                                             <input type="text" class="required validInput" id="docName" name="docName" style="width:100%">
                                         </div>
                                     </div>
-
                                     <div class="control-group">
                                         <label class="control-label" for="textarea">Summary</label>
                                         <div class="controls">

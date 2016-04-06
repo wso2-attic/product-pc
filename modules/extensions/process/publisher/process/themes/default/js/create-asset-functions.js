@@ -26,41 +26,20 @@ window.onload = function () {
     getProcessList();
     getAllProcessTags();
 
-    $('#span').click(function () {
-        $("#tag-box").focus()
+    $('#tag-box').tokenfield({
+        autocomplete: {
+            source: allProcessTags,
+            delay: 100
+        },
+        showAutocompleteOnFocus: true
     });
 
-    $("#tag-box").keyup(function (e) {
-
-        var tagValue = $("#tag-box").val().trim();
-        var duplicate = $.inArray(tagValue, tagList);
-
-        if (duplicate >= 0) {
-            $("#select2-results__option--highlighted").hide();
-            $("#select2-results__option").hide();
-            $('#tag-box').val('');
-        }
-
-        if (e.which == 13 && tagValue.length >= 2) {
-            addNewTag();
-            $("#select2-results__option").hide();
-            $("#select2-results__option--highlighted").hide();
-        }
-        else {
-            updateTextBox(tagValue);
-        }
-    });
-
-    $("#tag-box").focusin(function () {
-
-        var tagValue = $("#tag-box").val().trim();
-        updateTextBox(tagValue);
-    });
-
-
-    $("#span").focusout(function () {
-        $("#select2-results__option").hide();
-        $("#select2-results__option--highlighted").hide();
+    $('#tag-box').on('tokenfield:createtoken', function (event) {
+        var existingTokens = $(this).tokenfield('getTokens');
+        $.each(existingTokens, function(index, token) {
+            if (token.value === event.attrs.value)
+                event.preventDefault();
+        });
     });
 }
 
@@ -148,7 +127,6 @@ function saveProcess(currentElement) {
         alertify.error('please fill the required fields.');
     } else {
         // save the process
-
         $.ajax({
             url: 'apis/create_process',
             type: 'POST',
@@ -172,13 +150,13 @@ function saveProcess(currentElement) {
 }
 
 function getProcessInfo() {
-    var tags = tagList.toString();
+    tagList = $('#tag-box').val().split(",");
     var processDetails = {
         'processName': $("#pName").val(),
         'processVersion': $("#pVersion").val(),
         'processOwner': $("#pOwner").val(),
         'processDescription': $("#overview_description").val(),
-        'processTags': tags,
+        'processTags': tagList.toString(),
         'subprocess': readSubprocessTable(),
         'successor': readSuccessorTable(),
         'predecessor': readPredecessorTable()
@@ -343,6 +321,7 @@ function getAllProcessTags() {
     $.ajax({
         url: '/publisher/assets/process/apis/get_process_tags',
         type: 'GET',
+        async: false,
         success: function (data) {
             var processTagsObj = JSON.parse(data);
             if (!$.isEmptyObject(processTagsObj)) {
@@ -434,8 +413,6 @@ function updateTextBox(tagValue) {
         $("#select2-results__option--highlighted").hide();
         $("#select2-results__option").text("Please enter 2 or more characters");
         $("#select2-results__option").show();
-
-
     }
     else if (tagValue.length == 1) {
         $("#select2-results__option--highlighted").hide();
@@ -446,38 +423,5 @@ function updateTextBox(tagValue) {
         $("#select2-results__option").hide();
         $("#select2-results__option--highlighted").text(tagValue);
         $("#select2-results__option--highlighted").show();
-
-
-    }
-}
-
-function addNewTag() {
-    var tagValue = $("#tag-box").val().trim();
-
-    if (tagValue) {
-        tagList.push(tagValue);
-        $('#_tags').append($("<option></option>").attr("value", tagValue).text(tagValue));
-
-        $("#tag-box-list").before('<li class="select2-selection__choice" title="' + tagValue + '">' +
-        '<span class="select2-selection__choice__remove" role="presentation" onclick="removeTag(this)">×</span>' + tagValue + '</li>');
-        $('#tag-box').val('');
-    }
-}
-
-function removeTag(currentElement) {
-
-    var parent = $(currentElement).parent();
-    var tagName = parent.attr("title");
-
-    $('#_tags option').each(function () {
-        if ($(this).val() == tagName) {
-            $(this).remove();
-        }
-    })
-    $(parent).remove();
-
-    var index = jQuery.inArray(tagName, tagList);
-    if (index > -1) {
-        tagList.splice(index, 1);
     }
 }
