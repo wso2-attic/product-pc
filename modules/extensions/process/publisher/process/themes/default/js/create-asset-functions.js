@@ -227,21 +227,52 @@ function completeTextDetails() {
     return true;
 }
 
+function isAlreadyExist(value, tableName) {
+    var matched = false;
+    $('#table_' + tableName + ' tbody tr').each(function () {
+        if ($(this).find('td:eq(0) input').val() == value) {
+            matched = true;
+        }
+    });
+    return matched;
+}
+
 function subProcessNamesAutoComplete() {
+    var temp = processNames.slice();
+    for (var i = 0; i < processNames.length; i++) {
+        if (isAlreadyExist(processNames[i], "subprocess")) {
+            temp[i] = "";
+        }
+    }
+
     $(".subprocess_Name").autocomplete({
-        source: processNames
+        source: temp
     });
 }
 
 function successorNameAutoComplete() {
+    var temp = processNames.slice();
+    for (var i = 0; i < processNames.length; i++) {
+        if (isAlreadyExist(processNames[i], "successor")) {
+            temp[i] = "";
+        }
+    }
+
     $(".successor_Name").autocomplete({
-        source: processNames
+        source: temp
     });
 }
 
 function predecessorNameAutoComplete() {
+    var temp = processNames.slice();
+    for (var i = 0; i < processNames.length; i++) {
+        if (isAlreadyExist(processNames[i], "predecessor")) {
+            temp[i] = "";
+        }
+    }
+
     $(".predecessor_Name").autocomplete({
-        source: processNames
+        source: temp
     });
 }
 
@@ -480,4 +511,16 @@ function removeTag(currentElement) {
     if (index > -1) {
         tagList.splice(index, 1);
     }
+}
+
+function showSearchModal(tableName) {
+    setTableName(tableName);
+    $("#process-search-results").html("");
+    document.getElementById("process-search-form").reset();
+    $("#searchModal").modal("show");
+}
+
+function deleteProcess(element) {
+    document.getElementById("table_" + element.getAttribute("data-name")).
+        deleteRow(element.parentElement.parentElement.rowIndex);
 }

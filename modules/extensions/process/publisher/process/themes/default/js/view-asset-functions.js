@@ -189,7 +189,7 @@ function downloadDocument(relativePath) {
                 byteNumbers[i] = byteCharacters.charCodeAt(i);
             }
             var contentType = 'application/msword';
-            if(extension == "pdf") {
+            if (extension == "pdf") {
                 contentType = 'application/pdf';
             }
             var byteArray = new Uint8Array(byteNumbers);
@@ -206,21 +206,21 @@ function removeDocument(processName, processVersion, documentName, documentSumma
     var currentElementId = "#" + idVal;
     $(currentElementId).parent().closest("tr").remove();
 
-    if(document.getElementById("listDocs").rows.length == 0) {
+    if (document.getElementById("listDocs").rows.length == 0) {
         $('#listDocs').append('<tr><td colspan="6">No documentation associated with this process</td></tr>');
     }
 
     var removeDocInfo = {
-        'name':documentName,
-        'summary':documentSummary,
-        'url':documentUrl,
-        'path':documentPath
+        'name': documentName,
+        'summary': documentSummary,
+        'url': documentUrl,
+        'path': documentPath
     };
 
     var removeDocObj = {
-        'processName':processName,
-        'processVersion':processVersion,
-        'removeDocument':removeDocInfo
+        'processName': processName,
+        'processVersion': processVersion,
+        'removeDocument': removeDocInfo
     };
 
     $.ajax({
@@ -312,29 +312,29 @@ function viewPDF(pdfUrl, heading, iteration) {
 function confirmDialog(question) {
     var confirmModal =
         $('<div class="modal fade">' +
-            '<div class="modal-dialog">' +
-            '<div class="modal-content">' +
-            '<div class="modal-header">' +
-            '<a class="close" data-dismiss="modal" >&times;</a>' +
-            '<h3>Confirm delete</h3>' +
-            '</div>' +
-            '<div class="modal-body">' +
-            '<p>' + question + '</p>' +
-            '</div>' +
-            '<div class="modal-footer">' +
-            '<a href="#!" class="btn" data-dismiss="modal">cancel</a>' +
-            '<a href="#!" id="okButton" class="btn btn-primary">delete</a>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>');
+        '<div class="modal-dialog">' +
+        '<div class="modal-content">' +
+        '<div class="modal-header">' +
+        '<a class="close" data-dismiss="modal" >&times;</a>' +
+        '<h3>Confirm delete</h3>' +
+        '</div>' +
+        '<div class="modal-body">' +
+        '<p>' + question + '</p>' +
+        '</div>' +
+        '<div class="modal-footer">' +
+        '<a href="#!" class="btn" data-dismiss="modal">cancel</a>' +
+        '<a href="#!" id="okButton" class="btn btn-primary">delete</a>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>');
     return confirmModal;
 }
 
 function removeDocumentConfirmListener(processName, processVersion, documentName, documentSummary, documentUrl, documentPath, idVal) {
     var question = "Are you sure you want to delete " + documentName + " document permanently ?";
     var confirmModal = confirmDialog(question);
-    confirmModal.find('#okButton').click(function(event) {
+    confirmModal.find('#okButton').click(function (event) {
         removeDocument(processName, processVersion, documentName, documentSummary, documentUrl, documentPath, idVal);
         confirmModal.modal('hide');
     });
@@ -400,7 +400,7 @@ function showDocument() {
                         anchorElement.style.marginRight = "15px";
                         cellDocAction.appendChild(anchorElement);
 
-                        if(response[i].path.split('.').pop().toLowerCase() == "pdf") {
+                        if (response[i].path.split('.').pop().toLowerCase() == "pdf") {
                             viewPDFDocument(response[i].path, response[i].name, i);
                             var anchorPdfViewElement = document.createElement("a");
                             anchorPdfViewElement.setAttribute("id", "pdfDocumentView" + i);
@@ -458,22 +458,52 @@ function editProcessOwner(e) {
         $('#processOwnerUpdateBtn').show();
     }
 }
+function isAlreadyExist(value, tableName) {
+    var matched = false;
+    $('#table_' + tableName + ' tbody tr').each(function () {
+        if ($(this).find('td:eq(0) span').text() == value) {
+            matched = true;
+        }
+    });
+    return matched;
+}
 
 function subProcessNamesAutoComplete() {
+    var temp = processNames.slice();
+    for (var i = 0; i < processNames.length; i++) {
+        if (isAlreadyExist(processNames[i], "subprocess")) {
+            temp[i] = "";
+        }
+    }
+
     $(".subprocess_Name").autocomplete({
-        source: processNames
+        source: temp
     });
 }
 
 function successorNameAutoComplete() {
+    var temp = processNames.slice();
+    for (var i = 0; i < processNames.length; i++) {
+        if (isAlreadyExist(processNames[i], "successor")) {
+            temp[i] = "";
+        }
+    }
+
     $(".successor_Name").autocomplete({
-        source: processNames
+        source: temp
     });
 }
 
 function predecessorNameAutoComplete() {
+    var temp = processNames.slice();
+    for (var i = 0; i < processNames.length; i++) {
+        if (isAlreadyExist(processNames[i], "predecessor")) {
+            temp[i] = "";
+        }
+    }
+
     $(".predecessor_Name").autocomplete({
-        source: processNames
+        source: temp
     });
 }
 
@@ -662,119 +692,140 @@ function readUpdatedPredecessor(currentObj) {
 
 function deleteSubprocess(element) {
     var deleteSubInput = $(element).parent().closest("tr").find("span").text();
-    if (!isProcessNotAvailableInList(deleteSubInput)) {
-        var deleteSubPath, deleteSubId;
-        for (var i = 0; i < processListObj.length; i++) {
-            if (processListObj[i].processname == deleteSubInput.split("-")[0] &&
-                processListObj[i].processversion == deleteSubInput.split("-")[1]) {
-                deleteSubPath = processListObj[i].path;
-                deleteSubId = processListObj[i].processid;
-                break;
+    var question = "Are you sure you want to delete sub process " + deleteSubInput + "?";
+    var confirmModal = confirmDialog(question);
+    confirmModal.find('#okButton').click(function (event) {
+        if (!isProcessNotAvailableInList(deleteSubInput)) {
+            var deleteSubPath, deleteSubId;
+            for (var i = 0; i < processListObj.length; i++) {
+                if (processListObj[i].processname == deleteSubInput.split("-")[0] &&
+                    processListObj[i].processversion == deleteSubInput.split("-")[1]) {
+                    deleteSubPath = processListObj[i].path;
+                    deleteSubId = processListObj[i].processid;
+                    break;
+                }
             }
+
+            var deleteSubInfo = {
+                name: deleteSubInput.split("-")[0],
+                path: deleteSubPath,
+                id: deleteSubId
+            };
+
+            var deleteSubObj = {
+                'processName': $('#view-header').text(),
+                'processVersion': $('#process-version').text(),
+                'deleteSubprocess': deleteSubInfo
+            };
+
+            $.ajax({
+                url: '/publisher/assets/process/apis/delete_subprocess',
+                type: 'POST',
+                data: {'deleteSubprocessDetails': JSON.stringify(deleteSubObj)},
+                success: function (response) {
+                    document.getElementById("table_subprocess").deleteRow($(element).parent().closest("tr").index() + 1);
+                    alertify.success('Successfully deleted ' + deleteSubInput + ' from the subprocess list.');
+                },
+                error: function () {
+                    alertify.error('Subprocess deleting error');
+                }
+            });
         }
-
-        var deleteSubInfo = {
-            name: deleteSubInput.split("-")[0],
-            path: deleteSubPath,
-            id: deleteSubId
-        };
-
-        var deleteSubObj = {
-            'processName': $('#view-header').text(),
-            'processVersion': $('#process-version').text(),
-            'deleteSubprocess': deleteSubInfo
-        };
-
-        $.ajax({
-            url: '/publisher/assets/process/apis/delete_subprocess',
-            type: 'POST',
-            data: {'deleteSubprocessDetails': JSON.stringify(deleteSubObj)},
-            success: function (response) {
-                alertify.success('Successfully deleted ' + deleteSubInput + ' from the subprocess list.');
-            },
-            error: function () {
-                alertify.error('Subprocess deleting error');
-            }
-        });
-    }
+        confirmModal.modal('hide');
+    });
+    confirmModal.modal('show');
 }
 
 function deleteSuccessor(element) {
     var deleteSuccessorInput = $(element).parent().closest("tr").find("span").text();
-    if (!isProcessNotAvailableInList(deleteSuccessorInput)) {
-        var deleteSuccessorPath, deleteSuccessorId;
-        for (var i = 0; i < processListObj.length; i++) {
-            if (processListObj[i].processname == deleteSuccessorInput.split("-")[0] &&
-                processListObj[i].processversion == deleteSuccessorInput.split("-")[1]) {
-                deleteSuccessorPath = processListObj[i].path;
-                deleteSuccessorId = processListObj[i].processid;
-                break;
+    var question = "Are you sure you want to delete successor " + deleteSuccessorInput + "?";
+    var confirmModal = confirmDialog(question);
+    confirmModal.find('#okButton').click(function (event) {
+        if (!isProcessNotAvailableInList(deleteSuccessorInput)) {
+            var deleteSuccessorPath, deleteSuccessorId;
+            for (var i = 0; i < processListObj.length; i++) {
+                if (processListObj[i].processname == deleteSuccessorInput.split("-")[0] &&
+                    processListObj[i].processversion == deleteSuccessorInput.split("-")[1]) {
+                    deleteSuccessorPath = processListObj[i].path;
+                    deleteSuccessorId = processListObj[i].processid;
+                    break;
+                }
             }
+
+            var deleteSuccessorInfo = {
+                name: deleteSuccessorInput.split("-")[0],
+                path: deleteSuccessorPath,
+                id: deleteSuccessorId
+            };
+
+            var deleteSuccessorObj = {
+                'processName': $('#view-header').text(),
+                'processVersion': $('#process-version').text(),
+                'deleteSuccessor': deleteSuccessorInfo
+            };
+
+            $.ajax({
+                url: '/publisher/assets/process/apis/delete_successor',
+                type: 'POST',
+                data: {'deleteSuccessorDetails': JSON.stringify(deleteSuccessorObj)},
+                success: function (response) {
+                    document.getElementById("table_successor").deleteRow($(element).parent().closest("tr").index() + 1);
+                    alertify.success('Successfully deleted ' + deleteSuccessorInput + ' from the successor list.');
+                },
+                error: function () {
+                    alertify.error('Successor deleting error');
+                }
+            });
         }
-
-        var deleteSuccessorInfo = {
-            name: deleteSuccessorInput.split("-")[0],
-            path: deleteSuccessorPath,
-            id: deleteSuccessorId
-        };
-
-        var deleteSuccessorObj = {
-            'processName': $('#view-header').text(),
-            'processVersion': $('#process-version').text(),
-            'deleteSuccessor': deleteSuccessorInfo
-        };
-
-        $.ajax({
-            url: '/publisher/assets/process/apis/delete_successor',
-            type: 'POST',
-            data: {'deleteSuccessorDetails': JSON.stringify(deleteSuccessorObj)},
-            success: function (response) {
-                alertify.success('Successfully deleted ' + deleteSuccessorInput + ' from the successor list.');
-            },
-            error: function () {
-                alertify.error('Successor deleting error');
-            }
-        });
-    }
+        confirmModal.modal('hide');
+    });
+    confirmModal.modal('show');
 }
 
 function deletePredecessor(element) {
     var deletePredecessorInput = $(element).parent().closest("tr").find("span").text();
-    if (!isProcessNotAvailableInList(deletePredecessorInput)) {
-        var deletePredecessorPath, deletePredecessorId;
-        for (var i = 0; i < processListObj.length; i++) {
-            if (processListObj[i].processname == deletePredecessorInput.split("-")[0] &&
-                processListObj[i].processversion == deletePredecessorInput.split("-")[1]) {
-                deletePredecessorPath = processListObj[i].path;
-                deletePredecessorId = processListObj[i].processid;
-                break;
+    var question = "Are you sure you want to delete predecessor " + deletePredecessorInput + "?";
+    var confirmModal = confirmDialog(question);
+    confirmModal.find('#okButton').click(function (event) {
+        if (!isProcessNotAvailableInList(deletePredecessorInput)) {
+            var deletePredecessorPath, deletePredecessorId;
+            for (var i = 0; i < processListObj.length; i++) {
+                if (processListObj[i].processname == deletePredecessorInput.split("-")[0] &&
+                    processListObj[i].processversion == deletePredecessorInput.split("-")[1]) {
+                    deletePredecessorPath = processListObj[i].path;
+                    deletePredecessorId = processListObj[i].processid;
+                    break;
+                }
             }
+
+            var deletePredecessorInfo = {
+                name: deletePredecessorInput.split("-")[0],
+                path: deletePredecessorPath,
+                id: deletePredecessorId
+            };
+
+            var deletePredecessorObj = {
+                'processName': $('#view-header').text(),
+                'processVersion': $('#process-version').text(),
+                'deletePredecessor': deletePredecessorInfo
+            };
+
+            $.ajax({
+                url: '/publisher/assets/process/apis/delete_Predecessor',
+                type: 'POST',
+                data: {'deletePredecessorDetails': JSON.stringify(deletePredecessorObj)},
+                success: function (response) {
+                    document.getElementById("table_predecessor").deleteRow($(element).parent().closest("tr").index() + 1);
+                    alertify.success('Successfully deleted ' + deletePredecessorInput + ' from the predecessor list.');
+                },
+                error: function () {
+                    alertify.error('Predecessor deleting error');
+                }
+            });
         }
-
-        var deletePredecessorInfo = {
-            name: deletePredecessorInput.split("-")[0],
-            path: deletePredecessorPath,
-            id: deletePredecessorId
-        };
-
-        var deletePredecessorObj = {
-            'processName': $('#view-header').text(),
-            'processVersion': $('#process-version').text(),
-            'deletePredecessor': deletePredecessorInfo
-        };
-
-        $.ajax({
-            url: '/publisher/assets/process/apis/delete_Predecessor',
-            type: 'POST',
-            data: {'deletePredecessorDetails': JSON.stringify(deletePredecessorObj)},
-            success: function (response) {
-                alertify.success('Successfully deleted ' + deletePredecessorInput + ' from the predecessor list.');
-            },
-            error: function () {
-                alertify.error('Predecessor deleting error');
-            }
-        });
-    }
+        confirmModal.modal('hide');
+    });
+    confirmModal.modal('show');
 }
 
 function updateProcessOwner(element) {
@@ -1013,12 +1064,12 @@ function showFlowchartEditor(name, flowchartPath) {
     });
 }
 
-function removeFlowchart(){
+function removeFlowchart() {
     var name = $("#fcProcessName").val();
     var version = $("#fcProcessVersion").val();
     var question = "Are you sure you want to delete the flowchart of process " + name + " " + version + " permanently?";
     var confirmModal = confirmDialog(question);
-    confirmModal.find('#okButton').click(function(event) {
+    confirmModal.find('#okButton').click(function (event) {
         _deleteFlowchart(name, version);
         confirmModal.modal('hide');
     });
@@ -1050,4 +1101,36 @@ function validateDocument() {
         $("#docExtension").val(ext);
     }
     return true;
+}
+
+
+$('.view').click(function (e) {
+    e.preventDefault();
+    setTableName($(this).attr("data-name"));
+    $("#process-search-results").html("");
+    document.getElementById("process-search-form").reset();
+    $("#searchModal").modal("show");
+});
+
+function deleteProcess(element) {
+    var value = $(element.parentElement.parentElement).find(":input");
+    if (value.length == 0) {
+        if (element.getAttribute("data-name") == "subprocess")
+            deleteSubprocess(element);
+        else if (element.getAttribute("data-name") == "successor")
+            deleteSuccessor(element);
+        else
+            deletePredecessor(element);
+    }
+    else {
+        value = value.val();
+        var question = "Are you sure you want to delete " + element.getAttribute("data-name") + " " + value + "?";
+        var confirmModal = confirmDialog(question);
+        confirmModal.find('#okButton').click(function (event) {
+            document.getElementById("table_" + element.getAttribute("data-name")).
+                deleteRow(element.parentElement.parentElement.rowIndex);
+            confirmModal.modal('hide');
+        });
+        confirmModal.modal('show');
+    }
 }
