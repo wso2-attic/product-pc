@@ -18,50 +18,70 @@
  */
 
 var tableName = "subprocess";
+var SEARCH_FORM = "#process-search-form";
 
-//get the filter values from the search form and combine them to a JSON string
-function getFilters() {
-    var elements = $('#process-search-form').find(":input");
-    var filters = "{";
-    var count = 0;
-    for (var i = 0; i < elements.length; i++) {
-        if (elements[i].value != "") {
-            count++;
-            if (count > 1)
-                filters = filters.concat(",");
-            filters = filters.concat(elements[i].getAttribute("name").substr(8) + ":" + elements[i].value);
+var processInputField = function(field){
+    var result = field;
+    switch(field.type) {
+        case 'text':
+            result = field;
+            break;
+        default:
+            break;
+    }
+    return result;
+};
+var getInputFields = function(){
+    var obj = {};
+    var fields = $(SEARCH_FORM).find(':input');
+    var field;
+    for(var index = 0; index < fields.length; index++){
+        field = fields[index];
+        field = processInputField(field);
+        if((field.name)&&(field.value)){
+            obj[field.name.substr(8)] = field.value;
         }
     }
-    filters = filters.concat("}");
-    return filters;
-}
+    return obj;
+};
+var createQueryString = function(key,value){
+    return '"'+key+'":"'+value+'"';
+};
+var buildQuery = function(){
+    var fields = getInputFields();
+    var queryString =[];
+    var value;
+    for(var key in fields){
+        value = fields[key];
+        queryString.push(createQueryString(key,value));
+    }
+    return queryString.join(',');
+};
 
 //Search process using the given filters
 function searchProcesses() {
-    var filters = [];
-    filters = getFilters();
+    var query = buildQuery();
+    var url = "/publisher/apis/assets?q=" + query;
     $.ajax({
-        url: '/publisher/assets/process/apis/process_advance_search',
-        type: 'POST',
-        data: {
-            'filters': filters.toString()
-        },
+        url: url,
+        type: 'GET',
         success: function (response) {
-            var processes = JSON.parse(response);
-            if (processes.length > 0) { //if there is a result, append it as a checkbox to the search result div
+            var results = [];
+            results = response.list;
+            if(results.length > 0){
                 $("#process-search-results").html("");
-                for (var i = 0; i < processes.length; i++) {
+                for (var i = 0; i < results.length; i++) {
                     var id = "checkbox" + (i + 1);
                     var checkbox = "";
                     checkbox += "<div class=\"checkbox checkbox-primary\">";
                     checkbox += "    <input id=\"" + id + "\" class=\"styled\" type=\"checkbox\">";
-                    checkbox += "    <label for=\"" + id + "\">" + processes[i].name + "-" + processes[i].version + "<\/label>";
+                    checkbox += "    <label for=\"" + id + "\">" + results[i].name + "-" + results[i].version + "<\/label>";
                     checkbox += "<\/div>";
                     $("#process-search-results").append(checkbox);
                 }
                 document.getElementById("process-search-form").reset();//reset the form
-                $("#process-search-results").ajaxForm();//to prevent the response from redirecting
-            } else {
+                $(SEARCH_FORM).ajaxForm();//to prevent the response from redirecting
+            }else{
                 $("#process-search-results").html("");
                 $("#process-search-results").append("<p>We are sorry but we could not find any matching assets</p>");
             }
@@ -74,7 +94,7 @@ function searchProcesses() {
 
 $('#process-search-btn').click(function (e) {
     e.preventDefault();
-    var filters = getFilters();
+    var filters = buildQuery();
     if (filters == "{}") {
         alertify.error("You have not entered anything");
     } else {
@@ -112,16 +132,6 @@ $('#form-clear-btn').click(function (e) {
     document.getElementById("process-search-form").reset();
     $("#process-search-results").html("");
 })
-
-function isInputFieldEmpty(tableName) {
-    var isFieldEmpty = false;
-    $('#table_' + tableName + ' tbody tr').each(function () {
-        if ($(this).find('td:eq(0) input').val() == '') {
-            isFieldEmpty = true;
-        }
-    });
-    return isFieldEmpty;
-}
 
 function setTableName(tblName) {
     tableName = tblName;

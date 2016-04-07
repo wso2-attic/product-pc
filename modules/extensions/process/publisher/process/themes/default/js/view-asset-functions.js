@@ -1113,6 +1113,24 @@ $('.view').click(function (e) {
 });
 
 function deleteProcess(element){
-    document.getElementById("table_" + element.getAttribute("data-name")).
-        deleteRow(element.parentElement.parentElement.rowIndex);
+    var value = $(element.parentElement.parentElement).find(":input");
+    if(value.length == 0){
+        if(element.getAttribute("data-name") == "subprocess")
+            deleteSubprocess(element);
+        else if(element.getAttribute("data-name") == "successor")
+            deleteSuccessor(element);
+        else
+            deletePredecessor(element);
+    }
+    else {
+        value = value.val();
+        var question = "Are you sure you want to delete " + element.getAttribute("data-name") + " " + value + "?";
+        var confirmModal = confirmDialog(question);
+        confirmModal.find('#okButton').click(function (event) {
+            document.getElementById("table_" + element.getAttribute("data-name")).
+                deleteRow(element.parentElement.parentElement.rowIndex);
+            confirmModal.modal('hide');
+        });
+        confirmModal.modal('show');
+    }
 }

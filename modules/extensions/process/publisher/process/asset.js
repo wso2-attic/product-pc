@@ -98,9 +98,6 @@ asset.server = function (ctx) {
             }, {
                 url: 'delete_document',
                 path: 'delete_document.jag'
-            }, {
-                url: 'process_advance_search',
-                path: 'process_advance_search.jag'
             }]
         }
     }
