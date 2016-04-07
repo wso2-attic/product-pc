@@ -414,6 +414,13 @@
         </fileSet>
 
         <fileSet>
+            <directory>../extensions/main/process-center/extensions/app/publisher-search-apis</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app/publisher-search-apis
+            </outputDirectory>
+        </fileSet>
+
+        <fileSet>
             <directory>../extensions/apps/store</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/app

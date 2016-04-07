@@ -33,10 +33,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
+import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.registry.indexing.AsyncIndexer;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -1295,6 +1297,8 @@ public class ProcessStore {
         try {
             StreamHostObject s = (StreamHostObject) object;
             InputStream pdfStream = s.getStream();
+
+            ProcessPDFIndexer registryClient = new ProcessPDFIndexer();
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
@@ -1306,9 +1310,13 @@ public class ProcessStore {
                 pdfContentResource.setContent(pdfContent);
                 pdfContentResource.setMediaType("application/pdf");
                 String pdfContentPath = "pdf/" + processName + "/" + processVersion;
-                reg.put(pdfContentPath, pdfContentResource);
                 String processPath = "processes/" + processName + "/" + processVersion;
-
+                pdfContentResource.addAspect(processPath);
+                reg.put(pdfContentPath, pdfContentResource);
+                reg.addAssociation(pdfContentPath, processPath, Association.USED_BY);
+               AsyncIndexer.File2Index fileData =
+                       new AsyncIndexer.File2Index(pdfContent, "application/pdf", pdfContentPath, -1234, null);
+                registryClient.getIndexedDocument(fileData);
                 // update process by linking the pdf asset
 
                 Resource processAsset = reg.get(processPath);
@@ -1417,6 +1425,7 @@ public class ProcessStore {
 
         return flowchartString;
     }
+
 
     //    public static void main(String[] args) {
     //        String path = "/home/chathura/temp/t5/TestProcess1.bpmn";

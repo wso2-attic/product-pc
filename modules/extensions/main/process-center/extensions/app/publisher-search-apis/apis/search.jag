@@ -1,0 +1,17 @@
+<%
+importPackage(org.wso2.carbon.pc.core);
+
+var username = require('store').server.current(session).username;
+
+var log = new Log();
+if(log.isDebugEnabled()){
+    log.debug("Process creation logic");
+}
+
+log.info("creating pdfsearchservice");
+var pdfsearch = new PDFSearchService();
+var searchQuery = String(request.getParameter("search-query"));
+
+var status = pdfsearch.search(searchQuery, username);
+print(status);
+%>

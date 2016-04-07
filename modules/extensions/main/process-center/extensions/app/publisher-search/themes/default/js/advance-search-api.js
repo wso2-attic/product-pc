@@ -62,6 +62,7 @@ $(function(){
 
     };
     store.infiniteScroll.getItems = function(from, to, query ){
+
         var count = to-from;
         var dynamicData = {};
         dynamicData["from"] = from;
@@ -93,14 +94,21 @@ $(function(){
                     $('.loading-animation-big').remove();
                     doPagination = false;
                 } else {
-                    loadPartials('list-assets', function(partials) {
-                        caramel.partials(partials, function () {
-                            caramel.render('list_assets_table_body', results, function (info, content) {
-                                $('#search-results').append($(content));
-                                $('.loading-animation-big').remove();
+                    //pdf content specified by user.
+                    if($("#content").val()){
+                        contentSearch(results);
+                    }
+                    //pdf content search is not specified by the user.
+                    else {
+                        loadPartials('list-assets', function (partials) {
+                            caramel.partials(partials, function () {
+                                caramel.render('list_assets_table_body', results, function (info, content) {
+                                    $('#search-results').append($(content));
+                                    $('.loading-animation-big').remove();
+                                });
                             });
                         });
-                    });
+                    }
                 }
             },error:function(){
                 doPagination = false;
@@ -133,7 +141,7 @@ $(function(){
     };
     var getInputFields = function(){
         var obj = {};
-        var fields = $(SEARCH_FORM).find(':input');
+        var fields = $(SEARCH_FORM).find(':input:not(#content)');
         var field;
         for(var index = 0; index < fields.length; index++){
             field = fields[index];
@@ -178,10 +186,96 @@ $(function(){
         rows_added = 0;
         $('#search-results').html('');       
         var query = buildQuery();
-        if(isEmptyQuery(query)) {
+        if(isEmptyQuery(query) && !$("#content").val()) {
             console.log('User has not entered anything');
             return;
         }
-        store.infiniteScroll.showAll(query);
+        else if (isEmptyQuery(query) && $("#content").val()){
+            contentSearch(null);
+        }
+        else {
+            store.infiniteScroll.showAll(query);
+        }
     });
+
+
+    function contentSearch(rxt_results) {
+
+        var str = $("#content").val().trim();
+        var res = str.replace(/ /g, "&&");
+        var search_url = caramel.tenantedUrl('/apis/search');
+        $.ajax({
+            url: search_url,
+            type: 'POST',
+            data: {
+                'search-query': res
+            },
+            success: function (data) {
+
+                if(data != "null") {
+
+                    var results = JSON.parse(data);
+                    if (!rxt_results) {
+                        for (var i = 0; i < results.length; i++) {
+
+                            $("#search-results").append('<div class="ctrl-wr-asset">' +
+                            '<div class="itm-ast">' +
+                            '<a class="ast-img" href="/publisher/assets/process/details/' + results[i].processid + '">' +
+                            '<img alt="thumbnail" src="/publisher/themes/default/img/default-thumbnail.png" class="img-responsive">' +
+                            '</a>' +
+                            '<div class="ast-type-display">' + results[i].type + '</div>' +
+                            '<div class="ast-desc">' +
+                            '<a href="/publisher/assets/process/details/' + results[i].processid + '">' +
+                            '<h3 class="ast-name" title="' + results[i].processname + '">' + results[i].processname + '</h3>' +
+                            '</a>' +
+                            '<span class="ast-ver">Vp, </span><span class="ast-auth" title=""></span>' +
+                            '<span class="ast-published"></span>' +
+                            '<span class="lifecycle-state"><small><i class="icon-circle lc-state-Initial"></i>' + results[i].lifecyclestate + '</small></span>' +
+                            '</div>' +
+                            '<br class="c-both">' +
+                            '</div><br class="c-both">' +
+                            '</div>');
+                        }
+                    }
+                    //get the intersection of the two searches.
+                    else{
+                        var hashmap = {};
+                        var intersection = [];
+
+                        for(var i=0; i<rxt_results.length; i++){
+                            var pid = rxt_results[i].id;
+                            hashmap[pid] = rxt_results[i];
+                        }
+
+                        for(var i=0; i<results.length; i++){
+
+                            var key = results[i].processid;
+                            if(hashmap.hasOwnProperty(key)){
+                                intersection.push(hashmap[key]);
+                            }
+                        }
+                        loadPartials('list-assets', function (partials) {
+                            caramel.partials(partials, function () {
+                                caramel.render('list_assets_table_body', intersection, function (info, content) {
+                                    $('#search-results').append($(content));
+                                    $('.loading-animation-big').remove();
+                                });
+                            });
+                        });
+                    }
+                }
+                else{
+                    $('#search-results').html('We are sorry but we could not find any matching assets');
+                    $('.loading-animation-big').remove();
+                    doPagination = false;
+                }
+
+            }, error: function (xhr, status, error) {
+                console.log(error);
+                doPagination = false;
+                $('.loading-animation-big').remove();
+            }
+        });
+
+    }
 });
