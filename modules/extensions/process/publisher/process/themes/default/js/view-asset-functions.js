@@ -470,8 +470,8 @@ function isAlreadyExist(value, tableName) {
 
 function subProcessNamesAutoComplete() {
     var temp = processNames.slice();
-    for(var i = 0; i < processNames.length; i++){
-        if(isAlreadyExist(processNames[i], "subprocess")){
+    for (var i = 0; i < processNames.length; i++) {
+        if (isAlreadyExist(processNames[i], "subprocess")) {
             temp[i] = "";
         }
     }
@@ -483,8 +483,8 @@ function subProcessNamesAutoComplete() {
 
 function successorNameAutoComplete() {
     var temp = processNames.slice();
-    for(var i = 0; i < processNames.length; i++){
-        if(isAlreadyExist(processNames[i], "successor")){
+    for (var i = 0; i < processNames.length; i++) {
+        if (isAlreadyExist(processNames[i], "successor")) {
             temp[i] = "";
         }
     }
@@ -496,8 +496,8 @@ function successorNameAutoComplete() {
 
 function predecessorNameAutoComplete() {
     var temp = processNames.slice();
-    for(var i = 0; i < processNames.length; i++){
-        if(isAlreadyExist(processNames[i], "predecessor")){
+    for (var i = 0; i < processNames.length; i++) {
+        if (isAlreadyExist(processNames[i], "predecessor")) {
             temp[i] = "";
         }
     }
@@ -1112,12 +1112,12 @@ $('.view').click(function (e) {
     $("#searchModal").modal("show");
 });
 
-function deleteProcess(element){
+function deleteProcess(element) {
     var value = $(element.parentElement.parentElement).find(":input");
-    if(value.length == 0){
-        if(element.getAttribute("data-name") == "subprocess")
+    if (value.length == 0) {
+        if (element.getAttribute("data-name") == "subprocess")
             deleteSubprocess(element);
-        else if(element.getAttribute("data-name") == "successor")
+        else if (element.getAttribute("data-name") == "successor")
             deleteSuccessor(element);
         else
             deletePredecessor(element);

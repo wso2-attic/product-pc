@@ -239,8 +239,8 @@ function isAlreadyExist(value, tableName) {
 
 function subProcessNamesAutoComplete() {
     var temp = processNames.slice();
-    for(var i = 0; i < processNames.length; i++){
-        if(isAlreadyExist(processNames[i], "subprocess")){
+    for (var i = 0; i < processNames.length; i++) {
+        if (isAlreadyExist(processNames[i], "subprocess")) {
             temp[i] = "";
         }
     }
@@ -252,8 +252,8 @@ function subProcessNamesAutoComplete() {
 
 function successorNameAutoComplete() {
     var temp = processNames.slice();
-    for(var i = 0; i < processNames.length; i++){
-        if(isAlreadyExist(processNames[i], "successor")){
+    for (var i = 0; i < processNames.length; i++) {
+        if (isAlreadyExist(processNames[i], "successor")) {
             temp[i] = "";
         }
     }
@@ -265,8 +265,8 @@ function successorNameAutoComplete() {
 
 function predecessorNameAutoComplete() {
     var temp = processNames.slice();
-    for(var i = 0; i < processNames.length; i++){
-        if(isAlreadyExist(processNames[i], "predecessor")){
+    for (var i = 0; i < processNames.length; i++) {
+        if (isAlreadyExist(processNames[i], "predecessor")) {
             temp[i] = "";
         }
     }
@@ -520,7 +520,7 @@ function showSearchModal(tableName) {
     $("#searchModal").modal("show");
 }
 
-function deleteProcess(element){
+function deleteProcess(element) {
     document.getElementById("table_" + element.getAttribute("data-name")).
         deleteRow(element.parentElement.parentElement.rowIndex);
 }
