@@ -20,9 +20,11 @@
 var processNames = [];
 var processListObj;
 var tagList = [];
+var allProcessTags = [];
 
 window.onload = function () {
     getProcessList();
+    getAllProcessTags();
 
     $('#span').click(function () {
         $("#tag-box").focus()
@@ -175,6 +177,7 @@ function getProcessInfo() {
         'processName': $("#pName").val(),
         'processVersion': $("#pVersion").val(),
         'processOwner': $("#pOwner").val(),
+        'processDescription': $("#overview_description").val(),
         'processTags': tags,
         'subprocess': readSubprocessTable(),
         'successor': readSuccessorTable(),
@@ -224,21 +227,52 @@ function completeTextDetails() {
     return true;
 }
 
+function isAlreadyExist(value, tableName) {
+    var matched = false;
+    $('#table_' + tableName + ' tbody tr').each(function () {
+        if ($(this).find('td:eq(0) input').val() == value) {
+            matched = true;
+        }
+    });
+    return matched;
+}
+
 function subProcessNamesAutoComplete() {
+    var temp = processNames.slice();
+    for (var i = 0; i < processNames.length; i++) {
+        if (isAlreadyExist(processNames[i], "subprocess")) {
+            temp[i] = "";
+        }
+    }
+
     $(".subprocess_Name").autocomplete({
-        source: processNames
+        source: temp
     });
 }
 
 function successorNameAutoComplete() {
+    var temp = processNames.slice();
+    for (var i = 0; i < processNames.length; i++) {
+        if (isAlreadyExist(processNames[i], "successor")) {
+            temp[i] = "";
+        }
+    }
+
     $(".successor_Name").autocomplete({
-        source: processNames
+        source: temp
     });
 }
 
 function predecessorNameAutoComplete() {
+    var temp = processNames.slice();
+    for (var i = 0; i < processNames.length; i++) {
+        if (isAlreadyExist(processNames[i], "predecessor")) {
+            temp[i] = "";
+        }
+    }
+
     $(".predecessor_Name").autocomplete({
-        source: processNames
+        source: temp
     });
 }
 
@@ -336,6 +370,26 @@ function getProcessList() {
     });
 }
 
+function getAllProcessTags() {
+    $.ajax({
+        url: '/publisher/assets/process/apis/get_process_tags',
+        type: 'GET',
+        success: function (data) {
+            var processTagsObj = JSON.parse(data);
+            if (!$.isEmptyObject(processTagsObj)) {
+                for (var key in processTagsObj) {
+                    if (processTagsObj.hasOwnProperty(key)) {
+                        allProcessTags.push(key);
+                    }
+                }
+            }
+        },
+        error: function () {
+            alert.error('Process tag list returning error');
+        }
+    });
+}
+
 function isInputFieldEmpty(tableName) {
     var isFieldEmpty = false;
     $('#table_' + tableName + ' tbody tr').each(function () {
@@ -364,19 +418,19 @@ function validateDocs() {
     $("#docProcessName").val($("#pName").val());
     $("#docProcessVersion").val($("#pVersion").val());
     if (document.getElementById('docName').value.length == 0) {
-        alertify.error('Please enter doc name.');
+        alertify.error('Please enter document name.');
         return false;
     } else if ((!document.getElementById('optionsRadios7').checked) && (!document.getElementById('optionsRadios8').checked)) {
         alertify.error('Please select a source.');
         return false;
     } else if (document.getElementById('optionsRadios7').checked) {
         if (document.getElementById('docUrl').value.length == 0) {
-            alertify.error('Please give the doc url.');
+            alertify.error('Please give the document url.');
             return false;
         }
     } else if (document.getElementById('optionsRadios8').checked) {
         var ext = $('#docLocation').val().split('.').pop().toLowerCase();
-        if ($.inArray(ext, ['docx', 'doc']) == -1) {
+        if ($.inArray(ext, ['docx', 'doc', 'pdf']) == -1) {
             alertify.error('invalid extension!');
             return false;
         }
@@ -457,4 +511,16 @@ function removeTag(currentElement) {
     if (index > -1) {
         tagList.splice(index, 1);
     }
+}
+
+function showSearchModal(tableName) {
+    setTableName(tableName);
+    $("#process-search-results").html("");
+    document.getElementById("process-search-form").reset();
+    $("#searchModal").modal("show");
+}
+
+function deleteProcess(element) {
+    document.getElementById("table_" + element.getAttribute("data-name")).
+        deleteRow(element.parentElement.parentElement.rowIndex);
 }

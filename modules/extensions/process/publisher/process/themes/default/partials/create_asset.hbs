@@ -1,52 +1,89 @@
 <div id="overviewDiv">
-        <div class="control-group">
-            <h2 class="field-title">
-                <a class="collapsing-h2" aria-expanded="true" href="#collapseprocessinfo" data-toggle="collapse">
-                    <i class="cu-btn-exp-col btn-collapsed">Process Information</i>
-                </a>
-            </h2>
-            <div class="collapse in responsive-form-container" id="collapseprocessinfo">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Process name<sup class="required-field">*</sup></label>
-                        <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                            <input onblur="blurIt()" type="text" placeholder="Enter Process Name" name="overview_name" id="pName" class="form-control" required="">
-                        </div>
-                    </div>
+    <div class="control-group">
+        <h2 class="field-title">
+            <a class="collapsing-h2" aria-expanded="true" href="#collapseprocessinfo" data-toggle="collapse">
+                <i class="cu-btn-exp-col btn-collapsed">Process Information</i>
+            </a>
+        </h2>
 
-                    <div class="form-group">
-                        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Version<sup class="required-field">*</sup></label>
-                        <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                            <input onblur="blurIt()" type="text" placeholder="Enter Process Version" name="overview_version" id="pVersion" class="form-control" required="">
-                        </div>
-                    </div>
+        <div class="collapse in responsive-form-container" id="collapseprocessinfo">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Process name<sup
+                            class="required-field">*</sup></label>
 
-                    <div class="form-group">
-                        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Owner<sup class="required-field">*</sup></label>
-                        <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                            <input onblur="blurIt()" type="text" placeholder="Enter Process Owner" name="overview_owner" id="pOwner" class="form-control" required="">
-                        </div>
+                    <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                        <input onblur="blurIt()" type="text" placeholder="Enter Process Name" name="overview_name"
+                               id="pName" class="form-control" required="">
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Tags</label>
-                        <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                            <select id="_tags" class="tag-ui-selectbox form-control select2-hidden-accessible" multiple="" name="_tags" tabindex="-1" aria-hidden="true">
-                            </select>
-                            <span id = "span" class="select2 select2-container select2-container--default select2-container--below" dir="ltr" style="width: 142px;">
+                <div class="form-group">
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Version<sup
+                            class="required-field">*</sup></label>
+
+                    <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                        <input onblur="blurIt()" type="text" placeholder="Enter Process Version" name="overview_version"
+                               id="pVersion" class="form-control" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Owner<sup
+                            class="required-field">*</sup></label>
+
+                    <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                        <input onblur="blurIt()" type="text" placeholder="Enter Process Owner" name="overview_owner"
+                               id="pOwner" class="form-control" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Description</label>
+
+                    <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                        <textarea row="3" style="width:100%; height:70px" name="overview_description"
+                                  id="overview_description" class="input-large"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Tags</label>
+
+                    <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                        <select id="_tags" class="tag-ui-selectbox form-control select2-hidden-accessible" multiple=""
+                                name="_tags" tabindex="-1" aria-hidden="true">
+                        </select>
+                            <span id="span"
+                                  class="select2 select2-container select2-container--default select2-container--below"
+                                  dir="ltr" style="width: 142px;">
                                 <span class="selection">
-                                    <span class="select2-selection select2-selection--multiple" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false" tabindex="0">
+                                    <span class="select2-selection select2-selection--multiple" role="combobox"
+                                          aria-autocomplete="list" aria-haspopup="true" aria-expanded="false"
+                                          tabindex="0">
                                         <ul class="select2-selection__rendered">
                                             <li id="tag-box-list" class="select2-search select2-search--inline">
-                                                <input id="tag-box" class="select2-search__field" type="search" tabindex="-1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="textbox" placeholder="" style="width: 2.25em;">
+                                                <input id="tag-box" class="select2-search__field" type="search"
+                                                       tabindex="-1" autocomplete="off" autocorrect="off"
+                                                       autocapitalize="off" spellcheck="false" role="textbox"
+                                                       placeholder="" style="width: 2.25em;">
                                             </li>
                                         </ul>
                                         <span class="select2-container--default select2-container--open select2-container--focus">
-                                            <span class="select2-dropdown select2-dropdown--above" dir="ltr" style="width: 142px">
+                                            <span class="select2-dropdown select2-dropdown--above" dir="ltr"
+                                                  style="width: 142px">
                                                 <span class="select2-results">
-                                                    <ul class="select2-results__options" role="tree" aria-multiselectable="true" id="select2-_tags-6j-results" aria-expanded="true" aria-hidden="false">
-                                                        <li id="select2-results__option" role="treeitem" class="select2-results__option" style="display: none">Please enter 2 or more characters</li>
-                                                        <li id="select2-results__option--highlighted" class="select2-results__option select2-results__option--highlighted" role="treeitem" aria-selected="false" style="display: none" onclick="addNewTag()"></li>
+                                                    <ul class="select2-results__options" role="tree"
+                                                        aria-multiselectable="true" id="select2-_tags-6j-results"
+                                                        aria-expanded="true" aria-hidden="false">
+                                                        <li id="select2-results__option" role="treeitem"
+                                                            class="select2-results__option" style="display: none">Please
+                                                            enter 2 or more characters
+                                                        </li>
+                                                        <li id="select2-results__option--highlighted"
+                                                            class="select2-results__option select2-results__option--highlighted"
+                                                            role="treeitem" aria-selected="false" style="display: none"
+                                                            onclick="addNewTag()"></li>
                                                     </ul>
                                                 </span>
                                             </span>
@@ -55,117 +92,129 @@
                                 </span>
                                 <span class="dropdown-wrapper" aria-hidden="true"></span>
                             </span>
-                        </div>
-                    </div>
-                </form>
-
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button class="btn btn-primary" onclick="showTextEditor(this)">Describe process in text</button>
-                        <button class="btn btn-primary" onclick="associateBPMN(this)">Associate BPMN model</button>
-                        <button class="btn btn-primary" onclick="associateFlowChart(this)">Associate Flow Chart</button>
-                        <button class="btn btn-primary" onclick="associateDocument(this)">Documents</button>
-                        <button class="btn btn-primary" onclick="associatePdf(this)">Associate PDF</button>
-
                     </div>
                 </div>
+            </form>
 
-            </div>
-
-            <h2 class="field-title">
-                <a class="collapsing-h2" aria-expanded="true" href="#subprocess" data-toggle="collapse" rel="tooltip" title="List of subprocesses for a given process">
-                    <i class="cu-btn-exp-col btn-collapsed">Subprocess</i>
-                </a>
-            </h2>
-
-            <div id="subprocess" class="responsive-form-container collapse in" aria-expanded="true" style="">
-                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
-                    &nbsp;
-                </div>
-                <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                    <div class="add-unbounded-row"><a data-name="subprocess" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Subprocess</a></div>
-                    <table class="tablex cu-data-table js-unbounded-table" id="table_subprocess">
-                        <thead>
-
-                        <tr><th></th>
-                        </tr></thead>
-                        <tbody>
-                        <tr>
-                            <td valign="top"><input type="text" value="" name="subprocess_Name" id="subprocess_Name" class="input-large subprocess_Name" onkeydown="subProcessNamesAutoComplete()"></td>
-                            <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <h2 class="field-title">
-                <a class="collapsing-h2" aria-expanded="true" href="#successor" data-toggle="collapse" rel="tooltip" title="List of successor processes for a given process">
-                    <i class="cu-btn-exp-col btn-collapsed">Successor</i>
-                </a>
-            </h2>
-            <div id="successor" class="responsive-form-container collapse in" aria-expanded="true" style="">
-                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
-                    &nbsp;
-                </div>
-                <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                    <div class="add-unbounded-row"><a data-name="successor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Successor</a></div>
-                    <table class="tablex cu-data-table js-unbounded-table" id="table_successor">
-                        <thead>
-
-                        <tr><th></th>
-                        </tr></thead>
-                        <tbody>
-                        <tr>
-                            <td valign="top"><input type="text" value="" name="successor_Name" id="successor_Name" class="input-large successor_Name" onkeydown="successorNameAutoComplete()"></td>
-                            <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <h2 class="field-title">
-                <a class="collapsing-h2" aria-expanded="true" href="#predecessor" data-toggle="collapse" rel="tooltip" title="List of predecessor processes for a given process">
-                    <i class="cu-btn-exp-col btn-collapsed">Predecessor</i>
-                </a>
-            </h2>
-
-            <div id="predecessor" class="responsive-form-container collapse in" aria-expanded="true" style="">
-                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
-                    &nbsp;
-                </div>
-                <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                    <div class="add-unbounded-row"><a data-name="predecessor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Predecessor</a></div>
-                    <table class="tablex cu-data-table js-unbounded-table" id="table_predecessor">
-                        <thead>
-
-                        <tr><th></th>
-                        </tr></thead>
-                        <tbody>
-                        <tr>
-                            <td valign="top"><input type="text" value="" name="predecessor_Name" id="predecessor_Name" class="input-large predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
-                            <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-
-        <div id="processButtons" class="form-actions">
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <button class="btn btn-success" id="saveProcessBtn" value="Save process" onclick="saveProcess(this)">Save process</button>
+                    <button class="btn btn-primary" onclick="showTextEditor(this)">Describe process in text</button>
+                    <button class="btn btn-primary" onclick="associateBPMN(this)">Associate BPMN model</button>
+                    <button class="btn btn-primary" onclick="associateFlowChart(this)">Associate Flow Chart</button>
+                    <button class="btn btn-primary" onclick="associateDocument(this)">Documents</button>
+                    <button class="btn btn-primary" onclick="associatePdf(this)">Associate PDF</button>
+
                 </div>
             </div>
+
         </div>
+
+        <h2 class="field-title">
+            <a class="collapsing-h2 collapsed" aria-expanded="true" href="#subprocess" data-toggle="collapse"
+               rel="tooltip" title="List of subprocesses for a given process">
+                <i class="cu-btn-exp-col btn-collapsed">Subprocess</i>
+            </a>
+        </h2>
+
+        <div id="subprocess" class="responsive-form-container collapse out" aria-expanded="true" style="">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+                &nbsp;
+            </div>
+            <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                <div class="add-unbounded-row">
+                    <a data-name="subprocess" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
+                        Subprocess</a>
+                    <button class="btn btn-primary" id="search-process" onclick="showSearchModal('subprocess')">
+                        <i class="fa fa-search"></i> Search Process
+                    </button>
+                </div>
+                <table class="tablex cu-data-table js-unbounded-table" id="table_subprocess">
+                    <thead>
+                    <tr>
+                        <th style="background: none;"></th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+        <h2 class="field-title">
+            <a class="collapsing-h2 collapsed" aria-expanded="true" href="#successor" data-toggle="collapse"
+               rel="tooltip" title="List of successor processes for a given process">
+                <i class="cu-btn-exp-col btn-collapsed">Successor</i>
+            </a>
+        </h2>
+
+        <div id="successor" class="responsive-form-container collapse out" aria-expanded="true" style="">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+                &nbsp;
+            </div>
+            <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                <div class="add-unbounded-row">
+                    <a data-name="successor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
+                        Successor</a>
+                    <button class="btn btn-primary" id="search-process" onclick="showSearchModal('successor')">
+                        <i class="fa fa-search"></i> Search Process
+                    </button>
+                </div>
+                <table class="tablex cu-data-table js-unbounded-table" id="table_successor">
+                    <thead>
+                    <tr>
+                        <th style="background: none;"></th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+        <h2 class="field-title">
+            <a class="collapsing-h2 collapsed" aria-expanded="true" href="#predecessor" data-toggle="collapse"
+               rel="tooltip" title="List of predecessor processes for a given process">
+                <i class="cu-btn-exp-col btn-collapsed">Predecessor</i>
+            </a>
+        </h2>
+
+        <div id="predecessor" class="responsive-form-container collapse out" aria-expanded="true" style="">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+                &nbsp;
+            </div>
+            <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                <div class="add-unbounded-row">
+                    <a data-name="predecessor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
+                        Predecessor</a>
+                    <button class="btn btn-primary" id="search-process" onclick="showSearchModal('predecessor')">
+                        <i class="fa fa-search"></i> Search Process
+                    </button>
+                </div>
+                <table class="tablex cu-data-table js-unbounded-table" id="table_predecessor">
+                    <thead>
+                    <tr>
+                        <th style="background: none;"></th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="processButtons" class="form-actions">
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-success" id="saveProcessBtn" value="Save process" onclick="saveProcess(this)">
+                    Save process
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="processTextDiv" style="display: none">
-    <br />
-    <a id="processTextOverviewLink" class="btn btn-primary" onclick="saveProcessText(this)" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
-    <button class="btn btn-primary" id="processTxtSaveBtn" onclick="saveProcessText(this)">Save</button><br /><br />
+    <br/>
+    <a id="processTextOverviewLink" class="btn btn-primary" onclick="saveProcessText(this)" href=""><span
+            class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
+    <button class="btn btn-primary" id="processTxtSaveBtn" onclick="saveProcessText(this)">Save</button>
+    <br/><br/>
 
     <input type="hidden" id="textProcessName" name="textProcessName"/>
     <input type="hidden" id="textProcessVersion" name="textProcessVersion"/>
@@ -177,12 +226,18 @@
 
 <div id="bpmnView" style="display:none">
     <h2 id="create-view-header"></h2>
-    <br /><a id="bpmnOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
-    <form  method='post' action='apis/upload_bpmn' onsubmit='return completeBPMNDetails()' enctype="multipart/form-data" class="form-horizontal" id="form-bar-create" data-redirect-url='{{url ""}}/assets/{{rxt.shortName}}/list' >
-        <br />
+    <br/><a id="bpmnOverviewLink" class="btn btn-primary" href=""><span
+        class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
+
+    <form method='post' action='apis/upload_bpmn' onsubmit='return completeBPMNDetails()' enctype="multipart/form-data"
+          class="form-horizontal" id="form-bar-create" data-redirect-url='{{url ""}}/assets/{{rxt.shortName}}/list'>
+        <br/>
+
         <div style="float:left;width:15cm">
-            <input type="file" class="filestyle" data-buttonName="btn-primary" data-placeholder="Enter archive" name="bpmn" id="bpmnFile" data-buttonText="BPMN file" accept=".xml,.bpmn">
-        </div><br /><br />
+            <input type="file" class="filestyle" data-buttonName="btn-primary" data-placeholder="Enter archive"
+                   name="bpmn" id="bpmnFile" data-buttonText="BPMN file" accept=".xml,.bpmn">
+        </div>
+        <br/><br/>
 
         <input type="hidden" id="bpmnProcessName" name="bpmnProcessName"/>
         <input type="hidden" id="bpmnProcessVersion" name="bpmnProcessVersion"/>
@@ -198,112 +253,148 @@
 </div>
 
 <div id="docView" style="display:none">
-    <br /><a id="docOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
+    <br/><a id="docOverviewLink" class="btn btn-primary" href=""><span
+        class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
     <!--<div class="control-group">-->
-        <br /><br />
-        <div class="row-fluid">
-            <div class="span12">
-                <div class="row-fluid">
-                    <div class="control-group">
-                        <div id="addDoc">
-                            <a onclick="newDocFormToggle()" href="#">
-                                <i class="fa fa-plus-circle"></i> Add New Document
-                            </a>
-                        </div>
-                        <div id="updateDoc" style="display:none;">
-                            <h4></h4>
-                        </div>
+    <br/><br/>
 
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="row-fluid">
+                <div class="control-group">
+                    <div id="addDoc">
+                        <a onclick="newDocFormToggle()" href="#">
+                            <i class="fa fa-plus-circle"></i> Add New Document
+                        </a>
                     </div>
-                </div>
-                <!-- Row -->
-                <form id="addNewDoc" enctype="multipart/form-data" action="apis/upload_documents" onsubmit="return validateDocs()" method="POST" style="margin-left: 20px;">
-                    <div class="container-fluid" style="padding-left:0">
-                        <div id="newDoc">
-                            <div class="row-fluid">
-                                <div class="span6 name-column" style="float:left;width:50%;">
-                                    <div class="control-group">
-                                        <label class="control-label" for="docName">Name<span class="requiredAstrix" style="color: red;">*</span></label>
-                                        <div class="controls">
-                                            <input type="text" class="required validInput" id="docName" name="docName" style="width:100%">
-                                        </div>
-                                    </div>
+                    <div id="updateDoc" style="display:none;">
+                        <h4></h4>
+                    </div>
 
-                                    <div class="control-group">
-                                        <label class="control-label" for="textarea">Summary</label>
-                                        <div class="controls">
-                                            <textarea id="summaryDoc" name="summaryDoc" rows="3" style="width:100%"></textarea>
-                                        </div>
+                </div>
+            </div>
+            <!-- Row -->
+            <form id="addNewDoc" enctype="multipart/form-data" action="apis/upload_documents"
+                  onsubmit="return validateDocs()" method="POST" style="margin-left: 20px;">
+                <div class="container-fluid" style="padding-left:0">
+                    <div id="newDoc">
+                        <div class="row-fluid">
+                            <div class="span6 name-column" style="float:left;width:50%;">
+                                <div class="control-group">
+                                    <label class="control-label" for="docName">Name<span class="requiredAstrix"
+                                                                                         style="color: red;">*</span></label>
+
+                                    <div class="controls">
+                                        <input type="text" class="required validInput" id="docName" name="docName"
+                                               style="width:100%">
                                     </div>
-                                    <input type="hidden" id="docProcessName" name="docProcessName"/>
-                                    <input type="hidden" id="docProcessVersion" name="docProcessVersion"/>
-                                    <input type="hidden" id="docExtension" name="docExtension"/>
                                 </div>
 
-                                <div class="span6" style="float:right;width:48%;">
-                                    <div class="well">
-                                        <div class="control-group">
-                                            <label class="control-label">Source</label>
-                                            <div class="controls">
-                                                <label class="radio" style="margin-left:20px">
-                                                    <input type="radio" name="optionsRadios1" id="optionsRadios7" value="url" onclick="javascript:$('#sourceUrlDoc').toggle('slow');$('#sourceFile').hide('slow')">URL (Eg: google doc)
-                                                    <a class="icon-question-sign help_popup" data-original-title="" title=""></a>
-                                                    <p id="urlDoc_help" class="hide">Link to documentation managed by an external configuration management system</p>
-                                                </label>
+                                <div class="control-group">
+                                    <label class="control-label" for="textarea">Summary</label>
 
-                                                <div id="sourceUrlDoc" class="controls" style="display: none;">
-                                                    <span class="requiredAstrix" style="color: red;">*</span> <input type="text" class="required" style="width:98%" id="docUrl" name="docUrl">
-                                                </div>
-                                                <label class="radio" style="margin-left:20px">
-                                                    <input type="radio" name="optionsRadios1" id="optionsRadios8" value="file" onclick="javascript:$('#sourceFile').toggle('slow');$('#sourceUrlDoc').hide('slow')">Document
-                                                    <a class="icon-question-sign help_popup" data-original-title="" title=""></a>
-                                                    <p id="fileDoc_help" class="hide">Upload a documentation file</p>
-                                                </label>
+                                    <div class="controls">
+                                        <textarea id="summaryDoc" name="summaryDoc" rows="3"
+                                                  style="width:100%"></textarea>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="docProcessName" name="docProcessName"/>
+                                <input type="hidden" id="docProcessVersion" name="docProcessVersion"/>
+                                <input type="hidden" id="docExtension" name="docExtension"/>
+                            </div>
 
-                                                <div id="fileNameDiv" style="display:none;"></div>
-                                                <a onclick="javascript:$('#sourceFile').toggle('slow')" id="toggleFileDoc" style="display:none;">
-                                                    Change File
-                                                </a>
-                                                <div id="sourceFile" class="controls" style="display:none;">
-                                                    <span class="requiredAstrix" style="color: red;">*</span> <input type="file" class="required" style="width:98%" name="docLocation" id="docLocation">
-                                                    <p id="fileType_help">eg : .docx, .doc</p>
-                                                </div>
+                            <div class="span6" style="float:right;width:48%;">
+                                <div class="well">
+                                    <div class="control-group">
+                                        <label class="control-label">Source</label>
+
+                                        <div class="controls">
+                                            <label class="radio" style="margin-left:20px">
+                                                <input type="radio" name="optionsRadios1" id="optionsRadios7"
+                                                       value="url"
+                                                       onclick="javascript:$('#sourceUrlDoc').toggle('slow');$('#sourceFile').hide('slow')">URL
+                                                (Eg: google doc)
+                                                <a class="icon-question-sign help_popup" data-original-title=""
+                                                   title=""></a>
+
+                                                <p id="urlDoc_help" class="hide">Link to documentation managed by an
+                                                    external configuration management system</p>
+                                            </label>
+
+                                            <div id="sourceUrlDoc" class="controls" style="display: none;">
+                                                <span class="requiredAstrix" style="color: red;">*</span> <input
+                                                    type="text" class="required" style="width:98%" id="docUrl"
+                                                    name="docUrl">
+                                            </div>
+                                            <label class="radio" style="margin-left:20px">
+                                                <input type="radio" name="optionsRadios1" id="optionsRadios8"
+                                                       value="file"
+                                                       onclick="javascript:$('#sourceFile').toggle('slow');$('#sourceUrlDoc').hide('slow')">Document
+                                                <a class="icon-question-sign help_popup" data-original-title=""
+                                                   title=""></a>
+
+                                                <p id="fileDoc_help" class="hide">Upload a documentation file</p>
+                                            </label>
+
+                                            <div id="fileNameDiv" style="display:none;"></div>
+                                            <a onclick="javascript:$('#sourceFile').toggle('slow')" id="toggleFileDoc"
+                                               style="display:none;">
+                                                Change File
+                                            </a>
+
+                                            <div id="sourceFile" class="controls" style="display:none;">
+                                                <span class="requiredAstrix" style="color: red;">*</span> <input
+                                                    type="file" class="required" style="width:98%" name="docLocation"
+                                                    id="docLocation">
+
+                                                <p id="fileType_help">eg : .docx, .doc</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div style="clear:both; font-size:1px;"></div>
                             </div>
-                            <div class="row-fluid">
-                                <div class="span12">
-                                    <div class="control-group">
-                                        <!--<button type="button" class="btn btn-primary" id="saveDocBtn" onclick="saveDoc()">Add Document</button>-->
-                                        <input type="submit" class="btn btn-primary" id="saveDocBtn" value="Add Document">
-                                    </div>
-                                </div>
-
-                            </div><!-- Enod of row -->
+                            <div style="clear:both; font-size:1px;"></div>
                         </div>
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="control-group">
+                                    <!--<button type="button" class="btn btn-primary" id="saveDocBtn" onclick="saveDoc()">Add Document</button>-->
+                                    <input type="submit" class="btn btn-primary" id="saveDocBtn" value="Add Document">
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- Enod of row -->
                     </div>
-                </form><br /><br />
-            </div>
+                </div>
+            </form>
+            <br/><br/>
         </div>
+    </div>
     <!--</div>-->
 </div>
 
 <div id="pdfUploader" class="form-group" style="display: none">
     <h2 id="pdf-create-view-header"></h2>
-    <br /><a id="pdfOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
-    <form method="post" action="apis/upload_pdf"  onsubmit="" enctype="multipart/form-data" class="form-horizontal" id="form-bar-create">
+    <br/><a id="pdfOverviewLink" class="btn btn-primary" href=""><span
+        class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
+
+    <form method="post" action="apis/upload_pdf" onsubmit="" enctype="multipart/form-data" class="form-horizontal"
+          id="form-bar-create">
         <br>
+
         <div style="float:left;width:15cm">
-            <input type="file" onchange="setfilename(this.value);" class="filestyle" data-buttonname="btn-primary" data-placeholder="Associate pdf/text file" name="pdfFile" id="pdfFile" data-buttontext="PDF file" accept=".pdf" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
-        </div><br><br>
+            <input type="file" onchange="setfilename(this.value);" class="filestyle" data-buttonname="btn-primary"
+                   data-placeholder="Associate pdf/text file" name="pdfFile" id="pdfFile" data-buttontext="PDF file"
+                   accept=".pdf" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
+        </div>
+        <br><br>
         <input type="hidden" id="ProcessName" name="ProcessName" value="">
         <input type="hidden" id="ProcessVersion" name="ProcessVersion" value="">
 
         <div id="saveButtons" class="form-actions">
-            <input type="submit" id="btn-create-asset-bar" class="btn btn-primary" name="addNewAssetButton" value="Upload pdf">
+            <input type="submit" id="btn-create-asset-bar" class="btn btn-primary" name="addNewAssetButton"
+                   value="Upload pdf">
             <button class="btn" type="reset">Reset</button>
             <input type="hidden" value="process" name="process" id="meta-asset-type">
         </div>
@@ -314,8 +405,9 @@
 <table style="display: none;" class="refernceTableForUnbounded">
     <tbody>
     <tr id="table_reference_subprocess">
-        <td valign="top"><input type="text" class="form-control subprocess_Name" value="" name="subprocess_Name" id="subprocess_Name" onkeydown="subProcessNamesAutoComplete()"></td>
-        <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td>
+        <td valign="top"><input type="text" class="form-control subprocess_Name" value="" name="subprocess_Name"
+                                id="subprocess_Name" onkeydown="subProcessNamesAutoComplete()"></td>
+        <td><label  data-name="subprocess" class="remove-process" onclick="deleteProcess(this)"><i class="fa fa-trash"></i></label></td>
     </tr>
     </tbody>
 </table>
@@ -323,44 +415,139 @@
 <table style="display: none;" class="refernceTableForUnbounded">
     <tbody>
     <tr id="table_reference_successor">
-        <td valign="top"><input type="text" class="form-control successor_Name" value="" name="successor_Name" id="successor_Name" onkeydown="successorNameAutoComplete()"></td>
-        <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td></tr>
+        <td valign="top"><input type="text" class="form-control successor_Name" value="" name="successor_Name"
+                                id="successor_Name" onkeydown="successorNameAutoComplete()"></td>
+        <td><label data-name="successor" class="remove-process" onclick="deleteProcess(this)"><i class="fa fa-trash"></i></label></td>
+    </tr>
     </tbody>
 </table>
 
 <table style="display: none;" class="refernceTableForUnbounded">
     <tbody>
     <tr id="table_reference_predecessor">
-        <td valign="top"><input type="text" class="form-control predecessor_Name" value="" name="predecessor_Name" id="predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
-        <td><a class="js-remove-row"><i class="fa fa-trash"></i></a> </td></tr>
+        <td valign="top"><input type="text" class="form-control predecessor_Name" value="" name="predecessor_Name"
+                                id="predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
+        <td><label data-name="predecessor" class="remove-process" onclick="deleteProcess(this)"><i class="fa fa-trash"></i></label></td>
+    </tr>
     </tbody>
 </table>
 
 <div id="flowChartView" style="display:none">
-    <br />
-    <a id="flowchartOverviewLink" class="btn btn-primary" onclick="redirectToProcess(this)" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
-    <button class="btn btn-primary" id="flowchartSaveBtn" onclick=" _saveFlowchart()">Save</button><br /><br />
+    <br/>
+
+    <h2 id="flow-chart-view-header"></h2>
+    <a id="flowchartOverviewLink" class="btn btn-primary" onclick="redirectToProcess(this)" href=""><span
+            class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
+    <button class="btn btn-primary" id="flowchartSaveBtn" onclick=" _saveFlowchart()">Save</button>
+    <br/><br/>
+
     <div style="width:100%; height: 50%; white-space:nowrap;">
         <span style="display: inline-block; vertical-align: top; padding: 5px; width:15%">
-            <div id="myPalette" style="border: solid 1px gray; height: auto"><p><center><strong>Palette</strong></center></p>
+            <div id="myPalette" style="border: solid 1px gray; height: 602px">
                 <div class="jtk-demo-main" style="margin-top: 20px;">
-                    <div class="jtk-demo-canvas canvas-wide flowchart-demo" id="canvas1">
-                        <div class="window start jsplumb-connected" id="startEv"><strong><p>start</p></strong></div>
-                        <div class="window step jsplumb-connected-step" id="stepEv"><strong><p>step</p></strong></div>
-                        <div class="window diamond jsplumb-connected-step" id="descEv"><strong><p class="desc-text">decision</p></strong></div>
-                        <div class="window start jsplumb-connected-end" id="endEv"><strong><p>end</p></strong></div>
+                    <div class="jtk-demo-canvas canvas-wide flowchart-demo" id="canvas1" style="border: none">
+                        <div class="window start jsplumb-connected" id="startEv" title="To start the flowchart"><strong>
+                            <p>start</p></strong></div>
+                        <div style="border: 1px solid lightgray; width: 150px; top: 8em; position: absolute; left: 0.5em;"></div>
+                        <div class="window step jsplumb-connected-step" id="stepEv" title="To describe a step"><strong>
+                            <p>step</p></strong></div>
+                        <div style="border: 1px solid lightgray; width: 150px; top: 15.25em; position: absolute; left: 0.5em;"></div>
+                        <div class="window diamond jsplumb-connected-step" id="descEv" title="To describe a decision">
+                            <strong><p class="desc-text">decision</p></strong></div>
+                        <div style="border: 1px solid lightgray; width: 150px; top: 24.5em; position: absolute; left: 0.5em;"></div>
+                        <div class="window step parallelogram jsplumb-connected-step" id="inpEv"
+                             title="To take/give input/output"><strong><p class="input-text">i/o</p></strong></div>
+                        <div style="border: 1px solid lightgray; width: 150px; top: 31.5em; position: absolute; left: 0.5em;"></div>
+                        <div class="window end jsplumb-connected-end" id="endEv" title="To end the flowchart"><strong>
+                            <p>end</p></strong></div>
                     </div>
                 </div>
             </div>
         </span>
 
         <span style="display: inline-block; vertical-align: top; padding: 5px; width:85%">
-          <div id="myDiagram" style="border: solid 1px gray;;"><p><center><strong>Drawing</strong></center></p>
+          <div id="myDiagram" style="border: solid 1px gray;"><p>
+              <center><strong>Drawing</strong></center>
+              </p>
               <div class="jtk-demo-main" style="margin-top: 20px;">
                   <div class="jtk-demo-canvas canvas-wide flowchart-demo jtk-surface  jtk-surface-nopan" id="canvas">
                   </div>
               </div>
           </div>
         </span>
+    </div>
+</div>
+<div class="modal fade" id="searchModal">
+    <div class="modal-dialog">
+        <div class="modal-content search-modal">
+            <div class="modal-header custom-header">
+                <a class="close" data-dismiss="modal">&times;</a>
+
+                <h3>Search Processes</h3>
+            </div>
+            <div class="modal-body">
+                <div class="well asset-well search-form">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12 advanced-search-form-container">
+                                <form id="process-search-form">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="process-name">Name</label>
+                                                <input type="text" class="form-control" id="process-name"
+                                                       name="process-name" placeholder="Enter an asset name">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-tags">Tags</label>
+                                                <input type="text" class="form-control" id="process-tags"
+                                                       name="process-tags" placeholder="Enter a tag">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-description">Description</label>
+                                                <input type="text" class="form-control" id="process-description"
+                                                       name="process-description" placeholder="Process Description">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-content">Content</label>
+                                                <input type="text" class="form-control" id="process-content"
+                                                       name="process-content" placeholder="PDF Content">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="process-version">Version</label>
+                                                <input type="text" class="form-control" id="process-version"
+                                                       name="process-version" placeholder="Version Eg: 1.0.0">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-lcState">Lifecycle State</label>
+                                                <input type="text" class="form-control" id="process-lcState"
+                                                       name="process-lcState" placeholder="Lifecycle State">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-owner">Owner</label>
+                                                <input type="text" class="form-control" id="process-owner"
+                                                       name="process-owner" placeholder="Process Owner">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button id='process-search-btn' type="submit" class="btn btn-primary">SEARCH
+                                    </button>
+                                    <button id="form-clear-btn" class="btn btn-default">CLEAR</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="process-search-results" class="well asset-well">
+                    <label>Search Results</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="btn" data-dismiss="modal">Cancel</a>
+                <a href="#!" id="okButton" class="btn btn-primary">Add</a>
+            </div>
+        </div>
     </div>
 </div>

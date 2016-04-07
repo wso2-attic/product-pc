@@ -1,7 +1,5 @@
 package org.wso2.carbon.pc.core;
 
-import com.itextpdf.text.pdf.*;
-import com.itextpdf.text.pdf.parser.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.solr.common.SolrException;
@@ -56,20 +54,6 @@ public class ProcessPDFIndexer implements Indexer{
             throw new SolrException(SolrException.ErrorCode.SERVER_ERROR, msg);
         }
     }
-    public String processPDF(InputStream pdfStream){
 
-        try {
-
-                PdfReader reader = new PdfReader(pdfStream);
-                int numberOfPages = reader.getNumberOfPages();
-                String str=PdfTextExtractor.getTextFromPage(reader, 2); //Extracting the content from a particular page.
-               // System.out.println(str);
-                reader.close();
-
-        }catch (Exception ex){
-            log.error(ex.getMessage(), ex);
-        }
-        return null;
-    }
 
 }

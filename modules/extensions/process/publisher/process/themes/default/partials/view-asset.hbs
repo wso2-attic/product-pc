@@ -1,91 +1,132 @@
 <h2 id="view-header">{{assets.tables.[0].fields.name.value}}</h2>
 <br/>
 <div id="overviewDiv">
-            <table class="table table-responsive" style="width: 8cm;border-bottom:0px !important;">
-                <tbody>
-                <tr>
-                    <td width="40%" style="border: 0px !important;">Version:</td>
-                    <td width="60%" id="process-version" style="border: 0px !important;">{{assets.tables.[0].fields.version.value}}</td>
-                </tr>
-                <tr>
-                    <td width="40%" style="border: 0px !important;">Owner:</td>
-                    <td width="40%" style="border: 0px !important;" contenteditable="true" onblur="editProcessOwner(this)">{{assets.tables.[0].fields.owner.value}}</td>
-                    <td width="20%" style="border: 0px !important;"><span id="processOwnerUpdateBtn" class="glyphicon glyphicon-ok" data-toggle="tooltip" title="Click here to update the value" style="color:#0081c2;cursor: pointer;display: none;" onclick="updateProcessOwner(this)"></span></td>
-                </tr>
-                </tbody>
-            </table>
+    <table class="table table-responsive" style="width: 8cm;border-bottom:0px !important;">
+        <tbody>
+        <tr>
+            <td width="40%" style="border: 0px !important;">Version:</td>
+            <td width="60%" id="process-version"
+                style="border: 0px !important;">{{assets.tables.[0].fields.version.value}}</td>
+        </tr>
+        <tr>
+            <td width="40%" style="border: 0px !important;">Owner:</td>
+            <td width="40%" style="border: 0px !important;" contenteditable="true"
+                onblur="editProcessOwner(this)">{{assets.tables.[0].fields.owner.value}}</td>
+            <td width="20%" style="border: 0px !important;"><span id="processOwnerUpdateBtn"
+                                                                  class="glyphicon glyphicon-ok" data-toggle="tooltip"
+                                                                  title="Click here to update the value"
+                                                                  style="color:#0081c2;cursor: pointer;display: none;"
+                                                                  onclick="updateProcessOwner(this)"></span></td>
+        </tr>
+        </tbody>
+    </table>
 
-            <div class="control-group" style="display: inline-block">
-                {{#if processTextAvaliable}}
-                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View/Edit Process Text</button></div>
-                    <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()" style="display: none">Describe process in text</button></div>
-                {{else}}
-                    <div id="vtdiv"><button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View/Edit Process Text</button></div>
-                    <div id="atdiv"><button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text</button></div>
-                {{/if}}
-            </div>
-
-            <div class="control-group" style="display: inline-block">
-                {{#if bpmnAvaliable}}
-                    <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
-                    <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
-                {{else}}
-                    <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
-                {{/if}}
-            </div>
-
-            <div class="control-group" style="display: inline-block">
-                {{#if documentAvailable}}
-                    <div id="sddiv"><button id="viewDocumentButton" class="btn btn-primary" onclick="showDocument()">View Document</button></div>
-                {{else}}
-                    <div id="addiv"><button id="addDocumentButton" class="btn btn-primary" onclick="associateDoc()">Associate Document</button></div>
-                {{/if}}
-            </div>
-
-            <div class="control-group" style="display: inline-block;">
-                {{#if flowchartAvailable}}
-                    <div id="sfdiv">
-                        <button id="showFlowchartButton" class="btn btn-primary"
-                                onclick="showFlowchartEditor('{{assets.tables.[0].fields.name.value}}', '{{flowchartPath}}')">Edit Flowchart</button>
-                    </div>
-                {{else}}
-                    <div id="aFdiv"><button id="addFlowchartButton" class="btn btn-primary" onclick="associateEditorFlowChart('{{assets.tables.[0].fields.name.value}}')">Associate Flowchart</button></div>
-                {{/if}}
-            </div>
     <div class="control-group" style="display: inline-block">
-                
-        <button id="pdfViewer" class="btn btn-primary" style="display: none" onclick="showPDF()">Show PDF</button>
-        <button id="pdfUploader" class="btn btn-primary" style="display:none" onclick="associatePdf()">Associate PDF</button>
+        {{#if processTextAvaliable}}
+            <div id="vtdiv">
+                <button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View/Edit Process Text</button>
+            </div>
+            <div id="atdiv">
+                <button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()" style="display: none">
+                    Describe process in text
+                </button>
+            </div>
+        {{else}}
+            <div id="vtdiv">
+                <button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View/Edit
+                    Process Text
+                </button>
+            </div>
+            <div id="atdiv">
+                <button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text
+                </button>
+            </div>
+        {{/if}}
     </div>
 
-    <br /><br />
+    <div class="control-group" style="display: inline-block">
+        {{#if bpmnAvaliable}}
+            <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
+            <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
+        {{else}}
+            <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
+        {{/if}}
+    </div>
+
+    <div class="control-group" style="display: inline-block">
+        {{#if documentAvailable}}
+            <div id="sddiv">
+                <button id="viewDocumentButton" class="btn btn-primary" onclick="showDocument()">View Document</button>
+            </div>
+        {{else}}
+            <div id="addiv">
+                <button id="addDocumentButton" class="btn btn-primary" onclick="associateDoc()">Associate Document
+                </button>
+            </div>
+        {{/if}}
+    </div>
+
+    <div class="control-group" style="display: inline-block;">
+        {{#if flowchartAvailable}}
+            <div id="sfdiv">
+                <button id="showFlowchartButton" class="btn btn-primary"
+                        onclick="showFlowchartEditor('{{assets.tables.[0].fields.name.value}}', '{{flowchartPath}}')">
+                    Edit Flowchart
+                </button>
+            </div>
+        {{else}}
+            <div id="aFdiv">
+                <button id="addFlowchartButton" class="btn btn-primary" onclick="associateEditorFlowChart()">Associate
+                    Flowchart
+                </button>
+            </div>
+        {{/if}}
+    </div>
+    <div class="control-group" style="display: inline-block">
+
+        <button id="pdfViewer" class="btn btn-primary" style="display: none" onclick="showPDF()">Show PDF</button>
+        <button id="pdfUploader" class="btn btn-primary" style="display:none" onclick="associatePdf()">Associate PDF
+        </button>
+    </div>
+
+    <br/><br/>
 
     <form class="form-horizontal">
         <div class="control-group">
 
             <h2 class="field-title">
-                <a class="collapsing-h2" aria-expanded="true" href="#subprocess" data-toggle="collapse" rel="tooltip" title="List of subprocesses for a given process">
+                <a class="collapsing-h2 collapsed" aria-expanded="true" href="#subprocess" data-toggle="collapse"
+                   rel="tooltip" title="List of subprocesses for a given process">
                     <i class="cu-btn-exp-col btn-collapsed">Subprocess</i>
                 </a>
             </h2>
 
-            <div id="subprocess" class="responsive-form-container collapse in" aria-expanded="true" style="">
+            <div id="subprocess" class="responsive-form-container collapse out" aria-expanded="true" style="">
                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
                     &nbsp;
                 </div>
                 <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                    <div class="add-unbounded-row"><a data-name="subprocess" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Subprocess</a></div>
+                    <div class="add-unbounded-row">
+                        <a data-name="subprocess" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
+                            Subprocess</a>
+                        <button class="btn btn-primary view" data-name="subprocess" id="search-process-view">
+                            <i class="fa fa-search"></i> Search Process
+                        </button>
+                    </div>
                     <table class="tablex cu-data-table js-unbounded-table" id="table_subprocess">
                         <thead>
-
-                        <tr><th></th>
-                        </tr></thead>
+                        <tr>
+                            <th style="background: none;"></th>
+                        </tr>
+                        </thead>
                         <tbody>
                         {{#each involveProcessList.subprocesses}}
                             <tr>
-                                <td valign="top" style="width: 90%;"><span id="subprocess_Name" class="subprocess_Name">{{this.name}}-{{this.version}}</span></td>
+                                <td valign="top" style="width: 90%;"><span id="subprocess_Name"
+                                                                           class="subprocess_Name">{{this.name}}-{{this.version}}</span></td>
                                 <td style="width: 5%;"></td>
-                                <td style="width: 5%;"><a class="js-remove-row" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></a> </td>
+                                <td style="width: 5%;"><label class="remove-process" onclick="deleteSubprocess(this)"><i
+                                        class="fa fa-trash"></i></label></td>
                             </tr>
                         {{/each}}
                         </tbody>
@@ -94,27 +135,38 @@
             </div>
 
             <h2 class="field-title">
-                <a class="collapsing-h2" aria-expanded="true" href="#successor" data-toggle="collapse" rel="tooltip" title="List of successor processes for a given process">
+                <a class="collapsing-h2 collapsed" aria-expanded="true" href="#successor" data-toggle="collapse"
+                   rel="tooltip" title="List of successor processes for a given process">
                     <i class="cu-btn-exp-col btn-collapsed">Successor</i>
                 </a>
             </h2>
-            <div id="successor" class="responsive-form-container collapse in" aria-expanded="true" style="">
+
+            <div id="successor" class="responsive-form-container collapse out" aria-expanded="true" style="">
                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
                     &nbsp;
                 </div>
                 <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                    <div class="add-unbounded-row"><a data-name="successor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Successor</a></div>
+                    <div class="add-unbounded-row">
+                        <a data-name="successor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
+                            Successor</a>
+                        <button class="btn btn-primary view" data-name="successor" id="search-process-view">
+                            <i class="fa fa-search"></i> Search Process
+                        </button>
+                    </div>
                     <table class="tablex cu-data-table js-unbounded-table" id="table_successor">
                         <thead>
-
-                        <tr><th></th>
-                        </tr></thead>
+                        <tr>
+                            <th style="background: none;"></th>
+                        </tr>
+                        </thead>
                         <tbody>
                         {{#each involveProcessList.successors}}
                             <tr>
-                                <td valign="top" style="width: 90%;"><span id="successor_Name" class="successor_Name">{{this.name}}-{{this.version}}</span></td>
+                                <td valign="top" style="width: 90%;"><span id="successor_Name"
+                                                                           class="successor_Name">{{this.name}}-{{this.version}}</span></td>
                                 <td style="width: 5%;"></td>
-                                <td style="width: 5%;"><a class="js-remove-row" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></a> </td>
+                                <td style="width: 5%;"><label class="remove-process" onclick="deleteSuccessor(this)"><i
+                                        class="fa fa-trash"></i></label></td>
                             </tr>
                         {{/each}}
                         </tbody>
@@ -124,28 +176,38 @@
 
 
             <h2 class="field-title">
-                <a class="collapsing-h2" aria-expanded="true" href="#predecessor" data-toggle="collapse" rel="tooltip" title="List of predecessor processes for a given process">
+                <a class="collapsing-h2 collapsed" aria-expanded="true" href="#predecessor" data-toggle="collapse"
+                   rel="tooltip" title="List of predecessor processes for a given process">
                     <i class="cu-btn-exp-col btn-collapsed">Predecessor</i>
                 </a>
             </h2>
 
-            <div id="predecessor" class="responsive-form-container collapse in" aria-expanded="true" style="">
+            <div id="predecessor" class="responsive-form-container collapse out" aria-expanded="true" style="">
                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
                     &nbsp;
                 </div>
                 <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                    <div class="add-unbounded-row"><a data-name="predecessor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add Predecessor</a></div>
+                    <div class="add-unbounded-row">
+                        <a data-name="predecessor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
+                            Predecessor</a>
+                        <button class="btn btn-primary view" data-name="predecessor" id="search-process">
+                            <i class="fa fa-search"></i> Search Process
+                        </button>
+                    </div>
                     <table class="tablex cu-data-table js-unbounded-table" id="table_predecessor">
                         <thead>
-
-                        <tr><th></th>
-                        </tr></thead>
+                        <tr>
+                            <th style="background: none;"></th>
+                        </tr>
+                        </thead>
                         <tbody>
                         {{#each involveProcessList.predecessors}}
                             <tr>
-                                <td valign="top" style="width: 90%;"><span id="predecessor_Name" class="predecessor_Name">{{this.name}}-{{this.version}}</span></td>
+                                <td valign="top" style="width: 90%;"><span id="predecessor_Name"
+                                                                           class="predecessor_Name">{{this.name}}-{{this.version}}</span></td>
                                 <td style="width: 5%;"></td>
-                                <td style="width: 5%;"><a class="js-remove-row" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></a> </td>
+                                <td style="width: 5%;"><label class="remove-process" onclick="deletePredecessor(this)"><i
+                                        class="fa fa-trash"></i></label></td>
                             </tr>
                         {{/each}}
                         </tbody>
@@ -159,10 +221,12 @@
 
 <div id="processTextContainer" style="display: none">
     <div class="form-group">
-        <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button>
+        <button class="btn btn-primary" onclick="showOverview(this)"><span
+                class="glyphicon glyphicon-circle-arrow-left"></span> Overview
+        </button>
         <button class="btn btn-primary" onclick="editText()">Edit</button>
     </div>
-    <div class = "panel panel-default">
+    <div class="panel panel-default">
         <div id="processTextDiv" class="panel-body">
             Place holder for rendering process text
         </div>
@@ -171,11 +235,14 @@
 
 <div id="processTextEditDiv" style="display: none">
     <div class="form-group">
-        <button class="btn btn-primary" id="processTextOverviewBtn" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button>
+        <button class="btn btn-primary" id="processTextOverviewBtn" onclick="showOverview(this)"><span
+                class="glyphicon glyphicon-circle-arrow-left"></span> Overview
+        </button>
         <button class="btn btn-primary" id="processTextSaveBtn" onclick="saveProcessText(this)">Save</button>
     </div>
     <input type="hidden" id="textProcessName" name="textProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
-    <input type="hidden" id="textProcessVersion" name="textProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
+    <input type="hidden" id="textProcessVersion" name="textProcessVersion"
+           value="{{assets.tables.[0].fields.version.value}}"/>
     <textarea placeholder="Enter Process Details" rows="15"
               id="processContent" name="processContentName"
               class="input-large"
@@ -183,21 +250,34 @@
 </div>
 
 <div id="bpmnViewDiv" style="display: none">
-    <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button><br /><br />
-<div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
-    <img id="bpmnImage" src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
-</div>
+    <button class="btn btn-primary" onclick="showOverview(this)"><span
+            class="glyphicon glyphicon-circle-arrow-left"></span> Overview
+    </button>
+    <br/><br/>
+
+    <div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
+        <img id="bpmnImage" style="position: relative;top: 50%;left: 50%;transform: translateX(-50%) translateY(-50%);"
+             src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
+    </div>
 </div>
 
 <div id="bpmnEditDiv" style="display:none">
-    <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button>
-    <form  method='post' action='../apis/upload_bpmn' enctype="multipart/form-data" class="form-horizontal" id="form-bar-create" data-redirect-url='{{url ""}}/assets/{{rxt.shortName}}/list' >
-        <br />
+    <button class="btn btn-primary" onclick="showOverview(this)"><span
+            class="glyphicon glyphicon-circle-arrow-left"></span> Overview
+    </button>
+    <form method='post' action='../apis/upload_bpmn' enctype="multipart/form-data" class="form-horizontal"
+          id="form-bar-create" data-redirect-url='{{url ""}}/assets/{{rxt.shortName}}/list'>
+        <br/>
+
         <div style="float:left;width:15cm">
-            <input type="file" class="filestyle" data-buttonName="btn-primary" data-placeholder="Enter archive" name="bpmn" id="bpmnFile" data-buttonText="BPMN file" accept=".xml,.bpmn">
-        </div><br /><br />
-        <input type="hidden" id="bpmnProcessName" name="bpmnProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
-        <input type="hidden" id="bpmnProcessVersion" name="bpmnProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
+            <input type="file" class="filestyle" data-buttonName="btn-primary" data-placeholder="Enter archive"
+                   name="bpmn" id="bpmnFile" data-buttonText="BPMN file" accept=".xml,.bpmn">
+        </div>
+        <br/><br/>
+        <input type="hidden" id="bpmnProcessName" name="bpmnProcessName"
+               value="{{assets.tables.[0].fields.name.value}}"/>
+        <input type="hidden" id="bpmnProcessVersion" name="bpmnProcessVersion"
+               value="{{assets.tables.[0].fields.version.value}}"/>
 
         <div id="saveButtons" class="form-actions">
             <input type='submit' id="btn-create-asset-bar" class="btn btn-primary"
@@ -212,9 +292,13 @@
 <table style="display: none;" class="refernceTableForUnbounded">
     <tbody>
     <tr id="table_reference_subprocess">
-        <td valign="top" style="width: 90%;"><input type="text" class="form-control subprocess_Name" value="" name="subprocess_Name" id="subprocess_Name" onkeydown="subProcessNamesAutoComplete()"></td>
-        <td style="width: 5%;"><span class="glyphicon glyphicon-ok" style="color:#0081c2;cursor: pointer;" onclick="readUpdatedSubprocess(this)"></span></td>
-        <td style="width: 5%;"><a class="js-remove-row" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></a> </td>
+        <td valign="top" style="width: 90%;"><input type="text" class="form-control subprocess_Name" value=""
+                                                    name="subprocess_Name" id="subprocess_Name"
+                                                    onkeydown="subProcessNamesAutoComplete()"></td>
+        <td style="width: 5%;"><span class="glyphicon glyphicon-ok" style="color:#0081c2;cursor: pointer;"
+                                     onclick="readUpdatedSubprocess(this)"></span></td>
+        <td style="width: 5%;"><label data-name="subprocess" class="remove-process" onclick="deleteProcess(this)"><i class="fa fa-trash"></i></label>
+        </td>
     </tr>
     </tbody>
 </table>
@@ -222,9 +306,13 @@
 <table style="display: none;" class="refernceTableForUnbounded">
     <tbody>
     <tr id="table_reference_successor">
-        <td valign="top" style="width: 90%;"><input type="text" class="form-control successor_Name" value="" name="successor_Name" id="successor_Name" onkeydown="successorNameAutoComplete()"></td>
-        <td style="width: 5%;"><span class="glyphicon glyphicon-ok" style="color:#0081c2;cursor: pointer;" onclick="readUpdatedSuccessor(this)"></span></td>
-        <td style="width: 5%;"><a class="js-remove-row" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></a> </td>
+        <td valign="top" style="width: 90%;"><input type="text" class="form-control successor_Name" value=""
+                                                    name="successor_Name" id="successor_Name"
+                                                    onkeydown="successorNameAutoComplete()"></td>
+        <td style="width: 5%;"><span class="glyphicon glyphicon-ok" style="color:#0081c2;cursor: pointer;"
+                                     onclick="readUpdatedSuccessor(this)"></span></td>
+        <td style="width: 5%;"><label data-name="successor" class="remove-process" onclick="deleteProcess(this)"><i class="fa fa-trash"></i></label>
+        </td>
     </tr>
     </tbody>
 </table>
@@ -232,40 +320,70 @@
 <table style="display: none;" class="refernceTableForUnbounded">
     <tbody>
     <tr id="table_reference_predecessor">
-        <td valign="top" style="width: 90%;"><input type="text" class="form-control predecessor_Name" value="" name="predecessor_Name" id="predecessor_Name" onkeydown="predecessorNameAutoComplete()"></td>
-        <td style="width: 5%;"><span class="glyphicon glyphicon-ok" style="color:#0081c2;cursor: pointer;" onclick="readUpdatedPredecessor(this)"></span></td>
-        <td style="width: 5%;"><a class="js-remove-row" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></a> </td>
+        <td valign="top" style="width: 90%;"><input type="text" class="form-control predecessor_Name" value=""
+                                                    name="predecessor_Name" id="predecessor_Name"
+                                                    onkeydown="predecessorNameAutoComplete()"></td>
+        <td style="width: 5%;"><span class="glyphicon glyphicon-ok" style="color:#0081c2;cursor: pointer;"
+                                     onclick="readUpdatedPredecessor(this)"></span></td>
+        <td style="width: 5%;"><label data-name="predecessor" class="remove-process" onclick="deleteProcess(this)"><i
+                class="fa fa-trash"></i></label></td>
     </tr>
     </tbody>
 </table>
 
 <div id="holder" style="display:none">
-    <button class="btn btn-primary" onclick="showOverview(this)"><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</button><br /><br />
+    <button class="btn btn-primary" onclick="showOverview(this)"><span
+            class="glyphicon glyphicon-circle-arrow-left"></span> Overview
+    </button>
+    <br/><br/>
     <hr>
     <div>
-        <button id="prev" class="btn btn-primary" onclick="goPrevious()"><span class="glyphicon glyphicon-circle-arrow-left"></span>Prev</button>
-        <button id="next" class="btn btn-primary" onclick="goNext()"><span class="glyphicon glyphicon-circle-arrow-right"></span>Next</button>
+        <button id="prev" class="btn btn-primary" onclick="goPrevious()"><span
+                class="glyphicon glyphicon-circle-arrow-left"></span>Prev
+        </button>
+        <button id="next" class="btn btn-primary" onclick="goNext()"><span
+                class="glyphicon glyphicon-circle-arrow-right"></span>Next
+        </button>
         &nbsp; &nbsp;
         <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
         &nbsp; &nbsp;
-        <button id="zoomOut" class="toolbarButton zoomOut btn btn-primary" title="Zoom Out" tabindex="21" data-l10n-id="zoom_out" onclick="zoomOut()">
+        <button id="zoomOut" class="toolbarButton zoomOut btn btn-primary" title="Zoom Out" tabindex="21"
+                data-l10n-id="zoom_out" onclick="zoomOut()">
             <span data-l10n-id="zoom_out_label"></span>
             <span class="glyphicon glyphicon-minus"></span>
         </button>
-        <button id="zoomIn" class="toolbarButton zoomIn btn btn-primary" title="Zoom In" tabindex="22" data-l10n-id="zoom_in" onclick="zoomIn()">
+        <button id="zoomIn" class="toolbarButton zoomIn btn btn-primary" title="Zoom In" tabindex="22"
+                data-l10n-id="zoom_in" onclick="zoomIn()">
             <span data-l10n-id="zoom_in_label"></span>
             <span class="glyphicon glyphicon-plus"></span>
         </button>
                   <span style="min-width: 120px; max-width: 120px;" id="scaleSelectContainer">
-                     <select style="min-width: 142px;" class="selectpicker" data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="zoom" onclick="zoomSelect()">
-                         <option title="" value="0.5" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 50 }">50%</option>
-                         <option title="" value="0.75" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 75 }">75%</option>
-                         <option title="" value="1" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 100 }">100%</option>
-                         <option title="" value="1.25" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 125 }">125%</option>
-                         <option title="" value="1.5" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 150 }" selected="selected">150%</option>
-                         <option title="" value="2" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 200 }">200%</option>
-                         <option title="" value="3" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 300 }">300%</option>
-                         <option title="" value="4" data-l10n-id="page_scale_percent" data-l10n-args="{ &quot;scale&quot;: 400 }">400%</option>
+                     <select style="min-width: 142px;" class="selectpicker" data-style="btn-primary" id="scaleSelect"
+                             title="Zoom" tabindex="23" data-l10n-id="zoom" onclick="zoomSelect()">
+                         <option title="" value="0.5" data-l10n-id="page_scale_percent"
+                                 data-l10n-args="{ &quot;scale&quot;: 50 }">50%
+                         </option>
+                         <option title="" value="0.75" data-l10n-id="page_scale_percent"
+                                 data-l10n-args="{ &quot;scale&quot;: 75 }">75%
+                         </option>
+                         <option title="" value="1" data-l10n-id="page_scale_percent"
+                                 data-l10n-args="{ &quot;scale&quot;: 100 }">100%
+                         </option>
+                         <option title="" value="1.25" data-l10n-id="page_scale_percent"
+                                 data-l10n-args="{ &quot;scale&quot;: 125 }">125%
+                         </option>
+                         <option title="" value="1.5" data-l10n-id="page_scale_percent"
+                                 data-l10n-args="{ &quot;scale&quot;: 150 }" selected="selected">150%
+                         </option>
+                         <option title="" value="2" data-l10n-id="page_scale_percent"
+                                 data-l10n-args="{ &quot;scale&quot;: 200 }">200%
+                         </option>
+                         <option title="" value="3" data-l10n-id="page_scale_percent"
+                                 data-l10n-args="{ &quot;scale&quot;: 300 }">300%
+                         </option>
+                         <option title="" value="4" data-l10n-id="page_scale_percent"
+                                 data-l10n-args="{ &quot;scale&quot;: 400 }">400%
+                         </option>
                      </select>
 
                   </span>
@@ -280,19 +398,27 @@
 <div id="pdfUploaderView" class="form-group" style="display: none">
 
     <h2 id="create-view-header"></h2>
-    <br /><a id="bpmnOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
+    <br/><a id="bpmnOverviewLink" class="btn btn-primary" href=""><span
+        class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
 
-    <form method="post" action="../apis/upload_pdf"  onsubmit="" enctype="multipart/form-data" class="form-horizontal" id="form-bar-create">
+    <form method="post" action="../apis/upload_pdf" onsubmit="" enctype="multipart/form-data" class="form-horizontal"
+          id="form-bar-create">
         <br>
-        <div style="float:left;width:15cm">
-            <input type="file" onchange="setfilename(this.value);" class="filestyle" data-buttonname="btn-primary" data-placeholder="Associate pdf/text file" name="pdfFile" id="pdfFile" data-buttontext="PDF file" accept=".pdf" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
 
-        </div><br><br>
+        <div style="float:left;width:15cm">
+            <input type="file" onchange="setfilename(this.value);" class="filestyle" data-buttonname="btn-primary"
+                   data-placeholder="Associate pdf/text file" name="pdfFile" id="pdfFile" data-buttontext="PDF file"
+                   accept=".pdf" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
+
+        </div>
+        <br><br>
         <input type="hidden" id="ProcessName" name="ProcessName" value="{{assets.tables.[0].fields.name.value}}">
-        <input type="hidden" id="ProcessVersion" name="ProcessVersion" value="{{assets.tables.[0].fields.version.value}}">
+        <input type="hidden" id="ProcessVersion" name="ProcessVersion"
+               value="{{assets.tables.[0].fields.version.value}}">
 
         <div id="saveButtons" class="form-actions">
-            <input type="submit" id="btn-create-asset-bar" class="btn btn-primary" name="addNewAssetButton" value="Upload pdf">
+            <input type="submit" id="btn-create-asset-bar" class="btn btn-primary" name="addNewAssetButton"
+                   value="Upload pdf">
             <button class="btn" type="reset">Reset</button>
             <input type="hidden" value="process" name="process" id="meta-asset-type">
         </div>
@@ -301,29 +427,47 @@
 </div>
 
 <div id="flowChartEditorView" style="display:none">
-    <br />
-    <a id="fcEditorOverviewLink" class="btn btn-primary" onclick="redirectTo(this)" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
-    <button class="btn btn-primary" id="flowchartSaveBtn" onclick=" _saveEditedFlowchart()">Save</button><br /><br />
+    <br/>
+    <a id="fcEditorOverviewLink" class="btn btn-primary" onclick="redirectTo(this)" href=""><span
+            class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
+    <button class="btn btn-primary" id="flowchartSaveBtn" onclick=" _saveEditedFlowchart()">Save</button>
+    <button class="btn btn-primary" id="flowchartEditorDltBtn" onclick="removeFlowchart()">Delete</button>
+    <br/><br/>
     <input type="hidden" id="fcProcessName" name="fcProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
-    <input type="hidden" id="fcProcessVersion" name="fcProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
+    <input type="hidden" id="fcProcessVersion" name="fcProcessVersion"
+           value="{{assets.tables.[0].fields.version.value}}"/>
+
     <div style="width:100%; height: 50%; white-space:nowrap;">
         <span style="display: inline-block; vertical-align: top; padding: 5px; width:15%">
-            <div id="editorPalette" style="border: solid 1px gray; height: auto"><p><center><strong>Palette</strong></center></p>
+            <div id="editorPalette" style="border: solid 1px gray; height: 602px">
                 <div class="jtk-demo-main" style="margin-top: 20px;">
-                    <div class="jtk-demo-canvas canvas-wide flowchart-demo" id="canvas1">
-                        <div class="window start jsplumb-connected" id="startEv"><strong><p>start</p></strong></div>
-                        <div class="window step jsplumb-connected-step" id="stepEv"><strong><p>step</p></strong></div>
-                        <div class="window diamond jsplumb-connected-step" id="descEv"><strong><p class="desc-text">decision</p></strong></div>
-                        <div class="window start jsplumb-connected-end" id="endEv"><strong><p>end</p></strong></div>
+                    <div class="jtk-demo-canvas canvas-wide flowchart-demo" id="canvas1" style="border: none;">
+                        <div class="window start jsplumb-connected" id="startEv" title="To start the flowchart"><strong>
+                            <p>start</p></strong></div>
+                        <div style="border: 1px solid lightgray; width: 150px; top: 8em; position: absolute; left: 0.5em;"></div>
+                        <div class="window step jsplumb-connected-step" id="stepEv" title="To describe a step"><strong>
+                            <p>step</p></strong></div>
+                        <div style="border: 1px solid lightgray; width: 150px; top: 15.25em; position: absolute; left: 0.5em;"></div>
+                        <div class="window diamond jsplumb-connected-step" id="descEv" title="To describe a decision">
+                            <strong><p class="desc-text">decision</p></strong></div>
+                        <div style="border: 1px solid lightgray; width: 150px; top: 24.5em; position: absolute; left: 0.5em;"></div>
+                        <div class="window step parallelogram jsplumb-connected-step" id="inpEv"
+                             title="To take/give input/output"><strong><p class="input-text">i/o</p></strong></div>
+                        <div style="border: 1px solid lightgray; width: 150px; top: 31.5em; position: absolute; left: 0.5em;"></div>
+                        <div class="window end jsplumb-connected-end" id="endEv" title="To end the flowchart"><strong>
+                            <p>end</p></strong></div>
                     </div>
                 </div>
             </div>
         </span>
 
         <span style="display: inline-block; vertical-align: top; padding: 5px; width:85%">
-          <div id="editorDiagram" style="border: solid 1px gray;;"><p><center><strong>Drawing</strong></center></p>
+          <div id="editorDiagram" style="border: solid 1px gray;;"><p>
+              <center><strong>Drawing</strong></center>
+              </p>
               <div class="jtk-demo-main" style="margin-top: 20px;">
-                  <div class="jtk-demo-canvas canvas-wide flowchart-demo jtk-surface  jtk-surface-nopan" id="editor_canvas">
+                  <div class="jtk-demo-canvas canvas-wide flowchart-demo jtk-surface  jtk-surface-nopan"
+                       id="editor_canvas">
                   </div>
               </div>
           </div>
@@ -331,35 +475,16 @@
     </div>
 </div>
 
-<div id="docViewDiv" style="display:none">
-    <a id="docOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a><br />
-    <div class="row-fluid">
-        <div class="span12">
-            <table class="table table-bordered" id="docTable">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Summary</th>
-                    <th>Url</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody id="listDocs">
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-</div>
-
 <div id="docUploaderDiv" style="display:none">
-    <a id="docOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a><br /><br />
+    <a id="docOverviewLink" class="btn btn-primary" href=""><span class="glyphicon glyphicon-circle-arrow-left"></span>
+        Overview</a><br/><br/>
+
     <div class="row-fluid">
         <div class="span12">
             <div class="row-fluid">
                 <div class="control-group">
                     <div id="addDoc">
-                        <a onclick="newDocFormToggle()" href="#">
+                        <a onclick="newDocFormToggle()" id="toggleAnchor" href="#">
                             <i class="fa fa-plus-circle"></i> Add New Document
                         </a>
                     </div>
@@ -370,26 +495,34 @@
                 </div>
             </div>
             <!-- Row -->
-            <form id="addNewDoc" enctype="multipart/form-data" action="../apis/upload_documents" onsubmit="return validateDocument()" method="POST" style="margin-left: 20px;">
+            <form id="addNewDoc" enctype="multipart/form-data" action="../apis/upload_documents"
+                  onsubmit="return validateDocument()" method="POST" style="margin-left: 20px;">
                 <div class="container-fluid" style="padding-left:0">
                     <div id="newDoc">
                         <div class="row-fluid">
                             <div class="span6 name-column" style="float:left;width:50%;">
                                 <div class="control-group">
-                                    <label class="control-label" for="docName">Name<span class="requiredAstrix" style="color: red;">*</span></label>
+                                    <label class="control-label" for="docName">Name<span class="requiredAstrix"
+                                                                                         style="color: red;">*</span></label>
+
                                     <div class="controls">
-                                        <input type="text" class="required validInput" id="docName" name="docName" style="width:100%">
+                                        <input type="text" class="required validInput" id="docName" name="docName"
+                                               style="width:100%">
                                     </div>
                                 </div>
 
                                 <div class="control-group">
                                     <label class="control-label" for="textarea">Summary</label>
+
                                     <div class="controls">
-                                        <textarea id="summaryDoc" name="summaryDoc" rows="3" style="width:100%"></textarea>
+                                        <textarea id="summaryDoc" name="summaryDoc" rows="3"
+                                                  style="width:100%"></textarea>
                                     </div>
                                 </div>
-                                <input type="hidden" id="docProcessName" name="docProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
-                                <input type="hidden" id="docProcessVersion" name="docProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
+                                <input type="hidden" id="docProcessName" name="docProcessName"
+                                       value="{{assets.tables.[0].fields.name.value}}"/>
+                                <input type="hidden" id="docProcessVersion" name="docProcessVersion"
+                                       value="{{assets.tables.[0].fields.version.value}}"/>
                                 <input type="hidden" id="docExtension" name="docExtension" value=""/>
                             </div>
 
@@ -397,29 +530,47 @@
                                 <div class="well">
                                     <div class="control-group">
                                         <label class="control-label">Source</label>
+
                                         <div class="controls">
                                             <label class="radio" style="margin-left:20px">
-                                                <input type="radio" name="optionsRadios1" id="optionsRadios7" value="url" onclick="javascript:$('#sourceUrlDoc').toggle('slow');$('#sourceFile').hide('slow')">URL (Eg: google doc)
-                                                <a class="icon-question-sign help_popup" data-original-title="" title=""></a>
-                                                <p id="urlDoc_help" class="hide">Link to documentation managed by an external configuration management system</p>
+                                                <input type="radio" name="optionsRadios1" id="optionsRadios7"
+                                                       value="url"
+                                                       onclick="javascript:$('#sourceUrlDoc').toggle('slow');$('#sourceFile').hide('slow')">URL
+                                                (Eg: google document)
+                                                <a class="icon-question-sign help_popup" data-original-title=""
+                                                   title=""></a>
+
+                                                <p id="urlDoc_help" class="hide">Link to documentation managed by an
+                                                    external configuration management system</p>
                                             </label>
 
                                             <div id="sourceUrlDoc" class="controls" style="display: none;">
-                                                <span class="requiredAstrix" style="color: red;">*</span> <input type="text" class="required" style="width:98%" id="docUrl" name="docUrl">
+                                                <span class="requiredAstrix" style="color: red;">*</span> <input
+                                                    type="text" class="required" style="width:98%" id="docUrl"
+                                                    name="docUrl">
                                             </div>
                                             <label class="radio" style="margin-left:20px">
-                                                <input type="radio" name="optionsRadios1" id="optionsRadios8" value="file" onclick="javascript:$('#sourceFile').toggle('slow');$('#sourceUrlDoc').hide('slow')">Document
-                                                <a class="icon-question-sign help_popup" data-original-title="" title=""></a>
+                                                <input type="radio" name="optionsRadios1" id="optionsRadios8"
+                                                       value="file"
+                                                       onclick="javascript:$('#sourceFile').toggle('slow');$('#sourceUrlDoc').hide('slow')">Document/pdf
+                                                <a class="icon-question-sign help_popup" data-original-title=""
+                                                   title=""></a>
+
                                                 <p id="fileDoc_help" class="hide">Upload a documentation file</p>
                                             </label>
 
                                             <div id="fileNameDiv" style="display:none;"></div>
-                                            <a onclick="javascript:$('#sourceFile').toggle('slow')" id="toggleFileDoc" style="display:none;">
+                                            <a onclick="javascript:$('#sourceFile').toggle('slow')" id="toggleFileDoc"
+                                               style="display:none;">
                                                 Change File
                                             </a>
+
                                             <div id="sourceFile" class="controls" style="display:none;">
-                                                <span class="requiredAstrix" style="color: red;">*</span> <input type="file" class="required" style="width:98%" name="docLocation" id="docLocation">
-                                                <p id="fileType_help">eg : .docx, .doc</p>
+                                                <span class="requiredAstrix" style="color: red;">*</span> <input
+                                                    type="file" class="required" style="width:98%" name="docLocation"
+                                                    id="docLocation">
+
+                                                <p id="fileType_help">eg : .docx, .doc, .pdf</p>
                                             </div>
                                         </div>
                                     </div>
@@ -430,15 +581,113 @@
                         <div class="row-fluid">
                             <div class="span12">
                                 <div class="control-group">
-                                    <!--<button type="button" class="btn btn-primary" id="saveDocBtn" onclick="saveDoc()">Add Document</button>-->
                                     <input type="submit" class="btn btn-primary" id="saveDocBtn" value="Add Document">
                                 </div>
                             </div>
 
-                        </div><!-- Enod of row -->
+                        </div>
+                        <!-- Enod of row -->
                     </div>
                 </div>
-            </form><br /><br />
+            </form>
+            <br/><br/>
+        </div>
+    </div>
+</div>
+
+<div id="docViewDiv" style="display:none">
+    <div id="docUploaderDivContainer"></div>
+    <div class="row-fluid">
+        <div class="span12">
+            <table class="table table-bordered" id="docTable">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Summary</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="listDocs">
+                </tbody>
+            </table>
+        </div>
+        <div id="googleDocViewer">
+        </div>
+        <div id="pdfDocViewer">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="searchModal">
+    <div class="modal-dialog">
+        <div class="modal-content search-modal">
+            <div class="modal-header custom-header">
+                <a class="close" data-dismiss="modal">&times;</a>
+
+                <h3>Search Processes</h3>
+            </div>
+            <div class="modal-body">
+                <div class="well asset-well search-form">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12 advanced-search-form-container">
+                                <form id="process-search-form">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="process-name">Name</label>
+                                                <input type="text" class="form-control" id="process-name"
+                                                       name="process-name" placeholder="Enter an asset name">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-tags">Tags</label>
+                                                <input type="text" class="form-control" id="process-tags"
+                                                       name="process-tags" placeholder="Enter a tag">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-description">Description</label>
+                                                <input type="text" class="form-control" id="process-description"
+                                                       name="process-description" placeholder="Process Description">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-content">Content</label>
+                                                <input type="text" class="form-control" id="process-content"
+                                                       name="process-content" placeholder="PDF Content">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="process-version">Version</label>
+                                                <input type="text" class="form-control" id="process-version"
+                                                       name="process-version" placeholder="Version Eg: 1.0.0">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-lcState">Lifecycle State</label>
+                                                <input type="text" class="form-control" id="process-lcState"
+                                                       name="process-lcState" placeholder="Lifecycle State">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-owner">Owner</label>
+                                                <input type="text" class="form-control" id="process-owner"
+                                                       name="process-owner" placeholder="Process Owner">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button id='process-search-btn' type="submit" class="btn btn-primary">SEARCH
+                                    </button>
+                                    <button id="form-clear-btn" class="btn btn-default">CLEAR</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="process-search-results" class="well asset-well">
+                    <label>Search Results</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="btn" data-dismiss="modal">Cancel</a>
+                <a href="#!" id="okButton" class="btn btn-primary">Add</a>
+            </div>
         </div>
     </div>
 </div>

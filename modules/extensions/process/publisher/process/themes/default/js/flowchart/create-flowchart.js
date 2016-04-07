@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -19,15 +19,36 @@
 var endpointList = [];
 var sourcepointList = [];
 var _saveFlowchart, elementCount = 0;
+var jsPlumbInstance; //the jsPlumb jsPlumbInstance
+var properties = []; //keeps the properties of each element
 jsPlumb.ready(function () {
+    var element = "";   //the element which will be appended to the canvas
+    var clicked = false;    //check whether an element from the palette was clicked
+
+    jsPlumbInstance = window.jsp = jsPlumb.getInstance({
+        // default drag options
+        DragOptions: {
+            cursor: 'pointer',
+            zIndex: 2000
+        },
+        //the arrow overlay for the connection
+        ConnectionOverlays: [
+            ["Arrow", {
+                location: 1,
+                visible: true,
+                id: "ARROW"
+            }]
+        ],
+        Container: "canvas"
+    });
+
+    //define basic connection type
     var basicType = {
         connector: "StateMachine",
         paintStyle: {strokeStyle: "#216477", lineWidth: 4},
         hoverPaintStyle: {strokeStyle: "blue"}
     };
-    jsPlumb.registerConnectionType("basic", basicType);
-
-    var properties = [];
+    jsPlumbInstance.registerConnectionType("basic", basicType);
 
     //style for the connector
     var connectorPaintStyle = {
@@ -62,6 +83,7 @@ jsPlumb.ready(function () {
             isSource: true,
             connector: ["Flowchart", {stub: [40, 60], gap: 5, cornerRadius: 5, alwaysRespectStubs: true}],
             connectorStyle: connectorPaintStyle,
+            hoverPaintStyle: endpointHoverStyle,
             connectorHoverStyle: connectorHoverStyle,
             EndpointOverlays: [],
             maxConnections: -1,
@@ -71,16 +93,7 @@ jsPlumb.ready(function () {
                     location: 1,
                     visible: true,
                     id: "ARROW",
-                    events: {
-                        click: function () {
-                            alert("you clicked on the arrow overlay")
-                        }
-                    }
-                }],
-                ["Label", {
-                    location: 0.3,
-                    id: "label",
-                    cssClass: "aLabel"
+                    direction: 1
                 }]
             ]
         },
@@ -88,26 +101,53 @@ jsPlumb.ready(function () {
     //definition of the target endpoint the connector would end
         targetEndpoint = {
             endpoint: "Dot",
-            paintStyle: {fillStyle: "#7AB02C", radius: 11},
+            paintStyle: {fillStyle: "#7AB02C", radius: 9},
             maxConnections: -1,
             dropOptions: {hoverClass: "hover", activeClass: "active"},
+            hoverPaintStyle: endpointHoverStyle,
             isTarget: true
         };
 
     //set the label of the connector
     var initConn = function (connection) {
-        var myLabel = prompt("Enter label text: ", "");
-        if (myLabel != null)
-            connection.getOverlay("label").setLabel(myLabel);
+        connection.addOverlay(["Custom", {
+            create: function (component) {
+                return $("<input type=\"text\" value=\"\" autofocus style=\"position:absolute; width: 20px\"\/>");
+            },
+            location: 0.5,
+            id: "label",
+            cssClass: "aLabel"
+        }]);
+
+        connection.addOverlay(["Custom", {
+            create: function (component) {
+                return $("<button title=\"Delete the connection\"><i class=\"fa fa-trash\"><\/i><\/button>");
+            },
+            location: 0.2,
+            id: "close",
+            cssClass: "close-mark btn btn-danger",
+            events: {
+                click: function () {
+                    jsPlumbInstance.detach(connection);
+                    $(".start").css({'border': "2px solid green"})
+                }
+            }
+        }]);
+
+        $(".aLabel").css({
+            'font-weight': 'bold',
+            'text-align': 'center'
+        });
     };
 
-    jsPlumb.bind("connection", function (connInfo, originalEvent) {
+    jsPlumbInstance.bind("connection", function (connInfo, originalEvent) {
         initConn(connInfo.connection);
-    });
 
-    jsPlumb.bind("dblclick", function (conn, originalEvent) {
-        if (confirm("Do you want to delete the connection from " + conn.sourceId + " to " + conn.targetId + "?"))
-            jsPlumb.detach(conn);
+        connInfo.connection.bind("click", function (conn) {
+            $(".jtk-node").css({'outline': "none"});
+            conn.showOverlay("close");
+            var my = "abc";
+        })
     });
 
     //add the endpoints for the elements
@@ -115,71 +155,23 @@ jsPlumb.ready(function () {
     var _addEndpoints = function (toId, sourceAnchors, targetAnchors) {
         for (var i = 0; i < sourceAnchors.length; i++) {
             var sourceUUID = toId + sourceAnchors[i];
-            ep = jsPlumb.addEndpoint("flowchart" + toId, sourceEndpoint, {
+            ep = jsPlumbInstance.addEndpoint("flowchart" + toId, sourceEndpoint, {
                 anchor: sourceAnchors[i], uuid: sourceUUID
             });
             sourcepointList.push(["flowchart" + toId, ep]);
+            ep.canvas.setAttribute("title", "Drag a connection from here");
             ep = null;
         }
         for (var j = 0; j < targetAnchors.length; j++) {
             var targetUUID = toId + targetAnchors[j];
-            ep = jsPlumb.addEndpoint("flowchart" + toId, targetEndpoint, {
+            ep = jsPlumbInstance.addEndpoint("flowchart" + toId, targetEndpoint, {
                 anchor: targetAnchors[j], uuid: targetUUID
             });
             endpointList.push(["flowchart" + toId, ep]);
+            ep.canvas.setAttribute("title", "Drop a connection here");
             ep = null;
         }
     };
-
-    var element = "";
-    var clicked = false;
-    var to_delete = "";
-
-    //load properties of a start element once the start element in the palette is clicked
-    $('#startEv').click(function () {
-        loadProperties("window start custom jtk-node jsplumb-connected", "5em", "5em", "start", ["BottomCenter"],
-            [], false);
-        clicked = true;
-    });
-
-    //load properties of a step element once the step element in the palette is clicked
-    $('#stepEv').click(function () {
-        loadProperties("window step custom jtk-node jsplumb-connected-step", "13em", "5em", "step",
-            ["BottomCenter", "RightMiddle"], ["TopCenter", "LeftMiddle"], true);
-        clicked = true;
-    });
-
-    //load properties of a decision element once the decision element in the palette is clicked
-    $('#descEv').click(function () {
-        loadProperties("window diamond custom jtk-node jsplumb-connected-step", "23em", "5em", "decision",
-            ["LeftMiddle", "RightMiddle", "BottomCenter"], ["TopCenter"], true);
-        clicked = true;
-    });
-
-    //load properties of a end element once the end element in the palette is clicked
-    $('#endEv').click(function () {
-        loadProperties("window end jtk-node jsplumb-connected-end", "23em", "15em", "end",
-            [], ["TopCenter"], false);
-        clicked = true;
-    });
-
-    //once the user clicks on the canvas, the element is drawn
-    $('#myDiagram').click(function () {
-        if (clicked) {
-            clicked = false;
-            elementCount++;
-            var name = "Window" + elementCount;
-            var id = "flowchartWindow" + elementCount;
-            element = createElement(id);
-            if (elementCount == 1 && element.attr("class").indexOf("start") == -1) {
-                alertify.error("The flowchart diagram should contain a start activity");
-                elementCount = 0;
-            } else {
-                drawElement(element, "#canvas", name);
-            }
-            element = "";
-        }
-    });
 
     //load properties of a given element
     function loadProperties(clsName, left, top, label, startpoints, endpoints, contenteditable) {
@@ -195,9 +187,24 @@ jsPlumb.ready(function () {
         });
     }
 
+    //take the x, y coordinates of the current mouse position
+    var x, y;
+    $(document).on("mousemove", function (event) {
+        x = event.pageX;
+        y = event.pageY;
+        if (clicked) {
+            properties[0].top = y - 358;
+            properties[0].left = x - 308;
+        }
+    });
+
     //create an element to be drawn on the canvas
     function createElement(id) {
         var elm = $('<div>').addClass(properties[0].clsName).attr('id', id);
+        if (properties[0].clsName.indexOf("diamond") > -1) {
+            elm.outerWidth("100px");
+            elm.outerHeight("100px");
+        }
         elm.css({
             'top': properties[0].top,
             'left': properties[0].left
@@ -205,13 +212,26 @@ jsPlumb.ready(function () {
 
         var strong = $('<strong>');
         if (properties[0].clsName == "window diamond custom jtk-node jsplumb-connected-step") {
-            var p = "<p style='line-height: 110%; margin-top: 25px' class='desc-text' contenteditable='true' ondblclick='$(this).focus();'>" + properties[0].label + "</p>";
+            elm.append("<i style='display: none; margin-left: -5px; margin-top: -50px' " +
+            "class=\"fa fa-trash fa-lg close-icon desc-text\"><\/i>");
+            var p = "<p style='line-height: 110%; margin-top: 25px' class='desc-text' contenteditable='true' " +
+                "ondblclick='$(this).focus();'>" + properties[0].label + "</p>";
+            strong.append(p);
+        }
+        else if (properties[0].clsName == "window parallelogram step custom jtk-node jsplumb-connected-step") {
+            elm.append("<i style='display: none' class=\"fa fa-trash fa-lg close-icon input-text\"><\/i>");
+            var p = "<p style='line-height: 110%; margin-top: 25px' class='input-text' contenteditable='true' " +
+                "ondblclick='$(this).focus();'>" + properties[0].label
+                + "</p>";
             strong.append(p);
         }
         else if (properties[0].contenteditable) {
-            var p = "<p style='line-height: 110%; margin-top: 25px' contenteditable='true' ondblclick='$(this).focus();'>" + properties[0].label + "</p>";
+            elm.append("<i style='display: none' class=\"fa fa-trash fa-lg close-icon\"><\/i>");
+            var p = "<p style='line-height: 110%; margin-top: 25px' contenteditable='true' " +
+                "ondblclick='$(this).focus();'>" + properties[0].label + "</p>";
             strong.append(p);
         } else {
+            elm.append("<i style='display: none' class=\"fa fa-trash fa-lg close-icon\"><\/i>");
             var p = $('<p>').text(properties[0].label);
             strong.append(p);
         }
@@ -224,80 +244,200 @@ jsPlumb.ready(function () {
         $(canvasId).append(element);
         _addEndpoints(name, properties[0].startpoints, properties[0].endpoints);
         makeResizable('.custom.step');
-        jsPlumb.draggable(jsPlumb.getSelector(".jtk-node"), {grid: [20, 20]});
+        jsPlumbInstance.draggable(jsPlumbInstance.getSelector(".jtk-node"), {
+            grid: [20, 20],
+            filter: ".ui-resizable-handle"
+        });
     }
 
     //make an element resizable
     function makeResizable(classname) {
         $(classname).resizable({
             resize: function (event, ui) {
-                jsPlumb.repaint(ui.helper);
-            }
+                jsPlumbInstance.revalidate(ui.helper);
+                var marginLeft = $(this).outerWidth() + 8;
+                $(this).find("i").css({'margin-left': marginLeft + "px"});
+            },
+            handles: "all"
         });
     }
 
-    //select the current element and make its boarder red.
-    $('#canvas').on('click', '[id^="flowchartWindow"]', function () {
-        to_delete = $(this).attr("id");
-        $('.step').not(this).css({'border-color': '#29e'});
-        $('.diamond').not(this).css({'border-color': '#29e'});
-        $('.start').not(this).css({'border-color': 'green'});
-        $('.window.jsplumb-connected-end').not(this).css({'border-color': 'orangered'});
-        $(this).css({'border-color': 'red'});
+    //*********** make the elements on the palette draggable ***************
+    function makeDraggable(id, className, text) {
+        $(id).draggable({
+            helper: function () {
+                return $("<div/>", {
+                    text: text,
+                    class: className
+                });
+            },
+            stack: ".custom",
+            revert: false
+        });
+    }
+
+    makeDraggable("#startEv", "window start jsplumb-connected custom", "start");
+    makeDraggable("#stepEv", "window step jsplumb-connected-step custom", "step");
+    makeDraggable("#endEv", "window start jsplumb-connected-end custom", "end");
+
+    $("#descEv").draggable({
+        helper: function () {
+            return createElement("");
+        },
+        stack: ".custom",
+        revert: false
     });
 
-    //to delete and resize the elements
-    $(document).keypress(function (e) {
-        if (e.which == 127) {
-            if (to_delete != "") {
-                jsPlumb.remove(to_delete);
+    $("#inpEv").draggable({
+        helper: function () {
+            return createElement("");
+        },
+        stack: ".custom",
+        revert: false
+    });
 
-                //if there are no elements in the canvas, ids start from 1
-                if($(".jtk-node").length == 0){
+    //*************************************************************************
+
+    //make the editor canvas droppable
+    $("#canvas").droppable({
+        accept: ".window",
+        drop: function (event, ui) {
+            if (clicked) {
+                clicked = false;
+                elementCount++;
+                var name = "Window" + elementCount;
+                var id = "flowchartWindow" + elementCount;
+                element = createElement(id);
+                if (elementCount == 1 && element.attr("class").indexOf("start") == -1) {
+                    alertify.error("The flowchart diagram should contain a start activity");
                     elementCount = 0;
+                } else {
+                    drawElement(element, "#canvas", name);
                 }
-
-                for (var i = 0; i < editorEndpointList.length; i++) {
-                    if (editorEndpointList[i][0] == to_delete) {
-                        for (var j = 0; j < editorEndpointList[i].length; j++) {
-                            jsPlumb.deleteEndpoint(editorEndpointList[i][j]);
-                            editorEndpointList[i][j] = null;
-                        }
-                    }
-                }
-
-                for (var i = 0; i < editorSourcepointList.length; i++) {
-                    if (editorSourcepointList[i][0] == to_delete) {
-                        for (var j = 0; j < editorSourcepointList[i].length; j++) {
-                            jsPlumb.deleteEndpoint(editorSourcepointList[i][j]);
-                            editorSourcepointList[i][j] = null;
-                        }
-                    }
-                }
-                to_delete = "";
-            }
-        } else if (e.which == 43) {
-            var elm = $('.diamond.custom').filter(function () {
-                return $(this).css("border-color") == 'rgb(255, 0, 0)';
-            });
-            if (elm.outerWidth() < 150) {
-                elm.outerWidth(elm.outerWidth() + 5);
-                elm.outerHeight(elm.outerHeight() + 5);
-                var p = elm.children()[0].firstChild;
-                p.style.lineHeight = 110 + '%';
-                jsPlumb.repaint(elm.attr("id"));
+                element = "";
             }
         }
-        else if (e.which == 45) {
-            var elm = $('.diamond.custom').filter(function () {
-                return $(this).css("border-color") == 'rgb(255, 0, 0)';
+    });
+
+    //load properties of a start element once the start element in the palette is clicked
+    $('#startEv').mousedown(function () {
+        loadProperties("window start custom jtk-node jsplumb-connected", "5em", "5em", "start", ["BottomCenter"],
+            [], false);
+        clicked = true;
+    });
+
+    //load properties of a step element once the step element in the palette is clicked
+    $('#stepEv').mousedown(function () {
+        loadProperties("window step custom jtk-node jsplumb-connected-step", "5em", "5em", "step",
+            ["BottomCenter"], ["TopCenter"], true);
+        clicked = true;
+    });
+
+    //load properties of a decision element once the decision element in the palette is clicked
+    $('#descEv').mousedown(function () {
+        loadProperties("window diamond custom jtk-node jsplumb-connected-step", "5em", "5em", "decision",
+            ["LeftMiddle", "RightMiddle", "BottomCenter"], ["TopCenter"], true, 100, 100);
+        clicked = true;
+    });
+
+    //load properties of a decision element once the input/output element in the palette is clicked
+    $('#inpEv').mousedown(function () {
+        loadProperties("window parallelogram step custom jtk-node jsplumb-connected-step", "23em", "5em", "i/o",
+            ["BottomCenter"], ["TopCenter"], true);
+        clicked = true;
+    });
+
+    //load properties of a end element once the end element in the palette is clicked
+    $('#endEv').mousedown(function () {
+        loadProperties("window end custom jtk-node jsplumb-connected-end", "5em", "5em", "end",
+            [], ["TopCenter"], false);
+        clicked = true;
+    });
+
+    //de-select all the selected elements and hide the delete buttons and highlight the selected element
+    $('#canvas').on('click', function (e) {
+        $(".jtk-node").css({'outline': "none"});
+        $(".close-icon").hide();
+        if (e.target.getAttribute("class") != null && e.target.getAttribute("class").indexOf("jtk-demo-canvas") > -1) {
+            $.each(jsPlumbInstance.getConnections(), function (index, connection) {
+                connection.hideOverlay("close");
             });
-            if (elm.outerWidth() > 80) {
-                elm.outerWidth(elm.outerWidth() - 5);
-                elm.outerHeight(elm.outerHeight() - 5);
-                jsPlumb.repaint(elm.attr("id"));
-                var p = elm.children()[0].firstChild;
-                p.style.lineHeight = 110 + '%';
+        }
+
+        if (e.target.nodeName == "P") {
+            e.target.parentElement.parentElement.style.outline = "4px solid red";
+        } else if (e.target.nodeName == "STRONG") {
+            e.target.parentElement.style.outline = "4px solid red";
+        } else if (e.target.getAttribute("class") != null && e.target.getAttribute("class").indexOf("jtk-node") > -1) {//when clicked the step, decision or i/o elements
+            e.target.style.outline = "4px solid red";
+        }
+    });
+
+    $('#canvas').on("click", '[id^="flowchartWindow"]', function () {
+        $.each(jsPlumbInstance.getConnections(), function (index, connection) {
+            connection.hideOverlay("close");
+        });
+    });
+
+    //to make the text field resizable when typing the input text.
+    $.fn.textWidth = function (text, font) {//get width of text with font.  usage: $("div").textWidth();
+        var temp = $('<span>').hide().appendTo(document.body).text(text || this.val() || this.text()).css('font', font || this.css('font')),
+            width = temp.width();
+        temp.remove();
+        return width;
+    };
+
+    $.fn.autoresize = function (options) {//resizes elements based on content size.  usage: $('input').autoresize({padding:10,minWidth:0,maxWidth:100});
+        options = $.extend({padding: 10, minWidth: 0, maxWidth: 10000}, options || {});
+        $(this).on('input', function () {
+            $(this).css('width', Math.min(options.maxWidth, Math.max(options.minWidth, $(this).textWidth() + options.padding)));
+        }).trigger('input');
+        return this;
+    }
+
+    //resize the label text field when typing
+    $('#canvas').on('keyup', '.jsplumb-overlay.aLabel', function () {
+        $(this).css('font-weight', 'bold');
+        $(this).css('text-align', 'center');
+        $(this).autoresize({padding: 20, minWidth: 20, maxWidth: 100});
+    });
+
+    //when an item is selected, highlight it and show the delete icon
+    $(document).on("click", ".custom", function () {
+        if ($(this).attr("class").indexOf("diamond") == -1) {
+            var marginLeft = $(this).outerWidth() + 8 + "px";
+            $(".close-icon").prop("title", "Delete the element");
+            $(this).find("i").css({'margin-left': marginLeft, 'margin-top': "-10px"}).show();
+        } else {
+            $(this).find("i").css({'margin-left': "35px", 'margin-top': "-40px"}).show();
+        }
+    });
+
+    //when the close-icon of an element is clicked, delete that element together with its endpoints
+    $(document).on("click", ".close-icon", function () {
+        jsPlumbInstance.remove($(this).parent().attr("id"));
+        $(".start").css({'border-color': "green"});
+
+        //if there are no elements in the canvas, ids start from 1
+        if ($(".jtk-node").length == 0) {
+            elementCount = 0;
+        }
+
+        for (var i = 0; i < endpointList.length; i++) {
+            if (endpointList[i][0] == $(this).parent().attr("id")) {
+                for (var j = 0; j < endpointList[i].length; j++) {
+                    jsPlumbInstance.deleteEndpoint(endpointList[i][j]);
+                    endpointList[i][j] = null;
+                }
+            }
+        }
+
+        for (var i = 0; i < sourcepointList.length; i++) {
+            if (sourcepointList[i][0] == $(this).parent().attr("id")) {
+                for (var j = 0; j < sourcepointList[i].length; j++) {
+                    jsPlumbInstance.deleteEndpoint(sourcepointList[i][j]);
+                    sourcepointList[i][j] = null;
+                }
             }
         }
     });
@@ -310,21 +450,21 @@ jsPlumb.ready(function () {
 
             //check whether the diagram has a start element
             var elm = $(".start.jtk-node");
-            if(elm.length == 0){
+            if (elm.length == 0) {
                 alertify.error("The flowchart diagram should have a start element");
-            }else{
+            } else {
                 $(".jtk-node").each(function (index, element) {
                     totalCount++;
                     var $element = $(element);
                     var type = $element.attr('class').toString().split(" ")[1];
-                    if (type == "step" || type == "diamond") {
+                    if (type == "step" || type == "diamond" || type == "parallelogram") {
                         nodes.push({
                             elementId: $element.attr('id'),
                             nodeType: type,
                             positionX: parseInt($element.css("left"), 10),
                             positionY: parseInt($element.css("top"), 10),
                             clsName: $element.attr('class').toString(),
-                            label: $element.children()[0].firstChild.innerHTML,
+                            label: $element.text(),
                             width: $element.outerWidth(),
                             height: $element.outerHeight()
                         });
@@ -341,17 +481,16 @@ jsPlumb.ready(function () {
                 });
 
                 var connections = [];
-                $.each(jsPlumb.getConnections(), function (index, connection) {
+                $.each(jsPlumbInstance.getConnections(), function (index, connection) {
                     connections.push({
                         connectionId: connection.id,
                         sourceUUId: connection.endpoints[0].getUuid(),
                         targetUUId: connection.endpoints[1].getUuid(),
-                        label: connection.getOverlay("label").getLabel()
+                        label: connection.getOverlay("label").getElement().value,
+                        labelWidth: connection.getOverlay("label").getElement().style.width
                     });
                 });
 
-                var sourceEps = [];
-                var targetEps = [];
                 var flowchart = {};
                 flowchart.nodes = nodes;
                 flowchart.connections = connections;

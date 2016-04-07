@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,6 +37,8 @@ import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.exceptions.ResourceNotFoundException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.indexing.AsyncIndexer;
@@ -101,6 +104,7 @@ public class ProcessStore {
             String processName = processInfo.getString("processName");
             String processVersion = processInfo.getString("processVersion");
             String processOwner = processInfo.getString("processOwner");
+            String processDescription = processInfo.getString("processDescription");
             String processTags = processInfo.getString("processTags");
             JSONArray subprocess = processInfo.getJSONArray("subprocess");
             JSONArray successor = processInfo.getJSONArray("successor");
@@ -124,6 +128,10 @@ public class ProcessStore {
                 appendText(doc, overviewElement, "name", mns, processName);
                 appendText(doc, overviewElement, "version", mns, processVersion);
                 appendText(doc, overviewElement, "owner", mns, processOwner);
+
+                if ((processDescription != null) && (!processDescription.isEmpty())) {
+                    appendText(doc, overviewElement, "description", mns, processDescription);
+                }
 
                 Element propertiesElement = append(doc, rootElement, "properties", mns);
                 appendText(doc, propertiesElement, "processtextpath", mns, "NA");
@@ -166,11 +174,6 @@ public class ProcessStore {
 
                 Element flowchartElement = append(doc, rootElement, "flowchart", mns);
                 appendText(doc, flowchartElement, "path", mns, "NA");
-                Element documentElement = append(doc, rootElement, "document", mns);
-                appendText(doc, documentElement, "documentname", mns, "NA");
-                appendText(doc, documentElement, "summary", mns, "NA");
-                appendText(doc, documentElement, "url", mns, "NA");
-                appendText(doc, documentElement, "path", mns, "NA");
 
                 String processAssetContent = xmlToString(doc);
                 Resource processAsset = reg.newResource();
@@ -193,7 +196,7 @@ public class ProcessStore {
                 processId = storedProcess.getUUID();
             }
         } catch (Exception e) {
-            log.error(e);
+            log.error("Create process error:" + processDetails, e);
         }
 
         return processId;
@@ -232,7 +235,8 @@ public class ProcessStore {
                 reg.put(processPath, processAsset);
             }
         } catch (Exception e) {
-            log.error(e);
+            log.error("Save process text error for " + processName + " - " + processVersion + " : " + processText, e);
+            return false;
         }
 
         return true;
@@ -380,7 +384,7 @@ public class ProcessStore {
                 processId = storedProcessAsset.getUUID();
             }
         } catch (Exception e) {
-            log.error(e);
+            log.error("Create BPMN error:" + bpmnName + " - " + bpmnVersion, e);
         }
 
         return processId;
@@ -578,7 +582,7 @@ public class ProcessStore {
                 textContent = new String((byte[]) textResource.getContent());
             }
         } catch (Exception e) {
-            log.error(e);
+            log.error("Process text retrieving error: " + textPath, e);
         }
         return textContent;
     }
@@ -650,7 +654,8 @@ public class ProcessStore {
                     String processName = processXML.getElementsByTagName("name").item(0).getTextContent();
                     String processVersion = processXML.getElementsByTagName("version").item(0).getTextContent();
                     String pdfPath = processXML.getElementsByTagName("pdf").item(0).getFirstChild().getTextContent();
-                    String flowchartPath = processXML.getElementsByTagName("flowchart").item(0).getFirstChild().getTextContent();
+                    String flowchartPath = processXML.getElementsByTagName("flowchart").item(0).getFirstChild()
+                            .getTextContent();
 
                     JSONObject processJSON = new JSONObject();
                     processJSON.put("path", processPath);
@@ -753,11 +758,9 @@ public class ProcessStore {
                 conObj.put("successors", successorArray);
                 conObj.put("predecessors", predecessorArray);
 
-                NodeList subprocessElements = ((Element) document.getFirstChild()).getElementsByTagName(
-                        "subprocess");
+                NodeList subprocessElements = ((Element) document.getFirstChild()).getElementsByTagName("subprocess");
                 NodeList successorElements = ((Element) document.getFirstChild()).getElementsByTagName("successor");
-                NodeList predecessorElements = ((Element) document.getFirstChild()).getElementsByTagName(
-                        "predecessor");
+                NodeList predecessorElements = ((Element) document.getFirstChild()).getElementsByTagName("predecessor");
 
                 if (subprocessElements.getLength() != 0) {
                     for (int i = 0; i < subprocessElements.getLength(); i++) {
@@ -846,7 +849,8 @@ public class ProcessStore {
             }
 
         } catch (Exception e) {
-            log.error("Failed to update the process owner", e);
+            log.error("Failed to update the process owner:" + ownerDetails, e);
+            return false;
         }
         return true;
     }
@@ -883,7 +887,8 @@ public class ProcessStore {
             }
 
         } catch (Exception e) {
-            log.error("Failed to add a subprocess", e);
+            log.error("Failed to add subprocess: " + subprocessDetails, e);
+            return false;
         }
         return true;
     }
@@ -920,7 +925,8 @@ public class ProcessStore {
             }
 
         } catch (Exception e) {
-            log.error("Failed to add a successor", e);
+            log.error("Failed to add successor: " + successorDetails, e);
+            return false;
         }
         return true;
     }
@@ -957,7 +963,8 @@ public class ProcessStore {
             }
 
         } catch (Exception e) {
-            log.error("Failed to add a predecessor", e);
+            log.error("Failed to add predecessor: " + predecessorDetails, e);
+            return false;
         }
         return true;
     }
@@ -1001,7 +1008,8 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to delete a subprocess", e);
+            log.error("Failed to delete subprocess: " + deleteSubprocess, e);
+            return false;
         }
         return true;
     }
@@ -1045,7 +1053,8 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to delete a successor", e);
+            log.error("Failed to delete successor: " + deleteSuccessor, e);
+            return false;
         }
         return true;
     }
@@ -1091,11 +1100,54 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to delete a predecessor", e);
+            log.error("Failed to delete predecessor: " + deletePredecessor, e);
+            return false;
         }
         return true;
     }
 
+    /**
+     * Check the documents availability for a given process
+     *
+     * @param resourcePath holds the process path
+     * @return true if documents are available
+     */
+    public boolean isDocumentAvailable(String resourcePath) {
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                resourcePath = resourcePath.substring(ProcessStoreConstants.GREG_PATH.length());
+                Resource resourceAsset = reg.get(resourcePath);
+                String resourceContent = new String((byte[]) resourceAsset.getContent());
+
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                Document document = builder.parse(new InputSource(new StringReader(resourceContent)));
+
+                NodeList documentElements = ((Element) document.getFirstChild()).getElementsByTagName("document");
+                if (documentElements.getLength() != 0) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            log.error("No documents available in the path: " + resourcePath, e);
+        }
+        return false;
+    }
+
+    /**
+     * Upload a document
+     *
+     * @param processName    process name
+     * @param processVersion process version
+     * @param docName        document name
+     * @param docSummary     summary of the document
+     * @param docUrl         google document url
+     * @param docObject      document stream object
+     * @param docExtension   document extension
+     * @return process id
+     */
     public String uploadDocument(String processName, String processVersion, String docName, String docSummary,
             String docUrl, Object docObject, String docExtension) {
         String processId = "FAILED TO UPLOAD DOCUMENT";
@@ -1123,26 +1175,21 @@ public class ProcessStore {
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                int numOfDocAttrs = doc.getElementsByTagName("document").item(0).getChildNodes().getLength();
-                NodeList nodeList = doc.getElementsByTagName("document").item(0).getChildNodes();
-
-                if(numOfDocAttrs != 0) {
-                    for(int i = 0; i < numOfDocAttrs; i++) {
-                        if(nodeList.item(i).getNodeName().equals("documentname")) {
-                            nodeList.item(i).setTextContent(docName);
-                        }else if(nodeList.item(i).getNodeName().equals("summary")){
-                            nodeList.item(i).setTextContent(docSummary);
-                        }else if(nodeList.item(i).getNodeName().equals("url")){
-                            if ((docUrl != null) && (!docUrl.isEmpty())) {
-                                nodeList.item(i).setTextContent(docUrl);
-                            }
-                        }else if(nodeList.item(i).getNodeName().equals("path")){
-                            if (docContentPath != null) {
-                                nodeList.item(i).setTextContent(docContentPath);
-                            }
-                        }
-                    }
+                Element rootElement = doc.getDocumentElement();
+                Element docElement = append(doc, rootElement, "document", mns);
+                appendText(doc, docElement, "name", mns, docName);
+                appendText(doc, docElement, "summary", mns, docSummary);
+                if ((docUrl != null) && (!docUrl.isEmpty())) {
+                    appendText(doc, docElement, "url", mns, docUrl);
+                } else {
+                    appendText(doc, docElement, "url", mns, "NA");
                 }
+                if (docContentPath != null) {
+                    appendText(doc, docElement, "path", mns, docContentPath);
+                } else {
+                    appendText(doc, docElement, "path", mns, "NA");
+                }
+
                 String newProcessContent = xmlToString(doc);
                 resource.setContent(newProcessContent);
                 reg.put(processAssetPath, resource);
@@ -1151,11 +1198,19 @@ public class ProcessStore {
                 processId = storedProcessAsset.getUUID();
             }
         } catch (Exception e) {
-            log.error("Upload documentation error.");
+            String errMsg =
+                    docName + "." + docExtension + " document upload error for " + processName + ":" + processVersion;
+            log.error(errMsg, e);
         }
         return processId;
     }
 
+    /**
+     * Get a document which is already uploaded
+     *
+     * @param resourcePath holds the process path
+     * @return document information
+     */
     public String getUploadedDocumentDetails(String resourcePath) {
         String documentString = "NA";
         try {
@@ -1176,13 +1231,13 @@ public class ProcessStore {
                 if (documentElements.getLength() != 0) {
                     for (int i = 0; i < documentElements.getLength(); i++) {
                         Element documentElement = (Element) documentElements.item(i);
-                        String docName = documentElement.getElementsByTagName("documentname").item(0).getTextContent();
+                        String docName = documentElement.getElementsByTagName("name").item(0).getTextContent();
                         String docSummary = documentElement.getElementsByTagName("summary").item(0).getTextContent();
                         String docUrl = documentElement.getElementsByTagName("url").item(0).getTextContent();
                         String docPath = documentElement.getElementsByTagName("path").item(0).getTextContent();
 
                         JSONObject processDoc = new JSONObject();
-                        processDoc.put("documentname", docName);
+                        processDoc.put("name", docName);
                         processDoc.put("summary", docSummary);
                         processDoc.put("url", docUrl);
                         processDoc.put("path", docPath);
@@ -1191,12 +1246,18 @@ public class ProcessStore {
                 }
                 documentString = documentArray.toString();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Failed to fetch document: " + resourcePath);
         }
         return documentString;
     }
 
+    /**
+     * Download a document
+     *
+     * @param resourcePath holds the process path
+     * @return document content as  a String
+     */
     public String downloadDocument(String resourcePath) {
         String docString = "FAILED TO GET Document";
         try {
@@ -1211,9 +1272,70 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to fetch document: " + resourcePath);
+            log.error("Failed to download document: " + resourcePath);
         }
         return docString;
+    }
+
+    /**
+     * delete a given document
+     *
+     * @param deleteDocument holds the information of the document that need to be deleted
+     * @return true after successful deletion
+     */
+    public boolean deleteDocument(String deleteDocument) {
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+                JSONObject documentInfo = new JSONObject(deleteDocument);
+                String processName = documentInfo.getString("processName");
+                String processVersion = documentInfo.getString("processVersion");
+                JSONObject removeDocument = documentInfo.getJSONObject("removeDocument");
+
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                        processVersion;
+                Resource resource = reg.get(processAssetPath);
+                String processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
+
+                if (removeDocument != null) {
+                    NodeList documentElements = ((Element) doc.getFirstChild()).getElementsByTagName("document");
+                    for (int i = 0; i < documentElements.getLength(); i++) {
+                        Element documentElement = (Element) documentElements.item(i);
+                        String documentName = documentElement.getElementsByTagName("name").item(0).getTextContent();
+                        String documentSummary = documentElement.getElementsByTagName("summary").item(0)
+                                .getTextContent();
+                        String documentUrl = documentElement.getElementsByTagName("url").item(0).getTextContent();
+                        String documentPath = documentElement.getElementsByTagName("path").item(0).getTextContent();
+
+                        if (documentName.equals(removeDocument.getString("name")) &&
+                                documentSummary.equals(removeDocument.getString("summary")) &&
+                                documentPath.equals(removeDocument.getString("path")) &&
+                                documentUrl.equals(removeDocument.getString("url"))) {
+                            documentElement.getParentNode().removeChild(documentElement);
+                            break;
+                        }
+                    }
+                    String newProcessContent = xmlToString(doc);
+                    resource.setContent(newProcessContent);
+                    reg.put(processAssetPath, resource);
+
+                    String docContentResourcePath = removeDocument.getString("path");
+                    if (!docContentResourcePath.equals("NA")) {
+                        if (reg.resourceExists(docContentResourcePath)) {
+                            reg.delete(docContentResourcePath);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete a document: " + deleteDocument, e);
+            return false;
+        }
+        return true;
     }
 
     public String getProcessTags() throws ProcessCenterException {
@@ -1281,13 +1403,11 @@ public class ProcessStore {
                 throw new ProcessCenterException(msg);
             }
         } catch (Exception e) {
-            String msg = "Failed";
+            String msg = "Process tags retrieving error";
             log.error(msg, e);
             throw new ProcessCenterException(msg, e);
         }
-
         return textContent;
-
     }
 
     public String associatePDF(String processName, String processVersion, Object object) {
@@ -1371,7 +1491,8 @@ public class ProcessStore {
      */
     public String uploadFlowchart(String processName, String processVersion, String flowchartJson) {
         String processId = "NA";
-        log.debug("Creating Flowchart...");
+        if (log.isDebugEnabled())
+            log.debug("Creating Flowchart...");
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
@@ -1383,13 +1504,15 @@ public class ProcessStore {
                 reg.put(flowchartContentPath, flowchartContentResource);
                 String processPath = "processes/" + processName + "/" + processVersion;
 
-                // update process by linking the pdf asset
+                // update process by linking the flowchart asset
                 Resource processAsset = reg.get(processPath);
                 byte[] processContentBytes = (byte[]) processAsset.getContent();
                 String processContent = new String(processContentBytes);
                 Document processXMLContent = stringToXML(processContent);
 
-                processXMLContent.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent(flowchartContentPath);
+                //set the flowchart content
+                processXMLContent.getElementsByTagName("flowchart").item(0).getFirstChild()
+                        .setTextContent(flowchartContentPath);
 
                 String newProcessContent = xmlToString(processXMLContent);
                 processAsset.setContent(newProcessContent);
@@ -1399,8 +1522,12 @@ public class ProcessStore {
                 processId = storedProcessAsset.getUUID();
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            String errMsg =
+                    "Flow-chart uploading error for " + processName + " - " + processVersion + ":" + flowchartJson;
+            log.error(errMsg, e);
         }
+        if (log.isDebugEnabled())
+            log.debug("Successfully uploaded the flowchart for process " + processName + "-" + processVersion);
         return processId;
     }
 
@@ -1416,16 +1543,58 @@ public class ProcessStore {
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
                 flowchartPath = flowchartPath.substring("/_system/governance/".length());
-                Resource flowchartAsset = reg.get(flowchartPath);
-                flowchartString = new String((byte[]) flowchartAsset.getContent());
+                try {
+                    Resource flowchartAsset = reg.get(flowchartPath);
+                    flowchartString = new String((byte[]) flowchartAsset.getContent());
+                } catch (ResourceNotFoundException e) {
+                    flowchartString = "NA";
+                    String errorMessage = "No resource found in path " + flowchartPath;
+                    log.error(errorMessage, e);
+                }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            String values[] = flowchartPath.split("/");
+            String errorMessage = "Failed to retrieve the flowchart for process " + values[1] + "-" + values[2];
+            log.error(errorMessage, e);
         }
-
+        if (log.isDebugEnabled())
+            log.debug("Successfully retrieved the flowchart at path " + flowchartPath);
         return flowchartString;
     }
 
+    /**
+     * Delete a flowchart from the registry
+     *
+     * @param name
+     * @param version
+     */
+    public void deleteFlowchart(String name, String version) {
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            String flowchartContentPath = "flowchart/" + name + "/" + version;
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                reg.delete(flowchartContentPath);
+
+                String processPath = "processes/" + name + "/" + version;
+                Resource processResource = reg.get(processPath);
+
+                String processContent = new String((byte[]) processResource.getContent());
+                Document processXML = stringToXML(processContent);
+                processXML.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent("NA");
+
+                String newProcessContent = xmlToString(processXML);
+                processResource.setContent(newProcessContent);
+                reg.put(processPath, processResource);
+            }
+        } catch (RegistryException e) {
+            String errorMessage = "Failed to upload the flowchart for process " + name + "-" + version;
+            log.error(errorMessage, e);
+        } catch (Exception e) {
+            String errorMessage = "Failed to upload the flowchart for process " + name + "-" + version;
+            log.error(errorMessage, e);
+        }
+    }
 
     //    public static void main(String[] args) {
     //        String path = "/home/chathura/temp/t5/TestProcess1.bpmn";
