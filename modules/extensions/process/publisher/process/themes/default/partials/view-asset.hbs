@@ -123,11 +123,10 @@
                         {{#each involveProcessList.subprocesses}}
                             <tr>
                                 <td valign="top" style="width: 90%;"><span id="subprocess_Name"
-                                                                           class="subprocess_Name">{{this.name}}
-                                    -{{this.version}}</span></td>
+                                                                           class="subprocess_Name">{{this.name}}-{{this.version}}</span></td>
                                 <td style="width: 5%;"></td>
-                                <td style="width: 5%;"><a class="js-remove-row" onclick="deleteSubprocess(this)"><i
-                                        class="fa fa-trash"></i></a></td>
+                                <td style="width: 5%;"><label class="remove-process" onclick="deleteSubprocess(this)"><i
+                                        class="fa fa-trash"></i></label></td>
                             </tr>
                         {{/each}}
                         </tbody>
@@ -164,11 +163,10 @@
                         {{#each involveProcessList.successors}}
                             <tr>
                                 <td valign="top" style="width: 90%;"><span id="successor_Name"
-                                                                           class="successor_Name">{{this.name}}
-                                    -{{this.version}}</span></td>
+                                                                           class="successor_Name">{{this.name}}-{{this.version}}</span></td>
                                 <td style="width: 5%;"></td>
-                                <td style="width: 5%;"><a class="js-remove-row" onclick="deleteSuccessor(this)"><i
-                                        class="fa fa-trash"></i></a></td>
+                                <td style="width: 5%;"><label class="remove-process" onclick="deleteSuccessor(this)"><i
+                                        class="fa fa-trash"></i></label></td>
                             </tr>
                         {{/each}}
                         </tbody>
@@ -206,11 +204,10 @@
                         {{#each involveProcessList.predecessors}}
                             <tr>
                                 <td valign="top" style="width: 90%;"><span id="predecessor_Name"
-                                                                           class="predecessor_Name">{{this.name}}
-                                    -{{this.version}}</span></td>
+                                                                           class="predecessor_Name">{{this.name}}-{{this.version}}</span></td>
                                 <td style="width: 5%;"></td>
-                                <td style="width: 5%;"><a class="js-remove-row" onclick="deletePredecessor(this)"><i
-                                        class="fa fa-trash"></i></a></td>
+                                <td style="width: 5%;"><label class="remove-process" onclick="deletePredecessor(this)"><i
+                                        class="fa fa-trash"></i></label></td>
                             </tr>
                         {{/each}}
                         </tbody>
@@ -300,7 +297,7 @@
                                                     onkeydown="subProcessNamesAutoComplete()"></td>
         <td style="width: 5%;"><span class="glyphicon glyphicon-ok" style="color:#0081c2;cursor: pointer;"
                                      onclick="readUpdatedSubprocess(this)"></span></td>
-        <td style="width: 5%;"><a class="js-remove-row" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></a>
+        <td style="width: 5%;"><label data-name="subprocess" class="remove-process" onclick="deleteProcess(this)"><i class="fa fa-trash"></i></label>
         </td>
     </tr>
     </tbody>
@@ -314,7 +311,7 @@
                                                     onkeydown="successorNameAutoComplete()"></td>
         <td style="width: 5%;"><span class="glyphicon glyphicon-ok" style="color:#0081c2;cursor: pointer;"
                                      onclick="readUpdatedSuccessor(this)"></span></td>
-        <td style="width: 5%;"><a class="js-remove-row" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></a>
+        <td style="width: 5%;"><label data-name="successor" class="remove-process" onclick="deleteProcess(this)"><i class="fa fa-trash"></i></label>
         </td>
     </tr>
     </tbody>
@@ -328,8 +325,8 @@
                                                     onkeydown="predecessorNameAutoComplete()"></td>
         <td style="width: 5%;"><span class="glyphicon glyphicon-ok" style="color:#0081c2;cursor: pointer;"
                                      onclick="readUpdatedPredecessor(this)"></span></td>
-        <td style="width: 5%;"><a class="js-remove-row" onclick="deletePredecessor(this)"><i
-                class="fa fa-trash"></i></a></td>
+        <td style="width: 5%;"><label data-name="predecessor" class="remove-process" onclick="deleteProcess(this)"><i
+                class="fa fa-trash"></i></label></td>
     </tr>
     </tbody>
 </table>

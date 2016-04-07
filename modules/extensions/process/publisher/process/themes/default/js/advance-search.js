@@ -123,16 +123,6 @@ function isInputFieldEmpty(tableName) {
     return isFieldEmpty;
 }
 
-function isAlreadyExist(value, tableName) {
-    var matched = false;
-    $('#table_' + tableName + ' tbody tr').each(function () {
-        if ($(this).find('td:eq(0) input').val() == value) {
-            matched = true;
-        }
-    });
-    return matched;
-}
-
 function setTableName(tblName) {
     tableName = tblName;
 }
