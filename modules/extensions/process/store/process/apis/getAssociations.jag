@@ -16,20 +16,21 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
- 
+
 importPackage(org.wso2.carbon.pc.core);
 var log = new Log();
 if (log.isDebugEnabled()) {
-log.debug("Accessing associations for the process...");
+    log.debug("Accessing associations for the process...");
 }
 var ps = new ProcessStore();
 
 var processPath = String(request.getParameter("processPath"));
-log.info("Retrieving associations for: " + processPath);
-var associateData = ps.getSucessorPredecessorSubprocessList(processPath);
-log.info(associateData);
 if (log.isDebugEnabled()) {
-log.debug(associateData);
+    log.debug("Retrieving associations for: " + processPath);
+}
+var associateData = ps.getSucessorPredecessorSubprocessList(processPath);
+if (log.isDebugEnabled()) {
+    log.debug(associateData);
 }
 print(associateData);
 %>

@@ -19,15 +19,24 @@
  */
 importPackage(org.wso2.carbon.pc.core);
 var log = new Log();
-if(log.isDebugEnabled()){
-    log.debug("INSIDE download document in Process Explorer");
+if (log.isDebugEnabled()) {
+    log.debug("INSIDE download document...");
 }
 var ps = new ProcessStore();
-
 var processDocPath = String(request.getParameter("process_doc_path"));
-if(log.isDebugEnabled()){
+if (log.isDebugEnabled()) {
     log.debug("Download document for: " + processDocPath);
 }
-var doc = ps.downloadDocument(processDocPath);
-print(doc);
+var responseObj = {};
+
+try {
+    var doc = ps.downloadDocument(processDocPath);
+    responseObj.error = false;
+    responseObj.content = doc;
+    print(stringify(responseObj));
+} catch (error) {
+    responseObj.error = true;
+    responseObj.content = "Process document downloading error.";
+    print(stringify(responseObj));
+}
 %>
