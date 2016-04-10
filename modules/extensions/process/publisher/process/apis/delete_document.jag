@@ -20,15 +20,25 @@
 importPackage(org.wso2.carbon.pc.core);
 
 var log = new Log();
-if(log.isDebugEnabled()){
+if (log.isDebugEnabled()) {
     log.debug("Deleting document X of process Y");
 }
 
 var ps = new ProcessStore();
 var deleteDocumentDetails = String(request.getParameter("removeDocumentDetails"));
-var deleteDocStatus = ps.deleteDocument(deleteDocumentDetails);
-print(String(deleteDocStatus));
-if(log.isDebugEnabled()){
+if (log.isDebugEnabled()) {
     log.debug("deleteDocumentDetails: " + deleteDocumentDetails);
+}
+
+var responseObj = {};
+try {
+    var deleteDocStatus = ps.deleteDocument(deleteDocumentDetails);
+    responseObj.error = false;
+    responseObj.content = stringify(deleteDocStatus);
+    print(stringify(responseObj));
+} catch (error) {
+    responseObj.error = true;
+    responseObj.content = "Process document deleting error.";
+    print(stringify(responseObj));
 }
 %>

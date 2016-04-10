@@ -36,7 +36,7 @@ window.onload = function () {
 
     $('#tag-box').on('tokenfield:createtoken', function (event) {
         var existingTokens = $(this).tokenfield('getTokens');
-        $.each(existingTokens, function(index, token) {
+        $.each(existingTokens, function (index, token) {
             if (token.value === event.attrs.value)
                 event.preventDefault();
         });
@@ -131,14 +131,19 @@ function saveProcess(currentElement) {
             url: 'apis/create_process',
             type: 'POST',
             data: {'processInfo': getProcessInfo()},
-            success: function (response) {
-                $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response);
-                $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response);
-                $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response);
-                $("#docOverviewLink").attr("href", "../../assets/process/details/" + response);
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response.content);
+                    $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response.content);
+                    $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response.content);
+                    $("#docOverviewLink").attr("href", "../../assets/process/details/" + response.content);
 
-                if ($(currentElement).attr('id') == 'saveProcessBtn') {
-                    window.location = "../../assets/process/details/" + response;
+                    if ($(currentElement).attr('id') == 'saveProcessBtn') {
+                        window.location = "../../assets/process/details/" + response.content;
+                    }
+                } else {
+                    alertify.error(response.content);
                 }
             },
             error: function () {
@@ -172,7 +177,6 @@ function saveProcessText(currentElement) {
         }
     } else {
         // save the process
-
         $.ajax({
             url: 'apis/save_process_text',
             type: 'POST',
@@ -181,9 +185,14 @@ function saveProcessText(currentElement) {
                 'processVersion': $("#pVersion").val(),
                 'processText': textContent
             },
-            success: function (response) {
-                if ($(currentElement).attr('id') == 'processTxtSaveBtn') {
-                    alertify.success("Successfully saved the process content.");
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    if ($(currentElement).attr('id') == 'processTxtSaveBtn') {
+                        alertify.success("Successfully saved the process content.");
+                    }
+                } else {
+                    alertify.error(response.content);
                 }
             },
             error: function () {
@@ -336,10 +345,15 @@ function getProcessList() {
     $.ajax({
         url: '/publisher/assets/process/apis/get_process_list',
         type: 'GET',
-        success: function (response) {
-            processListObj = JSON.parse(response);
-            for (var i = 0; i < processListObj.length; i++) {
-                processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                processListObj = JSON.parse(response.content);
+                for (var i = 0; i < processListObj.length; i++) {
+                    processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
+                }
+            } else {
+                alertify.error(response.content);
             }
         },
         error: function () {
@@ -354,13 +368,18 @@ function getAllProcessTags() {
         type: 'GET',
         async: false,
         success: function (data) {
-            var processTagsObj = JSON.parse(data);
-            if (!$.isEmptyObject(processTagsObj)) {
-                for (var key in processTagsObj) {
-                    if (processTagsObj.hasOwnProperty(key)) {
-                        allProcessTags.push(key);
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                var processTagsObj = JSON.parse(response.content);
+                if (!$.isEmptyObject(processTagsObj)) {
+                    for (var key in processTagsObj) {
+                        if (processTagsObj.hasOwnProperty(key)) {
+                            allProcessTags.push(key);
+                        }
                     }
                 }
+            } else {
+                alertify.error(response.content);
             }
         },
         error: function () {
