@@ -1541,8 +1541,6 @@ public class ProcessStore {
                     flowchartString = new String((byte[]) flowchartAsset.getContent());
                 } catch (ResourceNotFoundException e) {
                     flowchartString = "NA";
-                    String errorMessage = "No resource found in path " + flowchartPath;
-                    log.error(errorMessage, e);
                 }
             }
         } catch (Exception e) {

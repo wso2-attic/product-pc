@@ -531,30 +531,34 @@ $("#saveAsPNGBtn").click(function() {
             ctx = canvas.getContext('2d');
 
             $elements = $(".jtk-node");
-            $elements.each(function () {
-                $svg = $(this).find("p")[0];
-                $svg.style.whiteSpace = "pre-wrap";
-            });
+            if($elements.length != 0){
+                $elements.each(function () {
+                    $svg = $(this).find("p")[0];
+                    $svg.style.whiteSpace = "pre-wrap";
+                });
 
-            $flows = $('.jsplumb-connector');
-            $flows.each( function() {
-                $svg = $(this);
-                var text = $svg.parent().find(":input")[0];
-                $(text).css('z-index', '100');
-                offset = $svg.position();
-                svgStr = this.outerHTML;
-                ctx.drawSvg(svgStr, offset.left, offset.top);
-            });
+                $flows = $('.jsplumb-connector');
+                $flows.each( function() {
+                    $svg = $(this);
+                    var text = $svg.parent().find(":input")[0];
+                    $(text).css('z-index', '100');
+                    offset = $svg.position();
+                    svgStr = this.outerHTML;
+                    ctx.drawSvg(svgStr, offset.left, offset.top);
+                });
 
-            $endpoints = $('.jsplumb-endpoint > svg');
-            $endpoints.each(function() {
-                $svg = $(this);
-                offset = $svg.parent().position();
-                svgStr = this.outerHTML;
-                ctx.drawSvg(svgStr, offset.left, offset.top);
-            });
+                $endpoints = $('.jsplumb-endpoint > svg');
+                $endpoints.each(function() {
+                    $svg = $(this);
+                    offset = $svg.parent().position();
+                    svgStr = this.outerHTML;
+                    ctx.drawSvg(svgStr, offset.left, offset.top);
+                });
 
-            Canvas2Image.saveAsPNG(canvas);
+                Canvas2Image.saveAsPNG(canvas);
+            }else{
+                alertify.error('Flowchart content is empty.');
+            }
         }
     });
 });

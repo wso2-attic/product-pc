@@ -18,8 +18,9 @@
  */
 var resources = function (page, meta) {
     return {
-        js: ['jquery.rating.pack.js', 'async.min.js', 'asset-core.js', 'asset.js', 'porthole.min.js', 'FileSaver.min.js' , 'storeDocumentPlacer.js', 'contentPlacer.js'],
-        css: ['jquery.rating.css', 'asset.css'],
+        js: ['jquery.rating.pack.js', 'async.min.js', 'asset-core.js', 'asset.js', 'porthole.min.js', 'FileSaver.min.js'
+            , 'storeDocumentPlacer.js', 'contentPlacer.js', 'jsPlumb-2.0.7.js', 'viewFlowchart.js'],
+        css: ['jquery.rating.css', 'asset.css', 'flowchart.css'],
         code: ['store.asset.hbs']
     };
 };
