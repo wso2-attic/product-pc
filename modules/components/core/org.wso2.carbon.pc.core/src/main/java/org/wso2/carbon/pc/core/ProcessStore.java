@@ -94,10 +94,8 @@ public class ProcessStore {
         return document;
     }
 
-    public String createProcess(String processDetails) {
-
+    public String createProcess(String processDetails) throws ProcessCenterException {
         String processId = "FAILED TO ADD PROCESS";
-
         try {
             JSONObject processInfo = new JSONObject(processDetails);
             String processName = processInfo.getString("processName");
@@ -190,19 +188,19 @@ public class ProcessStore {
                     tag = tag.trim();
                     reg.applyTag(processAssetPath, tag);
                 }
-
                 Resource storedProcess = reg.get(processAssetPath);
                 processId = storedProcess.getUUID();
             }
         } catch (Exception e) {
+            String errMsg = "Create process error:" + processDetails;
             log.error("Create process error:" + processDetails, e);
+            throw new ProcessCenterException(errMsg, e);
         }
-
         return processId;
     }
 
-    public boolean saveProcessText(String processName, String processVersion, String processText) {
-
+    public boolean saveProcessText(String processName, String processVersion, String processText)
+            throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
@@ -234,10 +232,10 @@ public class ProcessStore {
                 reg.put(processPath, processAsset);
             }
         } catch (Exception e) {
-            log.error("Save process text error for " + processName + " - " + processVersion + " : " + processText, e);
-            return false;
+            String errMsg = "Save process text error for " + processName + " - " + processVersion + " : " + processText;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
-
         return true;
     }
 
@@ -318,9 +316,12 @@ public class ProcessStore {
         }
     }
 
-    public String createBPMN(String bpmnName, String bpmnVersion, Object o) {
+    public String createBPMN(String bpmnName, String bpmnVersion, Object o)
+            throws ProcessCenterException {
         String processId = "FAILED TO CREATE BPMN";
-        log.debug("Creating BPMN resource...");
+        if (log.isDebugEnabled()) {
+            log.debug("Creating BPMN resource:" + bpmnName + " - " + bpmnVersion);
+        }
         try {
             StreamHostObject s = (StreamHostObject) o;
             InputStream bpmnStream = s.getStream();
@@ -383,9 +384,10 @@ public class ProcessStore {
                 processId = storedProcessAsset.getUUID();
             }
         } catch (Exception e) {
-            log.error("Create BPMN error:" + bpmnName + " - " + bpmnVersion, e);
+            String errMsg = "Create BPMN error:" + bpmnName + " - " + bpmnVersion;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
-
         return processId;
     }
 
@@ -571,7 +573,7 @@ public class ProcessStore {
         return barString;
     }
 
-    public String getProcessText(String textPath) {
+    public String getProcessText(String textPath) throws ProcessCenterException {
         String textContent = "FAILED TO GET TEXT CONTENT";
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
@@ -581,12 +583,14 @@ public class ProcessStore {
                 textContent = new String((byte[]) textResource.getContent());
             }
         } catch (Exception e) {
-            log.error("Process text retrieving error: " + textPath, e);
+            String errMsg = "Process text retrieving error: " + textPath;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
         return textContent;
     }
 
-    public String getBPMN(String bpmnPath) {
+    public String getBPMN(String bpmnPath) throws ProcessCenterException {
 
         String bpmnString = "";
 
@@ -621,7 +625,9 @@ public class ProcessStore {
                 bpmnString = bpmn.toString();
             }
         } catch (Exception e) {
+            String errMsg = "Failed to fetch BPMN model: " + bpmnPath;
             log.error("Failed to fetch BPMN model: " + bpmnPath);
+            throw new ProcessCenterException(errMsg, e);
         }
 
         return bpmnString;
@@ -675,11 +681,10 @@ public class ProcessStore {
                 throw new ProcessCenterException(msg);
             }
         } catch (Exception e) {
-            String msg = "Failed";
-            log.error(msg, e);
-            throw new ProcessCenterException(msg, e);
+            String errMsg = "Failed to get all processes";
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
-
         return processDetails;
     }
 
@@ -822,7 +827,7 @@ public class ProcessStore {
         return resourceString;
     }
 
-    public boolean updateOwner(String ownerDetails) {
+    public boolean updateOwner(String ownerDetails) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
@@ -848,13 +853,14 @@ public class ProcessStore {
             }
 
         } catch (Exception e) {
-            log.error("Failed to update the process owner:" + ownerDetails, e);
-            return false;
+            String errMsg = "Failed to update the process owner:" + ownerDetails;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
         return true;
     }
 
-    public boolean addSubprocess(String subprocessDetails) {
+    public boolean addSubprocess(String subprocessDetails) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
@@ -886,13 +892,14 @@ public class ProcessStore {
             }
 
         } catch (Exception e) {
-            log.error("Failed to add subprocess: " + subprocessDetails, e);
-            return false;
+            String errMsg = "Failed to add subprocess: " + subprocessDetails;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
         return true;
     }
 
-    public boolean addSuccessor(String successorDetails) {
+    public boolean addSuccessor(String successorDetails) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
@@ -924,13 +931,14 @@ public class ProcessStore {
             }
 
         } catch (Exception e) {
-            log.error("Failed to add successor: " + successorDetails, e);
-            return false;
+            String errMsg = "Failed to add successor: " + successorDetails;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
         return true;
     }
 
-    public boolean addPredecessor(String predecessorDetails) {
+    public boolean addPredecessor(String predecessorDetails) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
@@ -962,13 +970,14 @@ public class ProcessStore {
             }
 
         } catch (Exception e) {
-            log.error("Failed to add predecessor: " + predecessorDetails, e);
-            return false;
+            String errMsg = "Failed to add predecessor: " + predecessorDetails;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
         return true;
     }
 
-    public boolean deleteSubprocess(String deleteSubprocess) {
+    public boolean deleteSubprocess(String deleteSubprocess) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
@@ -1007,13 +1016,14 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to delete subprocess: " + deleteSubprocess, e);
-            return false;
+            String errMsg = "Failed to delete subprocess: " + deleteSubprocess;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
         return true;
     }
 
-    public boolean deleteSuccessor(String deleteSuccessor) {
+    public boolean deleteSuccessor(String deleteSuccessor) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
@@ -1052,13 +1062,14 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to delete successor: " + deleteSuccessor, e);
-            return false;
+            String errMsg = "Failed to delete successor: " + deleteSuccessor;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
         return true;
     }
 
-    public boolean deletePredecessor(String deletePredecessor) {
+    public boolean deletePredecessor(String deletePredecessor) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
@@ -1099,8 +1110,9 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to delete predecessor: " + deletePredecessor, e);
-            return false;
+            String errMsg = "Failed to delete predecessor: " + deletePredecessor;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
         return true;
     }
@@ -1148,7 +1160,7 @@ public class ProcessStore {
      * @return process id
      */
     public String uploadDocument(String processName, String processVersion, String docName, String docSummary,
-            String docUrl, Object docObject, String docExtension) {
+            String docUrl, Object docObject, String docExtension) throws ProcessCenterException {
         String processId = "FAILED TO UPLOAD DOCUMENT";
         try {
             StreamHostObject s = (StreamHostObject) docObject;
@@ -1200,6 +1212,7 @@ public class ProcessStore {
             String errMsg =
                     docName + "." + docExtension + " document upload error for " + processName + ":" + processVersion;
             log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
         return processId;
     }
@@ -1210,7 +1223,7 @@ public class ProcessStore {
      * @param resourcePath holds the process path
      * @return document information
      */
-    public String getUploadedDocumentDetails(String resourcePath) {
+    public String getUploadedDocumentDetails(String resourcePath) throws ProcessCenterException {
         String documentString = "NA";
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
@@ -1246,7 +1259,9 @@ public class ProcessStore {
                 documentString = documentArray.toString();
             }
         } catch (Exception e) {
-            log.error("Failed to fetch document: " + resourcePath);
+            String errMsg = "Failed to fetch document: " + resourcePath;
+            log.error(errMsg);
+            throw new ProcessCenterException(errMsg, e);
         }
         return documentString;
     }
@@ -1257,7 +1272,7 @@ public class ProcessStore {
      * @param resourcePath holds the process path
      * @return document content as  a String
      */
-    public String downloadDocument(String resourcePath) {
+    public String downloadDocument(String resourcePath) throws ProcessCenterException {
         String docString = "FAILED TO GET Document";
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
@@ -1271,7 +1286,9 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to download document: " + resourcePath);
+            String errMsg = "Failed to download document: " + resourcePath;
+            log.error(errMsg);
+            throw new ProcessCenterException(errMsg, e);
         }
         return docString;
     }
@@ -1282,7 +1299,7 @@ public class ProcessStore {
      * @param deleteDocument holds the information of the document that need to be deleted
      * @return true after successful deletion
      */
-    public boolean deleteDocument(String deleteDocument) {
+    public boolean deleteDocument(String deleteDocument) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
@@ -1331,8 +1348,9 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to delete a document: " + deleteDocument, e);
-            return false;
+            String errMsg = "Failed to delete a document: " + deleteDocument;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
         return true;
     }

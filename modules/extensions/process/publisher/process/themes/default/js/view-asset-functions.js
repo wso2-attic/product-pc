@@ -54,9 +54,14 @@ function showBPMN() {
     $.ajax({
         url: '/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/' + fieldsName + "/" + fieldsVersion,
         type: 'GET',
-        success: function (response) {
-            var bpmnObject = JSON.parse(response);
-            $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                var bpmnObject = JSON.parse(response.content);
+                $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
+            } else {
+                alertify.error(response.content);
+            }
         },
         error: function () {
             alertify.error('BPMN diagram showing error');
@@ -89,8 +94,13 @@ function loadProcessText() {
     $.ajax({
         url: '/publisher/assets/process/apis/get_process_text?process_text_path=/processText/' + fieldsName + "/" + fieldsVersion,
         type: 'GET',
-        success: function (response) {
-            $("#processTextDiv").html(response);
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                $("#processTextDiv").html(response.content);
+            } else {
+                alertify.error(response.content);
+            }
         },
         error: function () {
             alertify.error('Text editor error');
@@ -106,7 +116,6 @@ function saveProcessText(e) {
         }
     } else {
         // save the process
-
         $.ajax({
             url: '/publisher/assets/process/apis/save_process_text',
             type: 'POST',
@@ -115,12 +124,17 @@ function saveProcessText(e) {
                 'processVersion': $("#textProcessVersion").val(),
                 'processText': textContent
             },
-            success: function (response) {
-                if ($(e).attr('id') == 'processTextSaveBtn') {
-                    alertify.success("Successfully saved the process content.");
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    if ($(e).attr('id') == 'processTextSaveBtn') {
+                        alertify.success("Successfully saved the process content.");
+                    }
+                    $("#viewTextButton").show();
+                    $("#addTextButton").hide();
+                } else {
+                    alertify.error(response.content);
                 }
-                $("#viewTextButton").show();
-                $("#addTextButton").hide();
             },
             error: function () {
                 alertify.error('Process text error');
@@ -179,22 +193,27 @@ function downloadDocument(relativePath) {
     $.ajax({
         url: '/publisher/assets/process/apis/download_document?process_doc_path=' + relativePath,
         type: 'GET',
-        success: function (response) {
-            var docNameWithExt = relativePath.substr(relativePath.lastIndexOf('/') + 1);
-            var extension = docNameWithExt.split('.').pop().toLowerCase();
-            var byteCharacters = atob(response);
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                var docNameWithExt = relativePath.substr(relativePath.lastIndexOf('/') + 1);
+                var extension = docNameWithExt.split('.').pop().toLowerCase();
+                var byteCharacters = atob(response.content);
 
-            var byteNumbers = new Array(byteCharacters.length);
-            for (var i = 0; i < byteCharacters.length; i++) {
-                byteNumbers[i] = byteCharacters.charCodeAt(i);
+                var byteNumbers = new Array(byteCharacters.length);
+                for (var i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                var contentType = 'application/msword';
+                if (extension == "pdf") {
+                    contentType = 'application/pdf';
+                }
+                var byteArray = new Uint8Array(byteNumbers);
+                var blob = new Blob([byteArray], {type: contentType});
+                saveAs(blob, docNameWithExt);
+            } else {
+                alertify.error(response.content);
             }
-            var contentType = 'application/msword';
-            if (extension == "pdf") {
-                contentType = 'application/pdf';
-            }
-            var byteArray = new Uint8Array(byteNumbers);
-            var blob = new Blob([byteArray], {type: contentType});
-            saveAs(blob, docNameWithExt);
         },
         error: function () {
             alertify.error('Text editor error');
@@ -227,8 +246,13 @@ function removeDocument(processName, processVersion, documentName, documentSumma
         url: '/publisher/assets/process/apis/delete_document',
         type: 'POST',
         data: {'removeDocumentDetails': JSON.stringify(removeDocObj)},
-        success: function (response) {
-            alertify.success('Successfully deleted ' + documentName + ' from the document list.');
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                alertify.success('Successfully deleted ' + documentName + ' from the document list.');
+            } else {
+                alertify.error(response.content);
+            }
         },
         error: function () {
             alertify.error('Document deleting error');
@@ -241,17 +265,22 @@ function viewPDFDocument(relativePath, heading, iteration) {
     $.ajax({
         url: '/publisher/assets/process/apis/download_document?process_doc_path=' + relativePath,
         type: 'GET',
-        success: function (response) {
-            var byteCharacters = atob(response);
-            var byteNumbers = new Array(byteCharacters.length);
-            for (var i = 0; i < byteCharacters.length; i++) {
-                byteNumbers[i] = byteCharacters.charCodeAt(i);
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                var byteCharacters = atob(response.content);
+                var byteNumbers = new Array(byteCharacters.length);
+                for (var i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                var contentType = 'application/pdf';
+                var byteArray = new Uint8Array(byteNumbers);
+                var file = new Blob([byteArray], {type: contentType});
+                var fileURL = URL.createObjectURL(file);
+                viewPDF(fileURL, heading, iteration);
+            } else {
+                alertify.error(response.content);
             }
-            var contentType = 'application/pdf';
-            var byteArray = new Uint8Array(byteNumbers);
-            var file = new Blob([byteArray], {type: contentType});
-            var fileURL = URL.createObjectURL(file);
-            viewPDF(fileURL, heading, iteration);
         },
         error: function () {
             alertify.error('Text editor error');
@@ -312,22 +341,22 @@ function viewPDF(pdfUrl, heading, iteration) {
 function confirmDialog(question) {
     var confirmModal =
         $('<div class="modal fade">' +
-        '<div class="modal-dialog">' +
-        '<div class="modal-content">' +
-        '<div class="modal-header">' +
-        '<a class="close" data-dismiss="modal" >&times;</a>' +
-        '<h3>Confirm delete</h3>' +
-        '</div>' +
-        '<div class="modal-body">' +
-        '<p>' + question + '</p>' +
-        '</div>' +
-        '<div class="modal-footer">' +
-        '<a href="#!" class="btn" data-dismiss="modal">cancel</a>' +
-        '<a href="#!" id="okButton" class="btn btn-primary">delete</a>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>');
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header">' +
+            '<a class="close" data-dismiss="modal" >&times;</a>' +
+            '<h3>Confirm delete</h3>' +
+            '</div>' +
+            '<div class="modal-body">' +
+            '<p>' + question + '</p>' +
+            '</div>' +
+            '<div class="modal-footer">' +
+            '<a href="#!" class="btn" data-dismiss="modal">cancel</a>' +
+            '<a href="#!" id="okButton" class="btn btn-primary">delete</a>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>');
     return confirmModal;
 }
 
@@ -358,73 +387,78 @@ function showDocument() {
         url: '/publisher/assets/process/apis/get_process_doc?process_path=/_system/governance/processes/' + fieldsName + "/" + fieldsVersion,
         type: 'GET',
         success: function (data) {
-            var response = JSON.parse(data);
-            if (response.length != 0) {
-                for (var i = 0; i < response.length; i++) {
-                    var table = document.getElementById("listDocs");
-                    var rowCount = table.rows.length;
-                    var row = table.insertRow(rowCount);
-                    var cellDocName = row.insertCell(0);
-                    var cellDocSummary = row.insertCell(1);
-                    var cellDocAction = row.insertCell(2);
-                    cellDocName.innerHTML = response[i].name;
-                    cellDocSummary.innerHTML = response[i].summary;
+            var responseObj = JSON.parse(data);
+            if (responseObj.error === false) {
+                var response = JSON.parse(responseObj.content);
+                if (response.length != 0) {
+                    for (var i = 0; i < response.length; i++) {
+                        var table = document.getElementById("listDocs");
+                        var rowCount = table.rows.length;
+                        var row = table.insertRow(rowCount);
+                        var cellDocName = row.insertCell(0);
+                        var cellDocSummary = row.insertCell(1);
+                        var cellDocAction = row.insertCell(2);
+                        cellDocName.innerHTML = response[i].name;
+                        cellDocSummary.innerHTML = response[i].summary;
 
-                    if (response[i].url != "NA") {
-                        var anchorUrlElement = document.createElement("a");
-                        anchorUrlElement.setAttribute("id", "documentUrl" + i);
-                        anchorUrlElement.setAttribute("href", response[i].url);
-                        anchorUrlElement.setAttribute('target', '_blank');
-                        anchorUrlElement.style.marginRight = "15px";
-                        anchorUrlElement.innerHTML = "open";
+                        if (response[i].url != "NA") {
+                            var anchorUrlElement = document.createElement("a");
+                            anchorUrlElement.setAttribute("id", "documentUrl" + i);
+                            anchorUrlElement.setAttribute("href", response[i].url);
+                            anchorUrlElement.setAttribute('target', '_blank');
+                            anchorUrlElement.style.marginRight = "15px";
+                            anchorUrlElement.innerHTML = "open";
 
-                        viewGoogleDocument(response[i].url, response[i].name, i);
-                        var anchorGoogleDocViewElement = document.createElement("a");
-                        anchorGoogleDocViewElement.setAttribute("id", "googleDocumentView" + i);
-                        anchorGoogleDocViewElement.setAttribute("data-toggle", "modal");
-                        anchorGoogleDocViewElement.setAttribute("data-target", "#docViewModal" + i);
-                        anchorGoogleDocViewElement.style.marginRight = "15px";
-                        anchorGoogleDocViewElement.innerHTML = "view";
+                            viewGoogleDocument(response[i].url, response[i].name, i);
+                            var anchorGoogleDocViewElement = document.createElement("a");
+                            anchorGoogleDocViewElement.setAttribute("id", "googleDocumentView" + i);
+                            anchorGoogleDocViewElement.setAttribute("data-toggle", "modal");
+                            anchorGoogleDocViewElement.setAttribute("data-target", "#docViewModal" + i);
+                            anchorGoogleDocViewElement.style.marginRight = "15px";
+                            anchorGoogleDocViewElement.innerHTML = "view";
 
-                        cellDocAction.appendChild(anchorUrlElement);
-                        cellDocAction.appendChild(anchorGoogleDocViewElement);
-                    } else if (response[i].path != "NA") {
-                        var anchorElement = document.createElement("a");
-                        anchorElement.setAttribute("id", "document" + i);
-                        anchorElement.onclick = (function (currentPath) {
-                            return function () {
-                                downloadDocument(currentPath);
-                            };
-                        })(response[i].path);
-                        anchorElement.innerHTML = "download";
-                        anchorElement.style.marginRight = "15px";
-                        cellDocAction.appendChild(anchorElement);
+                            cellDocAction.appendChild(anchorUrlElement);
+                            cellDocAction.appendChild(anchorGoogleDocViewElement);
+                        } else if (response[i].path != "NA") {
+                            var anchorElement = document.createElement("a");
+                            anchorElement.setAttribute("id", "document" + i);
+                            anchorElement.onclick = (function (currentPath) {
+                                return function () {
+                                    downloadDocument(currentPath);
+                                };
+                            })(response[i].path);
+                            anchorElement.innerHTML = "download";
+                            anchorElement.style.marginRight = "15px";
+                            cellDocAction.appendChild(anchorElement);
 
-                        if (response[i].path.split('.').pop().toLowerCase() == "pdf") {
-                            viewPDFDocument(response[i].path, response[i].name, i);
-                            var anchorPdfViewElement = document.createElement("a");
-                            anchorPdfViewElement.setAttribute("id", "pdfDocumentView" + i);
-                            anchorPdfViewElement.setAttribute("data-toggle", "modal");
-                            anchorPdfViewElement.setAttribute("data-target", "#pdfViewModal" + i);
-                            anchorPdfViewElement.style.marginRight = "15px";
-                            anchorPdfViewElement.innerHTML = "view";
-                            cellDocAction.appendChild(anchorPdfViewElement);
+                            if (response[i].path.split('.').pop().toLowerCase() == "pdf") {
+                                viewPDFDocument(response[i].path, response[i].name, i);
+                                var anchorPdfViewElement = document.createElement("a");
+                                anchorPdfViewElement.setAttribute("id", "pdfDocumentView" + i);
+                                anchorPdfViewElement.setAttribute("data-toggle", "modal");
+                                anchorPdfViewElement.setAttribute("data-target", "#pdfViewModal" + i);
+                                anchorPdfViewElement.style.marginRight = "15px";
+                                anchorPdfViewElement.innerHTML = "view";
+                                cellDocAction.appendChild(anchorPdfViewElement);
+                            }
+                        } else {
+                            cellDocAction.innerHTML = "Not Available";
                         }
-                    } else {
-                        cellDocAction.innerHTML = "Not Available";
-                    }
-                    if (response[i].url != "NA" || response[i].path != "NA") {
-                        var removeDocElement = document.createElement("a");
-                        removeDocElement.setAttribute("id", "removeDocElement" + i);
-                        removeDocElement.onclick = (function (processName, processVersion, docName, docSummary, docUrl, docPath, idVal) {
-                            return function () {
-                                removeDocumentConfirmListener(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
-                            };
-                        })(fieldsName, fieldsVersion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
-                        removeDocElement.innerHTML = "remove";
-                        cellDocAction.appendChild(removeDocElement);
+                        if (response[i].url != "NA" || response[i].path != "NA") {
+                            var removeDocElement = document.createElement("a");
+                            removeDocElement.setAttribute("id", "removeDocElement" + i);
+                            removeDocElement.onclick = (function (processName, processVersion, docName, docSummary, docUrl, docPath, idVal) {
+                                return function () {
+                                    removeDocumentConfirmListener(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
+                                };
+                            })(fieldsName, fieldsVersion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
+                            removeDocElement.innerHTML = "remove";
+                            cellDocAction.appendChild(removeDocElement);
+                        }
                     }
                 }
+            } else {
+                alertify.error(responseObj.content);
             }
         },
         error: function () {
@@ -511,25 +545,29 @@ function getProcessList() {
     $.ajax({
         url: '/publisher/assets/process/apis/get_process_list',
         type: 'GET',
-        success: function (response) {
-            processListObj = JSON.parse(response);
-            for (var i = 0; i < processListObj.length; i++) {
-                processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
-                if (processListObj[i].processid == pid) {
-                    if (processListObj[i].pdfpath == "NA") {
-                        //show pdf upload button
-                        $("#pdfUploader").show();
-                        $("#pdfViewer").hide();
-                    }
-                    else {
-                        //show pdf view button
-                        $("#pdfUploader").hide();
-                        $("#pdfViewer").show();
-                    }
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                processListObj = JSON.parse(response.content);
+                for (var i = 0; i < processListObj.length; i++) {
+                    processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
+                    if (processListObj[i].processid == pid) {
+                        if (processListObj[i].pdfpath == "NA") {
+                            //show pdf upload button
+                            $("#pdfUploader").show();
+                            $("#pdfViewer").hide();
+                        }
+                        else {
+                            //show pdf view button
+                            $("#pdfUploader").hide();
+                            $("#pdfViewer").show();
+                        }
 
+                    }
                 }
+            } else {
+                alertify.error(response.content);
             }
-
         },
         error: function () {
             alertify.error('Process list returning error');
@@ -584,8 +622,13 @@ function readUpdatedSubprocess(currentObj) {
             url: '/publisher/assets/process/apis/update_subprocess',
             type: 'POST',
             data: {'subprocessDetails': JSON.stringify(subProcessDetails)},
-            success: function (response) {
-                alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
+                } else {
+                    alertify.error(response.content);
+                }
             },
             error: function () {
                 alertify.error('Subprocess updating error');
@@ -632,8 +675,13 @@ function readUpdatedSuccessor(currentObj) {
             url: '/publisher/assets/process/apis/update_successor',
             type: 'POST',
             data: {'successorDetails': JSON.stringify(successorDetails)},
-            success: function (response) {
-                alertify.success('Process ' + successorInput + ' successfully added to the successor list.');
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    alertify.success('Process ' + successorInput + ' successfully added to the successor list.');
+                } else {
+                    alertify.error(response.content);
+                }
             },
             error: function () {
                 alertify.error('Successor updating error');
@@ -680,8 +728,13 @@ function readUpdatedPredecessor(currentObj) {
             url: '/publisher/assets/process/apis/update_predecessor',
             type: 'POST',
             data: {'predecessorDetails': JSON.stringify(predecessorDetails)},
-            success: function (response) {
-                alertify.success('Process ' + predecessorInput + ' successfully added to the predecessor list.');
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    alertify.success('Process ' + predecessorInput + ' successfully added to the predecessor list.');
+                } else {
+                    alertify.error(response.content);
+                }
             },
             error: function () {
                 alertify.error('Predecessor updating error');
@@ -722,9 +775,14 @@ function deleteSubprocess(element) {
                 url: '/publisher/assets/process/apis/delete_subprocess',
                 type: 'POST',
                 data: {'deleteSubprocessDetails': JSON.stringify(deleteSubObj)},
-                success: function (response) {
-                    document.getElementById("table_subprocess").deleteRow($(element).parent().closest("tr").index() + 1);
-                    alertify.success('Successfully deleted ' + deleteSubInput + ' from the subprocess list.');
+                success: function (data) {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        document.getElementById("table_subprocess").deleteRow($(element).parent().closest("tr").index() + 1);
+                        alertify.success('Successfully deleted ' + deleteSubInput + ' from the subprocess list.');
+                    } else {
+                        alertify.error(response.content);
+                    }
                 },
                 error: function () {
                     alertify.error('Subprocess deleting error');
@@ -768,9 +826,14 @@ function deleteSuccessor(element) {
                 url: '/publisher/assets/process/apis/delete_successor',
                 type: 'POST',
                 data: {'deleteSuccessorDetails': JSON.stringify(deleteSuccessorObj)},
-                success: function (response) {
-                    document.getElementById("table_successor").deleteRow($(element).parent().closest("tr").index() + 1);
-                    alertify.success('Successfully deleted ' + deleteSuccessorInput + ' from the successor list.');
+                success: function (data) {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        document.getElementById("table_successor").deleteRow($(element).parent().closest("tr").index() + 1);
+                        alertify.success('Successfully deleted ' + deleteSuccessorInput + ' from the successor list.');
+                    } else {
+                        alertify.error(response.content);
+                    }
                 },
                 error: function () {
                     alertify.error('Successor deleting error');
@@ -814,9 +877,14 @@ function deletePredecessor(element) {
                 url: '/publisher/assets/process/apis/delete_Predecessor',
                 type: 'POST',
                 data: {'deletePredecessorDetails': JSON.stringify(deletePredecessorObj)},
-                success: function (response) {
-                    document.getElementById("table_predecessor").deleteRow($(element).parent().closest("tr").index() + 1);
-                    alertify.success('Successfully deleted ' + deletePredecessorInput + ' from the predecessor list.');
+                success: function (data) {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        document.getElementById("table_predecessor").deleteRow($(element).parent().closest("tr").index() + 1);
+                        alertify.success('Successfully deleted ' + deletePredecessorInput + ' from the predecessor list.');
+                    } else {
+                        alertify.error(response.content);
+                    }
                 },
                 error: function () {
                     alertify.error('Predecessor deleting error');
@@ -843,9 +911,14 @@ function updateProcessOwner(element) {
             url: '/publisher/assets/process/apis/update_owner',
             type: 'POST',
             data: {'ownerDetails': JSON.stringify(ownerDetails)},
-            success: function (response) {
-                $(element).hide();
-                alertify.success('Successfully updated the Process owner name.');
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    $(element).hide();
+                    alertify.success('Successfully updated the Process owner name.');
+                } else {
+                    alertify.error(response.content);
+                }
             },
             error: function () {
                 alertify.error('Process owner updating error');

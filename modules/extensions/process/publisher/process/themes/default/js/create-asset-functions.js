@@ -26,41 +26,20 @@ window.onload = function () {
     getProcessList();
     getAllProcessTags();
 
-    $('#span').click(function () {
-        $("#tag-box").focus()
+    $('#tag-box').tokenfield({
+        autocomplete: {
+            source: allProcessTags,
+            delay: 100
+        },
+        showAutocompleteOnFocus: true
     });
 
-    $("#tag-box").keyup(function (e) {
-
-        var tagValue = $("#tag-box").val().trim();
-        var duplicate = $.inArray(tagValue, tagList);
-
-        if (duplicate >= 0) {
-            $("#select2-results__option--highlighted").hide();
-            $("#select2-results__option").hide();
-            $('#tag-box').val('');
-        }
-
-        if (e.which == 13 && tagValue.length >= 2) {
-            addNewTag();
-            $("#select2-results__option").hide();
-            $("#select2-results__option--highlighted").hide();
-        }
-        else {
-            updateTextBox(tagValue);
-        }
-    });
-
-    $("#tag-box").focusin(function () {
-
-        var tagValue = $("#tag-box").val().trim();
-        updateTextBox(tagValue);
-    });
-
-
-    $("#span").focusout(function () {
-        $("#select2-results__option").hide();
-        $("#select2-results__option--highlighted").hide();
+    $('#tag-box').on('tokenfield:createtoken', function (event) {
+        var existingTokens = $(this).tokenfield('getTokens');
+        $.each(existingTokens, function (index, token) {
+            if (token.value === event.attrs.value)
+                event.preventDefault();
+        });
     });
 }
 
@@ -148,19 +127,23 @@ function saveProcess(currentElement) {
         alertify.error('please fill the required fields.');
     } else {
         // save the process
-
         $.ajax({
             url: 'apis/create_process',
             type: 'POST',
             data: {'processInfo': getProcessInfo()},
-            success: function (response) {
-                $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response);
-                $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response);
-                $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response);
-                $("#docOverviewLink").attr("href", "../../assets/process/details/" + response);
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response.content);
+                    $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response.content);
+                    $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response.content);
+                    $("#docOverviewLink").attr("href", "../../assets/process/details/" + response.content);
 
-                if ($(currentElement).attr('id') == 'saveProcessBtn') {
-                    window.location = "../../assets/process/details/" + response;
+                    if ($(currentElement).attr('id') == 'saveProcessBtn') {
+                        window.location = "../../assets/process/details/" + response.content;
+                    }
+                } else {
+                    alertify.error(response.content);
                 }
             },
             error: function () {
@@ -172,13 +155,13 @@ function saveProcess(currentElement) {
 }
 
 function getProcessInfo() {
-    var tags = tagList.toString();
+    tagList = $('#tag-box').val().split(",");
     var processDetails = {
         'processName': $("#pName").val(),
         'processVersion': $("#pVersion").val(),
         'processOwner': $("#pOwner").val(),
         'processDescription': $("#overview_description").val(),
-        'processTags': tags,
+        'processTags': tagList.toString(),
         'subprocess': readSubprocessTable(),
         'successor': readSuccessorTable(),
         'predecessor': readPredecessorTable()
@@ -194,7 +177,6 @@ function saveProcessText(currentElement) {
         }
     } else {
         // save the process
-
         $.ajax({
             url: 'apis/save_process_text',
             type: 'POST',
@@ -203,9 +185,14 @@ function saveProcessText(currentElement) {
                 'processVersion': $("#pVersion").val(),
                 'processText': textContent
             },
-            success: function (response) {
-                if ($(currentElement).attr('id') == 'processTxtSaveBtn') {
-                    alertify.success("Successfully saved the process content.");
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    if ($(currentElement).attr('id') == 'processTxtSaveBtn') {
+                        alertify.success("Successfully saved the process content.");
+                    }
+                } else {
+                    alertify.error(response.content);
                 }
             },
             error: function () {
@@ -358,10 +345,15 @@ function getProcessList() {
     $.ajax({
         url: '/publisher/assets/process/apis/get_process_list',
         type: 'GET',
-        success: function (response) {
-            processListObj = JSON.parse(response);
-            for (var i = 0; i < processListObj.length; i++) {
-                processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                processListObj = JSON.parse(response.content);
+                for (var i = 0; i < processListObj.length; i++) {
+                    processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
+                }
+            } else {
+                alertify.error(response.content);
             }
         },
         error: function () {
@@ -374,14 +366,20 @@ function getAllProcessTags() {
     $.ajax({
         url: '/publisher/assets/process/apis/get_process_tags',
         type: 'GET',
+        async: false,
         success: function (data) {
-            var processTagsObj = JSON.parse(data);
-            if (!$.isEmptyObject(processTagsObj)) {
-                for (var key in processTagsObj) {
-                    if (processTagsObj.hasOwnProperty(key)) {
-                        allProcessTags.push(key);
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                var processTagsObj = JSON.parse(response.content);
+                if (!$.isEmptyObject(processTagsObj)) {
+                    for (var key in processTagsObj) {
+                        if (processTagsObj.hasOwnProperty(key)) {
+                            allProcessTags.push(key);
+                        }
                     }
                 }
+            } else {
+                alertify.error(response.content);
             }
         },
         error: function () {
@@ -465,8 +463,6 @@ function updateTextBox(tagValue) {
         $("#select2-results__option--highlighted").hide();
         $("#select2-results__option").text("Please enter 2 or more characters");
         $("#select2-results__option").show();
-
-
     }
     else if (tagValue.length == 1) {
         $("#select2-results__option--highlighted").hide();
@@ -477,39 +473,6 @@ function updateTextBox(tagValue) {
         $("#select2-results__option").hide();
         $("#select2-results__option--highlighted").text(tagValue);
         $("#select2-results__option--highlighted").show();
-
-
-    }
-}
-
-function addNewTag() {
-    var tagValue = $("#tag-box").val().trim();
-
-    if (tagValue) {
-        tagList.push(tagValue);
-        $('#_tags').append($("<option></option>").attr("value", tagValue).text(tagValue));
-
-        $("#tag-box-list").before('<li class="select2-selection__choice" title="' + tagValue + '">' +
-        '<span class="select2-selection__choice__remove" role="presentation" onclick="removeTag(this)">×</span>' + tagValue + '</li>');
-        $('#tag-box').val('');
-    }
-}
-
-function removeTag(currentElement) {
-
-    var parent = $(currentElement).parent();
-    var tagName = parent.attr("title");
-
-    $('#_tags option').each(function () {
-        if ($(this).val() == tagName) {
-            $(this).remove();
-        }
-    })
-    $(parent).remove();
-
-    var index = jQuery.inArray(tagName, tagList);
-    if (index > -1) {
-        tagList.splice(index, 1);
     }
 }
 
