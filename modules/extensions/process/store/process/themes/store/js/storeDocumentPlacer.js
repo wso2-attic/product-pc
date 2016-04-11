@@ -17,25 +17,30 @@ function downloadDocument(relativePath) {
     $.ajax({
         url: '/store/assets/process/apis/download_document?process_doc_path=' + relativePath,
         type: 'GET',
-        success: function (response) {
-            var docNameWithExt = relativePath.substr(relativePath.lastIndexOf('/') + 1);
-            var extension = docNameWithExt.split('.').pop().toLowerCase();
-            var byteCharacters = atob(response);
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                var docNameWithExt = relativePath.substr(relativePath.lastIndexOf('/') + 1);
+                var extension = docNameWithExt.split('.').pop().toLowerCase();
+                var byteCharacters = atob(response.content);
 
-            var byteNumbers = new Array(byteCharacters.length);
-            for (var i = 0; i < byteCharacters.length; i++) {
-                byteNumbers[i] = byteCharacters.charCodeAt(i);
+                var byteNumbers = new Array(byteCharacters.length);
+                for (var i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                var contentType = 'application/msword';
+                if (extension == "pdf") {
+                    contentType = 'application/pdf';
+                }
+                var byteArray = new Uint8Array(byteNumbers);
+                var blob = new Blob([byteArray], {type: contentType});
+                saveAs(blob, docNameWithExt);
+            } else {
+                alertify.error(response.content);
             }
-            var contentType = 'application/msword';
-            if(extension == "pdf") {
-                contentType = 'application/pdf';
-            }
-            var byteArray = new Uint8Array(byteNumbers);
-            var blob = new Blob([byteArray], {type: contentType});
-            saveAs(blob, docNameWithExt);
         },
         error: function () {
-            alertify.error('Text editor error');
+            alertify.error('Document download error.');
         }
     });
 }
@@ -44,20 +49,25 @@ function viewPDFDocument(relativePath, heading, iteration) {
     $.ajax({
         url: '/store/assets/process/apis/download_document?process_doc_path=' + relativePath,
         type: 'GET',
-        success: function (response) {
-            var byteCharacters = atob(response);
-            var byteNumbers = new Array(byteCharacters.length);
-            for (var i = 0; i < byteCharacters.length; i++) {
-                byteNumbers[i] = byteCharacters.charCodeAt(i);
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                var byteCharacters = atob(response.content);
+                var byteNumbers = new Array(byteCharacters.length);
+                for (var i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                var contentType = 'application/pdf';
+                var byteArray = new Uint8Array(byteNumbers);
+                var file = new Blob([byteArray], {type: contentType});
+                var fileURL = URL.createObjectURL(file);
+                viewPDF(fileURL, heading, iteration);
+            } else {
+                alertify.error(response.content);
             }
-            var contentType = 'application/pdf';
-            var byteArray = new Uint8Array(byteNumbers);
-            var file = new Blob([byteArray], {type: contentType});
-            var fileURL = URL.createObjectURL(file);
-            viewPDF(fileURL, heading, iteration);
         },
         error: function () {
-            alertify.error('Text editor error');
+            alertify.error('PDF viewing error.');
         }
     });
 }

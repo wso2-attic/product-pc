@@ -25,21 +25,25 @@
         $("#list_tagged_processes").hide();
     }
 
-    function getProcessTags(){
+    function getProcessTags() {
         $.ajax({
             url: '/publisher/assets/process/apis/get_process_tags',
             type: 'GET',
-            success: function (response) {
-                processTagsObj = JSON.parse(response);
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    processTagsObj = JSON.parse(response.content);
+                    if (!$.isEmptyObject(processTagsObj)) {
+                        for (var key in processTagsObj) {
+                            if (processTagsObj.hasOwnProperty(key)) {
+                                $("#searchtags").append('<a id="' + key + '" onclick="searchProcessesByTag(this)">' + key + '</a>');
 
-
-                for (var key in processTagsObj) {
-                    if (processTagsObj.hasOwnProperty(key)) {
-                        $("#searchtags").append('<a id="'+key+'" onclick="searchProcessesByTag(this)">'+key+'</a>');
-
+                            }
+                        }
                     }
+                } else {
+                    alertify.error(response.content);
                 }
-
             },
             error: function () {
                 alert.error('Process list returning error');
@@ -176,7 +180,7 @@
               {{#each assetCategoryDetails.values}}
               <li><a tabindex="-1" href="#">{{this}}</a></li>
               {{/each}}
-          </ul>          
+          </ul>
       </div>
       {{/if}}
 
@@ -218,7 +222,7 @@
                     </div>
             {{else}}
                     <div class="emptyAssets-MsgDiv">
-                    
+
                     <p class="emptyAssets">We are sorry! we couldn't find anything for you ...</p>
 
                     </div>

@@ -18,6 +18,7 @@
  *
  */
 importPackage(org.wso2.carbon.pc.core);
+
 var log = new Log();
 if(log.isDebugEnabled()){
     log.debug("INSIDE UPLOAD DOCUMENTS");
@@ -39,11 +40,14 @@ if(docUrl == '') {
     docUrl = "NA";
 }
 
-var processid = "NA";
-var files = request.getAllFiles();
-for (var name in files) {
-    processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, files[name].getStream(), docExtension);
+try{
+    var processid = "NA";
+    var files = request.getAllFiles();
+    for (var name in files) {
+        processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, files[name].getStream(), docExtension);
+    }
+    response.sendRedirect('/publisher/assets/process/details/' + processid);
+}catch(error){
+    log.error(error);
 }
-
-response.sendRedirect('/publisher/assets/process/details/' + processid);
 %>
