@@ -38,6 +38,7 @@
 .custom {
     position: absolute;
     z-index: 5;
+    white-space: pre-wrap;
 }
 
 .start {
@@ -97,6 +98,11 @@
 }
 
 #editor_canvas {
+    z-index: 1;
+    position: relative;
+}
+
+#canvas {
     z-index: 1;
     position: relative;
 }
