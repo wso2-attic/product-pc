@@ -98,6 +98,9 @@ asset.server = function (ctx) {
             }, {
                 url: 'delete_document',
                 path: 'delete_document.jag'
+            }, {
+                url: 'delete_bpmn',
+                path: 'delete_bpmn.jag'
             }]
         }
     }
