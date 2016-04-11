@@ -11,7 +11,9 @@ if(log.isDebugEnabled()){
 log.info("creating pdfsearchservice");
 var pdfsearch = new PDFSearchService();
 var searchQuery = String(request.getParameter("search-query"));
+var mediaType = String(request.getParameter("mediatype"));
 
-var status = pdfsearch.search(searchQuery, username);
+
+var status = pdfsearch.search(searchQuery,mediaType, username);
 print(status);
 %>

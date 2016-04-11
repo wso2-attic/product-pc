@@ -6,7 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.governance.api.common.GovernanceArtifactManager;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.common.AttributeSearchService;
 import org.wso2.carbon.registry.common.ResourceData;
@@ -21,6 +20,7 @@ import org.xml.sax.InputSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,25 +31,37 @@ import java.util.Map;
 public class PDFSearchService  {
 
     private static final Log log = LogFactory.getLog(PDFSearchService.class);
+    private static final Map<String, String> mediatypes;
+    static {
+        Map<String, String> aMap = new HashMap<>();
+        aMap.put("PDF", "application/pdf");
+        aMap.put("Document", "application/msword");
+        aMap.put("Process-Text", "text/html");
+        aMap.put("Process", "application/vnd.wso2-process+xml");
+        mediatypes = Collections.unmodifiableMap(aMap);
+    }
 
-    public String search(String searchQuery, String username){
+    public String search(String searchQuery, String mediaType, String username) throws ProcessCenterException{
 
         String processString = null;
-         ContentSearchService contentSearchService = ProcessCenterServerHolder.getInstance().getContentSearchService();
+        String mediaTypeStr;
         AttributeSearchService attributeSearchService = ProcessCenterServerHolder.getInstance().getAttributeSearchService();
          try {
 
              PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(username);
-             ResourceData[] data = contentSearchService.search(searchQuery);
-             log.info(data[0].getResourcePath());
+             JSONArray mediaTypeArr= new JSONArray(mediaType);
 
-           //  contentSearchService.search(registry, "summary");
+             mediaTypeStr = mediaTypeArr.length() > 0 ? mediatypes.get(mediaTypeArr.get(0)) : "";
+             for(int i=1; i< mediaTypeArr.length(); i++){
+                 mediaTypeStr += " OR "+mediatypes.get(mediaTypeArr.get(i));
+             }
+
              Map<String, String> input = new HashMap<>();
-             input.put(IndexingConstants.FIELD_MEDIA_TYPE, "application/pdf");
+             input.put(IndexingConstants.FIELD_MEDIA_TYPE, mediaTypeStr);
              input.put(IndexingConstants.FIELD_CONTENT, searchQuery);
-             ResourceData[] pdfResources = attributeSearchService.search(input);
+             ResourceData[] resources = attributeSearchService.search(input);
 
-             if(pdfResources.length > 0 && pdfResources != null){
+             if(resources != null){
 
                  JSONArray result = new JSONArray();
 
@@ -58,15 +70,16 @@ public class PDFSearchService  {
                      UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
 
-                     for(ResourceData pdf : pdfResources){
+                     for(ResourceData resource : resources){
 
-                         String resourcePath = pdf.getResourcePath();
+                         String resourcePath = resource.getResourcePath();
                          Association[] associations = reg.getAllAssociations(resourcePath.substring("/_system/governance/".length()));
                          for(Association association : associations){
                              String destinationPath = association.getDestinationPath();
                              Resource processResource = reg.get(destinationPath);
-                             String lifecycleState = processResource.getProperty("registry.lifecycle.SampleLifeCycle2.state");                             String mediaType = "application/vnd.wso2-process+xml";
-                             if(processResource.getMediaType().equals(mediaType)){
+                             String lifecycleState = processResource.getProperty("registry.lifecycle.SampleLifeCycle2.state");
+                             String process_mediatype = "application/vnd.wso2-process+xml";
+                             if(processResource.getMediaType().equals(process_mediatype)){
 
                                  String processContent = new String((byte[]) processResource.getContent());
                                  Document processXML = stringToXML(processContent);
@@ -93,8 +106,9 @@ public class PDFSearchService  {
                  }
              }
          }catch (Exception ex){
-             log.error(ex.getMessage(), ex);
-             ex.printStackTrace();
+             String message = "Registry service not available for retrieving processes.";
+             log.error(message, ex);
+             throw new ProcessCenterException(message);
          }
 
         return processString;

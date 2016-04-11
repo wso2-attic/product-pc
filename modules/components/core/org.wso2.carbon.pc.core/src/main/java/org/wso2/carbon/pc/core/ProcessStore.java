@@ -218,6 +218,8 @@ public class ProcessStore {
 
                 // store process text as a separate resource
                 String processTextResourcePath = "processText/" + processName + "/" + processVersion;
+                reg.addAssociation(processTextResourcePath, processPath, Association.USED_BY);
+
                 if (processText != null && processText.length() > 0) {
                     Resource processTextResource = reg.newResource();
                     processTextResource.setContent(processText);
@@ -1171,6 +1173,8 @@ public class ProcessStore {
 
                 String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
+                reg.addAssociation(docContentPath, processAssetPath, Association.USED_BY);
+
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);

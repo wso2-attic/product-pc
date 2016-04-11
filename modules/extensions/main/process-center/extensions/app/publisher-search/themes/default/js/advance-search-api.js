@@ -201,14 +201,15 @@ $(function(){
 
     function contentSearch(rxt_results) {
 
-        var str = $("#content").val().trim();
-        var res = str.replace(/ /g, "&&");
+        var content = $("#content").val().trim();
+        var media = JSON.stringify(options);
         var search_url = caramel.tenantedUrl('/apis/search');
         $.ajax({
             url: search_url,
             type: 'POST',
             data: {
-                'search-query': res
+                'search-query': content,
+                'mediatype' : media
             },
             success: function (data) {
 
@@ -278,4 +279,27 @@ $(function(){
         });
 
     }
+
+    var options = [];
+
+    $( '.dropdown-menu a' ).on( 'click', function( event ) {
+
+        var $target = $( event.currentTarget ),
+            val = $target.attr( 'data-value' ),
+            $inp = $target.find( 'input' ),
+            idx;
+
+        if ( ( idx = options.indexOf( val ) ) > -1 ) {
+            options.splice( idx, 1 );
+            setTimeout( function() { $inp.prop( 'checked', false ) }, 0);
+        } else {
+            options.push( val );
+            setTimeout( function() { $inp.prop( 'checked', true ) }, 0);
+        }
+
+        $( event.target ).blur();
+
+        console.log( options );
+        return false;
+    });
 });
