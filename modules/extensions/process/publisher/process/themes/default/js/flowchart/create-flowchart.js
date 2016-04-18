@@ -507,10 +507,10 @@ jsPlumb.ready(function () {
                     },
                     success: function (data) {
                         var response = JSON.parse(data);
-                        if(response.error == false) {
+                        if (response.error == false) {
                             alertify.success("Successfully saved the flowchart.");
                             $("#flowchartOverviewLink").attr("href", "../process/details/" + response.content);
-                        }else{
+                        } else {
                             alertify.error(response.content);
                         }
                     },

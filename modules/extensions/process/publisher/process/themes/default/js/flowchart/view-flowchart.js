@@ -517,10 +517,10 @@ jsPlumb.ready(function () {
                     },
                     success: function (data) {
                         var response = JSON.parse(data);
-                        if(response.error == false){
+                        if (response.error == false) {
                             alertify.success("Successfully saved the flowchart.");
                             $("#fcEditorOverviewLink").attr("href", "../../../assets/process/details/" + response.content);
-                        }else{
+                        } else {
                             alertify.error(response.content);
                         }
                     },
@@ -586,14 +586,14 @@ jsPlumb.ready(function () {
                 },
                 success: function (data) {
                     var response = JSON.parse(data);
-                    if(response.error == false) {
+                    if (response.error == false) {
                         alertify.success(response.content);
                         var node = document.getElementById("editor_canvas");
                         while (node.hasChildNodes()) {
                             node.removeChild(node.lastChild);
                         }
                         editableElmCount = 0;
-                    }else{
+                    } else {
                         alertify.error(response.content);
                     }
                 },

@@ -191,13 +191,13 @@ path, .jsplumb-endpoint {
     background-color: white;
 }
 
-#fc-content{
+#fc-content {
     width: 100%;
     min-height: 400px;
     overflow-y: auto;
     margin-top: -10px;
 }
 
-#fc-demo{
+#fc-demo {
     margin-top: -25px;
 }

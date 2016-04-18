@@ -20,7 +20,7 @@
 
 importPackage(org.wso2.carbon.pc.core);
 var log = new Log();
-if(log.isDebugEnabled()){
+if (log.isDebugEnabled()) {
     log.debug("INSIDE get process flowchart...");
 }
 var ps = new ProcessStore();
@@ -34,7 +34,7 @@ try {
     responseObj.error = false;
     responseObj.content = flowchart;
     print(stringify(responseObj));
-}catch(error){
+} catch (error) {
     responseObj.error = true;
     responseObj.content = "Process flowchart retrieving error.";
     print(stringify(responseObj));

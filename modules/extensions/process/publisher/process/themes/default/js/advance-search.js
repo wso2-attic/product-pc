@@ -20,9 +20,9 @@
 var tableName = "subprocess";
 var SEARCH_FORM = "#process-search-form";
 
-var processInputField = function(field){
+var processInputField = function (field) {
     var result = field;
-    switch(field.type) {
+    switch (field.type) {
         case 'text':
             result = field;
             break;
@@ -31,29 +31,29 @@ var processInputField = function(field){
     }
     return result;
 };
-var getInputFields = function(){
+var getInputFields = function () {
     var obj = {};
     var fields = $(SEARCH_FORM).find(':input');
     var field;
-    for(var index = 0; index < fields.length; index++){
+    for (var index = 0; index < fields.length; index++) {
         field = fields[index];
         field = processInputField(field);
-        if((field.name)&&(field.value)){
+        if ((field.name) && (field.value)) {
             obj[field.name.substr(8)] = field.value;
         }
     }
     return obj;
 };
-var createQueryString = function(key,value){
-    return '"'+key+'":"'+value+'"';
+var createQueryString = function (key, value) {
+    return '"' + key + '":"' + value + '"';
 };
-var buildQuery = function(){
+var buildQuery = function () {
     var fields = getInputFields();
-    var queryString =[];
+    var queryString = [];
     var value;
-    for(var key in fields){
+    for (var key in fields) {
         value = fields[key];
-        queryString.push(createQueryString(key,value));
+        queryString.push(createQueryString(key, value));
     }
     return queryString.join(',');
 };
@@ -68,7 +68,7 @@ function searchProcesses() {
         success: function (response) {
             var results = [];
             results = response.list;
-            if(results.length > 0){
+            if (results.length > 0) {
                 $("#process-search-results").html("");
                 for (var i = 0; i < results.length; i++) {
                     var id = "checkbox" + (i + 1);
@@ -83,7 +83,7 @@ function searchProcesses() {
                 document.getElementById("process-search-form").reset();
                 //to prevent the response from redirecting
                 $(SEARCH_FORM).ajaxForm();
-            }else{
+            } else {
                 $("#process-search-results").html("");
                 $("#process-search-results").append("<p>We are sorry but we could not find any matching assets</p>");
             }

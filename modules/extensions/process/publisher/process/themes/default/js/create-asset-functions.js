@@ -488,20 +488,20 @@ function deleteProcess(element) {
         deleteRow(element.parentElement.parentElement.rowIndex);
 }
 
-$("#saveAsPNGBtn").click(function() {
+$("#saveAsPNGBtn").click(function () {
     html2canvas($("#canvas"), {
-        onrendered: function(canvas) {
+        onrendered: function (canvas) {
             ctx = canvas.getContext('2d');
 
             $elements = $(".jtk-node");
-            if($elements.length != 0){
+            if ($elements.length != 0) {
                 $elements.each(function () {
                     $svg = $(this).find("p")[0];
                     $svg.style.whiteSpace = "pre-wrap";
                 });
 
                 $flows = $('.jsplumb-connector');
-                $flows.each( function() {
+                $flows.each(function () {
                     $svg = $(this);
                     var text = $svg.parent().find(":input")[0];
                     $(text).css('z-index', '100');
@@ -511,7 +511,7 @@ $("#saveAsPNGBtn").click(function() {
                 });
 
                 $endpoints = $('.jsplumb-endpoint > svg');
-                $endpoints.each(function() {
+                $endpoints.each(function () {
                     $svg = $(this);
                     offset = $svg.parent().position();
                     svgStr = this.outerHTML;
@@ -519,7 +519,7 @@ $("#saveAsPNGBtn").click(function() {
                 });
 
                 Canvas2Image.saveAsPNG(canvas);
-            }else{
+            } else {
                 alertify.error('Flowchart content is empty.');
             }
         }

@@ -341,22 +341,22 @@ function viewPDF(pdfUrl, heading, iteration) {
 function confirmDialog(question) {
     var confirmModal =
         $('<div class="modal fade">' +
-            '<div class="modal-dialog">' +
-            '<div class="modal-content">' +
-            '<div class="modal-header">' +
-            '<a class="close" data-dismiss="modal" >&times;</a>' +
-            '<h3>Confirm delete</h3>' +
-            '</div>' +
-            '<div class="modal-body">' +
-            '<p>' + question + '</p>' +
-            '</div>' +
-            '<div class="modal-footer">' +
-            '<a href="#!" class="btn" data-dismiss="modal">cancel</a>' +
-            '<a href="#!" id="okButton" class="btn btn-primary">delete</a>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>');
+        '<div class="modal-dialog">' +
+        '<div class="modal-content">' +
+        '<div class="modal-header">' +
+        '<a class="close" data-dismiss="modal" >&times;</a>' +
+        '<h3>Confirm delete</h3>' +
+        '</div>' +
+        '<div class="modal-body">' +
+        '<p>' + question + '</p>' +
+        '</div>' +
+        '<div class="modal-footer">' +
+        '<a href="#!" class="btn" data-dismiss="modal">cancel</a>' +
+        '<a href="#!" id="okButton" class="btn btn-primary">delete</a>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>');
     return confirmModal;
 }
 
@@ -1132,7 +1132,7 @@ function showFlowchartEditor(name, flowchartPath) {
             var response = JSON.parse(data);
             if (response.error === false) {
                 _loadEditableFlowChart(response.content, '#editor_canvas');
-            }else {
+            } else {
                 alertify.error(response.content);
             }
         },
@@ -1213,20 +1213,20 @@ function deleteProcess(element) {
     }
 }
 
-$("#saveAsPNGBtn").click(function() {
+$("#saveAsPNGBtn").click(function () {
     html2canvas($("#editor_canvas"), {
-        onrendered: function(canvas) {
+        onrendered: function (canvas) {
             ctx = canvas.getContext('2d');
 
             $elements = $(".jtk-node");
-            if($elements.length != 0){
+            if ($elements.length != 0) {
                 $elements.each(function () {
                     $svg = $(this).find("p")[0];
                     $svg.style.whiteSpace = "pre-wrap";
                 });
 
                 $flows = $('.jsplumb-connector');
-                $flows.each( function() {
+                $flows.each(function () {
                     $svg = $(this);
                     $svg.parent().find(":input")[0].style.zIndex = 50;
                     var text = $svg.parent().find(":input")[0];
@@ -1237,7 +1237,7 @@ $("#saveAsPNGBtn").click(function() {
                 });
 
                 $endpoints = $('.jsplumb-endpoint > svg');
-                $endpoints.each(function() {
+                $endpoints.each(function () {
                     $svg = $(this);
                     //$svg.find(':input').css({'z-index':6});
                     offset = $svg.parent().position();
@@ -1246,7 +1246,7 @@ $("#saveAsPNGBtn").click(function() {
                 });
 
                 Canvas2Image.saveAsPNG(canvas);
-            }else{
+            } else {
                 alertify.error('Flowchart content is empty.');
             }
         }

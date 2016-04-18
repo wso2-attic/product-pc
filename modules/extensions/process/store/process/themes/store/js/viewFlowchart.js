@@ -232,8 +232,8 @@ jsPlumb.ready(function () {
             data: {'flowchartPath': flowchartPath},
             success: function (data) {
                 var response = JSON.parse(data);
-                if(response.error == false){
-                    if(response.content != "NA") {
+                if (response.error == false) {
+                    if (response.content != "NA") {
                         $('#editor_canvas').html('');
                         $('#fc-content').css('min-height', '400px');
                         var flowchart = JSON.parse(response.content);
@@ -270,7 +270,7 @@ jsPlumb.ready(function () {
                             var conn = instance.connect({uuids: [element.sourceUUId, element.targetUUId]});
                             init(conn, element.label, element.labelWidth);
                         });
-                    }else{
+                    } else {
                         $('#editor_canvas').html('');
                         $("#editor_canvas").append("<p>No flowchart available</p>");
                         $('#fc-content').css('min-height', '153px');

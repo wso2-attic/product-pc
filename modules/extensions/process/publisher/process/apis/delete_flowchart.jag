@@ -29,7 +29,7 @@ try {
     responseObj.error = false;
     responseObj.content = "Successfully deleted the flowchart";
     print(stringify(responseObj));
-}catch(error){
+} catch (error) {
     responseObj.error = true;
     responseObj.content = "Process flowchart deleting error";
     print(stringify(responseObj));
