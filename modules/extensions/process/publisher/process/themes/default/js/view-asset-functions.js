@@ -1252,3 +1252,37 @@ $("#saveAsPNGBtn").click(function() {
         }
     });
 });
+
+function deleteBPMNDiagram(processName, processVersion) {
+    $.ajax({
+        url: '/publisher/assets/process/apis/delete_bpmn',
+        type: 'POST',
+        data: {
+            'processName': processName,
+            'processVersion': processVersion
+        },
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                window.location = "../../process/details/" + response.content;
+            } else {
+                alertify.error(response.content);
+            }
+        },
+        error: function () {
+            alertify.error('BPMN diagram deleting error');
+        }
+    });
+}
+
+function removeBPMNDiagramListener() {
+    var processName = $("#bpmnViewProcessName").val();
+    var processVersion = $("#bpmnViewProcessVersion").val();
+    var question = "Are you sure you want to delete the BPMN diagram of process " + processName + " " + processVersion + " permanently ?";
+    var confirmModal = confirmDialog(question);
+    confirmModal.find('#okButton').click(function (event) {
+        deleteBPMNDiagram(processName, processVersion);
+        confirmModal.modal('hide');
+    });
+    confirmModal.modal('show');
+}
