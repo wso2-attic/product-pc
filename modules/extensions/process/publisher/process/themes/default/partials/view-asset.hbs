@@ -253,7 +253,10 @@
     <button class="btn btn-primary" onclick="showOverview(this)"><span
             class="glyphicon glyphicon-circle-arrow-left"></span> Overview
     </button>
+    <button class="btn btn-primary" id="bpmnDiagramDltBtn" onclick="removeBPMNDiagramListener()">Delete</button>
     <br/><br/>
+    <input type="hidden" id="bpmnViewProcessName" name="bpmnViewProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
+    <input type="hidden" id="bpmnViewProcessVersion" name="bpmnViewProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
 
     <div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
         <img id="bpmnImage" style="position: relative;top: 50%;left: 50%;transform: translateX(-50%) translateY(-50%);"

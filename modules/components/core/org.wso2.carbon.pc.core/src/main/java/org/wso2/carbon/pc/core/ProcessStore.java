@@ -223,7 +223,8 @@ public class ProcessStore {
                     processTextResource.setContent(processText);
                     processTextResource.setMediaType("text/html");
                     reg.put(processTextResourcePath, processTextResource);
-                    doc.getElementsByTagName("processtextpath").item(0).setTextContent(processTextResourcePath);
+                    doc.getElementsByTagName("processtextpath").item(0).setTextContent(
+		                    processTextResourcePath);
                 } else {
                     reg.delete(processTextResourcePath);
                     doc.getElementsByTagName("processtextpath").item(0).setTextContent("NA");
@@ -390,6 +391,47 @@ public class ProcessStore {
             String errMsg = "Create BPMN error:" + bpmnName + " - " + bpmnVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
+        }
+        return processId;
+    }
+
+    public String removeBPMNDiagram(String processName, String processVersion)
+		    throws ProcessCenterException {
+	    String processId = "";
+        try {
+	        RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+	        if (registryService != null) {
+		        UserRegistry reg = registryService.getGovernanceSystemRegistry();
+		        String bpmnContentPath = ProcessStoreConstants.BPMN_CONTENT_PATH + processName + "/" + processVersion;
+		        if (reg.resourceExists(bpmnContentPath)) {
+			        reg.delete(bpmnContentPath);
+		        }
+		        String bpmnAssetPath = ProcessStoreConstants.BPMN_PATH + processName + "/" + processVersion;
+		        if (reg.resourceExists(bpmnAssetPath)) {
+			        reg.delete(bpmnAssetPath);
+		        }
+		        String processPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
+		        if(reg.resourceExists(processPath)) {
+			        Resource processResource = reg.get(processPath);
+
+			        String processContent = new String((byte[]) processResource.getContent());
+			        Document processXML = stringToXML(processContent);
+			        processXML.getElementsByTagName("bpmnpath").item(0).setTextContent("NA");
+			        processXML.getElementsByTagName("bpmnid").item(0).setTextContent("NA");
+
+			        String newProcessContent = xmlToString(processXML);
+			        processResource.setContent(newProcessContent);
+			        reg.put(processPath, processResource);
+
+			        Resource storedProcessAsset = reg.get(processPath);
+			        processId = storedProcessAsset.getUUID();
+		        }
+	        }
+        } catch (Exception e) {
+            String errMsg = "Error has been occurred while removing BPMN diagram in the process:"
+                            + processName + "-" + processVersion;
+	        log.error(errMsg, e);
+	        throw new ProcessCenterException(errMsg, e);
         }
         return processId;
     }
@@ -1466,7 +1508,8 @@ public class ProcessStore {
                 String processContent = new String(processContentBytes);
                 Document pdoc = stringToXML(processContent);
 
-                pdoc.getElementsByTagName("pdf").item(0).getFirstChild().setTextContent(pdfContentPath);
+                pdoc.getElementsByTagName("pdf").item(0).getFirstChild().setTextContent(
+		                pdfContentPath);
                 String newProcessContent = xmlToString(pdoc);
                 processAsset.setContent(newProcessContent);
                 reg.put(processPath, processAsset);
@@ -1603,7 +1646,8 @@ public class ProcessStore {
 
                 String processContent = new String((byte[]) processResource.getContent());
                 Document processXML = stringToXML(processContent);
-                processXML.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent("NA");
+                processXML.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent(
+		                "NA");
 
                 String newProcessContent = xmlToString(processXML);
                 processResource.setContent(newProcessContent);
