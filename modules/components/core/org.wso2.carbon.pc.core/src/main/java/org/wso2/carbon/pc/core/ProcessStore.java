@@ -1500,7 +1500,8 @@ public class ProcessStore {
      * @param flowchartJson
      * @return the processId once the flowchart is saved
      */
-    public String uploadFlowchart(String processName, String processVersion, String flowchartJson) {
+    public String uploadFlowchart(String processName, String processVersion, String flowchartJson)
+                                        throws ProcessCenterException{
         String processId = "NA";
         if (log.isDebugEnabled())
             log.debug("Creating Flowchart...");
@@ -1536,6 +1537,7 @@ public class ProcessStore {
             String errMsg =
                     "Flow-chart uploading error for " + processName + " - " + processVersion + ":" + flowchartJson;
             log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
         if (log.isDebugEnabled())
             log.debug("Successfully uploaded the flowchart for process " + processName + "-" + processVersion);
@@ -1546,7 +1548,7 @@ public class ProcessStore {
      * @param flowchartPath
      * @return the flowchart string of a process
      */
-    public String getFlowchart(String flowchartPath) {
+    public String getFlowchart(String flowchartPath) throws ProcessCenterException {
         String flowchartString = "NA";
 
         try {
@@ -1565,6 +1567,7 @@ public class ProcessStore {
             String values[] = flowchartPath.split("/");
             String errorMessage = "Failed to retrieve the flowchart for process " + values[1] + "-" + values[2];
             log.error(errorMessage, e);
+            throw new ProcessCenterException(errorMessage);
         }
         if (log.isDebugEnabled())
             log.debug("Successfully retrieved the flowchart at path " + flowchartPath);
@@ -1577,7 +1580,7 @@ public class ProcessStore {
      * @param name
      * @param version
      */
-    public void deleteFlowchart(String name, String version) {
+    public void deleteFlowchart(String name, String version) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             String flowchartContentPath = "flowchart/" + name + "/" + version;
@@ -1596,12 +1599,10 @@ public class ProcessStore {
                 processResource.setContent(newProcessContent);
                 reg.put(processPath, processResource);
             }
-        } catch (RegistryException e) {
-            String errorMessage = "Failed to upload the flowchart for process " + name + "-" + version;
-            log.error(errorMessage, e);
         } catch (Exception e) {
             String errorMessage = "Failed to upload the flowchart for process " + name + "-" + version;
             log.error(errorMessage, e);
+            throw new ProcessCenterException(errorMessage);
         }
     }
 

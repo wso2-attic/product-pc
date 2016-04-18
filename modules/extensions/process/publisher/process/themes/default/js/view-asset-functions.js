@@ -1129,7 +1129,12 @@ function showFlowchartEditor(name, flowchartPath) {
         dataType: 'text',
         data: {'flowchartPath': flowchartPath},
         success: function (data) {
-            _loadEditableFlowChart(data, '#editor_canvas');
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                _loadEditableFlowChart(response.content, '#editor_canvas');
+            }else {
+                alertify.error(response.content);
+            }
         },
         error: function () {
             alertify.error('Error retrieving flowchart');

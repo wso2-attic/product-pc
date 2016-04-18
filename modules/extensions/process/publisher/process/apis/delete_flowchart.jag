@@ -20,8 +20,18 @@
 importPackage(org.wso2.carbon.pc.core);
 var log = new Log();
 var ps = new ProcessStore();
+var responseObj = {};
 
 var pName = String(request.getParameter("processName"));
 var pVersion = String(request.getParameter("processVersion"));
-ps.deleteFlowchart(pName, pVersion);
+try {
+    ps.deleteFlowchart(pName, pVersion);
+    responseObj.error = false;
+    responseObj.content = "Successfully deleted the flowchart";
+    print(stringify(responseObj));
+}catch(error){
+    responseObj.error = true;
+    responseObj.content = "Process flowchart deleting error";
+    print(stringify(responseObj));
+}
 %>

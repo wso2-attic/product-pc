@@ -20,7 +20,6 @@ var editorEndpointList = [];
 var editorSourcepointList = [];
 var elementCount = 0; // keeps the total element count when creating the element ids
 var _loadFlowChart;
-    editableElmCount = 0; //counts the number of elements on the canvas at any given time
 var instance; //the jsPlumb instance
 var properties = []; //keeps the properties of each element
 
@@ -232,49 +231,52 @@ jsPlumb.ready(function () {
             dataType: 'text',
             data: {'flowchartPath': flowchartPath},
             success: function (data) {
-                if(data != "NA") {
-                    $('#editor_canvas').html('');
-                    $('#fc-content').css('min-height', '400px');
-                    var flowchart = JSON.parse(data);
-                    var nodes = flowchart.nodes;
-                    var connections = flowchart.connections;
-                    editableElmCount = flowchart.numberOfElements;
-                    elementCount = flowchart.lastElementId;
-                    $.each(nodes, function (index, element) {
-                        var name = element.elementId.substring(9);
-                        if (element.nodeType == 'start') {
-                            loadEditorProperties(element.clsName.substr(0, 46), element.positionX, element.positionY, element.label,
-                                ["BottomCenter"], [], false, -1, -1);
-                        } else if (element.nodeType == 'step') {
-                            loadEditorProperties(element.clsName.substr(0, 50), element.positionX, element.positionY, element.label,
-                                ["BottomCenter"], ["TopCenter"], true, element.width, element.height);
-                        } else if (element.nodeType == 'diamond') {
-                            loadEditorProperties(element.clsName.substr(0, 53), element.positionX, element.positionY, element.label,
-                                ["LeftMiddle", "RightMiddle", "BottomCenter"], ["TopCenter"], true, element.width, element.height);
-                        } else if (element.nodeType == 'parallelogram') {
-                            loadEditorProperties(element.clsName.substr(0, 64), element.positionX, element.positionY, element.label,
-                                ["BottomCenter"], ["TopCenter"], true, element.width, element.height);
-                        }
-                        else if (element.nodeType == 'end') {
-                            loadEditorProperties(element.clsName.substr(0, 48), element.positionX, element.positionY, element.label,
-                                [], ["TopCenter"], false, -1, -1);
-                        }
-                        var elm = createEditorElement(element.elementId);
-                        drawEditorElement(elm, canvasId, name);
-                    });
+                var response = JSON.parse(data);
+                if(response.error == false){
+                    if(response.content != "NA") {
+                        $('#editor_canvas').html('');
+                        $('#fc-content').css('min-height', '400px');
+                        var flowchart = JSON.parse(response.content);
+                        var nodes = flowchart.nodes;
+                        var connections = flowchart.connections;
+                        elementCount = flowchart.lastElementId;
+                        $.each(nodes, function (index, element) {
+                            var name = element.elementId.substring(9);
+                            if (element.nodeType == 'start') {
+                                loadEditorProperties(element.clsName.substr(0, 46), element.positionX, element.positionY, element.label,
+                                    ["BottomCenter"], [], false, -1, -1);
+                            } else if (element.nodeType == 'step') {
+                                loadEditorProperties(element.clsName.substr(0, 50), element.positionX, element.positionY, element.label,
+                                    ["BottomCenter"], ["TopCenter"], true, element.width, element.height);
+                            } else if (element.nodeType == 'diamond') {
+                                loadEditorProperties(element.clsName.substr(0, 53), element.positionX, element.positionY, element.label,
+                                    ["LeftMiddle", "RightMiddle", "BottomCenter"], ["TopCenter"], true, element.width, element.height);
+                            } else if (element.nodeType == 'parallelogram') {
+                                loadEditorProperties(element.clsName.substr(0, 64), element.positionX, element.positionY, element.label,
+                                    ["BottomCenter"], ["TopCenter"], true, element.width, element.height);
+                            }
+                            else if (element.nodeType == 'end') {
+                                loadEditorProperties(element.clsName.substr(0, 48), element.positionX, element.positionY, element.label,
+                                    [], ["TopCenter"], false, -1, -1);
+                            }
+                            var elm = createEditorElement(element.elementId);
+                            drawEditorElement(elm, canvasId, name);
+                        });
 
-                    $.each(connections, function (index, element) {
-                        var width = element.labelWidth;
-                        if (width == undefined)
-                            width = "20px";
-                        var conn = instance.connect({uuids: [element.sourceUUId, element.targetUUId]});
-                        init(conn, element.label, element.labelWidth);
-                    });
-                }else{
-                    $('#editor_canvas').html('');
-                    $("#editor_canvas").append("<p>No flowchart available</p>");
-                    $('#fc-content').css('min-height', '153px');
+                        $.each(connections, function (index, element) {
+                            var width = element.labelWidth;
+                            if (width == undefined)
+                                width = "20px";
+                            var conn = instance.connect({uuids: [element.sourceUUId, element.targetUUId]});
+                            init(conn, element.label, element.labelWidth);
+                        });
+                    }else{
+                        $('#editor_canvas').html('');
+                        $("#editor_canvas").append("<p>No flowchart available</p>");
+                        $('#fc-content').css('min-height', '153px');
+                    }
                 }
+
             },
             error: function () {
                 alert('Error retrieving flowchart');

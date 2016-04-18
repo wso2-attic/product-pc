@@ -505,9 +505,14 @@ jsPlumb.ready(function () {
                         'processVersion': $("#pVersion").val(),
                         'flowchartJson': JSON.stringify(flowchart)
                     },
-                    success: function (response) {
-                        alertify.success("Successfully saved the flowchart.");
-                        $("#flowchartOverviewLink").attr("href", "../process/details/" + response);
+                    success: function (data) {
+                        var response = JSON.parse(data);
+                        if(response.error == false) {
+                            alertify.success("Successfully saved the flowchart.");
+                            $("#flowchartOverviewLink").attr("href", "../process/details/" + response.content);
+                        }else{
+                            alertify.error(response.content);
+                        }
                     },
                     error: function () {
                         alertify.error('Flowchart saving error');
