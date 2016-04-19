@@ -25,6 +25,18 @@ var pName = String(request.getParameter("processName"));
 var pVersion = String(request.getParameter("processVersion"));
 var flowchartJson = String(request.getParameter("flowchartJson"));
 var processid;
-processid = ps.uploadFlowchart(pName, pVersion, flowchartJson);
-print(processid);
+var responseObj = {};
+try {
+    processid = ps.uploadFlowchart(pName, pVersion, flowchartJson);
+    if (log.isDebugEnabled()) {
+        log.debug(processid);
+    }
+    responseObj.error = false;
+    responseObj.content = processid;
+    print(stringify(responseObj));
+} catch (error) {
+    responseObj.error = true;
+    responseObj.content = "Process flowchart uploading error.";
+    print(stringify(responseObj));
+}
 %>

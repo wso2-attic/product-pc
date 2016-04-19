@@ -97,6 +97,10 @@
                            data-type="basic">{{t "Documents"}}</a>
                     </li>
                     <li>
+                        <a href="#tab-flowchart" onclick="_loadFlowChart('{{overview_name}}/{{overview_version}}');" id="tab-fc-list" data-toggle="tab"
+                           data-type="basic">{{t "Flowchart"}}</a>
+                    </li>
+                    <li>
                         <a href="#tab-share" data-toggle="tab" data-type="basic">{{t "Share"}}</a>
                     </li>
                 </ul>
@@ -190,6 +194,21 @@
                                     <div id="googleDocViewer">
                                     </div>
                                     <div id="pdfDocViewer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Flowchart-->
+                        <div class="tab-pane" id="tab-flowchart">
+                            <div class="content" id="fc-content">
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <div class="jtk-demo-main" id="fc-demo">
+                                            <div class="jtk-demo-canvas canvas-wide flowchart-demo jtk-surface  jtk-surface-nopan"
+                                                 id="editor_canvas">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
