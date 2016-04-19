@@ -216,7 +216,7 @@ public class ProcessStore {
 
                 // store process text as a separate resource
                 String processTextResourcePath = "processText/" + processName + "/" + processVersion;
-                reg.addAssociation(processTextResourcePath, processPath, Association.USED_BY);
+                reg.addAssociation(processTextResourcePath, processPath, ProcessSearchConstants.ASSOCIATION_TYPE);
 
                 if (processText != null && processText.length() > 0) {
                     Resource processTextResource = reg.newResource();
@@ -1227,7 +1227,7 @@ public class ProcessStore {
 
                 String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
-                reg.addAssociation(docContentPath, processAssetPath, Association.USED_BY);
+                reg.addAssociation(docContentPath, processAssetPath, ProcessSearchConstants.ASSOCIATION_TYPE);
 
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
@@ -1482,7 +1482,6 @@ public class ProcessStore {
             StreamHostObject s = (StreamHostObject) object;
             InputStream pdfStream = s.getStream();
 
-            ProcessPDFIndexer registryClient = new ProcessPDFIndexer();
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
@@ -1497,10 +1496,7 @@ public class ProcessStore {
                 String processPath = "processes/" + processName + "/" + processVersion;
                 pdfContentResource.addAspect(processPath);
                 reg.put(pdfContentPath, pdfContentResource);
-                reg.addAssociation(pdfContentPath, processPath, Association.USED_BY);
-               AsyncIndexer.File2Index fileData =
-                       new AsyncIndexer.File2Index(pdfContent, "application/pdf", pdfContentPath, -1234, null);
-                registryClient.getIndexedDocument(fileData);
+                reg.addAssociation(pdfContentPath, processPath, ProcessSearchConstants.ASSOCIATION_TYPE);
                 // update process by linking the pdf asset
 
                 Resource processAsset = reg.get(processPath);

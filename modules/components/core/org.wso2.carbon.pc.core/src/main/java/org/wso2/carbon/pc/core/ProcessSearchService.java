@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.wso2.carbon.pc.core;
 
 import org.apache.commons.logging.Log;
@@ -14,7 +30,6 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.indexing.IndexingConstants;
-import org.wso2.carbon.registry.indexing.service.ContentSearchService;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -22,48 +37,53 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Created by sathya on 3/24/16.
+ * Class for content based search on Process-Center assets.
  */
-public class PDFSearchService  {
+public class ProcessSearchService {
 
-    private static final Log log = LogFactory.getLog(PDFSearchService.class);
+    private static final Log log = LogFactory.getLog(ProcessSearchService.class);
     private static final Map<String, String> mediatypes;
     static {
         Map<String, String> aMap = new HashMap<>();
-        aMap.put("PDF", "application/pdf");
-        aMap.put("Document", "application/msword");
-        aMap.put("Process-Text", "text/html");
-        aMap.put("Process", "application/vnd.wso2-process+xml");
+        aMap.put(ProcessSearchConstants.PDF, ProcessSearchConstants.PDF_MEDIATYPE);
+        aMap.put(ProcessSearchConstants.DOCUMENT, ProcessSearchConstants.DOCUMENT_MEDIATYPE);
+        aMap.put(ProcessSearchConstants.PROCESS_TEXT, ProcessSearchConstants.PROCESS_TEXT_MEDIATYPE);
+        aMap.put(ProcessSearchConstants.PROCESS, ProcessSearchConstants.PROCESS_MEDIATYPE);
         mediatypes = Collections.unmodifiableMap(aMap);
     }
 
     public String search(String searchQuery, String mediaType, String username) throws ProcessCenterException{
 
-        String processString = null;
+        String processString = "FAILED TO GET PROCESS LIST";
         String mediaTypeStr;
+
         AttributeSearchService attributeSearchService = ProcessCenterServerHolder.getInstance().getAttributeSearchService();
          try {
-
+            //get current logged in user.
              PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(username);
              JSONArray mediaTypeArr= new JSONArray(mediaType);
 
+             //creating the mediatype value string
              mediaTypeStr = mediaTypeArr.length() > 0 ? mediatypes.get(mediaTypeArr.get(0)) : "";
              for(int i=1; i< mediaTypeArr.length(); i++){
-                 mediaTypeStr += " OR "+mediatypes.get(mediaTypeArr.get(i));
+                 mediaTypeStr +=" OR "+mediatypes.get(mediaTypeArr.get(i));
              }
+
+             //mediatype value format for multiple mediatypes : (mediatype1 OR mediatype2)
+             mediaTypeStr = mediaTypeArr.length() > 1 ? "("+mediaTypeStr+")" : mediaTypeStr;
 
              Map<String, String> input = new HashMap<>();
              input.put(IndexingConstants.FIELD_MEDIA_TYPE, mediaTypeStr);
              input.put(IndexingConstants.FIELD_CONTENT, searchQuery);
              ResourceData[] resources = attributeSearchService.search(input);
 
-             if(resources != null){
+             if(resources != null && resources.length > 0){
 
-                 JSONArray result = new JSONArray();
+                 //keeping the process resources in a hashmap to avoid duplicates
+                 HashMap<String, JSONObject> processMap = new HashMap<>();
 
                  RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
                  if (registryService != null) {
@@ -73,13 +93,14 @@ public class PDFSearchService  {
                      for(ResourceData resource : resources){
 
                          String resourcePath = resource.getResourcePath();
-                         Association[] associations = reg.getAllAssociations(resourcePath.substring("/_system/governance/".length()));
+                         //fetch the associations of the process_association type for the resources
+                         Association[] associations = reg.getAssociations(resourcePath.substring("/_system/governance/".length()), ProcessSearchConstants.ASSOCIATION_TYPE);
+
+                         //get the process resource for each association
                          for(Association association : associations){
                              String destinationPath = association.getDestinationPath();
                              Resource processResource = reg.get(destinationPath);
                              String lifecycleState = processResource.getProperty("registry.lifecycle.SampleLifeCycle2.state");
-                             String process_mediatype = "application/vnd.wso2-process+xml";
-                             if(processResource.getMediaType().equals(process_mediatype)){
 
                                  String processContent = new String((byte[]) processResource.getContent());
                                  Document processXML = stringToXML(processContent);
@@ -87,28 +108,35 @@ public class PDFSearchService  {
                                  String processVersion = processXML.getElementsByTagName("version").item(0).getTextContent();
 
                                  JSONObject processJSON = new JSONObject();
-                                 processJSON.put("processid", processResource.getUUID());
+                                 processJSON.put("id", processResource.getUUID());
                                  processJSON.put("type", "process");
                                  processJSON.put("path", destinationPath);
-                                 processJSON.put("mediaType", "application/vnd.wso2-process+xml");
-                                 processJSON.put("processname", processName);
-                                 processJSON.put("processversion", processVersion);
-                                 processJSON.put("lifecyclestate", lifecycleState);
+                                 processJSON.put("lifecycle", "SampleLifeCycle2");
+                                 processJSON.put("mediaType", ProcessSearchConstants.PROCESS_MEDIATYPE);
+                                 processJSON.put("name", processName);
+                                 processJSON.put("version", processVersion);
+                                 processJSON.put("lifecycleState", lifecycleState);
 
-                                 result.put(processJSON);
+                                 JSONObject attributes = new JSONObject();
+                                 attributes.put("overview_name", processName);
+                                 attributes.put("overview_version", processVersion);
 
-                                 processString = result.toString();
+                                 processJSON.put("attributes", attributes);
+                                 processJSON.put("_default", false);
+                                 processJSON.put("showType", true);
 
-                             }
+                                 processMap.put(processResource.getUUID(), processJSON);
 
                          }
                      }
+                     JSONArray results = new JSONArray(processMap.values());
+                     processString = results.toString();
                  }
              }
          }catch (Exception ex){
              String message = "Registry service not available for retrieving processes.";
              log.error(message, ex);
-             throw new ProcessCenterException(message);
+             throw new ProcessCenterException(message, ex);
          }
 
         return processString;
