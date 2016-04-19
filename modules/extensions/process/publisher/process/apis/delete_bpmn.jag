@@ -32,12 +32,12 @@ if (log.isDebugEnabled()) {
 }
 
 var responseObj = {};
-try{
+try {
     var removeBPMNStatus = ps.removeBPMNDiagram(processName, processVersion);
     responseObj.error = false;
     responseObj.content = removeBPMNStatus;
     print(stringify(responseObj));
-}catch(error){
+} catch (error) {
     responseObj.error = true;
     responseObj.content = "BPMN diagram deleting error.";
     print(stringify(responseObj));
