@@ -105,29 +105,31 @@ $('#process-search-btn').click(function (e) {
 });
 
 $('#okButton').click(function () {
-    var $elements = $("#process-search-results").find(":input");
+    var $elements = $("#process-search-results").find(":input:checked");
     if ($elements.length > 0) {
-        var selected = 0;
         for (var i = 0; i < $elements.length; i++) {
-            if ($elements[i].checked) {
-                selected++;
-                var table = $('#table_' + tableName);
-                var referenceRow = $('#table_reference_' + tableName);
-                var newRow = referenceRow.clone().removeAttr('id');
-                if (!isAlreadyExist($("label[for='" + $elements[i].id + "']").text(), tableName)) {
-                    $('input[type="text"]', newRow).val($("label[for='" + $elements[i].id + "']").text());
-                    table.show().append(newRow);
+            var table = $('#table_' + tableName);
+            var referenceRow = $('#table_reference_' + tableName);
+            var newRow = referenceRow.clone().removeAttr('id');
+            if (!isAlreadyExist($("label[for='" + $elements[i].id + "']").text(), tableName)) {
+                $('input[type="text"]', newRow).val($("label[for='" + $elements[i].id + "']").text());
+                table.show().append(newRow);
+                if($(this).attr('data-name') == "view"){
+                    readUpdatedSubprocess($(newRow).find("span")[0], $elements.length);
                 }
             }
         }
-        if (selected == 0) {
+        if ($elements.length == 0) {
             alertify.error("You have not selected any process");
-        } else
+        } else {
             $("#searchModal").modal("hide");
+            if($(this).attr('data-name') == "view" && $elements.length > 1)
+                alertify.success('Processes were successfully added to the subprocess list.');
+        }
     } else {
         alertify.error("You have not selected any process");
     }
-})
+});
 
 $('#form-clear-btn').click(function (e) {
     e.preventDefault();

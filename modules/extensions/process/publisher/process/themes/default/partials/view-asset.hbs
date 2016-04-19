@@ -299,7 +299,7 @@
                                                     name="subprocess_Name" id="subprocess_Name"
                                                     onkeydown="subProcessNamesAutoComplete()"></td>
         <td style="width: 5%;"><span class="glyphicon glyphicon-ok" style="color:#0081c2;cursor: pointer;"
-                                     onclick="readUpdatedSubprocess(this)"></span></td>
+                                     onclick="readUpdatedSubprocess(this, 1)"></span></td>
         <td style="width: 5%;"><label data-name="subprocess" class="remove-process" onclick="deleteProcess(this)"><i class="fa fa-trash"></i></label>
         </td>
     </tr>
@@ -448,16 +448,16 @@
                     <div class="jtk-demo-canvas canvas-wide flowchart-demo" id="canvas1" style="border: none;">
                         <div class="window start jsplumb-connected" id="startEv" title="To start the flowchart"><strong>
                             <p>start</p></strong></div>
-                        <div style="border: 1px solid lightgray; width: 150px; top: 8em; position: absolute; left: 0.5em;"></div>
+                        <div style="border: 1px solid lightgray; width: 90%; top: 8em; position: absolute; left: 0.5em;"></div>
                         <div class="window step jsplumb-connected-step" id="stepEv" title="To describe a step"><strong>
                             <p>step</p></strong></div>
-                        <div style="border: 1px solid lightgray; width: 150px; top: 15.25em; position: absolute; left: 0.5em;"></div>
+                        <div style="border: 1px solid lightgray; width: 90%; top: 15.25em; position: absolute; left: 0.5em;"></div>
                         <div class="window diamond jsplumb-connected-step" id="descEv" title="To describe a decision">
                             <strong><p class="desc-text">decision</p></strong></div>
-                        <div style="border: 1px solid lightgray; width: 150px; top: 24.5em; position: absolute; left: 0.5em;"></div>
+                        <div style="border: 1px solid lightgray; width: 90%; top: 24.5em; position: absolute; left: 0.5em;"></div>
                         <div class="window step parallelogram jsplumb-connected-step" id="inpEv"
                              title="To take/give input/output"><strong><p class="input-text">i/o</p></strong></div>
-                        <div style="border: 1px solid lightgray; width: 150px; top: 31.5em; position: absolute; left: 0.5em;"></div>
+                        <div style="border: 1px solid lightgray; width: 90%; top: 31.5em; position: absolute; left: 0.5em;"></div>
                         <div class="window end jsplumb-connected-end" id="endEv" title="To end the flowchart"><strong>
                             <p>end</p></strong></div>
                     </div>
@@ -690,7 +690,7 @@
             </div>
             <div class="modal-footer">
                 <a href="#!" class="btn" data-dismiss="modal">Cancel</a>
-                <a href="#!" id="okButton" class="btn btn-primary">Add</a>
+                <a href="#!" id="okButton" data-name="view" class="btn btn-primary">Add</a>
             </div>
         </div>
     </div>

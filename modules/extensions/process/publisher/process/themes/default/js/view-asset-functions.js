@@ -584,9 +584,8 @@ function isProcessNotAvailableInList(processName) {
     return true;
 }
 
-function readUpdatedSubprocess(currentObj) {
+function readUpdatedSubprocess(currentObj, count) {
     var subprocessInput = $(currentObj).parent().closest("tr").find("input").val();
-
     if (subprocessInput == '') {
         alertify.error('Subprocess field is empty.');
     } else if (isProcessNotAvailableInList(subprocessInput)) {
@@ -625,7 +624,8 @@ function readUpdatedSubprocess(currentObj) {
             success: function (data) {
                 var response = JSON.parse(data);
                 if (response.error === false) {
-                    alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
+                    if(count == 1)
+                        alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
                 } else {
                     alertify.error(response.content);
                 }
@@ -1202,14 +1202,19 @@ function deleteProcess(element) {
     }
     else {
         value = value.val();
-        var question = "Are you sure you want to delete " + element.getAttribute("data-name") + " " + value + "?";
-        var confirmModal = confirmDialog(question);
-        confirmModal.find('#okButton').click(function (event) {
+        if(value != ""){
+            var question = "Are you sure you want to delete " + element.getAttribute("data-name") + " " + value + "?";
+            var confirmModal = confirmDialog(question);
+            confirmModal.find('#okButton').click(function (event) {
+                document.getElementById("table_" + element.getAttribute("data-name")).
+                    deleteRow(element.parentElement.parentElement.rowIndex);
+                confirmModal.modal('hide');
+            });
+            confirmModal.modal('show');
+        }else{
             document.getElementById("table_" + element.getAttribute("data-name")).
                 deleteRow(element.parentElement.parentElement.rowIndex);
-            confirmModal.modal('hide');
-        });
-        confirmModal.modal('show');
+        }
     }
 }
 
