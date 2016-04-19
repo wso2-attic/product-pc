@@ -24,6 +24,7 @@ $(function(){
     var last_to = 0;
     var items_per_row = 0;
     var doPagination = true;
+    var options = [];
     store.infiniteScroll ={};
     store.infiniteScroll.recalculateRowsAdded = function(){
         return (last_to - last_to%items_per_row)/items_per_row;
@@ -89,7 +90,7 @@ $(function(){
                 }
                 if(results.length==0) {
                     if(from == 0) {
-                        $('#search-results').html('We are sorry but we could not find any matching assets');
+                        alertify.error('We are sorry but we could not find any matching assets');
                     }
                     $('.loading-animation-big').remove();
                     doPagination = false;
@@ -187,7 +188,7 @@ $(function(){
         $('#search-results').html('');       
         var query = buildQuery();
         if(isEmptyQuery(query) && !$("#content").val()) {
-            console.log('User has not entered anything');
+            alertify.error('User has not entered anything');
             return;
         }
         else if (isEmptyQuery(query) && $("#content").val()){
@@ -201,6 +202,13 @@ $(function(){
 
     function contentSearch(rxt_results) {
 
+        if(jQuery.isEmptyObject(options)){
+            alertify.error("Please select content-type");
+            $('.loading-animation-big').remove();
+            doPagination = false;
+            return;
+        }
+
         var content = $("#content").val().trim();
         var media = JSON.stringify(options);
         var search_url = caramel.tenantedUrl('/apis/search');
@@ -213,74 +221,49 @@ $(function(){
             },
             success: function (data) {
 
-                if(data != "null") {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    var results = JSON.parse(response.content);
 
-                    var results = JSON.parse(data);
-                    if (!rxt_results) {
-                        for (var i = 0; i < results.length; i++) {
+                    if(rxt_results){                     //get the intersection of the two searches.
 
-                            $("#search-results").append('<div class="ctrl-wr-asset">' +
-                            '<div class="itm-ast">' +
-                            '<a class="ast-img" href="/publisher/assets/process/details/' + results[i].processid + '">' +
-                            '<img alt="thumbnail" src="/publisher/themes/default/img/default-thumbnail.png" class="img-responsive">' +
-                            '</a>' +
-                            '<div class="ast-type-display">' + results[i].type + '</div>' +
-                            '<div class="ast-desc">' +
-                            '<a href="/publisher/assets/process/details/' + results[i].processid + '">' +
-                            '<h3 class="ast-name" title="' + results[i].processname + '">' + results[i].processname + '</h3>' +
-                            '</a>' +
-                            '<span class="ast-ver">Vp, </span><span class="ast-auth" title=""></span>' +
-                            '<span class="ast-published"></span>' +
-                            '<span class="lifecycle-state"><small><i class="icon-circle lc-state-Initial"></i>' + results[i].lifecyclestate + '</small></span>' +
-                            '</div>' +
-                            '<br class="c-both">' +
-                            '</div><br class="c-both">' +
-                            '</div>');
-                        }
-                    }
-                    //get the intersection of the two searches.
-                    else{
                         var hashmap = {};
                         var intersection = [];
-
                         for(var i=0; i<rxt_results.length; i++){
                             var pid = rxt_results[i].id;
                             hashmap[pid] = rxt_results[i];
                         }
-
                         for(var i=0; i<results.length; i++){
 
-                            var key = results[i].processid;
+                            var key = results[i].id;
                             if(hashmap.hasOwnProperty(key)){
                                 intersection.push(hashmap[key]);
                             }
                         }
-                        loadPartials('list-assets', function (partials) {
-                            caramel.partials(partials, function () {
-                                caramel.render('list_assets_table_body', intersection, function (info, content) {
-                                    $('#search-results').append($(content));
-                                    $('.loading-animation-big').remove();
-                                });
+                        results = intersection;
+                    }
+
+                    loadPartials('list-assets', function (partials) {
+                        caramel.partials(partials, function () {
+                            caramel.render('list_assets_table_body', results, function (info, content) {
+                                $('#search-results').append($(content));
+                                $('.loading-animation-big').remove();
                             });
                         });
-                    }
+                    });
                 }
                 else{
-                    $('#search-results').html('We are sorry but we could not find any matching assets');
+                    alertify.error(response.content);
                     $('.loading-animation-big').remove();
                     doPagination = false;
                 }
-
             }, error: function (xhr, status, error) {
-                console.log(error);
+                alertify.error(error);
                 doPagination = false;
                 $('.loading-animation-big').remove();
             }
         });
-
     }
-
-    var options = [];
 
     $( '.dropdown-menu a' ).on( 'click', function( event ) {
 
@@ -298,8 +281,6 @@ $(function(){
         }
 
         $( event.target ).blur();
-
-        console.log( options );
         return false;
     });
 });
