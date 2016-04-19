@@ -46,17 +46,17 @@
 
 }
 
-#process-search-results{
+#process-search-results {
     padding-left: 15px;
-    max-height:80px;
+    max-height: 80px;
     overflow-y: auto;
 }
 
-.remove-process{
+.remove-process {
     color: #337ab7;
 }
 
-.remove-process:hover, .remove-process:focus{
+.remove-process:hover, .remove-process:focus {
     color: #23527c;
     cursor: pointer;
 }

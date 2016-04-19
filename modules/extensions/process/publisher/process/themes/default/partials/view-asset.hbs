@@ -56,11 +56,11 @@
     <div class="control-group" style="display: inline-block">
         {{#if documentAvailable}}
             <div id="sddiv">
-                <button id="viewDocumentButton" class="btn btn-primary" onclick="showDocument()">View Document</button>
+                <button id="viewDocumentButton" class="btn btn-primary" onclick="showDocument()">View Documents</button>
             </div>
         {{else}}
             <div id="addiv">
-                <button id="addDocumentButton" class="btn btn-primary" onclick="associateDoc()">Associate Document
+                <button id="addDocumentButton" class="btn btn-primary" onclick="associateDoc()">Associate Documents
                 </button>
             </div>
         {{/if}}
@@ -434,6 +434,7 @@
     <a id="fcEditorOverviewLink" class="btn btn-primary" onclick="redirectTo(this)" href=""><span
             class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
     <button class="btn btn-primary" id="flowchartSaveBtn" onclick=" _saveEditedFlowchart()">Save</button>
+    <button class="btn btn-primary" id="saveAsPNGBtn">Download As PNG</button>
     <button class="btn btn-primary" id="flowchartEditorDltBtn" onclick="removeFlowchart()">Delete</button>
     <br/><br/>
     <input type="hidden" id="fcProcessName" name="fcProcessName" value="{{assets.tables.[0].fields.name.value}}"/>

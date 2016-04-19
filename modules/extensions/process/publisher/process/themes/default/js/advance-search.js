@@ -79,8 +79,10 @@ function searchProcesses() {
                     checkbox += "<\/div>";
                     $("#process-search-results").append(checkbox);
                 }
-                document.getElementById("process-search-form").reset();//reset the form
-                $(SEARCH_FORM).ajaxForm();//to prevent the response from redirecting
+                //reset the form
+                document.getElementById("process-search-form").reset();
+                //to prevent the response from redirecting
+                $(SEARCH_FORM).ajaxForm();
             } else {
                 $("#process-search-results").html("");
                 $("#process-search-results").append("<p>We are sorry but we could not find any matching assets</p>");
@@ -95,7 +97,7 @@ function searchProcesses() {
 $('#process-search-btn').click(function (e) {
     e.preventDefault();
     var filters = buildQuery();
-    if (filters == "{}") {
+    if (filters == "") {
         alertify.error("You have not entered anything");
     } else {
         searchProcesses();
