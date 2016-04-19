@@ -98,19 +98,14 @@ function associateDocument(element) {
     if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
         alertify.error('please fill the required fields.');
     } else {
-        //$('#create-view-header').text($('#pName').val());
+        $('#document-view-header').text($('#pName').val());
         saveProcess(element);
-        //completeBPMNDetails();
         $("#overviewDiv").hide();
         $("#processTextView").hide();
         $("#bpmnView").hide();
         $("#docView").show();
         $("#flowChartView").hide();
     }
-}
-
-function newDocFormToggle() {
-    $("#addNewDoc").toggle("slow");
 }
 
 function showMain() {
