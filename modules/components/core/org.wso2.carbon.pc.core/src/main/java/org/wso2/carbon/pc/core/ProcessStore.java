@@ -1216,6 +1216,12 @@ public class ProcessStore {
                 String docContentPath = null;
                 if (docContent.length != 0) {
                     docContentResource.setContent(docContent);
+                    if(docExtension.equalsIgnoreCase("pdf")){
+                        docContentResource.setMediaType("application/pdf");
+                    }
+                    else{
+                        docContentResource.setMediaType("application/msword");
+                    }
                     docContentPath = "doccontent/" + processName + "/" + processVersion + "/" + docName +
                             "." + docExtension;
                     reg.put(docContentPath, docContentResource);

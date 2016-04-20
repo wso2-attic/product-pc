@@ -17,7 +17,7 @@
 package org.wso2.carbon.pc.core;
 
 /**
- * Class to store content search related constants
+ * store content search related constants
  */
 public final class ProcessContentSearchConstants {
 
