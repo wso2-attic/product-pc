@@ -22,7 +22,7 @@ importPackage(org.wso2.carbon.pc.core);
 var username = require('store').server.current(session).username;
 
 var log = new Log();
-if(log.isDebugEnabled()){
+if (log.isDebugEnabled()) {
     log.debug("Advanced Content Search logic");
 }
 
@@ -33,19 +33,19 @@ var mediaType = String(request.getParameter("mediatype"));
 var responseObj = {};
 try {
     var status = ps.search(searchQuery, mediaType, username);
-    if(status != "FAILED TO GET PROCESS LIST"){
+    if (status != "FAILED TO GET PROCESS LIST") {
         responseObj.error = false;
         responseObj.content = status;
         print(stringify(responseObj));
     }
-    else{
+    else {
         responseObj.error = true;
         responseObj.content = "We are sorry but we could not find any matching assets.";
         print(stringify(responseObj));
     }
-    } catch (error) {
-        responseObj.error = true;
-        responseObj.content = "Process list retrieving error.";
-        print(stringify(responseObj));
-    }
+} catch (error) {
+    responseObj.error = true;
+    responseObj.content = "Process list retrieving error.";
+    print(stringify(responseObj));
+}
 %>

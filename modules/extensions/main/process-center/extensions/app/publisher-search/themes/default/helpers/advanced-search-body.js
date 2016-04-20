@@ -16,9 +16,9 @@
  *  under the License.
  *
  */
-var resources = function(){
-	return {
-		js:['libs/jquery.form.min.js','advance-search-api.js', 'alertify.js'],
-		css:['alertify.css']
-	}
+var resources = function () {
+    return {
+        js: ['libs/jquery.form.min.js', 'advance-search-api.js', 'alertify.js'],
+        css: ['alertify.css']
+    }
 };

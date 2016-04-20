@@ -31,7 +31,6 @@ public final class ProcessContentSearchConstants {
     public static final String PROCESS_TEXT = "Process-Text";
     public static final String PROCESS = "Process";
 
-
     //media types for for indexing
     public static final String PDF_MEDIATYPE = "application/pdf";
     public static final String DOCUMENT_MEDIATYPE = "application/msword";
@@ -40,8 +39,5 @@ public final class ProcessContentSearchConstants {
 
     //association type for processes in pdf, documents and process text assets
     public static final String ASSOCIATION_TYPE = "process_association";
-
-
-
 
 }
