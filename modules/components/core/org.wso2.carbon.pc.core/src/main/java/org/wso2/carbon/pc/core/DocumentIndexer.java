@@ -15,7 +15,6 @@
  */
 package org.wso2.carbon.pc.core;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hwpf.extractor.WordExtractor;
@@ -29,6 +28,7 @@ import org.wso2.carbon.registry.indexing.AsyncIndexer;
 import org.wso2.carbon.registry.indexing.IndexingConstants;
 import org.wso2.carbon.registry.indexing.indexer.Indexer;
 import org.wso2.carbon.registry.indexing.solr.IndexDocument;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -42,8 +42,8 @@ import java.util.Map;
 public class DocumentIndexer implements Indexer {
     public static final Log log = LogFactory.getLog(DocumentIndexer.class);
 
-    @Override
-    public IndexDocument getIndexedDocument(AsyncIndexer.File2Index fileData) throws SolrException, RegistryException {
+    @Override public IndexDocument getIndexedDocument(AsyncIndexer.File2Index fileData)
+            throws SolrException, RegistryException {
         try {
             String wordText = null;
             try {
@@ -53,14 +53,14 @@ public class DocumentIndexer implements Indexer {
                 WordExtractor msWord2003Extractor = new WordExtractor(fs);
                 wordText = msWord2003Extractor.getText();
 
-            }catch (OfficeXmlFileException e){
+            } catch (OfficeXmlFileException e) {
                 //if 2003 extraction failed, try with MSWord 2007 document files extractor
                 XWPFDocument doc = new XWPFDocument(new ByteArrayInputStream(fileData.data));
 
                 XWPFWordExtractor msWord2007Extractor = new XWPFWordExtractor(doc);
                 wordText = msWord2007Extractor.getText();
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 //The reason for not throwing an exception is that since this is an indexer that runs in the background
                 //throwing an exception might lead to adverse behaviors in the client side and might lead to
                 //other files not being indexed
