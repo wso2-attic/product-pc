@@ -31,6 +31,36 @@ window.onload = function () {
     var url = window.location.toString();
     pid = url.substr(url.lastIndexOf('/') + 1);
     getProcessList();
+
+    $.fn.editable.defaults.mode = 'popup';
+    $.fn.editable.defaults.ajaxOptions = {type: "POST"};
+
+    $('#description').editable({
+        type: 'text',
+        url: '/publisher/assets/process/apis/update_description',
+        pk: 1,
+        display: function(value, response) {
+            $('#description').html(value);
+        },
+        params: function(params) {
+            params.processName = $('#view-header').text();
+            params.processVersion = $('#process-version').text();
+            return JSON.stringify(params);
+        }
+    });
+
+    $('#owner').editable({
+        url: '/publisher/assets/process/apis/update_owner',
+        pk: 2,
+        display: function(value, response) {
+            $('#owner').html(value);
+        },
+        params: function(params) {
+            params.processName = $('#view-header').text();
+            params.processVersion = $('#process-version').text();
+            return JSON.stringify(params);
+        }
+    });
 };
 
 function getMainProcess() {
@@ -894,37 +924,6 @@ function deletePredecessor(element) {
         confirmModal.modal('hide');
     });
     confirmModal.modal('show');
-}
-
-function updateProcessOwner(element) {
-    var processOwner = $(element).parent().closest("tr").find("td:eq(1)").text();
-    if (processOwner == '') {
-        alertify.error('Process owner field is empty.');
-    } else {
-        var ownerDetails = {
-            'processName': $('#view-header').text(),
-            'processVersion': $('#process-version').text(),
-            'processOwner': processOwner
-        };
-
-        $.ajax({
-            url: '/publisher/assets/process/apis/update_owner',
-            type: 'POST',
-            data: {'ownerDetails': JSON.stringify(ownerDetails)},
-            success: function (data) {
-                var response = JSON.parse(data);
-                if (response.error === false) {
-                    $(element).hide();
-                    alertify.success('Successfully updated the Process owner name.');
-                } else {
-                    alertify.error(response.content);
-                }
-            },
-            error: function () {
-                alertify.error('Process owner updating error');
-            }
-        });
-    }
 }
 
 function isInputFieldEmpty(tableName) {
