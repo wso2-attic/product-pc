@@ -27,21 +27,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
-import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.exceptions.ResourceNotFoundException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.registry.indexing.AsyncIndexer;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -216,7 +212,7 @@ public class ProcessStore {
 
                 // store process text as a separate resource
                 String processTextResourcePath = "processText/" + processName + "/" + processVersion;
-                reg.addAssociation(processTextResourcePath, processPath, ProcessSearchConstants.ASSOCIATION_TYPE);
+                reg.addAssociation(processTextResourcePath, processPath, ProcessContentSearchConstants.ASSOCIATION_TYPE);
 
                 if (processText != null && processText.length() > 0) {
                     Resource processTextResource = reg.newResource();
@@ -1227,7 +1223,7 @@ public class ProcessStore {
 
                 String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
-                reg.addAssociation(docContentPath, processAssetPath, ProcessSearchConstants.ASSOCIATION_TYPE);
+                reg.addAssociation(docContentPath, processAssetPath, ProcessContentSearchConstants.ASSOCIATION_TYPE);
 
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
@@ -1496,7 +1492,7 @@ public class ProcessStore {
                 String processPath = "processes/" + processName + "/" + processVersion;
                 pdfContentResource.addAspect(processPath);
                 reg.put(pdfContentPath, pdfContentResource);
-                reg.addAssociation(pdfContentPath, processPath, ProcessSearchConstants.ASSOCIATION_TYPE);
+                reg.addAssociation(pdfContentPath, processPath, ProcessContentSearchConstants.ASSOCIATION_TYPE);
                 // update process by linking the pdf asset
 
                 Resource processAsset = reg.get(processPath);

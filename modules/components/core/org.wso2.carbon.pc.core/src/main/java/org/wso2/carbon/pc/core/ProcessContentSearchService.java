@@ -31,7 +31,6 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.indexing.IndexingConstants;
 import org.xml.sax.InputSource;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
@@ -42,19 +41,27 @@ import java.util.Map;
 /**
  * Class for content based search on Process-Center assets.
  */
-public class ProcessSearchService {
+public class ProcessContentSearchService {
 
-    private static final Log log = LogFactory.getLog(ProcessSearchService.class);
+    private static final Log log = LogFactory.getLog(ProcessContentSearchService.class);
     private static final Map<String, String> mediatypes;
     static {
         Map<String, String> aMap = new HashMap<>();
-        aMap.put(ProcessSearchConstants.PDF, ProcessSearchConstants.PDF_MEDIATYPE);
-        aMap.put(ProcessSearchConstants.DOCUMENT, ProcessSearchConstants.DOCUMENT_MEDIATYPE);
-        aMap.put(ProcessSearchConstants.PROCESS_TEXT, ProcessSearchConstants.PROCESS_TEXT_MEDIATYPE);
-        aMap.put(ProcessSearchConstants.PROCESS, ProcessSearchConstants.PROCESS_MEDIATYPE);
+        aMap.put(ProcessContentSearchConstants.PDF, ProcessContentSearchConstants.PDF_MEDIATYPE);
+        aMap.put(ProcessContentSearchConstants.DOCUMENT, ProcessContentSearchConstants.DOCUMENT_MEDIATYPE);
+        aMap.put(ProcessContentSearchConstants.PROCESS_TEXT, ProcessContentSearchConstants.PROCESS_TEXT_MEDIATYPE);
+        aMap.put(ProcessContentSearchConstants.PROCESS, ProcessContentSearchConstants.PROCESS_MEDIATYPE);
         mediatypes = Collections.unmodifiableMap(aMap);
     }
 
+    /**
+     *
+     * @param searchQuery
+     * @param mediaType
+     * @param username
+     * @return
+     * @throws ProcessCenterException
+     */
     public String search(String searchQuery, String mediaType, String username) throws ProcessCenterException{
 
         String processString = "FAILED TO GET PROCESS LIST";
@@ -94,7 +101,7 @@ public class ProcessSearchService {
 
                          String resourcePath = resource.getResourcePath();
                          //fetch the associations of the process_association type for the resources
-                         Association[] associations = reg.getAssociations(resourcePath.substring("/_system/governance/".length()), ProcessSearchConstants.ASSOCIATION_TYPE);
+                         Association[] associations = reg.getAssociations(resourcePath.substring("/_system/governance/".length()), ProcessContentSearchConstants.ASSOCIATION_TYPE);
 
                          //get the process resource for each association
                          for(Association association : associations){
@@ -112,7 +119,7 @@ public class ProcessSearchService {
                                  processJSON.put("type", "process");
                                  processJSON.put("path", destinationPath);
                                  processJSON.put("lifecycle", "SampleLifeCycle2");
-                                 processJSON.put("mediaType", ProcessSearchConstants.PROCESS_MEDIATYPE);
+                                 processJSON.put("mediaType", ProcessContentSearchConstants.PROCESS_MEDIATYPE);
                                  processJSON.put("name", processName);
                                  processJSON.put("version", processVersion);
                                  processJSON.put("lifecycleState", lifecycleState);
