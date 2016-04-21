@@ -26,3 +26,21 @@
     <label for="mediaType">Description</label>
     <input type="text" class="form-control" id="description" name="description" placeholder="Process Description">
 </div>
+<div class="form-group">
+    <label>Search by content</label>&nbsp;&nbsp;
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+            <span class="glyphicon glyphicon-cog"></span>
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu" style="background:white;border: medium">
+            <li><a data-value="PDF"><input type="checkbox"/>&nbsp;PDF</a></li>
+            <li><a data-value="Document"><input type="checkbox"/>&nbsp;Document</a></li>
+            <li><a data-value="Process-Text"><input type="checkbox"/>&nbsp;Process-Text</a></li>
+        </ul>
+    </div>
+    <br>
+    <input type="text" class="form-control" id="content" name="content" placeholder="content">
+</div>
