@@ -41,7 +41,7 @@ window.onload = function () {
                 event.preventDefault();
         });
     });
-}
+};
 
 function showTextEditor(element) {
     if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
@@ -122,6 +122,16 @@ function saveProcess(currentElement) {
         alertify.error('please fill the required fields.');
     } else {
         // save the process
+        if ($(currentElement).attr('id') == 'saveProcessBtn') {
+            var imageElement = $("#images_thumbnail");
+            if (imageElement.val().length != 0) {
+                var ext = imageElement.val().split('.').pop().toLowerCase();
+                if ($.inArray(ext, ['png', 'jpeg']) == -1) {
+                    alertify.error('invalid image extension!');
+                    return;
+                }
+            }
+        }
         $.ajax({
             url: 'apis/create_process',
             type: 'POST',
@@ -159,7 +169,8 @@ function getProcessInfo() {
         'processTags': tagList.toString(),
         'subprocess': readSubprocessTable(),
         'successor': readSuccessorTable(),
-        'predecessor': readPredecessorTable()
+        'predecessor': readPredecessorTable(),
+        'image': getImageData()
     };
     return (JSON.stringify(processDetails));
 }
@@ -334,6 +345,33 @@ function readPredecessorTable() {
         }
     });
     return predecessorInfo;
+}
+
+function readImage(element) {
+    var reader = new FileReader();
+    var file = element.files[0];
+    var preview = document.getElementById("processImage");
+    reader.onload = function (e) {
+        var encodedImg = e.target.result.replace(/^data:image\/(png|jpg);base64,/, "");
+        var ext = element.value.split('.').pop().toLowerCase();
+        var imageObj = {
+            imgValue: "images_thumbnail",
+            extension: ext,
+            binaryImg: btoa(encodedImg)
+        };
+        preview.value = JSON.stringify(imageObj);
+    };
+    if (file) {
+        reader.readAsBinaryString(file);
+    }
+}
+
+function getImageData() {
+    var processImage = $("#processImage").val();
+    if (processImage.length == 0) {
+        return {};
+    }
+    return JSON.parse(processImage);
 }
 
 function getProcessList() {
