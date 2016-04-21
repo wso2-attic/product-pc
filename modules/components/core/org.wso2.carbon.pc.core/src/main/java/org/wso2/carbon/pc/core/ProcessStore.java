@@ -39,6 +39,7 @@ import org.wso2.carbon.registry.core.exceptions.ResourceNotFoundException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.xml.sax.InputSource;
+import sun.misc.BASE64Decoder;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -103,6 +104,7 @@ public class ProcessStore {
             JSONArray subprocess = processInfo.getJSONArray("subprocess");
             JSONArray successor = processInfo.getJSONArray("successor");
             JSONArray predecessor = processInfo.getJSONArray("predecessor");
+            JSONObject imageObj = processInfo.getJSONObject("image");
 
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
@@ -169,6 +171,11 @@ public class ProcessStore {
                 Element flowchartElement = append(doc, rootElement, "flowchart", mns);
                 appendText(doc, flowchartElement, "path", mns, "NA");
 
+                if(imageObj.length() != 0) {
+                    Element imageElement = append(doc, rootElement, "images", mns);
+                    appendText(doc, imageElement, "thumbnail", mns, imageObj.getString("imgValue"));
+                }
+
                 String processAssetContent = xmlToString(doc);
                 Resource processAsset = reg.newResource();
                 processAsset.setContent(processAssetContent);
@@ -187,6 +194,16 @@ public class ProcessStore {
                 }
                 Resource storedProcess = reg.get(processAssetPath);
                 processId = storedProcess.getUUID();
+
+                if(imageObj.length() != 0) {
+                    String imageRegPath = ProcessStoreConstants.IMAGE_PATH + processId + "/" +
+                                          imageObj.getString("imgValue");
+                    Resource imageContentResource = reg.newResource();
+                    BASE64Decoder decoder = new BASE64Decoder();
+                    byte[] imageContent = decoder.decodeBuffer(imageObj.getString("binaryImg"));
+                    imageContentResource.setContent(imageContent);
+                    reg.put(imageRegPath, imageContentResource);
+                }
             }
         } catch (Exception e) {
             String errMsg = "Create process error:" + processDetails;
