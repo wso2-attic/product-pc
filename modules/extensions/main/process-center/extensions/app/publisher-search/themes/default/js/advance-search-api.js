@@ -95,11 +95,11 @@ $(function () {
                     $('.loading-animation-big').remove();
                     doPagination = false;
                 } else {
-                    //pdf content specified by user.
+                    //content specified by user.
                     if ($("#content").val()) {
                         contentSearch(results);
                     }
-                    //pdf content search is not specified by the user.
+                    //content search not required.
                     else {
                         loadPartials('list-assets', function (partials) {
                             caramel.partials(partials, function () {
@@ -186,6 +186,13 @@ $(function () {
         doPagination = true;
         rows_added = 0;
         $('#search-results').html('');
+
+        if ($("#content").val() && jQuery.isEmptyObject(options)) {
+            alertify.error("Please select content-type");
+            $('.loading-animation-big').remove();
+            doPagination = false;
+            return;
+        }
         var query = buildQuery();
         if (isEmptyQuery(query) && !$("#content").val()) {
             alertify.error('User has not entered anything');
@@ -202,13 +209,6 @@ $(function () {
 
     function contentSearch(rxt_results) {
 
-        if (jQuery.isEmptyObject(options)) {
-            alertify.error("Please select content-type");
-            $('.loading-animation-big').remove();
-            doPagination = false;
-            return;
-        }
-
         var content = $("#content").val().trim();
         var media = JSON.stringify(options);
         var search_url = caramel.tenantedUrl('/apis/search');
@@ -221,41 +221,45 @@ $(function () {
             },
             success: function (data) {
 
-                var response = JSON.parse(data);
-                if (response.error === false) {
-                    var results = JSON.parse(response.content);
+                try {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        var results = JSON.parse(response.content);
 
-                    if (rxt_results) {                     //get the intersection of the two searches.
+                        if (rxt_results) {                     //get the intersection of the two searches.
 
-                        var hashmap = {};
-                        var intersection = [];
-                        for (var i = 0; i < rxt_results.length; i++) {
-                            var pid = rxt_results[i].id;
-                            hashmap[pid] = rxt_results[i];
-                        }
-                        for (var i = 0; i < results.length; i++) {
-
-                            var key = results[i].id;
-                            if (hashmap.hasOwnProperty(key)) {
-                                intersection.push(hashmap[key]);
+                            var hashmap = {};
+                            var intersection = [];
+                            for (var i = 0; i < rxt_results.length; i++) {
+                                var pid = rxt_results[i].id;
+                                hashmap[pid] = rxt_results[i];
                             }
-                        }
-                        results = intersection;
-                    }
+                            for (var i = 0; i < results.length; i++) {
 
-                    loadPartials('list-assets', function (partials) {
-                        caramel.partials(partials, function () {
-                            caramel.render('list_assets_table_body', results, function (info, content) {
-                                $('#search-results').append($(content));
-                                $('.loading-animation-big').remove();
+                                var key = results[i].id;
+                                if (hashmap.hasOwnProperty(key)) {
+                                    intersection.push(hashmap[key]);
+                                }
+                            }
+                            results = intersection;
+                        }
+
+                        loadPartials('list-assets', function (partials) {
+                            caramel.partials(partials, function () {
+                                caramel.render('list_assets_table_body', results, function (info, content) {
+                                    $('#search-results').append($(content));
+                                    $('.loading-animation-big').remove();
+                                });
                             });
                         });
-                    });
-                }
-                else {
-                    alertify.error(response.content);
-                    $('.loading-animation-big').remove();
-                    doPagination = false;
+                    }
+                    else {
+                        alertify.error(response.content);
+                        $('.loading-animation-big').remove();
+                        doPagination = false;
+                    }
+                } catch (e) {
+                    alertify.error("We are sorry but we could not find any matching assets");
                 }
             }, error: function (xhr, status, error) {
                 alertify.error(error);

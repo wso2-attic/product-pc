@@ -16,50 +16,20 @@
  *  under the License.
  *
  */
-app.server = function(ctx) {
+app.server = function (ctx) {
     return {
         endpoints: {
             apis: [{
-                url: 'assets',
-                path: 'assets.jag',
-                secured:false
-            }, {
-                url: 'lifecycles',
-                path: 'lifecycles.jag',
-                secured:true
-            }, {
-                url: 'authenticate',
-                path: 'authenticate.jag'
-            },{
-                url: 'tags',
-                path: 'tags.jag',
+                url: 'search',
+                path: 'search.jag',
                 secured: true
-            },{
-                url: 'logout',
-                path: 'logout.jag',
-                secured:true
-            }, {
-                url: 'asset',
-                path: 'asset.jag',
-                secured:true
-            }, {
-                url: 'subscriptions',
-                path: 'subscriptions.jag',
-                secured:true
-            },{
-                url:'rate',
-                path:'rate.jag',
-                secured:true
-            },{
-                url:'partials',
-                path:'partials.jag'
             }]
         }
     };
 };
-app.apiHandlers = function(ctx) {
+app.apiHandlers = function (ctx) {
     return {
-        onApiLoad: function() {
+        onApiLoad: function () {
             if ((ctx.isAnonContext) && (ctx.endpoint.secured)) {
                 //ctx.res.status='401';//sendRedirect(ctx.appContext+'/login');
                 print('{ error:"Authentication error" }'); //TODO: Fix this to return a proper status code
