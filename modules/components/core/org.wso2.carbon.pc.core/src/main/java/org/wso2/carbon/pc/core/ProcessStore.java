@@ -27,21 +27,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
-import org.wso2.carbon.pc.core.internal.ProcessCenterServiceComponent;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.exceptions.ResourceNotFoundException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.xml.sax.InputSource;
+import sun.misc.BASE64Decoder;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -106,6 +104,7 @@ public class ProcessStore {
             JSONArray subprocess = processInfo.getJSONArray("subprocess");
             JSONArray successor = processInfo.getJSONArray("successor");
             JSONArray predecessor = processInfo.getJSONArray("predecessor");
+            JSONObject imageObj = processInfo.getJSONObject("image");
 
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
@@ -172,6 +171,11 @@ public class ProcessStore {
                 Element flowchartElement = append(doc, rootElement, "flowchart", mns);
                 appendText(doc, flowchartElement, "path", mns, "NA");
 
+                if(imageObj.length() != 0) {
+                    Element imageElement = append(doc, rootElement, "images", mns);
+                    appendText(doc, imageElement, "thumbnail", mns, imageObj.getString("imgValue"));
+                }
+
                 String processAssetContent = xmlToString(doc);
                 Resource processAsset = reg.newResource();
                 processAsset.setContent(processAssetContent);
@@ -190,6 +194,16 @@ public class ProcessStore {
                 }
                 Resource storedProcess = reg.get(processAssetPath);
                 processId = storedProcess.getUUID();
+
+                if(imageObj.length() != 0) {
+                    String imageRegPath = ProcessStoreConstants.IMAGE_PATH + processId + "/" +
+                                          imageObj.getString("imgValue");
+                    Resource imageContentResource = reg.newResource();
+                    BASE64Decoder decoder = new BASE64Decoder();
+                    byte[] imageContent = decoder.decodeBuffer(imageObj.getString("binaryImg"));
+                    imageContentResource.setContent(imageContent);
+                    reg.put(imageRegPath, imageContentResource);
+                }
             }
         } catch (Exception e) {
             String errMsg = "Create process error:" + processDetails;
@@ -215,6 +229,8 @@ public class ProcessStore {
 
                 // store process text as a separate resource
                 String processTextResourcePath = "processText/" + processName + "/" + processVersion;
+                reg.addAssociation(processTextResourcePath, processPath, ProcessContentSearchConstants.ASSOCIATION_TYPE);
+
                 if (processText != null && processText.length() > 0) {
                     Resource processTextResource = reg.newResource();
                     processTextResource.setContent(processText);
@@ -1217,6 +1233,12 @@ public class ProcessStore {
                 String docContentPath = null;
                 if (docContent.length != 0) {
                     docContentResource.setContent(docContent);
+                    if(docExtension.equalsIgnoreCase("pdf")){
+                        docContentResource.setMediaType("application/pdf");
+                    }
+                    else{
+                        docContentResource.setMediaType("application/msword");
+                    }
                     docContentPath = "doccontent/" + processName + "/" + processVersion + "/" + docName +
                             "." + docExtension;
                     reg.put(docContentPath, docContentResource);
@@ -1224,6 +1246,8 @@ public class ProcessStore {
 
                 String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
+                reg.addAssociation(docContentPath, processAssetPath, ProcessContentSearchConstants.ASSOCIATION_TYPE);
+
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
@@ -1476,6 +1500,7 @@ public class ProcessStore {
         try {
             StreamHostObject s = (StreamHostObject) object;
             InputStream pdfStream = s.getStream();
+
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
@@ -1487,9 +1512,10 @@ public class ProcessStore {
                 pdfContentResource.setContent(pdfContent);
                 pdfContentResource.setMediaType("application/pdf");
                 String pdfContentPath = "pdf/" + processName + "/" + processVersion;
-                reg.put(pdfContentPath, pdfContentResource);
                 String processPath = "processes/" + processName + "/" + processVersion;
-
+                pdfContentResource.addAspect(processPath);
+                reg.put(pdfContentPath, pdfContentResource);
+                reg.addAssociation(pdfContentPath, processPath, ProcessContentSearchConstants.ASSOCIATION_TYPE);
                 // update process by linking the pdf asset
 
                 Resource processAsset = reg.get(processPath);

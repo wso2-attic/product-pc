@@ -8,6 +8,7 @@ public class ProcessStoreConstants {
     public static final String PROCESS_ASSET_ROOT = "processes/";
     public static final String BPMN_CONTENT_PATH = "bpmncontent/";
     public static final String BPMN_PATH = "bpmn/";
+    public static final String IMAGE_PATH = "store/asset_resources/process/";
 
     public static final String TAGS = "tags";
     public static final String LC_STATE = "lcState";

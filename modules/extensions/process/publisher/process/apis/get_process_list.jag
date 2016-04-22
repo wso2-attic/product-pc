@@ -20,21 +20,21 @@
 importPackage(org.wso2.carbon.pc.core);
 
 var log = new Log();
-if(log.isDebugEnabled()){
+if (log.isDebugEnabled()) {
     log.debug("INSIDE get process list...");
 }
 var ps = new ProcessStore();
 var responseObj = {};
 
-try{
+try {
     var processList = ps.getProcesses();
-    if(log.isDebugEnabled()){
+    if (log.isDebugEnabled()) {
         log.debug(processList);
     }
     responseObj.error = false;
     responseObj.content = processList;
     print(stringify(responseObj));
-}catch(error){
+} catch (error) {
     responseObj.error = true;
     responseObj.content = "Process list retrieving error.";
     print(stringify(responseObj));

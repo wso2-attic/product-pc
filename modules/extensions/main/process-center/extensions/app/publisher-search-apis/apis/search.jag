@@ -19,27 +19,33 @@
  */
 importPackage(org.wso2.carbon.pc.core);
 
+var username = require('store').server.current(session).username;
+
 var log = new Log();
 if (log.isDebugEnabled()) {
-    log.debug("Saving process text");
+    log.debug("Advanced Content Search logic");
 }
 
-var ps = new ProcessStore();
-var processName = String(request.getParameter("processName"));
-var processVersion = String(request.getParameter("processVersion"));
-var processText = String(request.getParameter("processText"));
-if (log.isDebugEnabled()) {
-    log.debug(processName);
-}
+var ps = new ProcessContentSearchService();
+var searchQuery = String(request.getParameter("search-query"));
+var mediaType = String(request.getParameter("mediatype"));
+
 var responseObj = {};
 try {
-    var result = ps.saveProcessText(processName, processVersion, processText);
-    responseObj.error = false;
-    responseObj.content = stringify(result);
-    print(stringify(responseObj));
+    var status = ps.search(searchQuery, mediaType, username);
+    if (status != "FAILED TO GET PROCESS LIST") {
+        responseObj.error = false;
+        responseObj.content = status;
+        print(stringify(responseObj));
+    }
+    else {
+        responseObj.error = true;
+        responseObj.content = "We are sorry but we could not find any matching assets.";
+        print(stringify(responseObj));
+    }
 } catch (error) {
     responseObj.error = true;
-    responseObj.content = "Text content saving error.";
+    responseObj.content = "Process list retrieving error.";
     print(stringify(responseObj));
 }
 %>

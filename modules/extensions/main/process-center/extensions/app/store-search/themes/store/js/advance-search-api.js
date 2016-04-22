@@ -24,6 +24,7 @@ $(function(){
     var last_to = 0;
     var items_per_row = 0;
     var doPagination = true;
+    var options =[];
     store.infiniteScroll ={};
     store.infiniteScroll.recalculateRowsAdded = function(){
         return (last_to - last_to%items_per_row)/items_per_row;
@@ -98,14 +99,21 @@ $(function(){
                         }
                     }
                     results = {assets:results,showType:true};
-                    loadPartials('assets', function(partials) {
-                        caramel.partials(partials, function () {
-                            caramel.render('assets-thumbnails', results, function (info, content) {
-                                $('#search-results').append($(content));
-                                $('.loading-animation-big').remove();
+                    //content specified by user.
+                    if ($("#content").val()) {
+                        contentSearch(results);
+                    }
+                    //content search not required.
+                    else {
+                        loadPartials('assets', function (partials) {
+                            caramel.partials(partials, function () {
+                                caramel.render('assets-thumbnails', results, function (info, content) {
+                                    $('#search-results').append($(content));
+                                    $('.loading-animation-big').remove();
+                                });
                             });
                         });
-                    });
+                    }
                 }
             },error:function(){
                 doPagination = false;
@@ -138,7 +146,7 @@ $(function(){
 	};
 	var getInputFields = function(){
 		var obj = {};
-		var fields = $(SEARCH_FORM).find(':input');
+        var fields = $(SEARCH_FORM).find(':input:not(#content)');
 		var field;
 		for(var index = 0; index < fields.length; index++){
 			field = fields[index];
@@ -181,12 +189,121 @@ $(function(){
 		e.preventDefault();
         doPagination = true;
         rows_added = 0;
-        $('#search-results').html('');       
+        $('#search-results').html('');
+        if ($("#content").val() && jQuery.isEmptyObject(options)) {
+            alertify.error("Please select content-type");
+            $('.loading-animation-big').remove();
+            doPagination = false;
+            return;
+        }
 		var query = buildQuery();
-		if(isEmptyQuery(query)) {
-			console.log('User has not entered anything');
-			return;
-		}
-        store.infiniteScroll.showAll(query);
+        if ($("#content").val() && jQuery.isEmptyObject(options)) {
+            alertify.error("Please select content-type");
+            $('.loading-animation-big').remove();
+            doPagination = false;
+            return;
+        }
+        var query = buildQuery();
+        if (isEmptyQuery(query) && !$("#content").val()) {
+            alertify.error('User has not entered anything');
+            return;
+        }
+        else if (isEmptyQuery(query) && $("#content").val()) {
+            contentSearch(null);
+        }
+        else {
+            store.infiniteScroll.showAll(query);
+        }
 	});
+
+    function contentSearch(rxt_results) {
+
+        var content = $("#content").val().trim();
+        var media = JSON.stringify(options);
+        var search_url = caramel.tenantedUrl('/apis/search');
+        $.ajax({
+            url: search_url,
+            type: 'POST',
+            data: {
+                'search-query': content,
+                'mediatype': media
+            },
+            success: function (data) {
+
+                try {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        var results = JSON.parse(response.content);
+
+                        if (rxt_results) {                     //get the intersection of the two searches.
+
+                            var hashmap = {};
+                            var intersection = [];
+                            for (var i = 0; i < rxt_results.length; i++) {
+                                var pid = rxt_results[i].id;
+                                hashmap[pid] = rxt_results[i];
+                            }
+                            for (var i = 0; i < results.length; i++) {
+
+                                var key = results[i].id;
+                                if (hashmap.hasOwnProperty(key)) {
+                                    intersection.push(hashmap[key]);
+                                }
+                            }
+                            results = intersection;
+                        }
+                        for (var index in results) {
+                            var asset = results[index];
+                            if (asset.thumbnail == 'null') {
+                                asset.thumbnail = null;
+                            }
+                        }
+                        results = {assets: results, showType: true};
+                        loadPartials('assets', function (partials) {
+                            caramel.partials(partials, function () {
+                                caramel.render('assets-thumbnails', results, function (info, content) {
+                                    $('#search-results').append($(content));
+                                    $('.loading-animation-big').remove();
+                                });
+                            });
+                        });
+                    }
+                    else {
+                        alertify.error(response.content);
+                        $('.loading-animation-big').remove();
+                        doPagination = false;
+                    }
+                } catch (e) {
+                    alertify.error("We are sorry but we could not find any matching assets");
+                }
+            }, error: function (xhr, status, error) {
+                alertify.error(error);
+                doPagination = false;
+                $('.loading-animation-big').remove();
+            }
+        });
+    }
+
+    $('.dropdown-menu a').on('click', function (event) {
+
+        var $target = $(event.currentTarget),
+            val = $target.attr('data-value'),
+            $inp = $target.find('input'),
+            idx;
+
+        if (( idx = options.indexOf(val) ) > -1) {
+            options.splice(idx, 1);
+            setTimeout(function () {
+                $inp.prop('checked', false)
+            }, 0);
+        } else {
+            options.push(val);
+            setTimeout(function () {
+                $inp.prop('checked', true)
+            }, 0);
+        }
+
+        $(event.target).blur();
+        return false;
+    });
 });

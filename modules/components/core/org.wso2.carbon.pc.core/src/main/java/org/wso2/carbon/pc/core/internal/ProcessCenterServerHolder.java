@@ -15,13 +15,19 @@
  */
 package org.wso2.carbon.pc.core.internal;
 
+import org.wso2.carbon.registry.common.AttributeSearchService;
 import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.registry.indexing.service.ContentSearchService;
 
 public class ProcessCenterServerHolder {
 
     private static ProcessCenterServerHolder instance = new ProcessCenterServerHolder();
 
     private RegistryService registryService;
+
+    private ContentSearchService contentSearchService;
+
+    private AttributeSearchService attributeSearchService;
 
     private ProcessCenterServerHolder() {}
 
@@ -40,4 +46,27 @@ public class ProcessCenterServerHolder {
     public RegistryService getRegistryService() {
         return registryService;
     }
+
+    public void unsetContentSearchService(ContentSearchService contentSearchService) {
+        this.contentSearchService = null;
+    }
+
+    public ContentSearchService getContentSearchService() {
+        return contentSearchService;
+    }
+
+    public void setContentSearchService(ContentSearchService contentSearchService) {
+        this.contentSearchService = contentSearchService;
+    }
+
+    public void unsetAttributeSearchService(AttributeSearchService attributeSearchService){
+        this.attributeSearchService = null;
+    }
+
+    public AttributeSearchService getAttributeSearchService(){ return attributeSearchService;}
+
+    public void setAttributeSearchService(AttributeSearchService attributeSearchService){
+        this.attributeSearchService = attributeSearchService;
+    }
+
 }
