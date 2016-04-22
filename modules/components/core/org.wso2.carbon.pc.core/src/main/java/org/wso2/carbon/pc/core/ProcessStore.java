@@ -127,6 +127,8 @@ public class ProcessStore {
 
                 if ((processDescription != null) && (!processDescription.isEmpty())) {
                     appendText(doc, overviewElement, "description", mns, processDescription);
+                }else{
+                    appendText(doc, overviewElement, "description", mns, "NA");
                 }
 
                 Element propertiesElement = append(doc, rootElement, "properties", mns);
@@ -1695,7 +1697,11 @@ public class ProcessStore {
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                doc.getElementsByTagName("description").item(0).setTextContent(processDescription);
+                if(doc.getElementsByTagName("description").getLength() != 0)
+                    doc.getElementsByTagName("description").item(0).setTextContent(processDescription);
+                else{
+
+                }
 
                 String newProcessContent = xmlToString(doc);
                 resource.setContent(newProcessContent);
