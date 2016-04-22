@@ -68,13 +68,13 @@ function searchProcesses() {
         type: 'GET',
         success: function (response) {
             var results = [];
-            if(response != null){
+            if (response != null) {
                 results = response.list;
             }
             if (results.length > 0) {
                 if ($("#content").val()) {
                     contentSearch(results);//search using fields in rxt and content
-                }else{  //no content search. only using the fields in rxt
+                } else {  //no content search. only using the fields in rxt
                     renderCheckboxes(results);
                 }
                 //reset the form
@@ -82,13 +82,13 @@ function searchProcesses() {
                 //to prevent the response from redirecting
                 $(SEARCH_FORM).ajaxForm();
             } else {    //no search from rxt fields. only the content search.
-                if($('#content').val()){
+                if ($('#content').val()) {
                     contentSearch(results);
                     //reset the form
                     document.getElementById("process-search-form").reset();
                     //to prevent the response from redirecting
                     $(SEARCH_FORM).ajaxForm();
-                }else{  //no filter to search
+                } else {  //no filter to search
                     $("#process-search-results").html("");
                     $("#process-search-results").append("<p>We are sorry but we could not find any matching assets</p>");
                 }
@@ -110,9 +110,9 @@ $('#process-search-btn').click(function (e) {
     }
 });
 
-function renderCheckboxes(results){
+function renderCheckboxes(results) {
     $("#process-search-results").html("");
-    if(results != null){
+    if (results != null) {
         for (var i = 0; i < results.length; i++) {
             var id = "checkbox" + (i + 1);
             var checkbox = "";
@@ -135,7 +135,7 @@ $('#okButton').click(function () {
             if (!isAlreadyExist($("label[for='" + $elements[i].id + "']").text(), tableName)) {
                 $('input[type="text"]', newRow).val($("label[for='" + $elements[i].id + "']").text());
                 table.show().append(newRow);
-                if($(this).attr('data-name') == "view"){
+                if ($(this).attr('data-name') == "view") {
                     readUpdatedSubprocess($(newRow).find("span")[0], $elements.length);
                 }
             }
@@ -144,7 +144,7 @@ $('#okButton').click(function () {
             alertify.error("You have not selected any process");
         } else {
             $("#searchModal").modal("hide");
-            if($(this).attr('data-name') == "view" && $elements.length > 1)
+            if ($(this).attr('data-name') == "view" && $elements.length > 1)
                 alertify.success('Processes were successfully added to the subprocess list.');
         }
     } else {
@@ -202,7 +202,7 @@ function contentSearch(rxt_results) {
                 else {
                     alertify.error(response.content);
                 }
-            }catch (e){
+            } catch (e) {
                 alertify.error("We are sorry but we could not find any matching assets");
             }
         }, error: function (xhr, status, error) {
