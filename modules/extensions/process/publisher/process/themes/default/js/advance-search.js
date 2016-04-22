@@ -70,15 +70,18 @@ function searchProcesses() {
             results = response.list;
             if (results.length > 0) {
                 $("#process-search-results").html("");
-                for (var i = 0; i < results.length; i++) {
-                    var id = "checkbox" + (i + 1);
-                    var checkbox = "";
-                    checkbox += "<div class=\"checkbox checkbox-primary\">";
-                    checkbox += "    <input id=\"" + id + "\" class=\"styled\" type=\"checkbox\">";
-                    checkbox += "    <label for=\"" + id + "\">" + results[i].name + "-" + results[i].version + "<\/label>";
-                    checkbox += "<\/div>";
-                    $("#process-search-results").append(checkbox);
+                if(results != null){
+                    for (var i = 0; i < results.length; i++) {
+                        var id = "checkbox" + (i + 1);
+                        var checkbox = "";
+                        checkbox += "<div class=\"checkbox checkbox-primary\">";
+                        checkbox += "    <input id=\"" + id + "\" class=\"styled\" type=\"checkbox\">";
+                        checkbox += "    <label for=\"" + id + "\">" + results[i].name + "-" + results[i].version + "<\/label>";
+                        checkbox += "<\/div>";
+                        $("#process-search-results").append(checkbox);
+                    }
                 }
+
                 //reset the form
                 document.getElementById("process-search-form").reset();
                 //to prevent the response from redirecting
