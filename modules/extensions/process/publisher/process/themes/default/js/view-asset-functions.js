@@ -648,6 +648,7 @@ function readUpdatedSubprocess(currentObj, count) {
         };
 
         $.ajax({
+            async: false,
             url: '/publisher/assets/process/apis/update_subprocess',
             type: 'POST',
             data: {'subprocessDetails': JSON.stringify(subProcessDetails)},
@@ -703,6 +704,7 @@ function readUpdatedSuccessor(currentObj, count) {
         };
 
         $.ajax({
+            async: false,
             url: '/publisher/assets/process/apis/update_successor',
             type: 'POST',
             data: {'successorDetails': JSON.stringify(successorDetails)},
@@ -758,6 +760,7 @@ function readUpdatedPredecessor(currentObj, count) {
         };
 
         $.ajax({
+            async: false,
             url: '/publisher/assets/process/apis/update_predecessor',
             type: 'POST',
             data: {'predecessorDetails': JSON.stringify(predecessorDetails)},
