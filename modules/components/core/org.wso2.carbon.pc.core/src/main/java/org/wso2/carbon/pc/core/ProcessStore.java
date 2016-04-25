@@ -1232,6 +1232,8 @@ public class ProcessStore {
                 // store doc content as a registry resource
                 Resource docContentResource = reg.newResource();
                 byte[] docContent = IOUtils.toByteArray(docStream);
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                                          processVersion;
                 String docContentPath = null;
                 if (docContent.length != 0) {
                     docContentResource.setContent(docContent);
@@ -1244,11 +1246,9 @@ public class ProcessStore {
                     docContentPath = "doccontent/" + processName + "/" + processVersion + "/" + docName +
                             "." + docExtension;
                     reg.put(docContentPath, docContentResource);
+                    reg.addAssociation(docContentPath, processAssetPath,
+                                       ProcessContentSearchConstants.ASSOCIATION_TYPE);
                 }
-
-                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
-                        processVersion;
-                reg.addAssociation(docContentPath, processAssetPath, ProcessContentSearchConstants.ASSOCIATION_TYPE);
 
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
