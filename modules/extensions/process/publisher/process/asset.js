@@ -101,6 +101,9 @@ asset.server = function (ctx) {
             }, {
                 url: 'delete_bpmn',
                 path: 'delete_bpmn.jag'
+            }, {
+                url: 'update_description',
+                path: 'update_description.jag'
             }]
         }
     }

@@ -127,6 +127,8 @@ public class ProcessStore {
 
                 if ((processDescription != null) && (!processDescription.isEmpty())) {
                     appendText(doc, overviewElement, "description", mns, processDescription);
+                }else{
+                    appendText(doc, overviewElement, "description", mns, "NA");
                 }
 
                 Element propertiesElement = append(doc, rootElement, "properties", mns);
@@ -895,7 +897,7 @@ public class ProcessStore {
                 JSONObject processInfo = new JSONObject(ownerDetails);
                 String processName = processInfo.getString("processName");
                 String processVersion = processInfo.getString("processVersion");
-                String processOwner = processInfo.getString("processOwner");
+                String processOwner = processInfo.getString("value");
 
                 String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
@@ -1676,6 +1678,46 @@ public class ProcessStore {
         }
     }
 
+    public String updateDescription(String descriptionDetails) throws ProcessCenterException {
+        String processId = "NA";
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+                JSONObject processInfo = new JSONObject(descriptionDetails);
+                String processName = processInfo.getString("processName");
+                String processVersion = processInfo.getString("processVersion");
+                String processDescription = processInfo.getString("value");
+
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                        processVersion;
+                Resource resource = reg.get(processAssetPath);
+                String processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
+
+                if(doc.getElementsByTagName("description").getLength() != 0)
+                    doc.getElementsByTagName("description").item(0).setTextContent(processDescription);
+                else{
+
+                }
+
+                String newProcessContent = xmlToString(doc);
+                resource.setContent(newProcessContent);
+                reg.put(processAssetPath, resource);
+
+                Resource storedProcess = reg.get(processAssetPath);
+                processId = storedProcess.getUUID();
+            }
+
+        } catch (Exception e) {
+            String errMsg = "Failed to update the process description:" + descriptionDetails;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        }
+        return processId;
+    }
     //    public static void main(String[] args) {
     //        String path = "/home/chathura/temp/t5/TestProcess1.bpmn";
     //        String outpath = "/home/chathura/temp/t5/TestProcess1image.png";

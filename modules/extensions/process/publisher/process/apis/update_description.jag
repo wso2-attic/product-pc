@@ -21,24 +21,23 @@ importPackage(org.wso2.carbon.pc.core);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
-    log.debug("Updating owner of process X");
+    log.debug("Updating description of process");
 }
 
 var ps = new ProcessStore();
-var ownerDetails = String(request.getContent());
+var descriptionDetails = String(request.getContent());
 if (log.isDebugEnabled()) {
-    log.debug("ownerDetails: " + ownerDetails);
+    log.debug("descriptionDetails: " + descriptionDetails);
 }
-
 var responseObj = {};
 try {
-    var ownerStatus = ps.updateOwner(ownerDetails);
+    var processId = ps.updateDescription(descriptionDetails);
     responseObj.error = false;
-    responseObj.content = stringify(ownerStatus);
+    responseObj.content = processId;
     print(stringify(responseObj));
 } catch (error) {
     responseObj.error = true;
-    responseObj.content = "Update owner information error.";
+    responseObj.content = "Update description error.";
     print(stringify(responseObj));
 }
 %>

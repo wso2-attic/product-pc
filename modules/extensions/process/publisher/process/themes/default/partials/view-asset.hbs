@@ -1,22 +1,28 @@
 <h2 id="view-header">{{assets.tables.[0].fields.name.value}}</h2>
 <br/>
 <div id="overviewDiv">
-    <table class="table table-responsive" style="width: 8cm;border-bottom:0px !important;">
+    <table class="table table-responsive" style="width: 24cm;border-bottom:0px !important;">
         <tbody>
         <tr>
-            <td width="40%" style="border: 0px !important;">Version:</td>
+            <td width="20%" style="border: 0px !important;">Version:</td>
             <td width="60%" id="process-version"
                 style="border: 0px !important;">{{assets.tables.[0].fields.version.value}}</td>
         </tr>
         <tr>
-            <td width="40%" style="border: 0px !important;">Owner:</td>
-            <td width="40%" style="border: 0px !important;" contenteditable="true"
-                onblur="editProcessOwner(this)">{{assets.tables.[0].fields.owner.value}}</td>
-            <td width="20%" style="border: 0px !important;"><span id="processOwnerUpdateBtn"
-                                                                  class="glyphicon glyphicon-ok" data-toggle="tooltip"
-                                                                  title="Click here to update the value"
-                                                                  style="color:#0081c2;cursor: pointer;display: none;"
-                                                                  onclick="updateProcessOwner(this)"></span></td>
+            <td width="20%" style="border: 0px !important;">Owner:</td>
+            <td title="Click here to edit" width="60%" id="process-owner" style="border: 0px !important;">
+                <a href="#" id="owner" data-type="text" data-placement="top" data-title="Enter Owner">
+                    {{assets.tables.[0].fields.owner.value}}
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td width="20%" style="border: 0px !important;">Description:</td>
+            <td title="Click here to edit" width="60%" id="process-description" style="border: 0px !important;">
+                <a href="#" id="description" data-type="textarea" data-placement="top" data-title="Enter Description">
+                    {{assets.tables.[0].fields.description.value}}
+                </a>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -299,7 +305,7 @@
                                                     name="subprocess_Name" id="subprocess_Name"
                                                     onkeydown="subProcessNamesAutoComplete()"></td>
         <td style="width: 5%;"><span class="glyphicon glyphicon-ok" style="color:#0081c2;cursor: pointer;"
-                                     onclick="readUpdatedSubprocess(this)"></span></td>
+                                     onclick="readUpdatedSubprocess(this, 1)"></span></td>
         <td style="width: 5%;"><label data-name="subprocess" class="remove-process" onclick="deleteProcess(this)"><i class="fa fa-trash"></i></label>
         </td>
     </tr>
@@ -448,16 +454,16 @@
                     <div class="jtk-demo-canvas canvas-wide flowchart-demo" id="canvas1" style="border: none;">
                         <div class="window start jsplumb-connected" id="startEv" title="To start the flowchart"><strong>
                             <p>start</p></strong></div>
-                        <div style="border: 1px solid lightgray; width: 150px; top: 8em; position: absolute; left: 0.5em;"></div>
+                        <div style="border: 1px solid lightgray; width: 90%; top: 8em; position: absolute; left: 0.5em;"></div>
                         <div class="window step jsplumb-connected-step" id="stepEv" title="To describe a step"><strong>
                             <p>step</p></strong></div>
-                        <div style="border: 1px solid lightgray; width: 150px; top: 15.25em; position: absolute; left: 0.5em;"></div>
+                        <div style="border: 1px solid lightgray; width: 90%; top: 15.25em; position: absolute; left: 0.5em;"></div>
                         <div class="window diamond jsplumb-connected-step" id="descEv" title="To describe a decision">
                             <strong><p class="desc-text">decision</p></strong></div>
-                        <div style="border: 1px solid lightgray; width: 150px; top: 24.5em; position: absolute; left: 0.5em;"></div>
+                        <div style="border: 1px solid lightgray; width: 90%; top: 24.5em; position: absolute; left: 0.5em;"></div>
                         <div class="window step parallelogram jsplumb-connected-step" id="inpEv"
                              title="To take/give input/output"><strong><p class="input-text">i/o</p></strong></div>
-                        <div style="border: 1px solid lightgray; width: 150px; top: 31.5em; position: absolute; left: 0.5em;"></div>
+                        <div style="border: 1px solid lightgray; width: 90%; top: 31.5em; position: absolute; left: 0.5em;"></div>
                         <div class="window end jsplumb-connected-end" id="endEv" title="To end the flowchart"><strong>
                             <p>end</p></strong></div>
                     </div>
@@ -653,9 +659,22 @@
                                                        name="process-description" placeholder="Process Description">
                                             </div>
                                             <div class="form-group filter">
-                                                <label for="process-content">Content</label>
-                                                <input type="text" class="form-control" id="process-content"
-                                                       name="process-content" placeholder="PDF Content">
+                                                <label>Search by content</label>&nbsp;&nbsp;
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false">
+                                                        <span class="glyphicon glyphicon-cog"></span>
+                                                        <span class="caret"></span>
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                    </button>
+                                                    <ul class="dropdown-menu" style="background:white;border: medium">
+                                                        <li><a data-value="PDF"><input type="checkbox"/>&nbsp;PDF</a></li>
+                                                        <li><a data-value="Document"><input type="checkbox"/>&nbsp;Document</a></li>
+                                                        <li><a data-value="Process-Text"><input type="checkbox"/>&nbsp;Process-Text</a></li>
+                                                    </ul>
+                                                </div>
+                                                <br>
+                                                <input type="text" class="form-control" id="content" name="content" placeholder="content">
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -690,7 +709,7 @@
             </div>
             <div class="modal-footer">
                 <a href="#!" class="btn" data-dismiss="modal">Cancel</a>
-                <a href="#!" id="okButton" class="btn btn-primary">Add</a>
+                <a href="#!" id="okButton" data-name="view" class="btn btn-primary">Add</a>
             </div>
         </div>
     </div>
