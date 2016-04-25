@@ -128,15 +128,23 @@ function renderCheckboxes(results) {
 $('#okButton').click(function () {
     var $elements = $("#process-search-results").find(":input:checked");
     if ($elements.length > 0) {
-        for (var i = 0; i < $elements.length; i++) {
+        for (var j = 0; j < $elements.length; j++) {
             var table = $('#table_' + tableName);
             var referenceRow = $('#table_reference_' + tableName);
             var newRow = referenceRow.clone().removeAttr('id');
-            if (!isAlreadyExist($("label[for='" + $elements[i].id + "']").text(), tableName)) {
-                $('input[type="text"]', newRow).val($("label[for='" + $elements[i].id + "']").text());
+            if (!isAlreadyExist($("label[for='" + $elements[j].id + "']").text(), tableName)) {
+                $('input[type="text"]', newRow).val($("label[for='" + $elements[j].id + "']").text());
                 table.show().append(newRow);
                 if ($(this).attr('data-name') == "view") {
-                    readUpdatedSubprocess($(newRow).find("span")[0], $elements.length);
+                    if(tableName == "subprocess") {
+                        readUpdatedSubprocess($(newRow).find("span")[0], $elements.length);
+                    }
+                    if(tableName == "successor") {
+                        readUpdatedSuccessor($(newRow).find("span")[0], $elements.length);
+                    }
+                    if(tableName == "predecessor") {
+                        readUpdatedPredecessor($(newRow).find("span")[0], $elements.length);
+                    }
                 }
             }
         }

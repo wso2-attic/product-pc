@@ -39,10 +39,10 @@ window.onload = function () {
         type: 'text',
         url: '/publisher/assets/process/apis/update_description',
         pk: 1,
-        display: function(value, response) {
+        display: function (value, response) {
             $('#description').html(value);
         },
-        params: function(params) {
+        params: function (params) {
             params.processName = $('#view-header').text();
             params.processVersion = $('#process-version').text();
             return JSON.stringify(params);
@@ -52,10 +52,10 @@ window.onload = function () {
     $('#owner').editable({
         url: '/publisher/assets/process/apis/update_owner',
         pk: 2,
-        display: function(value, response) {
+        display: function (value, response) {
             $('#owner').html(value);
         },
-        params: function(params) {
+        params: function (params) {
             params.processName = $('#view-header').text();
             params.processVersion = $('#process-version').text();
             return JSON.stringify(params);
@@ -371,22 +371,22 @@ function viewPDF(pdfUrl, heading, iteration) {
 function confirmDialog(question) {
     var confirmModal =
         $('<div class="modal fade">' +
-        '<div class="modal-dialog">' +
-        '<div class="modal-content">' +
-        '<div class="modal-header">' +
-        '<a class="close" data-dismiss="modal" >&times;</a>' +
-        '<h3>Confirm delete</h3>' +
-        '</div>' +
-        '<div class="modal-body">' +
-        '<p>' + question + '</p>' +
-        '</div>' +
-        '<div class="modal-footer">' +
-        '<a href="#!" class="btn" data-dismiss="modal">cancel</a>' +
-        '<a href="#!" id="okButton" class="btn btn-primary">delete</a>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>');
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header">' +
+            '<a class="close" data-dismiss="modal" >&times;</a>' +
+            '<h3>Confirm delete</h3>' +
+            '</div>' +
+            '<div class="modal-body">' +
+            '<p>' + question + '</p>' +
+            '</div>' +
+            '<div class="modal-footer">' +
+            '<a href="#!" class="btn" data-dismiss="modal">cancel</a>' +
+            '<a href="#!" id="okButton" class="btn btn-primary">delete</a>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>');
     return confirmModal;
 }
 
@@ -654,8 +654,9 @@ function readUpdatedSubprocess(currentObj, count) {
             success: function (data) {
                 var response = JSON.parse(data);
                 if (response.error === false) {
-                    if(count == 1)
+                    if (count == 1) {
                         alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
+                    }
                 } else {
                     alertify.error(response.content);
                 }
@@ -667,7 +668,7 @@ function readUpdatedSubprocess(currentObj, count) {
     }
 }
 
-function readUpdatedSuccessor(currentObj) {
+function readUpdatedSuccessor(currentObj, count) {
     var successorInput = $(currentObj).parent().closest("tr").find("input").val();
 
     if (successorInput == '') {
@@ -708,7 +709,9 @@ function readUpdatedSuccessor(currentObj) {
             success: function (data) {
                 var response = JSON.parse(data);
                 if (response.error === false) {
-                    alertify.success('Process ' + successorInput + ' successfully added to the successor list.');
+                    if (count == 1) {
+                        alertify.success('Process ' + successorInput + ' successfully added to the successor list.');
+                    }
                 } else {
                     alertify.error(response.content);
                 }
@@ -720,7 +723,7 @@ function readUpdatedSuccessor(currentObj) {
     }
 }
 
-function readUpdatedPredecessor(currentObj) {
+function readUpdatedPredecessor(currentObj, count) {
     var predecessorInput = $(currentObj).parent().closest("tr").find("input").val();
 
     if (predecessorInput == '') {
@@ -761,7 +764,9 @@ function readUpdatedPredecessor(currentObj) {
             success: function (data) {
                 var response = JSON.parse(data);
                 if (response.error === false) {
-                    alertify.success('Process ' + predecessorInput + ' successfully added to the predecessor list.');
+                    if (count == 1) {
+                        alertify.success('Process ' + predecessorInput + ' successfully added to the predecessor list.');
+                    }
                 } else {
                     alertify.error(response.content);
                 }
@@ -1201,7 +1206,7 @@ function deleteProcess(element) {
     }
     else {
         value = value.val();
-        if(value != ""){
+        if (value != "") {
             var question = "Are you sure you want to delete " + element.getAttribute("data-name") + " " + value + "?";
             var confirmModal = confirmDialog(question);
             confirmModal.find('#okButton').click(function (event) {
@@ -1210,7 +1215,7 @@ function deleteProcess(element) {
                 confirmModal.modal('hide');
             });
             confirmModal.modal('show');
-        }else{
+        } else {
             document.getElementById("table_" + element.getAttribute("data-name")).
                 deleteRow(element.parentElement.parentElement.rowIndex);
         }
