@@ -75,12 +75,6 @@ asset.server = function (ctx) {
                 url: 'get_process_tags',
                 path: 'get_process_tags.jag'
             }, {
-                url: 'upload_pdf',
-                path: 'upload_pdf.jag'
-            }, {
-                url: 'get_process_pdf',
-                path: 'get_process_pdf.jag'
-            }, {
                 url: 'upload_flowchart',
                 path: 'upload_flowchart.jag'
             },{
@@ -92,7 +86,7 @@ asset.server = function (ctx) {
             }, {
                 url: 'download_document',
                 path: 'download_document.jag'
-            },{
+            }, {
                 url: 'delete_flowchart',
                 path: 'delete_flowchart.jag'
             }, {
@@ -153,7 +147,7 @@ asset.renderer = function (ctx) {
                 log.debug(page);
             }
 
-            var flowchartPath = page.assets.tables[8].fields.path.value;
+            var flowchartPath = page.assets.tables[7].fields.path.value;
             if(flowchartPath != "NA"){
                 page.flowchartAvailable = true;
                 page.flowchartPath = flowchartPath;
