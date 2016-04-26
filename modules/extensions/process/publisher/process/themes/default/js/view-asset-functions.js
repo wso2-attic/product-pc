@@ -75,8 +75,6 @@ function showBPMN() {
     $("#processTextEditDiv").hide();
     $("#bpmnViewDiv").show();
     $("#bpmnEditDiv").hide();
-    $("#pdfUploaderView").hide();
-    $("#holder").hide();
     $("#flowChartEditorView").hide();
     $("#docUploaderDiv").hide();
     $("#docViewDiv").hide();
@@ -108,8 +106,6 @@ function viewText() {
     $("#processTextEditDiv").hide();
     $("#bpmnViewDiv").hide();
     $("#bpmnEditDiv").hide();
-    $("#pdfUploaderView").hide();
-    $("#holder").hide();
     $("#flowChartEditorView").hide();
     $("#docUploaderDiv").hide();
     $("#docViewDiv").hide();
@@ -179,8 +175,6 @@ function showTextEditor() {
     $("#processTextEditDiv").show();
     $("#bpmnViewDiv").hide();
     $("#bpmnEditDiv").hide();
-    $("#pdfUploaderView").hide();
-    $("holder").hide();
     $("#flowChartEditorView").hide();
     $("#docUploaderDiv").hide();
     $("#docViewDiv").hide();
@@ -196,8 +190,6 @@ function showBPMNUploader() {
     $("#processTextEditDiv").hide();
     $("#bpmnViewDiv").hide();
     $("#bpmnEditDiv").show();
-    $("#pdfUploaderView").hide();
-    $("#holder").hide();
     $("#flowChartEditorView").hide();
     $("#docUploaderDiv").hide();
     $("#docViewDiv").hide();
@@ -212,8 +204,6 @@ function showOverview(e) {
     $("#processTextEditDiv").hide();
     $("#bpmnViewDiv").hide();
     $("#bpmnEditDiv").hide();
-    $("#pdfUploaderView").hide();
-    $("#holder").hide();
     $("#flowChartEditorView").hide();
     $("#docUploaderDiv").hide();
     $("#docViewDiv").hide();
@@ -406,8 +396,6 @@ function showDocument() {
     $("#processTextEditDiv").hide();
     $("#bpmnViewDiv").hide();
     $("#bpmnEditDiv").hide();
-    $("#pdfUploaderView").hide();
-    $("#holder").hide();
     $("#flowChartEditorView").hide();
     $("#docUploaderDiv").show();
     $("#docViewDiv").show();
@@ -503,8 +491,6 @@ function associateDoc() {
     $("#processTextEditDiv").hide();
     $("#bpmnViewDiv").hide();
     $("#bpmnEditDiv").hide();
-    $("#pdfUploaderView").hide();
-    $("#holder").hide();
     $("#flowChartEditorView").hide();
     $("#docUploaderDiv").show();
     $("#docViewDiv").hide();
@@ -581,19 +567,6 @@ function getProcessList() {
                 processListObj = JSON.parse(response.content);
                 for (var i = 0; i < processListObj.length; i++) {
                     processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
-                    if (processListObj[i].processid == pid) {
-                        if (processListObj[i].pdfpath == "NA") {
-                            //show pdf upload button
-                            $("#pdfUploader").show();
-                            $("#pdfViewer").hide();
-                        }
-                        else {
-                            //show pdf view button
-                            $("#pdfUploader").hide();
-                            $("#pdfViewer").show();
-                        }
-
-                    }
                 }
             } else {
                 alertify.error(response.content);
@@ -956,158 +929,6 @@ function addUnboundedRow(element) {
     } else {
         alertify.error('Please fill the empty ' + tableName + ' field.');
     }
-}
-
-//****************************PDF rendering*************************************************
-
-function showPDF() {
-    $("#overviewDiv").hide();
-    $("#processTextContainer").hide();
-    $("#processTextEditDiv").hide();
-    $("#bpmnViewDiv").hide();
-    $("#bpmnEditDiv").hide();
-    $("#holder").show();
-    $("#pdfUploaderView").hide();
-    $("#flowChartEditorView").hide();
-    $("#docUploaderDiv").hide();
-    $("#docViewDiv").hide();
-
-    if (pdfDoc == null) {
-        loadPdf();
-    }
-
-}
-
-function associatePdf(element) {
-    $("#overviewDiv").hide();
-    $("#processTextView").hide();
-    $("#bpmnView").hide();
-    $("#docView").hide();
-    $("#pdfUploaderView").show();
-    $("#flowChartEditorView").hide();
-    $("#docUploaderDiv").hide();
-    $("#docViewDiv").hide();
-}
-
-function loadPdf() {
-    $.ajax({
-        url: '/publisher/assets/process/apis/get_process_pdf?process_pdf_path=/_system/governance/pdf/' + fieldsName + "/" + fieldsVersion,
-        type: 'GET',
-        dataType: 'text',
-        success: function (data) {
-            renderPDF(base64ToUint8Array(data));
-        },
-        error: function () {
-            alertify.error('pdf retrieving error');
-        }
-    });
-}
-
-// Go to previous page
-function goPrevious() {
-    if (pageNum <= 1)
-        return;
-    pageNum--;
-    renderPage(pageNum);
-}
-
-// Go to next page
-function goNext() {
-    if (pageNum >= pdfDoc.numPages)
-        return;
-    pageNum++;
-    renderPage(pageNum);
-}
-
-function renderPDF(url) {
-    pdfDoc = null;
-    pageNum = 1;
-    scale = 1.5;
-    canvas = document.getElementById('the-canvas');
-    ctx = canvas.getContext('2d');
-    PDFJS.disableWorker = true;
-
-    PDFJS.getDocument(url).then(function getPdf(_pdfDoc) {
-        pdfDoc = _pdfDoc;
-        renderPage(pageNum);
-
-    });
-}
-
-// Get page info from document, resize canvas accordingly, and render page
-function renderPage(num) {
-    // Using promise to fetch the page
-    pdfDoc.getPage(num).then(function (page) {
-        var viewport = page.getViewport(scale);
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        // Render PDF page into canvas context
-        var renderContext = {
-            canvasContext: ctx,
-            viewport: viewport
-        };
-        page.render(renderContext);
-    });
-
-    // Update page counters
-    document.getElementById('page_num').textContent = pageNum;
-    document.getElementById('page_count').textContent = pdfDoc.numPages;
-}
-
-function base64ToUint8Array(base64) {//base64 is an encoded byte Array sent from server-side
-
-    var raw = atob(base64); //This is a native function that decodes a base64-encoded string.
-    var uint8Array = new Uint8Array(new ArrayBuffer(raw.length));
-    for (var i = 0; i < raw.length; i++) {
-        uint8Array[i] = raw.charCodeAt(i);
-    }
-    return uint8Array;
-}
-
-function zoom(newScale) {
-    // Using promise to fetch the page
-    pdfDoc.getPage(pageNum).then(function (page) {
-        var viewport = page.getViewport(newScale);
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        // Render PDF page into canvas context
-        var renderContext = {
-            canvasContext: ctx,
-            viewport: viewport
-        };
-        page.render(renderContext);
-    });
-
-}
-
-function zoomIn() {
-    var scaleSelect = document.getElementById("scaleSelect");
-    var last = scaleSelect.options.length - 1;
-
-    if (scaleSelect.selectedIndex < last) {
-        scale = scaleSelect.options[scaleSelect.selectedIndex + 1].value;
-        scaleSelect.selectedIndex += 1;
-        zoom(scale);
-    }
-}
-
-function zoomOut() {
-    var scaleSelect = document.getElementById("scaleSelect");
-    var last = scaleSelect.options.length - 1;
-
-    if (scaleSelect.selectedIndex > 0) {
-        scale = scaleSelect.options[scaleSelect.selectedIndex - 1].value;
-        scaleSelect.selectedIndex -= 1;
-        zoom(scale);
-    }
-}
-
-function zoomSelect() {
-    var scaleSelect = document.getElementById("scaleSelect");
-    scale = scaleSelect.options[scaleSelect.selectedIndex].value;
-    zoom(scale);
 }
 
 //******************************Flowchart Editor***********************************

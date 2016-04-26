@@ -167,9 +167,6 @@ public class ProcessStore {
                     }
                 }
 
-                Element pdfElement = append(doc, rootElement, "pdf", mns);
-                appendText(doc, pdfElement, "path", mns, "NA");
-
                 Element flowchartElement = append(doc, rootElement, "flowchart", mns);
                 appendText(doc, flowchartElement, "path", mns, "NA");
 
@@ -718,7 +715,6 @@ public class ProcessStore {
                     Document processXML = stringToXML(processContent);
                     String processName = processXML.getElementsByTagName("name").item(0).getTextContent();
                     String processVersion = processXML.getElementsByTagName("version").item(0).getTextContent();
-                    String pdfPath = processXML.getElementsByTagName("pdf").item(0).getFirstChild().getTextContent();
                     String flowchartPath = processXML.getElementsByTagName("flowchart").item(0).getFirstChild()
                             .getTextContent();
 
@@ -727,7 +723,6 @@ public class ProcessStore {
                     processJSON.put("processid", processResource.getUUID());
                     processJSON.put("processname", processName);
                     processJSON.put("processversion", processVersion);
-                    processJSON.put("pdfpath", pdfPath);
                     processJSON.put("flowchartpath", flowchartPath);
                     result.put(processJSON);
                 }
@@ -1493,76 +1488,6 @@ public class ProcessStore {
             throw new ProcessCenterException(msg, e);
         }
         return textContent;
-    }
-
-    public String associatePDF(String processName, String processVersion, Object object) {
-
-        String processId = "FAILED TO ADD PDF";
-        log.debug("Creating PDF resource...");
-        try {
-            StreamHostObject s = (StreamHostObject) object;
-            InputStream pdfStream = s.getStream();
-
-            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
-            if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
-
-                // store pdf content as a registry resource
-                Resource pdfContentResource = reg.newResource();
-                byte[] pdfContent = IOUtils.toByteArray(pdfStream);
-
-                pdfContentResource.setContent(pdfContent);
-                pdfContentResource.setMediaType("application/pdf");
-                String pdfContentPath = "pdf/" + processName + "/" + processVersion;
-                String processPath = "processes/" + processName + "/" + processVersion;
-                pdfContentResource.addAspect(processPath);
-                reg.put(pdfContentPath, pdfContentResource);
-                reg.addAssociation(pdfContentPath, processPath, ProcessContentSearchConstants.ASSOCIATION_TYPE);
-                // update process by linking the pdf asset
-
-                Resource processAsset = reg.get(processPath);
-                byte[] processContentBytes = (byte[]) processAsset.getContent();
-                String processContent = new String(processContentBytes);
-                Document pdoc = stringToXML(processContent);
-
-                pdoc.getElementsByTagName("pdf").item(0).getFirstChild().setTextContent(
-		                pdfContentPath);
-                String newProcessContent = xmlToString(pdoc);
-                processAsset.setContent(newProcessContent);
-                reg.put(processPath, processAsset);
-
-                Resource storedProcessAsset = reg.get(processPath);
-                processId = storedProcessAsset.getUUID();
-            }
-        } catch (Exception e) {
-            log.error(e);
-        }
-
-        log.info("successfully added pdf asset");
-        return processId;
-    }
-
-    public String getPDF(String pdfPath) {
-
-        String pdfString = "FAILED TO GET PDF";
-
-        try {
-            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
-            if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                pdfPath = pdfPath.substring("/_system/governance/".length());
-                Resource pdfAsset = reg.get(pdfPath);
-                byte[] pdfContent = (byte[]) pdfAsset.getContent();
-                pdfString = new sun.misc.BASE64Encoder().encode(pdfContent);
-                if (log.isDebugEnabled()) {
-                    log.debug("PDF PATH:" + pdfPath);
-                }
-            }
-        } catch (Exception e) {
-            log.error("Failed to fetch pdf: " + pdfPath);
-        }
-
-        return pdfString;
     }
 
     /**
