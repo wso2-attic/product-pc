@@ -52,24 +52,24 @@
     }
 
 
-    function searchProcessesByTag(currentElement){  //tagName
-
-
+    function searchProcessesByTag(currentElement) {
         var tagName = $(currentElement).attr("id");
         $('#list_tagged_processes').empty();
-
         $("#list_assets_content").hide();
         $("#list_tagged_processes").show();
-
 
         var processArray = processTagsObj[tagName];
 
         for (var process in processArray){
+            var imagePath = "/publisher/themes/default/img/default-thumbnail.png";
+            if(processArray[process].processImage.length !== 0) {
+                imagePath = "/publisher/storage/process/" + processArray[process].processid + "/" + processArray[process].processImage;
+            }
 
             $('#list_tagged_processes').append('<div class="ctrl-wr-asset">'+
             '<div class="itm-ast">'+
             '<a class="ast-img" href="/publisher/assets/process/details/'+processArray[process].processid+'">'+
-            '<img alt="thumbnail" src="/publisher/themes/default/img/default-thumbnail.png" style="top:0px; left:0px; height:100%; width:100%;" class="img-responsive">'+
+            '<img alt="thumbnail" src="'+imagePath+'" style="top:0px; left:0px; height:100%; width:100%;" class="img-responsive">'+
             '</a>'+
             '<div class="ast-desc">'+
             '<a href="/publisher/assets/process/details/'+processArray[process].processid+'">'+
