@@ -817,9 +817,11 @@ public class ProcessStore {
                 conObj.put("successors", successorArray);
                 conObj.put("predecessors", predecessorArray);
 
-                NodeList subprocessElements = ((Element) document.getFirstChild()).getElementsByTagName("subprocess");
+                NodeList subprocessElements = ((Element) document.getFirstChild()).getElementsByTagName(
+                        "subprocess");
                 NodeList successorElements = ((Element) document.getFirstChild()).getElementsByTagName("successor");
-                NodeList predecessorElements = ((Element) document.getFirstChild()).getElementsByTagName("predecessor");
+                NodeList predecessorElements = ((Element) document.getFirstChild()).getElementsByTagName(
+                        "predecessor");
 
                 if (subprocessElements.getLength() != 0) {
                     for (int i = 0; i < subprocessElements.getLength(); i++) {
@@ -1298,7 +1300,8 @@ public class ProcessStore {
 
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
-                Document document = builder.parse(new InputSource(new StringReader(resourceContent)));
+                Document document = builder.parse(
+                        new InputSource(new StringReader(resourceContent)));
 
                 JSONArray documentArray = new JSONArray();
                 NodeList documentElements = ((Element) document.getFirstChild()).getElementsByTagName("document");
@@ -1438,12 +1441,21 @@ public class ProcessStore {
                     Document processXML = stringToXML(processContent);
                     String processName = processXML.getElementsByTagName("name").item(0).getTextContent();
                     String processVersion = processXML.getElementsByTagName("version").item(0).getTextContent();
+                    NodeList processImages = processXML.getElementsByTagName("images");
+
+                    String processImage = "";
+                    if(processImages.getLength() != 0) {
+                        Element imageElement = (Element) processImages.item(0);
+                        processImage = imageElement.getElementsByTagName("thumbnail").item(0).getTextContent();
+                    }
 
                     JSONObject processJSON = new JSONObject();
                     processJSON.put("path", processPath);
                     processJSON.put("processid", processResource.getUUID());
                     processJSON.put("processname", processName);
                     processJSON.put("processversion", processVersion);
+                    processJSON.put("processImage", processImage);
+
                     Tag[] tags = reg.getTags(processPath);
 
                     for (Tag tag : tags) {
