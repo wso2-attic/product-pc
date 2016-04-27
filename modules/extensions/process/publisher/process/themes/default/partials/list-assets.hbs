@@ -60,7 +60,7 @@
 
         var processArray = processTagsObj[tagName];
 
-        for (var process in processArray){
+        for (var process in processArray) {
             var imagePath = "/publisher/themes/default/img/default-thumbnail.png";
             if(processArray[process].processImage.length !== 0) {
                 imagePath = "/publisher/storage/process/" + processArray[process].processid + "/" + processArray[process].processImage;
@@ -202,7 +202,7 @@
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-3 wr-filters">
         <div class="dropdown pull-right">
             <a class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                <span class="sort-asset-info"><span>( <span class="hidden-xs">{{sorting.selected.help}}</span> <i class="fa {{sorting.selected.helpIcon}}"></i> )</span> <img src="{{url "/themes/default/img/icons/ico-sort.png"}}" />
+                <span class="sort-asset-info"><span>( <span class="hidden-xs">{{sorting.selected.help}}</span> <i class="fa {{sorting.selected.helpIcon}}"></i> )</span> <img src="{{url "/themes/default/img/icons/ico-sort.png"}}" /></span>
             </a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" id="ul-sort-assets">
                 {{#each sorting.list}}
