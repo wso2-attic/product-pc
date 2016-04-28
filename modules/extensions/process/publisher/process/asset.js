@@ -77,7 +77,7 @@ asset.server = function (ctx) {
             }, {
                 url: 'upload_flowchart',
                 path: 'upload_flowchart.jag'
-            },{
+            }, {
                 url: 'get_process_flowchart',
                 path: 'get_process_flowchart.jag'
             }, {
@@ -104,6 +104,49 @@ asset.server = function (ctx) {
 };
 
 asset.renderer = function (ctx) {
+    var type = ctx.assetType;
+    var permissionAPI = require('rxt').permissions;
+    var isAssetWithLifecycle = function(asset) {
+        if ((asset.lifecycle) && (asset.lifecycleState)) {
+            return true;
+        }
+        if (log.isDebugEnabled()) {
+            log.debug('asset: ' + asset.name + ' does not have a lifecycle or a state.The lifecycle view will not be rendered for this asset');
+        }
+        return false;
+    };
+
+    var buildListLeftNav = function(page, util) {
+        var navList = util.navList();
+        if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) {
+            navList.push('Add ' + type, 'btn-add-new', util.buildUrl('create'));
+        }
+        return navList.list();
+    };
+
+    var buildDefaultLeftNav = function(page, util) {
+        var id = page.assets.id;
+        var path = page.assets.path;
+        var navList = util.navList();
+        var isLCViewEnabled = ctx.rxtManager.isLifecycleViewEnabled(ctx.assetType);
+        var user = require('store').server.current(session);
+        var username = user? user.username : null;
+
+        navList.push('Overview', 'btn-overview', util.buildUrl('details') + '/' + id);
+        if ((isLCViewEnabled) && (isAssetWithLifecycle(page.assets))) {
+            if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_LIFECYCLE, ctx.assetType, ctx.session)) {
+                navList.push('Life Cycle', 'btn-lifecycle', util.buildUrl('lifecycle') + '/' + id);
+            }
+        }
+        if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
+            navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + id);
+        }
+        return navList.list();
+    };
+
+    var buildAddLeftNav = function(page, util) {
+        return [];
+    };
 
     return {
         details: function (page) {
@@ -153,6 +196,32 @@ asset.renderer = function (ctx) {
                 page.flowchartPath = flowchartPath;
             }else{
                 page.flowchartAvailable = false;
+            }
+        },
+        pageDecorators: {
+            leftNav: function(page) {
+                if (log.isDebugEnabled()) {
+                    log.debug('Using default leftNav');
+                }
+                switch (page.meta.pageName) {
+                    case 'list':
+                        page.leftNav = buildListLeftNav(page, this);
+                        break;
+                    case 'create':
+                        page.leftNav = buildAddLeftNav(page, this);
+                        break;
+                    default:
+                        page.leftNav = buildDefaultLeftNav(page, this);
+                        break;
+                }
+                if (page.leftNav) {
+                    for (var navItem in page.leftNav) {
+                        if (page.leftNav[navItem].name) {
+                            page.leftNav[navItem].id = page.leftNav[navItem].name.replace(/\s/g, "");
+                        }
+                    }
+                }
+                return page;
             }
         }
     };
