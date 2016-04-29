@@ -1,6 +1,6 @@
 <%
 /*
- *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -22,8 +22,5 @@ var log = new Log();
 var ps = new ProcessStore();
 var pName = String(request.getParameter("processName"));
 var pVersion = String(request.getParameter("processVersion"));
-var bpmnEditorDiagramJson = String(request.getParameter("bpmnEditorJson"));
-var processid;
-processid = ps.uploadBpmnDesign(pName, pVersion, bpmnEditorDiagramJson);
-print(processid);
+ps.deletebpmnDiagram(pName, pVersion);
 %>

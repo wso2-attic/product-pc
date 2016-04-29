@@ -196,6 +196,7 @@ var processEditor = function(svg, activities, links) {
         }
     });
 
+    //Show the saved bpmn diagram by taking the relevant json file from the registry
     d3.select("#showBPMNDesign").on("click", function(){
         updateStr = true;
 
@@ -237,6 +238,30 @@ var processEditor = function(svg, activities, links) {
                 alertify.error('bpmn diagram retrieving error');
             }
         });
+
+    });
+    //  deletes the graph
+    d3.select("#deleteBPMNDigram").on("click", function() {
+
+        var name = $("#beProcessName").val();
+        var version = $("#beProcessVersion").val();
+        if (confirm("Do you want to delete this BPMN diagram?") == true) {
+            $.ajax({
+                url: '/publisher/assets/process/apis/delete_bpmnEditorDiagram',
+                type: 'POST',
+                data: {
+                    'processName': name,
+                    'processVersion': version
+                },
+                success: function (response) {
+                    alertify.success("Successfully deleted the BPMN digram.");
+                    bpmnProcessDiagram.deleteGraph(false);
+                },
+                error: function () {
+                    alertify.error('BPMN diagram deleting error');
+                }
+            });
+        }
 
     });
 
