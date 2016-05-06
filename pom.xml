@@ -257,19 +257,19 @@
             <dependency>
                 <groupId>org.json.wso2</groupId>
                 <artifactId>json</artifactId>
-                <version>2.0.0.wso2v1</version>
+                <version>${orbit.version.json}</version>
             </dependency>
 
             <dependency>
                 <groupId>commons-io.wso2</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.0.0.wso2v2</version>
+                <version>${commons-io.wso2.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.jaggeryjs</groupId>
                 <artifactId>org.jaggeryjs.hostobjects.stream</artifactId>
-                <version>0.9.0.ALPHA4.wso2v1</version>
+                <version>${jaggery.version}</version>
             </dependency>
 
             <dependency>
@@ -281,13 +281,13 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.registry.core</artifactId>
-                <version>4.2.0</version>
+                <version>${carbon.kernel.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon.governance</groupId>
                 <artifactId>org.wso2.carbon.governance.api</artifactId>
-                <version>4.5.8</version>
+                <version>${carbon.governance.version}</version>
             </dependency>
 
             <!-- Dependencies taken from ES -->
@@ -351,11 +351,6 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.json</groupId>
-                <artifactId>json</artifactId>
-                <version>${json.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -553,11 +548,6 @@
                 <version>${log4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${commons-io.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
                 <version>${testng.version}</version>
@@ -703,27 +693,25 @@
         <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <carbon.kernel.version>4.4.1</carbon.kernel.version>
-        <carbon.social.version>2.3.8</carbon.social.version>
-        <carbon.store.version>2.3.8</carbon.store.version>
+        <carbon.kernel.version>4.4.5</carbon.kernel.version>
+        <carbon.social.version>2.3.11-SNAPSHOT</carbon.social.version>
+        <carbon.store.version>2.3.11-SNAPSHOT</carbon.store.version>
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
-        <!--<product.es.version>2.0.1-SNAPSHOT</product.es.version>-->
+        <product.es.version>2.1.0-SNAPSHOT</product.es.version>
 
-        <test.framework.version>4.4.2</test.framework.version>
+        <test.framework.version>4.4.3</test.framework.version>
         <automation.utils.version>4.4.2</automation.utils.version>
         <ciphertool.version>1.0.0-wso2v3</ciphertool.version>
 
         <!--repo versions-->
-        <carbon.commons.version>4.4.6</carbon.commons.version>
-        <carbon.registry.version>4.4.8</carbon.registry.version>
-        <carbon.governance.version>4.5.8</carbon.governance.version>
-        <carbon.deployment.version>4.5.2</carbon.deployment.version>
-        <carbon.identity.version>4.5.6</carbon.identity.version>
-        <carbon.multitenancy.version>4.4.1</carbon.multitenancy.version>
+        <carbon.commons.version>4.5.2</carbon.commons.version>
+        <carbon.registry.version>4.5.5-SNAPSHOT</carbon.registry.version>
+        <carbon.governance.version>4.6.4-SNAPSHOT</carbon.governance.version>
+        <carbon.deployment.version>4.6.1</carbon.deployment.version>
+        <carbon.identity.version>5.0.8</carbon.identity.version>
+        <carbon.multitenancy.version>4.5.1</carbon.multitenancy.version>
 
         <operadriver.version>0.8.1</operadriver.version>
-
-        <commons-httpclient.version>3.1</commons-httpclient.version>
 
         <maven.scrplugin.version>1.7.2</maven.scrplugin.version>
         <maven.wagon.ssh.version>2.1</maven.wagon.ssh.version>
@@ -747,20 +735,19 @@
         <opensaml2.wso2.version>2.4.1.wso2v1</opensaml2.wso2.version>
         <commons-codec.osgi.version>1.4.0.wso2v1</commons-codec.osgi.version>
         <gson.version>2.2.4</gson.version>
-        <json.version>20070829</json.version>
         <junit.version>3.8.1</junit.version>
         <el.api.version>2.2</el.api.version>
         <h2.wso2.version>1.2.140.wso2v3</h2.wso2.version>
 
-        <jaggery.feature.version>0.11.1</jaggery.feature.version>
-        <caramel.feature.version>1.4.0</caramel.feature.version>
-        <handlebars.feature.version>1.4.0</handlebars.feature.version>
-        <markdown.feature.version>1.4.0</markdown.feature.version>
-        <carbon.feature.version>1.4.0</carbon.feature.version>
-        <process.feature.version>1.4.0</process.feature.version>
-        <uuid.feature.version>1.4.0</uuid.feature.version>
-        <sso.feature.version>1.4.0</sso.feature.version>
-        <jaggery-test.feature.version>1.4.0</jaggery-test.feature.version>
+        <jaggery.feature.version>0.12.3</jaggery.feature.version>
+        <caramel.feature.version>1.5.3-SNAPSHOT</caramel.feature.version>
+        <handlebars.feature.version>1.5.3-SNAPSHOT</handlebars.feature.version>
+        <markdown.feature.version>1.5.3-SNAPSHOT</markdown.feature.version>
+        <carbon.feature.version>1.5.3-SNAPSHOT</carbon.feature.version>
+        <process.feature.version>1.5.3-SNAPSHOT</process.feature.version>
+        <uuid.feature.version>1.5.3-SNAPSHOT</uuid.feature.version>
+        <sso.feature.version>1.5.3-SNAPSHOT</sso.feature.version>
+        <jaggery-test.feature.version>1.5.3-SNAPSHOT</jaggery-test.feature.version>
         <slf4j.wso2.version>1.5.10.wso2v1</slf4j.wso2.version>
         <axis2-transports.wso2.version>1.1.0-wso2v12</axis2-transports.wso2.version>
         <sso.hostobjects.version>1.0.1</sso.hostobjects.version>
@@ -770,7 +757,26 @@
         <javax.mail.version>1.4.4</javax.mail.version>
         <log4j.version>1.2.17</log4j.version>
         <commons-io.version>2.2</commons-io.version>
+        <commons-io.wso2.version>2.0.0.wso2v2</commons-io.wso2.version>
         <google.guava.version>16.0.1</google.guava.version>
         <testng.version>6.8.5</testng.version>
+        <carbon.metrics.version>1.2.1</carbon.metrics.version>
+
+
+        <commons-httpclient.version>3.1</commons-httpclient.version>
+
+        <!-- Activiti Version -->
+
+        <org.activiti.version>5.16.3.wso2v2</org.activiti.version>
+        <!-- JSON Version -->
+        <orbit.version.json>1.0.0.wso2v1</orbit.version.json>
+
+        <!--Jaggery -->
+        <jaggery.version>0.12.2</jaggery.version>
+        <!--Analytics-->
+        <carbon.analytics.common.version>5.0.8</carbon.analytics.common.version>
+        <version.commons.logging>1.2</version.commons.logging>
+        <orbit.version.commons.io>2.4.0.wso2v1</orbit.version.commons.io>
+        <carbon.kernel.registry.imp.pkg.version>[1.0.1, 2.0.0)</carbon.kernel.registry.imp.pkg.version>
     </properties>
 </project>

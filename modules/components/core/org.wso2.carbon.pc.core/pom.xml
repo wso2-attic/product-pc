@@ -54,6 +54,16 @@
                             org.wso2.carbon.pc.core;version=${project.version}
                         </Export-Package>
                         <Import-Package>
+                            org.wso2.carbon.registry.indexing.*; version="4.5.5",
+                            org.wso2.carbon.registry.common; version="0.0.0",
+                            org.wso2.carbon.registry.core.*; version="${carbon.kernel.registry.imp.pkg.version}",
+                            org.wso2.carbon.governance.api.util; version="0.0.0",
+                            org.wso2.carbon.context; version="${carbon.kernel.version}",
+                            org.jaggeryjs.hostobjects.stream; version="${jaggery.version}",
+                            org.apache.commons.logging; version="${version.commons.logging}",
+                            org.apache.commons.io; version="2.4.0",
+                            org.apache.commons.codec.binary; version="1.4.0",
+                            org.activiti.*; version="${org.activiti.version}",
                             *;resolution:=optional
                         </Import-Package>
                     </instructions>
