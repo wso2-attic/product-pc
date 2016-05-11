@@ -20,17 +20,9 @@ import org.apache.wink.client.ClientResponse;
 import org.json.JSONException;
 
 import javax.ws.rs.core.MediaType;
-import java.util.HashMap;
 import java.util.Map;
 
-public class PublisherTestBaseTest extends PCIntegrationBaseTest {
-    Map<String, String> queryParamMap;
-    Map<String, String> headerMap;
-
-    public PublisherTestBaseTest() {
-        queryParamMap = new HashMap<String, String>();
-        headerMap = new HashMap<String, String>();
-    }
+public class TestUtils {
 
     /**
      * Authenticate and return jSessionId
@@ -42,16 +34,19 @@ public class PublisherTestBaseTest extends PCIntegrationBaseTest {
      * @return ClientResponse
      * @throws JSONException
      */
-    public ClientResponse authenticate(String url,
+    public static ClientResponse authenticate(String url,
                                        GenericRestClient genericRestClient,
                                        String username,
-                                       String password) throws JSONException {
+                                       String password,
+                                       Map<String, String> queryParamMap,
+                                       Map<String, String> headerMap) throws JSONException {
         ClientResponse response =
                 genericRestClient.geneticRestRequestPost(url + "/authenticate/",
                                                          MediaType.APPLICATION_FORM_URLENCODED,
                                                          MediaType.APPLICATION_JSON,
-                                                         "username=" + username + "&password=" + password
-                        , queryParamMap, headerMap, null);
+                                                         "username=" + username + "&password=" +
+                                                                 password, queryParamMap, headerMap,
+                                                          null);
         return response;
     }
 }

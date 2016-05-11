@@ -26,7 +26,8 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.pc.integration.test.utils.base.PublisherTestBaseTest;
+import org.wso2.pc.integration.test.utils.base.PCIntegrationBaseTest;
+import org.wso2.pc.integration.test.utils.base.TestUtils;
 import org.wso2.pc.integration.test.utils.base.GenericRestClient;
 
 import javax.xml.xpath.XPathExpressionException;
@@ -36,16 +37,16 @@ import java.util.Map;
 /**
  * This class tests the login functionality of publisher
  */
-public class PublisherLoginTestCase extends PublisherTestBaseTest {
+public class PublisherLoginTestCase extends PCIntegrationBaseTest {
 
     private static final Log log = LogFactory.getLog(PublisherLoginTestCase.class);
     private TestUserMode userMode;
     String jSessionId;
     GenericRestClient genericRestClient;
     Map<String, String> headerMap;
+    Map<String, String> queryMap;
     String publisherUrl;
     String publisherUrlForVersion;
-    String resourcePath;
 
     @Factory(dataProvider = "userModeProvider")
     public PublisherLoginTestCase(TestUserMode userMode) {
@@ -57,18 +58,22 @@ public class PublisherLoginTestCase extends PublisherTestBaseTest {
         super.init(userMode);
         genericRestClient = new GenericRestClient();
         headerMap = new HashMap<>();
-        publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services", "publisher/apis");
-        publisherUrlForVersion = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
-                                                                                                  "publisher/assets");
+        queryMap = new HashMap<>();
+        publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
+                "publisher/apis");
+        publisherUrlForVersion = automationContext.getContextUrls().getSecureServiceUrl().
+                replace("services", "publisher/assets");
     }
 
     @Test(groups = {"wso2.pc"}, description = "Login to publisher")
     public void loginPublisher() throws JSONException, XPathExpressionException {
         JSONObject objSessionPublisher =
-                new JSONObject(authenticate(publisherUrl, genericRestClient,
-                                            automationContext.getSuperTenant().getTenantAdmin().getUserName(),
-                                            automationContext.getSuperTenant().getTenantAdmin().getPassword())
-                                       .getEntity(String.class));
+                new JSONObject(TestUtils.authenticate(
+                        publisherUrl, genericRestClient,
+                        automationContext.getSuperTenant().getTenantAdmin().getUserName(),
+                        automationContext.getSuperTenant().getTenantAdmin().getPassword(),
+                        queryMap,
+                        headerMap).getEntity(String.class));
         jSessionId = objSessionPublisher.getJSONObject("data").getString("sessionId");
         Assert.assertNotNull(jSessionId, "Invalid JSessionID received.Cannot login.");
     }
