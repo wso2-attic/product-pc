@@ -1,20 +1,19 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *   Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
  */
-package org.wso2.pc.integration.tests;
+package org.wso2.pc.integration.tests.publisher;
 
 import org.apache.wink.client.ClientResponse;
 import org.json.JSONException;
@@ -30,6 +29,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.pc.integration.test.utils.base.GenericRestClient;
 import org.wso2.pc.integration.test.utils.base.PCIntegrationBaseTest;
+import org.wso2.pc.integration.test.utils.base.PCIntegrationConstants;
 import org.wso2.pc.integration.test.utils.base.TestUtils;
 
 import javax.ws.rs.core.MediaType;
@@ -38,7 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class PublisherAddProcessTestCase extends PCIntegrationBaseTest {
+public class AddProcessTestCase extends PCIntegrationBaseTest {
 
     String cookieHeader;
     String publisherUrl;
@@ -72,16 +72,15 @@ public class PublisherAddProcessTestCase extends PCIntegrationBaseTest {
 
         String requestBody = readFile(resourcePath);
         queryMap.put("processInfo", URLEncoder.encode(requestBody, "UTF-8"));
-        publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
-                "publisher/assets/process/apis/create_process");
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherUrl,
-                MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, requestBody, queryMap,
-                headerMap, cookieHeader);
+
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+                "create_process" , MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
+                requestBody, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
 
-        Assert.assertTrue(response.getStatusCode() == 200, "Expected 200 OK, Received " +
-                response.getStatusCode());
+        Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
+                "Expected 200 OK, Received " + response.getStatusCode());
         Assert.assertTrue(responseObject.get("error").toString().equals("false"),
                 "Error while creating the process");
     }
