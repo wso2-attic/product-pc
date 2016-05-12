@@ -698,11 +698,11 @@
         <!-- Files of PC starts from here -->
 
         <!-- Process rxt -->
-        <file>
+        <!--file>
             <source>../extensions/conf/sso/login.jag</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/views</outputDirectory>
             <fileMode>644</fileMode>
-        </file>
+        </file-->
 
         <file>
             <source>../extensions/process/process.rxt</source>
@@ -710,9 +710,14 @@
             <fileMode>644</fileMode>
         </file>
 
-        <file>
+        <!--file>
             <source>../extensions/conf/jaggery.conf</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso</outputDirectory>
+            <fileMode>644</fileMode>
+        </file-->
+        <file>
+            <source>../extensions/main/process-center/controllers/assets-router.jag</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/controllers</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
@@ -720,11 +725,11 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-        <file>
+        <!--file>
             <source>../extensions/conf/decorators/page-decorators.js</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules</outputDirectory>
             <fileMode>644</fileMode>
-        </file>
+        </file-->
         <file>
             <source>../extensions/process/store/process/themes/store/partials/navigation.hbs</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
