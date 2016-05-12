@@ -66,7 +66,6 @@ public class PCIntegrationBaseTest {
         userInfo = automationContext.getContextTenant().getContextUser();
     }
 
-
     protected void initPublisher(String productGroupName, String instanceName,
                                  TestUserMode userMode, String userKey)
             throws XPathExpressionException {
@@ -101,7 +100,4 @@ public class PCIntegrationBaseTest {
         String fileData=new String(Files.readAllBytes(Paths.get(filePath)));
         return fileData;
     }
-
 }
-
-
