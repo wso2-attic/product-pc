@@ -377,6 +377,13 @@
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/assets
             </outputDirectory>
+            <excludes>
+                <exclude>**/partials/navigation.hbs</exclude>
+                <exclude>**/partials/header.hbs</exclude>
+                <exclude>**/partials/top_assets.hbs</exclude>
+                <exclude>**/partials/sso-auth.hbs</exclude>
+                <exclude>**/partials/product-title.hbs</exclude>
+            </excludes>
         </fileSet>
         <!-- PC copy configs for store and global -->
 
@@ -715,52 +722,22 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso</outputDirectory>
             <fileMode>644</fileMode>
         </file-->
-        <file>
-            <source>../extensions/main/process-center/controllers/assets-router.jag</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/controllers</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../extensions/process/store/process/themes/store/partials/product-title.hbs</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
         <!--file>
             <source>../extensions/conf/decorators/page-decorators.js</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules</outputDirectory>
             <fileMode>644</fileMode>
         </file-->
         <file>
-            <source>../extensions/process/store/process/themes/store/partials/navigation.hbs</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../extensions/process/store/process/themes/store/partials/advance-search-navigation.hbs</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/app/store-common/themes/store/partials</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../extensions/process/store/process/themes/store/partials/header.hbs</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../extensions/process/store/process/themes/store/partials/top_assets.hbs</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../extensions/process/store/process/themes/store/partials/sso-auth.hbs</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
             <source>../extensions/process/publisher/default/asset.js</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets/default</outputDirectory>
             <fileMode>644</fileMode>
         </file>
 
+        <file>
+            <source>../extensions/main/process-center/controllers/assets-router.jag</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/controllers</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
         <!-- Files of PC ends from here -->
 
     </files>

@@ -246,13 +246,19 @@
             <dependency>
                 <groupId>org.activiti</groupId>
                 <artifactId>activiti-bpmn-converter</artifactId>
-                <version>5.16.1</version>
+                <version>${org.activiti.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.activiti</groupId>
                 <artifactId>activiti-image-generator</artifactId>
-                <version>5.16.1</version>
+                <version>${org.activiti.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.activiti</groupId>
+                <artifactId>activiti-bpmn-model</artifactId>
+                <version>${org.activiti.version}</version>
             </dependency>
 
             <dependency>
@@ -819,8 +825,8 @@
         <commons-httpclient.version>3.1</commons-httpclient.version>
 
         <!-- Activiti Version -->
-
-        <org.activiti.version>5.16.3.wso2v2</org.activiti.version>
+        <org.activiti.version>5.19.0</org.activiti.version>
+        <org.activiti.wso2.version>5.19.0.wso2v2</org.activiti.wso2.version>
         <!-- JSON Version -->
         <orbit.version.json>1.0.0.wso2v1</orbit.version.json>
 

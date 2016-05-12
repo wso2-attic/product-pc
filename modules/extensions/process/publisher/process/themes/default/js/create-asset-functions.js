@@ -121,7 +121,7 @@ function saveProcess(currentElement) {
             var imageElement = $("#images_thumbnail");
             if (imageElement.val().length != 0) {
                 var ext = imageElement.val().split('.').pop().toLowerCase();
-                if ($.inArray(ext, ['png', 'jpeg']) == -1) {
+                if ($.inArray(ext, ['png', 'jpeg','jpg','gif','ico']) == -1) {
                     alertify.error('invalid image extension!');
                     return;
                 }
