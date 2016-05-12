@@ -11,9 +11,9 @@
   "processTags":"",
   "processDescription":"",
   "processVersion":"1.0",
-  "processName":"malintha",
+  "processName":"TestProcess1",
   "image":{
 
   },
-  "processOwner":"adikari"
+  "processOwner":"TestOwner1"
 }

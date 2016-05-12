@@ -38,7 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class PublisherAddProcessTestCase extends PCIntegrationBaseTest {
+public class AddProcessTestCase extends PCIntegrationBaseTest {
 
     String cookieHeader;
     String publisherUrl;
@@ -72,11 +72,10 @@ public class PublisherAddProcessTestCase extends PCIntegrationBaseTest {
 
         String requestBody = readFile(resourcePath);
         queryMap.put("processInfo", URLEncoder.encode(requestBody, "UTF-8"));
-        publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
-                "publisher/assets/process/apis/create_process");
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherUrl,
-                MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, requestBody, queryMap,
-                headerMap, cookieHeader);
+
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+                "create_process" , MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
+                requestBody, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
 

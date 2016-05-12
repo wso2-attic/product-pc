@@ -36,9 +36,9 @@ import java.util.Map;
 /**
  * This class tests the login functionality of publisher
  */
-public class PublisherLoginTestCase extends PCIntegrationBaseTest {
+public class LoginTestCase extends PCIntegrationBaseTest {
 
-    private static final Log log = LogFactory.getLog(PublisherLoginTestCase.class);
+    private static final Log log = LogFactory.getLog(LoginTestCase.class);
     private TestUserMode userMode;
     String jSessionId;
     GenericRestClient genericRestClient;
@@ -48,7 +48,7 @@ public class PublisherLoginTestCase extends PCIntegrationBaseTest {
     String publisherUrlForVersion;
 
     @Factory(dataProvider = "userModeProvider")
-    public PublisherLoginTestCase(TestUserMode userMode) {
+    public LoginTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 

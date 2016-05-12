@@ -27,8 +27,9 @@
 
     <test name="Process-Tests" preserve-order="true" verbose="2">
         <classes>
-            <class name="org.wso2.pc.integration.tests.publisher.PublisherLoginTestCase"/>
-            <class name="org.wso2.pc.integration.tests.publisher.PublisherAddProcessTestCase"/>
+            <class name="org.wso2.pc.integration.tests.publisher.LoginTestCase"/>
+            <class name="org.wso2.pc.integration.tests.publisher.AddProcessTestCase"/>
+            <class name="org.wso2.pc.integration.tests.publisher.ProcessTextTestCase"/>
         </classes>
     </test>
 
