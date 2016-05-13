@@ -732,8 +732,7 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets/default</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-
-        <file>
+ 	 <file>
             <source>../extensions/main/process-center/controllers/assets-router.jag</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/controllers</outputDirectory>
             <fileMode>644</fileMode>
