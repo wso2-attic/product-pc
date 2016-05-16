@@ -30,6 +30,7 @@
             <class name="org.wso2.pc.integration.tests.publisher.LoginTestCase"/>
             <class name="org.wso2.pc.integration.tests.publisher.AddProcessTestCase"/>
             <class name="org.wso2.pc.integration.tests.publisher.ProcessTextTestCase"/>
+            <class name="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase"/>
         </classes>
     </test>
 

@@ -18,8 +18,12 @@ package org.wso2.pc.integration.test.utils.base;
 
 import org.apache.wink.client.ClientResponse;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.ws.rs.core.MediaType;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 
 public class TestUtils {
@@ -48,5 +52,21 @@ public class TestUtils {
                                                                  password, queryParamMap, headerMap,
                                                           null);
         return response;
+    }
+
+    public static String addProcess(String requestBody,
+                                    String cookieHeader,
+                                    String publisherAPIBaseUrl)
+            throws UnsupportedEncodingException, JSONException {
+        GenericRestClient genericRestClient = new GenericRestClient();
+        HashMap<String, String> queryMap = new HashMap<>();
+        HashMap<String, String> headerMap = new HashMap<>();
+        queryMap.put("processInfo", URLEncoder.encode(requestBody, "UTF-8"));
+
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+                        "create_process" , MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, null,
+                queryMap, headerMap, cookieHeader);
+        JSONObject responseObject = new JSONObject(response.getEntity(String.class));
+        return responseObject.get("content").toString();
     }
 }
