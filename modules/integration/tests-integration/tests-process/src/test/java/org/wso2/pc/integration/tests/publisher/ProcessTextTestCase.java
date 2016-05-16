@@ -68,7 +68,7 @@ public class ProcessTextTestCase extends PCIntegrationBaseTest {
                         headerMap).getEntity(String.class));
         jSessionId = objSessionPublisher.getJSONObject("data").getString("sessionId");
         cookieHeader = "JSESSIONID=" + jSessionId;
-        queryMap.put("processInfo", URLEncoder.encode(requestBody, "UTF-8"));
+        queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
         genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl + "create_process",
                 MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, requestBody, queryMap,

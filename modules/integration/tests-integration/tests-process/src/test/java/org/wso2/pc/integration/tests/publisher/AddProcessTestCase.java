@@ -71,7 +71,7 @@ public class AddProcessTestCase extends PCIntegrationBaseTest {
     public void addProcess() throws IOException, XPathExpressionException, JSONException {
 
         String requestBody = readFile(resourcePath);
-        queryMap.put("processInfo", URLEncoder.encode(requestBody, "UTF-8"));
+        queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
                 "create_process" , MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,

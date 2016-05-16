@@ -117,7 +117,8 @@ public class InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
                 "Error while creating process with associate processes");
     }
 
-    @Test(groups = {"org.wso2.pc"}, description = "Subprocess test case")
+    @Test(groups = {"org.wso2.pc"}, description = "Subprocess test case",
+            dependsOnMethods = "addProcess")
     public void subProcessTest() throws Exception {
         Element subProcessElement = getAssociateProcess("subprocess");
         Assert.assertNotNull(subProcessElement, "Subprocess doesn't exist");
@@ -125,7 +126,7 @@ public class InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
                 getTextContent(), subProcessID, "Subprocess error");
     }
 
-    @Test(groups = {"org.wso2.pc"}, description = "Successor Process test case")
+    @Test(groups = {"org.wso2.pc"}, description = "Successor Process test case" )
     public void successorProcessTest() throws Exception {
         Element successorProcessElement = getAssociateProcess("successor");
         Assert.assertNotNull(successorProcessElement,"Successor Process doesn't exist");

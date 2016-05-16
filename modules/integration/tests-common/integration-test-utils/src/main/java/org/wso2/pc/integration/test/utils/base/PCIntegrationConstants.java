@@ -23,4 +23,5 @@ public class PCIntegrationConstants {
     public static final String PROCESS_NAME = "processName";
     public static final String PROCESS_VERSION = "processVersion";
     public static final String PROCESS_TEXT = "processText";
+    public static final String UTF_8 = "UTF-8";
 }

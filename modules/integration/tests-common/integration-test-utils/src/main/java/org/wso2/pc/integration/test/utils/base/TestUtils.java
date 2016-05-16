@@ -61,7 +61,7 @@ public class TestUtils {
         GenericRestClient genericRestClient = new GenericRestClient();
         HashMap<String, String> queryMap = new HashMap<>();
         HashMap<String, String> headerMap = new HashMap<>();
-        queryMap.put("processInfo", URLEncoder.encode(requestBody, "UTF-8"));
+        queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
                         "create_process" , MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, null,
