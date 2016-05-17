@@ -48,6 +48,7 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
     private String cookieHeader;
     private RegistryProviderUtil registryProviderUtil = new RegistryProviderUtil();
     private static final String PROCESS_NAME="TestProcess1";
+    private static final String PROCESS_VERSION="1.0";
 
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
@@ -94,9 +95,9 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
                 + File.separator + "userTaskProcess.bpmn20.xml";
         String url = publisherAPIBaseUrl + "upload_bpmn";
         PostMethod httpMethod = ArtifactUploadUtil.uploadContentTypeAssets(resourcePath1,
-                "1.0.0", "userTaskProcess.bpmn20.xml", "BPMN", cookieHeader, url);
-        Assert.assertTrue(httpMethod.getStatusCode() == 200,
-                "Wrong status code ,Expected 200 ,Received " + httpMethod.getStatusCode());
+                PROCESS_NAME, PROCESS_VERSION, "BPMN", cookieHeader, url);
+        Assert.assertTrue(httpMethod.getStatusCode() == 302,
+                "Wrong status code ,Expected 302 ,Received " + httpMethod.getStatusCode());
     }
 
     @Test(groups = {"org.wso2.pc"}, description = "Checking associated BPMN",
