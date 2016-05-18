@@ -24,4 +24,6 @@ public class PCIntegrationConstants {
     public static final String PROCESS_VERSION = "processVersion";
     public static final String PROCESS_TEXT = "processText";
     public static final String UTF_8 = "UTF-8";
+    public static final String PDF_EXTENSION = "pdf";
+    public static final String DOC_CONTENT = "doccontent";
 }

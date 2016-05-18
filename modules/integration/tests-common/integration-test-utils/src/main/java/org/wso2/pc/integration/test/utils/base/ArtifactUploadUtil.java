@@ -29,7 +29,7 @@ import java.io.IOException;
 public class ArtifactUploadUtil {
 
     /**
-     * This method uploads a artifacts
+     * This method uploads a BPMN
      *
      * @param filePath       The absolute path of the file
      * @param processName    Process name
@@ -38,12 +38,12 @@ public class ArtifactUploadUtil {
      * @param cookieHeader   Session cookie
      * @throws IOException
      */
-        public static PostMethod uploadContentTypeAssets(String filePath,
-                                                         String processName,
-                                                         String processVersion,
-                                                         String shortName,
-                                                         String cookieHeader,
-                                                         String apiUrl)
+        public static PostMethod uploadBPMN(String filePath,
+                                            String processName,
+                                            String processVersion,
+                                            String shortName,
+                                            String cookieHeader,
+                                            String apiUrl)
             throws IOException {
 
         File file = new File(filePath);
@@ -67,5 +67,62 @@ public class ArtifactUploadUtil {
         return httpMethod;
     }
 
+    /**
+     * This method uploads a document
+     *
+     * @param filePath       The absolute path of the file
+     * @param documentName   document name
+     * @param documentSummary summary of the document
+     * @param documentExtension extension of the document file
+     * @param documentURL    document URL
+     * @param processName    Process name
+     * @param processVersion Process version
+     * @param cookieHeader   Session cookie
+     * @throws IOException
+     */
+    public static PostMethod uploadDocument(String filePath,
+                                        String documentName,
+                                        String documentSummary,
+                                        String documentExtension,
+                                        String documentURL,
+                                        String optionsRadios1,
+                                        String processName,
+                                        String processVersion,
+                                        String cookieHeader,
+                                        String apiUrl)
+            throws IOException {
 
+        File file = new File(filePath);
+        FilePart fp = new FilePart("PDF" + "_file", file);
+        fp.setContentType("application/pdf");
+        StringPart sp1 = new StringPart("docName", documentName);
+        sp1.setContentType(MediaType.TEXT_PLAIN);
+        StringPart sp2 = new StringPart("summaryDoc", documentSummary);
+        sp2.setContentType(MediaType.TEXT_PLAIN);
+        StringPart sp3 = new StringPart("docProcessName", processName);
+        sp3.setContentType(MediaType.TEXT_PLAIN);
+        StringPart sp4 = new StringPart("docProcessVersion", processVersion);
+        sp4.setContentType(MediaType.TEXT_PLAIN);
+        StringPart sp5 = new StringPart("docExtension", documentExtension);
+        sp5.setContentType(MediaType.TEXT_PLAIN);
+        StringPart sp6 = new StringPart("docUrl", documentURL);
+        sp6.setContentType(MediaType.TEXT_PLAIN);
+        StringPart sp7 = new StringPart("docUrl", documentURL);
+        sp7.setContentType(MediaType.TEXT_PLAIN);
+        StringPart sp8 = new StringPart("optionsRadios1", optionsRadios1);
+        sp8.setContentType(MediaType.TEXT_PLAIN);
+
+        //Set file parts and string parts together
+        final Part[] part = {fp, sp1, sp2,sp3,sp4,sp5,sp6,sp7,sp8};
+
+        HttpClient httpClient = new HttpClient();
+        PostMethod httpMethod = new PostMethod(apiUrl);
+
+        httpMethod.addRequestHeader("Cookie", cookieHeader);
+        httpMethod.addRequestHeader("Accept", MediaType.APPLICATION_JSON);
+        httpMethod.setRequestEntity(
+                new MultipartRequestEntity(part, httpMethod.getParams()));
+        httpClient.executeMethod(httpMethod);
+        return httpMethod;
+    }
 }
