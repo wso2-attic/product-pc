@@ -32,23 +32,23 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
-public class AssociatePDFTestCase extends PCIntegrationBaseTest{
+public class AssociateMSWordDocTestCase extends PCIntegrationBaseTest{
 
     private String cookieHeader;
     private GenericRestClient genericRestClient;
     private HashMap<String, String> queryMap;
     private HashMap<String, String> headerMap;
     private String resourcePath;
-    private static final String ASSOCIATED_PDF_NAME = "TestPDFDocument";
-    private static final String ASSOCIATED_PDF_SUMMARY = "TestPDFSummary";
+    private static final String ASSOCIATED_MSDOC_NAME = "TestMSDocument";
+    private static final String ASSOCIATES_MSDOC_SUMMARY = "TestMSDoc Summary";
     private static final String PROCESS_NAME = "TestProcess1";
     private static final String PROCESS_VERSION = "1.0";
 
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        String publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
-                replace("services", "publisher/apis");
+        String publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
+                "publisher/apis");
         genericRestClient = new GenericRestClient();
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
@@ -82,30 +82,30 @@ public class AssociatePDFTestCase extends PCIntegrationBaseTest{
 
     @Test(groups = {"org.wso2.pc"}, description = "Associating PDF to the process",
             dependsOnMethods = "addProcess")
-    public void uploadPDF() throws IOException {
+    public void uploadMSDoc() throws IOException {
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
-                File.separator + "PDF" + File.separator + "TestFile.pdf";
+                File.separator + "MSDoc" + File.separator + "TestMSDoc.doc";
         String url = publisherAPIBaseUrl + "upload_documents";
-        PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_PDF_NAME,
-                ASSOCIATED_PDF_SUMMARY,PCIntegrationConstants.PDF_EXTENSION,"NA","file",
-                "TestProcess1","1.0",cookieHeader,url,PCIntegrationConstants.APPLICATION_PDF_TYPE);
+        PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_MSDOC_NAME,
+                ASSOCIATES_MSDOC_SUMMARY,PCIntegrationConstants.MSDOC_EXTENSION,"NA","file",
+                "TestProcess1","1.0",cookieHeader,url,PCIntegrationConstants.APPLICATION_MSWORD_TYPE);
         Assert.assertTrue(httpMethod.getStatusCode() == 302,
                 "Wrong status code ,Expected 302 ,Received " + httpMethod.getStatusCode());
     }
 
     @Test(groups = {"org.wso2.pc"}, description = "Download associated PDF document",
-            dependsOnMethods = "uploadPDF")
-    public void checkPDF() throws JSONException {
+            dependsOnMethods = "uploadMSDoc")
+    public void checkMSDoc() throws JSONException {
 
         queryMap.put("process_doc_path",String.format("%s/%s/%s/%s.%s",
                 PCIntegrationConstants.DOC_CONTENT,
                 PROCESS_NAME,PROCESS_VERSION,
-                ASSOCIATED_PDF_NAME,
-                PCIntegrationConstants.PDF_EXTENSION));
+                ASSOCIATED_MSDOC_NAME,
+                PCIntegrationConstants.MSDOC_EXTENSION));
         ClientResponse response = genericRestClient.geneticRestRequestGet(publisherAPIBaseUrl +
-                        "download_document",queryMap,headerMap,cookieHeader);
+                "download_document",queryMap,headerMap,cookieHeader);
         Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().
-                equals("false"),"Associated PDF doesn't exit");
+                equals("false"),"Associated MSDoc doesn't exit");
     }
 }
