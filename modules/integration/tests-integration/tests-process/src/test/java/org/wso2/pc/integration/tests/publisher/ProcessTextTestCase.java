@@ -37,36 +37,33 @@ import java.util.HashMap;
 
 public class ProcessTextTestCase extends PCIntegrationBaseTest {
 
-    String publisherUrl;
-    String cookieHeader;
-    GenericRestClient genericRestClient;
-    String jSessionId;
-    HashMap<String, String> queryMap;
-    HashMap<String, String> headerMap;
-    String resourcePath;
-    String requestBody;
+    private String cookieHeader;
+    private GenericRestClient genericRestClient;
+    private HashMap<String, String> queryMap;
+    private HashMap<String, String> headerMap;
+    private String requestBody;
 
-    String processName = "TestProcess1";
-    String processVersion = "1.0";
-    String processText = "This is a test text of the process";
+    private String processName = "TestProcess1";
+    private String processVersion = "1.0";
+    private String processText = "This is a test text of the process";
 
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
-                "publisher/apis");
+        String publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
+                replace("services", "publisher/apis");
         genericRestClient = new GenericRestClient();
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
-        resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                + "json" + File.separator + "create-process.json";
+        String resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
+                File.separator + "json" + File.separator + "create-process.json";
         requestBody = readFile(resourcePath);
         JSONObject objSessionPublisher =
                 new JSONObject(TestUtils.authenticate(publisherUrl, genericRestClient,
                         automationContext.getSuperTenant().getTenantAdmin().getUserName(),
                         automationContext.getSuperTenant().getTenantAdmin().getPassword(), queryMap,
                         headerMap).getEntity(String.class));
-        jSessionId = objSessionPublisher.getJSONObject("data").getString("sessionId");
+        String jSessionId = objSessionPublisher.getJSONObject("data").getString("sessionId");
         cookieHeader = "JSESSIONID=" + jSessionId;
         queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
