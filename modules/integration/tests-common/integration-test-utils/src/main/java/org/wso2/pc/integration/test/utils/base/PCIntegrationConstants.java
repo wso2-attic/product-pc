@@ -25,5 +25,8 @@ public class PCIntegrationConstants {
     public static final String PROCESS_TEXT = "processText";
     public static final String UTF_8 = "UTF-8";
     public static final String PDF_EXTENSION = "pdf";
+    public static final String MSDOC_EXTENSION = "doc";
     public static final String DOC_CONTENT = "doccontent";
+    public static final String APPLICATION_PDF_TYPE = "application/pdf";
+    public static final String APPLICATION_MSWORD_TYPE = "application/msword";
 }
