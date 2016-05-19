@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -13,14 +13,12 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+
 package org.wso2.pc.integration.tests.publisher;
 
 import org.apache.wink.client.ClientResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.URLEncoder;
-
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
@@ -36,15 +34,18 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 
-public class AddProcessTestCase extends PCIntegrationBaseTest {
+public class AddFlowChartTestCase extends PCIntegrationBaseTest{
 
     private String cookieHeader;
     private GenericRestClient genericRestClient;
     private HashMap<String, String> queryMap;
     private HashMap<String, String> headerMap;
     private String resourcePath;
+    private static final String PROCESS_NAME = "TestProcess1";
+    private static final String PROCESS_VERSION = "1.0";
 
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
@@ -72,7 +73,7 @@ public class AddProcessTestCase extends PCIntegrationBaseTest {
         queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
-                "create_process" , MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
+                        "create_process" , MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
                 requestBody, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
@@ -81,6 +82,39 @@ public class AddProcessTestCase extends PCIntegrationBaseTest {
                 "Expected 200 OK, Received " + response.getStatusCode());
         Assert.assertTrue(responseObject.get("error").toString().equals("false"),
                 "Error while creating the process");
+    }
+
+    @Test(groups = {"org.wso2.pc"}, description = "Test case for adding flowchart",
+            dependsOnMethods = "addProcess")
+    public void addFlowChart() throws IOException, JSONException {
+        String flowchartBody = readFile(FrameworkPathUtil.getSystemResourceLocation() + "artifacts"
+                + File.separator + "json" + File.separator + "TestFlowChart.json");
+        queryMap.put(PCIntegrationConstants.PROCESS_NAME,PROCESS_NAME);
+        queryMap.put(PCIntegrationConstants.PROCESS_VERSION,PROCESS_VERSION);
+        queryMap.put("flowchartJson",URLEncoder.encode(flowchartBody,PCIntegrationConstants.UTF_8));
+
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+                        "upload_flowchart" , MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
+                null, queryMap, headerMap, cookieHeader);
+        response.getStatusCode();
+        JSONObject responseObject = new JSONObject(response.getEntity(String.class));
+
+        Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
+                "Expected 200 OK, Received " + response.getStatusCode());
+        Assert.assertTrue(responseObject.get("error").toString().equals("false"),
+                "Error while creating the process");
+    }
+
+    @Test(groups = {"org.wso2.pc"}, description = "Check associated flowchart of the process",
+            dependsOnMethods = "addFlowChart")
+    public void checkFlowchart() throws JSONException {
+
+        queryMap.put("flowchartPath",String.format("%s%s/%s",
+                PCIntegrationConstants.REG_FLOWCHART_PATH, PROCESS_NAME, PROCESS_VERSION));
+        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherAPIBaseUrl +
+                "get_process_flowchart",queryMap,headerMap,cookieHeader);
+        Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().
+                equals("false"),"Associated Flowchart doesn't exit");
     }
 
     @DataProvider
