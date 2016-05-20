@@ -109,6 +109,21 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
                 "TestProcess1 doesn't have associated BPMN");
     }
 
+    @Test(groups = {"org.wso2.pc"}, description = "BPMN deleting test case",
+            dependsOnMethods = "checkBPMN")
+    public void deleteBPMN() throws JSONException {
+        queryMap.put(PCIntegrationConstants.PROCESS_NAME, PROCESS_NAME);
+        queryMap.put(PCIntegrationConstants.PROCESS_VERSION,PROCESS_VERSION);
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+                "delete_bpmn",MediaType.APPLICATION_FORM_URLENCODED,MediaType.APPLICATION_JSON,null,
+                queryMap,headerMap,cookieHeader);
+        Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
+                "Expected 200 OK, Received " + response.getStatusCode());
+        JSONObject responseObject = new JSONObject(response.getEntity(String.class));
+        Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
+                equals("false"),"Couldn't delete BPMN");
+    }
+
     private Element getAssociateProcess(String processType) throws Exception {
         Element associateProcessElement = null;
         WSRegistryServiceClient wsRegistryServiceClient = registryProviderUtil.

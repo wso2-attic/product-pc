@@ -126,9 +126,9 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
                 "Expected 200 OK, Received " + response.getStatusCode());
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
         Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
-                equals("false"));
+                equals("false"),"Error while deleting flowchart");
         Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_CONTENT).toString().
-                contains("Successfully deleted the flowchart"));
+                contains("Successfully deleted the flowchart"),"Couldn't delete flowchart");
     }
 
     @DataProvider
