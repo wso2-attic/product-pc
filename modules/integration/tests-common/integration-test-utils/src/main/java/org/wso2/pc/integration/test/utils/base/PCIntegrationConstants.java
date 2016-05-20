@@ -30,6 +30,8 @@ public class PCIntegrationConstants {
     public static final String APPLICATION_PDF_TYPE = "application/pdf";
     public static final String APPLICATION_MSWORD_TYPE = "application/msword";
     public static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
+    public static final String RESPONSE_ERROR = "error";
+    public static final String RESPONSE_CONTENT = "content";
 
     //Registry path locations
     public static final String REG_FLOWCHART_PATH = "/_system/governance/flowchart/";

@@ -80,8 +80,8 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
 
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
                 "Expected 200 OK, Received " + response.getStatusCode());
-        Assert.assertTrue(responseObject.get("error").toString().equals("false"),
-                "Error while creating the process");
+        Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
+                equals("false"), "Error while creating the process");
     }
 
     @Test(groups = {"org.wso2.pc"}, description = "Test case for adding flowchart",
@@ -101,20 +101,34 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
 
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
                 "Expected 200 OK, Received " + response.getStatusCode());
-        Assert.assertTrue(responseObject.get("error").toString().equals("false"),
-                "Error while creating the process");
+        Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
+                equals("false"), "Error while creating the process");
     }
 
     @Test(groups = {"org.wso2.pc"}, description = "Check associated flowchart of the process",
             dependsOnMethods = "addFlowChart")
     public void checkFlowchart() throws JSONException {
-
         queryMap.put("flowchartPath",String.format("%s%s/%s",
                 PCIntegrationConstants.REG_FLOWCHART_PATH, PROCESS_NAME, PROCESS_VERSION));
         ClientResponse response = genericRestClient.geneticRestRequestGet(publisherAPIBaseUrl +
                 "get_process_flowchart",queryMap,headerMap,cookieHeader);
-        Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().
-                equals("false"),"Associated Flowchart doesn't exit");
+        Assert.assertTrue(new JSONObject(response.getEntity(String.class)).
+                get(PCIntegrationConstants.RESPONSE_ERROR).toString().equals("false"),
+                "Associated Flowchart doesn't exit");
+    }
+
+    @Test(groups = {"org.wso2.pc"}, description = "Deleting flowchart testcase",
+            dependsOnMethods = "checkFlowchart")
+    public void deleteFlowchart() throws JSONException {
+        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherAPIBaseUrl +
+                "delete_flowchart",queryMap,headerMap,cookieHeader);
+        Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
+                "Expected 200 OK, Received " + response.getStatusCode());
+        JSONObject responseObject = new JSONObject(response.getEntity(String.class));
+        Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
+                equals("false"));
+        Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_CONTENT).toString().
+                contains("Successfully deleted the flowchart"));
     }
 
     @DataProvider
