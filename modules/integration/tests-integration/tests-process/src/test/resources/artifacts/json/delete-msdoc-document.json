@@ -1,0 +1,10 @@
+{
+  "processName":"TestProcess1",
+  "processVersion":"1.0",
+  "removeDocument":{
+    "name":"TestMSDocument",
+    "summary":"TestPDFSummary",
+    "url":"NA",
+    "path":"doccontent/TestProcess1/1.0/TestMSDocument.doc"
+  }
+}

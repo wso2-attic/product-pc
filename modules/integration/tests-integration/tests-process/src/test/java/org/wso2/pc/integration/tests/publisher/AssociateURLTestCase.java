@@ -120,4 +120,21 @@ public class AssociateURLTestCase extends PCIntegrationBaseTest{
                 getElementsByTagName("url").item(0).getTextContent();
         Assert.assertTrue(expectedGDocURL.equals(GDOC_URL),"Expected GDoc URL not found");
     }
+
+    @Test(groups = {"org.wso2.pc"}, description = "GDoc deleting test case",
+            dependsOnMethods = "checkGDoc")
+    public void deleteGDOC() throws JSONException, IOException {
+        String PDFDeleteRequest = readFile(FrameworkPathUtil.getSystemResourceLocation() +
+                "artifacts" + File.separator + "json" + File.separator + "delete-gdoc-document.json");
+        queryMap.put("removeDocumentDetails", URLEncoder.
+                encode(PDFDeleteRequest,PCIntegrationConstants.UTF_8));
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+                        "delete_document",MediaType.APPLICATION_FORM_URLENCODED,
+                MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
+        Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
+                "Expected 200 OK, Received " + response.getStatusCode());
+        JSONObject responseObject = new JSONObject(response.getEntity(String.class));
+        Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
+                equals("false"),"Couldn't delete associated MSDoc");
+    }
 }
