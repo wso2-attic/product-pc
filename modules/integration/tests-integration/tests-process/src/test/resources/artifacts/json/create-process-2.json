@@ -1,0 +1,19 @@
+{
+  "predecessor":[
+
+  ],
+  "subprocess":[
+
+  ],
+  "successor":[
+
+  ],
+  "processTags":"vegetable, tag1",
+  "processDescription":"This is a sample process for a restaurant",
+  "processVersion":"2.0",
+  "processName":"Order Process",
+  "image":{
+
+  },
+  "processOwner":"TestOwner2"
+}

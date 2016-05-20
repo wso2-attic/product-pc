@@ -1,0 +1,19 @@
+{
+  "predecessor":[
+
+  ],
+  "subprocess":[
+
+  ],
+  "successor":[
+
+  ],
+  "processTags":"tag1, tag2",
+  "processDescription":"This is a bank loan requesting process",
+  "processVersion":"3.0",
+  "processName":"GetLoanProcess",
+  "image":{
+
+  },
+  "processOwner":"TestOwner3"
+}
