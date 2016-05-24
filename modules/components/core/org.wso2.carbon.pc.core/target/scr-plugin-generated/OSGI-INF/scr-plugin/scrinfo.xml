@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.0.0">
-    <scr:component enabled="true" immediate="true" name="org.wso2.carbon.pc.core.internal.ProcessCenterServiceComponent">
-        <implementation class="org.wso2.carbon.pc.core.internal.ProcessCenterServiceComponent"/>
-        <property name="service.pid" value="org.wso2.carbon.pc.core.internal.ProcessCenterServiceComponent" private="false"/>
-        <reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService" cardinality="1..1" policy="dynamic" bind="setRegistryService" unbind="unsetRegistryService" checked="true" strategy="event"/>
-        <reference name="registry.indexing.service" interface="org.wso2.carbon.registry.indexing.service.ContentSearchService" cardinality="1..1" policy="dynamic" bind="setContentSearchService" unbind="unsetContentSearchService" checked="true" strategy="event"/>
-        <reference name="registry.common" interface="org.wso2.carbon.registry.common.AttributeSearchService" cardinality="1..1" policy="dynamic" bind="setAttributeSearchService" unbind="unsetAttributeSearchService" checked="true" strategy="event"/>
-    </scr:component>
-</components>
