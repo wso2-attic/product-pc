@@ -1,0 +1,246 @@
+<script>
+    var isSocial = ('{{features.social.enabled}}' == 'true');
+    var guestDomain = '{{guestDomain}}';
+</script>
+{{#with assets}}
+    {{#with attributes}}
+        <br>
+        <div id="collapsedProcessName"><h4 class="margin-none ">{{overview_name}}
+            - {{overview_version}}</h4></div>
+    {{/with}}
+{{/with}}
+<div class="asset-description">
+
+{{#with assets}}
+
+
+    {{#with attributes}}
+
+            <div class="asset-description-header">
+                <div class="col-lg-12 white-bg left ">
+                    <h3>{{../../rxt.singularLabel}} Details</h3>
+
+                    <div class="clear"></div>
+                    <hr>
+                </div>
+            </div>
+            <!-- asset details folder-->
+            <div class="asset-details-header ">
+                <!-- aset details -->
+                <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 white-bg">
+                    <div class=" details-image white-bg">
+                        {{> asset-thumbnail ..}}
+                    </div>
+                    <div class="details-container">
+                        <div class="pull-left">
+                            <h4 class="margin-none ">{{overview_name}}</h4>
+
+                            <p class="grey padding-none margin-none">{{t "Version"}} {{overview_version}}</p>
+
+                            <p class="light-blue padding-none margin-none">{{t "by"}} {{overview_provider}}</p>
+                        </div>
+                        <div class="pull-right">
+                            <span class="pull-right rating-count"> ( <i
+                                    class="fa fa-users"></i> {{../count}} )</span>
+                        <span class="asset-rating pull-right">
+                        <div style="width:{{../ratingPx}}px"></div>
+                        </span>
+
+                            <div class="clearfix"></div>
+                            {{#hasAssetPermission . key="ASSET_BOOKMARK" type=../../rxt.shortName username=../../cuser.username tenantId=../../cuser.tenantId}}
+                                {{>asset-utilization ../../..}}
+                            {{/hasAssetPermission}}
+                            {{> asset-version-info ../..}}
+                        </div>
+                    </div>
+                </div>
+                <!-- end of asset details-->
+            </div>
+            <div class="white-bg asset-details-wrapper ">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <h4>Summary</h4>
+
+                    <p>{{>overview .}}</p>
+                    <hr>
+                    {{>tags ../../.}}
+                </div>
+                <!-- description column-->
+            </div>
+        </div>
+        <div>
+            <!-- asset description -->
+            <div class="assetp-properties">
+                <hr class="margin-bottom-double">
+                <button type="button" id="btnView">View</button>
+                <button type="button" id="btnCollapse">Collapse</button>
+                <ul class="nav nav-tabs" id="assetp-tabs" data-aid="{{../path}}">
+                    <li class="active">
+                        <a href="#tab-properties" id="tab-text" data-toggle="tab"
+                           data-type="basic">{{t "Text"}}</a>
+                    </li>
+                    <li>
+                        <a href="#tab-bpmn" data-toggle="tab" id="tab-model"
+                           data-type="basic">{{t "BPMN Model "}}</a>
+                    </li>
+                    <li>
+                        <a href="#tab-associations" data-toggle="tab" id="tab-relations"
+                           data-type="basic">{{t "Associations "}}</a>
+                    </li>
+                    {{#hasAssetPermission . key="ASSET_REVIEWS" type=../../rxt.shortName username=../../cuser.username tenantId=../../cuser.tenantId}}
+                        <li>
+                            <a href="#tab-reviews" data-toggle="tab"
+                               data-type="comments">{{t "User Reviews"}}</a>
+                        </li>
+                    {{/hasAssetPermission}}
+                    <li>
+                        <a href="#tab-documents" id="tab-doc-list" data-toggle="tab"
+                           data-type="basic">{{t "Documents"}}</a>
+                    </li>
+                    <li>
+                        <a href="#tab-flowchart" onclick="_loadFlowChart('{{overview_name}}/{{overview_version}}');" id="tab-fc-list" data-toggle="tab"
+                           data-type="basic">{{t "Flowchart"}}</a>
+                    </li>
+                    <li>
+                        <a href="#tab-share" data-toggle="tab" data-type="basic">{{t "Share"}}</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+
+                    <div class="tab-pane active" id="tab-properties">
+
+                        <div id="divTextProcessPath" style="display: none;">
+                            {{properties_processtextpath}}
+                        </div>
+
+                        <div class="content">
+
+                        </div>
+                    </div>
+
+
+                    <!--Associations-->
+                    {{#if ../../cuser.username}}
+                        <div class="tab-pane" id="tab-associations">
+                            <div id="divProcessName" style="display: none;">
+                                {{overview_name}}
+                            </div>
+                            <div class="content">
+                                <div class="panel-group">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse"
+                                                   href="#collapsePredecessor">Predecessors</a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapsePredecessor"
+                                             class="panel-collapse collapse">
+                                            <ul class="list-group" id="predecessor-list-group"></ul>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" href="#collapseSuccessor">Successors</a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseSuccessor" class="panel-collapse collapse">
+                                            <ul class="list-group" id="successor-list-group"></ul>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse"
+                                                   href="#collapseSubprocess">Sub Processes</a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseSubprocess"
+                                             class="panel-collapse collapse">
+                                            <ul class="list-group" id="subprocess-list-group"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--BPMN-->
+                        <div class="tab-pane" id="tab-bpmn">
+                            <div id="divBpmnPath" style="display: none;">
+                                {{properties_bpmnpath}}
+                            </div>
+                            <div class="content">
+                                <img id="bpmnImage"/>
+                            </div>
+                        </div>
+
+                        <!--Documents-->
+                        <div class="tab-pane" id="tab-documents">
+                            <div class="content">
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <table class="table table-bordered" id="docTable">
+                                            <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Summary</th>
+                                                <th>Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="listDocs">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div id="googleDocViewer">
+                                    </div>
+                                    <div id="pdfDocViewer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Flowchart-->
+                        <div class="tab-pane" id="tab-flowchart">
+                            <div class="content" id="fc-content">
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <div class="jtk-demo-main" id="fc-demo">
+                                            <div class="jtk-demo-canvas canvas-wide flowchart-demo jtk-surface  jtk-surface-nopan"
+                                                 id="editor_canvas">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {{else}}
+                        <div id="loginError"><b>Please Sign in to continue</b></div>
+                    {{/if}}
+
+                    <div class="tab-pane" id="tab-share">
+                        <div class="content">
+                            {{>share ../..}}
+                        </div>
+                    </div>
+                    {{#hasAssetPermission . key="ASSET_REVIEWS" type=../../rxt.shortName username=../../cuser.username tenantId=../../cuser.tenantId}}
+                        <div class="tab-pane" id="tab-reviews">
+                            {{#if ../../../features.social.enabled}}
+                                <iframe name="socialIfr" id="socialIfr"
+                                        src="{{../../../../features.social.keys.socialAppUrl}}?target={{../../../../rxt.shortName}}:{{../../../id}}&user={{../../../../cuser.username}}&urlDomain={{../../../../features.social.keys.urlDomain}}"
+                                        width="100%" height="100%" style="min-height: 500px;"
+                                        data-script="{{../../../../features.social.keys.socialScriptSource}}"
+                                        data-script-type="{{../../../../features.social.keys.socialScriptType}}"></iframe>
+                            {{/if}}
+                            {{#if ../../../inDashboard}}
+                                <div id="comment-content" class="content"></div>
+                            {{else}}
+                                <div id="comment-content" class="content user-review"></div>
+                            {{/if}}
+                        </div>
+                    {{/hasAssetPermission}}
+                </div>
+            </div>
+    {{/with}}
+{{/with}}
+</div>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<feature id="org.wso2.carbon.identity.user.profile" label="User Profiles Feature" provider-name="%providerName" version="4.5.6">
+  <description>This feature contains the bundles required for Identity User Profiles functionality</description>
+  <copyright>%copyright</copyright>
+  <license url="%licenseURL">%license</license>
+  <includes id="org.wso2.carbon.identity.user.profile.server" optional="false" version="4.5.6"/>
+  <includes id="org.wso2.carbon.identity.user.profile.ui" optional="false" version="4.5.6"/>
+</feature>

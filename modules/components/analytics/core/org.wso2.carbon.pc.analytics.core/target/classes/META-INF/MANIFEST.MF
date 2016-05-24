@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Bundle-Description: WSO2 Process Center
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
+Bundle-SymbolicName: org.wso2.carbon.pc.analytics.core
+Built-By: sameerag
+Bundle-ManifestVersion: 2
+Bnd-LastModified: 1464051584162
+Bundle-DocURL: http://wso2.com
+Bundle-Vendor: WSO2
+Import-Package: com.google.gson;version="[2.2,3)";resolution:=optional
+ ,javax.xml.bind;resolution:=optional,javax.xml.namespace;resolution:=
+ optional,javax.xml.stream;version="[1.0,2)";resolution:=optional,org.
+ apache.axiom.om;version="[1.2,2)";resolution:=optional,org.apache.axi
+ om.om.util;version="[1.2,2)";resolution:=optional,org.apache.commons.
+ httpclient;version="[3.1,4)";resolution:=optional,org.apache.commons.
+ httpclient.methods;version="[3.1,4)";resolution:=optional,org.apache.
+ commons.io;version="[2.0,3)";resolution:=optional,org.apache.commons.
+ logging;version="[1.1,2)";resolution:=optional,org.json;version="[2.0
+ ,3)";resolution:=optional,org.wso2.carbon.registry.core.utils;version
+ ="[1.0,2)";resolution:=optional,org.wso2.carbon.utils;version="[4.2,5
+ )";resolution:=optional,org.wso2.securevault;resolution:=optional
+Tool: Bnd-1.43.0
+Export-Package: org.wso2.carbon.pc.analytics.core;uses:="org.apache.co
+ mmons.logging,org.json";version="1.0.0.SNAPSHOT"
+Bundle-Name: WSO2 PC Analytics - Core
+Bundle-Version: 1.0.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Build-Jdk: 1.8.0_91
+

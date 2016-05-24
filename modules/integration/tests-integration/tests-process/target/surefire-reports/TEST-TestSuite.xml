@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite tests="14" failures="0" name="TestSuite" time="3.151" errors="0" skipped="0">
+  <properties>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64"/>
+    <property name="java.vm.version" value="25.91-b14"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="java.vendor.url" value="http://java.oracle.com/"/>
+    <property name="path.separator" value=":"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="/home/sameerag/WSO2/product-pc-update/product-pc"/>
+    <property name="java.runtime.version" value="1.8.0_91-8u91-b14-0ubuntu4~14.04-b14"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/endorsed"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="os.name" value="Linux"/>
+    <property name="classworlds.conf" value="/usr/share/maven/bin/m2.conf"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="52.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="3.13.0-24-generic"/>
+    <property name="user.home" value="/home/sameerag"/>
+    <property name="user.timezone" value="Asia/Colombo"/>
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.specification.version" value="1.8"/>
+    <property name="user.name" value="sameerag"/>
+    <property name="java.class.path" value="/usr/share/maven/boot/plexus-classworlds-2.x.jar"/>
+    <property name="java.vm.specification.version" value="1.8"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="/usr/lib/jvm/java-8-openjdk-amd64/jre"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean install"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.language" value="en"/>
+    <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.8.0_91"/>
+    <property name="java.ext.dirs" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext:/usr/java/packages/lib/ext"/>
+    <property name="securerandom.source" value="file:/dev/./urandom"/>
+    <property name="sun.boot.class.path" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jfr.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/classes"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="maven.home" value="/usr/share/maven"/>
+    <property name="file.separator" value="/"/>
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.desktop" value="gnome"/>
+    <property name="sun.cpu.isalist" value=""/>
+  </properties>
+  <testcase classname="org.wso2.pc.integration.tests.publisher.LoginTestCase" name="loginPublisher" time="0.013"/>
+  <testcase classname="org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase" name="addProcess" time="0.057"/>
+  <testcase classname="org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase" name="getLogs" time="2.057"/>
+  <testcase classname="org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase" name="getLogs" time="0.037"/>
+  <testcase classname="org.wso2.pc.integration.tests.publisher.AddProcessTestCase" name="addProcess" time="0.052"/>
+  <testcase classname="org.wso2.pc.integration.tests.publisher.ProcessTextTestCase" name="addProcessText" time="0.026"/>
+  <testcase classname="org.wso2.pc.integration.tests.publisher.ProcessTextTestCase" name="getProcessText" time="0.03"/>
+  <testcase classname="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase" name="addProcess" time="0.112"/>
+  <testcase classname="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase" name="predecessorTest" time="0.298"/>
+  <testcase classname="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase" name="successorProcessTest" time="0.154"/>
+  <testcase classname="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase" name="subProcessTest" time="0.115"/>
+  <testcase classname="org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase" name="addProcess" time="0.061"/>
+  <testcase classname="org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase" name="uploadBPMN" time="0.057"/>
+  <testcase classname="org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase" name="checkBPMN" time="0.082"/>
+</testsuite>

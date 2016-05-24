@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+      <entry name="!?*.aj" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="integration-test-utils" />
+        <module name="org.wso2.carbon.pc.analytics.capp" />
+        <module name="org.wso2.carbon.pc.analytics.core" />
+        <module name="org.wso2.carbon.pc.analytics.udf" />
+        <module name="org.wso2.carbon.pc.analytics.web" />
+        <module name="org.wso2.carbon.pc.core" />
+        <module name="org.wso2.carbon.pc.handlers" />
+        <module name="tests-process" />
+        <module name="wso2pc" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="integration" target="1.5" />
+      <module name="integration-test-utils" target="1.7" />
+      <module name="org.wso2.carbon.pc.analytics.capp" target="1.7" />
+      <module name="org.wso2.carbon.pc.analytics.core" target="1.7" />
+      <module name="org.wso2.carbon.pc.analytics.core.feature" target="1.5" />
+      <module name="org.wso2.carbon.pc.analytics.udf" target="1.7" />
+      <module name="org.wso2.carbon.pc.analytics.web" target="1.7" />
+      <module name="org.wso2.carbon.pc.core" target="1.7" />
+      <module name="org.wso2.carbon.pc.core.feature" target="1.5" />
+      <module name="org.wso2.carbon.pc.handlers" target="1.7" />
+      <module name="tests-common" target="1.5" />
+      <module name="tests-integration" target="1.5" />
+      <module name="tests-process" target="1.7" />
+      <module name="wso2pc" target="1.7" />
+      <module name="wso2pc-parent" target="1.5" />
+      <module name="wso2pc-profile-gen" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

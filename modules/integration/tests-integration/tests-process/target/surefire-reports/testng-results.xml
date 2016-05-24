@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="14" passed="14">
+  <reporter-output>
+  </reporter-output>
+  <suite name="ESBTestSuite" duration-ms="5348" started-at="2016-05-24T01:01:06Z" finished-at="2016-05-24T01:01:12Z">
+    <groups>
+      <group name="wso2.pc">
+        <method signature="LoginTestCase.loginPublisher()[pri:0, instance:org.wso2.pc.integration.tests.publisher.LoginTestCase@5cc5b667]" name="loginPublisher" class="org.wso2.pc.integration.tests.publisher.LoginTestCase"/>
+      </group> <!-- wso2.pc -->
+      <group name="org.wso2.pc">
+        <method signature="AssociateBPMNTestCase.addProcess()[pri:0, instance:org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase@5ac86ba5]" name="addProcess" class="org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase"/>
+        <method signature="AssociateBPMNTestCase.uploadBPMN()[pri:0, instance:org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase@5ac86ba5]" name="uploadBPMN" class="org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase"/>
+        <method signature="AssociateBPMNTestCase.checkBPMN()[pri:0, instance:org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase@5ac86ba5]" name="checkBPMN" class="org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase"/>
+        <method signature="InterProcessAssociationsTestCase.addProcess()[pri:0, instance:org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase@b5cc23a]" name="addProcess" class="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase"/>
+        <method signature="InterProcessAssociationsTestCase.predecessorTest()[pri:0, instance:org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase@b5cc23a]" name="predecessorTest" class="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase"/>
+        <method signature="InterProcessAssociationsTestCase.subProcessTest()[pri:0, instance:org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase@b5cc23a]" name="subProcessTest" class="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase"/>
+        <method signature="InterProcessAssociationsTestCase.successorProcessTest()[pri:0, instance:org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase@b5cc23a]" name="successorProcessTest" class="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase"/>
+        <method signature="ProcessTextTestCase.addProcessText()[pri:0, instance:org.wso2.pc.integration.tests.publisher.ProcessTextTestCase@71c5b236]" name="addProcessText" class="org.wso2.pc.integration.tests.publisher.ProcessTextTestCase"/>
+        <method signature="ProcessTextTestCase.getProcessText()[pri:0, instance:org.wso2.pc.integration.tests.publisher.ProcessTextTestCase@71c5b236]" name="getProcessText" class="org.wso2.pc.integration.tests.publisher.ProcessTextTestCase"/>
+        <method signature="PublisherAuditLogTestCase.addProcess()[pri:0, instance:org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase@2f3c6ac4]" name="addProcess" class="org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase"/>
+        <method signature="PublisherAuditLogTestCase.getLogs(java.lang.String)[pri:0, instance:org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase@2f3c6ac4]" name="getLogs" class="org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase"/>
+        <method signature="AddProcessTestCase.addProcess()[pri:0, instance:org.wso2.pc.integration.tests.publisher.AddProcessTestCase@65aa6596]" name="addProcess" class="org.wso2.pc.integration.tests.publisher.AddProcessTestCase"/>
+      </group> <!-- org.wso2.pc -->
+    </groups>
+    <test name="Process-Tests" duration-ms="5348" started-at="2016-05-24T01:01:06Z" finished-at="2016-05-24T01:01:12Z">
+      <class name="org.wso2.pc.integration.tests.publisher.ProcessTextTestCase">
+        <test-method status="PASS" signature="addProcessText()[pri:0, instance:org.wso2.pc.integration.tests.publisher.ProcessTextTestCase@71c5b236]" name="addProcessText" duration-ms="26" started-at="2016-05-24T06:31:11Z" description="Test case for adding process text" finished-at="2016-05-24T06:31:11Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- addProcessText -->
+        <test-method status="PASS" signature="getProcessText()[pri:0, instance:org.wso2.pc.integration.tests.publisher.ProcessTextTestCase@71c5b236]" name="getProcessText" duration-ms="29" started-at="2016-05-24T06:31:11Z" description="Test case for retrieving the process text" depends-on-methods="org.wso2.pc.integration.tests.publisher.ProcessTextTestCase.addProcessText" finished-at="2016-05-24T06:31:11Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getProcessText -->
+      </class> <!-- org.wso2.pc.integration.tests.publisher.ProcessTextTestCase -->
+      <class name="org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase">
+        <test-method status="PASS" signature="addProcess()[pri:0, instance:org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase@5ac86ba5]" name="addProcess" duration-ms="59" started-at="2016-05-24T06:31:12Z" description="Adding process in to publisher" finished-at="2016-05-24T06:31:12Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- addProcess -->
+        <test-method status="PASS" signature="uploadBPMN()[pri:0, instance:org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase@5ac86ba5]" name="uploadBPMN" duration-ms="58" started-at="2016-05-24T06:31:12Z" description="Associating BPMN to the process" depends-on-methods="org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase.addProcess" finished-at="2016-05-24T06:31:12Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- uploadBPMN -->
+        <test-method status="PASS" signature="checkBPMN()[pri:0, instance:org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase@5ac86ba5]" name="checkBPMN" duration-ms="82" started-at="2016-05-24T06:31:12Z" description="Checking associated BPMN" depends-on-methods="org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase.uploadBPMN" finished-at="2016-05-24T06:31:12Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- checkBPMN -->
+      </class> <!-- org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase -->
+      <class name="org.wso2.pc.integration.tests.publisher.LoginTestCase">
+        <test-method status="PASS" signature="init()[pri:0, instance:org.wso2.pc.integration.tests.publisher.LoginTestCase@5cc5b667]" name="init" is-config="true" duration-ms="216" started-at="2016-05-24T06:31:08Z" finished-at="2016-05-24T06:31:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- init -->
+        <test-method status="PASS" signature="loginPublisher()[pri:0, instance:org.wso2.pc.integration.tests.publisher.LoginTestCase@5cc5b667]" name="loginPublisher" duration-ms="11" started-at="2016-05-24T06:31:09Z" description="Login to publisher" finished-at="2016-05-24T06:31:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- loginPublisher -->
+      </class> <!-- org.wso2.pc.integration.tests.publisher.LoginTestCase -->
+      <class name="org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase">
+        <test-method status="PASS" signature="addProcess()[pri:0, instance:org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase@2f3c6ac4]" name="addProcess" duration-ms="55" started-at="2016-05-24T06:31:09Z" description="Test case for adding process" finished-at="2016-05-24T06:31:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- addProcess -->
+        <test-method name="getLogs" signature="getLogs(java.lang.String)[pri:0, instance:org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase@2f3c6ac4]" status="PASS" duration-ms="2064" finished-at="2016-05-24T06:31:11Z" started-at="2016-05-24T06:31:09Z" depends-on-methods="org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase.addProcess" data-provider="logPaths" description="Getting audit logs for process">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[NA]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getLogs -->
+        <test-method name="getLogs" signature="getLogs(java.lang.String)[pri:0, instance:org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase@2f3c6ac4]" status="PASS" duration-ms="37" finished-at="2016-05-24T06:31:11Z" started-at="2016-05-24T06:31:11Z" depends-on-methods="org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase.addProcess" data-provider="logPaths" description="Getting audit logs for process">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[/_system/governance/processes/TestProcess1/1.0]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getLogs -->
+      </class> <!-- org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase -->
+      <class name="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase">
+        <test-method status="PASS" signature="addProcess()[pri:0, instance:org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase@b5cc23a]" name="addProcess" duration-ms="113" started-at="2016-05-24T06:31:11Z" description="Adding a process with subprocess, predecessor process and successorprocess" finished-at="2016-05-24T06:31:11Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- addProcess -->
+        <test-method status="PASS" signature="predecessorTest()[pri:0, instance:org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase@b5cc23a]" name="predecessorTest" duration-ms="298" started-at="2016-05-24T06:31:11Z" description="Predecessor Process test case" finished-at="2016-05-24T06:31:11Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- predecessorTest -->
+        <test-method status="PASS" signature="successorProcessTest()[pri:0, instance:org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase@b5cc23a]" name="successorProcessTest" duration-ms="155" started-at="2016-05-24T06:31:11Z" description="Successor Process test case" finished-at="2016-05-24T06:31:11Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- successorProcessTest -->
+        <test-method status="PASS" signature="subProcessTest()[pri:0, instance:org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase@b5cc23a]" name="subProcessTest" duration-ms="114" started-at="2016-05-24T06:31:11Z" description="Subprocess test case" depends-on-methods="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase.addProcess" finished-at="2016-05-24T06:31:12Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- subProcessTest -->
+      </class> <!-- org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase -->
+      <class name="org.wso2.pc.integration.tests.publisher.AddProcessTestCase">
+        <test-method status="PASS" signature="init()[pri:0, instance:org.wso2.pc.integration.tests.publisher.AddProcessTestCase@65aa6596]" name="init" is-config="true" duration-ms="511" started-at="2016-05-24T06:31:06Z" finished-at="2016-05-24T06:31:07Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- init -->
+        <test-method status="PASS" signature="init()[pri:0, instance:org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase@5ac86ba5]" name="init" is-config="true" duration-ms="302" started-at="2016-05-24T06:31:07Z" finished-at="2016-05-24T06:31:07Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- init -->
+        <test-method status="PASS" signature="init()[pri:0, instance:org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase@b5cc23a]" name="init" is-config="true" duration-ms="419" started-at="2016-05-24T06:31:07Z" finished-at="2016-05-24T06:31:08Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- init -->
+        <test-method status="PASS" signature="init()[pri:0, instance:org.wso2.pc.integration.tests.publisher.ProcessTextTestCase@71c5b236]" name="init" is-config="true" duration-ms="446" started-at="2016-05-24T06:31:08Z" finished-at="2016-05-24T06:31:08Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- init -->
+        <test-method status="PASS" signature="init()[pri:0, instance:org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase@2f3c6ac4]" name="init" is-config="true" duration-ms="270" started-at="2016-05-24T06:31:08Z" finished-at="2016-05-24T06:31:08Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- init -->
+        <test-method status="PASS" signature="addProcess()[pri:0, instance:org.wso2.pc.integration.tests.publisher.AddProcessTestCase@65aa6596]" name="addProcess" duration-ms="53" started-at="2016-05-24T06:31:11Z" description="Test case for adding process" finished-at="2016-05-24T06:31:11Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- addProcess -->
+      </class> <!-- org.wso2.pc.integration.tests.publisher.AddProcessTestCase -->
+    </test> <!-- Process-Tests -->
+  </suite> <!-- ESBTestSuite -->
+</testng-results>

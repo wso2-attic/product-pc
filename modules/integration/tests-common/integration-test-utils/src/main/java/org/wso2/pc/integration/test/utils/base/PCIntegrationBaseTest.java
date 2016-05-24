@@ -35,7 +35,7 @@ import java.nio.file.Paths;
  */
 public class PCIntegrationBaseTest {
 
-    //protected Log log = LogFactory.getLog(PCIntegrationBaseTest.class);
+    protected Log log = LogFactory.getLog(PCIntegrationBaseTest.class);
     protected AutomationContext automationContext;
     protected String backendURL;
     protected String sessionCookie;
@@ -44,6 +44,7 @@ public class PCIntegrationBaseTest {
     protected SecurityAdminServiceClient securityAdminServiceClient;
     protected LoginLogoutClient loginLogoutClient;
     protected User userInfo;
+    protected String publisherAPIBaseUrl;
 
     protected AutomationContext storeContext;
     protected AutomationContext publisherContext;
@@ -64,10 +65,12 @@ public class PCIntegrationBaseTest {
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         webAppURL = automationContext.getContextUrls().getWebAppURL();
         userInfo = automationContext.getContextTenant().getContextUser();
+        publisherAPIBaseUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
+                "publisher/assets/process/apis/");
     }
 
-
-    protected void initPublisher(String productGroupName, String instanceName, TestUserMode userMode, String userKey)
+    protected void initPublisher(String productGroupName, String instanceName,
+                                 TestUserMode userMode, String userKey)
             throws XPathExpressionException {
         automationContext = new AutomationContext(productGroupName, instanceName, userMode);
         backendURL = automationContext.getContextUrls().getBackEndUrl();
@@ -100,7 +103,4 @@ public class PCIntegrationBaseTest {
         String fileData=new String(Files.readAllBytes(Paths.get(filePath)));
         return fileData;
     }
-
 }
-
-

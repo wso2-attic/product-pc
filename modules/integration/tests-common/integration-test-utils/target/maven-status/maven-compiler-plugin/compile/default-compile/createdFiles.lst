@@ -1,0 +1,7 @@
+org/wso2/pc/integration/test/utils/base/GenericRestClient.class
+org/wso2/pc/integration/test/utils/base/PCIntegrationBaseTest.class
+org/wso2/pc/integration/test/utils/base/RegistryProviderUtil.class
+org/wso2/pc/integration/test/utils/base/beans/ProcessBean.class
+org/wso2/pc/integration/test/utils/base/ArtifactUploadUtil.class
+org/wso2/pc/integration/test/utils/base/TestUtils.class
+org/wso2/pc/integration/test/utils/base/PCIntegrationConstants.class

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/modules/integration/integration.iml" filepath="$PROJECT_DIR$/modules/integration/integration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/integration/tests-common/integration-test-utils/integration-test-utils.iml" filepath="$PROJECT_DIR$/modules/integration/tests-common/integration-test-utils/integration-test-utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/components/analytics/capp/org.wso2.carbon.pc.analytics.capp/org.wso2.carbon.pc.analytics.capp.iml" filepath="$PROJECT_DIR$/modules/components/analytics/capp/org.wso2.carbon.pc.analytics.capp/org.wso2.carbon.pc.analytics.capp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/components/analytics/core/org.wso2.carbon.pc.analytics.core/org.wso2.carbon.pc.analytics.core.iml" filepath="$PROJECT_DIR$/modules/components/analytics/core/org.wso2.carbon.pc.analytics.core/org.wso2.carbon.pc.analytics.core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/features/analytics-core/org.wso2.carbon.pc.analytics.core.feature/org.wso2.carbon.pc.analytics.core.feature.iml" filepath="$PROJECT_DIR$/modules/features/analytics-core/org.wso2.carbon.pc.analytics.core.feature/org.wso2.carbon.pc.analytics.core.feature.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/components/analytics/udf/org.wso2.carbon.pc.analytics.udf/org.wso2.carbon.pc.analytics.udf.iml" filepath="$PROJECT_DIR$/modules/components/analytics/udf/org.wso2.carbon.pc.analytics.udf/org.wso2.carbon.pc.analytics.udf.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/components/analytics/web/org.wso2.carbon.pc.analytics.web/org.wso2.carbon.pc.analytics.web.iml" filepath="$PROJECT_DIR$/modules/components/analytics/web/org.wso2.carbon.pc.analytics.web/org.wso2.carbon.pc.analytics.web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/components/core/org.wso2.carbon.pc.core/org.wso2.carbon.pc.core.iml" filepath="$PROJECT_DIR$/modules/components/core/org.wso2.carbon.pc.core/org.wso2.carbon.pc.core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/features/core/org.wso2.carbon.pc.core.feature/org.wso2.carbon.pc.core.feature.iml" filepath="$PROJECT_DIR$/modules/features/core/org.wso2.carbon.pc.core.feature/org.wso2.carbon.pc.core.feature.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/components/handlers/org.wso2.carbon.pc.handlers/org.wso2.carbon.pc.handlers.iml" filepath="$PROJECT_DIR$/modules/components/handlers/org.wso2.carbon.pc.handlers/org.wso2.carbon.pc.handlers.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/integration/tests-common/tests-common.iml" filepath="$PROJECT_DIR$/modules/integration/tests-common/tests-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/integration/tests-integration/tests-integration.iml" filepath="$PROJECT_DIR$/modules/integration/tests-integration/tests-integration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/integration/tests-integration/tests-process/tests-process.iml" filepath="$PROJECT_DIR$/modules/integration/tests-integration/tests-process/tests-process.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/distribution/wso2pc.iml" filepath="$PROJECT_DIR$/modules/distribution/wso2pc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wso2pc-parent.iml" filepath="$PROJECT_DIR$/wso2pc-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/p2-profile-gen/wso2pc-profile-gen.iml" filepath="$PROJECT_DIR$/modules/p2-profile-gen/wso2pc-profile-gen.iml" />
+    </modules>
+  </component>
+</project>

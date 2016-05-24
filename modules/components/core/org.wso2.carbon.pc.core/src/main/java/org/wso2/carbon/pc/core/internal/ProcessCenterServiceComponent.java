@@ -39,7 +39,6 @@ public class ProcessCenterServiceComponent {
         log.info("Initializing the PC core component...");
         try {
             ProcessCenterServerHolder holder = ProcessCenterServerHolder.getInstance();
-
         }catch (Throwable e) {
             log.error("Failed to initialize the PC core component.", e);
         }

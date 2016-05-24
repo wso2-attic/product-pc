@@ -1,0 +1,6 @@
+/home/sameerag/WSO2/product-pc-update/product-pc/modules/integration/tests-integration/tests-process/src/test/java/org/wso2/pc/integration/tests/publisher/InterProcessAssociationsTestCase.java
+/home/sameerag/WSO2/product-pc-update/product-pc/modules/integration/tests-integration/tests-process/src/test/java/org/wso2/pc/integration/tests/publisher/ProcessTextTestCase.java
+/home/sameerag/WSO2/product-pc-update/product-pc/modules/integration/tests-integration/tests-process/src/test/java/org/wso2/pc/integration/tests/publisher/PublisherAuditLogTestCase.java
+/home/sameerag/WSO2/product-pc-update/product-pc/modules/integration/tests-integration/tests-process/src/test/java/org/wso2/pc/integration/tests/publisher/AddProcessTestCase.java
+/home/sameerag/WSO2/product-pc-update/product-pc/modules/integration/tests-integration/tests-process/src/test/java/org/wso2/pc/integration/tests/publisher/LoginTestCase.java
+/home/sameerag/WSO2/product-pc-update/product-pc/modules/integration/tests-integration/tests-process/src/test/java/org/wso2/pc/integration/tests/publisher/AssociateBPMNTestCase.java

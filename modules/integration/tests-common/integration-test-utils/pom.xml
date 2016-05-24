@@ -77,5 +77,25 @@
             <artifactId>org.wso2.carbon.automation.engine</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.registry</groupId>
+            <artifactId>org.wso2.carbon.registry.ws.client</artifactId>
+            <scope>test</scope>
+            <version>4.4.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.5.11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jettison.wso2</groupId>
+            <artifactId>jettison</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.registry</groupId>
+            <artifactId>org.wso2.carbon.registry.ws.client</artifactId>
+            <version>4.5.5-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

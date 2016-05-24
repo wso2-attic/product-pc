@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+  <title>TestNG reports</title>
+
+    <link type="text/css" href="testng-reports.css" rel="stylesheet" />  
+    <script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="testng-reports.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type='text/javascript'>
+      google.load('visualization', '1', {packages:['table']});
+      google.setOnLoadCallback(drawTable);
+      var suiteTableInitFunctions = new Array();
+      var suiteTableData = new Array();
+    </script>
+    <!--
+      <script type="text/javascript" src="jquery-ui/js/jquery-ui-1.8.16.custom.min.js"></script>
+     -->
+  </head>
+
+  <body>
+    <div class="top-banner-root">
+      <span class="top-banner-title-font">Test results</span>
+      <br/>
+      <span class="top-banner-font-1">1 suite</span>
+    </div> <!-- top-banner-root -->
+    <div class="navigator-root">
+      <div class="navigator-suite-header">
+        <span>All suites</span>
+        <a href="#" class="collapse-all-link" title="Collapse/expand all the suites">
+          <img class="collapse-all-icon" src="collapseall.gif">
+          </img> <!-- collapse-all-icon -->
+        </a> <!-- collapse-all-link -->
+      </div> <!-- navigator-suite-header -->
+      <div class="suite">
+        <div class="rounded-window">
+          <div class="suite-header light-rounded-window-top">
+            <a href="#" class="navigator-link" panel-name="suite-ESBTestSuite">
+              <span class="suite-name border-passed">ESBTestSuite</span>
+            </a> <!-- navigator-link -->
+          </div> <!-- suite-header light-rounded-window-top -->
+          <div class="navigator-suite-content">
+            <div class="suite-section-title">
+              <span>Info</span>
+            </div> <!-- suite-section-title -->
+            <div class="suite-section-content">
+              <ul>
+                <li>
+                  <a href="#" class="navigator-link " panel-name="test-xml-ESBTestSuite">
+                    <span>testng.xml</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" class="navigator-link " panel-name="testlist-ESBTestSuite">
+                    <span class="test-stats">1 test</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" class="navigator-link " panel-name="group-ESBTestSuite">
+                    <span>2 groups</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" class="navigator-link " panel-name="times-ESBTestSuite">
+                    <span>Times</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" class="navigator-link " panel-name="reporter-ESBTestSuite">
+                    <span>Reporter output</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" class="navigator-link " panel-name="ignored-methods-ESBTestSuite">
+                    <span>Ignored methods</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" class="navigator-link " panel-name="chronological-ESBTestSuite">
+                    <span>Chronological view</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+              </ul>
+            </div> <!-- suite-section-content -->
+            <div class="result-section">
+              <div class="suite-section-title">
+                <span>Results</span>
+              </div> <!-- suite-section-title -->
+              <div class="suite-section-content">
+                <ul>
+                  <li>
+                    <span class="method-stats">14 methods,   14 passed</span>
+                  </li>
+                  <li>
+                    <span class="method-list-title passed">Passed methods</span>
+                    <span class="show-or-hide-methods passed">
+                      <a href="#" panel-name="suite-ESBTestSuite" class="hide-methods passed suite-ESBTestSuite"> (hide)</a> <!-- hide-methods passed suite-ESBTestSuite -->
+                      <a href="#" panel-name="suite-ESBTestSuite" class="show-methods passed suite-ESBTestSuite"> (show)</a> <!-- show-methods passed suite-ESBTestSuite -->
+                    </span>
+                    <div class="method-list-content passed suite-ESBTestSuite">
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-ESBTestSuite" title="org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase" hash-for-method="addProcess">addProcess</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-ESBTestSuite" title="org.wso2.pc.integration.tests.publisher.AddProcessTestCase" hash-for-method="addProcess">addProcess</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-ESBTestSuite" title="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase" hash-for-method="addProcess">addProcess</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-ESBTestSuite" title="org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase" hash-for-method="addProcess">addProcess</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-ESBTestSuite" title="org.wso2.pc.integration.tests.publisher.ProcessTextTestCase" hash-for-method="addProcessText">addProcessText</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-ESBTestSuite" title="org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase" hash-for-method="checkBPMN">checkBPMN</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-ESBTestSuite" title="org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase" hash-for-method="getLogs(NA)">getLogs(NA)</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-ESBTestSuite" title="org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase" hash-for-method="getLogs(/_system/governance/processes/TestProcess1/1.0)">getLogs(/_system/governance/processes/TestProcess1/1.0)</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-ESBTestSuite" title="org.wso2.pc.integration.tests.publisher.ProcessTextTestCase" hash-for-method="getProcessText">getProcessText</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-ESBTestSuite" title="org.wso2.pc.integration.tests.publisher.LoginTestCase" hash-for-method="loginPublisher">loginPublisher</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-ESBTestSuite" title="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase" hash-for-method="predecessorTest">predecessorTest</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-ESBTestSuite" title="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase" hash-for-method="subProcessTest">subProcessTest</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-ESBTestSuite" title="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase" hash-for-method="successorProcessTest">successorProcessTest</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-ESBTestSuite" title="org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase" hash-for-method="uploadBPMN">uploadBPMN</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                    </div> <!-- method-list-content passed suite-ESBTestSuite -->
+                  </li>
+                </ul>
+              </div> <!-- suite-section-content -->
+            </div> <!-- result-section -->
+          </div> <!-- navigator-suite-content -->
+        </div> <!-- rounded-window -->
+      </div> <!-- suite -->
+    </div> <!-- navigator-root -->
+    <div class="wrapper">
+      <div class="main-panel-root">
+        <div panel-name="suite-ESBTestSuite" class="panel ESBTestSuite">
+          <div class="suite-ESBTestSuite-class-passed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="passed.png"/>
+              <span class="class-name">org.wso2.pc.integration.tests.publisher.AddProcessTestCase</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="addProcess">
+                  </a> <!-- addProcess -->
+                  <span class="method-name">addProcess</span>
+                  <em>
+(Test case for adding process)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-ESBTestSuite-class-passed -->
+          <div class="suite-ESBTestSuite-class-passed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="passed.png"/>
+              <span class="class-name">org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="addProcess">
+                  </a> <!-- addProcess -->
+                  <span class="method-name">addProcess</span>
+                  <em>
+(Adding process in to publisher)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="checkBPMN">
+                  </a> <!-- checkBPMN -->
+                  <span class="method-name">checkBPMN</span>
+                  <em>
+(Checking associated BPMN)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="uploadBPMN">
+                  </a> <!-- uploadBPMN -->
+                  <span class="method-name">uploadBPMN</span>
+                  <em>
+(Associating BPMN to the process)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-ESBTestSuite-class-passed -->
+          <div class="suite-ESBTestSuite-class-passed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="passed.png"/>
+              <span class="class-name">org.wso2.pc.integration.tests.publisher.ProcessTextTestCase</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="addProcessText">
+                  </a> <!-- addProcessText -->
+                  <span class="method-name">addProcessText</span>
+                  <em>
+(Test case for adding process text)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="getProcessText">
+                  </a> <!-- getProcessText -->
+                  <span class="method-name">getProcessText</span>
+                  <em>
+(Test case for retrieving the process text)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-ESBTestSuite-class-passed -->
+          <div class="suite-ESBTestSuite-class-passed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="passed.png"/>
+              <span class="class-name">org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="addProcess">
+                  </a> <!-- addProcess -->
+                  <span class="method-name">addProcess</span>
+                  <em>
+(Adding a process with subprocess, predecessor process and successorprocess)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="predecessorTest">
+                  </a> <!-- predecessorTest -->
+                  <span class="method-name">predecessorTest</span>
+                  <em>
+(Predecessor Process test case)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="subProcessTest">
+                  </a> <!-- subProcessTest -->
+                  <span class="method-name">subProcessTest</span>
+                  <em>
+(Subprocess test case)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="successorProcessTest">
+                  </a> <!-- successorProcessTest -->
+                  <span class="method-name">successorProcessTest</span>
+                  <em>
+(Successor Process test case)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-ESBTestSuite-class-passed -->
+          <div class="suite-ESBTestSuite-class-passed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="passed.png"/>
+              <span class="class-name">org.wso2.pc.integration.tests.publisher.LoginTestCase</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="loginPublisher">
+                  </a> <!-- loginPublisher -->
+                  <span class="method-name">loginPublisher</span>
+                  <em>
+(Login to publisher)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-ESBTestSuite-class-passed -->
+          <div class="suite-ESBTestSuite-class-passed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="passed.png"/>
+              <span class="class-name">org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="addProcess">
+                  </a> <!-- addProcess -->
+                  <span class="method-name">addProcess</span>
+                  <em>
+(Test case for adding process)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="getLogs(NA)">
+                  </a> <!-- getLogs(NA) -->
+                  <span class="method-name">getLogs</span>
+                  <span class="parameters">(NA)</span>
+                  <em>
+(Getting audit logs for process)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="getLogs(/_system/governance/processes/TestProcess1/1.0)">
+                  </a> <!-- getLogs(/_system/governance/processes/TestProcess1/1.0) -->
+                  <span class="method-name">getLogs</span>
+                  <span class="parameters">(/_system/governance/processes/TestProcess1/1.0)</span>
+                  <em>
+(Getting audit logs for process)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-ESBTestSuite-class-passed -->
+        </div> <!-- panel ESBTestSuite -->
+        <div panel-name="test-xml-ESBTestSuite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">/home/sameerag/WSO2/product-pc-update/product-pc/modules/integration/tests-integration/tests-process/src/test/resources/testng.xml</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE suite SYSTEM &quot;http://testng.org/testng-1.0.dtd&quot;&gt;
+&lt;suite verbose=&quot;0&quot; name=&quot;ESBTestSuite&quot;&gt;
+  &lt;listeners&gt;
+    &lt;listener class-name=&quot;org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener&quot;/&gt;
+    &lt;listener class-name=&quot;org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener&quot;/&gt;
+    &lt;listener class-name=&quot;org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener&quot;/&gt;
+    &lt;listener class-name=&quot;org.wso2.carbon.automation.engine.testlisteners.TestManagerListener&quot;/&gt;
+    &lt;listener class-name=&quot;org.wso2.carbon.automation.engine.testlisteners.TestReportListener&quot;/&gt;
+  &lt;/listeners&gt;
+  &lt;test verbose=&quot;2&quot; name=&quot;Process-Tests&quot;&gt;
+    &lt;classes&gt;
+      &lt;class name=&quot;org.wso2.pc.integration.tests.publisher.LoginTestCase&quot;/&gt;
+      &lt;class name=&quot;org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase&quot;/&gt;
+      &lt;class name=&quot;org.wso2.pc.integration.tests.publisher.AddProcessTestCase&quot;/&gt;
+      &lt;class name=&quot;org.wso2.pc.integration.tests.publisher.ProcessTextTestCase&quot;/&gt;
+      &lt;class name=&quot;org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase&quot;/&gt;
+      &lt;class name=&quot;org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase&quot;/&gt;
+    &lt;/classes&gt;
+  &lt;/test&gt; &lt;!-- Process-Tests --&gt;
+&lt;/suite&gt; &lt;!-- ESBTestSuite --&gt;
+            </pre>
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="testlist-ESBTestSuite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Tests for ESBTestSuite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <ul>
+              <li>
+                <span class="test-name">Process-Tests (6 classes)</span>
+              </li>
+            </ul>
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="group-ESBTestSuite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Groups for ESBTestSuite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <div class="test-group">
+              <span class="test-group-name">org.wso2.pc</span>
+              <br/>
+              <div class="method-in-group">
+                <span class="method-in-group-name">addProcess</span>
+                <br/>
+              </div> <!-- method-in-group -->
+              <div class="method-in-group">
+                <span class="method-in-group-name">addProcessText</span>
+                <br/>
+              </div> <!-- method-in-group -->
+              <div class="method-in-group">
+                <span class="method-in-group-name">checkBPMN</span>
+                <br/>
+              </div> <!-- method-in-group -->
+              <div class="method-in-group">
+                <span class="method-in-group-name">getLogs</span>
+                <br/>
+              </div> <!-- method-in-group -->
+              <div class="method-in-group">
+                <span class="method-in-group-name">getProcessText</span>
+                <br/>
+              </div> <!-- method-in-group -->
+              <div class="method-in-group">
+                <span class="method-in-group-name">predecessorTest</span>
+                <br/>
+              </div> <!-- method-in-group -->
+              <div class="method-in-group">
+                <span class="method-in-group-name">subProcessTest</span>
+                <br/>
+              </div> <!-- method-in-group -->
+              <div class="method-in-group">
+                <span class="method-in-group-name">successorProcessTest</span>
+                <br/>
+              </div> <!-- method-in-group -->
+              <div class="method-in-group">
+                <span class="method-in-group-name">uploadBPMN</span>
+                <br/>
+              </div> <!-- method-in-group -->
+            </div> <!-- test-group -->
+            <div class="test-group">
+              <span class="test-group-name">wso2.pc</span>
+              <br/>
+              <div class="method-in-group">
+                <span class="method-in-group-name">loginPublisher</span>
+                <br/>
+              </div> <!-- method-in-group -->
+            </div> <!-- test-group -->
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="times-ESBTestSuite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Times for ESBTestSuite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <div class="times-div">
+              <script type="text/javascript">
+suiteTableInitFunctions.push('tableData_ESBTestSuite');
+function tableData_ESBTestSuite() {
+var data = new google.visualization.DataTable();
+data.addColumn('number', 'Number');
+data.addColumn('string', 'Method');
+data.addColumn('string', 'Class');
+data.addColumn('number', 'Time (ms)');
+data.addRows(14);
+data.setCell(0, 0, 0)
+data.setCell(0, 1, 'getLogs')
+data.setCell(0, 2, 'org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase')
+data.setCell(0, 3, 2064);
+data.setCell(1, 0, 1)
+data.setCell(1, 1, 'predecessorTest')
+data.setCell(1, 2, 'org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase')
+data.setCell(1, 3, 298);
+data.setCell(2, 0, 2)
+data.setCell(2, 1, 'successorProcessTest')
+data.setCell(2, 2, 'org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase')
+data.setCell(2, 3, 155);
+data.setCell(3, 0, 3)
+data.setCell(3, 1, 'subProcessTest')
+data.setCell(3, 2, 'org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase')
+data.setCell(3, 3, 114);
+data.setCell(4, 0, 4)
+data.setCell(4, 1, 'addProcess')
+data.setCell(4, 2, 'org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase')
+data.setCell(4, 3, 113);
+data.setCell(5, 0, 5)
+data.setCell(5, 1, 'checkBPMN')
+data.setCell(5, 2, 'org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase')
+data.setCell(5, 3, 82);
+data.setCell(6, 0, 6)
+data.setCell(6, 1, 'addProcess')
+data.setCell(6, 2, 'org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase')
+data.setCell(6, 3, 59);
+data.setCell(7, 0, 7)
+data.setCell(7, 1, 'uploadBPMN')
+data.setCell(7, 2, 'org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase')
+data.setCell(7, 3, 58);
+data.setCell(8, 0, 8)
+data.setCell(8, 1, 'addProcess')
+data.setCell(8, 2, 'org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase')
+data.setCell(8, 3, 55);
+data.setCell(9, 0, 9)
+data.setCell(9, 1, 'addProcess')
+data.setCell(9, 2, 'org.wso2.pc.integration.tests.publisher.AddProcessTestCase')
+data.setCell(9, 3, 53);
+data.setCell(10, 0, 10)
+data.setCell(10, 1, 'getLogs')
+data.setCell(10, 2, 'org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase')
+data.setCell(10, 3, 37);
+data.setCell(11, 0, 11)
+data.setCell(11, 1, 'getProcessText')
+data.setCell(11, 2, 'org.wso2.pc.integration.tests.publisher.ProcessTextTestCase')
+data.setCell(11, 3, 29);
+data.setCell(12, 0, 12)
+data.setCell(12, 1, 'addProcessText')
+data.setCell(12, 2, 'org.wso2.pc.integration.tests.publisher.ProcessTextTestCase')
+data.setCell(12, 3, 26);
+data.setCell(13, 0, 13)
+data.setCell(13, 1, 'loginPublisher')
+data.setCell(13, 2, 'org.wso2.pc.integration.tests.publisher.LoginTestCase')
+data.setCell(13, 3, 11);
+window.suiteTableData['ESBTestSuite']= { tableData: data, tableDiv: 'times-div-ESBTestSuite'}
+return data;
+}
+              </script>
+              <span class="suite-total-time">Total running time: 3 seconds</span>
+              <div id="times-div-ESBTestSuite">
+              </div> <!-- times-div-ESBTestSuite -->
+            </div> <!-- times-div -->
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="reporter-ESBTestSuite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Reporter output for ESBTestSuite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="ignored-methods-ESBTestSuite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">0 ignored methods</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="chronological-ESBTestSuite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Methods in chronological order</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <div class="chronological-class">
+              <div class="chronological-class-name">org.wso2.pc.integration.tests.publisher.AddProcessTestCase</div> <!-- chronological-class-name -->
+              <div class="configuration-test before">
+                <span class="method-name">init</span>
+                <span class="method-start">0 ms</span>
+              </div> <!-- configuration-test before -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase</div> <!-- chronological-class-name -->
+              <div class="configuration-test before">
+                <span class="method-name">init</span>
+                <span class="method-start">511 ms</span>
+              </div> <!-- configuration-test before -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase</div> <!-- chronological-class-name -->
+              <div class="configuration-test before">
+                <span class="method-name">init</span>
+                <span class="method-start">813 ms</span>
+              </div> <!-- configuration-test before -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">org.wso2.pc.integration.tests.publisher.ProcessTextTestCase</div> <!-- chronological-class-name -->
+              <div class="configuration-test before">
+                <span class="method-name">init</span>
+                <span class="method-start">1232 ms</span>
+              </div> <!-- configuration-test before -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase</div> <!-- chronological-class-name -->
+              <div class="configuration-test before">
+                <span class="method-name">init</span>
+                <span class="method-start">1678 ms</span>
+              </div> <!-- configuration-test before -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">org.wso2.pc.integration.tests.publisher.LoginTestCase</div> <!-- chronological-class-name -->
+              <div class="configuration-class before">
+                <span class="method-name">init</span>
+                <span class="method-start">1958 ms</span>
+              </div> <!-- configuration-class before -->
+              <div class="test-method">
+                <span class="method-name">loginPublisher</span>
+                <span class="method-start">2175 ms</span>
+              </div> <!-- test-method -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">org.wso2.pc.integration.tests.publisher.PublisherAuditLogTestCase</div> <!-- chronological-class-name -->
+              <div class="test-method">
+                <span class="method-name">addProcess</span>
+                <span class="method-start">2188 ms</span>
+              </div> <!-- test-method -->
+              <div class="test-method">
+                <span class="method-name">getLogs(NA)</span>
+                <span class="method-start">2244 ms</span>
+              </div> <!-- test-method -->
+              <div class="test-method">
+                <span class="method-name">getLogs(/_system/governance/processes/TestProcess1/1.0)</span>
+                <span class="method-start">4308 ms</span>
+              </div> <!-- test-method -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">org.wso2.pc.integration.tests.publisher.AddProcessTestCase</div> <!-- chronological-class-name -->
+              <div class="test-method">
+                <span class="method-name">addProcess</span>
+                <span class="method-start">4354 ms</span>
+              </div> <!-- test-method -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">org.wso2.pc.integration.tests.publisher.ProcessTextTestCase</div> <!-- chronological-class-name -->
+              <div class="test-method">
+                <span class="method-name">addProcessText</span>
+                <span class="method-start">4408 ms</span>
+              </div> <!-- test-method -->
+              <div class="test-method">
+                <span class="method-name">getProcessText</span>
+                <span class="method-start">4435 ms</span>
+              </div> <!-- test-method -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase</div> <!-- chronological-class-name -->
+              <div class="test-method">
+                <span class="method-name">addProcess</span>
+                <span class="method-start">4464 ms</span>
+              </div> <!-- test-method -->
+              <div class="test-method">
+                <span class="method-name">predecessorTest</span>
+                <span class="method-start">4577 ms</span>
+              </div> <!-- test-method -->
+              <div class="test-method">
+                <span class="method-name">successorProcessTest</span>
+                <span class="method-start">4875 ms</span>
+              </div> <!-- test-method -->
+              <div class="test-method">
+                <span class="method-name">subProcessTest</span>
+                <span class="method-start">5031 ms</span>
+              </div> <!-- test-method -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase</div> <!-- chronological-class-name -->
+              <div class="test-method">
+                <span class="method-name">addProcess</span>
+                <span class="method-start">5146 ms</span>
+              </div> <!-- test-method -->
+              <div class="test-method">
+                <span class="method-name">uploadBPMN</span>
+                <span class="method-start">5206 ms</span>
+              </div> <!-- test-method -->
+              <div class="test-method">
+                <span class="method-name">checkBPMN</span>
+                <span class="method-start">5265 ms</span>
+              </div> <!-- test-method -->
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+      </div> <!-- main-panel-root -->
+    </div> <!-- wrapper -->
+  </body>
+</html>

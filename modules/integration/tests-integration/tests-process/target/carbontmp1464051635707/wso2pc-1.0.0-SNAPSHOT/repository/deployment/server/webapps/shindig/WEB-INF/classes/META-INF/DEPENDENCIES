@@ -1,0 +1,15 @@
+// ------------------------------------------------------------------
+// Transitive dependencies of this project determined from the
+// maven pom organized by organization.
+// ------------------------------------------------------------------
+
+Apache Shindig WSO2 Server
+
+
+From: 'The Apache Software Foundation' (http://www.apache.org/)
+  - Apache Shindig Web App (http://shindig.apache.org/shindig-server) org.apache.shindig:shindig-server:war:2.5.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+
+
+

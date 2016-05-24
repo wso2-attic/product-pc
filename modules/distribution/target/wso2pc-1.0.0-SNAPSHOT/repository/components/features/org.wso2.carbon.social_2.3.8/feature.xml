@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<feature id="org.wso2.carbon.social" label="WSO2 Carbon - Social - Feature" provider-name="%providerName" version="2.3.8">
+  <description>WSO2 Enterprise Store apps, features, components and jaggery-modules</description>
+  <copyright>%copyright</copyright>
+  <license url="%licenseURL">%license</license>
+  <require>
+    <import feature="org.wso2.carbon.core.server" match="equivalent" version="4.4.1"/>
+  </require>
+  <includes id="org.wso2.carbon.social.core" optional="false" version="2.3.8"/>
+  <includes id="org.wso2.carbon.social.sql" optional="false" version="2.3.8"/>
+  <includes id="org.wso2.carbon.social.db.adapter" optional="false" version="2.3.8"/>
+</feature>

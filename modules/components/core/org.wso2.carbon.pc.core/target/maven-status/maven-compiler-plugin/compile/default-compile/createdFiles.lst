@@ -1,0 +1,16 @@
+org/wso2/carbon/pc/core/ProcessContentSearchConstants.class
+org/wso2/carbon/pc/core/ProcessStore.class
+org/wso2/carbon/pc/core/ProcessCenterException.class
+org/wso2/carbon/pc/core/audit/util/Constants$REG.class
+org/wso2/carbon/pc/core/DocumentIndexer.class
+org/wso2/carbon/pc/core/internal/ProcessCenterServiceComponent.class
+org/wso2/carbon/pc/core/PCInputStreamProvider.class
+org/wso2/carbon/pc/core/audit/bean/Process.class
+org/wso2/carbon/pc/core/ProcessStoreConstants.class
+org/wso2/carbon/pc/core/audit/util/LogEntryProcessUtils.class
+org/wso2/carbon/pc/core/audit/util/Constants$LOGENTRY.class
+org/wso2/carbon/pc/core/ProcessContentSearchService.class
+org/wso2/carbon/pc/core/audit/bean/LogBean.class
+org/wso2/carbon/pc/core/internal/ProcessCenterServerHolder.class
+org/wso2/carbon/pc/core/audit/util/Constants.class
+org/wso2/carbon/pc/core/audit/RegLogAccessor.class

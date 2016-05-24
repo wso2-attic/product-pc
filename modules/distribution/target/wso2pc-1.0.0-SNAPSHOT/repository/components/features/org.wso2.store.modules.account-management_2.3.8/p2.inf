@@ -1,0 +1,5 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../modules); \
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../modules/account-management); \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.store.modules.account-management_2.3.8/module/,target:${installFolder}/../../../modules/account-management,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.store.modules.account-management_2.3.8/email-admin-config.xml,target:${installFolder}/../../conf/email/email-admin-config.xml,overwrite:true);\

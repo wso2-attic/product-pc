@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/components/analytics/capp/org.wso2.carbon.pc.analytics.capp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/components/analytics/core/org.wso2.carbon.pc.analytics.core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/components/analytics/udf/org.wso2.carbon.pc.analytics.udf" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/components/analytics/web/org.wso2.carbon.pc.analytics.web" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/components/core/org.wso2.carbon.pc.core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/components/handlers" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/components/handlers/org.wso2.carbon.pc.handlers" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/distribution" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/features/analytics-core/org.wso2.carbon.pc.analytics.core.feature" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/features/core/org.wso2.carbon.pc.core.feature" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/integration" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/integration/tests-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/integration/tests-common/integration-test-utils" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/integration/tests-integration" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/integration/tests-integration/tests-process" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/p2-profile-gen" charset="UTF-8" />
+  </component>
+</project>

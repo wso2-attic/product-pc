@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<feature id="org.wso2.carbon.registry.task.server" label="WSO2 Carbon - Registry Task Server Feature" provider-name="%providerName" version="4.4.8">
+  <description>This feature contains the bundles required for Back-end Registry Task Scheduling</description>
+  <copyright>%copyright</copyright>
+  <license url="%licenseURL">%license</license>
+  <plugin id="org.wso2.carbon.registry.task" unpack="false" version="4.4.8"/>
+  <require>
+    <import feature="org.wso2.carbon.registry.core.server" match="equivalent" version="4.4.8"/>
+    <import feature="org.wso2.carbon.ntask" match="equivalent" version="4.4.4"/>
+  </require>
+</feature>

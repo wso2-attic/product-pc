@@ -1,0 +1,19 @@
+{
+  "predecessor":[
+
+  ],
+  "subprocess":[
+
+  ],
+  "successor":[
+
+  ],
+  "processTags":"",
+  "processDescription":"",
+  "processVersion":"1.0",
+  "processName":"TestProcess1",
+  "image":{
+
+  },
+  "processOwner":"TestOwner1"
+}

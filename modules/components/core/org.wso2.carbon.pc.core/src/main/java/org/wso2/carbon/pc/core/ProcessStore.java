@@ -92,7 +92,7 @@ public class ProcessStore {
         return document;
     }
 
-    public String createProcess(String processDetails) throws ProcessCenterException {
+    public String createProcess(String processDetails, String user) throws ProcessCenterException {
         String processId = "FAILED TO ADD PROCESS";
         try {
             JSONObject processInfo = new JSONObject(processDetails);
@@ -107,8 +107,11 @@ public class ProcessStore {
             JSONObject imageObj = processInfo.getJSONObject("image");
 
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+//            EmbeddedRegistryService embeddedRegistryService = new InMemoryEmbeddedRegistryService();
+
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+//                UserRegistry sysreg = registryService.getGovernanceSystemRegistry();
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -212,12 +215,12 @@ public class ProcessStore {
         return processId;
     }
 
-    public boolean saveProcessText(String processName, String processVersion, String processText)
+    public boolean saveProcessText(String processName, String processVersion, String processText,String user)
             throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
                 // get process asset content
                 String processPath = "processes/" + processName + "/" + processVersion;
@@ -332,7 +335,7 @@ public class ProcessStore {
         }
     }
 
-    public String createBPMN(String bpmnName, String bpmnVersion, Object o)
+    public String createBPMN(String bpmnName, String bpmnVersion, Object o, String user)
             throws ProcessCenterException {
         String processId = "FAILED TO CREATE BPMN";
         if (log.isDebugEnabled()) {
@@ -343,7 +346,7 @@ public class ProcessStore {
             InputStream bpmnStream = s.getStream();
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
                 // store bpmn content as a registry resource
                 Resource bpmnContentResource = reg.newResource();
@@ -407,13 +410,13 @@ public class ProcessStore {
         return processId;
     }
 
-    public String removeBPMNDiagram(String processName, String processVersion)
+    public String removeBPMNDiagram(String processName, String processVersion, String user)
 		    throws ProcessCenterException {
 	    String processId = "";
         try {
 	        RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 	        if (registryService != null) {
-		        UserRegistry reg = registryService.getGovernanceSystemRegistry();
+		        UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 		        String bpmnContentPath = ProcessStoreConstants.BPMN_CONTENT_PATH + processName + "/" + processVersion;
 		        if (reg.resourceExists(bpmnContentPath)) {
 			        reg.delete(bpmnContentPath);
@@ -884,12 +887,12 @@ public class ProcessStore {
         return resourceString;
     }
 
-    public boolean updateOwner(String ownerDetails) throws ProcessCenterException {
+    public boolean updateOwner(String ownerDetails, String user) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
                 JSONObject processInfo = new JSONObject(ownerDetails);
                 String processName = processInfo.getString("processName");
@@ -917,12 +920,12 @@ public class ProcessStore {
         return true;
     }
 
-    public boolean addSubprocess(String subprocessDetails) throws ProcessCenterException {
+    public boolean addSubprocess(String subprocessDetails, String user) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
                 JSONObject processInfo = new JSONObject(subprocessDetails);
                 String processName = processInfo.getString("processName");
@@ -956,12 +959,12 @@ public class ProcessStore {
         return true;
     }
 
-    public boolean addSuccessor(String successorDetails) throws ProcessCenterException {
+    public boolean addSuccessor(String successorDetails, String user) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
                 JSONObject processInfo = new JSONObject(successorDetails);
                 String processName = processInfo.getString("processName");
@@ -995,12 +998,12 @@ public class ProcessStore {
         return true;
     }
 
-    public boolean addPredecessor(String predecessorDetails) throws ProcessCenterException {
+    public boolean addPredecessor(String predecessorDetails, String user) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
                 JSONObject processInfo = new JSONObject(predecessorDetails);
                 String processName = processInfo.getString("processName");
@@ -1034,12 +1037,12 @@ public class ProcessStore {
         return true;
     }
 
-    public boolean deleteSubprocess(String deleteSubprocess) throws ProcessCenterException {
+    public boolean deleteSubprocess(String deleteSubprocess, String user) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
                 JSONObject processInfo = new JSONObject(deleteSubprocess);
                 String processName = processInfo.getString("processName");
@@ -1080,12 +1083,12 @@ public class ProcessStore {
         return true;
     }
 
-    public boolean deleteSuccessor(String deleteSuccessor) throws ProcessCenterException {
+    public boolean deleteSuccessor(String deleteSuccessor, String user) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
                 JSONObject processInfo = new JSONObject(deleteSuccessor);
                 String processName = processInfo.getString("processName");
@@ -1126,12 +1129,12 @@ public class ProcessStore {
         return true;
     }
 
-    public boolean deletePredecessor(String deletePredecessor) throws ProcessCenterException {
+    public boolean deletePredecessor(String deletePredecessor, String user) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
                 JSONObject processInfo = new JSONObject(deletePredecessor);
                 String processName = processInfo.getString("processName");
@@ -1217,14 +1220,15 @@ public class ProcessStore {
      * @return process id
      */
     public String uploadDocument(String processName, String processVersion, String docName, String docSummary,
-            String docUrl, Object docObject, String docExtension) throws ProcessCenterException {
+            String docUrl, Object docObject, String docExtension,String user) throws ProcessCenterException {
         String processId = "FAILED TO UPLOAD DOCUMENT";
         try {
             StreamHostObject s = (StreamHostObject) docObject;
             InputStream docStream = s.getStream();
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+//                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
                 // store doc content as a registry resource
                 Resource docContentResource = reg.newResource();
@@ -1365,12 +1369,12 @@ public class ProcessStore {
      * @param deleteDocument holds the information of the document that need to be deleted
      * @return true after successful deletion
      */
-    public boolean deleteDocument(String deleteDocument) throws ProcessCenterException {
+    public boolean deleteDocument(String deleteDocument, String user) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
                 JSONObject documentInfo = new JSONObject(deleteDocument);
                 String processName = documentInfo.getString("processName");
@@ -1508,7 +1512,7 @@ public class ProcessStore {
      * @param flowchartJson
      * @return the processId once the flowchart is saved
      */
-    public String uploadFlowchart(String processName, String processVersion, String flowchartJson)
+    public String uploadFlowchart(String processName, String processVersion, String flowchartJson, String user)
                                         throws ProcessCenterException{
         String processId = "NA";
         if (log.isDebugEnabled())
@@ -1516,7 +1520,7 @@ public class ProcessStore {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
                 Resource flowchartContentResource = reg.newResource();
                 flowchartContentResource.setContent(flowchartJson);
                 flowchartContentResource.setMediaType("application/json");
@@ -1588,12 +1592,12 @@ public class ProcessStore {
      * @param name
      * @param version
      */
-    public void deleteFlowchart(String name, String version) throws ProcessCenterException {
+    public void deleteFlowchart(String name, String version, String user) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             String flowchartContentPath = "flowchart/" + name + "/" + version;
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
                 reg.delete(flowchartContentPath);
 
                 String processPath = "processes/" + name + "/" + version;
@@ -1615,13 +1619,13 @@ public class ProcessStore {
         }
     }
 
-    public String updateDescription(String descriptionDetails) throws ProcessCenterException {
+    public String updateDescription(String descriptionDetails, String user) throws ProcessCenterException {
         String processId = "NA";
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
                 JSONObject processInfo = new JSONObject(descriptionDetails);
                 String processName = processInfo.getString("processName");

@@ -1,0 +1,6 @@
+org/wso2/pc/integration/tests/publisher/AssociateBPMNTestCase.class
+org/wso2/pc/integration/tests/publisher/AddProcessTestCase.class
+org/wso2/pc/integration/tests/publisher/ProcessTextTestCase.class
+org/wso2/pc/integration/tests/publisher/PublisherAuditLogTestCase.class
+org/wso2/pc/integration/tests/publisher/InterProcessAssociationsTestCase.class
+org/wso2/pc/integration/tests/publisher/LoginTestCase.class
