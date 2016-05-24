@@ -15,4 +15,11 @@ public class ProcessCenterConstants {
     public static final String PROCESS_MEDIA_TYPE = "application/vnd.wso2-process+xml";
 
     public static final String LC_NAME = "SampleLifeCycle2";
+
+    //association type for processes in pdf, documents and process text assets
+    public static final String ASSOCIATION_TYPE = "process_association";
+    public static final String SUBPROCESS_ASSOCIATION = "subprocess";
+    public static final String PARENTPROCESS_ASSOCIATION = "parent";
+    public static final String SUCCESSOR_ASSOCIATION = "successor";
+    public static final String PREDECESSOR_ASSOCIATION = "predecessor";
 }
