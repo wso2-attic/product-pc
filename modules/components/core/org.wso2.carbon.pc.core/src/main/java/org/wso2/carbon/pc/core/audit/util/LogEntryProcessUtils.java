@@ -58,17 +58,17 @@ public class LogEntryProcessUtils {
         filterProcessCreation(list, path);
         LogEntry[] processEntriesArr = list.toArray(new LogEntry[list.size()]);
 
-        processLogEntries(processEntriesArr, Constants.PROCESS, path, logResult);
-        processLogEntries(logBean.getProcessTxtEntries(), Constants.PROCESS_TEXT, path, logResult);
-        processLogEntries(logBean.getPdfEntries(), Constants.PDF, path, logResult);
-        processLogEntries(logBean.getFlowchartEntries(), Constants.FLOW_CHART, path, logResult);
-        processLogEntries(logBean.getDocEntries(), Constants.DOCUMENT, path, logResult);
-        processLogEntries(logBean.getBpmnEntries(), Constants.BPMN, path, logResult);
-        processLogEntries(logBean.getLifecycleEntries(), Constants.LIFE_CYCLE, path, logResult);
+        processLogEntryResponse(processEntriesArr, Constants.PROCESS, path, logResult);
+        processLogEntryResponse(logBean.getProcessTxtEntries(), Constants.PROCESS_TEXT, path, logResult);
+        processLogEntryResponse(logBean.getPdfEntries(), Constants.PDF, path, logResult);
+        processLogEntryResponse(logBean.getFlowchartEntries(), Constants.FLOW_CHART, path, logResult);
+        processLogEntryResponse(logBean.getDocEntries(), Constants.DOCUMENT, path, logResult);
+        processLogEntryResponse(logBean.getBpmnEntries(), Constants.BPMN, path, logResult);
+        processLogEntryResponse(logBean.getLifecycleEntries(), Constants.LIFE_CYCLE, path, logResult);
 
     }
 
-    private static void processLogEntries(LogEntry[] entries, String type, String processPath, JSONArray result) {
+    private static void processLogEntryResponse(LogEntry[] entries, String type, String processPath, JSONArray result) {
 
         for (LogEntry logEntry : entries) {
             try {
