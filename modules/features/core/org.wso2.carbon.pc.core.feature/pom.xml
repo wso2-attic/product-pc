@@ -25,28 +25,6 @@
 
     <build>
         <plugins>
-
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-antrun-plugin</artifactId>-->
-                <!--<version>1.1</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>clean_target</id>-->
-                        <!--<phase>install</phase>-->
-                        <!--<configuration>-->
-                            <!--<tasks>-->
-                                <!--<delete dir="src/main/resources" />-->
-                                <!--<delete dir="src/main" />-->
-                                <!--<delete dir="src" />-->
-                            <!--</tasks>-->
-                        <!--</configuration>-->
-                        <!--<goals>-->
-                            <!--<goal>run</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
             <plugin>
                 <groupId>org.wso2.maven</groupId>
                 <artifactId>carbon-p2-plugin</artifactId>
@@ -73,7 +51,7 @@
                                 <bundleDef>org.wso2.pc:org.wso2.carbon.pc.core</bundleDef>
                             </bundles>
                             <importBundles>
-                                <importBundleDef>org.wso2.orbit.org.activiti:activiti-all:5.16.3.wso2v2</importBundleDef>
+                                <importBundleDef>org.wso2.orbit.org.activiti:activiti-all:${org.activiti.wso2.version}</importBundleDef>
                                 <importBundleDef>org.apache.commons:commons-lang3:3.3.2</importBundleDef>
                                 <importBundleDef>org.apache.geronimo.specs:geronimo-jpa_2.0_spec:1.1</importBundleDef>
                             </importBundles>

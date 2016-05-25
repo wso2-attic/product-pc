@@ -176,7 +176,6 @@ public class GenericRestClient {
         return response;
     }
 
-
     public ClientResponse geneticRestRequestGet(String resourceUrl,
                                                 Map<String, String> queryParamMap,
                                                 String acceptMediaType,
@@ -236,5 +235,4 @@ public class GenericRestClient {
                 accept(acceptMediaType).put(postBody);
         return response;
     }
-
 }

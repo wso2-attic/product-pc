@@ -33,8 +33,11 @@
             <class name="org.wso2.pc.integration.tests.publisher.ProcessTextTestCase"/>
             <class name="org.wso2.pc.integration.tests.publisher.InterProcessAssociationsTestCase"/>
             <class name="org.wso2.pc.integration.tests.publisher.AssociateBPMNTestCase"/>
+            <class name="org.wso2.pc.integration.tests.publisher.AssociatePDFTestCase"/>
+            <class name="org.wso2.pc.integration.tests.publisher.AssociateMSWordDocTestCase"/>
+            <class name="org.wso2.pc.integration.tests.publisher.AssociateURLTestCase"/>
+            <class name="org.wso2.pc.integration.tests.publisher.AddFlowChartTestCase"/>
         </classes>
     </test>
-
 </suite>
 

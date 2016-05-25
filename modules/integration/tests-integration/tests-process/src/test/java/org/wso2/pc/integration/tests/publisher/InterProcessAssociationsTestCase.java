@@ -17,6 +17,8 @@
 package org.wso2.pc.integration.tests.publisher;
 
 import com.google.gson.Gson;
+import org.apache.wink.client.ClientResponse;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
@@ -25,20 +27,20 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
-import org.wso2.pc.integration.test.utils.base.GenericRestClient;
-import org.wso2.pc.integration.test.utils.base.PCIntegrationBaseTest;
-import org.wso2.pc.integration.test.utils.base.RegistryProviderUtil;
-import org.wso2.pc.integration.test.utils.base.TestUtils;
+import org.wso2.pc.integration.test.utils.base.*;
 import org.wso2.pc.integration.test.utils.base.beans.ProcessBean;
 import org.xml.sax.InputSource;
 
+import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 
-public class InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
+public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
 
     private String processResourcePath;
     private String cookieHeader;
@@ -49,6 +51,14 @@ public class InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
     private static final String SUBPROCESS_NAME = "SubProcess";
     private static final String SUCESSOR_PROCESS_NAME = "SuccessorProcess";
     private RegistryProviderUtil registryProviderUtil = new RegistryProviderUtil();
+    private GenericRestClient genericRestClient = new GenericRestClient();
+    private HashMap<String, String> headerMap = new HashMap<>();
+    private HashMap<String, String> queryMap = new HashMap<>();
+    private static final String PROCESS_NAME = "TestProcess1";
+    private static final String PROCESS_VERSION = "1.0";
+    private ProcessBean predecessorProcess;
+    private ProcessBean subProcess;
+    private ProcessBean successorProcess;
 
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
@@ -56,8 +66,6 @@ public class InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
         String publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
                 replace("services", "publisher/apis");
         GenericRestClient genericRestClient = new GenericRestClient();
-        HashMap<String, String> headerMap = new HashMap<>();
-        HashMap<String, String> queryMap = new HashMap<>();
 
         //logging in to publisher and obtain session cookie
         JSONObject objSessionPublisher =
@@ -96,11 +104,11 @@ public class InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
             "process and successorprocess")
     public void addProcess() throws Exception {
 
-        ProcessBean predecessorProcess = createProcessBean(PREDECESSOR_PROCESS_NAME,
+        predecessorProcess = createProcessBean(PREDECESSOR_PROCESS_NAME,
                 "/processes/PredecessorProcess/1.0", predecessorProcessID);
-        ProcessBean subProcess = createProcessBean(SUBPROCESS_NAME,
+        subProcess = createProcessBean(SUBPROCESS_NAME,
                 "/processes/SubProcess/1.0", subProcessID);
-        ProcessBean successorProcess = createProcessBean(SUCESSOR_PROCESS_NAME,
+        successorProcess = createProcessBean(SUCESSOR_PROCESS_NAME,
                 "/processes/SuccessorProcess/1.0", successorProcessID);
 
         Gson gson = new Gson();
@@ -142,6 +150,45 @@ public class InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
                 getTextContent(), predecessorProcessID, "predecessor error");
     }
 
+    @Test(groups = {"org.wso2.pc"}, description = "Delete subprocess test",
+            dependsOnMethods = "subProcessTest")
+    public void deleteSubprocess() throws JSONException, UnsupportedEncodingException {
+        queryMap.put("deleteSubprocessDetails",
+                URLEncoder.encode(associateProcessDeleteRequest("deleteSubprocess",
+                        PROCESS_NAME,PROCESS_VERSION,subProcess),PCIntegrationConstants.UTF_8));
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+                        "delete_subprocess", MediaType.APPLICATION_FORM_URLENCODED,
+                MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
+        Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().
+                equals("false"));
+    }
+
+    @Test(groups = {"org.wso2.pc"}, description = "Delete Predecessor process test",
+            dependsOnMethods = "predecessorTest")
+    public void deletePredecessor() throws JSONException, UnsupportedEncodingException {
+        queryMap.put("deletePredecessorDetails",
+                URLEncoder.encode(associateProcessDeleteRequest("deletePredecessor",
+                        PROCESS_NAME,PROCESS_VERSION,predecessorProcess),PCIntegrationConstants.UTF_8));
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+                        "delete_Predecessor", MediaType.APPLICATION_FORM_URLENCODED,
+                MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
+        Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().
+                equals("false"));
+    }
+
+    @Test(groups = {"org.wso2.pc"}, description = "Delete Successor process test",
+            dependsOnMethods = "successorProcessTest")
+    public void deleteSuccessor() throws JSONException, UnsupportedEncodingException {
+        queryMap.put("deleteSuccessorDetails",
+                URLEncoder.encode(associateProcessDeleteRequest("deleteSuccessor",
+                        PROCESS_NAME,PROCESS_VERSION,successorProcess),PCIntegrationConstants.UTF_8));
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+                        "delete_successor", MediaType.APPLICATION_FORM_URLENCODED,
+                MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
+        Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().
+                equals("false"));
+    }
+
     private Element getAssociateProcess(String processType) throws Exception {
         Element associateProcessElement = null;
         WSRegistryServiceClient wsRegistryServiceClient = registryProviderUtil.
@@ -163,5 +210,18 @@ public class InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
         process.setId(ID);
         process.setPath(path);
         return process;
+    }
+
+    private String associateProcessDeleteRequest(String action,
+                                                 String processName,
+                                                 String processVersion,
+                                                 ProcessBean associateProcess)
+            throws JSONException {
+        JSONObject deleteProcessObject = new JSONObject();
+        Gson gson = new Gson();
+        deleteProcessObject.put(PCIntegrationConstants.PROCESS_NAME,processName);
+        deleteProcessObject.put(PCIntegrationConstants.PROCESS_VERSION,processVersion);
+        deleteProcessObject.put(action,new JSONObject(gson.toJson(associateProcess)));
+        return deleteProcessObject.toString();
     }
 }

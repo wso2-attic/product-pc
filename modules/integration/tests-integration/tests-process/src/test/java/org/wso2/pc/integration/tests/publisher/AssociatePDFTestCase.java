@@ -23,38 +23,32 @@ import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
-import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.pc.integration.test.utils.base.*;
-import org.xml.sax.InputSource;
 
 import javax.ws.rs.core.MediaType;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
-public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
+public class AssociatePDFTestCase extends PCIntegrationBaseTest{
 
-    private GenericRestClient genericRestClient;
-    private HashMap<String, String> headerMap;
-    private HashMap<String, String> queryMap;
-    private String resourcePath;
     private String cookieHeader;
-    private RegistryProviderUtil registryProviderUtil = new RegistryProviderUtil();
-    private static final String PROCESS_NAME="TestProcess1";
-    private static final String PROCESS_VERSION="1.0";
+    private GenericRestClient genericRestClient;
+    private HashMap<String, String> queryMap;
+    private HashMap<String, String> headerMap;
+    private String resourcePath;
+    private static final String ASSOCIATED_PDF_NAME = "TestPDFDocument";
+    private static final String ASSOCIATED_PDF_SUMMARY = "TestPDFSummary";
+    private static final String PROCESS_NAME = "TestProcess1";
+    private static final String PROCESS_VERSION = "1.0";
 
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
         super.init();
         String publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
-                replace("services","publisher/apis");
+                replace("services", "publisher/apis");
         genericRestClient = new GenericRestClient();
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
@@ -86,56 +80,49 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
                 "Error while creating the process");
     }
 
-    @Test(groups = {"org.wso2.pc"}, description = "Associating BPMN to the process",
+    @Test(groups = {"org.wso2.pc"}, description = "Associating PDF to the process",
             dependsOnMethods = "addProcess")
-    public void uploadBPMN() throws IOException {
+    public void uploadPDF() throws IOException {
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
-                File.separator + "BPMN"
-                + File.separator + "userTaskProcess.bpmn20.xml";
-        String url = publisherAPIBaseUrl + "upload_bpmn";
-        PostMethod httpMethod = ArtifactUploadUtil.uploadBPMN(resourcePath1,
-                PROCESS_NAME, PROCESS_VERSION, "BPMN", cookieHeader, url);
+                File.separator + "PDF" + File.separator + "TestFile.pdf";
+        String url = publisherAPIBaseUrl + "upload_documents";
+        PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_PDF_NAME,
+                ASSOCIATED_PDF_SUMMARY,PCIntegrationConstants.PDF_EXTENSION,"NA","file",
+                "TestProcess1","1.0",cookieHeader,url,PCIntegrationConstants.APPLICATION_PDF_TYPE);
         Assert.assertTrue(httpMethod.getStatusCode() == 302,
                 "Wrong status code ,Expected 302 ,Received " + httpMethod.getStatusCode());
     }
 
-    @Test(groups = {"org.wso2.pc"}, description = "Checking associated BPMN",
-            dependsOnMethods = "uploadBPMN")
-    public void checkBPMN() throws Exception {
-        Element bpmnElement = getAssociateProcess("name");
-        Assert.assertNotNull(bpmnElement,"Associated BPMN doesn't exist");
-        Assert.assertTrue(bpmnElement.getTextContent().equals(PROCESS_NAME),
-                "TestProcess1 doesn't have associated BPMN");
+    @Test(groups = {"org.wso2.pc"}, description = "Download associated PDF document",
+            dependsOnMethods = "uploadPDF")
+    public void checkPDF() throws JSONException {
+
+        queryMap.put("process_doc_path",String.format("%s/%s/%s/%s.%s",
+                PCIntegrationConstants.DOC_CONTENT,
+                PROCESS_NAME,PROCESS_VERSION,
+                ASSOCIATED_PDF_NAME,
+                PCIntegrationConstants.PDF_EXTENSION));
+        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherAPIBaseUrl +
+                        "download_document",queryMap,headerMap,cookieHeader);
+        Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().
+                equals("false"),"Associated PDF doesn't exit");
     }
 
-    @Test(groups = {"org.wso2.pc"}, description = "BPMN deleting test case",
-            dependsOnMethods = "checkBPMN")
-    public void deleteBPMN() throws JSONException {
-        queryMap.put(PCIntegrationConstants.PROCESS_NAME, PROCESS_NAME);
-        queryMap.put(PCIntegrationConstants.PROCESS_VERSION,PROCESS_VERSION);
+    @Test(groups = {"org.wso2.pc"}, description = "PDF deleting test case",
+            dependsOnMethods = "checkPDF")
+    public void deletePDF() throws JSONException, IOException {
+        String PDFDeleteRequest = readFile(FrameworkPathUtil.getSystemResourceLocation() +
+                "artifacts" + File.separator + "json" + File.separator + "delete-pdf-document.json");
+        queryMap.put("removeDocumentDetails", URLEncoder.
+                encode(PDFDeleteRequest,PCIntegrationConstants.UTF_8));
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
-                        "delete_bpmn",MediaType.APPLICATION_FORM_URLENCODED,MediaType.APPLICATION_JSON,null,
-                queryMap,headerMap,cookieHeader);
+                        "delete_document",MediaType.APPLICATION_FORM_URLENCODED,
+                MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
                 "Expected 200 OK, Received " + response.getStatusCode());
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
         Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
-                equals("false"),"Couldn't delete BPMN");
-    }
-
-    private Element getAssociateProcess(String processType) throws Exception {
-        Element associateProcessElement = null;
-        WSRegistryServiceClient wsRegistryServiceClient = registryProviderUtil.
-                getWSRegistry(automationContext);
-        String xml = new String(wsRegistryServiceClient.
-                getContent("/_system/governance/bpmn/TestProcess1/1.0"));
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
-        Document document = builder.parse(new InputSource(new StringReader(xml)));
-        Element root = document.getDocumentElement();
-        if (root.getElementsByTagName(processType) != null)
-            associateProcessElement = (Element) root.getElementsByTagName(processType).item(0);
-        return associateProcessElement;
+                equals("false"),"Couldn't delete associated PDF");
     }
 }

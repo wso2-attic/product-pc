@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.pc.core;
 
+import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.converter.util.InputStreamProvider;
 import org.activiti.bpmn.model.BpmnModel;
@@ -33,8 +34,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
+import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.exceptions.ResourceNotFoundException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -198,7 +201,7 @@ public class ProcessStore {
                 processId = storedProcess.getUUID();
 
                 if(imageObj.length() != 0) {
-                    String imageRegPath = ProcessStoreConstants.IMAGE_PATH + processId + "/" +
+                    String imageRegPath = ProcessCenterConstants.IMAGE_PATH + processId + "/" +
                                           imageObj.getString("imgValue");
                     Resource imageContentResource = reg.newResource();
                     BASE64Decoder decoder = new BASE64Decoder();
@@ -231,7 +234,7 @@ public class ProcessStore {
 
                 // store process text as a separate resource
                 String processTextResourcePath = "processText/" + processName + "/" + processVersion;
-                reg.addAssociation(processTextResourcePath, processPath, ProcessContentSearchConstants.ASSOCIATION_TYPE);
+                reg.addAssociation(processTextResourcePath, processPath, ProcessCenterConstants.ASSOCIATION_TYPE);
 
                 if (processText != null && processText.length() > 0) {
                     Resource processTextResource = reg.newResource();
@@ -417,15 +420,16 @@ public class ProcessStore {
 	        RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 	        if (registryService != null) {
 		        UserRegistry reg = registryService.getGovernanceUserRegistry(user);
-		        String bpmnContentPath = ProcessStoreConstants.BPMN_CONTENT_PATH + processName + "/" + processVersion;
+		        String bpmnContentPath = ProcessCenterConstants.BPMN_CONTENT_PATH + processName + "/" + processVersion;
+
 		        if (reg.resourceExists(bpmnContentPath)) {
 			        reg.delete(bpmnContentPath);
 		        }
-		        String bpmnAssetPath = ProcessStoreConstants.BPMN_PATH + processName + "/" + processVersion;
+		        String bpmnAssetPath = ProcessCenterConstants.BPMN_PATH + processName + "/" + processVersion;
 		        if (reg.resourceExists(bpmnAssetPath)) {
 			        reg.delete(bpmnAssetPath);
 		        }
-		        String processPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
+		        String processPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
 		        if(reg.resourceExists(processPath)) {
 			        Resource processResource = reg.get(processPath);
 
@@ -796,93 +800,52 @@ public class ProcessStore {
         }
     }
 
+    public void populateAssociations(Association[] associations, JSONArray jsonArray, UserRegistry reg) throws Exception {
+        for (Association association : associations) {
+            String associationPath = association.getDestinationPath();
+            Resource associatedResource = reg.get(associationPath);
+
+            String processContent = new String((byte[]) associatedResource.getContent());
+            Document doc = stringToXML(processContent);
+            Element rootElement = doc.getDocumentElement();
+            Element overviewElement = (Element) rootElement.getElementsByTagName("overview").item(0);
+            JSONObject associatedProcessDetails = new JSONObject();
+            associatedProcessDetails.put("name", overviewElement.getElementsByTagName("name").item(0).getTextContent());
+            associatedProcessDetails.put("path", associatedResource.getPath());
+            associatedProcessDetails.put("id", associatedResource.getId());
+            associatedProcessDetails.put("version", overviewElement.getElementsByTagName("version").item(0).getTextContent());
+            jsonArray.put(associatedProcessDetails);
+        }
+    }
+
     public String getSucessorPredecessorSubprocessList(String resourcePath) {
         String resourceString = "";
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                resourcePath = resourcePath.substring(ProcessStoreConstants.GREG_PATH.length());
-                Resource resourceAsset = reg.get(resourcePath);
-                String resourceContent = new String((byte[]) resourceAsset.getContent());
+                resourcePath = resourcePath.substring(ProcessCenterConstants.GREG_PATH.length());
 
                 JSONObject conObj = new JSONObject();
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder builder;
-                builder = factory.newDocumentBuilder();
-                Document document = builder.parse(new InputSource(new StringReader(resourceContent)));
-
                 JSONArray subprocessArray = new JSONArray();
-                JSONArray successorArray = new JSONArray();
-                JSONArray predecessorArray = new JSONArray();
-
+                Association[] aSubprocesses = reg.getAssociations(resourcePath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
+                populateAssociations(aSubprocesses, subprocessArray, reg);
                 conObj.put("subprocesses", subprocessArray);
+
+                JSONArray successorArray = new JSONArray();
+                Association[] aSuccessors = reg.getAssociations(resourcePath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                populateAssociations(aSuccessors, successorArray, reg);
                 conObj.put("successors", successorArray);
+
+                JSONArray predecessorArray = new JSONArray();
+                Association[] aPredecessors = reg.getAssociations(resourcePath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                populateAssociations(aPredecessors, predecessorArray, reg);
                 conObj.put("predecessors", predecessorArray);
 
-                NodeList subprocessElements = ((Element) document.getFirstChild()).getElementsByTagName(
-                        "subprocess");
-                NodeList successorElements = ((Element) document.getFirstChild()).getElementsByTagName("successor");
-                NodeList predecessorElements = ((Element) document.getFirstChild()).getElementsByTagName(
-                        "predecessor");
-
-                if (subprocessElements.getLength() != 0) {
-                    for (int i = 0; i < subprocessElements.getLength(); i++) {
-                        Element subprocessElement = (Element) subprocessElements.item(i);
-                        String subprocessName = subprocessElement.getElementsByTagName("name").item(0).getTextContent();
-                        String subprocessPath = subprocessElement.getElementsByTagName("path").item(0).getTextContent();
-                        String subprocessId = subprocessElement.getElementsByTagName("id").item(0).getTextContent();
-                        String subprocessVersion = subprocessPath.substring(subprocessPath.lastIndexOf("/") + 1).trim();
-
-                        JSONObject subprocess = new JSONObject();
-                        subprocess.put("name", subprocessName);
-                        subprocess.put("path", subprocessPath);
-                        subprocess.put("id", subprocessId);
-                        subprocess.put("version", subprocessVersion);
-                        subprocessArray.put(subprocess);
-                    }
-                }
-
-                if (successorElements.getLength() != 0) {
-                    for (int i = 0; i < successorElements.getLength(); i++) {
-                        Element successorElement = (Element) successorElements.item(i);
-                        String successorName = successorElement.getElementsByTagName("name").item(0).getTextContent();
-                        String successorPath = successorElement.getElementsByTagName("path").item(0).getTextContent();
-                        String successorId = successorElement.getElementsByTagName("id").item(0).getTextContent();
-                        String successorVersion = successorPath.substring(successorPath.lastIndexOf("/") + 1).trim();
-
-                        JSONObject successor = new JSONObject();
-                        successor.put("name", successorName);
-                        successor.put("path", successorPath);
-                        successor.put("id", successorId);
-                        successor.put("version", successorVersion);
-                        successorArray.put(successor);
-                    }
-                }
-
-                if (predecessorElements.getLength() != 0) {
-                    for (int i = 0; i < predecessorElements.getLength(); i++) {
-                        Element predecessorElement = (Element) predecessorElements.item(i);
-                        String predecessorName = predecessorElement.getElementsByTagName("name").item(0)
-                                .getTextContent();
-                        String predecessorPath = predecessorElement.getElementsByTagName("path").item(0)
-                                .getTextContent();
-                        String predecessorId = predecessorElement.getElementsByTagName("id").item(0).getTextContent();
-                        String predecessorVersion = predecessorPath.substring(predecessorPath.lastIndexOf("/") + 1)
-                                .trim();
-
-                        JSONObject predecessor = new JSONObject();
-                        predecessor.put("name", predecessorName);
-                        predecessor.put("path", predecessorPath);
-                        predecessor.put("id", predecessorId);
-                        predecessor.put("version", predecessorVersion);
-                        predecessorArray.put(predecessor);
-                    }
-                }
                 resourceString = conObj.toString();
             }
         } catch (Exception e) {
-            log.error("Failed to fetch Successor Predecessor and Subprocess information: " + resourcePath, e);
+            log.error("Failed to fetch Successor, Predecessor and Subprocess information of " + resourcePath, e);
         }
         return resourceString;
     }
@@ -899,7 +862,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 String processOwner = processInfo.getString("value");
 
-                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
@@ -932,22 +895,25 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject subprocess = processInfo.getJSONObject("subprocess");
 
-                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
                 if (subprocess != null) {
+                    String subprocessPath = subprocess.getString("path");
                     Element rootElement = doc.getDocumentElement();
                     Element subprocessElement = append(doc, rootElement, "subprocess", mns);
                     appendText(doc, subprocessElement, "name", mns, subprocess.getString("name"));
-                    appendText(doc, subprocessElement, "path", mns, subprocess.getString("path"));
+                    appendText(doc, subprocessElement, "path", mns, subprocessPath);
                     appendText(doc, subprocessElement, "id", mns, subprocess.getString("id"));
 
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
+                    reg.addAssociation(processAssetPath, subprocessPath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
+                    reg.addAssociation(subprocessPath, processAssetPath, ProcessCenterConstants.PARENTPROCESS_ASSOCIATION);
                 }
             }
 
@@ -971,7 +937,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject successor = processInfo.getJSONObject("successor");
 
-                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
@@ -987,6 +953,14 @@ public class ProcessStore {
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
+                    reg.addAssociation(processAssetPath, successor.getString("path"), ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                    reg.addAssociation(successor.getString("path"), processAssetPath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+
+                    // add current process as a predecessor to the successor process
+                    Resource successorProcess = reg.get(successor.getString("path"));
+                    String successorContent = new String((byte[]) successorProcess.getContent());
+                    Document sdoc = stringToXML(successorContent);
+
                 }
             }
 
@@ -1010,7 +984,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject predecessor = processInfo.getJSONObject("predecessor");
 
-                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
@@ -1026,6 +1000,8 @@ public class ProcessStore {
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
+                    reg.addAssociation(processAssetPath, predecessor.getString("path"), ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                    reg.addAssociation(predecessor.getString("path"), processAssetPath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
                 }
             }
 
@@ -1049,7 +1025,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject subprocess = processInfo.getJSONObject("deleteSubprocess");
 
-                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
@@ -1067,6 +1043,8 @@ public class ProcessStore {
                                 subprocessPath.equals(subprocess.getString("path")) &&
                                 subprocessId.equals(subprocess.getString("id"))) {
                             subprocessElement.getParentNode().removeChild(subprocessElement);
+                            reg.removeAssociation(processAssetPath, subprocess.getString("path"), ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
+                            reg.removeAssociation(subprocess.getString("path"), processAssetPath, ProcessCenterConstants.PARENTPROCESS_ASSOCIATION);
                             break;
                         }
                     }
@@ -1095,7 +1073,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject successor = processInfo.getJSONObject("deleteSuccessor");
 
-                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
@@ -1113,6 +1091,8 @@ public class ProcessStore {
                                 successorPath.equals(successor.getString("path")) &&
                                 successorId.equals(successor.getString("id"))) {
                             successorElement.getParentNode().removeChild(successorElement);
+                            reg.removeAssociation(processAssetPath, successor.getString("path"), ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                            reg.removeAssociation(successor.getString("path"), processAssetPath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
                             break;
                         }
                     }
@@ -1141,7 +1121,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 JSONObject predecessor = processInfo.getJSONObject("deletePredecessor");
 
-                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
@@ -1161,6 +1141,8 @@ public class ProcessStore {
                                 predecessorPath.equals(predecessor.getString("path")) &&
                                 predecessorId.equals(predecessor.getString("id"))) {
                             predecessorElement.getParentNode().removeChild(predecessorElement);
+                            reg.removeAssociation(processAssetPath, predecessor.getString("path"), ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                            reg.removeAssociation(predecessor.getString("path"), processAssetPath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
                             break;
                         }
                     }
@@ -1188,7 +1170,7 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                resourcePath = resourcePath.substring(ProcessStoreConstants.GREG_PATH.length());
+                resourcePath = resourcePath.substring(ProcessCenterConstants.GREG_PATH.length());
                 Resource resourceAsset = reg.get(resourcePath);
                 String resourceContent = new String((byte[]) resourceAsset.getContent());
 
@@ -1233,7 +1215,7 @@ public class ProcessStore {
                 // store doc content as a registry resource
                 Resource docContentResource = reg.newResource();
                 byte[] docContent = IOUtils.toByteArray(docStream);
-                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                                           processVersion;
                 String docContentPath = null;
                 if (docContent.length != 0) {
@@ -1248,7 +1230,7 @@ public class ProcessStore {
                             "." + docExtension;
                     reg.put(docContentPath, docContentResource);
                     reg.addAssociation(docContentPath, processAssetPath,
-                                       ProcessContentSearchConstants.ASSOCIATION_TYPE);
+                                       ProcessCenterConstants.ASSOCIATION_TYPE);
                 }
 
                 Resource resource = reg.get(processAssetPath);
@@ -1298,7 +1280,7 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                resourcePath = resourcePath.substring(ProcessStoreConstants.GREG_PATH.length());
+                resourcePath = resourcePath.substring(ProcessCenterConstants.GREG_PATH.length());
                 Resource resourceAsset = reg.get(resourcePath);
                 String resourceContent = new String((byte[]) resourceAsset.getContent());
 
@@ -1381,7 +1363,7 @@ public class ProcessStore {
                 String processVersion = documentInfo.getString("processVersion");
                 JSONObject removeDocument = documentInfo.getJSONObject("removeDocument");
 
-                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
@@ -1632,7 +1614,7 @@ public class ProcessStore {
                 String processVersion = processInfo.getString("processVersion");
                 String processDescription = processInfo.getString("value");
 
-                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());

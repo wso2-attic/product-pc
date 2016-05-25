@@ -252,9 +252,9 @@
                                     org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.patch.version.221}
                                 </featureArtifactDef-->
 
-                                <featureArtifactDef>
-                                    org.wso2.carbon.commons:org.wso2.carbon.event.feature:${carbon.commons.version}
-                                </featureArtifactDef>
+                                <!--featureArtifactDef>
+                                    org.wso2.carbon.commons:org.wso2.carbon.event.feature:${carbon.analytics.common.version}
+                                </featureArtifactDef-->
                                 <featureArtifactDef>
                                     org.wso2.carbon.registry:org.wso2.carbon.registry.ws.feature:${carbon.registry.version}
                                 </featureArtifactDef>
@@ -295,9 +295,9 @@
                                     org.wso2.carbon.store:org.wso2.carbon.social.feature:${carbon.social.version}
                                 </featureArtifactDef>
 
-                                <featureArtifactDef>
+                                <!--featureArtifactDef>
                                     org.wso2.carbon.commons:org.wso2.carbon.databridge.datapublisher.feature:${carbon.commons.version}
-                                </featureArtifactDef>
+                                </featureArtifactDef-->
 
                                 <!-- Notification Support: Mail -->
                                 <featureArtifactDef>
@@ -325,6 +325,23 @@
                                 <feaureArtifactDef>
                                     org.wso2.ciphertool:org.wso2.ciphertool.feature:${ciphertool.version}
                                 </feaureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.directory.service.mgr.feature:${carbon.identity.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.user.registration.server.feature:${carbon.identity.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.user.registration.ui.feature:${carbon.identity.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt.feature:${carbon.identity.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.metrics:org.wso2.carbon.metrics.feature:${carbon.metrics.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon.store:carbon-metrics.feature:${carbon.store.version}
+                                </featureArtifactDef>
 
                             </featureArtifacts>
                         </configuration>
@@ -494,10 +511,10 @@
                                     <version>${carbon.identity.version}</version>
                                 </feature>
 
-                                <feature>
+                                <!--feature>
                                     <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
-                                    <version>${carbon.commons.version}</version>
-                                </feature>
+                                    <version>${carbon.analytics.common.version}</version>
+                                </feature-->
                                 <!-- sso -->
                                 <feature>
                                     <id>
@@ -610,10 +627,10 @@
                                     <id>org.wso2.carbon.databridge.streamdefn.registry.server.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature-->
-                                <feature>
+                                <!--feature>
                                     <id>org.wso2.carbon.event.feature.group</id>
                                     <version>${carbon.commons.version}</version>
-                                </feature>
+                                </feature-->
                                 <feature>
                                     <id>org.wso2.carbon.claim.mgt.feature.group</id>
                                     <version>${carbon.identity.version}</version>
@@ -679,6 +696,30 @@
                                 <feature>
                                     <id>org.wso2.ciphertool.feature.group</id>
                                     <version>${ciphertool.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.directory.service.mgr.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.user.registration.server.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.user.registration.ui.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.notification.mgt.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.metrics.feature.group</id>
+                                    <version>${carbon.metrics.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.store.modules.carbon-metrics.feature.group</id>
+                                    <version>${carbon.store.version}</version>
                                 </feature>
                             </features>
                         </configuration>

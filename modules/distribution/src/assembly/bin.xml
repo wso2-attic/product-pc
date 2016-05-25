@@ -213,15 +213,9 @@
             </directory>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/security/</outputDirectory>
             <includes>
-                <include>**/cipher-standalone-config.properties</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>src/repository/conf/security</directory>
-            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/security/</outputDirectory>
-            <includes>
                 <include>**/cipher-text.properties</include>
                 <include>**/cipher-tool.properties</include>
+                <include>**/cipher-standalone-config.properties</include>
             </includes>
         </fileSet>
         <fileSet>
@@ -325,27 +319,6 @@
             </includes>
         </fileSet>
 
-        <!--<fileSet>-->
-        <!--<directory>../components/analytics/web/org.wso2.carbon.pc.analytics.web/src/web</directory>-->
-        <!--<outputDirectory>-->
-        <!--${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/bpmn-analytics-explorer-->
-        <!--</outputDirectory>-->
-        <!--</fileSet>-->
-        <!--<fileSet>-->
-        <!--<directory>../components/analytics/udf/org.wso2.carbon.pc.analytics.udf/target</directory>-->
-        <!--<outputDirectory>${project.artifactId}-${pc.version}/analytics</outputDirectory>-->
-        <!--<includes>-->
-        <!--<include>**/PCAnalyticsUDF.jar</include>-->
-        <!--</includes>-->
-        <!--</fileSet>-->
-        <!--<fileSet>-->
-        <!--<directory>../components/analytics/capp/org.wso2.carbon.pc.analytics.capp/target</directory>-->
-        <!--<outputDirectory>${project.artifactId}-${pc.version}/analytics</outputDirectory>-->
-        <!--<includes>-->
-        <!--<include>**/*.car</include>-->
-        <!--</includes>-->
-        <!--</fileSet>-->
-
         <!--fileSet>
             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0001</directory>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/components/patches/</outputDirectory>
@@ -361,7 +334,6 @@
                </includes>
                <outputDirectory>${project.artifactId}-${pc.version}/lib</outputDirectory>
            </fileSet>
-
            <fileSet>
               <directory>${project.basedir}/../components/asset-client/src/samples</directory>
                <includes>
@@ -385,6 +357,15 @@
             <directory>src/repository/samples</directory>
             <outputDirectory>${project.artifactId}-${pc.version}/samples</outputDirectory>
         </fileSet>
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/metrics/
+            </directory>
+            <outputDirectory>${project.artifactId}-${pc.version}/dbscripts/metrics</outputDirectory>
+            <includes>
+                <include>**/*.sql</include>
+            </includes>
+        </fileSet>
 
         <!-- File sets for PC starts from here -->
 
@@ -406,6 +387,13 @@
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/assets
             </outputDirectory>
+            <excludes>
+                <exclude>**/partials/navigation.hbs</exclude>
+                <exclude>**/partials/header.hbs</exclude>
+                <exclude>**/partials/top_assets.hbs</exclude>
+                <exclude>**/partials/sso-auth.hbs</exclude>
+                <exclude>**/partials/product-title.hbs</exclude>
+            </excludes>
         </fileSet>
         <!-- PC copy configs for store and global -->
 
@@ -462,6 +450,28 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules
             </outputDirectory>
         </fileSet>
+        <!--<fileSet>-->
+        <!--<directory>../components/analytics/web/org.wso2.carbon.pc.analytics.web/src/web</directory>-->
+        <!--<outputDirectory>-->
+        <!--${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/bpmn-analytics-explorer-->
+        <!--</outputDirectory>-->
+        <!--</fileSet>-->
+        <!--<fileSet>-->
+        <!--<directory>../components/analytics/udf/org.wso2.carbon.pc.analytics.udf/target</directory>-->
+        <!--<outputDirectory>${project.artifactId}-${pc.version}/analytics</outputDirectory>-->
+        <!--<includes>-->
+        <!--<include>**/PCAnalyticsUDF.jar</include>-->
+        <!--</includes>-->
+        <!--</fileSet>-->
+        <!--<fileSet>-->
+        <!--<directory>../components/analytics/capp/org.wso2.carbon.pc.analytics.capp/target</directory>-->
+        <!--<outputDirectory>${project.artifactId}-${pc.version}/analytics</outputDirectory>-->
+        <!--<includes>-->
+        <!--<include>**/*.car</include>-->
+        <!--</includes>-->
+        <!--</fileSet>-->
+
+        <!-- File Sets of PC starts from here -->
 
     </fileSets>
     <dependencySets>
@@ -484,7 +494,7 @@
     </dependencySets>
     <files>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/event-broker.xml
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry-event-broker.xml
             </source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
@@ -536,11 +546,6 @@
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>
-        <!--<file>-->
-        <!--<source>src/repository/conf/pc.xml</source>-->
-        <!--<outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>-->
-        <!--<filtered>true</filtered>-->
-        <!--</file>-->
         <!--file>
             <source>src/repository/conf/log4j.properties</source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
@@ -596,7 +601,7 @@
         </file-->
         <file>
             <source>src/repository/conf/identity.xml</source>
-            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf</outputDirectory>
+            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/identity/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
@@ -687,83 +692,51 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.xml</source>
+            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
+            <filtered>false</filtered>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.properties</source>
+            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
+            <filtered>false</filtered>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/metrics-datasources.xml</source>
+            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/datasources/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2METRICS_DB.h2.db</source>
+            <outputDirectory>${project.artifactId}-${pc.version}/repository/database/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
 
         <!-- Files of PC starts from here -->
 
         <!-- Process rxt -->
-        <file>
+        <!--file>
             <source>../extensions/conf/sso/login.jag</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/views
             </outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-
-        <file>
-            <source>../extensions/conf/identity/sso-idp-config.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/identity</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
+            <fileMode>644</fileMode-->
 
         <file>
             <source>../extensions/process/process.rxt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/rxts</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-
-        <file>
+        <!--file>
             <source>../extensions/conf/jaggery.conf</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso
-            </outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso</outputDirectory>
             <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../extensions/process/store/process/themes/store/partials/product-title.hbs</source>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials
-            </outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
+        </file-->
+        <!--file>
             <source>../extensions/conf/decorators/page-decorators.js</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules
-            </outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules</outputDirectory>
             <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../extensions/process/store/process/themes/store/partials/navigation.hbs</source>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials
-            </outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../extensions/process/store/process/themes/store/partials/advance-search-navigation.hbs</source>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/app/store-common/themes/store/partials
-            </outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../extensions/process/store/process/themes/store/partials/header.hbs</source>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials
-            </outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../extensions/process/store/process/themes/store/partials/top_assets.hbs</source>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials
-            </outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../extensions/process/store/process/themes/store/partials/sso-auth.hbs</source>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store/partials
-            </outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
+        </file-->
         <file>
             <source>../extensions/process/publisher/default/asset.js</source>
             <outputDirectory>
@@ -771,6 +744,13 @@
             </outputDirectory>
             <fileMode>644</fileMode>
         </file>
+ 	 <file>
+            <source>../extensions/main/process-center/controllers/assets-router.jag</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/controllers</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <!-- Files of PC ends from here -->
+
     </files>
 
     <!--
