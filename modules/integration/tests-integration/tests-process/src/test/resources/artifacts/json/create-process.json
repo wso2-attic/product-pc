@@ -8,8 +8,8 @@
   "successor":[
 
   ],
-  "processTags":"generic",
-  "processDescription":"This is the initial sample test process",
+  "processTags":"",
+  "processDescription":"",
   "processVersion":"1.0",
   "processName":"TestProcess1",
   "image":{

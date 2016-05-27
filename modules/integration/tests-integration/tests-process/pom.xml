@@ -22,6 +22,7 @@
 
     <groupId>org.wso2.pc</groupId>
     <artifactId>tests-process</artifactId>
+    <name>Tests-Process</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <parent>

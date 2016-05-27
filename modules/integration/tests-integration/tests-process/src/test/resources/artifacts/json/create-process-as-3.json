@@ -10,10 +10,10 @@
   ],
   "processTags":"tag1, tag2",
   "processDescription":"This is a bank loan requesting process",
-  "processVersion":"3.0",
-  "processName":"GetLoanProcess",
+  "processVersion":"2.4",
+  "processName":"TestProcessAS3",
   "image":{
 
   },
-  "processOwner":"TestOwner3"
+  "processOwner":"TestOwnerAS3"
 }
