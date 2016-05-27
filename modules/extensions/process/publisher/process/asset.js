@@ -159,10 +159,22 @@ asset.renderer = function (ctx) {
 
     var buildLogNav = function (page, util) {
         var navList = util.navList();
+        var isLCViewEnabled = ctx.rxtManager.isLifecycleViewEnabled(ctx.assetType);
+        var path = page.assets.path;
         if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) 		{
             //    log.info(page.assets);
             if(page.assets.id != null) {
+                navList.push('Overview', 'btn-overview', util.buildUrl('details') + '/' + page.assets.id);
+                if ((isLCViewEnabled) && (isAssetWithLifecycle(page.assets))) {
+                    if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_LIFECYCLE, ctx.assetType, ctx.session)) {
+                        navList.push('Life Cycle', 'btn-lifecycle', util.buildUrl('lifecycle') + '/' + page.assets.id);
+                    }
+                }
+                if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
+                    navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + page.assets.id);
+                }
                 navList.push('Audit Log', 'btn-overview', util.buildUrl('log') + '/' +page.assets.id);
+
             } else{
                 navList.push('Audit Log', 'btn-overview', util.buildUrl('log'));
             }

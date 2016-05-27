@@ -17,7 +17,7 @@ package org.wso2.carbon.pc.core.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.pc.core.audit.util.Constants;
+import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.registry.common.AttributeSearchService;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -118,9 +118,9 @@ public class ProcessCenterServerHolder {
 
     private void initProcessArtifacts(UserRegistry registry) throws RegistryException {
 
-        registry.put(Constants.PROCESS_TEXT,registry.newCollection());
-        registry.put(Constants.DOC_CONTENT,registry.newCollection());
-        registry.put(Constants.FLOW_CHART,registry.newCollection());
+        registry.put(ProcessCenterConstants.AUDIT.PROCESS_TEXT,registry.newCollection());
+        registry.put(ProcessCenterConstants.AUDIT.DOC_CONTENT,registry.newCollection());
+        registry.put(ProcessCenterConstants.AUDIT.FLOW_CHART,registry.newCollection());
     }
 
 }

@@ -15,7 +15,6 @@
  */
 package org.wso2.carbon.pc.core;
 
-import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.converter.util.InputStreamProvider;
 import org.activiti.bpmn.model.BpmnModel;
@@ -33,14 +32,17 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
+import org.wso2.carbon.pc.core.audit.util.RegPermissionUtil;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.exceptions.ResourceNotFoundException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.user.mgt.stub.UserAdminStub;
+import org.wso2.carbon.user.mgt.stub.types.carbon.UIPermissionNode;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.xml.sax.InputSource;
 import sun.misc.BASE64Decoder;
 
@@ -110,10 +112,8 @@ public class ProcessStore {
             JSONObject imageObj = processInfo.getJSONObject("image");
 
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
-//            EmbeddedRegistryService embeddedRegistryService = new InMemoryEmbeddedRegistryService();
 
             if (registryService != null) {
-//                UserRegistry sysreg = registryService.getGovernanceSystemRegistry();
                 UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -209,6 +209,7 @@ public class ProcessStore {
                     imageContentResource.setContent(imageContent);
                     reg.put(imageRegPath, imageContentResource);
                 }
+
             }
         } catch (Exception e) {
             String errMsg = "Create process error:" + processDetails;
@@ -224,6 +225,11 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(user);
+                RegPermissionUtil.setPutPermission(registryService, user, ProcessCenterConstants.AUDIT.PROCESS_TEXT_PATH);
+
+                UserAdminStub userAdminStub = new UserAdminStub("https://localhost:9443/services/UserAdmin");
+                CarbonUtils.setBasicAccessSecurityHeaders("admin", "admin", userAdminStub._getServiceClient());
+                UIPermissionNode uiPermissionNode = userAdminStub.getRolePermissions("Internal/publisher");
 
                 // get process asset content
                 String processPath = "processes/" + processName + "/" + processVersion;
@@ -350,6 +356,7 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(user);
+                RegPermissionUtil.setPutPermission(registryService, user, ProcessCenterConstants.AUDIT.PROCESS_BPMN);
 
                 // store bpmn content as a registry resource
                 Resource bpmnContentResource = reg.newResource();
@@ -1211,6 +1218,7 @@ public class ProcessStore {
             if (registryService != null) {
 //                UserRegistry reg = registryService.getGovernanceSystemRegistry();
                 UserRegistry reg = registryService.getGovernanceUserRegistry(user);
+                RegPermissionUtil.setPutPermission(registryService, user, ProcessCenterConstants.AUDIT.PROCESS_DOC_PATH);
 
                 // store doc content as a registry resource
                 Resource docContentResource = reg.newResource();
@@ -1503,6 +1511,8 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(user);
+                RegPermissionUtil.setPutPermission(registryService, user, ProcessCenterConstants.AUDIT.PROCESS_FLOW_CHART_PATH);
+
                 Resource flowchartContentResource = reg.newResource();
                 flowchartContentResource.setContent(flowchartJson);
                 flowchartContentResource.setMediaType("application/json");

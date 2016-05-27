@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.wso2.carbon.pc.core.audit.util;
 
 import org.apache.commons.logging.Log;
@@ -5,18 +21,123 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.audit.bean.LogBean;
 import org.wso2.carbon.registry.core.LogEntry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.ListIterator;
+
+/**
+ * class for getting registry logs and filter them to create activity logs
+ */
 
 public class LogEntryProcessUtils {
 
     private static final Log log = LogFactory.getLog(LogEntryProcessUtils.class);
 
-    public static void filterProcessCreation(ArrayList<LogEntry> entries, String path) {
+    /**
+     * @param registry  user registry from registry service
+     * @param logBean   bean for log entry
+     * @param logResult json result for log entry
+     * @param path      the path to process asset
+     * @throws RegistryException
+     * @throws JSONException
+     */
+    public void processLogResult(UserRegistry registry, LogBean logBean, JSONArray logResult, String path)
+            throws RegistryException, JSONException {
+
+        logBean.setProcessEntries(registry.getLogs(
+                ProcessCenterConstants.AUDIT.PROCESS_PATH + path, LogEntry.ALL, null, null, new Date(), true));
+        logBean.setProcessTxtEntries(registry.getLogs(
+                ProcessCenterConstants.AUDIT.PROCESS_TEXT_PATH + path, LogEntry.ALL, null, null, new Date(), true));
+        logBean.setPdfEntries(registry.getLogs(
+                ProcessCenterConstants.AUDIT.PROCESS_PDF_PATH + path, LogEntry.ALL, null, null, new Date(), true));
+        logBean.setFlowchartEntries(registry.getLogs(
+                ProcessCenterConstants.AUDIT.PROCESS_FLOW_CHART_PATH + path, LogEntry.ALL, null, null, new Date(), true));
+        logBean.setDocEntries(registry.getLogs(
+                ProcessCenterConstants.AUDIT.PROCESS_DOC_PATH + path, LogEntry.ALL, null, null, new Date(), true));
+        logBean.setBpmnEntries(registry.getLogs(
+                ProcessCenterConstants.AUDIT.PROCESS_BPMN + path, LogEntry.ALL, null, null, new Date(), true));
+        logBean.setLifecycleEntries(registry.getLogs(
+                ProcessCenterConstants.AUDIT.PROCESS_LIFECYCLE_HISTORY + path.replace("/", "_"), LogEntry.ALL, null, null, new Date(), true));
+
+        ArrayList<LogEntry> list = new ArrayList<>(Arrays.asList(logBean.getProcessEntries()));
+        filterProcessCreation(list, path);
+        LogEntry[] processEntriesArr = list.toArray(new LogEntry[list.size()]);
+
+        processLogEntryResponse(processEntriesArr, ProcessCenterConstants.AUDIT.PROCESS, path, logResult);
+        processLogEntryResponse(logBean.getProcessTxtEntries(), ProcessCenterConstants.AUDIT.PROCESS_TEXT, path, logResult);
+        processLogEntryResponse(logBean.getPdfEntries(), ProcessCenterConstants.AUDIT.PDF, path, logResult);
+        processLogEntryResponse(logBean.getFlowchartEntries(), ProcessCenterConstants.AUDIT.FLOW_CHART, path, logResult);
+        processLogEntryResponse(logBean.getDocEntries(), ProcessCenterConstants.AUDIT.DOCUMENT, path, logResult);
+        processLogEntryResponse(logBean.getBpmnEntries(), ProcessCenterConstants.AUDIT.BPMN, path, logResult);
+        processLogEntryResponse(logBean.getLifecycleEntries(), ProcessCenterConstants.AUDIT.LIFE_CYCLE, path, logResult);
+
+    }
+
+    /**
+     * @param entries log entries taken from the registry logs
+     * @param type log entry type
+     * @param processPath the path to the process asset
+     * @param result resultant json of the log entries
+     * @throws JSONException
+     */
+    private void processLogEntryResponse(LogEntry[] entries, String type, String processPath, JSONArray result) throws JSONException {
+
+        for (LogEntry logEntry : entries) {
+            try {
+                JSONObject entryObj = new JSONObject();
+                if (logEntry.getAction() == LogEntry.UPDATE) {
+
+                    entryObj.put(ProcessCenterConstants.AUDIT.ASSET_TYPE, processPath);
+                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION, "update");
+                    entryObj.put(ProcessCenterConstants.AUDIT.USER, logEntry.getUserName());
+                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION_TYPE, type);
+                    entryObj.put(ProcessCenterConstants.AUDIT.TIME_STAMP, logEntry.getDate().getTime());
+                    result.put(entryObj);
+
+                } else if (logEntry.getAction() == LogEntry.ADD) {
+                    entryObj.put(ProcessCenterConstants.AUDIT.ASSET_TYPE, processPath);
+                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION, "add");
+                    entryObj.put(ProcessCenterConstants.AUDIT.USER, logEntry.getUserName());
+                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION_TYPE, type);
+                    entryObj.put(ProcessCenterConstants.AUDIT.TIME_STAMP, logEntry.getDate().getTime());
+                    result.put(entryObj);
+
+                } else if (logEntry.getAction() == LogEntry.DELETE_RESOURCE) {
+                    entryObj.put(ProcessCenterConstants.AUDIT.ASSET_TYPE, processPath);
+                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION, "delete");
+                    entryObj.put(ProcessCenterConstants.AUDIT.USER, logEntry.getUserName());
+                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION_TYPE, type);
+                    entryObj.put(ProcessCenterConstants.AUDIT.TIME_STAMP, logEntry.getDate().getTime());
+                    result.put(entryObj);
+
+                } else if (logEntry.getAction() == LogEntry.TAG) {
+                    entryObj.put(ProcessCenterConstants.AUDIT.ASSET_TYPE, processPath);
+                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION, "tag");
+                    entryObj.put(ProcessCenterConstants.AUDIT.USER, logEntry.getUserName());
+                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION_TYPE, type);
+                    entryObj.put(ProcessCenterConstants.AUDIT.TIME_STAMP, logEntry.getDate().getTime());
+                    result.put(entryObj);
+                }
+            } catch (JSONException e) { //todo throw error with process path
+                String msg = "Error processing log entries for" + processPath;
+                log.error(msg, e);
+                throw new JSONException(msg);
+            }
+        }
+    }
+
+    /**
+     * @param entries log entries taken from the registry logs
+     * @param path the path to process asset
+     */
+    private void filterProcessCreation(ArrayList<LogEntry> entries, String path) {
 
         int count = 0;
         try {
@@ -32,112 +153,10 @@ public class LogEntryProcessUtils {
                 count++;
             }
         } catch (Exception e) {
+            //TODO custom error
             log.error("error occured", e);
         }
     }
 
-    public static void processLogResult(UserRegistry registry, LogBean logBean, JSONArray logResult, String path )
-            throws RegistryException {
 
-        logBean.setProcessEntries(registry.getLogs(
-                Constants.REG.PROCESS_PATH + path, LogEntry.ALL, null, null, new Date(), true));
-        logBean.setProcessTxtEntries(registry.getLogs(
-                Constants.REG.PROCESS_TEXT_PATH + path, LogEntry.ALL, null, null, new Date(), true));
-        logBean.setPdfEntries(registry.getLogs(
-                Constants.REG.PROCESS_PDF_PATH + path, LogEntry.ALL, null, null, new Date(), true));
-        logBean.setFlowchartEntries(registry.getLogs(
-                Constants.REG.PROCESS_FLOW_CHART_PATH + path, LogEntry.ALL, null, null, new Date(), true));
-        logBean.setDocEntries(registry.getLogs(
-                Constants.REG.PROCESS_DOC_PATH + path, LogEntry.ALL, null, null, new Date(), true));
-        logBean.setBpmnEntries(registry.getLogs(
-                Constants.REG.PROCESS_BPMN + path, LogEntry.ALL, null, null, new Date(), true));
-        logBean.setLifecycleEntries(registry.getLogs(
-                Constants.REG.PROCESS_LIFECYCLE_HISTORY+path.replace("/","_"),LogEntry.ALL, null, null, new Date(), true));
-
-        ArrayList<LogEntry> list = new ArrayList<>(Arrays.asList(logBean.getProcessEntries()));
-        filterProcessCreation(list, path);
-        LogEntry[] processEntriesArr = list.toArray(new LogEntry[list.size()]);
-
-        processLogEntryResponse(processEntriesArr, Constants.PROCESS, path, logResult);
-        processLogEntryResponse(logBean.getProcessTxtEntries(), Constants.PROCESS_TEXT, path, logResult);
-        processLogEntryResponse(logBean.getPdfEntries(), Constants.PDF, path, logResult);
-        processLogEntryResponse(logBean.getFlowchartEntries(), Constants.FLOW_CHART, path, logResult);
-        processLogEntryResponse(logBean.getDocEntries(), Constants.DOCUMENT, path, logResult);
-        processLogEntryResponse(logBean.getBpmnEntries(), Constants.BPMN, path, logResult);
-        processLogEntryResponse(logBean.getLifecycleEntries(), Constants.LIFE_CYCLE, path, logResult);
-
-    }
-
-    private static void processLogEntryResponse(LogEntry[] entries, String type, String processPath, JSONArray result) {
-
-        for (LogEntry logEntry : entries) {
-            try {
-                JSONObject entryObj = new JSONObject();
-                if (logEntry.getAction() == LogEntry.UPDATE) {
-
-                    entryObj.put(Constants.LOGENTRY.ASSET_TYPE, processPath);
-                    entryObj.put(Constants.LOGENTRY.ACTION, "update");
-                    entryObj.put(Constants.LOGENTRY.USER, logEntry.getUserName());
-                    entryObj.put(Constants.LOGENTRY.ACTION_TYPE, type);
-                    entryObj.put(Constants.LOGENTRY.TIME_STAMP, logEntry.getDate().getTime());
-                    result.put(entryObj);
-
-                } else if (logEntry.getAction() == LogEntry.ADD) {
-                    entryObj.put(Constants.LOGENTRY.ASSET_TYPE, processPath);
-                    entryObj.put(Constants.LOGENTRY.ACTION, "add");
-                    entryObj.put(Constants.LOGENTRY.USER, logEntry.getUserName());
-                    entryObj.put(Constants.LOGENTRY.ACTION_TYPE, type);
-                    entryObj.put(Constants.LOGENTRY.TIME_STAMP, logEntry.getDate().getTime());
-                    result.put(entryObj);
-
-                } else if (logEntry.getAction() == LogEntry.DELETE_RESOURCE) {
-                    entryObj.put(Constants.LOGENTRY.ASSET_TYPE, processPath);
-                    entryObj.put(Constants.LOGENTRY.ACTION, "delete");
-                    entryObj.put(Constants.LOGENTRY.USER, logEntry.getUserName());
-                    entryObj.put(Constants.LOGENTRY.ACTION_TYPE, type);
-                    entryObj.put(Constants.LOGENTRY.TIME_STAMP, logEntry.getDate().getTime());
-                    result.put(entryObj);
-
-                } else if (logEntry.getAction() == LogEntry.TAG) {
-                    entryObj.put(Constants.LOGENTRY.ASSET_TYPE, processPath);
-                    entryObj.put(Constants.LOGENTRY.ACTION, "tag");
-                    entryObj.put(Constants.LOGENTRY.USER, logEntry.getUserName());
-                    entryObj.put(Constants.LOGENTRY.ACTION_TYPE, type);
-                    entryObj.put(Constants.LOGENTRY.TIME_STAMP, logEntry.getDate().getTime());
-                    result.put(entryObj);
-                }
-            } catch (JSONException e) {
-                String msg = "Error processing log entries";
-                log.error(msg, e);
-            }
-        }
-    }
-
-
-    private static ArrayList<LogEntry> removeLogEntriesWithDuplicatePaths(LogEntry[] logEntries) {
-        Set set = new HashSet();
-        ArrayList newList = new ArrayList();
-        for (int i = 0; i < logEntries.length; i++) {
-            if (!set.contains(logEntries[i].getResourcePath())) {
-                if (logEntries[i].getAction() == LogEntry.DELETE_RESOURCE ||
-                        logEntries[i].getAction() == LogEntry.UPDATE ||
-                        logEntries[i].getAction() == LogEntry.DELETE_COMMENT ||
-                        logEntries[i].getAction() == LogEntry.REMOVE_TAG ||
-                        logEntries[i].getAction() == LogEntry.ADD ||
-                        logEntries[i].getAction() == LogEntry.TAG ||
-                        logEntries[i].getAction() == LogEntry.COMMENT ||
-                        logEntries[i].getAction() == LogEntry.ADD_ASSOCIATION ||
-                        logEntries[i].getAction() == LogEntry.MOVE ||
-                        logEntries[i].getAction() == LogEntry.COPY ||
-                        logEntries[i].getAction() == LogEntry.RENAME ||
-                        logEntries[i].getAction() == LogEntry.RESTORE) {
-                    if (logEntries[i].getAction() != LogEntry.COPY) {
-                        set.add(logEntries[i].getResourcePath());
-                    }
-                    newList.add(logEntries[i]);
-                }
-            }
-        }
-        return newList;
-    }
 }
