@@ -37,7 +37,6 @@ import java.util.List;
 
 public class RegPermissionUtil {
 
-    //TODO throw error with context
     private static final Log log = LogFactory.getLog(RegPermissionUtil.class);
 
     /**
@@ -56,9 +55,12 @@ public class RegPermissionUtil {
             List<String> roleList = new LinkedList<>(Arrays.asList(um.getRoleListOfUser(user)));
 
             String privateUserRole = ProcessCenterConstants.AUDIT.PRIVATE_USER_ROLE + user.toLowerCase();
-            if(!roleList.contains(ProcessCenterConstants.AUDIT.PUBLISHER_ROLE) && roleList.contains(privateUserRole)) {
-                ac.authorizeRole(privateUserRole, path, ActionConstants.PUT);
-                ac.authorizeRole(privateUserRole, ProcessCenterConstants.AUDIT.AC_PROCESS_PATH, ActionConstants.PUT);
+
+            if(ac.isUserAuthorized(user, ProcessCenterConstants.PROCESS_UPDATE_PERMISSION, ProcessCenterConstants.UI_PERMISSION_ACTION)) {
+                if (!roleList.contains(ProcessCenterConstants.AUDIT.PUBLISHER_ROLE) && roleList.contains(privateUserRole)) {
+                    ac.authorizeRole(privateUserRole, path, ActionConstants.PUT);
+                    ac.authorizeRole(privateUserRole, ProcessCenterConstants.AUDIT.AC_PROCESS_PATH, ActionConstants.PUT);
+                }
             }
         } catch (RegistryException e) {
             String msg = "Error retrieving system registry";
@@ -71,5 +73,6 @@ public class RegPermissionUtil {
         }
 
     }
+
 }
 

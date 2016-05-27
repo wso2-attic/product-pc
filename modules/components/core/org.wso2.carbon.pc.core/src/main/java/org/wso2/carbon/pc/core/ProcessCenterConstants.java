@@ -22,6 +22,9 @@ public class ProcessCenterConstants {
     public static final String PARENTPROCESS_ASSOCIATION = "parent";
     public static final String SUCCESSOR_ASSOCIATION = "successor";
     public static final String PREDECESSOR_ASSOCIATION = "predecessor";
+    public static final String UI_PERMISSION_ACTION = "ui.execute";
+
+    public static final String PROCESS_UPDATE_PERMISSION = "/permission/admin/enterprisestore/apps/publisher/features/assets/process/update";
 
     public static class AUDIT {
 

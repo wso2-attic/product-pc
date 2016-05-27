@@ -87,7 +87,7 @@ public class RegLogAccessor {
         } catch (RegistryException e) {
             log.error("Could not get resources from the path", e);
         } catch (JSONException e) {
-            log.error("Error processing log entries", e);
+            log.error("Error processing resultant audit log json", e);
         }
         return logObject.toString();
     }
