@@ -717,11 +717,11 @@
             <fileMode>644</fileMode>
         </file>
 
-        <!--file>
-            <source>../extensions/conf/jaggery.conf</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso</outputDirectory>
-            <fileMode>644</fileMode>
-        </file-->
+        <!--<file>-->
+            <!--<source>/home/malintha/projects/wso2/BPS/workspace/check_it/product-pc/modules/extensions/themes/process-center-theme/jaggery.conf</source>-->
+            <!--<outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso</outputDirectory>-->
+            <!--<fileMode>644</fileMode>-->
+        <!--</file>-->
         <!--file>
             <source>../extensions/conf/decorators/page-decorators.js</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules</outputDirectory>
@@ -738,7 +738,11 @@
             <fileMode>644</fileMode>
         </file>
         <!-- Files of PC ends from here -->
-
+        <file>
+            <source>../../modules/extensions/sso/jaggery.conf</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
     </files>
 
     <!--
