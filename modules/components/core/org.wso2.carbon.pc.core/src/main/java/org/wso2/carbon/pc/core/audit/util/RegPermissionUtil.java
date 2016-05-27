@@ -46,7 +46,7 @@ public class RegPermissionUtil {
      * @param user user performs tasks at publisher
      * @param path the path to process asset
      */
-    public static void setPutPermission(RegistryService registryService, String user, String path) {
+    public static void setPutPermission(RegistryService registryService, String user, String path) throws RegistryException, UserStoreException {
 
         try {
             UserRegistry sysReg = registryService.getGovernanceSystemRegistry();
@@ -61,10 +61,13 @@ public class RegPermissionUtil {
                 ac.authorizeRole(privateUserRole, ProcessCenterConstants.AUDIT.AC_PROCESS_PATH, ActionConstants.PUT);
             }
         } catch (RegistryException e) {
+            String msg = "Error retrieving system registry";
             log.error("Error retrieving system registry", e);
+            throw new RegistryException(msg);
         } catch (UserStoreException e) {
             String msg = "Error authorizing role for "+path;
             log.error(msg, e);
+            throw new UserStoreException(msg);
         }
 
     }

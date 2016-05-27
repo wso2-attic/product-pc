@@ -89,7 +89,6 @@ public class RegLogAccessor {
         } catch (JSONException e) {
             log.error("Error processing log entries", e);
         }
-
         return logObject.toString();
     }
 

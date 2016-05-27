@@ -81,10 +81,10 @@ public class LogEntryProcessUtils {
     }
 
     /**
-     * @param entries log entries taken from the registry logs
-     * @param type log entry type
+     * @param entries     log entries taken from the registry logs
+     * @param type        log entry type
      * @param processPath the path to the process asset
-     * @param result resultant json of the log entries
+     * @param result      resultant json of the log entries
      * @throws JSONException
      */
     private void processLogEntryResponse(LogEntry[] entries, String type, String processPath, JSONArray result) throws JSONException {
@@ -125,8 +125,8 @@ public class LogEntryProcessUtils {
                     entryObj.put(ProcessCenterConstants.AUDIT.TIME_STAMP, logEntry.getDate().getTime());
                     result.put(entryObj);
                 }
-            } catch (JSONException e) { //todo throw error with process path
-                String msg = "Error processing log entries for" + processPath;
+            } catch (JSONException e) {
+                String msg = "Error processing log entries for process in " + processPath;
                 log.error(msg, e);
                 throw new JSONException(msg);
             }
@@ -135,26 +135,21 @@ public class LogEntryProcessUtils {
 
     /**
      * @param entries log entries taken from the registry logs
-     * @param path the path to process asset
+     * @param path    the path to process asset
      */
     private void filterProcessCreation(ArrayList<LogEntry> entries, String path) {
 
         int count = 0;
-        try {
-            for (ListIterator<LogEntry> iterator = entries.listIterator(entries.size()); iterator.hasPrevious(); ) {
-                iterator.previous();
-                if (count > 0 && count < 5) {
-                    iterator.remove();
-                }
-
-                if (count == 5) {
-                    return;
-                }
-                count++;
+        for (ListIterator<LogEntry> iterator = entries.listIterator(entries.size()); iterator.hasPrevious(); ) {
+            iterator.previous();
+            if (count > 0 && count < 5) {
+                iterator.remove();
             }
-        } catch (Exception e) {
-            //TODO custom error
-            log.error("error occured", e);
+
+            if (count == 5) {
+                return;
+            }
+            count++;
         }
     }
 
