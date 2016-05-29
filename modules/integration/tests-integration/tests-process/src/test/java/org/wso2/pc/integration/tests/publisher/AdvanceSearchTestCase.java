@@ -53,7 +53,6 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
     private static final String ASSOCIATES_MSDOC_SUMMARY = "TestMSDoc Summary";
     private static final String ASSOCIATED_PDF_NAME = "TestPDFDocument";
     private static final String ASSOCIATED_PDF_SUMMARY = "TestPDFSummary";
-
     /**
      * flag whether the registry is completely updated after adding a new process, so that advanced search queries can be made
      */
@@ -212,20 +211,21 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
                 putQueryFieldInSearchQueryMap(searchQueryMap, name, version, lifeCycleStatus, tag, owner, description);
                 searchQueryMap.put(PCIntegrationConstants.SEARCH_QUERY_FIELD_START, "0");
                 String searchReqUrl = automationContext.getContextUrls().getSecureServiceUrl()
-                        .replace("services", "publisher/apis/assets");
+                        .replace("services", PCIntegrationConstants.ADVENCED_GENERIC_SEARCH_API_PATH);
 
                 ClientResponse response = genericRestClient
                         .geneticRestRequestGet(searchReqUrl, searchQueryMap, headerMap, cookieHeader);
                 JSONObject responseObject = new JSONObject(response.getEntity(String.class));
                 flag = responseObject.get("count").toString().equals("1.0");
-                Thread.sleep(flag ? 0 : 5000);
                 spentTime = System.currentTimeMillis() - startTime;
                 if (spentTime > 600000) {
                     Assert.assertTrue(false,
                             "Advanced Generic Searching Test Failed due to Indexing Delay - Time Out");
                 }
-
+                System.out.println(flag ? "Process Indexing Completed":"Process indexing not completed yet, so checking again... ");
+                Thread.sleep(flag ? 0 : 5000);
             } while (!flag);
+
             long endTime = System.currentTimeMillis();
             double time = (endTime - startTime) / 1000;
             log.info("=============================================\nProcess indexing latency-checking-While loop ends:"
@@ -272,8 +272,9 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
      * @throws XPathExpressionException
      * @throws JSONException
      */
-    @Test(dependsOnMethods = { "advanceGenericSearch" }, groups = {
-            "org.wso2.pc" }, description = "Test case for Advance Search - Content Search", dataProvider = "AdvanceContentSearchDataProvider") public void advanceContentSearch(
+    @Test(dependsOnMethods = { "advanceGenericSearch" }, groups = { "org.wso2.pc" },
+            description = "Test case for Advance Search - Content Search", dataProvider = "AdvanceContentSearchDataProvider")
+    public void advanceContentSearch(
             String content, String contentDocType) throws XPathExpressionException, JSONException {
         HashMap<String, String> searchQueryMap = new HashMap<String, String>();
         searchQueryMap.put("search-query", content);
@@ -289,10 +290,6 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         JSONObject responseContentObj = new JSONObject(
                 "{\"content\":" + responseObject.get("content").toString() + "}");
         String resultedProcName = responseContentObj.getJSONArray("content").getJSONObject(0).getString("name");
-        /*if(log.isDebugEnabled()){
-            log.debug("Response json object of advanceContentSearch:"+responseContentObj+"\nSearch query params:"+searchQueryMap);
-        }*/
-        log.info("Response json object of advanceContentSearch:"+responseContentObj+"\nSearch query params:"+searchQueryMap);
 
         boolean searchSuccess = false;
         //remove the final OR condition after adding process deletion functionality for each deployed process for each test
@@ -309,7 +306,9 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
                     .equals(PCIntegrationConstants.TEST_PROCESS_3_NAME)|| resultedProcName
                     .equals("TestProcess1"));
         }
-        Assert.assertTrue(searchSuccess, "Advance Search - Content Search- Failed for the type " + contentDocType);
+        Assert.assertTrue(searchSuccess, "Advance Search - Content Search- Failed for the type " + contentDocType+
+                "\nResponse object:"+responseObject+"\nResponse content json object of advanceContentSearch:"+
+                responseContentObj+"\nSearch query params:"+searchQueryMap);
     }
 
     /**
