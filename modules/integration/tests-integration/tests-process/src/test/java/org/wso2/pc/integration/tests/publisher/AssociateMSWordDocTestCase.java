@@ -47,8 +47,8 @@ public class AssociateMSWordDocTestCase extends PCIntegrationBaseTest{
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        String publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
-                "publisher/apis");
+        String publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
+                replace("services", "publisher/apis");
         genericRestClient = new GenericRestClient();
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
@@ -107,5 +107,22 @@ public class AssociateMSWordDocTestCase extends PCIntegrationBaseTest{
                 "download_document",queryMap,headerMap,cookieHeader);
         Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().
                 equals("false"),"Associated MSDoc doesn't exit");
+    }
+
+    @Test(groups = {"org.wso2.pc"}, description = "MSDoc deleting test case",
+            dependsOnMethods = "checkMSDoc")
+    public void deleteMSDOC() throws JSONException, IOException {
+        String PDFDeleteRequest = readFile(FrameworkPathUtil.getSystemResourceLocation() +
+                "artifacts" + File.separator + "json" + File.separator + "delete-msdoc-document.json");
+        queryMap.put("removeDocumentDetails", URLEncoder.
+                encode(PDFDeleteRequest,PCIntegrationConstants.UTF_8));
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+                        "delete_document",MediaType.APPLICATION_FORM_URLENCODED,
+                MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
+        Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
+                "Expected 200 OK, Received " + response.getStatusCode());
+        JSONObject responseObject = new JSONObject(response.getEntity(String.class));
+        Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
+                equals("false"),"Couldn't delete associated MSDoc");
     }
 }

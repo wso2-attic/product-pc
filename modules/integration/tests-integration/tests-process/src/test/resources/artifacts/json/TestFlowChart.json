@@ -1,0 +1,48 @@
+{
+  "nodes":[
+    {
+      "elementId":"flowchartWindow4",
+      "nodeType":"start",
+      "positionX":200,
+      "positionY":20,
+      "clsName":"window start custom jtk-node jsplumb-connected jsplumb-endpoint-anchor jsplumb-draggable",
+      "label":"start"
+    },
+    {
+      "elementId":"flowchartWindow5",
+      "nodeType":"step",
+      "positionX":200,
+      "positionY":209,
+      "clsName":"window step custom jtk-node jsplumb-connected-step jsplumb-endpoint-anchor ui-resizable jsplumb-draggable jsplumb-connected",
+      "label":"step",
+      "width":80,
+      "height":80
+    },
+    {
+      "elementId":"flowchartWindow6",
+      "nodeType":"end",
+      "positionX":200,
+      "positionY":400,
+      "clsName":"window end custom jtk-node jsplumb-connected-end jsplumb-endpoint-anchor jsplumb-draggable jsplumb-connected",
+      "label":"end"
+    }
+  ],
+  "connections":[
+    {
+      "connectionId":"con_20",
+      "sourceUUId":"Window4BottomCenter",
+      "targetUUId":"Window5TopCenter",
+      "label":"To Step",
+      "labelWidth":"68px"
+    },
+    {
+      "connectionId":"con_26",
+      "sourceUUId":"Window5BottomCenter",
+      "targetUUId":"Window6TopCenter",
+      "label":"To End",
+      "labelWidth":"64px"
+    }
+  ],
+  "numberOfElements":3,
+  "lastElementId":6
+}

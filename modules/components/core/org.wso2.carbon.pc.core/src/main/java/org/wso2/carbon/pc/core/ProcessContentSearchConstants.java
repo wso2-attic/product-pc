@@ -37,7 +37,4 @@ public final class ProcessContentSearchConstants {
     public static final String PROCESS_TEXT_MEDIATYPE = "text/html";
     public static final String PROCESS_MEDIATYPE = "application/vnd.wso2-process+xml";
 
-    //association type for processes in pdf, documents and process text assets
-    public static final String ASSOCIATION_TYPE = "process_association";
-
 }

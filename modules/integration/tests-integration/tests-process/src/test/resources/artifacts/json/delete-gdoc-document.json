@@ -1,0 +1,10 @@
+{
+  "processName":"TestProcess1",
+  "processVersion":"1.0",
+  "removeDocument":{
+    "name":"TestGDocOfTheProcess",
+    "summary":"This is the summary ofGDoc",
+    "url":"https://docs.google.com/a/wso2.com/document/d/19UbwEpV36EbD2OY6MomrldkFIYjOnmR8drRrx7zp3pA/edit?usp=sharing",
+    "path":"NA"
+  }
+}

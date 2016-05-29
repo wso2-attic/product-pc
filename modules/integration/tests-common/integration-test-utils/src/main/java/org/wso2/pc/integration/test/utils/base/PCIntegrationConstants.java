@@ -57,4 +57,10 @@ public class PCIntegrationConstants {
     public static final String TEST_PROCESS_2_VERSION = "2.3";
     public static final String TEST_PROCESS_3_VERSION = "2.4";
     public static final String TEST_PROCESS_1_OWNER = "TestOwnerAS1";
+    public static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
+    public static final String RESPONSE_ERROR = "error";
+    public static final String RESPONSE_CONTENT = "content";
+
+    //Registry path locations
+    public static final String REG_FLOWCHART_PATH = "/_system/governance/flowchart/";
 }

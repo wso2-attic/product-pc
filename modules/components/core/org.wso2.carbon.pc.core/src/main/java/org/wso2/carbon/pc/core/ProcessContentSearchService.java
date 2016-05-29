@@ -104,7 +104,7 @@ public class ProcessContentSearchService {
                         //fetch the associations of the process_association type for the resources
                         Association[] associations = reg
                                 .getAssociations(resourcePath.substring("/_system/governance/".length()),
-                                        ProcessContentSearchConstants.ASSOCIATION_TYPE);
+                                        ProcessCenterConstants.ASSOCIATION_TYPE);
 
                         //get the process resource for each association
                         for (Association association : associations) {
