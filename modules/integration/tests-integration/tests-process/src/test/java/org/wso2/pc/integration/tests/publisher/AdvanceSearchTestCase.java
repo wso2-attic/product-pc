@@ -19,6 +19,7 @@ import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.ftpserver.command.impl.SYST;
 import org.apache.wink.client.ClientResponse;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
@@ -287,12 +288,16 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
                 .geneticRestRequestPost(searchReqUrl, MediaType.TEXT_HTML, MediaType.APPLICATION_JSON, "",
                         searchQueryMap, headerMap, cookieHeader);
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
-        log.info("\n\nResponse object:"+responseObject);
-        JSONObject responseContentObj = new JSONObject(
-                "{\"content\":" + responseObject.get("content").toString() + "}");
-        log.info("\n\nResponse content json object of advanceContentSearch:"+
-                responseContentObj);
-        String resultedProcName = responseContentObj.getJSONArray("content").getJSONObject(0).getString("name");
+
+        JSONObject responseContentJOb= new JSONObject();
+        JSONArray responseContentJArr = new JSONArray(responseObject.get("content").toString());
+        responseContentJOb.put("content",responseContentJArr);
+        log.info("\n\n\n\n\n\n\nResponse object:"+responseObject);
+        log.info("Response content object:"+responseContentJOb);
+        log.info("Response content Json array:"+responseContentJArr);
+
+        String resultedProcName=responseContentJOb.getJSONArray("content").getJSONObject(0).getString("name");
+        log.info("String proc name:"+resultedProcName);
 
         boolean searchSuccess = false;
         //remove the final OR condition after adding process deletion functionality for each deployed process for each test
