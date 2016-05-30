@@ -291,7 +291,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         JSONObject responseContentJOb = new JSONObject();
         JSONArray responseContentJArr = new JSONArray(responseObject.get("content").toString());
         responseContentJOb.put("content", responseContentJArr);
-        log.info("\n\n\n\n\n\n\nResponse object:" + responseObject);
+        log.info("\n\nResponse object:" + responseObject);
         log.info("Response content object:" + responseContentJOb);
         log.info("Response content Json array:" + responseContentJArr);
 
