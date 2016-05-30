@@ -287,8 +287,11 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
                 .geneticRestRequestPost(searchReqUrl, MediaType.TEXT_HTML, MediaType.APPLICATION_JSON, "",
                         searchQueryMap, headerMap, cookieHeader);
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
+        log.info("\n\nResponse object:"+responseObject);
         JSONObject responseContentObj = new JSONObject(
                 "{\"content\":" + responseObject.get("content").toString() + "}");
+        log.info("\n\nResponse content json object of advanceContentSearch:"+
+                responseContentObj);
         String resultedProcName = responseContentObj.getJSONArray("content").getJSONObject(0).getString("name");
 
         boolean searchSuccess = false;
@@ -307,8 +310,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
                     .equals("TestProcess1"));
         }
         Assert.assertTrue(searchSuccess, "Advance Search - Content Search- Failed for the type " + contentDocType+
-                "\nResponse object:"+responseObject+"\nResponse content json object of advanceContentSearch:"+
-                responseContentObj+"\nSearch query params:"+searchQueryMap);
+                "\nResponse object:"+responseObject+"\nSearch query params:"+searchQueryMap);
     }
 
     /**
