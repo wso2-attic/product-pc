@@ -1,19 +1,15 @@
 {
-  "predecessor":[
-
+  "predecessor": [
   ],
-  "subprocess":[
-
+  "subprocess": [
   ],
-  "successor":[
-
+  "successor": [
   ],
-  "processTags":"vegetable, tag1",
-  "processDescription":"This is a sample process for a restaurant",
-  "processVersion":"2.3",
-  "processName":"TestProcessAS2",
-  "image":{
-
+  "processTags": "vegetable, tag1",
+  "processDescription": "This is a sample process for a restaurant",
+  "processVersion": "2.3",
+  "processName": "TestProcessAS2",
+  "image": {
   },
-  "processOwner":"TestOwnerAS2"
+  "processOwner": "TestOwnerAS2"
 }

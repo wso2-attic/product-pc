@@ -204,7 +204,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
                             getWSRegistry(automationContext);
                 } while (wsRegistryServiceClient.
                         getContent(PCIntegrationConstants.GOV_REG_PROC_PATH + PCIntegrationConstants.TEST_PROCESS_1_NAME
-                                + "/"+PCIntegrationConstants.TEST_PROCESS_1_VERSION) == null);
+                                + "/" + PCIntegrationConstants.TEST_PROCESS_1_VERSION) == null);
 
                 HashMap<String, String> searchQueryMap = new HashMap<String, String>();
                 searchQueryMap.put(PCIntegrationConstants.SEARCH_QUERY_FIELD_COUNT, "40");
@@ -220,10 +220,11 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
                 flag = responseObject.get("count").toString().equals("1.0");
                 spentTime = System.currentTimeMillis() - startTime;
                 if (spentTime > 600000) {
-                    Assert.assertTrue(false,
-                            "Advanced Generic Searching Test Failed due to Indexing Delay - Time Out");
+                    Assert.assertTrue(false, "Advanced Generic Searching Test Failed due to Indexing Delay - Time Out");
                 }
-                System.out.println(flag ? "Process Indexing Completed":"Process indexing not completed yet, so checking again... ");
+                System.out.println(flag ?
+                        "Process Indexing Completed" :
+                        "Process indexing not completed yet, so checking again... ");
                 Thread.sleep(flag ? 0 : 5000);
             } while (!flag);
 
@@ -262,7 +263,6 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         }
         Assert.assertTrue(isSearchSuccess,
                 "Advance Searching Test is Failed - Search Query :" + searchQueryMap + "\nResponse :" + responseObject);
-
     }
 
     /**
@@ -274,8 +274,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
      * @throws JSONException
      */
     @Test(dependsOnMethods = { "advanceGenericSearch" }, groups = { "org.wso2.pc" },
-            description = "Test case for Advance Search - Content Search", dataProvider = "AdvanceContentSearchDataProvider")
-    public void advanceContentSearch(
+            description = "Test case for Advance Search - Content Search", dataProvider = "AdvanceContentSearchDataProvider") public void advanceContentSearch(
             String content, String contentDocType) throws XPathExpressionException, JSONException {
         HashMap<String, String> searchQueryMap = new HashMap<String, String>();
         searchQueryMap.put("search-query", content);
@@ -289,33 +288,33 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
                         searchQueryMap, headerMap, cookieHeader);
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
 
-        JSONObject responseContentJOb= new JSONObject();
+        JSONObject responseContentJOb = new JSONObject();
         JSONArray responseContentJArr = new JSONArray(responseObject.get("content").toString());
-        responseContentJOb.put("content",responseContentJArr);
-        log.info("\n\n\n\n\n\n\nResponse object:"+responseObject);
-        log.info("Response content object:"+responseContentJOb);
-        log.info("Response content Json array:"+responseContentJArr);
+        responseContentJOb.put("content", responseContentJArr);
+        log.info("\n\n\n\n\n\n\nResponse object:" + responseObject);
+        log.info("Response content object:" + responseContentJOb);
+        log.info("Response content Json array:" + responseContentJArr);
 
-        String resultedProcName=responseContentJOb.getJSONArray("content").getJSONObject(0).getString("name");
-        log.info("String proc name:"+resultedProcName);
+        String resultedProcName = responseContentJOb.getJSONArray("content").getJSONObject(0).getString("name");
+        log.info("String proc name:" + resultedProcName);
 
         boolean searchSuccess = false;
         //remove the final OR condition after adding process deletion functionality for each deployed process for each test
         if (contentDocType.equals(PCIntegrationConstants.CONTENT_SEARCH_CATEGORY_TEXT)) {
-            searchSuccess = responseObject.getString("error").equals("false") && (resultedProcName
-                    .equals(PCIntegrationConstants.TEST_PROCESS_1_NAME) || resultedProcName
-                    .equals("TestProcess1"));
+            searchSuccess = responseObject.getString("error").equals("false") && (
+                    resultedProcName.equals(PCIntegrationConstants.TEST_PROCESS_1_NAME) || resultedProcName
+                            .equals("TestProcess1"));
         } else if (contentDocType.equals(PCIntegrationConstants.CONTENT_SEARCH_CATEGORY_PDF)) {
-            searchSuccess = responseObject.getString("error").equals("false") && (resultedProcName
-                    .equals(PCIntegrationConstants.TEST_PROCESS_2_NAME) || resultedProcName
-                    .equals("TestProcess1"));
+            searchSuccess = responseObject.getString("error").equals("false") && (
+                    resultedProcName.equals(PCIntegrationConstants.TEST_PROCESS_2_NAME) || resultedProcName
+                            .equals("TestProcess1"));
         } else if (contentDocType.equals(PCIntegrationConstants.CONTENT_SEARCH_CATEGORY_DOCUMENT)) {
-            searchSuccess = responseObject.getString("error").equals("false") && (resultedProcName
-                    .equals(PCIntegrationConstants.TEST_PROCESS_3_NAME)|| resultedProcName
-                    .equals("TestProcess1"));
+            searchSuccess = responseObject.getString("error").equals("false") && (
+                    resultedProcName.equals(PCIntegrationConstants.TEST_PROCESS_3_NAME) || resultedProcName
+                            .equals("TestProcess1"));
         }
-        Assert.assertTrue(searchSuccess, "Advance Search - Content Search- Failed for the type " + contentDocType+
-                "\nResponse object:"+responseObject+"\nSearch query params:"+searchQueryMap);
+        Assert.assertTrue(searchSuccess, "Advance Search - Content Search- Failed for the type " + contentDocType +
+                "\nResponse object:" + responseObject + "\nSearch query params:" + searchQueryMap);
     }
 
     /**
@@ -371,8 +370,8 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
                 .geneticRestRequestPost(publisherAPIBaseUrl + "save_process_text", MediaType.APPLICATION_JSON,
                         MediaType.APPLICATION_JSON, requestBody, queryMap, headerMap, cookieHeader);
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
-        Assert.assertTrue(responseObject.get("error").toString().equals("false"), "Process text adding to the process failed");
-
+        Assert.assertTrue(responseObject.get("error").toString().equals("false"),
+                "Process text adding to the process failed");
     }
 
     /**
@@ -388,9 +387,11 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         PostMethod httpMethod = ArtifactUploadUtil
                 .uploadDocument(resourcePath1, ASSOCIATED_PDF_NAME, ASSOCIATED_PDF_SUMMARY,
                         PCIntegrationConstants.PDF_EXTENSION, "NA", "file", PCIntegrationConstants.TEST_PROCESS_2_NAME,
-                        PCIntegrationConstants.TEST_PROCESS_2_VERSION, cookieHeader, url, PCIntegrationConstants.APPLICATION_PDF_TYPE);
+                        PCIntegrationConstants.TEST_PROCESS_2_VERSION, cookieHeader, url,
+                        PCIntegrationConstants.APPLICATION_PDF_TYPE);
         Assert.assertTrue(httpMethod.getStatusCode() == 302,
-                "Wrong status code ,Expected 302 ,Received " + httpMethod.getStatusCode()+", PDF uploading to a testing process failed.");
+                "Wrong status code ,Expected 302 ,Received " + httpMethod.getStatusCode()
+                        + ", PDF uploading to a testing process failed.");
     }
 
     /**
@@ -406,10 +407,11 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         PostMethod httpMethod = ArtifactUploadUtil
                 .uploadDocument(resourcePath1, ASSOCIATED_MSDOC_NAME, ASSOCIATES_MSDOC_SUMMARY,
                         PCIntegrationConstants.MSDOC_EXTENSION, "NA", "file",
-                        PCIntegrationConstants.TEST_PROCESS_3_NAME, PCIntegrationConstants.TEST_PROCESS_3_VERSION, cookieHeader, url,
-                        PCIntegrationConstants.APPLICATION_MSWORD_TYPE);
+                        PCIntegrationConstants.TEST_PROCESS_3_NAME, PCIntegrationConstants.TEST_PROCESS_3_VERSION,
+                        cookieHeader, url, PCIntegrationConstants.APPLICATION_MSWORD_TYPE);
         Assert.assertTrue(httpMethod.getStatusCode() == 302,
-                "Wrong status code ,Expected 302 ,Received " + httpMethod.getStatusCode()+",PDF uploading to a testing process failed.");
+                "Wrong status code ,Expected 302 ,Received " + httpMethod.getStatusCode()
+                        + ",PDF uploading to a testing process failed.");
     }
 
 }
