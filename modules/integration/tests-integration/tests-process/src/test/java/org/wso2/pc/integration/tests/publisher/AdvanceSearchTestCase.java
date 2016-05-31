@@ -15,9 +15,7 @@
  */
 package org.wso2.pc.integration.tests.publisher;
 
-import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.ftpserver.command.impl.SYST;
 import org.apache.wink.client.ClientResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +27,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.pc.integration.test.utils.base.*;
+import org.wso2.pc.integration.test.utils.base.models.AdvancedGenericSearchData;
 
 import javax.ws.rs.core.MediaType;
 import javax.xml.xpath.XPathExpressionException;
@@ -54,6 +53,35 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
     private static final String ASSOCIATES_MSDOC_SUMMARY = "TestMSDoc Summary";
     private static final String ASSOCIATED_PDF_NAME = "TestPDFDocument";
     private static final String ASSOCIATED_PDF_SUMMARY = "TestPDFSummary";
+    private static final String SEARCH_QUERY_FIELD_COUNT = "40";
+    private static final String SEARCH_QUERY_FIELD_PG_LIMIT = "40";
+    private static final String SEARCH_QUERY_FIELD_START = "0";
+    private static final String PROC_CREATE_DEF_FILE_1 = "create-process-as-1.json";
+    private static final String PROC_CREATE_DEF_FILE_2 = "create-process-as-2.json";
+    private static final String PROC_CREATE_DEF_FILE_3 = "create-process-as-3.json";
+    private static final String SAMPLE_PROESS_TEXT = "This is a test text of the process";
+    private static final String TEST_PROCESS_AS1_NAME = "TestProcessAS1";
+    private static final String TEST_PROCESS_AS2_NAME = "TestProcessAS2";
+    private static final String TEST_PROCESS_AS3_NAME = "TestProcessAS3";
+    private static final int INDEXING_TIMEOUT = 600000;
+    private static final int INDEXING_CHECKING_DELAY = 5000;
+    private static final String SEARCH_QUERY_FIELD_COUNT_KEY = "count";
+    private static final String SEARCH_QUERY_FIELD_PG_LIMIT_KEY = "paginationLimit";
+    private static final String SEARCH_QUERY_FIELD_START_KEY = "start";
+    private static final String SEARCH_QUERY_FIELD_NAME_KEY = "name";
+    private static final String SEARCH_QUERY_FIELD_VERSION_KEY = "version";
+    private static final String SEARCH_QUERY_FIELD_LCSTATE_KEY = "lcState";
+    private static final String SEARCH_QUERY_FIELD_TAGS_KEY = "tags";
+    private static final String SEARCH_QUERY_FIELD_OWNER_KEY = "owner";
+    private static final String SEARCH_QUERY_FIELD_DESCRIPTION_KEY = "description";
+    private static final String RESPONSE_RESULT_COUNT_0 = "0.0";
+    private static final String RESPONSE_RESULT_COUNT_1 = "1.0";
+    private static final String RESPONSE_RESULT_COUNT_2 = "2.0";
+    private static final String TEST_PROCESS_1_VERSION = "2.2";
+    private static final String TEST_PROCESS_2_VERSION = "2.3";
+    private static final String TEST_PROCESS_3_VERSION = "2.4";
+    private static final String TEST_PROCESS_1_OWNER = "TestOwnerAS1";
+
     /**
      * flag whether the registry is completely updated after adding a new process, so that advanced search queries can be made
      */
@@ -74,8 +102,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         jSessionId = objSessionPublisher.getJSONObject("data").getString("sessionId");
         cookieHeader = "JSESSIONID=" + jSessionId;
 
-        String createProcessFiles[] = { PCIntegrationConstants.PROC_CREATE_DEF_FILE_1,
-                PCIntegrationConstants.PROC_CREATE_DEF_FILE_2, PCIntegrationConstants.PROC_CREATE_DEF_FILE_3 };
+        String createProcessFiles[] = { PROC_CREATE_DEF_FILE_1, PROC_CREATE_DEF_FILE_2, PROC_CREATE_DEF_FILE_3 };
 
         //add 3 testing processes
         for (String fileName : createProcessFiles) {
@@ -87,182 +114,121 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
             genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl + "create_process", MediaType.APPLICATION_JSON,
                     MediaType.APPLICATION_JSON, requestBody, queryMap, headerMap, cookieHeader);
         }
-
-        //add a MSWord Doc to a testing process
         uploadMSDoc();
-        //add a pdf to a testing process
         uploadPDF();
-        //add a text to a testing process
         addProcessText();
+
+        //Check if Process indexing is completed
+        log.info(
+                "\n\n\n\n---------------------------------------------\nProcess indexing latency-checking-While loop starts"
+                        + "----------------------------------------------\n");
+        long startTime = System.currentTimeMillis();
+        long spentTime;
+        do {
+            //loop untill the process indexing is completed and processes are visible for advanced search
+            RegistryProviderUtil registryProviderUtil;
+            WSRegistryServiceClient wsRegistryServiceClient;
+            do {
+                registryProviderUtil = new RegistryProviderUtil();
+                wsRegistryServiceClient = registryProviderUtil.
+                        getWSRegistry(automationContext);
+            } while (wsRegistryServiceClient.
+                    getContent(PCIntegrationConstants.REG_PROCESS_PATH + TEST_PROCESS_AS1_NAME + "/"
+                            + TEST_PROCESS_1_VERSION) == null);
+
+            HashMap<String, String> searchQueryMap = new HashMap<String, String>();
+            searchQueryMap.put(SEARCH_QUERY_FIELD_COUNT_KEY, SEARCH_QUERY_FIELD_COUNT);
+            searchQueryMap.put(SEARCH_QUERY_FIELD_PG_LIMIT_KEY, SEARCH_QUERY_FIELD_PG_LIMIT);
+            putQueryFieldInSearchQueryMap(searchQueryMap, TEST_PROCESS_AS1_NAME, "", "", "", "", "");
+            searchQueryMap.put(SEARCH_QUERY_FIELD_START_KEY, SEARCH_QUERY_FIELD_START);
+            String searchReqUrl = automationContext.getContextUrls().getSecureServiceUrl()
+                    .replace("services", PCIntegrationConstants.ADVENCED_GENERIC_SEARCH_API_PATH);
+
+            ClientResponse response = genericRestClient
+                    .geneticRestRequestGet(searchReqUrl, searchQueryMap, headerMap, cookieHeader);
+            JSONObject responseObject = new JSONObject(response.getEntity(String.class));
+            flagRegReady = responseObject.get("count").toString().equals(RESPONSE_RESULT_COUNT_1);
+            spentTime = System.currentTimeMillis() - startTime;
+            //if the process indexing time exceeds 10 mins, skip the test
+            if (spentTime > INDEXING_TIMEOUT) {
+                Assert.assertTrue(false, "Advanced Generic Searching Test Failed due to Indexing Delay - Time Out");
+            }
+            log.info(flagRegReady ?
+                    "Process Indexing Completed" :
+                    "Process indexing not completed yet, so checking again... ");
+            Thread.sleep(flagRegReady ? 0 : INDEXING_CHECKING_DELAY);
+        } while (!flagRegReady);
+        long endTime = System.currentTimeMillis();
+        double time = (endTime - startTime) / 1000;
+        log.info("\nProcess indexing latency-checking-While loop ends:" + time
+                + "---------------------------------------------\n\n\n");
     }
 
-    @DataProvider(name = "AdvanceSearchDataProvider") public static Object[][] dataProvider() {
-        Object[][] data = new Object[11][6];
+    @DataProvider(name = "AdvancedGenericSearchDataProvider") public static Object[][] dataProvider() {
 
-        //data to test for single field values at once seperately : result=1
-        //(when the single field is the lcStatus = "initial" result would be 3)
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 6; j++) {
-                if (i != j) {
-                    data[i][j] = "";
-                }
-            }
-        }
-        data[0][0] = PCIntegrationConstants.TEST_PROCESS_1_NAME;
-        data[1][1] = PCIntegrationConstants.TEST_PROCESS_1_VERSION;
-        data[2][2] = "initial";
-        data[3][3] = "generic";
-        data[4][4] = PCIntegrationConstants.TEST_PROCESS_1_OWNER;
-        data[5][5] = "This is the initial sample test process";
-
-        //testing for all fields matching at once : result =1
-        data[6][0] = PCIntegrationConstants.TEST_PROCESS_1_NAME;
-        data[6][1] = PCIntegrationConstants.TEST_PROCESS_1_VERSION;
-        data[6][2] = "initial";
-        data[6][3] = "generic";
-        data[6][4] = PCIntegrationConstants.TEST_PROCESS_1_OWNER;
-        data[6][5] = "This is the initial sample test process";
-
-        //testing for 2 fields matching at once: result =1
-        data[7][0] = "Test";
-        data[7][1] = PCIntegrationConstants.TEST_PROCESS_1_VERSION;
-        data[7][2] = "";
-        data[7][3] = "";
-        data[7][4] = "";
-        data[7][5] = "";
-
-        data[8][0] = "";
-        data[8][1] = "";
-        data[8][2] = "ini";
-        data[8][3] = "";
-        data[8][4] = "";
-        data[8][5] = "loan";
-
-        //test for a case where the result is 2
-        data[9][0] = "";
-        data[9][1] = "";
-        data[9][2] = "";
-        data[9][3] = "tag1";
-        data[9][4] = "";
-        data[9][5] = "";
-
-        data[10][0] = "NoProcess";
-        data[10][1] = "";
-        data[10][2] = "";
-        data[10][3] = "";
-        data[10][4] = "";
-        data[10][5] = "";
-
+        Object[][] data = new Object[][] {
+                //data to test for single field values at once seperately : result(# of matching processes)=1
+                //(when the single field is the lcStatus = "initial" result would be 3)
+                { new AdvancedGenericSearchData(TEST_PROCESS_AS1_NAME, "", "", "", "", "") },
+                { new AdvancedGenericSearchData("", TEST_PROCESS_1_VERSION, "", "", "", "") },
+                { new AdvancedGenericSearchData("", "", "initial", "", "", "") },
+                { new AdvancedGenericSearchData("", "", "", "generic", "", "") },
+                { new AdvancedGenericSearchData("", "", "", "", TEST_PROCESS_1_OWNER, "") },
+                { new AdvancedGenericSearchData("", "", "", "", "", "This is the initial sample test process") },
+                //testing for all fields matching at once : result =1
+                { new AdvancedGenericSearchData(TEST_PROCESS_AS1_NAME, TEST_PROCESS_1_VERSION, "initial", "generic",
+                        TEST_PROCESS_1_OWNER, "This is the initial sample test process") },
+                //testing for 2 fields matching at once: result =1
+                { new AdvancedGenericSearchData("Test", TEST_PROCESS_1_VERSION, "", "", "", "") },
+                { new AdvancedGenericSearchData("", "", "ini", "", "", "loan") },
+                //test for a case where the result is 2
+                { new AdvancedGenericSearchData("", "", "", "tag1", "", "") },
+                //test for a case where the result is 0
+                { new AdvancedGenericSearchData("NoProcess", "", "", "", "", "") }, };
         return data;
     }
 
     @DataProvider(name = "AdvanceContentSearchDataProvider") public static Object[][] contentSearchDataProvider() {
-        Object[][] data = new Object[3][2];
-        data[0][0] = "Combining process design";
-        data[0][1] = PCIntegrationConstants.CONTENT_SEARCH_CATEGORY_TEXT;
-
-        data[1][0] = "Combining process design";
-        data[1][1] = PCIntegrationConstants.CONTENT_SEARCH_CATEGORY_PDF;
-
-        data[2][0] = "Combining process design";
-        data[2][1] = PCIntegrationConstants.CONTENT_SEARCH_CATEGORY_DOCUMENT;
-
+        Object data[][] = new Object[][] {
+                { "Combining process design", PCIntegrationConstants.CONTENT_SEARCH_CATEGORY_TEXT },
+                { "Combining process design", PCIntegrationConstants.CONTENT_SEARCH_CATEGORY_PDF },
+                { "Combining process design", PCIntegrationConstants.CONTENT_SEARCH_CATEGORY_DOCUMENT } };
         return data;
     }
 
-    /**
-     * Test for, generic searching fields (except content search) in the Advanced Search feature
-     *
-     * @param name
-     * @param version
-     * @param lifeCycleStatus
-     * @param tag
-     * @param owner
-     * @param description
-     * @throws Exception
-     */
-    @Test(groups = {
-            "org.wso2.pc" }, description = "Test case for Advance Search - Generic data search", dataProvider = "AdvanceSearchDataProvider") public void advanceGenericSearch(
-            String name, String version, String lifeCycleStatus, String tag, String owner, String description)
-            throws Exception {
+    @Test(groups = { "org.wso2.pc" }, description = "Test case for Advance Search - Generic data search",
+            dataProvider = "AdvancedGenericSearchDataProvider")
+    public void advanceGenericSearch(
+            AdvancedGenericSearchData data) throws Exception {
+        if (flagRegReady) {
+            boolean isSearchSuccess = false;
+            HashMap<String, String> searchQueryMap = new HashMap<String, String>();
+            searchQueryMap.put(SEARCH_QUERY_FIELD_COUNT_KEY, SEARCH_QUERY_FIELD_COUNT);
+            searchQueryMap.put(SEARCH_QUERY_FIELD_PG_LIMIT_KEY, SEARCH_QUERY_FIELD_PG_LIMIT);
+            putQueryFieldInSearchQueryMap(searchQueryMap, data.getName(), data.getVersion(), data.getLifeCycleStatus(),
+                    data.getTags(), data.getOwner(), data.getDescription());
+            searchQueryMap.put(SEARCH_QUERY_FIELD_START_KEY, SEARCH_QUERY_FIELD_START);
 
-        boolean flag = false;
+            String searchReqUrl = automationContext.getContextUrls().getSecureServiceUrl()
+                    .replace("services", PCIntegrationConstants.ADVENCED_GENERIC_SEARCH_API_PATH);
+            ClientResponse response = genericRestClient
+                    .geneticRestRequestGet(searchReqUrl, searchQueryMap, headerMap, cookieHeader);
+            JSONObject responseObject = new JSONObject(response.getEntity(String.class));
 
-        //Check if Process indexing is completed
-        if (!flagRegReady) {
-            log.info(
-                    "\n\n\n\n=============================================Process indexing latency-checking-While loop starts");
-            long startTime = System.currentTimeMillis();
-            long spentTime = 0;
-            do {
-                //Wait untill the testing process is created
-                RegistryProviderUtil registryProviderUtil;
-                WSRegistryServiceClient wsRegistryServiceClient;
-                do {
-                    registryProviderUtil = new RegistryProviderUtil();
-                    wsRegistryServiceClient = registryProviderUtil.
-                            getWSRegistry(automationContext);
-                } while (wsRegistryServiceClient.
-                        getContent(PCIntegrationConstants.GOV_REG_PROC_PATH + PCIntegrationConstants.TEST_PROCESS_1_NAME
-                                + "/" + PCIntegrationConstants.TEST_PROCESS_1_VERSION) == null);
-
-                HashMap<String, String> searchQueryMap = new HashMap<String, String>();
-                searchQueryMap.put(PCIntegrationConstants.SEARCH_QUERY_FIELD_COUNT, "40");
-                searchQueryMap.put(PCIntegrationConstants.SEARCH_QUERY_FIELD_PG_LIMIT, "40");
-                putQueryFieldInSearchQueryMap(searchQueryMap, name, version, lifeCycleStatus, tag, owner, description);
-                searchQueryMap.put(PCIntegrationConstants.SEARCH_QUERY_FIELD_START, "0");
-                String searchReqUrl = automationContext.getContextUrls().getSecureServiceUrl()
-                        .replace("services", PCIntegrationConstants.ADVENCED_GENERIC_SEARCH_API_PATH);
-
-                ClientResponse response = genericRestClient
-                        .geneticRestRequestGet(searchReqUrl, searchQueryMap, headerMap, cookieHeader);
-                JSONObject responseObject = new JSONObject(response.getEntity(String.class));
-                flag = responseObject.get("count").toString().equals("1.0");
-                spentTime = System.currentTimeMillis() - startTime;
-                if (spentTime > 600000) {
-                    Assert.assertTrue(false, "Advanced Generic Searching Test Failed due to Indexing Delay - Time Out");
-                }
-                System.out.println(flag ?
-                        "Process Indexing Completed" :
-                        "Process indexing not completed yet, so checking again... ");
-                Thread.sleep(flag ? 0 : 5000);
-            } while (!flag);
-
-            long endTime = System.currentTimeMillis();
-            double time = (endTime - startTime) / 1000;
-            log.info("=============================================\nProcess indexing latency-checking-While loop ends:"
-                    + time + "\n\n\n");
+            if (data.getLifeCycleStatus().equals("initial") && data.getDescription().equals("")) {//result should be "3.0"
+                //isSearchSuccess = responseObject.get("count").toString().equals("3.0");
+                isSearchSuccess = true;//comment this after creating life cycle status tests and changed them accordingly
+            } else if (data.getTags().equals("tag1")) { //result should be "2.0"
+                isSearchSuccess = responseObject.get("count").toString().equals(RESPONSE_RESULT_COUNT_2);
+            } else if (data.getName().equals("NoProcess")) { //result should be "0.0"
+                isSearchSuccess = responseObject.get("count").toString().equals(RESPONSE_RESULT_COUNT_0);
+            } else { //result should be "1.0"
+                isSearchSuccess = responseObject.get("count").toString().equals(RESPONSE_RESULT_COUNT_1);
+            }
+            Assert.assertTrue(isSearchSuccess,
+                    "Advance Searching Test is Failed - Search Query :" + searchQueryMap + "\nResponse :"
+                            + responseObject);
         }
-        flagRegReady = true;
-
-        ////////////////////////////////////
-        //actual testings goes from  here>>>
-        boolean isSearchSuccess = false;
-
-        HashMap<String, String> searchQueryMap = new HashMap<String, String>();
-        searchQueryMap.put(PCIntegrationConstants.SEARCH_QUERY_FIELD_COUNT, "40");
-        searchQueryMap.put(PCIntegrationConstants.SEARCH_QUERY_FIELD_PG_LIMIT, "40");
-        putQueryFieldInSearchQueryMap(searchQueryMap, name, version, lifeCycleStatus, tag, owner, description);
-        searchQueryMap.put(PCIntegrationConstants.SEARCH_QUERY_FIELD_START, "0");
-
-        String searchReqUrl = automationContext.getContextUrls().getSecureServiceUrl()
-                .replace("services", PCIntegrationConstants.ADVENCED_GENERIC_SEARCH_API_PATH);
-        ClientResponse response = genericRestClient
-                .geneticRestRequestGet(searchReqUrl, searchQueryMap, headerMap, cookieHeader);
-        JSONObject responseObject = new JSONObject(response.getEntity(String.class));
-
-        if (lifeCycleStatus.equals("initial") && description.equals("")) {//result should be 3
-            //isSearchSuccess = responseObject.get("count").toString().equals("3.0");
-            isSearchSuccess = true;//comment this after creating life cycle status tests and changed them accordingly
-        } else if (tag.equals("tag1")) { //result should be 2
-            isSearchSuccess = responseObject.get("count").toString().equals("2.0");
-        } else if (name.equals("NoProcess")) { //result should be 0
-            isSearchSuccess = responseObject.get("count").toString().equals("0.0");
-        } else { //result should be 1
-            isSearchSuccess = responseObject.get("count").toString().equals("1.0");
-        }
-        Assert.assertTrue(isSearchSuccess,
-                "Advance Searching Test is Failed - Search Query :" + searchQueryMap + "\nResponse :" + responseObject);
     }
 
     /**
@@ -274,7 +240,8 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
      * @throws JSONException
      */
     @Test(dependsOnMethods = { "advanceGenericSearch" }, groups = { "org.wso2.pc" },
-            description = "Test case for Advance Search - Content Search", dataProvider = "AdvanceContentSearchDataProvider") public void advanceContentSearch(
+            description = "Test case for Advance Search - Content Search", dataProvider = "AdvanceContentSearchDataProvider")
+    public void advanceContentSearch(
             String content, String contentDocType) throws XPathExpressionException, JSONException {
         HashMap<String, String> searchQueryMap = new HashMap<String, String>();
         searchQueryMap.put("search-query", content);
@@ -291,27 +258,22 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         JSONObject responseContentJOb = new JSONObject();
         JSONArray responseContentJArr = new JSONArray(responseObject.get("content").toString());
         responseContentJOb.put("content", responseContentJArr);
-        log.info("\n\nResponse object:" + responseObject);
-        log.info("Response content object:" + responseContentJOb);
-        log.info("Response content Json array:" + responseContentJArr);
-
         String resultedProcName = responseContentJOb.getJSONArray("content").getJSONObject(0).getString("name");
-        log.info("String proc name:" + resultedProcName);
 
         boolean searchSuccess = false;
         //remove the final OR condition after adding process deletion functionality for each deployed process for each test
         if (contentDocType.equals(PCIntegrationConstants.CONTENT_SEARCH_CATEGORY_TEXT)) {
-            searchSuccess = responseObject.getString("error").equals("false") && (
-                    resultedProcName.equals(PCIntegrationConstants.TEST_PROCESS_1_NAME) || resultedProcName
-                            .equals("TestProcess1"));
+            searchSuccess =
+                    responseObject.getString("error").equals("false") && (resultedProcName.equals(TEST_PROCESS_AS1_NAME)
+                            || resultedProcName.equals(PCIntegrationConstants.TEST_PROCESS_1_NAME));
         } else if (contentDocType.equals(PCIntegrationConstants.CONTENT_SEARCH_CATEGORY_PDF)) {
-            searchSuccess = responseObject.getString("error").equals("false") && (
-                    resultedProcName.equals(PCIntegrationConstants.TEST_PROCESS_2_NAME) || resultedProcName
-                            .equals("TestProcess1"));
+            searchSuccess =
+                    responseObject.getString("error").equals("false") && (resultedProcName.equals(TEST_PROCESS_AS2_NAME)
+                            || resultedProcName.equals(PCIntegrationConstants.TEST_PROCESS_1_NAME));
         } else if (contentDocType.equals(PCIntegrationConstants.CONTENT_SEARCH_CATEGORY_DOCUMENT)) {
-            searchSuccess = responseObject.getString("error").equals("false") && (
-                    resultedProcName.equals(PCIntegrationConstants.TEST_PROCESS_3_NAME) || resultedProcName
-                            .equals("TestProcess1"));
+            searchSuccess = responseObject.getString(PCIntegrationConstants.RESPONSE_ERROR).equals("false") && (
+                    resultedProcName.equals(TEST_PROCESS_AS3_NAME) || resultedProcName
+                            .equals(PCIntegrationConstants.TEST_PROCESS_1_NAME));
         }
         Assert.assertTrue(searchSuccess, "Advance Search - Content Search- Failed for the type " + contentDocType +
                 "\nResponse object:" + responseObject + "\nSearch query params:" + searchQueryMap);
@@ -333,22 +295,22 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
             String lifeCycleStatus, String tag, String owner, String description) throws JSONException {
         JSONObject queryField = new JSONObject();
         if (!name.equals("")) {
-            queryField.put(PCIntegrationConstants.SEARCH_QUERY_FIELD_NAME, name);
+            queryField.put(SEARCH_QUERY_FIELD_NAME_KEY, name);
         }
         if (!version.equals("")) {
-            queryField.put(PCIntegrationConstants.SEARCH_QUERY_FIELD_VERSION, version);
+            queryField.put(SEARCH_QUERY_FIELD_VERSION_KEY, version);
         }
         if (!lifeCycleStatus.equals("")) {
-            queryField.put(PCIntegrationConstants.SEARCH_QUERY_FIELD_LCSTATE, lifeCycleStatus);
+            queryField.put(SEARCH_QUERY_FIELD_LCSTATE_KEY, lifeCycleStatus);
         }
         if (!tag.equals("")) {
-            queryField.put(PCIntegrationConstants.SEARCH_QUERY_FIELD_TAGS, tag);
+            queryField.put(SEARCH_QUERY_FIELD_TAGS_KEY, tag);
         }
         if (!owner.equals("")) {
-            queryField.put(PCIntegrationConstants.SEARCH_QUERY_FIELD_OWNER, owner);
+            queryField.put(SEARCH_QUERY_FIELD_OWNER_KEY, owner);
         }
         if (!description.equals("")) {
-            queryField.put(PCIntegrationConstants.SEARCH_QUERY_FIELD_DESCRIPTION, description);
+            queryField.put(SEARCH_QUERY_FIELD_DESCRIPTION_KEY, description);
         }
 
         String queryFieldStringValue = queryField.toString().substring(1, queryField.toString().length() - 1);
@@ -362,15 +324,15 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
      * @throws JSONException
      */
     public void addProcessText() throws XPathExpressionException, JSONException {
-        queryMap.put(PCIntegrationConstants.PROCESS_NAME, PCIntegrationConstants.TEST_PROCESS_1_NAME);
-        queryMap.put(PCIntegrationConstants.PROCESS_VERSION, PCIntegrationConstants.TEST_PROCESS_1_VERSION);
-        queryMap.put(PCIntegrationConstants.PROCESS_TEXT, PCIntegrationConstants.SAMPLE_PROESS_TEXT);
+        queryMap.put(PCIntegrationConstants.PROCESS_NAME, TEST_PROCESS_AS1_NAME);
+        queryMap.put(PCIntegrationConstants.PROCESS_VERSION, TEST_PROCESS_1_VERSION);
+        queryMap.put(PCIntegrationConstants.PROCESS_TEXT, SAMPLE_PROESS_TEXT);
 
         ClientResponse response = genericRestClient
                 .geneticRestRequestPost(publisherAPIBaseUrl + "save_process_text", MediaType.APPLICATION_JSON,
                         MediaType.APPLICATION_JSON, requestBody, queryMap, headerMap, cookieHeader);
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
-        Assert.assertTrue(responseObject.get("error").toString().equals("false"),
+        Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().equals("false"),
                 "Process text adding to the process failed");
     }
 
@@ -386,9 +348,8 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         String url = publisherAPIBaseUrl + "upload_documents";
         PostMethod httpMethod = ArtifactUploadUtil
                 .uploadDocument(resourcePath1, ASSOCIATED_PDF_NAME, ASSOCIATED_PDF_SUMMARY,
-                        PCIntegrationConstants.PDF_EXTENSION, "NA", "file", PCIntegrationConstants.TEST_PROCESS_2_NAME,
-                        PCIntegrationConstants.TEST_PROCESS_2_VERSION, cookieHeader, url,
-                        PCIntegrationConstants.APPLICATION_PDF_TYPE);
+                        PCIntegrationConstants.PDF_EXTENSION, "NA", "file", TEST_PROCESS_AS2_NAME,
+                        TEST_PROCESS_2_VERSION, cookieHeader, url, PCIntegrationConstants.APPLICATION_PDF_TYPE);
         Assert.assertTrue(httpMethod.getStatusCode() == 302,
                 "Wrong status code ,Expected 302 ,Received " + httpMethod.getStatusCode()
                         + ", PDF uploading to a testing process failed.");
@@ -406,9 +367,8 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         String url = publisherAPIBaseUrl + "upload_documents";
         PostMethod httpMethod = ArtifactUploadUtil
                 .uploadDocument(resourcePath1, ASSOCIATED_MSDOC_NAME, ASSOCIATES_MSDOC_SUMMARY,
-                        PCIntegrationConstants.MSDOC_EXTENSION, "NA", "file",
-                        PCIntegrationConstants.TEST_PROCESS_3_NAME, PCIntegrationConstants.TEST_PROCESS_3_VERSION,
-                        cookieHeader, url, PCIntegrationConstants.APPLICATION_MSWORD_TYPE);
+                        PCIntegrationConstants.MSDOC_EXTENSION, "NA", "file", TEST_PROCESS_AS3_NAME,
+                        TEST_PROCESS_3_VERSION, cookieHeader, url, PCIntegrationConstants.APPLICATION_MSWORD_TYPE);
         Assert.assertTrue(httpMethod.getStatusCode() == 302,
                 "Wrong status code ,Expected 302 ,Received " + httpMethod.getStatusCode()
                         + ",PDF uploading to a testing process failed.");
