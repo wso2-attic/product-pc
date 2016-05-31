@@ -40,7 +40,7 @@ public class RegPermissionUtil {
     private static final Log log = LogFactory.getLog(RegPermissionUtil.class);
 
     /**
-     *
+     * Sets registry put permission for the private user role by checking user process permissions
      * @param registryService registry service to access registry functions
      * @param user user performs tasks at publisher
      * @param path the path to process asset
@@ -67,7 +67,7 @@ public class RegPermissionUtil {
             log.error("Error retrieving system registry", e);
             throw new RegistryException(msg);
         } catch (UserStoreException e) {
-            String msg = "Error authorizing role for "+path;
+            String msg = "Error authorizing private user role for "+ path;
             log.error(msg, e);
             throw new UserStoreException(msg);
         }

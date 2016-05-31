@@ -57,7 +57,7 @@ public class RegLogAccessor {
     }
 
     /**
-     *
+     * Gets activity logs for the all the process assets at process center
      * @return the resultant json of the activity logs
      */
     public String getAllLogEntries() {
@@ -85,15 +85,17 @@ public class RegLogAccessor {
             logObject.put("log", logResult);
 
         } catch (RegistryException e) {
-            log.error("Could not get resources from the path", e);
+            String msg = "Could not get resources for the process assets";
+            log.error(msg, e);
         } catch (JSONException e) {
-            log.error("Error processing resultant audit log json", e);
+            String msg = "Error processing resultant audit log json";
+            log.error(msg, e);
         }
         return logObject.toString();
     }
 
     /**
-     *
+     * Gets activity logs for a selected process asset
      * @param path the path to process asset
      * @return the resultant json of the activity logs
      */
@@ -109,24 +111,14 @@ public class RegLogAccessor {
                 logObject.put("log", logResult);
             }
         } catch (RegistryException e) {
-            log.error("Could not get resources from the path", e);
+            String msg = "Could not get resources from the path" + path;
+            log.error(msg, e);
         } catch (JSONException e) {
-            log.error("Error processing log entries", e);
+            String msg = "Error processing log entries resultant json";
+            log.error(msg, e);
         }
 
         return logObject.toString();
     }
-
-//    private UserRegistry getRegistry(int tenantId) {
-//        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
-//            return registry;
-//        } else {
-//            try {
-//                return Utils.getRegistryService().getRegistry(CarbonConstants.REGISTRY_SYSTEM_USERNAME, tenantId);
-//            } catch (RegistryException ignore) {
-//                return null;
-//            }
-//        }
-//    }
 
 }

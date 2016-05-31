@@ -41,6 +41,7 @@ public class LogEntryProcessUtils {
     private static final Log log = LogFactory.getLog(LogEntryProcessUtils.class);
 
     /**
+     * accesses registry logs and processes json response for logs
      * @param registry  user registry from registry service
      * @param logBean   bean for log entry
      * @param logResult json result for log entry
@@ -81,6 +82,7 @@ public class LogEntryProcessUtils {
     }
 
     /**
+     * processes log entry response to a json array
      * @param entries     log entries taken from the registry logs
      * @param type        log entry type
      * @param processPath the path to the process asset
@@ -134,6 +136,7 @@ public class LogEntryProcessUtils {
     }
 
     /**
+     * filters multiple log entries recorded at the process creation
      * @param entries log entries taken from the registry logs
      * @param path    the path to process asset
      */

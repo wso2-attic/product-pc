@@ -227,10 +227,6 @@ public class ProcessStore {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(user);
                 RegPermissionUtil.setPutPermission(registryService, user, ProcessCenterConstants.AUDIT.PROCESS_TEXT_PATH);
 
-                UserAdminStub userAdminStub = new UserAdminStub("https://localhost:9443/services/UserAdmin");
-                CarbonUtils.setBasicAccessSecurityHeaders("admin", "admin", userAdminStub._getServiceClient());
-                UIPermissionNode uiPermissionNode = userAdminStub.getRolePermissions("Internal/publisher");
-
                 // get process asset content
                 String processPath = "processes/" + processName + "/" + processVersion;
                 Resource processAsset = reg.get(processPath);

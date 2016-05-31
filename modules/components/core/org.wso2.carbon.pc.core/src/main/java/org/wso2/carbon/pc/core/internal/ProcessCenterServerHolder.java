@@ -53,7 +53,7 @@ public class ProcessCenterServerHolder {
 
     public void setRegistryService(RegistryService registrySvc) {
         this.registryService = registrySvc;
-        updateRegistryRolesofUser();
+        updateArtifactPathPermissions();
     }
 
     public void unsetRegistryService(RegistryService registryService) {
@@ -87,37 +87,39 @@ public class ProcessCenterServerHolder {
     }
 
 
-    private void updateRegistryRolesofUser() {
+    private void updateArtifactPathPermissions() {
         try {
             String[] artifactPaths = {"/_system/governance/flowchart", "/_system/governance/doccontent","/_system/governance/processText"};
 
-            UserRegistry registry = registryService.getGovernanceSystemRegistry();
-            initProcessArtifacts(registry);
+            if(this.registryService != null) {
+                UserRegistry registry = this.registryService.getGovernanceSystemRegistry();
+                initProcessArtifacts(registry);
 
-            PermissionEntry entry = new PermissionEntry();
-            entry.setUserName("internal/publisher");
-            entry.setWriteAllow(true);
+                PermissionEntry entry = new PermissionEntry();
+                entry.setUserName("internal/publisher");
+                entry.setWriteAllow(true);
 
-            for (String path: artifactPaths) {
-                PermissionBean permissions = PermissionUtil.getPermissions(registry,path);
-                List<PermissionEntry> entryRoles = new LinkedList<>(Arrays.asList(permissions.getRolePermissions()));
+                for (String path : artifactPaths) {
+                    PermissionBean permissions = PermissionUtil.getPermissions(registry, path);
+                    List<PermissionEntry> entryRoles = new LinkedList<>(Arrays.asList(permissions.getRolePermissions()));
 
-                if(!entryRoles.contains(entry)) {
-                    AddRolePermissionUtil.addRolePermission(registry,path,"Internal/publisher","3","1");
+                    if (!entryRoles.contains(entry)) {
+                        AddRolePermissionUtil.addRolePermission(registry, path, ProcessCenterConstants.AUDIT.PUBLISHER_ROLE, "3", "1");
+                    }
                 }
             }
 
         } catch (RegistryException e) {
-            log.error(e);
-        } catch (UserStoreException e){
-            log.error(e);
+            String msg = "Error occurred retrieving system registry";
+            log.error(msg, e);
         } catch (Exception e) {
-            log.error(e);
+            String msg = "Unable to add role permissions for process artifact paths";
+            log.error(msg, e);
         }
+
     }
 
     private void initProcessArtifacts(UserRegistry registry) throws RegistryException {
-
         registry.put(ProcessCenterConstants.AUDIT.PROCESS_TEXT,registry.newCollection());
         registry.put(ProcessCenterConstants.AUDIT.DOC_CONTENT,registry.newCollection());
         registry.put(ProcessCenterConstants.AUDIT.FLOW_CHART,registry.newCollection());
