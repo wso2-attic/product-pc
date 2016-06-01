@@ -987,10 +987,48 @@ function redirectTo(element) {
 }
 
 function validateDocument() {
-    if (document.getElementById('docName').value.length == 0) {
+    var attachedDocuments = [];
+    var isDocumentExists = false;
+    $.ajax({
+        url: '/publisher/assets/process/apis/get_process_doc?process_path=/_system/governance/processes/' +
+        fieldsName + "/" + fieldsVersion,
+        type: 'GET',
+        async: false,
+        success: function (data) {
+            var responseObj = JSON.parse(data);
+            if (responseObj.error === false) {
+               var response = JSON.parse(responseObj.content);
+               if (response.length != 0) {
+               for (var i = 0; i < response.length; i++) {
+                attachedDocuments.push(response[i].path);
+                }
+              }
+             }
+           }
+        });
+    var registryPathPrefix = "doccontent/"+fieldsName+"/"+fieldsVersion+"/";
+
+    for (i = 0; i < attachedDocuments.length; i++) {
+    var storedFileName = attachedDocuments[i].substring(attachedDocuments[i].indexOf(registryPathPrefix) +
+    registryPathPrefix.length, attachedDocuments[i].length);
+
+    var fileExtension = $('#docLocation').val().split('.')[1];
+    var currentFileName = document.getElementById('docName').value+"."+fileExtension;
+
+    if(currentFileName == storedFileName){
+        isDocumentExists = true;
+      }
+    }
+
+     if (isDocumentExists) {
+        alertify.error("File already exists. Please provide different filename");
+        return false;
+    }
+    else if (document.getElementById('docName').value.length == 0) {
         alertify.error('Please enter document name.');
         return false;
-    } else if ((!document.getElementById('optionsRadios7').checked) && (!document.getElementById('optionsRadios8').checked)) {
+    } else if ((!document.getElementById('optionsRadios7').checked) && (!document.getElementById('optionsRadios8').
+          checked)) {
         alertify.error('Please select a source.');
         return false;
     } else if (document.getElementById('optionsRadios7').checked) {
@@ -1008,7 +1046,6 @@ function validateDocument() {
     }
     return true;
 }
-
 
 $('.view').click(function (e) {
     e.preventDefault();
