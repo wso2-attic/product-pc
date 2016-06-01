@@ -17,6 +17,7 @@
  *
  */
 $(function () {
+
     var SEARCH_API = '/apis/assets?q=';
     var SEARCH_BUTTON = '#search-btn';
     var SEARCH_FORM = '#search-form';
@@ -25,6 +26,50 @@ $(function () {
     var items_per_row = 0;
     var doPagination = true;
     var options = [];
+    var tags = [];
+
+    window.onload = function () {
+        $.ajax({
+            url: '/publisher/assets/process/apis/get_process_tags',
+            type: 'GET',
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    processTagsObj = JSON.parse(response.content);
+                    if (!$.isEmptyObject(processTagsObj)) {
+                        for (var key in processTagsObj) {
+                            if (processTagsObj.hasOwnProperty(key)) {
+                                tags.push(key);
+                            }
+                        }
+                    }
+
+                    $('#tags').tokenfield({
+                        autocomplete: {
+                            source: tags,
+                            delay: 100
+                        },
+                        showAutocompleteOnFocus: true
+                    });
+
+                    $('#tags').on('tokenfield:createtoken', function (event) {
+                        var existingTokens = $(this).tokenfield('getTokens');
+                        $.each(existingTokens, function (index, token) {
+                            if (token.value === event.attrs.value)
+                                event.preventDefault();
+                        });
+                    });
+                } else {
+                    alertify.error(response.content);
+                }
+            },
+            error: function () {
+                alertify.error('Process list returning error');
+            }
+        });
+    };
+
+
     store.infiniteScroll = {};
     store.infiniteScroll.recalculateRowsAdded = function () {
         return (last_to - last_to % items_per_row) / items_per_row;
@@ -257,7 +302,7 @@ $(function () {
                         $('.loading-animation-big').remove();
                         doPagination = false;
                     }
-                }catch (e){
+                } catch (e) {
                     alertify.error("We are sorry but we could not find any matching assets");
                 }
             }, error: function (xhr, status, error) {
