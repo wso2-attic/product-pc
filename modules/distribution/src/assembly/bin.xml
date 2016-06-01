@@ -389,10 +389,10 @@
             </outputDirectory>
             <excludes>
                 <exclude>**/partials/navigation.hbs</exclude>
-                <exclude>**/partials/header.hbs</exclude>
-                <exclude>**/partials/top_assets.hbs</exclude>
+                <!--<exclude>**/partials/header.hbs</exclude>-->
+                <!--<exclude>**/partials/top_assets.hbs</exclude>-->
                 <exclude>**/partials/sso-auth.hbs</exclude>
-                <exclude>**/partials/product-title.hbs</exclude>
+                <!--<exclude>**/partials/product-title.hbs</exclude>-->
             </excludes>
         </fileSet>
         <!-- PC copy configs for store and global -->
