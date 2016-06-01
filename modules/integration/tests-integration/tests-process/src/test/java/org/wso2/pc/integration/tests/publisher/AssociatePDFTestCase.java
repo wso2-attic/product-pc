@@ -94,6 +94,20 @@ public class AssociatePDFTestCase extends PCIntegrationBaseTest{
                 "Wrong status code ,Expected 302 ,Received " + httpMethod.getStatusCode());
     }
 
+    @Test(groups = {"org.wso2.pc"}, description = "Associating copy PDF to the process",
+            dependsOnMethods = "uploadPDF")
+    public void uploadDuplicatePDF() throws IOException, JSONException {
+        queryMap.put("type", "process");
+        String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
+                File.separator + "PDF" + File.separator + "TestFile.pdf";
+        String url = publisherAPIBaseUrl + "upload_documents";
+        PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_PDF_NAME,
+                ASSOCIATED_PDF_SUMMARY,PCIntegrationConstants.PDF_EXTENSION,"NA","file",
+                "TestProcess1","1.0",cookieHeader,url,PCIntegrationConstants.APPLICATION_PDF_TYPE);
+        Assert.assertTrue(new JSONObject(httpMethod.getResponseBodyAsString()).get("error").toString().equals("true"),
+                "Expected error didn't receive while uploading duplicate document");
+    }
+
     @Test(groups = {"org.wso2.pc"}, description = "Download associated PDF document",
             dependsOnMethods = "uploadPDF")
     public void checkPDF() throws JSONException {

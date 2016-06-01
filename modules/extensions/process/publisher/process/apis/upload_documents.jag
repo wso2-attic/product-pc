@@ -31,6 +31,7 @@ var docUrl = String(request.getParameter("docUrl"));
 var docProcessName = String(request.getParameter("docProcessName"));
 var docProcessVersion = String(request.getParameter("docProcessVersion"));
 var docExtension = String(request.getParameter("docExtension"));
+var responseObj = {};
 
 if (docSummary == '') {
     docSummary = "NA";
@@ -49,5 +50,8 @@ try {
     response.sendRedirect('/publisher/assets/process/details/' + processid);
 } catch (error) {
     log.error(error);
+    responseObj.error = true;
+    responseObj.content = "Error while uploading document";
+     print(stringify(responseObj));
 }
 %>
