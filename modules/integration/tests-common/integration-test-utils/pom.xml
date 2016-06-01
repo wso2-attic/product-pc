@@ -29,6 +29,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.pc</groupId>
     <artifactId>integration-test-utils</artifactId>
+    <name>Integration-Test-Utils</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 

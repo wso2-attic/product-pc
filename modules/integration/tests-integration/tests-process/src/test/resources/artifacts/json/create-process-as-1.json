@@ -1,0 +1,15 @@
+{
+  "predecessor": [
+  ],
+  "subprocess": [
+  ],
+  "successor": [
+  ],
+  "processTags": "generic",
+  "processDescription": "This is the initial sample test process",
+  "processVersion": "2.2",
+  "processName": "TestProcessAS1",
+  "image": {
+  },
+  "processOwner": "TestOwnerAS1"
+}

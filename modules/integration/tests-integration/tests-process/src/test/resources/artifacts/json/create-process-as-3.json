@@ -1,0 +1,15 @@
+{
+  "predecessor": [
+  ],
+  "subprocess": [
+  ],
+  "successor": [
+  ],
+  "processTags": "tag1, tag2",
+  "processDescription": "This is a bank loan requesting process",
+  "processVersion": "2.4",
+  "processName": "TestProcessAS3",
+  "image": {
+  },
+  "processOwner": "TestOwnerAS3"
+}
