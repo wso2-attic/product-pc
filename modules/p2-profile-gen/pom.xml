@@ -73,6 +73,7 @@
                             <featureArtifacts>
 
                                 <featureArtifactDef>org.wso2.pc:org.wso2.carbon.pc.core.feature:${pc.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.pc:org.wso2.carbon.pc.styles.feature:${pc.version}</featureArtifactDef>
                                 <!--<featureArtifactDef>org.wso2.pc:org.wso2.carbon.pc.analytics.core.feature:${pc.version}</featureArtifactDef>-->
                                 <!-- Features of ES -->
 
@@ -363,6 +364,11 @@
                             <features>
                                 <feature>
                                     <id>org.wso2.carbon.pc.core.feature.group</id>
+                                    <version>${pc.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.carbon.pc.styles.feature.group</id>
                                     <version>${pc.version}</version>
                                 </feature>
 

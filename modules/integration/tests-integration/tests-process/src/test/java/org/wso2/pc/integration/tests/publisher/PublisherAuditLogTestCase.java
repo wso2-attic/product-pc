@@ -18,6 +18,7 @@ import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class PublisherAuditLogTestCase extends PCIntegrationBaseTest{
@@ -29,6 +30,7 @@ public class PublisherAuditLogTestCase extends PCIntegrationBaseTest{
     HashMap<String, String> queryMap;
     HashMap<String, String> headerMap;
     String resourcePath;
+    String testProcessName = "TestProcess1/1.0";
 
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
@@ -89,11 +91,14 @@ public class PublisherAuditLogTestCase extends PCIntegrationBaseTest{
             logArr = logObject.getJSONArray("log");
         }
 
+        String processName = logArr.getJSONObject(logArr.length()-1).get("asset").toString();
+
+        Assert.assertNotNull(logArr, "There are no log entries to be found");
+        Assert.assertTrue(processName.equals(testProcessName), "Error in retrieving process asset name");
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
                 "Expected 200 OK, Received " + response.getStatusCode());
         Assert.assertTrue(responseObject.get("error").toString().equals("false"),
                 "Error retrieving logs");
-        Assert.assertNotNull(logArr);
     }
 
     @DataProvider

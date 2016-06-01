@@ -29,6 +29,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.pc</groupId>
     <artifactId>tests-common</artifactId>
+    <name>Tests-Common</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
