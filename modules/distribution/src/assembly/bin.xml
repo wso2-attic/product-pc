@@ -769,6 +769,11 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app/publisher-apis</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>../extensions/main/process-center/modules/permission.jag</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app/publisher-apis/apis</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
         <!-- Files of PC ends from here -->
         <file>
             <source>../../modules/extensions/sso/jaggery.conf</source>
