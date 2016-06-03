@@ -521,7 +521,7 @@ function isAlreadyExist(value, tableName) {
 function subProcessNamesAutoComplete() {
     var temp = processNames.slice();
     for (var i = 0; i < processNames.length; i++) {
-        if (isAlreadyExist(processNames[i], "subprocess")) {
+        if (isAlreadyExist(processNames[i], "subprocess") || processNames[i] == getMainProcess()) {
             temp[i] = "";
         }
     }
@@ -534,7 +534,7 @@ function subProcessNamesAutoComplete() {
 function successorNameAutoComplete() {
     var temp = processNames.slice();
     for (var i = 0; i < processNames.length; i++) {
-        if (isAlreadyExist(processNames[i], "successor")) {
+        if (isAlreadyExist(processNames[i], "successor") || processNames[i] == getMainProcess()) {
             temp[i] = "";
         }
     }
@@ -547,7 +547,7 @@ function successorNameAutoComplete() {
 function predecessorNameAutoComplete() {
     var temp = processNames.slice();
     for (var i = 0; i < processNames.length; i++) {
-        if (isAlreadyExist(processNames[i], "predecessor")) {
+        if (isAlreadyExist(processNames[i], "predecessor") || processNames[i] == getMainProcess()) {
             temp[i] = "";
         }
     }
