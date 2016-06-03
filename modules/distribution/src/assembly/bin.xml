@@ -358,12 +358,12 @@
         <!-- File sets for PC starts from here -->
 
         <!-- Process extensions -->
-        <fileSet>
-            <directory>../extensions/main</directory>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps
-            </outputDirectory>
-        </fileSet>
+        <!--<fileSet>-->
+            <!--<directory>../extensions/main</directory>-->
+            <!--<outputDirectory>-->
+                <!--${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps-->
+            <!--</outputDirectory>-->
+        <!--</fileSet>-->
         <fileSet>
             <directory>../extensions/process/publisher</directory>
             <outputDirectory>
