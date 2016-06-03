@@ -197,6 +197,14 @@ asset.renderer = function (ctx) {
             }else{
                 page.flowchartAvailable = false;
             }
+
+            var permissionAPI = require('rxt').permissions;
+            if (permissionAPI.hasActionPermissionforPath(resourcePath , 'write', ctx.session)){
+                page.permission=true;
+            }
+            else{
+                page.permission=false;
+            }
         },
         pageDecorators: {
             leftNav: function(page) {
