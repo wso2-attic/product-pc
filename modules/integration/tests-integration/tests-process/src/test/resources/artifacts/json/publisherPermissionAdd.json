@@ -1,0 +1,9 @@
+{
+  "assetId": "%s",
+  "assetType": "process",
+  "actionToAuthorize": "3",
+  "roleToAuthorize": "role2",
+  "pathWithVersion":"%s",
+  "permissionType":"1",
+  "permissionCheck":"other"
+}
