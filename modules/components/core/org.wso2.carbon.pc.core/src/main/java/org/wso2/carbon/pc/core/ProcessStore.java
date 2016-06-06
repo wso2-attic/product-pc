@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -133,7 +134,7 @@ public class ProcessStore {
 
                 if ((processDescription != null) && (!processDescription.isEmpty())) {
                     appendText(doc, overviewElement, "description", mns, processDescription);
-                }else{
+                } else {
                     appendText(doc, overviewElement, "description", mns, "NA");
                 }
 
@@ -176,7 +177,7 @@ public class ProcessStore {
                 Element flowchartElement = append(doc, rootElement, "flowchart", mns);
                 appendText(doc, flowchartElement, "path", mns, "NA");
 
-                if(imageObj.length() != 0) {
+                if (imageObj.length() != 0) {
                     Element imageElement = append(doc, rootElement, "images", mns);
                     appendText(doc, imageElement, "thumbnail", mns, imageObj.getString("imgValue"));
                 }
@@ -200,9 +201,9 @@ public class ProcessStore {
                 Resource storedProcess = reg.get(processAssetPath);
                 processId = storedProcess.getUUID();
 
-                if(imageObj.length() != 0) {
+                if (imageObj.length() != 0) {
                     String imageRegPath = ProcessCenterConstants.IMAGE_PATH + processId + "/" +
-                                          imageObj.getString("imgValue");
+                            imageObj.getString("imgValue");
                     Resource imageContentResource = reg.newResource();
                     BASE64Decoder decoder = new BASE64Decoder();
                     byte[] imageContent = decoder.decodeBuffer(imageObj.getString("binaryImg"));
@@ -244,7 +245,7 @@ public class ProcessStore {
                     processTextResource.setMediaType("text/html");
                     reg.put(processTextResourcePath, processTextResource);
                     doc.getElementsByTagName("processtextpath").item(0).setTextContent(
-		                    processTextResourcePath);
+                            processTextResourcePath);
                 } else {
                     reg.delete(processTextResourcePath);
                     doc.getElementsByTagName("processtextpath").item(0).setTextContent("NA");
@@ -451,9 +452,9 @@ public class ProcessStore {
 	        }
         } catch (Exception e) {
             String errMsg = "Error has been occurred while removing BPMN diagram in the process:"
-                            + processName + "-" + processVersion;
-	        log.error(errMsg, e);
-	        throw new ProcessCenterException(errMsg, e);
+                    + processName + "-" + processVersion;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
         return processId;
     }
@@ -1205,8 +1206,22 @@ public class ProcessStore {
      * @return process id
      */
     public String uploadDocument(String processName, String processVersion, String docName, String docSummary,
-            String docUrl, Object docObject, String docExtension,String user) throws ProcessCenterException {
+            String docUrl, Object docObject, String docExtension,String user) throws ProcessCenterException,JSONException {
+
         String processId = "FAILED TO UPLOAD DOCUMENT";
+        //Getting associated document list of the process and creating json format of it
+        String processDocList = this.getUploadedDocumentDetails(ProcessCenterConstants.GREG_PATH_PROCESS + processName
+                + "/" + processVersion);
+        JSONArray processDocs = new JSONArray(processDocList);
+
+        //checking for a uploaded document with same name in the list, in positive case throws an error and exit
+        for (int iteratorValue = 0; iteratorValue < processDocs.length(); iteratorValue++) {
+            String path = ((JSONObject) processDocs.get(iteratorValue)).get("path").toString();
+            if ((getAssociatedDocFileName(path).equals(docName + "." + docExtension))) {
+                throw new ProcessCenterException("Associated document " + getAssociatedDocFileName(path) + " exits in "
+                        + processName +" version" + processVersion);
+            }
+        }
         try {
             StreamHostObject s = (StreamHostObject) docObject;
             InputStream docStream = s.getStream();
@@ -1220,21 +1235,20 @@ public class ProcessStore {
                 Resource docContentResource = reg.newResource();
                 byte[] docContent = IOUtils.toByteArray(docStream);
                 String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
-                                          processVersion;
+                        processVersion;
                 String docContentPath = null;
                 if (docContent.length != 0) {
                     docContentResource.setContent(docContent);
-                    if(docExtension.equalsIgnoreCase("pdf")){
+                    if (docExtension.equalsIgnoreCase("pdf")) {
                         docContentResource.setMediaType("application/pdf");
-                    }
-                    else{
+                    } else {
                         docContentResource.setMediaType("application/msword");
                     }
                     docContentPath = "doccontent/" + processName + "/" + processVersion + "/" + docName +
                             "." + docExtension;
                     reg.put(docContentPath, docContentResource);
                     reg.addAssociation(docContentPath, processAssetPath,
-                                       ProcessCenterConstants.ASSOCIATION_TYPE);
+                            ProcessCenterConstants.ASSOCIATION_TYPE);
                 }
 
                 Resource resource = reg.get(processAssetPath);
@@ -1434,7 +1448,7 @@ public class ProcessStore {
                     NodeList processImages = processXML.getElementsByTagName("images");
 
                     String processImage = "";
-                    if(processImages.getLength() != 0) {
+                    if (processImages.getLength() != 0) {
                         Element imageElement = (Element) processImages.item(0);
                         processImage = imageElement.getElementsByTagName("thumbnail").item(0).getTextContent();
                     }
@@ -1499,6 +1513,7 @@ public class ProcessStore {
      */
     public String uploadFlowchart(String processName, String processVersion, String flowchartJson, String user)
                                         throws ProcessCenterException{
+
         String processId = "NA";
         if (log.isDebugEnabled())
             log.debug("Creating Flowchart...");
@@ -1593,7 +1608,7 @@ public class ProcessStore {
                 String processContent = new String((byte[]) processResource.getContent());
                 Document processXML = stringToXML(processContent);
                 processXML.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent(
-		                "NA");
+                        "NA");
 
                 String newProcessContent = xmlToString(processXML);
                 processResource.setContent(newProcessContent);
@@ -1625,9 +1640,9 @@ public class ProcessStore {
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                if(doc.getElementsByTagName("description").getLength() != 0)
+                if (doc.getElementsByTagName("description").getLength() != 0)
                     doc.getElementsByTagName("description").item(0).setTextContent(processDescription);
-                else{
+                else {
 
                 }
 
@@ -1645,6 +1660,13 @@ public class ProcessStore {
             throw new ProcessCenterException(errMsg, e);
         }
         return processId;
+    }
+
+    /*
+    Utility method for extracting file name from the registry path
+     */
+    private static String getAssociatedDocFileName(String filepath) {
+        return filepath.substring(filepath.lastIndexOf("/") + 1);
     }
     //    public static void main(String[] args) {
     //        String path = "/home/chathura/temp/t5/TestProcess1.bpmn";

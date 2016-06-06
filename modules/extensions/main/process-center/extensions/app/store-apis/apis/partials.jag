@@ -39,6 +39,7 @@ var findPartials = function (partials, type, partial) {
         return;
     }
     path = resolve('partials/' + partial + '.hbs', type);
+
     file = new File(path);
     file.open('r');
     ast = Handlebars.parse(file.readAll());
