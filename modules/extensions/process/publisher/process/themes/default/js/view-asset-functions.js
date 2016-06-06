@@ -464,14 +464,16 @@ function showDocument() {
                         }
                         if (response[i].url != "NA" || response[i].path != "NA") {
                             var removeDocElement = document.createElement("a");
-                            removeDocElement.setAttribute("id", "removeDocElement" + i);
-                            removeDocElement.onclick = (function (processName, processVersion, docName, docSummary, docUrl, docPath, idVal) {
-                                return function () {
-                                    removeDocumentConfirmListener(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
-                                };
-                            })(fieldsName, fieldsVersion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
-                            removeDocElement.innerHTML = "remove";
-                            cellDocAction.appendChild(removeDocElement);
+                            if (permission) {
+                                removeDocElement.setAttribute("id", "removeDocElement" + i);
+                                removeDocElement.onclick = (function (processName, processVersion, docName, docSummary, docUrl, docPath, idVal) {
+                                    return function () {
+                                        removeDocumentConfirmListener(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
+                                    };
+                                })(fieldsName, fieldsVersion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
+                                removeDocElement.innerHTML = "remove";
+                                cellDocAction.appendChild(removeDocElement);
+                            }
                         }
                     }
                 }
