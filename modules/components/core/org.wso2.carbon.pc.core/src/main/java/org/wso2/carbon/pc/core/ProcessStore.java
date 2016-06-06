@@ -1447,7 +1447,6 @@ public class ProcessStore {
                     processJSON.put("processImage", processImage);
 
                     Tag[] tags = reg.getTags(processPath);
-
                     for (Tag tag : tags) {
 
                         Iterator<String> keys = tagsObj.keys();

@@ -116,6 +116,7 @@ $(function () {
         var path = window.location.href; //current page path
         // Returns the jQuery ajax method
         var url = caramel.tenantedUrl(SEARCH_API + query + "&paginationLimit=" + to + "&start=" + from + "&count=" + count);
+        console.log(url);
 
         caramel.render('loading', 'Loading assets from ' + from + ' to ' + to + '.', function (info, content) {
             $('.loading-animation-big').remove();
@@ -243,9 +244,39 @@ $(function () {
             return;
         }
         else if (isEmptyQuery(query) && $("#content").val()) {
-            contentSearch(null);
+
+            $.ajax({
+                url: '/publisher/apis/assets',
+                method: 'GET',
+                success: function (data) {
+                    var results = [];
+                    if (data) {
+                        results = data.list || [];
+                    }
+                    for (var i = 0; i < results.length; i++) {
+                        results[i].showType = true;
+                    }
+                    if (results.length == 0) {
+                        if (from == 0) {
+                            alertify.error('We are sorry but we could not find any matching assets');
+                        }
+                        $('.loading-animation-big').remove();
+                        doPagination = false;
+                    } else {
+                        //content specified by user.
+                        if ($("#content").val()) {
+                            contentSearch(results);
+                        }
+                    }
+                }, error: function () {
+                    doPagination = false;
+                    $('.loading-animation-big').remove();
+                }
+            });
+            //   contentSearch(null);
         }
         else {
+            console.log(query);
             store.infiniteScroll.showAll(query);
         }
     });
@@ -256,6 +287,11 @@ $(function () {
         var content = $("#content").val().trim();
         var media = JSON.stringify(options);
         var search_url = caramel.tenantedUrl('/apis/search');
+
+        caramel.render('loading', 'Loading assets ', function (info, content) {
+            $('.loading-animation-big').remove();
+            $('body').append($(content));
+        });
         $.ajax({
             url: search_url,
             type: 'POST',
@@ -267,31 +303,34 @@ $(function () {
 
                 try {
                     var response = JSON.parse(data);
+                    console.log(rxt_results);
                     if (response.error === false) {
                         var results = JSON.parse(response.content);
 
-                        if (rxt_results) {                     //get the intersection of the two searches.
+                        //      if (rxt_results) {                     //get the intersection of the two searches.
 
-                            var hashmap = {};
-                            var intersection = [];
-                            for (var i = 0; i < rxt_results.length; i++) {
-                                var pid = rxt_results[i].id;
-                                hashmap[pid] = rxt_results[i];
-                            }
-                            for (var i = 0; i < results.length; i++) {
-
-                                var key = results[i].id;
-                                if (hashmap.hasOwnProperty(key)) {
-                                    intersection.push(hashmap[key]);
-                                }
-                            }
-                            results = intersection;
+                        var hashmap = {};
+                        var intersection = [];
+                        for (var i = 0; i < rxt_results.length; i++) {
+                            var pid = rxt_results[i].id;
+                            hashmap[pid] = rxt_results[i];
                         }
+                        for (var i = 0; i < results.length; i++) {
+
+                            var key = results[i].id;
+                            if (hashmap.hasOwnProperty(key)) {
+                                intersection.push(hashmap[key]);
+                            }
+                        }
+                        results = intersection;
+                        console.log(results);
+                        //        }
 
                         loadPartials('list-assets', function (partials) {
                             caramel.partials(partials, function () {
                                 caramel.render('list_assets_table_body', results, function (info, content) {
                                     $('#search-results').append($(content));
+                                    //console.log(content);
                                     $('.loading-animation-big').remove();
                                 });
                             });

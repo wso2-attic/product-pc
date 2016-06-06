@@ -161,7 +161,7 @@ asset.renderer = function (ctx) {
         var navList = util.navList();
         var isLCViewEnabled = ctx.rxtManager.isLifecycleViewEnabled(ctx.assetType);
         var path = page.assets.path;
-        if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) 		{
+        if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) {
             //    log.info(page.assets);
             if(page.assets.id != null) {
                 navList.push('Overview', 'btn-overview', util.buildUrl('details') + '/' + page.assets.id);
