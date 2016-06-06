@@ -1699,16 +1699,14 @@ public class ProcessStore {
                     }
                     else {
                         //add read permission
-                        AddRolePermissionUtil.addRolePermission(userRegistry, path, role, "2", "1");
+                        AddRolePermissionUtil.addRolePermission(userRegistry, path, role, ProcessCenterConstants.READ, ProcessCenterConstants.ALLOW);
                         //add write permission
-                        AddRolePermissionUtil.addRolePermission(userRegistry, path, role, "3", "1");
+                        AddRolePermissionUtil.addRolePermission(userRegistry, path, role, ProcessCenterConstants.WRITE, ProcessCenterConstants.ALLOW);
                         //add authorize permission
-                        AddRolePermissionUtil.addRolePermission(userRegistry, path, role, "5", "1");
+                        AddRolePermissionUtil.addRolePermission(userRegistry, path, role, ProcessCenterConstants.AUTHORIZE, ProcessCenterConstants.ALLOW);
                     }
-
                 }
                 status="Permission set successfully";
-
             }
         }catch (Exception e) {
             String errMsg = "Failed to update Permission" ;
