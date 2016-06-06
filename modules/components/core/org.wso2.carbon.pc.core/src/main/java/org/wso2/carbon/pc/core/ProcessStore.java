@@ -38,6 +38,7 @@ import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.exceptions.ResourceNotFoundException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -1660,6 +1661,68 @@ public class ProcessStore {
             throw new ProcessCenterException(errMsg, e);
         }
         return processId;
+    }
+
+    /**
+     * Adds a new tag for a process asset at the publisher
+     * @param processDetails
+     * @param user
+     * @return true if the process tag update is a success
+     * @throws ProcessCenterException
+     */
+    public boolean addNewTag(String processDetails,String user) throws ProcessCenterException {
+
+        RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+        if (registryService != null) {
+            String processName = "FAILED TO APPLY TAG";
+            try {
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
+                JSONObject processInfo = new JSONObject(processDetails);
+
+                processName = processInfo.getString("processName");
+                String processVersion = processInfo.getString("processVersion");
+                String tagName = processInfo.getString("tag");
+                String assetPath =  "processes/" + processName + "/" + processVersion;
+
+                reg.applyTag(assetPath, tagName);
+            } catch (Exception e) {
+                String msg = "Process update error:" +processName;
+                log.error(msg, e);
+                throw new ProcessCenterException(msg, e);
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Removes tag for a process asset at the publisher
+     * @param processDetails
+     * @param user
+     * @return true is the process tag removal is a success
+     * @throws ProcessCenterException
+     */
+    public boolean removeTag(String processDetails,String user) throws ProcessCenterException {
+
+        RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+        if (registryService != null) {
+            String processName = "FAILED TO REMOVE TAG";
+            try {
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
+                JSONObject processInfo = new JSONObject(processDetails);
+
+                processName = processInfo.getString("processName");
+                String processVersion = processInfo.getString("processVersion");
+                String tagName = processInfo.getString("tag");
+                String assetPath =  "processes/" + processName + "/" + processVersion;
+
+                reg.removeTag(assetPath, tagName);
+            } catch (Exception e) {
+                String msg = "Process update error:" +processName;
+                log.error(msg, e);
+                throw new ProcessCenterException(msg, e);
+            }
+        }
+        return true;
     }
 
     /*
