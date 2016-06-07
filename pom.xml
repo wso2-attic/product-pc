@@ -241,6 +241,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.resource</artifactId>
+                <version>4.3.0</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.wso2.pc</groupId>
                 <artifactId>org.wso2.carbon.pc.analytics.core</artifactId>
                 <version>${pc.version}</version>
