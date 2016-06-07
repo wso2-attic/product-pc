@@ -98,9 +98,6 @@ asset.server = function (ctx) {
             }, {
                 url: 'update_description',
                 path: 'update_description.jag'
-            }, {
-                url: 'delete_asset_post_actions',
-                path: 'delete_asset_post_actions.jag'
             }]
         }
     }
