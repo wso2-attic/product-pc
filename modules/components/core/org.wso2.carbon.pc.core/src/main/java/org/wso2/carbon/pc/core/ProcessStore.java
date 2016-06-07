@@ -42,9 +42,9 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.exceptions.ResourceNotFoundException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.user.mgt.stub.UserAdminStub;
-import org.wso2.carbon.user.mgt.stub.types.carbon.UIPermissionNode;
-import org.wso2.carbon.utils.CarbonUtils;
+
+import org.wso2.carbon.registry.resource.services.utils.AddRolePermissionUtil;
+import org.wso2.carbon.user.core.UserRealm;
 import org.xml.sax.InputSource;
 import sun.misc.BASE64Decoder;
 
@@ -99,7 +99,8 @@ public class ProcessStore {
         return document;
     }
 
-    public String createProcess(String processDetails, String user) throws ProcessCenterException {
+    public String createProcess(String processDetails,String userName) throws ProcessCenterException {
+
         String processId = "FAILED TO ADD PROCESS";
         try {
             JSONObject processInfo = new JSONObject(processDetails);
@@ -116,7 +117,7 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
+                UserRegistry reg = registryService.getGovernanceUserRegistry(userName);
 
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -211,6 +212,8 @@ public class ProcessStore {
                     imageContentResource.setContent(imageContent);
                     reg.put(imageRegPath, imageContentResource);
                 }
+
+                setPermission(userName,processName,processVersion);
 
             }
         } catch (Exception e) {
@@ -1745,4 +1748,46 @@ public class ProcessStore {
     //            e.printStackTrace();
     //        }
     //    }
+
+    public String setPermission(String userName, String processName, String processVersion) throws ProcessCenterException {
+
+        String status="Failed to set permission";
+
+        try {
+
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+
+            if (registryService != null) {
+                UserRegistry userRegistry = registryService.getGovernanceSystemRegistry();
+                UserRealm userRealm = userRegistry.getUserRealm();
+                String[] roles=userRealm.getUserStoreManager().getRoleListOfUser(userName);
+
+                String path = "/_system/governance/processes/" + processName + "/" +
+                        processVersion;
+
+                for(String role:roles){
+
+                    if(role.equalsIgnoreCase("Internal/everyone")||role.equalsIgnoreCase("Internal/store")||role.equalsIgnoreCase("Internal/publisher")){
+                        continue;
+                    }
+                    else {
+                        //add read permission
+                        AddRolePermissionUtil.addRolePermission(userRegistry, path, role, ProcessCenterConstants.READ, ProcessCenterConstants.ALLOW);
+                        //add write permission
+                        AddRolePermissionUtil.addRolePermission(userRegistry, path, role, ProcessCenterConstants.WRITE, ProcessCenterConstants.ALLOW);
+                        //add authorize permission
+                        AddRolePermissionUtil.addRolePermission(userRegistry, path, role, ProcessCenterConstants.AUTHORIZE, ProcessCenterConstants.ALLOW);
+                    }
+                }
+                status="Permission set successfully";
+            }
+        }catch (Exception e) {
+            String errMsg = "Failed to update Permission" ;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        }
+
+        return status;
+
+    }
 }

@@ -23,6 +23,7 @@ public class ProcessCenterConstants {
     public static final String PARENTPROCESS_ASSOCIATION = "parent";
     public static final String SUCCESSOR_ASSOCIATION = "successor";
     public static final String PREDECESSOR_ASSOCIATION = "predecessor";
+
     public static final String UI_PERMISSION_ACTION = "ui.execute";
 
     public static final String PROCESS_UPDATE_PERMISSION = "/permission/admin/enterprisestore/apps/publisher/features/assets/process/update";
@@ -56,4 +57,10 @@ public class ProcessCenterConstants {
         public static final String TIME_STAMP = "timestamp";
         public static final String ASSET_ID = "id";
     }
+
+    public static final String READ = "2";
+    public static final String WRITE = "3";
+    public static final String AUTHORIZE = "5";
+    public static final String ALLOW = "1";
+
 }

@@ -134,6 +134,7 @@
             <!--<groupId>org.wso2.carbon</groupId>-->
             <!--<artifactId>org.wso2.carbon.registry.resource</artifactId>-->
         <!--</dependency>-->
+
         <dependency>
             <groupId>org.json.wso2</groupId>
             <artifactId>json</artifactId>

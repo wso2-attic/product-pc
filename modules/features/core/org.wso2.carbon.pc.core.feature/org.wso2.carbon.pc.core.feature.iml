@@ -8,6 +8,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon:org.wso2.carbon.authenticator.stub:4.4.5" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.http.helper:1.1.0.wso2v1" level="project" />
     <orderEntry type="module" module-name="org.wso2.carbon.pc.core" />
     <orderEntry type="library" name="Maven: rhino.wso2:js:1.7.0.R4.wso2v1" level="project" />
     <orderEntry type="library" name="Maven: org.mozilla:rhino:1.7R4" level="project" />
@@ -92,102 +94,62 @@
     <orderEntry type="library" name="Maven: org.apache.commons.ssl:not-yet-commons-ssl:0.3.9" level="project" />
     <orderEntry type="library" name="Maven: commons-pool.wso2:commons-pool:1.5.6.wso2v1" level="project" />
     <orderEntry type="library" name="Maven: commons-pool:commons-pool:1.5.6" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon.registry:org.wso2.carbon.registry.resource:4.5.4" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon.identity:org.wso2.carbon.user.mgt:5.0.8" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon.identity:org.wso2.carbon.user.mgt.common:5.0.8" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon.identity:org.wso2.carbon.identity.base:5.0.8" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.rampart.wso2:rampart-core:1.6.1.wso2v19" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.axis2:axis2-kernel:1.6.1-wso2v17" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.geronimo.specs:geronimo-ws-metadata_2.0_spec:1.1.2" level="project" />
-    <orderEntry type="library" name="Maven: javax.servlet:servlet-api:2.3" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.neethi:neethi:2.0.4" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.woden:woden-api:1.0M9" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.woden:woden-impl-dom:1.0M9" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.woden:woden-impl-commons:1.0M9" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.axis2:mex:impl:1.6.1-wso2v17" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.axis2:axis2-mtompolicy:1.6.1-wso2v17" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.ws.commons.axiom:axiom-dom:1.2.11-wso2v10" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.ws.security:wss4j:1.5.11-wso2v11" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.xalan:xalan:2.7.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.santuario:xmlsec:1.4.2" level="project" />
-    <orderEntry type="library" name="Maven: org.opensaml:opensaml1:1.1" level="project" />
-    <orderEntry type="library" name="Maven: org.opensaml:opensaml:2.2.3" level="project" />
-    <orderEntry type="library" name="Maven: org.opensaml:openws:1.2.2" level="project" />
-    <orderEntry type="library" name="Maven: org.opensaml:xmltooling:1.2.0" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:log4j-over-slf4j:1.5.5" level="project" />
-    <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-ext-jdk15:1.40" level="project" />
-    <orderEntry type="library" name="Maven: net.jcip:jcip-annotations:1.0" level="project" />
-    <orderEntry type="library" name="Maven: jargs:jargs:1.0" level="project" />
-    <orderEntry type="library" name="Maven: velocity:velocity:1.5" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.apache.xerces:xml-apis:2.9.1" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.apache.xerces:xercesImpl:2.9.1" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.apache.xerces:resolver:2.9.1" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.apache.xerces:serializer:2.9.1" level="project" />
-    <orderEntry type="library" name="Maven: bouncycastle:bcprov-jdk14:140" level="project" />
-    <orderEntry type="library" name="Maven: commons-collections.wso2:commons-collections:3.2.0.wso2v1" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.registry:org.wso2.carbon.registry.resource:4.3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.commons:org.wso2.carbon.user.mgt:4.3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.commons:org.wso2.carbon.user.mgt.common:4.3.1" level="project" />
     <orderEntry type="library" name="Maven: au.com.bytecode.opencsv.wso2:opencsv:1.8.wso2v1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.poi.wso2:poi-ooxml:3.9.0.wso2v1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.poi:poi-ooxml:3.9" level="project" />
     <orderEntry type="library" name="Maven: org.apache.poi:poi-ooxml-schemas:3.9" level="project" />
     <orderEntry type="library" name="Maven: org.apache.xmlbeans:xmlbeans:2.3.0" level="project" />
-    <orderEntry type="library" name="Maven: commons-lang.wso2:commons-lang:2.6.0.wso2v1" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon.identity:org.wso2.carbon.identity.core:5.0.8" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.orbit.org.opensaml:opensaml:2.6.4.wso2v1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.ws.security.wso2:wss4j:1.5.11.wso2v7" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.axis2.wso2:axis2:1.6.1.wso2v17" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.axis2.wso2:axis2:1.6.1.wso2v11" level="project" />
     <orderEntry type="library" name="Maven: org.wso2.carbon:org.wso2.carbon.ui:4.4.5" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.ws.commons.axiom.wso2:axiom:1.2.11.wso2v10" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.woodstox:woodstox-core-asl:4.2.0" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.woodstox:stax2-api:3.1.1" level="project" />
-    <orderEntry type="library" name="Maven: javax.xml.stream:stax-api:1.0-2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tiles.wso2:tiles-jsp:2.0.5.wso2v1" level="project" />
     <orderEntry type="library" name="Maven: org.wso2.carbon:org.wso2.carbon.authenticator.proxy:4.4.5" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon:org.wso2.carbon.authenticator.stub:4.4.5" level="project" />
     <orderEntry type="library" name="Maven: org.wso2.carbon:org.wso2.carbon.core.common:4.4.5" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.http.servlet:1.1.400.v20130418-1354" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.equinox:org.apache.jasper.glassfish:2.2.2.v201205150955" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.equinox:javax.servlet.jsp:2.2.0.v201112011158" level="project" />
     <orderEntry type="library" name="Maven: org.wso2.carbon:org.wso2.carbon.core.commons.stub:4.4.5" level="project" />
     <orderEntry type="library" name="Maven: javax.servlet.jsp.jstl.wso2:jstl:1.2.1.wso2v2" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon.registry:org.wso2.carbon.registry.admin.api:4.5.4" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon.commons:org.wso2.carbon.ntask.core:4.5.2" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon.commons:org.wso2.carbon.ntask.common:4.5.2" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon.commons:org.wso2.carbon.remote-tasks.stub:4.5.2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.axis2.wso2:axis2-client:1.6.1.wso2v16" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.axis2.wso2:axis2-json:1.6.1.wso2v16" level="project" />
+    <orderEntry type="library" name="Maven: commons-lang.wso2:commons-lang:2.6.0.wso2v1" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.registry:org.wso2.carbon.registry.admin.api:4.3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.commons:org.wso2.carbon.ntask.core:4.3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.commons:org.wso2.carbon.ntask.common:4.3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.commons:org.wso2.carbon.remote-tasks.stub:4.3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.axis2.wso2:axis2-client:1.6.1.wso2v11" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.axis2.wso2:axis2-json:1.6.1.wso2v11" level="project" />
     <orderEntry type="library" name="Maven: org.apache.woden.wso2:woden:1.0.0.M8-wso2v1" level="project" />
     <orderEntry type="library" name="Maven: commons-codec.wso2:commons-codec:1.4.0.wso2v1" level="project" />
     <orderEntry type="library" name="Maven: org.quartz-scheduler.wso2:quartz:2.1.1.wso2v1" level="project" />
     <orderEntry type="library" name="Maven: org.quartz-scheduler:quartz:2.1.1" level="project" />
     <orderEntry type="library" name="Maven: c3p0:c3p0:0.9.1.1" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon.registry:org.wso2.carbon.registry.common:4.5.4" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.registry:org.wso2.carbon.registry.common:4.3.0" level="project" />
     <orderEntry type="library" name="Maven: commons-beanutils.wso2:commons-beanutils:1.8.0.wso2v1" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon:org.wso2.carbon.feature.mgt.services:4.4.5" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon:org.wso2.carbon.feature.mgt.core:4.4.5" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon:org.wso2.carbon.feature.mgt.services:4.3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon:org.wso2.carbon.feature.mgt.core:4.3.0" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.artifact.repository:1.1.100.v20110519" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.director:2.3.0.v20130526-0335" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.metadata.repository:1.2.100.v20130327-2119" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.simpleconfigurator:1.0.400.v20130327-2119" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.core:2.3.0.v20130327-2119" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.engine:2.3.0.v20130526-2122-wso2v1" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.core:org.eclipse.core.jobs:3.5.300.v20130429-1813" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.util:1.0.500.v20130404-1337" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.security:1.2.0.v20130424-1801" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.publisher.eclipse:1.1.200.v20130516-1953" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.director:2.1.0.v20110504-1715" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.metadata.repository:1.2.0.v20110511-1359" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.simpleconfigurator:1.0.301.v20120828-033635" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.core:2.1.0.v20110502-1955" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.engine:2.1.0.v20110511-wso2v1" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.core:org.eclipse.core.jobs:3.5.100.v20110404" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.util:1.0.300.v20110502" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.security:1.1.0.v20110502" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.publisher.eclipse:1.0.0.v20110511" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.publisher.pdepublishing:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.garbagecollector:1.0.200.v20130327-2119" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.publisher:1.3.0.v20130509-0110" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.preferences:3.5.100.v20130422-1538" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.simpleconfigurator.manipulator:2.0.0.v20130327-2119" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.frameworkadmin:2.0.100.v20130327-2119" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.metadata:2.2.0.v20130523-1557" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.repository:2.3.0.v20130412-2032" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.common:3.6.200.v20130402-1505" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon.registry:org.wso2.carbon.registry.extensions:4.5.4" level="project" />
-    <orderEntry type="library" name="Maven: wsdl4j.wso2:wsdl4j:1.6.2.wso2v2" level="project" />
-    <orderEntry type="library" name="Maven: wsdl4j:wsdl4j:1.6.2" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon.registry:org.wso2.carbon.registry.servlet:4.5.4" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon.registry:org.wso2.carbon.registry.uddi:4.5.4" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.garbagecollector:1.0.200.v20110510" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.publisher:1.2.0.v20110511" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.preferences:3.4.0.v20110502" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.simpleconfigurator.manipulator:2.0.0.v20110502-1955" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.frameworkadmin:2.0.0.v20110502-1955" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.metadata:2.1.0.v20110510" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.p2.repository:2.1.0.v20110601" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.common:3.6.100.v20120522-1841" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.registry:org.wso2.carbon.registry.extensions:4.3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.registry:org.wso2.carbon.registry.servlet:4.3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.registry:org.wso2.carbon.registry.uddi:4.3.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.juddi:juddi-core:3.1.5.wso2v1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.juddi:uddi-ws:3.1.5.wso2v1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.juddi:uddi-tck-base:3.1.5.wso2v1" level="project" />
@@ -227,21 +189,9 @@
     <orderEntry type="library" name="Maven: org.apache.ws.commons.schema:XmlSchema:1.4.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.derby:derby:10.4.2.0" level="project" />
     <orderEntry type="library" name="Maven: org.wso2.wsdl.validator.wso2:wsdl-validator:1.2.0.wso2v1" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.orbit.wadl.core:wadl-core:1.1.6.wso2v1" level="project" />
-    <orderEntry type="library" name="Maven: org.jvnet.ws.wadl:wadl-core:1.1.6" level="project" />
-    <orderEntry type="library" name="Maven: org.glassfish.jersey.core:jersey-common:2.5.1" level="project" />
-    <orderEntry type="library" name="Maven: javax.ws.rs:javax.ws.rs-api:2.0.1" level="project" />
-    <orderEntry type="library" name="Maven: javax.annotation:javax.annotation-api:1.2" level="project" />
-    <orderEntry type="library" name="Maven: com.google.guava:guava:16.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.glassfish.hk2:hk2-api:2.2.0-b21" level="project" />
-    <orderEntry type="library" name="Maven: org.glassfish.hk2:hk2-utils:2.2.0-b21" level="project" />
-    <orderEntry type="library" name="Maven: org.glassfish.hk2.external:javax.inject:2.2.0-b21" level="project" />
-    <orderEntry type="library" name="Maven: org.glassfish.hk2:hk2-locator:2.2.0-b21" level="project" />
-    <orderEntry type="library" name="Maven: org.glassfish.hk2.external:asm-all-repackaged:2.2.0-b21" level="project" />
-    <orderEntry type="library" name="Maven: org.glassfish.hk2.external:cglib:2.2.0-b21" level="project" />
-    <orderEntry type="library" name="Maven: org.glassfish.hk2:osgi-resource-locator:1.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.jsonschema2pojo:jsonschema2pojo-core:0.4.0" level="project" />
-    <orderEntry type="library" name="Maven: org.jvnet.ws.wadl:wadl-xslt:1.1.6" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.wadl.core.wso2:wadl-core:1.1.3.wso2v2" level="project" />
+    <orderEntry type="library" name="Maven: org.jvnet.ws.wadl:wadl-core:1.1.3" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-xjc:2.2" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.jsonschema2pojo:jsonschema2pojo-core:0.3.4" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.9" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.9" level="project" />
@@ -251,15 +201,12 @@
     <orderEntry type="library" name="Maven: javax.ws.rs:jsr311-api:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: com.sun.localizer:localizer:1.0" level="project" />
     <orderEntry type="library" name="Maven: com.sun.localizer:comresrcgen:1.0" level="project" />
-    <orderEntry type="library" name="Maven: com.sun.jersey:jersey-client:1.12" level="project" />
-    <orderEntry type="library" name="Maven: com.sun.jersey:jersey-core:1.12" level="project" />
-    <orderEntry type="library" name="Maven: com.sun.jersey:jersey-server:1.12" level="project" />
+    <orderEntry type="library" name="Maven: javax.xml.bind:jaxb-api:2.2.6" level="project" />
     <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-impl:2.2.6" level="project" />
-    <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-xjc:2.2.6" level="project" />
     <orderEntry type="library" name="Maven: uddi:uddi4j:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: xerces:xercesImpl:2.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.core:org.eclipse.core.runtime:3.5.0.v20090429-1800" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon:org.wso2.carbon.registry.server:4.4.5" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon:org.wso2.carbon.registry.server:4.3.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven.scm.wso2:maven-scm:1.7.0.wso2v1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-svnexe:1.7.0-wso2v1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-api:1.7" level="project" />
@@ -291,14 +238,20 @@
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.8.0" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2" level="project" />
     <orderEntry type="library" name="Maven: commons-digester:commons-digester:1.8" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon:org.wso2.carbon.authenticator.stub:4.2.0" level="project" />
+    <orderEntry type="library" name="Maven: wsdl4j.wso2:wsdl4j:1.6.2.wso2v2" level="project" />
+    <orderEntry type="library" name="Maven: wsdl4j:wsdl4j:1.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.neethi.wso2:neethi:2.0.4.wso2v4" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.ws.commons.axiom.wso2:axiom:1.2.11.wso2v4" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon:org.wso2.carbon.user.mgt.stub:4.2.0" level="project" />
     <orderEntry type="library" name="Maven: org.json.wso2:json:1.0.0.wso2v1" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon.governance:org.wso2.carbon.governance.api:4.6.3" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.governance:org.wso2.carbon.governance.api:4.6.4-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.ibm.icu:icu4j:3.8" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.registry:3.5.100.v20110502" level="project" />
     <orderEntry type="library" name="Maven: org.wso2.carbon:org.wso2.carbon.core:4.4.5" level="project" />
     <orderEntry type="library" name="Maven: org.wso2.orbit.com.hazelcast:hazelcast:3.5.4.wso2v1" level="project" />
     <orderEntry type="library" name="Maven: com.hazelcast:hazelcast-all:3.5.4" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.http.helper:1.1.0.wso2v1" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.http.helper:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.wso2.orbit.org.apache.neethi:neethi:2.0.4.wso2v5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents.wso2:httpcore:4.1.0-wso2v1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-catalina-ha:7.0.59" level="project" />
@@ -315,7 +268,42 @@
     <orderEntry type="library" name="Maven: org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ws.commons.axiom:axiom-impl:1.2.11-wso2v9" level="project" />
     <orderEntry type="library" name="Maven: org.apache.juddi.wso2:juddi:3.1.5.wso2v1" level="project" />
-    <orderEntry type="library" name="Maven: org.wso2.carbon.registry:org.wso2.carbon.registry.indexing:4.5.4" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.registry:org.wso2.carbon.registry.indexing:4.5.5-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.identity:org.wso2.carbon.user.mgt:5.0.8" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.identity:org.wso2.carbon.user.mgt.common:5.0.8" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.identity:org.wso2.carbon.identity.base:5.0.8" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.rampart.wso2:rampart-core:1.6.1.wso2v19" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.axis2:axis2-kernel:1.6.1-wso2v17" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.geronimo.specs:geronimo-ws-metadata_2.0_spec:1.1.2" level="project" />
+    <orderEntry type="library" name="Maven: javax.servlet:servlet-api:2.3" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.neethi:neethi:2.0.4" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.woden:woden-api:1.0M9" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.woden:woden-impl-dom:1.0M9" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.woden:woden-impl-commons:1.0M9" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.axis2:mex:impl:1.6.1-wso2v17" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.axis2:axis2-mtompolicy:1.6.1-wso2v17" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.ws.commons.axiom:axiom-dom:1.2.11-wso2v10" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.ws.security:wss4j:1.5.11-wso2v11" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.xalan:xalan:2.7.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.santuario:xmlsec:1.4.2" level="project" />
+    <orderEntry type="library" name="Maven: org.opensaml:opensaml1:1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.opensaml:opensaml:2.2.3" level="project" />
+    <orderEntry type="library" name="Maven: org.opensaml:openws:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: org.opensaml:xmltooling:1.2.0" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:log4j-over-slf4j:1.5.5" level="project" />
+    <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-ext-jdk15:1.40" level="project" />
+    <orderEntry type="library" name="Maven: net.jcip:jcip-annotations:1.0" level="project" />
+    <orderEntry type="library" name="Maven: jargs:jargs:1.0" level="project" />
+    <orderEntry type="library" name="Maven: velocity:velocity:1.5" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.apache.xerces:xml-apis:2.9.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.apache.xerces:xercesImpl:2.9.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.apache.xerces:resolver:2.9.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.apache.xerces:serializer:2.9.1" level="project" />
+    <orderEntry type="library" name="Maven: bouncycastle:bcprov-jdk14:140" level="project" />
+    <orderEntry type="library" name="Maven: commons-collections.wso2:commons-collections:3.2.0.wso2v1" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.carbon.identity:org.wso2.carbon.identity.core:5.0.8" level="project" />
+    <orderEntry type="library" name="Maven: org.wso2.orbit.org.opensaml:opensaml:2.6.4.wso2v1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.ws.security.wso2:wss4j:1.5.11.wso2v7" level="project" />
     <orderEntry type="library" name="Maven: org.wso2.orbit.org.apache.solr:solr:5.2.1.wso2v1" level="project" />
   </component>
 </module>
