@@ -23,4 +23,9 @@ public class ProcessCenterConstants {
     public static final String PARENTPROCESS_ASSOCIATION = "parent";
     public static final String SUCCESSOR_ASSOCIATION = "successor";
     public static final String PREDECESSOR_ASSOCIATION = "predecessor";
+
+    public static final String READ = "2";
+    public static final String WRITE = "3";
+    public static final String AUTHORIZE = "5";
+    public static final String ALLOW = "1";
 }

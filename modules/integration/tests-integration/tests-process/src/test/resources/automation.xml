@@ -131,10 +131,16 @@
                     <user key="user1">
                         <userName>testuser11</userName>
                         <password>testuser11</password>
+                        <roles>
+                            <role>role1</role>
+                        </roles>
                     </user>
                     <user key="user2">
                         <userName>testuser21</userName>
                         <password>testuser21</password>
+                        <roles>
+                            <role>role2</role>
+                        </roles>
                     </user>
                 </users>
             </tenant>
@@ -195,6 +201,18 @@
                 </users>
             </tenant>
         </tenants>
+        <roles>
+            <role name="role1">
+                <permissions>
+                    <permission>/permission/admin</permission>
+                </permissions>
+            </role>
+            <role name="role2">
+                <permissions>
+                    <permission>/permission/admin</permission>
+                </permissions>
+            </role>
+        </roles>
     </userManagement>
     <!--
    This section will initiate the initial deployment of the platform required by
