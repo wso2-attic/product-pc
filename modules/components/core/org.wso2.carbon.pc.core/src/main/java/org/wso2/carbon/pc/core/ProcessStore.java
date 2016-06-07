@@ -15,7 +15,6 @@
  */
 package org.wso2.carbon.pc.core;
 
-import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.converter.util.InputStreamProvider;
 import org.activiti.bpmn.model.BpmnModel;
@@ -130,7 +129,7 @@ public class ProcessStore {
 
                 if ((processDescription != null) && (!processDescription.isEmpty())) {
                     appendText(doc, overviewElement, "description", mns, processDescription);
-                }else{
+                } else {
                     appendText(doc, overviewElement, "description", mns, "NA");
                 }
 
@@ -173,7 +172,7 @@ public class ProcessStore {
                 Element flowchartElement = append(doc, rootElement, "flowchart", mns);
                 appendText(doc, flowchartElement, "path", mns, "NA");
 
-                if(imageObj.length() != 0) {
+                if (imageObj.length() != 0) {
                     Element imageElement = append(doc, rootElement, "images", mns);
                     appendText(doc, imageElement, "thumbnail", mns, imageObj.getString("imgValue"));
                 }
@@ -197,9 +196,9 @@ public class ProcessStore {
                 Resource storedProcess = reg.get(processAssetPath);
                 processId = storedProcess.getUUID();
 
-                if(imageObj.length() != 0) {
+                if (imageObj.length() != 0) {
                     String imageRegPath = ProcessCenterConstants.IMAGE_PATH + processId + "/" +
-                                          imageObj.getString("imgValue");
+                            imageObj.getString("imgValue");
                     Resource imageContentResource = reg.newResource();
                     BASE64Decoder decoder = new BASE64Decoder();
                     byte[] imageContent = decoder.decodeBuffer(imageObj.getString("binaryImg"));
@@ -238,8 +237,7 @@ public class ProcessStore {
                     processTextResource.setContent(processText);
                     processTextResource.setMediaType("text/html");
                     reg.put(processTextResourcePath, processTextResource);
-                    doc.getElementsByTagName("processtextpath").item(0).setTextContent(
-		                    processTextResourcePath);
+                    doc.getElementsByTagName("processtextpath").item(0).setTextContent(processTextResourcePath);
                 } else {
                     reg.delete(processTextResourcePath);
                     doc.getElementsByTagName("processtextpath").item(0).setTextContent("NA");
@@ -335,8 +333,7 @@ public class ProcessStore {
         }
     }
 
-    public String createBPMN(String bpmnName, String bpmnVersion, Object o)
-            throws ProcessCenterException {
+    public String createBPMN(String bpmnName, String bpmnVersion, Object o) throws ProcessCenterException {
         String processId = "FAILED TO CREATE BPMN";
         if (log.isDebugEnabled()) {
             log.debug("Creating BPMN resource:" + bpmnName + " - " + bpmnVersion);
@@ -410,43 +407,42 @@ public class ProcessStore {
         return processId;
     }
 
-    public String removeBPMNDiagram(String processName, String processVersion)
-		    throws ProcessCenterException {
-	    String processId = "";
+    public String removeBPMNDiagram(String processName, String processVersion) throws ProcessCenterException {
+        String processId = "";
         try {
-	        RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
-	        if (registryService != null) {
-		        UserRegistry reg = registryService.getGovernanceSystemRegistry();
-		        String bpmnContentPath = ProcessCenterConstants.BPMN_CONTENT_PATH + processName + "/" + processVersion;
-		        if (reg.resourceExists(bpmnContentPath)) {
-			        reg.delete(bpmnContentPath);
-		        }
-		        String bpmnAssetPath = ProcessCenterConstants.BPMN_PATH + processName + "/" + processVersion;
-		        if (reg.resourceExists(bpmnAssetPath)) {
-			        reg.delete(bpmnAssetPath);
-		        }
-		        String processPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
-		        if(reg.resourceExists(processPath)) {
-			        Resource processResource = reg.get(processPath);
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                String bpmnContentPath = ProcessCenterConstants.BPMN_CONTENT_PATH + processName + "/" + processVersion;
+                if (reg.resourceExists(bpmnContentPath)) {
+                    reg.delete(bpmnContentPath);
+                }
+                String bpmnAssetPath = ProcessCenterConstants.BPMN_PATH + processName + "/" + processVersion;
+                if (reg.resourceExists(bpmnAssetPath)) {
+                    reg.delete(bpmnAssetPath);
+                }
+                String processPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
+                if (reg.resourceExists(processPath)) {
+                    Resource processResource = reg.get(processPath);
 
-			        String processContent = new String((byte[]) processResource.getContent());
-			        Document processXML = stringToXML(processContent);
-			        processXML.getElementsByTagName("bpmnpath").item(0).setTextContent("NA");
-			        processXML.getElementsByTagName("bpmnid").item(0).setTextContent("NA");
+                    String processContent = new String((byte[]) processResource.getContent());
+                    Document processXML = stringToXML(processContent);
+                    processXML.getElementsByTagName("bpmnpath").item(0).setTextContent("NA");
+                    processXML.getElementsByTagName("bpmnid").item(0).setTextContent("NA");
 
-			        String newProcessContent = xmlToString(processXML);
-			        processResource.setContent(newProcessContent);
-			        reg.put(processPath, processResource);
+                    String newProcessContent = xmlToString(processXML);
+                    processResource.setContent(newProcessContent);
+                    reg.put(processPath, processResource);
 
-			        Resource storedProcessAsset = reg.get(processPath);
-			        processId = storedProcessAsset.getUUID();
-		        }
-	        }
+                    Resource storedProcessAsset = reg.get(processPath);
+                    processId = storedProcessAsset.getUUID();
+                }
+            }
         } catch (Exception e) {
-            String errMsg = "Error has been occurred while removing BPMN diagram in the process:"
-                            + processName + "-" + processVersion;
-	        log.error(errMsg, e);
-	        throw new ProcessCenterException(errMsg, e);
+            String errMsg = "Error has been occurred while removing BPMN diagram in the process:" + processName + "-"
+                    + processVersion;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
         }
         return processId;
     }
@@ -796,7 +792,8 @@ public class ProcessStore {
         }
     }
 
-    public void populateAssociations(Association[] associations, JSONArray jsonArray, UserRegistry reg) throws Exception {
+    public void populateAssociations(Association[] associations, JSONArray jsonArray, UserRegistry reg)
+            throws Exception {
         for (Association association : associations) {
             String associationPath = association.getDestinationPath();
             Resource associatedResource = reg.get(associationPath);
@@ -809,7 +806,8 @@ public class ProcessStore {
             associatedProcessDetails.put("name", overviewElement.getElementsByTagName("name").item(0).getTextContent());
             associatedProcessDetails.put("path", associatedResource.getPath());
             associatedProcessDetails.put("id", associatedResource.getId());
-            associatedProcessDetails.put("version", overviewElement.getElementsByTagName("version").item(0).getTextContent());
+            associatedProcessDetails
+                    .put("version", overviewElement.getElementsByTagName("version").item(0).getTextContent());
             jsonArray.put(associatedProcessDetails);
         }
     }
@@ -824,17 +822,20 @@ public class ProcessStore {
 
                 JSONObject conObj = new JSONObject();
                 JSONArray subprocessArray = new JSONArray();
-                Association[] aSubprocesses = reg.getAssociations(resourcePath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
+                Association[] aSubprocesses = reg
+                        .getAssociations(resourcePath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
                 populateAssociations(aSubprocesses, subprocessArray, reg);
                 conObj.put("subprocesses", subprocessArray);
 
                 JSONArray successorArray = new JSONArray();
-                Association[] aSuccessors = reg.getAssociations(resourcePath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                Association[] aSuccessors = reg
+                        .getAssociations(resourcePath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
                 populateAssociations(aSuccessors, successorArray, reg);
                 conObj.put("successors", successorArray);
 
                 JSONArray predecessorArray = new JSONArray();
-                Association[] aPredecessors = reg.getAssociations(resourcePath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                Association[] aPredecessors = reg
+                        .getAssociations(resourcePath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
                 populateAssociations(aPredecessors, predecessorArray, reg);
                 conObj.put("predecessors", predecessorArray);
 
@@ -909,7 +910,8 @@ public class ProcessStore {
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
                     reg.addAssociation(processAssetPath, subprocessPath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
-                    reg.addAssociation(subprocessPath, processAssetPath, ProcessCenterConstants.PARENTPROCESS_ASSOCIATION);
+                    reg.addAssociation(subprocessPath, processAssetPath,
+                            ProcessCenterConstants.PARENTPROCESS_ASSOCIATION);
                 }
             }
 
@@ -949,8 +951,10 @@ public class ProcessStore {
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
-                    reg.addAssociation(processAssetPath, successor.getString("path"), ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
-                    reg.addAssociation(successor.getString("path"), processAssetPath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                    reg.addAssociation(processAssetPath, successor.getString("path"),
+                            ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                    reg.addAssociation(successor.getString("path"), processAssetPath,
+                            ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
 
                     // add current process as a predecessor to the successor process
                     Resource successorProcess = reg.get(successor.getString("path"));
@@ -996,8 +1000,10 @@ public class ProcessStore {
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
-                    reg.addAssociation(processAssetPath, predecessor.getString("path"), ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
-                    reg.addAssociation(predecessor.getString("path"), processAssetPath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                    reg.addAssociation(processAssetPath, predecessor.getString("path"),
+                            ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                    reg.addAssociation(predecessor.getString("path"), processAssetPath,
+                            ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
                 }
             }
 
@@ -1039,8 +1045,10 @@ public class ProcessStore {
                                 subprocessPath.equals(subprocess.getString("path")) &&
                                 subprocessId.equals(subprocess.getString("id"))) {
                             subprocessElement.getParentNode().removeChild(subprocessElement);
-                            reg.removeAssociation(processAssetPath, subprocess.getString("path"), ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
-                            reg.removeAssociation(subprocess.getString("path"), processAssetPath, ProcessCenterConstants.PARENTPROCESS_ASSOCIATION);
+                            reg.removeAssociation(processAssetPath, subprocess.getString("path"),
+                                    ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
+                            reg.removeAssociation(subprocess.getString("path"), processAssetPath,
+                                    ProcessCenterConstants.PARENTPROCESS_ASSOCIATION);
                             break;
                         }
                     }
@@ -1087,8 +1095,10 @@ public class ProcessStore {
                                 successorPath.equals(successor.getString("path")) &&
                                 successorId.equals(successor.getString("id"))) {
                             successorElement.getParentNode().removeChild(successorElement);
-                            reg.removeAssociation(processAssetPath, successor.getString("path"), ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
-                            reg.removeAssociation(successor.getString("path"), processAssetPath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                            reg.removeAssociation(processAssetPath, successor.getString("path"),
+                                    ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                            reg.removeAssociation(successor.getString("path"), processAssetPath,
+                                    ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
                             break;
                         }
                     }
@@ -1137,8 +1147,10 @@ public class ProcessStore {
                                 predecessorPath.equals(predecessor.getString("path")) &&
                                 predecessorId.equals(predecessor.getString("id"))) {
                             predecessorElement.getParentNode().removeChild(predecessorElement);
-                            reg.removeAssociation(processAssetPath, predecessor.getString("path"), ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
-                            reg.removeAssociation(predecessor.getString("path"), processAssetPath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                            reg.removeAssociation(processAssetPath, predecessor.getString("path"),
+                                    ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                            reg.removeAssociation(predecessor.getString("path"), processAssetPath,
+                                    ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
                             break;
                         }
                     }
@@ -1211,21 +1223,19 @@ public class ProcessStore {
                 Resource docContentResource = reg.newResource();
                 byte[] docContent = IOUtils.toByteArray(docStream);
                 String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
-                                          processVersion;
+                        processVersion;
                 String docContentPath = null;
                 if (docContent.length != 0) {
                     docContentResource.setContent(docContent);
-                    if(docExtension.equalsIgnoreCase("pdf")){
+                    if (docExtension.equalsIgnoreCase("pdf")) {
                         docContentResource.setMediaType("application/pdf");
-                    }
-                    else{
+                    } else {
                         docContentResource.setMediaType("application/msword");
                     }
                     docContentPath = "doccontent/" + processName + "/" + processVersion + "/" + docName +
                             "." + docExtension;
                     reg.put(docContentPath, docContentResource);
-                    reg.addAssociation(docContentPath, processAssetPath,
-                                       ProcessCenterConstants.ASSOCIATION_TYPE);
+                    reg.addAssociation(docContentPath, processAssetPath, ProcessCenterConstants.ASSOCIATION_TYPE);
                 }
 
                 Resource resource = reg.get(processAssetPath);
@@ -1281,8 +1291,7 @@ public class ProcessStore {
 
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
-                Document document = builder.parse(
-                        new InputSource(new StringReader(resourceContent)));
+                Document document = builder.parse(new InputSource(new StringReader(resourceContent)));
 
                 JSONArray documentArray = new JSONArray();
                 NodeList documentElements = ((Element) document.getFirstChild()).getElementsByTagName("document");
@@ -1425,7 +1434,7 @@ public class ProcessStore {
                     NodeList processImages = processXML.getElementsByTagName("images");
 
                     String processImage = "";
-                    if(processImages.getLength() != 0) {
+                    if (processImages.getLength() != 0) {
                         Element imageElement = (Element) processImages.item(0);
                         processImage = imageElement.getElementsByTagName("thumbnail").item(0).getTextContent();
                     }
@@ -1490,7 +1499,7 @@ public class ProcessStore {
      * @return the processId once the flowchart is saved
      */
     public String uploadFlowchart(String processName, String processVersion, String flowchartJson)
-                                        throws ProcessCenterException{
+            throws ProcessCenterException {
         String processId = "NA";
         if (log.isDebugEnabled())
             log.debug("Creating Flowchart...");
@@ -1582,8 +1591,7 @@ public class ProcessStore {
 
                 String processContent = new String((byte[]) processResource.getContent());
                 Document processXML = stringToXML(processContent);
-                processXML.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent(
-		                "NA");
+                processXML.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent("NA");
 
                 String newProcessContent = xmlToString(processXML);
                 processResource.setContent(newProcessContent);
@@ -1594,6 +1602,63 @@ public class ProcessStore {
             log.error(errorMessage, e);
             throw new ProcessCenterException(errorMessage);
         }
+    }
+
+    /**
+     * Delete the resource collection (directory) created in the governance registry for the process to keep its documents
+     *
+     * @param processName
+     * @param processVersion
+     * @throws ProcessCenterException
+     */
+    public void deleteDocumentResourceCollection(String processName, String processVersion)
+            throws ProcessCenterException, RegistryException {
+
+        RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+        String documentsResourceCollectionPath =
+                ProcessCenterConstants.DOC_CONTENT_PATH + processName + "/" + processVersion;
+        if (registryService != null) {
+            UserRegistry reg = registryService.getGovernanceSystemRegistry();
+            reg.delete(documentsResourceCollectionPath);
+        }
+    }
+
+    public String deleteProcessText(String processName, String processVersion) throws ProcessCenterException {
+        String processId = "";
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                String processTextPath = ProcessCenterConstants.PROCESS_TEXT_PATH + processName + "/" + processVersion;
+                if (reg.resourceExists(processTextPath)) {
+                    //delete the processText resource
+                    reg.delete(processTextPath);
+                }
+
+                //delete the processText resource's path defined in process.rxt
+                String processPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
+                if (reg.resourceExists(processPath)) {
+                    Resource processResource = reg.get(processPath);
+
+                    String processContent = new String((byte[]) processResource.getContent());
+                    Document processXML = stringToXML(processContent);
+                    processXML.getElementsByTagName("processtextpath").item(0).setTextContent("NA");
+
+                    String newProcessContent = xmlToString(processXML);
+                    processResource.setContent(newProcessContent);
+                    reg.put(processPath, processResource);
+
+                    Resource storedProcessAsset = reg.get(processPath);
+                    processId = storedProcessAsset.getUUID();
+                }
+            }
+        } catch (Exception e) {
+            String errMsg = "Error has been occurred while removing BPMN diagram in the process:" + processName + "-"
+                    + processVersion;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        }
+        return processId;
     }
 
     public String updateDescription(String descriptionDetails) throws ProcessCenterException {
@@ -1615,9 +1680,9 @@ public class ProcessStore {
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                if(doc.getElementsByTagName("description").getLength() != 0)
+                if (doc.getElementsByTagName("description").getLength() != 0)
                     doc.getElementsByTagName("description").item(0).setTextContent(processDescription);
-                else{
+                else {
 
                 }
 
@@ -1635,6 +1700,45 @@ public class ProcessStore {
             throw new ProcessCenterException(errMsg, e);
         }
         return processId;
+    }
+
+    /**
+     * Delete the process associations : Documents, BPMN model, Flow chart , Process text
+     *
+     * @param processName
+     * @param processVersion
+     */
+    public void deleteProcessAssociations(String processName, String processVersion) throws ProcessCenterException {
+
+        String processResourcePath =
+                ProcessCenterConstants.GREG_PATH + ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/"
+                        + processVersion;
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                //delete Process Documents
+                String uploadedDocs = getUploadedDocumentDetails(processResourcePath);
+                JSONArray uploadedDocJSNArray = new JSONArray(uploadedDocs);
+
+                for (int i = 0; i < uploadedDocJSNArray.length(); i++) {
+                    JSONObject deleteDocument = new JSONObject();
+                    deleteDocument.put("processName", processName);
+                    deleteDocument.put("processVersion", processVersion);
+                    deleteDocument.put("removeDocument", uploadedDocJSNArray.get(i));
+                    deleteDocument(deleteDocument.toString());
+                }
+                deleteDocumentResourceCollection(processName, processVersion);
+
+                //delete other associations
+                removeBPMNDiagram(processName, processVersion);
+                deleteFlowchart(processName, processVersion);
+                deleteProcessText(processName, processVersion);
+            }
+        } catch (Exception e) {
+            String errMsg =
+                    "Error in deleting process associations of the process " + processName + "-" + processVersion;
+            throw new ProcessCenterException(errMsg, e);
+        }
     }
     //    public static void main(String[] args) {
     //        String path = "/home/chathura/temp/t5/TestProcess1.bpmn";

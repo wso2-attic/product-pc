@@ -98,6 +98,9 @@ asset.server = function (ctx) {
             }, {
                 url: 'update_description',
                 path: 'update_description.jag'
+            }, {
+                url: 'delete_asset_post_actions',
+                path: 'delete_asset_post_actions.jag'
             }]
         }
     }
@@ -227,4 +230,24 @@ asset.renderer = function (ctx) {
     };
 };
 
+asset.manager = function(ctx) {
+    return {
+        remove: function (options) {
+            var log=new Log("rxt.asset");
+            var processUUID = options;
+            var processObj= this.get(processUUID);
+            var processName = this.getName(processObj);
+            var processVersion = this.getVersion(processObj);
+
+            try {
+                importPackage(org.wso2.carbon.pc.core);
+                var ps = new ProcessStore();
+                ps.deleteProcessAssociations(processName, processVersion);
+                this._super.remove.call(this, options);
+            }catch (e){
+                log.error(e.message);
+            }
+        }
+    };
+};
 
