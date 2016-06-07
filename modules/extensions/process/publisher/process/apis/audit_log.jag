@@ -30,7 +30,7 @@ var responseObj = {};
 try {
     var regAccessor = new RegLogAccessor();
     var pcLog;
-    if(path != "NA") {
+    if (path != "NA") {
         pcLog = regAccessor.getProcessLogEntries(path);
     } else {
         pcLog = regAccessor.getAllLogEntries();

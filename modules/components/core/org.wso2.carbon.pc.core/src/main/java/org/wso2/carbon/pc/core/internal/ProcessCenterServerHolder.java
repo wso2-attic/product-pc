@@ -45,7 +45,8 @@ public class ProcessCenterServerHolder {
 
     private AttributeSearchService attributeSearchService;
 
-    private ProcessCenterServerHolder() {}
+    private ProcessCenterServerHolder() {
+    }
 
     public static ProcessCenterServerHolder getInstance() {
         return instance;
@@ -76,22 +77,24 @@ public class ProcessCenterServerHolder {
         this.contentSearchService = contentSearchService;
     }
 
-    public void unsetAttributeSearchService(AttributeSearchService attributeSearchService){
+    public void unsetAttributeSearchService(AttributeSearchService attributeSearchService) {
         this.attributeSearchService = null;
     }
 
-    public AttributeSearchService getAttributeSearchService(){ return attributeSearchService;}
+    public AttributeSearchService getAttributeSearchService() {
+        return attributeSearchService;
+    }
 
-    public void setAttributeSearchService(AttributeSearchService attributeSearchService){
+    public void setAttributeSearchService(AttributeSearchService attributeSearchService) {
         this.attributeSearchService = attributeSearchService;
     }
 
-
     private void updateArtifactPathPermissions() {
         try {
-            String[] artifactPaths = {"/_system/governance/flowchart", "/_system/governance/doccontent","/_system/governance/processText"};
+            String[] artifactPaths = { "/_system/governance/flowchart", "/_system/governance/doccontent",
+                    "/_system/governance/processText" };
 
-            if(this.registryService != null) {
+            if (this.registryService != null) {
                 UserRegistry registry = this.registryService.getGovernanceSystemRegistry();
                 initProcessArtifacts(registry);
 
@@ -101,10 +104,13 @@ public class ProcessCenterServerHolder {
 
                 for (String path : artifactPaths) {
                     PermissionBean permissions = PermissionUtil.getPermissions(registry, path);
-                    List<PermissionEntry> entryRoles = new LinkedList<>(Arrays.asList(permissions.getRolePermissions()));
+                    List<PermissionEntry> entryRoles = new LinkedList<>(
+                            Arrays.asList(permissions.getRolePermissions()));
 
                     if (!entryRoles.contains(entry)) {
-                        AddRolePermissionUtil.addRolePermission(registry, path, ProcessCenterConstants.AUDIT.PUBLISHER_ROLE, "3", "1");
+                        AddRolePermissionUtil
+                                .addRolePermission(registry, path, ProcessCenterConstants.AUDIT.PUBLISHER_ROLE, "3",
+                                        "1");
                     }
                 }
             }
@@ -120,9 +126,9 @@ public class ProcessCenterServerHolder {
     }
 
     private void initProcessArtifacts(UserRegistry registry) throws RegistryException {
-        registry.put(ProcessCenterConstants.AUDIT.PROCESS_TEXT,registry.newCollection());
-        registry.put(ProcessCenterConstants.AUDIT.DOC_CONTENT,registry.newCollection());
-        registry.put(ProcessCenterConstants.AUDIT.FLOW_CHART,registry.newCollection());
+        registry.put(ProcessCenterConstants.AUDIT.PROCESS_TEXT, registry.newCollection());
+        registry.put(ProcessCenterConstants.AUDIT.DOC_CONTENT, registry.newCollection());
+        registry.put(ProcessCenterConstants.AUDIT.FLOW_CHART, registry.newCollection());
     }
 
 }

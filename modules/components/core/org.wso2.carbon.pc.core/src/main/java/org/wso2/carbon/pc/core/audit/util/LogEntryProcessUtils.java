@@ -42,6 +42,7 @@ public class LogEntryProcessUtils {
 
     /**
      * accesses registry logs and processes json response for logs
+     *
      * @param registry  user registry from registry service
      * @param logBean   bean for log entry
      * @param logResult json result for log entry
@@ -52,44 +53,56 @@ public class LogEntryProcessUtils {
     public void processLogResult(UserRegistry registry, LogBean logBean, JSONArray logResult, String path)
             throws RegistryException, JSONException {
 
-        logBean.setProcessEntries(registry.getLogs(
-                ProcessCenterConstants.AUDIT.PROCESS_PATH + path, LogEntry.ALL, null, null, new Date(), true));
-        logBean.setProcessTxtEntries(registry.getLogs(
-                ProcessCenterConstants.AUDIT.PROCESS_TEXT_PATH + path, LogEntry.ALL, null, null, new Date(), true));
-        logBean.setPdfEntries(registry.getLogs(
-                ProcessCenterConstants.AUDIT.PROCESS_PDF_PATH + path, LogEntry.ALL, null, null, new Date(), true));
-        logBean.setFlowchartEntries(registry.getLogs(
-                ProcessCenterConstants.AUDIT.PROCESS_FLOW_CHART_PATH + path, LogEntry.ALL, null, null, new Date(), true));
-        logBean.setDocEntries(registry.getLogs(
-                ProcessCenterConstants.AUDIT.PROCESS_DOC_PATH + path, LogEntry.ALL, null, null, new Date(), true));
-        logBean.setBpmnEntries(registry.getLogs(
-                ProcessCenterConstants.AUDIT.PROCESS_BPMN + path, LogEntry.ALL, null, null, new Date(), true));
-        logBean.setLifecycleEntries(registry.getLogs(
-                ProcessCenterConstants.AUDIT.PROCESS_LIFECYCLE_HISTORY + path.replace("/", "_"), LogEntry.ALL, null, null, new Date(), true));
+        logBean.setProcessEntries(
+                registry.getLogs(ProcessCenterConstants.AUDIT.PROCESS_PATH + path, LogEntry.ALL, null, null, new Date(),
+                        true));
+        logBean.setProcessTxtEntries(
+                registry.getLogs(ProcessCenterConstants.AUDIT.PROCESS_TEXT_PATH + path, LogEntry.ALL, null, null,
+                        new Date(), true));
+        logBean.setPdfEntries(
+                registry.getLogs(ProcessCenterConstants.AUDIT.PROCESS_PDF_PATH + path, LogEntry.ALL, null, null,
+                        new Date(), true));
+        logBean.setFlowchartEntries(
+                registry.getLogs(ProcessCenterConstants.AUDIT.PROCESS_FLOW_CHART_PATH + path, LogEntry.ALL, null, null,
+                        new Date(), true));
+        logBean.setDocEntries(
+                registry.getLogs(ProcessCenterConstants.AUDIT.PROCESS_DOC_PATH + path, LogEntry.ALL, null, null,
+                        new Date(), true));
+        logBean.setBpmnEntries(
+                registry.getLogs(ProcessCenterConstants.AUDIT.PROCESS_BPMN + path, LogEntry.ALL, null, null, new Date(),
+                        true));
+        logBean.setLifecycleEntries(
+                registry.getLogs(ProcessCenterConstants.AUDIT.PROCESS_LIFECYCLE_HISTORY + path.replace("/", "_"),
+                        LogEntry.ALL, null, null, new Date(), true));
 
         ArrayList<LogEntry> list = new ArrayList<>(Arrays.asList(logBean.getProcessEntries()));
         filterProcessCreation(list, path);
         LogEntry[] processEntriesArr = list.toArray(new LogEntry[list.size()]);
 
         processLogEntryResponse(processEntriesArr, ProcessCenterConstants.AUDIT.PROCESS, path, logResult);
-        processLogEntryResponse(logBean.getProcessTxtEntries(), ProcessCenterConstants.AUDIT.PROCESS_TEXT, path, logResult);
+        processLogEntryResponse(logBean.getProcessTxtEntries(), ProcessCenterConstants.AUDIT.PROCESS_TEXT, path,
+                logResult);
         processLogEntryResponse(logBean.getPdfEntries(), ProcessCenterConstants.AUDIT.PDF, path, logResult);
-        processLogEntryResponse(logBean.getFlowchartEntries(), ProcessCenterConstants.AUDIT.FLOW_CHART, path, logResult);
+        processLogEntryResponse(logBean.getFlowchartEntries(), ProcessCenterConstants.AUDIT.FLOW_CHART, path,
+                logResult);
         processLogEntryResponse(logBean.getDocEntries(), ProcessCenterConstants.AUDIT.DOCUMENT, path, logResult);
         processLogEntryResponse(logBean.getBpmnEntries(), ProcessCenterConstants.AUDIT.BPMN, path, logResult);
-        processLogEntryResponse(logBean.getLifecycleEntries(), ProcessCenterConstants.AUDIT.LIFE_CYCLE, path, logResult);
+        processLogEntryResponse(logBean.getLifecycleEntries(), ProcessCenterConstants.AUDIT.LIFE_CYCLE, path,
+                logResult);
 
     }
 
     /**
      * processes log entry response to a json array
+     *
      * @param entries     log entries taken from the registry logs
      * @param type        log entry type
      * @param processPath the path to the process asset
      * @param result      resultant json of the log entries
      * @throws JSONException
      */
-    private void processLogEntryResponse(LogEntry[] entries, String type, String processPath, JSONArray result) throws JSONException {
+    private void processLogEntryResponse(LogEntry[] entries, String type, String processPath, JSONArray result)
+            throws JSONException {
 
         for (LogEntry logEntry : entries) {
             try {
@@ -137,6 +150,7 @@ public class LogEntryProcessUtils {
 
     /**
      * filters multiple log entries recorded at the process creation
+     *
      * @param entries log entries taken from the registry logs
      * @param path    the path to process asset
      */
@@ -155,6 +169,5 @@ public class LogEntryProcessUtils {
             count++;
         }
     }
-
 
 }

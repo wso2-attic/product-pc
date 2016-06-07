@@ -31,12 +31,12 @@ var type = String(request.getParameter("type"));
 var server = require('store').server;
 var user = server.current(session);
 
-if(type === "ADD") {
+if (type === "ADD") {
     var status = ps.addNewTag(processDetails, user.username);
     responseObj.error = false;
     responseObj.content = stringify(status);
     print(stringify(responseObj));
-} else if (type === "DEL"){
+} else if (type === "DEL") {
     var status = ps.removeTag(processDetails, user.username);
     responseObj.error = false;
     responseObj.content = stringify(status);

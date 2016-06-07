@@ -33,7 +33,7 @@ var server = require('store').server;
 var user = server.current(session);
 
 try {
-    var status = ps.createProcess(processDetails,userName);
+    var status = ps.createProcess(processDetails, userName);
     responseObj.error = false;
     responseObj.content = status;
     print(stringify(responseObj));

@@ -35,7 +35,7 @@ import org.wso2.carbon.registry.core.session.UserRegistry;
 import java.util.ArrayList;
 
 /**
- *  class to process activity logs and returns to the front end
+ * class to process activity logs and returns to the front end
  */
 public class RegLogAccessor {
 
@@ -58,6 +58,7 @@ public class RegLogAccessor {
 
     /**
      * Gets activity logs for the all the process assets at process center
+     *
      * @return the resultant json of the activity logs
      */
     public String getAllLogEntries() {
@@ -96,6 +97,7 @@ public class RegLogAccessor {
 
     /**
      * Gets activity logs for a selected process asset
+     *
      * @param path the path to process asset
      * @return the resultant json of the activity logs
      */
@@ -105,7 +107,7 @@ public class RegLogAccessor {
         JSONObject logObject = new JSONObject();
 
         try {
-            if(registry != null) {
+            if (registry != null) {
                 path = path.substring(ProcessCenterConstants.AUDIT.AC_PROCESS_PATH.length());
                 logEntryProcessUtils.processLogResult(registry, logBean, logResult, path);
                 logObject.put("log", logResult);

@@ -21,7 +21,7 @@ import org.wso2.carbon.registry.core.LogEntry;
 import java.io.Serializable;
 
 /**
- *  bean class for store a log entry
+ * bean class for store a log entry
  */
 public class LogBean implements Serializable {
 

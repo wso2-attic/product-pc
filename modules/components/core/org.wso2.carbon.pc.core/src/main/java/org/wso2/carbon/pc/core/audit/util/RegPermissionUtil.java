@@ -32,7 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *  class for check the permissions of a user to access registry paths
+ * class for check the permissions of a user to access registry paths
  */
 
 public class RegPermissionUtil {
@@ -41,11 +41,13 @@ public class RegPermissionUtil {
 
     /**
      * Sets registry put permission for the private user role by checking user process permissions
+     *
      * @param registryService registry service to access registry functions
-     * @param user user performs tasks at publisher
-     * @param path the path to process asset
+     * @param user            user performs tasks at publisher
+     * @param path            the path to process asset
      */
-    public static void setPutPermission(RegistryService registryService, String user, String path) throws RegistryException, UserStoreException {
+    public static void setPutPermission(RegistryService registryService, String user, String path)
+            throws RegistryException, UserStoreException {
 
         try {
             UserRegistry sysReg = registryService.getGovernanceSystemRegistry();
@@ -56,10 +58,13 @@ public class RegPermissionUtil {
 
             String privateUserRole = ProcessCenterConstants.AUDIT.PRIVATE_USER_ROLE + user.toLowerCase();
 
-            if(ac.isUserAuthorized(user, ProcessCenterConstants.PROCESS_UPDATE_PERMISSION, ProcessCenterConstants.UI_PERMISSION_ACTION)) {
-                if (!roleList.contains(ProcessCenterConstants.AUDIT.PUBLISHER_ROLE) && roleList.contains(privateUserRole)) {
+            if (ac.isUserAuthorized(user, ProcessCenterConstants.PROCESS_UPDATE_PERMISSION,
+                    ProcessCenterConstants.UI_PERMISSION_ACTION)) {
+                if (!roleList.contains(ProcessCenterConstants.AUDIT.PUBLISHER_ROLE) && roleList
+                        .contains(privateUserRole)) {
                     ac.authorizeRole(privateUserRole, path, ActionConstants.PUT);
-                    ac.authorizeRole(privateUserRole, ProcessCenterConstants.AUDIT.AC_PROCESS_PATH, ActionConstants.PUT);
+                    ac.authorizeRole(privateUserRole, ProcessCenterConstants.AUDIT.AC_PROCESS_PATH,
+                            ActionConstants.PUT);
                 }
             }
         } catch (RegistryException e) {
@@ -67,7 +72,7 @@ public class RegPermissionUtil {
             log.error("Error retrieving system registry", e);
             throw new RegistryException(msg);
         } catch (UserStoreException e) {
-            String msg = "Error authorizing private user role for "+ path;
+            String msg = "Error authorizing private user role for " + path;
             log.error(msg, e);
             throw new UserStoreException(msg);
         }
