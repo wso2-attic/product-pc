@@ -239,7 +239,7 @@ asset.manager = function(ctx) {
             try {
                 importPackage(org.wso2.carbon.pc.core);
                 var ps = new ProcessStore();
-                ps.deleteProcessAssociations(processName, processVersion);
+                ps.deleteProcessRelatedArtifacts(processName, processVersion);
                 this._super.remove.call(this, options);
             }catch (e){
                 log.error(e.message);

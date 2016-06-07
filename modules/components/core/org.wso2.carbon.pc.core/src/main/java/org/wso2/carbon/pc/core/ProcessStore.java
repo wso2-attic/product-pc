@@ -1718,12 +1718,12 @@ public class ProcessStore {
     }
 
     /**
-     * Delete the process associations : Documents, BPMN model, Flow chart , Process text
+     * Delete the process related artifacts : Documents, BPMN model, Flow chart , Process text
      *
      * @param processName
      * @param processVersion
      */
-    public void deleteProcessAssociations(String processName, String processVersion) throws ProcessCenterException {
+    public void deleteProcessRelatedArtifacts(String processName, String processVersion) throws ProcessCenterException {
 
         String processResourcePath =
                 ProcessCenterConstants.GREG_PATH + ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/"
@@ -1751,7 +1751,7 @@ public class ProcessStore {
             }
         } catch (Exception e) {
             String errMsg =
-                    "Error in deleting process associations of the process " + processName + "-" + processVersion;
+                    "Error in deleting process related aftifacts of the process " + processName + "-" + processVersion;
             throw new ProcessCenterException(errMsg, e);
         }
     }
