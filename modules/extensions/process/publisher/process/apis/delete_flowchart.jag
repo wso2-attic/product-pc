@@ -22,10 +22,13 @@ var log = new Log();
 var ps = new ProcessStore();
 var responseObj = {};
 
+var server = require('store').server;
+var user = server.current(session);
+
 var pName = String(request.getParameter("processName"));
 var pVersion = String(request.getParameter("processVersion"));
 try {
-    ps.deleteFlowchart(pName, pVersion);
+    ps.deleteFlowchart(pName, pVersion, user.username);
     responseObj.error = false;
     responseObj.content = "Successfully deleted the flowchart";
     print(stringify(responseObj));

@@ -41,6 +41,7 @@ window.onload = function () {
                 event.preventDefault();
         });
     });
+    
 };
 
 function showTextEditor(element) {
@@ -129,7 +130,7 @@ function saveProcess(currentElement) {
         }
         $.ajax({
             url: 'apis/create_process',
-            type: 'POST',
+            type: 'POST',       
             data: {'processInfo': getProcessInfo()},
             success: function (data) {
                 var response = JSON.parse(data);

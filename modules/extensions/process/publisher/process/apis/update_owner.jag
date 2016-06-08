@@ -30,9 +30,12 @@ if (log.isDebugEnabled()) {
     log.debug("ownerDetails: " + ownerDetails);
 }
 
+var server = require('store').server;
+var user = server.current(session);
+
 var responseObj = {};
 try {
-    var ownerStatus = ps.updateOwner(ownerDetails);
+    var ownerStatus = ps.updateOwner(ownerDetails, user.username);
     responseObj.error = false;
     responseObj.content = stringify(ownerStatus);
     print(stringify(responseObj));

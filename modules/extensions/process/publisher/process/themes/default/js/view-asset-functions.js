@@ -61,6 +61,7 @@ window.onload = function () {
             return JSON.stringify(params);
         }
     });
+
 };
 
 function getMainProcess() {

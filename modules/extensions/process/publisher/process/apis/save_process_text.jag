@@ -28,12 +28,16 @@ var ps = new ProcessStore();
 var processName = String(request.getParameter("processName"));
 var processVersion = String(request.getParameter("processVersion"));
 var processText = String(request.getParameter("processText"));
+
+var server = require('store').server;
+var user = server.current(session);
+
 if (log.isDebugEnabled()) {
     log.debug(processName);
 }
 var responseObj = {};
 try {
-    var result = ps.saveProcessText(processName, processVersion, processText);
+    var result = ps.saveProcessText(processName, processVersion, processText, user.username);
     responseObj.error = false;
     responseObj.content = stringify(result);
     print(stringify(responseObj));

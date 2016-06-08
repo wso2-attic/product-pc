@@ -39,8 +39,7 @@ public class ProcessCenterServiceComponent {
         log.info("Initializing the PC core component...");
         try {
             ProcessCenterServerHolder holder = ProcessCenterServerHolder.getInstance();
-
-        }catch (Throwable e) {
+        } catch (Throwable e) {
             log.error("Failed to initialize the PC core component.", e);
         }
     }
@@ -62,6 +61,7 @@ public class ProcessCenterServiceComponent {
         }
         ProcessCenterServerHolder.getInstance().unsetRegistryService(registryService);
     }
+
     protected void setContentSearchService(ContentSearchService contentSearchService) {
         if (log.isDebugEnabled()) {
             log.debug("ContentSearchService bound to the PC component");
@@ -75,6 +75,7 @@ public class ProcessCenterServiceComponent {
         }
         ProcessCenterServerHolder.getInstance().unsetContentSearchService(contentSearchService);
     }
+
     protected void setAttributeSearchService(AttributeSearchService attributeSearchService) {
         if (log.isDebugEnabled()) {
             log.debug("AttributeSearchService bound to the PC component");

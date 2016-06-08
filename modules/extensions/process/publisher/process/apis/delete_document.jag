@@ -30,9 +30,12 @@ if (log.isDebugEnabled()) {
     log.debug("deleteDocumentDetails: " + deleteDocumentDetails);
 }
 
+var server = require('store').server;
+var user = server.current(session);
+
 var responseObj = {};
 try {
-    var deleteDocStatus = ps.deleteDocument(deleteDocumentDetails);
+    var deleteDocStatus = ps.deleteDocument(deleteDocumentDetails, user.username);
     responseObj.error = false;
     responseObj.content = stringify(deleteDocStatus);
     print(stringify(responseObj));

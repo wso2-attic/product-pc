@@ -27,11 +27,14 @@ var ps = new ProcessStore();
 var bpmnName = String(request.getParameter("bpmnProcessName"));
 var bpmnVersion = String(request.getParameter("bpmnProcessVersion"));
 
+var server = require('store').server;
+var user = server.current(session);
+
 try {
     var processid = "NA";
     var files = request.getAllFiles();
     for (var name in files) {
-        processid = ps.createBPMN(bpmnName, bpmnVersion, files[name].getStream());
+        processid = ps.createBPMN(bpmnName, bpmnVersion, files[name].getStream(), user.username);
     }
     response.sendRedirect('/publisher/assets/process/details/' + processid);
 } catch (error) {

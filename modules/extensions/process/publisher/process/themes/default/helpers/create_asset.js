@@ -25,7 +25,7 @@ var resources = function (page, meta) {
             'jquery-file-upload/jquery.iframe-transport.js', 'jquery-file-upload/jquery.fileupload.js',
             'jquery-file-upload/vendor/jquery.ui.widget.js', 'create-asset-functions.js', 'flowchart/create-flowchart.js',
             'advance-search.js', 'jquery.form.js', 'flowchart/base64.js','flowchart/canvas2image.js', 'flowchart/canvg.js',
-            'flowchart/html2canvas.js', 'auto-complete-tags/bootstrap-tokenfield.min.js'],
+            'flowchart/html2canvas.js', 'auto-complete-tags/bootstrap-tokenfield.min.js','audit-log-functions.js'],
         css: ['flowchart/jsPlumb-defaults.css', 'flowchart/jsPlumb-demo.css', 'bootstrap-select.min.css',
             'alertify.css', 'default.css', 'datepick/smoothness.datepick.css', 'grid.css',
             'select2.min.css', 'jquery-ui.css', 'flowchart/flowchart.css', 'font-awesome.css', 'search.css', 'build.css',

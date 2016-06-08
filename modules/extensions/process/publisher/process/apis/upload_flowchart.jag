@@ -24,10 +24,14 @@ var ps = new ProcessStore();
 var pName = String(request.getParameter("processName"));
 var pVersion = String(request.getParameter("processVersion"));
 var flowchartJson = String(request.getParameter("flowchartJson"));
+
+var server = require('store').server;
+var user = server.current(session);
+
 var processid;
 var responseObj = {};
 try {
-    processid = ps.uploadFlowchart(pName, pVersion, flowchartJson);
+    processid = ps.uploadFlowchart(pName, pVersion, flowchartJson, user.username);
     if (log.isDebugEnabled()) {
         log.debug(processid);
     }
