@@ -199,8 +199,7 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security
-            </directory>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security</directory>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/security/</outputDirectory>
             <includes>
                 <include>**/cipher-text.properties</include>
@@ -378,8 +377,8 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/assets
             </outputDirectory>
             <excludes>
-                <exclude>**/partials/navigation.hbs</exclude>
-                <exclude>**/partials/header.hbs</exclude>
+                <!--<exclude>**/partials/navigation.hbs</exclude>-->
+                <!--<exclude>**/partials/header.hbs</exclude>-->
                 <exclude>**/partials/sso-auth.hbs</exclude>
             </excludes>
         </fileSet>
@@ -495,9 +494,7 @@
     </dependencySets>
     <files>
         <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry-event-broker.xml
-            </source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry-event-broker.xml</source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -688,36 +685,28 @@
 
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/shindig.properties
-            </source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/shindig.properties</source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.xml
-            </source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.xml</source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
             <filtered>false</filtered>
         </file>
         <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.properties
-            </source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.properties</source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
             <filtered>false</filtered>
         </file>
         <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/metrics-datasources.xml
-            </source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/metrics-datasources.xml</source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/datasources/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2METRICS_DB.h2.db
-            </source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2METRICS_DB.h2.db</source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/database/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
@@ -744,9 +733,7 @@
         </file-->
         <file>
             <source>../extensions/process/publisher/default/asset.js</source>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets/default
-            </outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets/default</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <!--file>
@@ -757,30 +744,22 @@
         <!--permission related -->
         <file>
             <source>../extensions/main/process-center/modules/asset-action-api.js</source>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/modules
-            </outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/modules</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>../extensions/main/process-center/modules/greg-permission-util.js</source>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/modules
-            </outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/modules</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>../extensions/main/process-center/modules/app.js</source>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app/publisher-apis
-            </outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app/publisher-apis</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>../extensions/main/process-center/modules/permission.jag</source>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app/publisher-apis/apis
-            </outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app/publisher-apis/apis</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>

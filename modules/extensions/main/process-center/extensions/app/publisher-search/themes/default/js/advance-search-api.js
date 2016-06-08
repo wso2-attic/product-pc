@@ -116,7 +116,6 @@ $(function () {
         var path = window.location.href; //current page path
         // Returns the jQuery ajax method
         var url = caramel.tenantedUrl(SEARCH_API + query + "&paginationLimit=" + to + "&start=" + from + "&count=" + count);
-        console.log(url);
 
         caramel.render('loading', 'Loading assets from ' + from + ' to ' + to + '.', function (info, content) {
             $('.loading-animation-big').remove();
@@ -276,7 +275,6 @@ $(function () {
             //   contentSearch(null);
         }
         else {
-            console.log(query);
             store.infiniteScroll.showAll(query);
         }
     });
@@ -303,7 +301,6 @@ $(function () {
 
                 try {
                     var response = JSON.parse(data);
-                    console.log(rxt_results);
                     if (response.error === false) {
                         var results = JSON.parse(response.content);
 
@@ -323,14 +320,12 @@ $(function () {
                             }
                         }
                         results = intersection;
-                        console.log(results);
                         //        }
 
                         loadPartials('list-assets', function (partials) {
                             caramel.partials(partials, function () {
                                 caramel.render('list_assets_table_body', results, function (info, content) {
                                     $('#search-results').append($(content));
-                                    //console.log(content);
                                     $('.loading-animation-big').remove();
                                 });
                             });

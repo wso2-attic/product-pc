@@ -39,11 +39,11 @@ public class ArtifactUploadUtil {
          * @throws IOException
          */
         public static PostMethod uploadBPMN(String filePath,
-                                            String processName,
-                                            String processVersion,
-                                            String shortName,
-                                            String cookieHeader,
-                                            String apiUrl)
+                String processName,
+                String processVersion,
+                String shortName,
+                String cookieHeader,
+                String apiUrl)
                 throws IOException {
 
                 File file = new File(filePath);
@@ -81,16 +81,16 @@ public class ArtifactUploadUtil {
          * @throws IOException
          */
         public static PostMethod uploadDocument(String filePath,
-                                                String documentName,
-                                                String documentSummary,
-                                                String documentExtension,
-                                                String documentURL,
-                                                String optionsRadios1,
-                                                String processName,
-                                                String processVersion,
-                                                String cookieHeader,
-                                                String apiUrl,
-                                                String contentType)
+                String documentName,
+                String documentSummary,
+                String documentExtension,
+                String documentURL,
+                String optionsRadios1,
+                String processName,
+                String processVersion,
+                String cookieHeader,
+                String apiUrl,
+                String contentType)
                 throws IOException {
 
                 File file = new File(filePath);

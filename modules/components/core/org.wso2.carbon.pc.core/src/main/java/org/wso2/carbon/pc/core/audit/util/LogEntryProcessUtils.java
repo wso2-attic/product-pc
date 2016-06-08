@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,6 @@ public class LogEntryProcessUtils {
             try {
                 JSONObject entryObj = new JSONObject();
                 if (logEntry.getAction() == LogEntry.UPDATE) {
-
                     entryObj.put(ProcessCenterConstants.AUDIT.ASSET_TYPE, processPath);
                     entryObj.put(ProcessCenterConstants.AUDIT.ACTION, "update");
                     entryObj.put(ProcessCenterConstants.AUDIT.USER, logEntry.getUserName());
@@ -159,11 +158,11 @@ public class LogEntryProcessUtils {
         int count = 0;
         for (ListIterator<LogEntry> iterator = entries.listIterator(entries.size()); iterator.hasPrevious(); ) {
             iterator.previous();
-            if (count > 0 && count < 5) {
+            if (count > 0 && count < 7) {
                 iterator.remove();
             }
 
-            if (count == 5) {
+            if (count == 7) {
                 return;
             }
             count++;

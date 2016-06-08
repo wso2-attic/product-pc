@@ -72,7 +72,7 @@ public class AddProcessTestCase extends PCIntegrationBaseTest {
         queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
-                        "create_process" , MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
+                "create_process" , MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
                 requestBody, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));

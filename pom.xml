@@ -630,16 +630,6 @@
                 <!--<artifactId>org.wso2.carbon.user.mgt.stub</artifactId>-->
                 <!--<version>${carbon.identity.version}</version>-->
             <!--</dependency>-->
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
-                <version>4.2.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
-                <version>4.2.0</version>
-            </dependency>
 
             <!-- Integration tests depedencies-->
             <dependency>

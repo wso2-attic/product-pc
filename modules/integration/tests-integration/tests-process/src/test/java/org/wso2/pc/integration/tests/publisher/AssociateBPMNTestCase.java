@@ -115,7 +115,7 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
         queryMap.put(PCIntegrationConstants.PROCESS_NAME, PROCESS_NAME);
         queryMap.put(PCIntegrationConstants.PROCESS_VERSION,PROCESS_VERSION);
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
-                        "delete_bpmn",MediaType.APPLICATION_FORM_URLENCODED,MediaType.APPLICATION_JSON,null,
+                "delete_bpmn",MediaType.APPLICATION_FORM_URLENCODED,MediaType.APPLICATION_JSON,null,
                 queryMap,headerMap,cookieHeader);
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
                 "Expected 200 OK, Received " + response.getStatusCode());
