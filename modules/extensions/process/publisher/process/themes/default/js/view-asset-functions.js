@@ -446,7 +446,7 @@ function showDocument() {
                             anchorUrlElement.setAttribute("href", response[i].url);
                             anchorUrlElement.setAttribute('target', '_blank');
                             anchorUrlElement.style.marginRight = "15px";
-                            anchorUrlElement.innerHTML = "open";
+                            anchorUrlElement.innerHTML = "Open";
 
                             viewGoogleDocument(response[i].url, response[i].name, i);
                             var anchorGoogleDocViewElement = document.createElement("a");
@@ -454,7 +454,7 @@ function showDocument() {
                             anchorGoogleDocViewElement.setAttribute("data-toggle", "modal");
                             anchorGoogleDocViewElement.setAttribute("data-target", "#docViewModal" + i);
                             anchorGoogleDocViewElement.style.marginRight = "15px";
-                            anchorGoogleDocViewElement.innerHTML = "view";
+                            anchorGoogleDocViewElement.innerHTML = "View";
 
                             cellDocAction.appendChild(anchorUrlElement);
                             cellDocAction.appendChild(anchorGoogleDocViewElement);
@@ -466,7 +466,7 @@ function showDocument() {
                                     downloadDocument(currentPath);
                                 };
                             })(response[i].path);
-                            anchorElement.innerHTML = "download";
+                            anchorElement.innerHTML = "Download";
                             anchorElement.style.marginRight = "15px";
                             cellDocAction.appendChild(anchorElement);
 
@@ -477,7 +477,7 @@ function showDocument() {
                                 anchorPdfViewElement.setAttribute("data-toggle", "modal");
                                 anchorPdfViewElement.setAttribute("data-target", "#pdfViewModal" + i);
                                 anchorPdfViewElement.style.marginRight = "15px";
-                                anchorPdfViewElement.innerHTML = "view";
+                                anchorPdfViewElement.innerHTML = "View";
                                 cellDocAction.appendChild(anchorPdfViewElement);
                             }
                         } else {
@@ -491,7 +491,7 @@ function showDocument() {
                                     removeDocumentConfirmListener(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
                                 };
                             })(fieldsName, fieldsVersion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
-                            removeDocElement.innerHTML = "remove";
+                            removeDocElement.innerHTML = "Remove";
                             cellDocAction.appendChild(removeDocElement);
                         }
                     }
