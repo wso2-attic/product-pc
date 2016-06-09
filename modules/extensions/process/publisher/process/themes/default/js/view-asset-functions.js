@@ -413,9 +413,30 @@ function showDocument() {
                         var table = document.getElementById("listDocs");
                         var rowCount = table.rows.length;
                         var row = table.insertRow(rowCount);
-                        var cellDocName = row.insertCell(0);
-                        var cellDocSummary = row.insertCell(1);
-                        var cellDocAction = row.insertCell(2);
+                        var cellDocTypeIcon = row.insertCell(0);
+                        var cellDocName = row.insertCell(1);
+                        var cellDocSummary = row.insertCell(2);
+                        var cellDocAction = row.insertCell(3);
+
+                        var docPath = response[i].path;
+                        var lastDotIndex = docPath.lastIndexOf(".");
+                        var docExt = docPath.substr(lastDotIndex + 1);
+
+                        cellDocTypeIcon.style.width = "5%"
+                        var iconElement = document.createElement('i');
+                        if (docExt === "pdf") {
+                            iconElement.className = "fw fw-pdf";
+                            iconElement.style.color = "red";
+                        } else if (docExt == "doc" || docExt == "docx") {
+                            iconElement.className = "fw fw-ms-document";
+                            iconElement.style.color = "blue";
+                        } else { // google doc
+                            iconElement.className = "fw fw-ms-document";
+                            iconElement.style.color = "green";
+                        }
+                        iconElement.style.fontSize = "21px";
+                        cellDocTypeIcon.appendChild(iconElement);
+
                         cellDocName.innerHTML = response[i].name;
                         cellDocSummary.innerHTML = response[i].summary;
 
