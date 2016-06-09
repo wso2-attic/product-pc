@@ -1638,6 +1638,14 @@ public class ProcessStore {
         }
     }
 
+    /**
+     * Delete process related text
+     *
+     * @param processName
+     * @param processVersion
+     * @return
+     * @throws ProcessCenterException
+     */
     public String deleteProcessText(String processName, String processVersion) throws ProcessCenterException {
         String processId = "";
         try {
