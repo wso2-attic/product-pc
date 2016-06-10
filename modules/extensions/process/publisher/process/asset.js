@@ -463,3 +463,28 @@ asset.renderer = function(ctx) {
     };
 };
 
+
+asset.manager = function(ctx) {
+    return {
+        remove: function (options) {
+            var log=new Log("rxt.asset");
+            var processUUID = options;
+            var processObj= this.get(processUUID);
+            var processName = this.getName(processObj);
+            var processVersion = this.getVersion(processObj);
+
+            var server = require('store').server;
+            var user = server.current(session);
+            var username = user? user.username : null;
+
+            try {
+                importPackage(org.wso2.carbon.pc.core);
+                var ps = new ProcessStore();
+                ps.deleteProcessRelatedArtifacts(processName, processVersion, username);
+                this._super.remove.call(this, options);
+            }catch (e){
+                log.error(e.message);
+            }
+        }
+    };
+};
