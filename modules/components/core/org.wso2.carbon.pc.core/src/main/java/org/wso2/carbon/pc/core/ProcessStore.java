@@ -454,8 +454,8 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            String errMsg = "Error has been occurred while removing BPMN diagram in the process:" + processName + "-"
-                    + processVersion;
+            String errMsg = "Error has been occurred while removing BPMN diagram in the process:"
+                    + processName + "-" + processVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
@@ -807,8 +807,7 @@ public class ProcessStore {
         }
     }
 
-    public void populateAssociations(Association[] associations, JSONArray jsonArray, UserRegistry reg)
-            throws Exception {
+    public void populateAssociations(Association[] associations, JSONArray jsonArray, UserRegistry reg) throws Exception {
         for (Association association : associations) {
             String associationPath = association.getDestinationPath();
             Resource associatedResource = reg.get(associationPath);
@@ -821,8 +820,7 @@ public class ProcessStore {
             associatedProcessDetails.put("name", overviewElement.getElementsByTagName("name").item(0).getTextContent());
             associatedProcessDetails.put("path", associatedResource.getPath());
             associatedProcessDetails.put("id", associatedResource.getId());
-            associatedProcessDetails
-                    .put("version", overviewElement.getElementsByTagName("version").item(0).getTextContent());
+            associatedProcessDetails.put("version", overviewElement.getElementsByTagName("version").item(0).getTextContent());
             jsonArray.put(associatedProcessDetails);
         }
     }
@@ -837,20 +835,17 @@ public class ProcessStore {
 
                 JSONObject conObj = new JSONObject();
                 JSONArray subprocessArray = new JSONArray();
-                Association[] aSubprocesses = reg
-                        .getAssociations(resourcePath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
+                Association[] aSubprocesses = reg.getAssociations(resourcePath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
                 populateAssociations(aSubprocesses, subprocessArray, reg);
                 conObj.put("subprocesses", subprocessArray);
 
                 JSONArray successorArray = new JSONArray();
-                Association[] aSuccessors = reg
-                        .getAssociations(resourcePath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                Association[] aSuccessors = reg.getAssociations(resourcePath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
                 populateAssociations(aSuccessors, successorArray, reg);
                 conObj.put("successors", successorArray);
 
                 JSONArray predecessorArray = new JSONArray();
-                Association[] aPredecessors = reg
-                        .getAssociations(resourcePath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                Association[] aPredecessors = reg.getAssociations(resourcePath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
                 populateAssociations(aPredecessors, predecessorArray, reg);
                 conObj.put("predecessors", predecessorArray);
 
@@ -926,8 +921,7 @@ public class ProcessStore {
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
                     reg.addAssociation(processAssetPath, subprocessPath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
-                    reg.addAssociation(subprocessPath, processAssetPath,
-                            ProcessCenterConstants.PARENTPROCESS_ASSOCIATION);
+                    reg.addAssociation(subprocessPath, processAssetPath, ProcessCenterConstants.PARENTPROCESS_ASSOCIATION);
                 }
             }
 
@@ -967,10 +961,8 @@ public class ProcessStore {
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
-                    reg.addAssociation(processAssetPath, successor.getString("path"),
-                            ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
-                    reg.addAssociation(successor.getString("path"), processAssetPath,
-                            ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                    reg.addAssociation(processAssetPath, successor.getString("path"), ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                    reg.addAssociation(successor.getString("path"), processAssetPath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
 
                     // add current process as a predecessor to the successor process
                     Resource successorProcess = reg.get(successor.getString("path"));
@@ -1016,10 +1008,8 @@ public class ProcessStore {
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
-                    reg.addAssociation(processAssetPath, predecessor.getString("path"),
-                            ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
-                    reg.addAssociation(predecessor.getString("path"), processAssetPath,
-                            ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                    reg.addAssociation(processAssetPath, predecessor.getString("path"), ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                    reg.addAssociation(predecessor.getString("path"), processAssetPath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
                 }
             }
 
@@ -1061,10 +1051,8 @@ public class ProcessStore {
                                 subprocessPath.equals(subprocess.getString("path")) &&
                                 subprocessId.equals(subprocess.getString("id"))) {
                             subprocessElement.getParentNode().removeChild(subprocessElement);
-                            reg.removeAssociation(processAssetPath, subprocess.getString("path"),
-                                    ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
-                            reg.removeAssociation(subprocess.getString("path"), processAssetPath,
-                                    ProcessCenterConstants.PARENTPROCESS_ASSOCIATION);
+                            reg.removeAssociation(processAssetPath, subprocess.getString("path"), ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
+                            reg.removeAssociation(subprocess.getString("path"), processAssetPath, ProcessCenterConstants.PARENTPROCESS_ASSOCIATION);
                             break;
                         }
                     }
@@ -1111,10 +1099,8 @@ public class ProcessStore {
                                 successorPath.equals(successor.getString("path")) &&
                                 successorId.equals(successor.getString("id"))) {
                             successorElement.getParentNode().removeChild(successorElement);
-                            reg.removeAssociation(processAssetPath, successor.getString("path"),
-                                    ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
-                            reg.removeAssociation(successor.getString("path"), processAssetPath,
-                                    ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                            reg.removeAssociation(processAssetPath, successor.getString("path"), ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                            reg.removeAssociation(successor.getString("path"), processAssetPath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
                             break;
                         }
                     }
@@ -1163,10 +1149,8 @@ public class ProcessStore {
                                 predecessorPath.equals(predecessor.getString("path")) &&
                                 predecessorId.equals(predecessor.getString("id"))) {
                             predecessorElement.getParentNode().removeChild(predecessorElement);
-                            reg.removeAssociation(processAssetPath, predecessor.getString("path"),
-                                    ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
-                            reg.removeAssociation(predecessor.getString("path"), processAssetPath,
-                                    ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                            reg.removeAssociation(processAssetPath, predecessor.getString("path"), ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                            reg.removeAssociation(predecessor.getString("path"), processAssetPath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
                             break;
                         }
                     }
@@ -1627,7 +1611,9 @@ public class ProcessStore {
 
                 String processContent = new String((byte[]) processResource.getContent());
                 Document processXML = stringToXML(processContent);
-                processXML.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent("NA");
+                processXML.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent(
+                        "NA");
+
                 String newProcessContent = xmlToString(processXML);
                 processResource.setContent(newProcessContent);
                 reg.put(processPath, processResource);
