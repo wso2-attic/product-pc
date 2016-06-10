@@ -13,108 +13,169 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-
-asset.server = function (ctx) {
-    var type = ctx.type;
+asset.server = function(ctx) {
+    var type = ctx.assetType;
+    var typeDetails = ctx.rxtManager.listRxtTypeDetails(type);
+    var typeSingularLabel = type; //Assume the type details are not returned
+    var pluralLabel = type; //Assume the type details are not returned
+    if (typeDetails) {
+        typeSingularLabel = typeDetails.singularLabel;
+        pluralLabel = typeDetails.pluralLabel;
+    }
     return {
-        onUserLoggedIn: function () {
-        },
+        onUserLoggedIn: function() {},
         endpoints: {
             apis: [{
-                url: 'assets',
-                path: 'assets.jag'
-            }, {
-                url: 'create_process',
-                path: 'create_process.jag'
-            }, {
-                url: 'upload_bpmn',
-                path: 'upload_bpmn.jag'
-            }, {
-                url: 'get_process_text',
-                path: 'get_process_text.jag'
-            }, {
-                url: 'get_bpmn_content',
-                path: 'get_bpmn_content.jag'
-            }, {
-                url: 'save_process_text',
-                path: 'save_process_text.jag'
-            }, {
-                url: 'asset',
-                path: 'asset.jag'
-            }, {
-                url: 'statistics',
-                path: 'statistics.jag'
-            }, {
-                url: 'get_process_list',
-                path: 'get_process_list.jag'
-            }, {
-                url: 'update_subprocess',
-                path: 'update_subprocess.jag'
-            }, {
-                url: 'update_successor',
-                path: 'update_successor.jag'
-            }, {
-                url: 'update_predecessor',
-                path: 'update_predecessor.jag'
-            }, {
-                url: 'delete_subprocess',
-                path: 'delete_subprocess.jag'
-            }, {
-                url: 'delete_successor',
-                path: 'delete_successor.jag'
-            }, {
-                url: 'delete_Predecessor',
-                path: 'delete_Predecessor.jag'
-            }, {
-                url: 'update_owner',
-                path: 'update_owner.jag'
-            }, {
-                url: 'upload_documents',
-                path: 'upload_documents.jag'
-            }, {
-                url: 'get_process_tags',
-                path: 'get_process_tags.jag'
-            }, {
-                url: 'upload_flowchart',
-                path: 'upload_flowchart.jag'
-            }, {
-                url: 'get_process_flowchart',
-                path: 'get_process_flowchart.jag'
-            }, {
-                url: 'get_process_doc',
-                path: 'get_process_doc.jag'
-            }, {
-                url: 'download_document',
-                path: 'download_document.jag'
-            }, {
-                url: 'delete_flowchart',
-                path: 'delete_flowchart.jag'
-            }, {
-                url: 'delete_document',
-                path: 'delete_document.jag'
-            }, {
-                url: 'delete_bpmn',
-                path: 'delete_bpmn.jag'
-            }, {
-                url: 'update_description',
-                path: 'update_description.jag'
-            }, {
-                url: 'audit_log',
-                path: 'audit_log.jag'
-            }, {
-                url: 'get_role_permission',
-                path: 'get_role_permission.jag'
-            }],
-            pages:[{
-                title: 'Log: ',
-                url: 'log',
-                path: 'log.jag'
-            }]
+                       url: 'assets',
+                       path: 'assets.jag'
+                   }, {
+                       url: 'asset',
+                       path: 'asset.jag'
+                   }, {
+                       url: 'statistics',
+                       path: 'statistics.jag'
+                   }, {
+                       url: 'create_process',
+                       path: 'create_process.jag'
+                   }, {
+                       url: 'upload_bpmn',
+                       path: 'upload_bpmn.jag'
+                   }, {
+                       url: 'get_process_text',
+                       path: 'get_process_text.jag'
+                   }, {
+                       url: 'get_bpmn_content',
+                       path: 'get_bpmn_content.jag'
+                   }, {
+                       url: 'save_process_text',
+                       path: 'save_process_text.jag'
+                   }, {
+                       url: 'asset',
+                       path: 'asset.jag'
+                   }, {
+                       url: 'statistics',
+                       path: 'statistics.jag'
+                   }, {
+                       url: 'get_process_list',
+                       path: 'get_process_list.jag'
+                   }, {
+                       url: 'update_subprocess',
+                       path: 'update_subprocess.jag'
+                   }, {
+                       url: 'update_successor',
+                       path: 'update_successor.jag'
+                   }, {
+                       url: 'update_predecessor',
+                       path: 'update_predecessor.jag'
+                   }, {
+                       url: 'delete_subprocess',
+                       path: 'delete_subprocess.jag'
+                   }, {
+                       url: 'delete_successor',
+                       path: 'delete_successor.jag'
+                   }, {
+                       url: 'delete_Predecessor',
+                       path: 'delete_Predecessor.jag'
+                   }, {
+                       url: 'update_owner',
+                       path: 'update_owner.jag'
+                   }, {
+                       url: 'upload_documents',
+                       path: 'upload_documents.jag'
+                   }, {
+                       url: 'get_process_tags',
+                       path: 'get_process_tags.jag'
+                   }, {
+                       url: 'upload_flowchart',
+                       path: 'upload_flowchart.jag'
+                   }, {
+                       url: 'get_process_flowchart',
+                       path: 'get_process_flowchart.jag'
+                   }, {
+                       url: 'get_process_doc',
+                       path: 'get_process_doc.jag'
+                   }, {
+                       url: 'download_document',
+                       path: 'download_document.jag'
+                   }, {
+                       url: 'delete_flowchart',
+                       path: 'delete_flowchart.jag'
+                   }, {
+                       url: 'delete_document',
+                       path: 'delete_document.jag'
+                   }, {
+                       url: 'delete_bpmn',
+                       path: 'delete_bpmn.jag'
+                   }, {
+                       url: 'update_description',
+                       path: 'update_description.jag'
+                   }, {
+                       url: 'audit_log',
+                       path: 'audit_log.jag'
+                   }, {
+                       url: 'get_role_permission',
+                       path: 'get_role_permission.jag'
+                   }
+            ],
+            pages: [{
+                        title: 'Asset: ' + typeSingularLabel,
+                        url: 'asset',
+                        path: 'asset.jag'
+                    }, {
+                        title: 'Assets ' + typeSingularLabel,
+                        url: 'assets',
+                        path: 'assets.jag'
+                    }, {
+                        title: 'Create ' + typeSingularLabel,
+                        url: 'create',
+                        path: 'create.jag',
+                        permission: 'ASSET_CREATE'
+                    }, {
+                        title: 'Update ' + typeSingularLabel,
+                        url: 'update',
+                        path: 'update.jag',
+                        permission: 'ASSET_UPDATE'
+                    }, {
+                        title: 'Details ' + typeSingularLabel,
+                        url: 'details',
+                        path: 'details.jag'
+                    }, {
+                        title: 'List ' + pluralLabel,
+                        url: 'list',
+                        path: 'list.jag',
+                        permission: 'ASSET_LIST'
+                    }, {
+                        title: 'Lifecycle',
+                        url: 'lifecycle',
+                        path: 'lifecycle.jag',
+                        permission: 'ASSET_LIFECYCLE'
+                    }, {
+                        title: 'Old lifecycle ',
+                        url: 'old-lifecycle',
+                        path: 'old-lifecycle.jag'
+                    }, {
+                        title: 'Statistics',
+                        url: 'statistics',
+                        path: 'statistics.jag'
+                    }, {
+                        title: 'Copy ' + typeSingularLabel,
+                        url: 'copy',
+                        path: 'copy.jag',
+                        permission: 'ASSET_CREATE'
+                    }, {
+                        title: 'Delete ' + typeSingularLabel,
+                        url: 'delete',
+                        path: 'delete.jag'
+                    },{
+                        title: 'Log: ',
+                        url: 'log',
+                        path: 'log.jag'
+                    }]
         }
-    }
+    };
 };
 
-asset.renderer = function (ctx) {
+asset.renderer = function(ctx) {
     var type = ctx.assetType;
     var permissionAPI = require('rxt').permissions;
     var isAssetWithLifecycle = function(asset) {
@@ -126,16 +187,15 @@ asset.renderer = function (ctx) {
         }
         return false;
     };
-
     var buildListLeftNav = function(page, util) {
         var navList = util.navList();
         if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) {
-            navList.push('Add ' + type, 'btn-add-new', util.buildUrl('create'));
+            navList.push('Add ', 'btn-add-new', util.buildUrl('create'));
             navList.push('Audit Log', 'btn-overview', util.buildUrl('log'));
         }
+        //navList.push('Configuration', 'icon-dashboard', util.buildUrl('configuration'));
         return navList.list();
     };
-
     var buildDefaultLeftNav = function(page, util) {
         var id = page.assets.id;
         var path = page.assets.path;
@@ -143,20 +203,26 @@ asset.renderer = function (ctx) {
         var isLCViewEnabled = ctx.rxtManager.isLifecycleViewEnabled(ctx.assetType);
         var user = require('store').server.current(session);
         var username = user? user.username : null;
-
-        navList.push('Overview', 'btn-overview', util.buildUrl('details') + '/' + id);
-        if ((isLCViewEnabled) && (isAssetWithLifecycle(page.assets))) {
-            if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_LIFECYCLE, ctx.assetType, ctx.session)) {
-                navList.push('Life Cycle', 'btn-lifecycle', util.buildUrl('lifecycle') + '/' + id);
-            }
-        }
+        //navList.push('Overview', 'btn-overview', util.buildUrl('details') + '/' + id);
+        //if (permissionAPI.hasActionPermissionforPath(path, 'write', ctx.session) && permissionAPI.hasAssetPagePermission(type,'update',user.tenantId,username)) {
+        //    navList.push('Edit', 'btn-edit', util.buildUrl('update') + '/' + id);
+        //}
         if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
             navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + id);
         }
+        //Only render the view if the asset has a
+        if ((isLCViewEnabled) && (isAssetWithLifecycle(page.assets))) {
+            if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_LIFECYCLE, ctx.assetType, ctx.session)) {
+                navList.push('Lifecycle', 'btn-lifecycle', util.buildUrl('lifecycle') + '/' + id);
+            }
+        }
         navList.push('Audit Log', 'btn-overview', util.buildUrl('log') + '/' + id);
+        //if (permissionAPI.hasActionPermissionforPath(path, 'write', ctx.session) && permissionAPI.hasAssetPagePermission(type,'update',user.tenantId,username)) {
+        //navList.push('Version', 'btn-copy', util.buildUrl('copy') + '/' + id);
+        //}
+
         return navList.list();
     };
-
     var buildLogNav = function (page, util) {
         var navList = util.navList();
         var isLCViewEnabled = ctx.rxtManager.isLifecycleViewEnabled(ctx.assetType);
@@ -181,20 +247,56 @@ asset.renderer = function (ctx) {
         }
         return navList.list();
     };
-
     var buildAddLeftNav = function(page, util) {
         return [];
     };
-
+    var isActivatedAsset = function(assetType) {
+        var app = require('rxt').app;
+        var activatedAssets = app.getUIActivatedAssets(ctx.tenantId); //ctx.tenantConfigs.assets;
+        //return true;
+        if (!activatedAssets) {
+            throw 'Unable to load all activated assets for current tenant: ' + ctx.tenatId + '.Make sure that the assets property is present in the tenant config';
+        }
+        for (var index in activatedAssets) {
+            if (activatedAssets[index] == assetType) {
+                return true;
+            }
+        }
+        return false;
+    };
     return {
-        details: function (page) {
+        list: function(page) {
+            var assets = page.assets;
+            for (var index in assets) {
+                var asset = assets[index];
+                var timestampAttribute = ctx.rxtManager.getTimeStampAttribute(ctx.assetType);
+                if (asset.attributes.hasOwnProperty(timestampAttribute)) {
+                    var value = asset.attributes[timestampAttribute];
+                    var date = new Date();
+                    date.setTime(value);
+                    asset.attributes[timestampAttribute] = date.toUTCString();
+                }
+            }
+            require('/modules/page-decorators.js').pageDecorators.assetCategoryDetails(ctx, page, this);
+        },
+        details: function(page) {
+            var tables = page.assets.tables;
+            //TODO:This cannot be hardcoded
+            var timestampAttribute = 'createdtime'; //ctx.rxtManager.getTimeStampAttribute(this.assetType);
+            for (var index in tables) {
+                var table = tables[index];
+                if ((table.name == 'overview') && (table.fields.hasOwnProperty(timestampAttribute))) {
+                    var value = table.fields[timestampAttribute].value || '';
+                    var date = new Date();
+                    date.setTime(value);
+                    table.fields[timestampAttribute].value = date.toUTCString();
+                }
+            }
             var log = new Log();
-
             var resourcePath = page.assets.path;
             if (log.isDebugEnabled()) {
                 log.debug(resourcePath);
             }
-
             if (page.assets.tables[1].fields.processtextpath.value == "NA") {
                 page.processTextAvaliable = false;
             } else {
@@ -244,6 +346,29 @@ asset.renderer = function (ctx) {
                 page.permission=false;
             }
         },
+        create: function(page) {
+            var tables = page.assets.tables;
+            var providerAttribute = 'provider'; //TODO: Provider should be picked up from the provider attribute
+            for (var index in tables) {
+                var table = tables[index];
+                if ((table.name == 'overview') && (table.fields.hasOwnProperty(providerAttribute))) {
+                    table.fields[providerAttribute].value = page.cuser.cleanedUsername;
+                }
+            }
+        },
+        update: function(page) {
+            var tables = page.assets.tables;
+            var timestampAttribute = 'createdtime';
+            for (var index in tables) {
+                var table = tables[index];
+                if ((table.name == 'overview') && (table.fields.hasOwnProperty(timestampAttribute))) {
+                    var value = table.fields[timestampAttribute].value;
+                    var date = new Date();
+                    date.setTime(value);
+                    table.fields[timestampAttribute].value = date.toUTCString();
+                }
+            }
+        },
         pageDecorators: {
             leftNav: function(page) {
                 if (log.isDebugEnabled()) {
@@ -259,6 +384,9 @@ asset.renderer = function (ctx) {
                     case 'log':
                         page.leftNav = buildLogNav(page, this);
                         break;
+                    case 'statistics':
+                        page.leftNav = buildListLeftNav(page, this);
+                        break;
                     default:
                         page.leftNav = buildDefaultLeftNav(page, this);
                         break;
@@ -271,9 +399,67 @@ asset.renderer = function (ctx) {
                     }
                 }
                 return page;
+            },
+            ribbon: function(page) {
+                var ribbon = page.ribbon = {};
+                var DEFAULT_ICON = 'fw fw-circle';
+                var assetTypes = [];
+                var assetType;
+                var assetList = ctx.rxtManager.listRxtTypeDetails();
+                for (var index in assetList) {
+                    assetType = assetList[index];
+                    //Only populate the link if the asset type is activated and the logged in user has permission to that asset
+                    if ((isActivatedAsset(assetType.shortName)) && (permissionAPI.hasAssetPermission(permissionAPI.ASSET_LIST, assetType.shortName, ctx.session))) {
+                        assetTypes.push({
+                                            url: this.buildBaseUrl(assetType.shortName) + '/list',
+                                            assetIcon: assetType.ui.icon || DEFAULT_ICON,
+                                            assetTitle: assetType.pluralLabel
+                                        });
+                    }
+                }
+                ribbon.currentType = page.rxt.singularLabel;
+                ribbon.currentTitle = page.rxt.singularLabel;
+                ribbon.currentUrl = this.buildBaseUrl(type) + '/list'; //page.meta.currentPage;
+                ribbon.shortName = page.rxt.singularLabel;
+                ribbon.query = 'Query';
+                ribbon.breadcrumb = assetTypes;
+                return page;
+            },
+            getStoreUrl: function (page) {
+                page.storeUrl = require('/config/publisher.js').config().storeUrl;
+                return page;
+            },
+            populateAttachedLifecycles: function(page) {
+                if (page.assets.id) {
+                    require('/modules/page-decorators.js').pageDecorators.populateAttachedLifecycles(ctx, page, this);
+                }
+            },
+            populateAssetVersionDetails: function(page) {
+                if (page.assets.id) {
+                    require('/modules/page-decorators.js').pageDecorators.populateAssetVersionDetails(ctx, page, this);
+                }
+            },
+            populateGroupingFeatureDetails: function(page) {
+                require('/modules/page-decorators.js').pageDecorators.populateGroupingFeatureDetails(ctx, page);
+            },
+            populateTags: function(page){
+                if(page.assets.id){
+                    require('/modules/page-decorators.js').pageDecorators.populateTagDetails(ctx,page);
+                }
+            },
+            sorting: function(page){
+                require('/modules/page-decorators.js').pageDecorators.sorting(ctx,page);
+            },
+            hideEmptyTables:function(page){
+                if(page.meta.pageName !=='details'){
+                    return;
+                }
+                require('/modules/page-decorators.js').pageDecorators.hideEmptyTables(ctx,page,this);
+            },
+            populateBreadcrumb:function(page){
+                require('/modules/page-decorators.js').pageDecorators.populateAssetPageBreadcrumb(ctx,page,this);
             }
         }
     };
 };
-
 

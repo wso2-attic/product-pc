@@ -12,13 +12,12 @@
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.w   See the License for the
+ *  KIND, either express or implied. See the License for t
  *  specific language governing permissions and limitations
  *  under the License.
  *
  */
 require('/modules/publisher.js').exec(function (ctx) {
-    var gregAPI = require('/modules/asset-action-api.js').api;
     var gregPermissionUtil = require('/modules/greg-permission-util.js').gregPermissionUtil;
     var session = ctx.session;
     var httpMethod = ctx.request.getMethod();
@@ -40,7 +39,7 @@ require('/modules/publisher.js').exec(function (ctx) {
 
     var checkPermission = function (assetType, assetId) {
         var am = assetManager(session, assetType);
-        var rolePermission = gregAPI.permissions.list(am, assetId);
+        var rolePermission = gregPermissionUtil.permissions.list(am, assetId);
 
         if (rolePermission) {
             return (rolePermission.isAuthorizeAllowed && !rolePermission.isVersionView);

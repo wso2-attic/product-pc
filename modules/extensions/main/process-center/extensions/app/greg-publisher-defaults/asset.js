@@ -11,7 +11,7 @@
  *  Unless required by applicable law or agreed to in writing,
  *  software distributed under the License is distributed on an
  *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.w   See the License for the
+ *  KIND, either express or implied. See the License for te
  *  specific language governing permissions and limitations
  *  under the License.
  *
@@ -25,7 +25,7 @@
 //  }
 // };
 asset.renderer = function(ctx) {
-    var gregAPI = require('/modules/asset-action-api.js').api;
+    var gregPermissionUtil = require('/modules/greg-permission-util.js').gregPermissionUtil;
     var rxt = require('rxt');
     var assetManager = function(session, type) {
         var am = rxt.asset.createUserAssetManager(session, type);
@@ -45,7 +45,7 @@ asset.renderer = function(ctx) {
                 var allowedPages = ['details','lifecycle','update','associations','permissions'];
                 log.debug('Permission populator ' + page.meta.pageName);
                 if(allowedPages.indexOf(page.meta.pageName)>-1){
-                    var permissionList = gregAPI.permissions.list(am, page.assets.id);
+                    var permissionList = gregPermissionUtil.permissions.list(am, page.assets.id);
                     if(permissionList){
                         if(permissionList.isAuthorizeAllowed && !permissionList.isVersionView){
                             log.debug('adding link');
@@ -53,7 +53,7 @@ asset.renderer = function(ctx) {
                             entry.name = 'Permissions';
                             entry.iconClass = 'btn-lifecycle';
                             entry.url = this.buildAppPageUrl('permissions') + '/' + page.assets.type + '/'
-                                + page.assets.id;
+                                        + page.assets.id;
                             ptr.push(entry);
                         }
                     }
