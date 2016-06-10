@@ -117,6 +117,7 @@ public class ProcessStore {
 
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(userName);
+                RegPermissionUtil.setPutPermission(registryService, userName, ProcessCenterConstants.AUDIT.PROCESS_PATH);
 
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
