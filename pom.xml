@@ -241,6 +241,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.resource</artifactId>
+                <version>4.3.0</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.wso2.pc</groupId>
                 <artifactId>org.wso2.carbon.pc.analytics.core</artifactId>
                 <version>${pc.version}</version>
@@ -542,6 +548,11 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.resource</artifactId>
+                <version>${carbon.registry.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
                 <version>${carbon.deployment.version}</version>
@@ -608,6 +619,17 @@
                 <artifactId>org.wso2.carbon.pc.styles</artifactId>
                 <version>1.0.0-SNAPSHO</version>
             </dependency>
+
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.carbon.identity</groupId>-->
+                <!--<artifactId>org.wso2.carbon.identity.application.authentication.framework</artifactId>-->
+                <!--<version>${carbon.identity.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.carbon.identity</groupId>-->
+                <!--<artifactId>org.wso2.carbon.user.mgt.stub</artifactId>-->
+                <!--<version>${carbon.identity.version}</version>-->
+            <!--</dependency>-->
 
             <!-- Integration tests depedencies-->
             <dependency>
@@ -812,6 +834,7 @@
         <carbon.deployment.version>4.6.1</carbon.deployment.version>
         <carbon.identity.version>5.0.8</carbon.identity.version>
         <carbon.multitenancy.version>4.5.1</carbon.multitenancy.version>
+        <!--<carbon.identity.version>5.0.9-SNAPSHOT</carbon.identity.version>-->
 
         <operadriver.version>0.8.1</operadriver.version>
 

@@ -79,7 +79,7 @@ public class ProcessTextTestCase extends PCIntegrationBaseTest {
         queryMap.put(PCIntegrationConstants.PROCESS_TEXT, processText);
 
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
-                "save_process_text", MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
+                        "save_process_text", MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
                 requestBody, queryMap, headerMap, cookieHeader);
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
         Assert.assertTrue(responseObject.get("error").toString().equals("false"),

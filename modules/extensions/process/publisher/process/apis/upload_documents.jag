@@ -33,6 +33,9 @@ var docProcessVersion = String(request.getParameter("docProcessVersion"));
 var docExtension = String(request.getParameter("docExtension"));
 var responseObj = {};
 
+var server = require('store').server;
+var user = server.current(session);
+
 if (docSummary == '') {
     docSummary = "NA";
 }
@@ -45,7 +48,7 @@ try {
     var processid = "NA";
     var files = request.getAllFiles();
     for (var name in files) {
-        processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, files[name].getStream(), docExtension);
+        processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, files[name].getStream(), docExtension, user.username);
     }
     response.sendRedirect('/publisher/assets/process/details/' + processid);
 } catch (error) {

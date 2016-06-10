@@ -10,18 +10,26 @@
         </tr>
         <tr>
             <td width="20%" style="border: 0px !important;">Owner:</td>
+            {{#if permission}}
             <td title="Click here to edit" width="60%" id="process-owner" style="border: 0px !important;">
                 <a href="#" id="owner" data-type="text" data-placement="top" data-title="Enter Owner">
                     {{assets.tables.[0].fields.owner.value}}
                 </a>
+            {{else}}
+                <td width="40%" style="border: 0px !important;" >{{assets.tables.[0].fields.owner.value}}</td>
+            {{/if}}
             </td>
         </tr>
         <tr>
             <td width="20%" style="border: 0px !important;">Description:</td>
+            {{#if permission}}
             <td title="Click here to edit" width="60%" id="process-description" style="border: 0px !important;">
                 <a href="#" id="description" data-type="textarea" data-placement="top" data-title="Enter Description">
                     {{assets.tables.[0].fields.description.value}}
                 </a>
+            {{else}}
+                <td width="40%" style="border: 0px !important;" >{{assets.tables.[0].fields.description.value}}</td>
+            {{/if}}
             </td>
         </tr>
         </tbody>
@@ -30,21 +38,20 @@
     <div class="control-group" style="display: inline-block">
         {{#if processTextAvaliable}}
             <div id="vtdiv">
-                <button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View/Edit Process Text</button>
+                <button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View {{#if permission}}/Edit {{/if}} Process Text</button>
             </div>
             <div id="atdiv">
-                <button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()" style="display: none">
+                <button id="addTextButton" class="btn btn-primary" {{#unless permission}} disabled {{/unless }} onclick="showTextEditor()" style="display: none">
                     Describe process in text
                 </button>
             </div>
         {{else}}
             <div id="vtdiv">
-                <button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View/Edit
-                    Process Text
+                <button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View {{#if permission}}/Edit {{/if}}Process Text
                 </button>
             </div>
             <div id="atdiv">
-                <button id="addTextButton" class="btn btn-primary" onclick="showTextEditor()">Describe process in text
+                <button id="addTextButton" class="btn btn-primary" {{#unless permission}} disabled {{/unless }} onclick="showTextEditor()">Describe process in text
                 </button>
             </div>
         {{/if}}
@@ -55,18 +62,18 @@
             <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
             <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
         {{else}}
-            <button class="btn btn-primary" onclick="showBPMNUploader()">Associate a BPMN model</button>
+            <button class="btn btn-primary" {{#unless permission}} disabled {{/unless }} onclick="showBPMNUploader()">Associate a BPMN model</button>
         {{/if}}
     </div>
 
     <div class="control-group" style="display: inline-block">
         {{#if documentAvailable}}
             <div id="sddiv">
-                <button id="viewDocumentButton" class="btn btn-primary" onclick="showDocument()">View Documents</button>
+                <button id="viewDocumentButton" class="btn btn-primary" onclick="showDocument({{#if permission}}true{{else}}false{{/if}})">View Documents</button>
             </div>
         {{else}}
             <div id="addiv">
-                <button id="addDocumentButton" class="btn btn-primary" onclick="associateDoc()">Associate Documents
+                <button id="addDocumentButton" class="btn btn-primary" {{#unless permission}} disabled {{/unless }} onclick="associateDoc()">Associate Documents
                 </button>
             </div>
         {{/if}}
@@ -77,12 +84,12 @@
             <div id="sfdiv">
                 <button id="showFlowchartButton" class="btn btn-primary"
                         onclick="showFlowchartEditor('{{assets.tables.[0].fields.name.value}}', '{{flowchartPath}}')">
-                    Edit Flowchart
+                    {{#if permission}}Edit{{else}}View{{/if}} Flowchart
                 </button>
             </div>
         {{else}}
             <div id="aFdiv">
-                <button id="addFlowchartButton" class="btn btn-primary" onclick="associateEditorFlowChart()">Associate
+                <button id="addFlowchartButton" class="btn btn-primary" {{#unless permission}} disabled {{/unless }} onclick="associateEditorFlowChart()">Associate
                     Flowchart
                 </button>
             </div>
@@ -106,9 +113,10 @@
                 </div>
                 <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
                     <div class="add-unbounded-row">
-                        <a data-name="subprocess" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
-                            Subprocess</a>
-                        <button class="btn btn-primary view" data-name="subprocess" id="search-process-view">
+                        {{#if permission}}
+                            <a data-name="subprocess" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
+                                Subprocess</a>{{/if}}
+                        <button {{#unless permission}}  style="display: none;" {{/unless }} class="btn btn-primary view" data-name="subprocess" id="search-process-view">
                             <i class="fa fa-search"></i> Search Process
                         </button>
                     </div>
@@ -124,8 +132,8 @@
                                 <td valign="top" style="width: 90%;"><span id="subprocess_Name"
                                                                            class="subprocess_Name">{{this.name}}-{{this.version}}</span></td>
                                 <td style="width: 5%;"></td>
-                                <td style="width: 5%;"><label class="remove-process" onclick="deleteSubprocess(this)"><i
-                                        class="fa fa-trash"></i></label></td>
+                                {{#if permission}} <td style="width: 5%;"><label class="remove-process" onclick="deleteSubprocess(this)"><i
+                                        class="fa fa-trash"></i></label></td>{{/if}}
                             </tr>
                         {{/each}}
                         </tbody>
@@ -146,9 +154,10 @@
                 </div>
                 <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
                     <div class="add-unbounded-row">
-                        <a data-name="successor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
-                            Successor</a>
-                        <button class="btn btn-primary view" data-name="successor" id="search-process-view">
+                        {{#if permission}}
+                            <a data-name="successor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
+                            Successor</a>{{/if}}
+                        <button {{#unless permission}} style="display: none;" {{/unless }} class="btn btn-primary view" data-name="successor" id="search-process-view">
                             <i class="fa fa-search"></i> Search Process
                         </button>
                     </div>
@@ -164,8 +173,8 @@
                                 <td valign="top" style="width: 90%;"><span id="successor_Name"
                                                                            class="successor_Name">{{this.name}}-{{this.version}}</span></td>
                                 <td style="width: 5%;"></td>
-                                <td style="width: 5%;"><label class="remove-process" onclick="deleteSuccessor(this)"><i
-                                        class="fa fa-trash"></i></label></td>
+                                {{#if permission}} <td style="width: 5%;"><label class="remove-process" onclick="deleteSuccessor(this)"><i
+                                        class="fa fa-trash"></i></label></td>{{/if}}
                             </tr>
                         {{/each}}
                         </tbody>
@@ -187,9 +196,9 @@
                 </div>
                 <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
                     <div class="add-unbounded-row">
-                        <a data-name="predecessor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
-                            Predecessor</a>
-                        <button class="btn btn-primary view" data-name="predecessor" id="search-process">
+                        {{#if permission}}<a data-name="predecessor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
+                            Predecessor</a> {{/if}}
+                        <button {{#unless permission}} style="display: none;" {{/unless }} class="btn btn-primary view" data-name="predecessor" id="search-process">
                             <i class="fa fa-search"></i> Search Process
                         </button>
                     </div>
@@ -205,8 +214,8 @@
                                 <td valign="top" style="width: 90%;"><span id="predecessor_Name"
                                                                            class="predecessor_Name">{{this.name}}-{{this.version}}</span></td>
                                 <td style="width: 5%;"></td>
-                                <td style="width: 5%;"><label class="remove-process" onclick="deletePredecessor(this)"><i
-                                        class="fa fa-trash"></i></label></td>
+                                {{#if permission}} <td style="width: 5%;"><label class="remove-process" onclick="deletePredecessor(this)"><i
+                                        class="fa fa-trash"></i></label></td> {{/if}}
                             </tr>
                         {{/each}}
                         </tbody>
@@ -223,7 +232,7 @@
         <button class="btn btn-primary" onclick="showOverview(this)"><span
                 class="glyphicon glyphicon-circle-arrow-left"></span> Overview
         </button>
-        <button class="btn btn-primary" onclick="editText()">Edit</button>
+        <button class="btn btn-primary" {{#unless permission}} disabled{{/unless}} onclick="editText()">Edit</button>
     </div>
     <div class="panel panel-default">
         <div id="processTextDiv" class="panel-body">
@@ -252,7 +261,7 @@
     <button class="btn btn-primary" onclick="showOverview(this)"><span
             class="glyphicon glyphicon-circle-arrow-left"></span> Overview
     </button>
-    <button class="btn btn-primary" id="bpmnDiagramDltBtn" onclick="removeBPMNDiagramListener()">Delete</button>
+    <button class="btn btn-primary" id="bpmnDiagramDltBtn" {{#unless permission}} disabled{{/unless}} onclick="removeBPMNDiagramListener()">Delete</button>
     <br/><br/>
     <input type="hidden" id="bpmnViewProcessName" name="bpmnViewProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
     <input type="hidden" id="bpmnViewProcessVersion" name="bpmnViewProcessVersion" value="{{assets.tables.[0].fields.version.value}}"/>
@@ -337,9 +346,9 @@
     <br/>
     <a id="fcEditorOverviewLink" class="btn btn-primary" onclick="redirectTo(this)" href=""><span
             class="glyphicon glyphicon-circle-arrow-left"></span> Overview</a>
-    <button class="btn btn-primary" id="flowchartSaveBtn" onclick=" _saveEditedFlowchart()">Save</button>
+    <button class="btn btn-primary" id="flowchartSaveBtn" {{#unless permission}} disabled{{/unless}} onclick=" _saveEditedFlowchart()">Save</button>
     <button class="btn btn-primary" id="saveAsPNGBtn">Download As PNG</button>
-    <button class="btn btn-primary" id="flowchartEditorDltBtn" onclick="removeFlowchart()">Delete</button>
+    <button class="btn btn-primary" id="flowchartEditorDltBtn" {{#unless permission}} disabled{{/unless}} onclick="removeFlowchart()">Delete</button>
     <br/><br/>
     <input type="hidden" id="fcProcessName" name="fcProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
     <input type="hidden" id="fcProcessVersion" name="fcProcessVersion"
@@ -392,9 +401,9 @@
             <div class="row-fluid">
                 <div class="control-group">
                     <div id="addDoc">
-                        <a onclick="newDocFormToggle()" id="toggleAnchor" href="#">
+                        {{#if permission}}<a onclick="newDocFormToggle()" id="toggleAnchor" href="#">
                             <i class="fa fa-plus-circle"></i> Add New Document
-                        </a>
+                        </a>{{/if}}
                     </div>
                     <div id="updateDoc" style="display:none;">
                         <h4></h4>

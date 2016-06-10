@@ -29,9 +29,13 @@ var descriptionDetails = String(request.getContent());
 if (log.isDebugEnabled()) {
     log.debug("descriptionDetails: " + descriptionDetails);
 }
+
+var server = require('store').server;
+var user = server.current(session);
+
 var responseObj = {};
 try {
-    var processId = ps.updateDescription(descriptionDetails);
+    var processId = ps.updateDescription(descriptionDetails, user.username);
     responseObj.error = false;
     responseObj.content = processId;
     print(stringify(responseObj));

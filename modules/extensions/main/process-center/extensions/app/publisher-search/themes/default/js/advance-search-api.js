@@ -17,6 +17,7 @@
  *
  */
 $(function () {
+
     var SEARCH_API = '/apis/assets?q=';
     var SEARCH_BUTTON = '#search-btn';
     var SEARCH_FORM = '#search-form';
@@ -25,6 +26,50 @@ $(function () {
     var items_per_row = 0;
     var doPagination = true;
     var options = [];
+    var tags = [];
+
+    window.onload = function () {
+        $.ajax({
+            url: '/publisher/assets/process/apis/get_process_tags',
+            type: 'GET',
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    processTagsObj = JSON.parse(response.content);
+                    if (!$.isEmptyObject(processTagsObj)) {
+                        for (var key in processTagsObj) {
+                            if (processTagsObj.hasOwnProperty(key)) {
+                                tags.push(key);
+                            }
+                        }
+                    }
+
+                    $('#tags').tokenfield({
+                        autocomplete: {
+                            source: tags,
+                            delay: 100
+                        },
+                        showAutocompleteOnFocus: true
+                    });
+
+                    $('#tags').on('tokenfield:createtoken', function (event) {
+                        var existingTokens = $(this).tokenfield('getTokens');
+                        $.each(existingTokens, function (index, token) {
+                            if (token.value === event.attrs.value)
+                                event.preventDefault();
+                        });
+                    });
+                } else {
+                    alertify.error(response.content);
+                }
+            },
+            error: function () {
+                alertify.error('Process list returning error');
+            }
+        });
+    };
+
+
     store.infiniteScroll = {};
     store.infiniteScroll.recalculateRowsAdded = function () {
         return (last_to - last_to % items_per_row) / items_per_row;
@@ -198,7 +243,36 @@ $(function () {
             return;
         }
         else if (isEmptyQuery(query) && $("#content").val()) {
-            contentSearch(null);
+
+            $.ajax({
+                url: '/publisher/apis/assets',
+                method: 'GET',
+                success: function (data) {
+                    var results = [];
+                    if (data) {
+                        results = data.list || [];
+                    }
+                    for (var i = 0; i < results.length; i++) {
+                        results[i].showType = true;
+                    }
+                    if (results.length == 0) {
+                        if (from == 0) {
+                            alertify.error('We are sorry but we could not find any matching assets');
+                        }
+                        $('.loading-animation-big').remove();
+                        doPagination = false;
+                    } else {
+                        //content specified by user.
+                        if ($("#content").val()) {
+                            contentSearch(results);
+                        }
+                    }
+                }, error: function () {
+                    doPagination = false;
+                    $('.loading-animation-big').remove();
+                }
+            });
+            //   contentSearch(null);
         }
         else {
             store.infiniteScroll.showAll(query);
@@ -211,6 +285,11 @@ $(function () {
         var content = $("#content").val().trim();
         var media = JSON.stringify(options);
         var search_url = caramel.tenantedUrl('/apis/search');
+
+        caramel.render('loading', 'Loading assets ', function (info, content) {
+            $('.loading-animation-big').remove();
+            $('body').append($(content));
+        });
         $.ajax({
             url: search_url,
             type: 'POST',
@@ -225,23 +304,23 @@ $(function () {
                     if (response.error === false) {
                         var results = JSON.parse(response.content);
 
-                        if (rxt_results) {                     //get the intersection of the two searches.
+                        //      if (rxt_results) {                     //get the intersection of the two searches.
 
-                            var hashmap = {};
-                            var intersection = [];
-                            for (var i = 0; i < rxt_results.length; i++) {
-                                var pid = rxt_results[i].id;
-                                hashmap[pid] = rxt_results[i];
-                            }
-                            for (var i = 0; i < results.length; i++) {
-
-                                var key = results[i].id;
-                                if (hashmap.hasOwnProperty(key)) {
-                                    intersection.push(hashmap[key]);
-                                }
-                            }
-                            results = intersection;
+                        var hashmap = {};
+                        var intersection = [];
+                        for (var i = 0; i < rxt_results.length; i++) {
+                            var pid = rxt_results[i].id;
+                            hashmap[pid] = rxt_results[i];
                         }
+                        for (var i = 0; i < results.length; i++) {
+
+                            var key = results[i].id;
+                            if (hashmap.hasOwnProperty(key)) {
+                                intersection.push(hashmap[key]);
+                            }
+                        }
+                        results = intersection;
+                        //        }
 
                         loadPartials('list-assets', function (partials) {
                             caramel.partials(partials, function () {
@@ -257,7 +336,7 @@ $(function () {
                         $('.loading-animation-big').remove();
                         doPagination = false;
                     }
-                }catch (e){
+                } catch (e) {
                     alertify.error("We are sorry but we could not find any matching assets");
                 }
             }, error: function (xhr, status, error) {

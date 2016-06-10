@@ -35,7 +35,6 @@
                         for (var key in processTagsObj) {
                             if (processTagsObj.hasOwnProperty(key)) {
                                 $("#searchtags").append('<a id="' + key + '" onclick="searchProcessesByTag(this)">' + key + '</a>');
-
                             }
                         }
                     }
@@ -44,41 +43,50 @@
                 }
             },
             error: function () {
-                alert.error('Process list returning error');
+                alertify.error('Process list returning error');
             }
         });
+
+        /*$.ajax({
+            url: '/publisher/assets/process/apis/get_role_permission',
+            type: 'POST',
+            data: {
+                'processName': 'test'
+            },
+            success: function (data) {
+                if(data === 'false') {
+                    $("#Addprocess").click(function(e) {
+                        e.preventDefault();
+                        alertify.error('You have no publisher permissions to perform this task');
+                    });
+                }
+            },
+            error: function () {
+                alertify.error('Permission retrieving error');
+            }
+        });*/
+
     }
 
     function searchProcessesByTag(currentElement) {
         var tagName = $(currentElement).attr("id");
+        if(!$("#list_assets_content").is(":visible")) {
+            $("#list_assets_content").show();
+        };
+        var wr_assets = $(list_assets_content).find('.ctrl-wr-asset');
         $('#list_tagged_processes').empty();
         $("#list_assets_content").hide();
         $("#list_tagged_processes").show();
 
         var processArray = processTagsObj[tagName];
-
         for (var process in processArray) {
-            var imagePath = "/publisher/themes/default/img/default-thumbnail.png";
-            if (processArray[process].processImage.length !== 0) {
-                imagePath = "/publisher/storage/process/" + processArray[process].processid + "/" + processArray[process].processImage;
+            var href = "/publisher/assets/process/details/" + processArray[process].processid;
+            for(var i=0; i < wr_assets.length; i++) {
+                var html = '<div class="ctrl-wr-asset">'+ $(wr_assets[i]).html()+'</div>';
+                if(href===$(wr_assets[i]).find('.ast-img').attr('href')) {
+                    $('#list_tagged_processes').append(html);
+                }
             }
-
-            $('#list_tagged_processes').append('<div class="ctrl-wr-asset">' +
-            '<div class="itm-ast">' +
-            '<a class="ast-img" href="/publisher/assets/process/details/' + processArray[process].processid + '">' +
-            '<img alt="thumbnail" src="' + imagePath + '" style="top:0px; left:0px; height:100%; width:100%;" class="img-responsive">' +
-            '</a>' +
-            '<div class="ast-desc">' +
-            '<a href="/publisher/assets/process/details/' + processArray[process].processid + '">' +
-            '<h3 class="ast-name" title="' + processArray[process].processname + 'p">' + processArray[process].processname + '</h3>' +
-            '</a>' +
-            '<span class="ast-ver">Vp, </span><span class="ast-auth" title=""></span>' +
-            '<span class="ast-published"></span>' +
-            '<span class="lifecycle-state"><small><i class="icon-circle lc-state-Initial"></i> Initial</small></span>' +
-            '</div>' +
-            '<br class="c-both">' +
-            '</div><br class="c-both">' +
-            '</div>');
         }
     }
 </script>

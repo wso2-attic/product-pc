@@ -31,9 +31,12 @@ if (log.isDebugEnabled()) {
     log.debug("Remove BPMN diagram in " + processName + "-" + processVersion + " process");
 }
 
+var server = require('store').server;
+var user = server.current(session);
+
 var responseObj = {};
 try {
-    var removeBPMNStatus = ps.removeBPMNDiagram(processName, processVersion);
+    var removeBPMNStatus = ps.removeBPMNDiagram(processName, processVersion, user.username);
     responseObj.error = false;
     responseObj.content = removeBPMNStatus;
     print(stringify(responseObj));

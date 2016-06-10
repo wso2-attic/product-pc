@@ -61,6 +61,7 @@ window.onload = function () {
             return JSON.stringify(params);
         }
     });
+
 };
 
 function getMainProcess() {
@@ -390,7 +391,7 @@ function removeDocumentConfirmListener(processName, processVersion, documentName
     confirmModal.modal('show');
 }
 
-function showDocument() {
+function showDocument(writePermission) {
     $("#overviewDiv").hide();
     $("#processTextContainer").hide();
     $("#processTextEditDiv").hide();
@@ -429,10 +430,10 @@ function showDocument() {
                             iconElement.style.color = "red";
                         } else if (docExt == "doc" || docExt == "docx") {
                             iconElement.className = "fw fw-ms-document";
-                            iconElement.style.color = "blue";
+                            iconElement.style.color = "#00458a";
                         } else { // google doc
-                            iconElement.className = "fw fw-ms-document";
-                            iconElement.style.color = "green";
+                            iconElement.className = "fw fw-document";
+                            iconElement.style.color = "#0099ff";
                         }
                         iconElement.style.fontSize = "21px";
                         cellDocTypeIcon.appendChild(iconElement);
@@ -485,14 +486,16 @@ function showDocument() {
                         }
                         if (response[i].url != "NA" || response[i].path != "NA") {
                             var removeDocElement = document.createElement("a");
-                            removeDocElement.setAttribute("id", "removeDocElement" + i);
-                            removeDocElement.onclick = (function (processName, processVersion, docName, docSummary, docUrl, docPath, idVal) {
-                                return function () {
-                                    removeDocumentConfirmListener(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
-                                };
-                            })(fieldsName, fieldsVersion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
-                            removeDocElement.innerHTML = "Remove";
-                            cellDocAction.appendChild(removeDocElement);
+                            if (writePermission) {
+                                removeDocElement.setAttribute("id", "removeDocElement" + i);
+                                removeDocElement.onclick = (function (processName, processVersion, docName, docSummary, docUrl, docPath, idVal) {
+                                    return function () {
+                                        removeDocumentConfirmListener(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
+                                    };
+                                })(fieldsName, fieldsVersion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
+                                removeDocElement.innerHTML = "Remove";
+                                cellDocAction.appendChild(removeDocElement);
+                            }
                         }
                     }
                 }

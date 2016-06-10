@@ -155,7 +155,7 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
     public void deleteSubprocess() throws JSONException, UnsupportedEncodingException {
         queryMap.put("deleteSubprocessDetails",
                 URLEncoder.encode(associateProcessDeleteRequest("deleteSubprocess",
-                PROCESS_NAME,PROCESS_VERSION,subProcess),PCIntegrationConstants.UTF_8));
+                        PROCESS_NAME,PROCESS_VERSION,subProcess),PCIntegrationConstants.UTF_8));
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
                         "delete_subprocess", MediaType.APPLICATION_FORM_URLENCODED,
                 MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
@@ -168,7 +168,7 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
     public void deletePredecessor() throws JSONException, UnsupportedEncodingException {
         queryMap.put("deletePredecessorDetails",
                 URLEncoder.encode(associateProcessDeleteRequest("deletePredecessor",
-                PROCESS_NAME,PROCESS_VERSION,predecessorProcess),PCIntegrationConstants.UTF_8));
+                        PROCESS_NAME,PROCESS_VERSION,predecessorProcess),PCIntegrationConstants.UTF_8));
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
                         "delete_Predecessor", MediaType.APPLICATION_FORM_URLENCODED,
                 MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
@@ -181,7 +181,7 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
     public void deleteSuccessor() throws JSONException, UnsupportedEncodingException {
         queryMap.put("deleteSuccessorDetails",
                 URLEncoder.encode(associateProcessDeleteRequest("deleteSuccessor",
-                PROCESS_NAME,PROCESS_VERSION,successorProcess),PCIntegrationConstants.UTF_8));
+                        PROCESS_NAME,PROCESS_VERSION,successorProcess),PCIntegrationConstants.UTF_8));
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
                         "delete_successor", MediaType.APPLICATION_FORM_URLENCODED,
                 MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
@@ -213,9 +213,9 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
     }
 
     private String associateProcessDeleteRequest(String action,
-                                                          String processName,
-                                                          String processVersion,
-                                                          ProcessBean associateProcess)
+                                                 String processName,
+                                                 String processVersion,
+                                                 ProcessBean associateProcess)
             throws JSONException {
         JSONObject deleteProcessObject = new JSONObject();
         Gson gson = new Gson();

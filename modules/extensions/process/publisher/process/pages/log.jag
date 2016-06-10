@@ -1,0 +1,42 @@
+<%
+var caramel;
+require('/modules/publisher.js').exec(function (ctx) {
+    caramel = require('caramel');
+    var ui = require('rxt').ui;
+    var asset = require('rxt').asset;
+    var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
+    var options = uriMatcher.match('/{context}/assets/{type}/{pageName}/{+id}') || uriMatcher.match('/{context}/assets/{type}/{pageName}');
+
+    var log = new Log();
+    var rxt = require('rxt');
+
+    if (!options) {
+        response.sendError(400, 'Could not locate an endpoint for your request.Make sure that you provide an id');
+    } else {
+        var type = options.type;
+        var am = asset.createUserAssetManager(session, type);
+        var page = ui.buildPage(session, request);
+        var assets;
+        if (options.id != null) {
+            assets = am.get(options.id);
+        } else {
+            var assetApi = require('/modules/asset-api.js').api;
+            assets = assetApi.advanceSearch(options, ctx.request, ctx.response, ctx.session) || [];
+        }
+
+        if (assets == null) {
+            response.sendError(404, 'The asset with id: ' + options.id + ' could not be located.');
+        } else {
+            var output;
+            if (options.id != null) {
+                output = am.render(assets, page).details();
+                page.path = assets.path;
+            } else {
+                output = am.render(assets, page).list();
+                page.path = "NA";
+            }
+            caramel.render(output);
+        }
+    }
+}, request, response, session);
+%>

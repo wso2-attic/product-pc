@@ -98,6 +98,17 @@ asset.server = function (ctx) {
             }, {
                 url: 'update_description',
                 path: 'update_description.jag'
+            }, {
+                url: 'audit_log',
+                path: 'audit_log.jag'
+            }, {
+                url: 'get_role_permission',
+                path: 'get_role_permission.jag'
+            }],
+            pages:[{
+                title: 'Log: ',
+                url: 'log',
+                path: 'log.jag'
             }]
         }
     }
@@ -120,6 +131,7 @@ asset.renderer = function (ctx) {
         var navList = util.navList();
         if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) {
             navList.push('Add ' + type, 'btn-add-new', util.buildUrl('create'));
+            navList.push('Audit Log', 'btn-overview', util.buildUrl('log'));
         }
         return navList.list();
     };
@@ -140,6 +152,32 @@ asset.renderer = function (ctx) {
         }
         if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
             navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + id);
+        }
+        navList.push('Audit Log', 'btn-overview', util.buildUrl('log') + '/' + id);
+        return navList.list();
+    };
+
+    var buildLogNav = function (page, util) {
+        var navList = util.navList();
+        var isLCViewEnabled = ctx.rxtManager.isLifecycleViewEnabled(ctx.assetType);
+        var path = page.assets.path;
+        if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) {
+            //    log.info(page.assets);
+            if(page.assets.id != null) {
+                navList.push('Overview', 'btn-overview', util.buildUrl('details') + '/' + page.assets.id);
+                if ((isLCViewEnabled) && (isAssetWithLifecycle(page.assets))) {
+                    if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_LIFECYCLE, ctx.assetType, ctx.session)) {
+                        navList.push('Life Cycle', 'btn-lifecycle', util.buildUrl('lifecycle') + '/' + page.assets.id);
+                    }
+                }
+                if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
+                    navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + page.assets.id);
+                }
+                navList.push('Audit Log', 'btn-overview', util.buildUrl('log') + '/' +page.assets.id);
+
+            } else{
+                navList.push('Audit Log', 'btn-overview', util.buildUrl('log'));
+            }
         }
         return navList.list();
     };
@@ -197,6 +235,14 @@ asset.renderer = function (ctx) {
             }else{
                 page.flowchartAvailable = false;
             }
+
+            var permissionAPI = require('rxt').permissions;
+            if (permissionAPI.hasActionPermissionforPath(resourcePath , 'write', ctx.session)){
+                page.permission=true;
+            }
+            else{
+                page.permission=false;
+            }
         },
         pageDecorators: {
             leftNav: function(page) {
@@ -209,6 +255,9 @@ asset.renderer = function (ctx) {
                         break;
                     case 'create':
                         page.leftNav = buildAddLeftNav(page, this);
+                        break;
+                    case 'log':
+                        page.leftNav = buildLogNav(page, this);
                         break;
                     default:
                         page.leftNav = buildDefaultLeftNav(page, this);
@@ -236,10 +285,14 @@ asset.manager = function(ctx) {
             var processName = this.getName(processObj);
             var processVersion = this.getVersion(processObj);
 
+            var server = require('store').server;
+            var user = server.current(session);
+            var username = user? user.username : null;
+
             try {
                 importPackage(org.wso2.carbon.pc.core);
                 var ps = new ProcessStore();
-                ps.deleteProcessRelatedArtifacts(processName, processVersion);
+                ps.deleteProcessRelatedArtifacts(processName, processVersion, username);
                 this._super.remove.call(this, options);
             }catch (e){
                 log.error(e.message);

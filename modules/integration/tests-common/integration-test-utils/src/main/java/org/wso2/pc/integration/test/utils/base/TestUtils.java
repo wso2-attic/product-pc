@@ -39,24 +39,24 @@ public class TestUtils {
      * @throws JSONException
      */
     public static ClientResponse authenticate(String url,
-                                       GenericRestClient genericRestClient,
-                                       String username,
-                                       String password,
-                                       Map<String, String> queryParamMap,
-                                       Map<String, String> headerMap) throws JSONException {
+            GenericRestClient genericRestClient,
+            String username,
+            String password,
+            Map<String, String> queryParamMap,
+            Map<String, String> headerMap) throws JSONException {
         ClientResponse response =
                 genericRestClient.geneticRestRequestPost(url + "/authenticate/",
-                                                         MediaType.APPLICATION_FORM_URLENCODED,
-                                                         MediaType.APPLICATION_JSON,
-                                                         "username=" + username + "&password=" +
-                                                                 password, queryParamMap, headerMap,
-                                                          null);
+                        MediaType.APPLICATION_FORM_URLENCODED,
+                        MediaType.APPLICATION_JSON,
+                        "username=" + username + "&password=" +
+                                password, queryParamMap, headerMap,
+                        null);
         return response;
     }
 
     public static String addProcess(String requestBody,
-                                    String cookieHeader,
-                                    String publisherAPIBaseUrl)
+            String cookieHeader,
+            String publisherAPIBaseUrl)
             throws UnsupportedEncodingException, JSONException {
         GenericRestClient genericRestClient = new GenericRestClient();
         HashMap<String, String> queryMap = new HashMap<>();

@@ -18,7 +18,7 @@
  */
 var resources = function () {
     return {
-        js: ['libs/jquery.form.min.js', 'advance-search-api.js', 'alertify.js'],
-        css: ['alertify.css']
+        js: ['libs/jquery.form.min.js', 'advance-search-api.js', 'alertify.js', 'jquery-ui.js','auto-complete-tags/bootstrap-tokenfield.min.js'],
+        css: ['alertify.css', 'jquery-ui.css','auto-complete-tags/bootstrap-tokenfield.min.css', 'auto-complete-tags/tokenfield-typehead.min.css']
     }
 };

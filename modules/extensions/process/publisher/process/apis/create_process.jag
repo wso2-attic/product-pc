@@ -26,9 +26,14 @@ if (log.isDebugEnabled()) {
 
 var ps = new ProcessStore();
 var processDetails = String(request.getParameter("processInfo"));
+var userName = user.username;
 var responseObj = {};
+
+var server = require('store').server;
+var user = server.current(session);
+
 try {
-    var status = ps.createProcess(processDetails);
+    var status = ps.createProcess(processDetails, userName);
     responseObj.error = false;
     responseObj.content = status;
     print(stringify(responseObj));

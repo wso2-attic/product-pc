@@ -30,9 +30,12 @@ if (log.isDebugEnabled()) {
     log.debug("deletePredecessorDetails: " + deletePredecessorDetails);
 }
 
+var server = require('store').server;
+var user = server.current(session);
+
 var responseObj = {};
 try {
-    var deletePredecessorStatus = ps.deletePredecessor(deletePredecessorDetails);
+    var deletePredecessorStatus = ps.deletePredecessor(deletePredecessorDetails, user.username);
     responseObj.error = false;
     responseObj.content = stringify(deletePredecessorStatus);
     print(stringify(responseObj));
