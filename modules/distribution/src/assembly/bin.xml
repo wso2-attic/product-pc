@@ -377,8 +377,8 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/assets
             </outputDirectory>
             <excludes>
-                <exclude>**/partials/navigation.hbs</exclude>
-                <exclude>**/partials/header.hbs</exclude>
+                <!--exclude>**/partials/navigation.hbs</exclude>
+                <exclude>**/partials/header.hbs</exclude-->
                 <exclude>**/partials/sso-auth.hbs</exclude>
             </excludes>
         </fileSet>
