@@ -1,0 +1,11 @@
+<div id="bpmnViewDiv" style="display: none">
+    <button class="btn btn-primary" id="bpmnDiagramDltBtn" onclick="removeBPMNDiagramListener()">Delete</button>
+    <br/><br/>
+    <input type="hidden" id="bpmnViewProcessName" name="bpmnViewProcessName"/>
+    <input type="hidden" id="bpmnViewProcessVersion" name="bpmnViewProcessVersion"/>
+
+    <div style="overflow:auto;width:1000px;height:500px;border:1px solid black;">
+        <img id="bpmnImage" style="position: relative;top: 50%;left: 50%;transform: translateX(-50%) translateY(-50%);"
+             src="data:image/png;base64,{{bpmn.bpmnImage}}"/>
+    </div>
+</div>
