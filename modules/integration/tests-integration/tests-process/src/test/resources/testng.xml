@@ -37,7 +37,7 @@
             <class name="org.wso2.pc.integration.tests.publisher.AssociateMSWordDocTestCase"/>
             <class name="org.wso2.pc.integration.tests.publisher.AssociateURLTestCase"/>
             <class name="org.wso2.pc.integration.tests.publisher.AddFlowChartTestCase"/>
-            <class name="org.wso2.pc.integration.tests.publisher.AdvanceSearchTestCase"/>
+            <!--class name="org.wso2.pc.integration.tests.publisher.AdvanceSearchTestCase"/-->
             <class name="org.wso2.pc.integration.tests.publisher.PublisherProcessLevelPermissionTestCase"/>
         </classes>
     </test>

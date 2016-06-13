@@ -392,7 +392,8 @@ function removeDocumentConfirmListener(processName, processVersion, documentName
     confirmModal.modal('show');
 }
 
-function showDocument(permission) {
+
+function showDocument(writePermission) {
     $("#overviewDiv").hide();
     $("#processTextContainer").hide();
     $("#processTextEditDiv").hide();
@@ -415,9 +416,31 @@ function showDocument(permission) {
                         var table = document.getElementById("listDocs");
                         var rowCount = table.rows.length;
                         var row = table.insertRow(rowCount);
-                        var cellDocName = row.insertCell(0);
-                        var cellDocSummary = row.insertCell(1);
-                        var cellDocAction = row.insertCell(2);
+
+                        var cellDocTypeIcon = row.insertCell(0);
+                        var cellDocName = row.insertCell(1);
+                        var cellDocSummary = row.insertCell(2);
+                        var cellDocAction = row.insertCell(3);
+
+                        var docPath = response[i].path;
+                        var lastDotIndex = docPath.lastIndexOf(".");
+                        var docExt = docPath.substr(lastDotIndex + 1);
+
+                        cellDocTypeIcon.style.width = "5%"
+                        var iconElement = document.createElement('i');
+                        if (docExt === "pdf") {
+                            iconElement.className = "fw fw-pdf";
+                            iconElement.style.color = "red";
+                        } else if (docExt == "doc" || docExt == "docx") {
+                            iconElement.className = "fw fw-ms-document";
+                            iconElement.style.color = "#00458a";
+                        } else { // google doc
+                            iconElement.className = "fw fw-document";
+                            iconElement.style.color = "#0099ff";
+                        }
+                        iconElement.style.fontSize = "21px";
+                        cellDocTypeIcon.appendChild(iconElement);
+
                         cellDocName.innerHTML = '<a href="#" id="docName'+i+'" data-type="text" data-placement="top" data-title="Enter Owner">'+response[i].name+'</a>';
                         cellDocSummary.innerHTML = response[i].summary;
 
@@ -441,7 +464,7 @@ function showDocument(permission) {
                             anchorUrlElement.setAttribute("href", response[i].url);
                             anchorUrlElement.setAttribute('target', '_blank');
                             anchorUrlElement.style.marginRight = "15px";
-                            anchorUrlElement.innerHTML = "open";
+                            anchorUrlElement.innerHTML = "Open";
 
                             viewGoogleDocument(response[i].url, response[i].name, i);
                             var anchorGoogleDocViewElement = document.createElement("a");
@@ -449,7 +472,7 @@ function showDocument(permission) {
                             anchorGoogleDocViewElement.setAttribute("data-toggle", "modal");
                             anchorGoogleDocViewElement.setAttribute("data-target", "#docViewModal" + i);
                             anchorGoogleDocViewElement.style.marginRight = "15px";
-                            anchorGoogleDocViewElement.innerHTML = "view";
+                            anchorGoogleDocViewElement.innerHTML = "View";
 
                             cellDocAction.appendChild(anchorUrlElement);
                             cellDocAction.appendChild(anchorGoogleDocViewElement);
@@ -461,7 +484,7 @@ function showDocument(permission) {
                                     downloadDocument(currentPath);
                                 };
                             })(response[i].path);
-                            anchorElement.innerHTML = "download";
+                            anchorElement.innerHTML = "Download";
                             anchorElement.style.marginRight = "15px";
                             cellDocAction.appendChild(anchorElement);
 
@@ -472,7 +495,7 @@ function showDocument(permission) {
                                 anchorPdfViewElement.setAttribute("data-toggle", "modal");
                                 anchorPdfViewElement.setAttribute("data-target", "#pdfViewModal" + i);
                                 anchorPdfViewElement.style.marginRight = "15px";
-                                anchorPdfViewElement.innerHTML = "view";
+                                anchorPdfViewElement.innerHTML = "View";
                                 cellDocAction.appendChild(anchorPdfViewElement);
                             }
                         } else {
@@ -480,14 +503,14 @@ function showDocument(permission) {
                         }
                         if (response[i].url != "NA" || response[i].path != "NA") {
                             var removeDocElement = document.createElement("a");
-                            if (permission) {
+                            if (writePermission) {
                                 removeDocElement.setAttribute("id", "removeDocElement" + i);
                                 removeDocElement.onclick = (function (processName, processVersion, docName, docSummary, docUrl, docPath, idVal) {
                                     return function () {
                                         removeDocumentConfirmListener(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
                                     };
                                 })(fieldsName, fieldsVersion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
-                                removeDocElement.innerHTML = "remove";
+                                removeDocElement.innerHTML = "Remove";
                                 cellDocAction.appendChild(removeDocElement);
                             }
                         }

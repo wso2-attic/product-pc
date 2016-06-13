@@ -116,11 +116,10 @@ public class ProcessStore {
             JSONObject imageObj = processInfo.getJSONObject("image");
 
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
-
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(userName);
-                RegPermissionUtil
-                        .setPutPermission(registryService, userName, ProcessCenterConstants.AUDIT.PROCESS_PATH);
+
+                RegPermissionUtil.setPutPermission(registryService, userName, ProcessCenterConstants.AUDIT.PROCESS_PATH);
 
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -1692,6 +1691,71 @@ public class ProcessStore {
         }
     }
 
+    /**
+     * Delete the resource collection (directory) created in the governance registry for the process to keep its documents
+     *
+     * @param processName
+     * @param processVersion
+     * @throws ProcessCenterException
+     */
+    public void deleteDocumentResourceCollection(String processName, String processVersion)
+            throws ProcessCenterException, RegistryException {
+
+        RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+        String documentsResourceCollectionPath =
+                ProcessCenterConstants.DOC_CONTENT_PATH + processName + "/" + processVersion;
+        if (registryService != null) {
+            UserRegistry reg = registryService.getGovernanceSystemRegistry();
+            reg.delete(documentsResourceCollectionPath);
+        }
+    }
+
+    /**
+     * Delete process related text
+     *
+     * @param processName
+     * @param processVersion
+     * @return
+     * @throws ProcessCenterException
+     */
+    public String deleteProcessText(String processName, String processVersion) throws ProcessCenterException {
+        String processId = "";
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                String processTextPath = ProcessCenterConstants.PROCESS_TEXT_PATH + processName + "/" + processVersion;
+                if (reg.resourceExists(processTextPath)) {
+                    //delete the processText resource
+                    reg.delete(processTextPath);
+                }
+
+                //delete the processText resource's path defined in process.rxt
+                String processPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
+                if (reg.resourceExists(processPath)) {
+                    Resource processResource = reg.get(processPath);
+
+                    String processContent = new String((byte[]) processResource.getContent());
+                    Document processXML = stringToXML(processContent);
+                    processXML.getElementsByTagName("processtextpath").item(0).setTextContent("NA");
+
+                    String newProcessContent = xmlToString(processXML);
+                    processResource.setContent(newProcessContent);
+                    reg.put(processPath, processResource);
+
+                    Resource storedProcessAsset = reg.get(processPath);
+                    processId = storedProcessAsset.getUUID();
+                }
+            }
+        } catch (Exception e) {
+            String errMsg = "Error has been occurred while removing BPMN diagram in the process:" + processName + "-"
+                    + processVersion;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        }
+        return processId;
+    }
+
     public String updateDescription(String descriptionDetails, String user) throws ProcessCenterException {
         String processId = "NA";
         try {
@@ -1735,6 +1799,45 @@ public class ProcessStore {
         return processId;
     }
 
+    /**
+     * Delete the process related artifacts : Documents, BPMN model, Flow chart , Process text
+     *
+     * @param processName
+     * @param processVersion
+     */
+    public void deleteProcessRelatedArtifacts(String processName, String processVersion, String user) throws
+            ProcessCenterException {
+
+        String processResourcePath =
+                ProcessCenterConstants.GREG_PATH + ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/"
+                        + processVersion;
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                //delete Process Documents
+                String uploadedDocs = getUploadedDocumentDetails(processResourcePath);
+                JSONArray uploadedDocJSNArray = new JSONArray(uploadedDocs);
+
+                for (int i = 0; i < uploadedDocJSNArray.length(); i++) {
+                    JSONObject deleteDocument = new JSONObject();
+                    deleteDocument.put("processName", processName);
+                    deleteDocument.put("processVersion", processVersion);
+                    deleteDocument.put("removeDocument", uploadedDocJSNArray.get(i));
+                    deleteDocument(deleteDocument.toString(), user);
+                }
+                deleteDocumentResourceCollection(processName, processVersion);
+
+                //delete other associations
+                removeBPMNDiagram(processName, processVersion, user);
+                deleteFlowchart(processName, processVersion, user);
+                deleteProcessText(processName, processVersion);
+            }
+        } catch (Exception e) {
+            String errMsg =
+                    "Error in deleting process related aftifacts of the process " + processName + "-" + processVersion;
+            throw new ProcessCenterException(errMsg, e);
+        }
+    }
     /**
      * Adds a new tag for a process asset at the publisher
      *
