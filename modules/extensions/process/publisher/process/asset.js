@@ -104,6 +104,9 @@ asset.server = function (ctx) {
             }, {
                 url: 'get_role_permission',
                 path: 'get_role_permission.jag'
+            }, {
+                url: 'update_document_details',
+                path: 'update_document_details.jag'
             }],
             pages:[{
                 title: 'Log: ',

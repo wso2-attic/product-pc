@@ -47,24 +47,24 @@
             }
         });
 
-        $.ajax({
-            url: '/publisher/assets/process/apis/get_role_permission',
-            type: 'POST',
-            data: {
-                'processName': 'test'
-            },
-            success: function (data) {
-                if(data === 'false') {
-                    $("#Addprocess").click(function(e) {
-                        e.preventDefault();
-                        alertify.error('You have no publisher permissions to perform this task');
-                    });
-                }
-            },
-            error: function () {
-                alertify.error('Permission retrieving error');
-            }
-        });
+//        $.ajax({
+//            url: '/publisher/assets/process/apis/get_role_permission',
+//            type: 'POST',
+//            data: {
+//                'processName': 'test'
+//            },
+//            success: function (data) {
+//                if(data === 'false') {
+//                    $("#Addprocess").click(function(e) {
+//                        e.preventDefault();
+//                        alertify.error('You have no publisher permissions to perform this task');
+//                    });
+//                }
+//            },
+//            error: function () {
+//                alertify.error('Permission retrieving error');
+//            }
+//        });
 
     }
 

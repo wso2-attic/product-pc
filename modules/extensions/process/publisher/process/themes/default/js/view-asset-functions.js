@@ -62,6 +62,7 @@ window.onload = function () {
         }
     });
 
+
 };
 
 function getMainProcess() {
@@ -391,7 +392,7 @@ function removeDocumentConfirmListener(processName, processVersion, documentName
     confirmModal.modal('show');
 }
 
-function showDocument() {
+function showDocument(permission) {
     $("#overviewDiv").hide();
     $("#processTextContainer").hide();
     $("#processTextEditDiv").hide();
@@ -417,8 +418,22 @@ function showDocument() {
                         var cellDocName = row.insertCell(0);
                         var cellDocSummary = row.insertCell(1);
                         var cellDocAction = row.insertCell(2);
-                        cellDocName.innerHTML = response[i].name;
+                        cellDocName.innerHTML = '<a href="#" id="docName'+i+'" data-type="text" data-placement="top" data-title="Enter Owner">'+response[i].name+'</a>';
                         cellDocSummary.innerHTML = response[i].summary;
+
+                        $('#docName'+i).editable({
+                            type: 'text',
+                            url: '/publisher/assets/process/apis/update_document_details',
+                            pk: 1,
+                            display: function (value, response) {
+                                $('#docName'+i).html(value);
+                            },
+                            params: function (params) {
+                                params.processName = $('#view-header').text();
+                                params.processVersion = $('#process-version').text();
+                                return JSON.stringify(params);
+                            }
+                        });
 
                         if (response[i].url != "NA") {
                             var anchorUrlElement = document.createElement("a");
