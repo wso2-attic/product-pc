@@ -26,18 +26,26 @@ if (log.isDebugEnabled()) {
 
 var ps = new ProcessStore();
 var processDetails = String(request.getParameter("processInfo"));
-var userName = user.username;
 var responseObj = {};
 
 var server = require('store').server;
 var user = server.current(session);
+var userName = user.username;
 
 try {
     var status = ps.createProcess(processDetails, userName);
-    responseObj.error = false;
-    responseObj.content = status;
+
+    if(status == "duplicate") {
+        responseObj.error = true;
+        responseObj.content = "Process already exists";
+
+    } else {
+        responseObj.error = false;
+        responseObj.content = status;
+    }
     print(stringify(responseObj));
 } catch (error) {
+    log.info(error);
     responseObj.error = true;
     responseObj.content = "Process creating error.";
     print(stringify(responseObj));

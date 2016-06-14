@@ -392,6 +392,21 @@ function removeDocumentConfirmListener(processName, processVersion, documentName
     confirmModal.modal('show');
 }
 
+function updateDocumentDetails(i) {
+    $('#docName'+i).editable({
+        type: 'text',
+        url: '/publisher/assets/process/apis/update_document_details',
+        pk: 1,
+        display: function (value, response) {
+            $('#docName'+i).html(value);
+        },
+        params: function (params) {
+            params.processName = $('#view-header').text();
+            params.processVersion = $('#process-version').text();
+            return JSON.stringify(params);
+        }
+    });
+}
 
 function showDocument(writePermission) {
     $("#overviewDiv").hide();
@@ -441,22 +456,10 @@ function showDocument(writePermission) {
                         iconElement.style.fontSize = "21px";
                         cellDocTypeIcon.appendChild(iconElement);
 
-                        cellDocName.innerHTML = '<a href="#" id="docName'+i+'" data-type="text" data-placement="top" data-title="Enter Owner">'+response[i].name+'</a>';
+                        cellDocName.innerHTML = '<a href="#" id="docName'+i+'" data-type="text" data-placement="top" data-title="Enter Owner" onclick="updateDocumentDetails('+i+')">'+response[i].name+'</a>';
                         cellDocSummary.innerHTML = response[i].summary;
+                        $('#docName'+i).trigger("click");
 
-                        $('#docName'+i).editable({
-                            type: 'text',
-                            url: '/publisher/assets/process/apis/update_document_details',
-                            pk: 1,
-                            display: function (value, response) {
-                                $('#docName'+i).html(value);
-                            },
-                            params: function (params) {
-                                params.processName = $('#view-header').text();
-                                params.processVersion = $('#process-version').text();
-                                return JSON.stringify(params);
-                            }
-                        });
 
                         if (response[i].url != "NA") {
                             var anchorUrlElement = document.createElement("a");

@@ -20,7 +20,6 @@ import org.activiti.bpmn.converter.util.InputStreamProvider;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.image.ProcessDiagramGenerator;
 import org.activiti.image.impl.DefaultProcessDiagramGenerator;
-import org.apache.axis2.databinding.types.soapencoding.Integer;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -118,8 +117,14 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(userName);
+                RegPermissionUtil
+                        .setPutPermission(registryService, userName, ProcessCenterConstants.AUDIT.PROCESS_PATH);
+                String processAssetPath = "processes/" + processName + "/" + processVersion;
 
-                RegPermissionUtil.setPutPermission(registryService, userName, ProcessCenterConstants.AUDIT.PROCESS_PATH);
+                if(reg.resourceExists(processAssetPath)){
+                    String status = "duplicate";
+                    return status;
+                }
 
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -190,7 +195,6 @@ public class ProcessStore {
                 Resource processAsset = reg.newResource();
                 processAsset.setContent(processAssetContent);
                 processAsset.setMediaType("application/vnd.wso2-process+xml");
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
                 reg.put(processAssetPath, processAsset);
 
                 // associate lifecycle with the process asset, so that it can be promoted to published state
@@ -864,12 +868,12 @@ public class ProcessStore {
         return resourceString;
     }
 
-    public boolean updateOwner(String ownerDetails, String user) throws ProcessCenterException {
+    public boolean updateOwner(String ownerDetails, String userName) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
+                UserRegistry reg = registryService.getGovernanceUserRegistry(userName);
 
                 JSONObject processInfo = new JSONObject(ownerDetails);
                 String processName = processInfo.getString("processName");
@@ -1450,6 +1454,7 @@ public class ProcessStore {
 
     /**
      * Updates document details including name and summary
+     *
      * @param documentDetails
      * @param user
      * @throws ProcessCenterException
@@ -1466,7 +1471,7 @@ public class ProcessStore {
                 String processName = processInfo.getString("processName");
                 String processVersion = processInfo.getString("processVersion");
                 String documentName = processInfo.getString("value");
-                String docIndex = processInfo.getString("name").replace("docName","");
+                String docIndex = processInfo.getString("name").replace("docName", "");
 
                 String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
@@ -1477,7 +1482,7 @@ public class ProcessStore {
 
                 NodeList documentElements = ((Element) doc.getFirstChild()).getElementsByTagName("document");
                 if (documentElements.getLength() != 0) {
-                    Element documentElement = (Element) documentElements.item(java.lang.Integer.valueOf(docIndex));
+                    Element documentElement = (Element) documentElements.item(Integer.valueOf(docIndex));
                     documentElement.getElementsByTagName("name").item(0).setTextContent(documentName);
                 }
                 String newProcessContent = xmlToString(doc);
@@ -1805,8 +1810,8 @@ public class ProcessStore {
      * @param processName
      * @param processVersion
      */
-    public void deleteProcessRelatedArtifacts(String processName, String processVersion, String user) throws
-            ProcessCenterException {
+    public void deleteProcessRelatedArtifacts(String processName, String processVersion, String user)
+            throws ProcessCenterException {
 
         String processResourcePath =
                 ProcessCenterConstants.GREG_PATH + ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/"
@@ -1838,6 +1843,7 @@ public class ProcessStore {
             throw new ProcessCenterException(errMsg, e);
         }
     }
+
     /**
      * Adds a new tag for a process asset at the publisher
      *

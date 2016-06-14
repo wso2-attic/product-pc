@@ -29,7 +29,6 @@ var documentDetails = String(request.getContent());
 if (log.isDebugEnabled()) {
     log.debug("documentDetails: " + documentDetails);
 }
-log.info("documentDetails: " + documentDetails);
 
 var server = require('store').server;
 var user = server.current(session);
