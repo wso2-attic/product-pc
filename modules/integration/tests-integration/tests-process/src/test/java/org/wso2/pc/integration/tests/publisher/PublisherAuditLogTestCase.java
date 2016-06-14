@@ -69,7 +69,8 @@ public class PublisherAuditLogTestCase extends PCIntegrationBaseTest{
                 "Error while creating the process");
     }
 
-    @Test(groups = {"org.wso2.pc"}, description = "Getting audit logs for process", dependsOnMethods = "addProcess", dataProvider = "logPaths")
+    @Test(groups = {"org.wso2.pc"}, description = "Getting audit logs for process", dependsOnMethods = "addProcess",
+            dataProvider = "logPaths")
     public void getLogs(String path) throws Exception {
         publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
                 "publisher/assets/process/apis/audit_log");

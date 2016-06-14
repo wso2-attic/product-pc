@@ -85,7 +85,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
     /**
      * flag whether the registry is completely updated after adding a new process, so that advanced search queries can be made
      */
-    boolean flagRegReady = false;
+    private boolean flagRegReady = false;
 
     @BeforeTest(alwaysRun = true) public void init() throws Exception {
         super.init();

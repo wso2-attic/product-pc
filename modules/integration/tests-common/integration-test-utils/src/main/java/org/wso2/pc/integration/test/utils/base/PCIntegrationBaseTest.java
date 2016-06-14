@@ -48,8 +48,7 @@ public class PCIntegrationBaseTest {
 
     protected AutomationContext storeContext;
     protected AutomationContext publisherContext;
-
-    protected String defaultHTTPPort = ":443";
+    protected TestUserMode userMode;
 
     protected void init() throws Exception {
         init(TestUserMode.SUPER_TENANT_ADMIN);
