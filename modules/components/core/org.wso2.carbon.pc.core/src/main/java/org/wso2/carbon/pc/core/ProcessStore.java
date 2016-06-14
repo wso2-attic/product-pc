@@ -64,9 +64,7 @@ import java.util.zip.ZipInputStream;
 public class ProcessStore {
 
     private static final Log log = LogFactory.getLog(ProcessStore.class);
-
     private static final String mns = "http://www.wso2.org/governance/metadata";
-    private static final String OK = "OK";
 
     private Element append(Document doc, Element parent, String childName, String childNS) {
         Element childElement = doc.createElementNS(childNS, childName);
@@ -87,16 +85,14 @@ public class ProcessStore {
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         StringWriter writer = new StringWriter();
         transformer.transform(new DOMSource(doc), new StreamResult(writer));
-        String output = writer.getBuffer().toString().replaceAll("\n|\r", "");
-        return output;
+        return writer.getBuffer().toString().replaceAll("\n|\r", "");
     }
 
     private Document stringToXML(String xmlString) throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         builder = factory.newDocumentBuilder();
-        Document document = builder.parse(new InputSource(new StringReader(xmlString)));
-        return document;
+        return builder.parse(new InputSource(new StringReader(xmlString)));
     }
 
     public String createProcess(String processDetails, String userName) throws ProcessCenterException {
@@ -313,7 +309,6 @@ public class ProcessStore {
                             reg.put(bpmnResourcePath, bpmnResource);
 
                             // add bpmn asset
-                            String bpmnAssetName = entryName;
                             String displayName = entryName;
                             if (displayName.endsWith(".bpmn")) {
                                 displayName = displayName.substring(0, (entryName.length() - 5));
@@ -483,7 +478,8 @@ public class ProcessStore {
 
                 // add the bar asset
                 //                String barAssetContent = "<metadata xmlns='http://www.wso2.org/governance/metadata'>" +
-                //                        "<overview><name>" + barName + "</name><version>" + barVersion + "</version><description>This is a test process2</description></overview></metadata>";
+                //                        "<overview><name>" + barName + "</name><version>" + barVersion + "</version>
+                // <description>This is a test process2</description></overview></metadata>";
 
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -541,15 +537,11 @@ public class ProcessStore {
                             displayName = displayName.substring(0, (entryName.length() - 5));
                         }
                         String bpmnAssetPath = "bpmn/" + barName + "." + entryName + "/" + barVersion;
-                        //                        String bpmnAssetContent = "<metadata xmlns='http://www.wso2.org/governance/metadata'>" +
-                        //                                "<overview><name>" + bpmnAssetName + "</name><version>" + barVersion + "</version>" +
-                        //                                "<description>This is a BPMN asset</description></overview></metadata>";
 
                         Document bpmnDoc = docBuilder.newDocument();
                         Element bpmnRoot = bpmnDoc.createElementNS(mns, "metadata");
                         bpmnDoc.appendChild(bpmnRoot);
                         Element bpmnOverview = append(bpmnDoc, bpmnRoot, "overview", mns);
-                        //                        appendText(bpmnDoc, bpmnOverview, "name", mns, bpmnAssetName);
                         appendText(bpmnDoc, bpmnOverview, "name", mns, displayName);
                         appendText(bpmnDoc, bpmnOverview, "version", mns, barVersion);
                         appendText(bpmnDoc, bpmnOverview, "package", mns, barName);
@@ -569,9 +561,6 @@ public class ProcessStore {
                         appendText(doc, bpmnElement, "Name", mns, bpmnAssetName);
                         appendText(doc, bpmnElement, "Path", mns, bpmnAssetPath);
                         appendText(doc, bpmnElement, "Id", mns, bpmnAssetID);
-
-                        //                        reg.addAssociation(barAssetPath, bpmnAssetPath, "contains");
-                        //                        reg.addAssociation(bpmnAssetPath, bpmnResourcePath, "has_content");
                     }
                 }
 
@@ -603,8 +592,6 @@ public class ProcessStore {
                 barPath = barPath.substring("/_system/governance/".length());
                 Resource barAsset = reg.get(barPath);
                 String barContent = new String((byte[]) barAsset.getContent());
-
-                //                String barContent = "<metadata xmlns=\"http://www.wso2.org/governance/metadata\"><overview><name>b4444</name><version>1.0.0</version><description>hfrefgygeofyure</description></overview><content><contentPath>bpmn_archives_binary/b4444/1.0.0</contentPath></content><bpmn><Name>test_name</Name><Path>bpmn/b4444.TestProcess1.bpmn/1.0.0</Path><Id>815fe296-9363-4895-b386-23162b78bec4</Id></bpmn></metadata>";
 
                 JSONObject bar = new JSONObject();
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -712,8 +699,7 @@ public class ProcessStore {
 
     public String getEncodedBPMNImage(String path) throws ProcessCenterException {
         byte[] encoded = Base64.encodeBase64(getBPMNImage(path));
-        String imageString = new String(encoded);
-        return imageString;
+        return new String(encoded);
     }
 
     public String getProcesses() throws ProcessCenterException {
@@ -749,8 +735,6 @@ public class ProcessStore {
 
                 processDetails = result.toString();
 
-                int a = 1;
-
             } else {
                 String msg = "Registry service not available for retrieving processes.";
                 throw new ProcessCenterException(msg);
@@ -779,8 +763,7 @@ public class ProcessStore {
                 ProcessDiagramGenerator generator = new DefaultProcessDiagramGenerator();
                 InputStream imageStream = generator.generatePngDiagram(bpmnModel);
 
-                byte[] imageContent = IOUtils.toByteArray(imageStream);
-                return imageContent;
+                return IOUtils.toByteArray(imageStream);
             } else {
                 String msg = "Registry service not available for fetching the BPMN image.";
                 throw new ProcessCenterException(msg);
@@ -804,8 +787,7 @@ public class ProcessStore {
             ProcessDiagramGenerator generator = new DefaultProcessDiagramGenerator();
             InputStream imageStream = generator.generatePngDiagram(bpmnModel);
 
-            byte[] imageContent = IOUtils.toByteArray(imageStream);
-            return imageContent;
+            return IOUtils.toByteArray(imageStream);
         } catch (Exception e) {
             String msg = "Failed to fetch BPMN model: " + path;
             log.error(msg, e);
@@ -813,12 +795,15 @@ public class ProcessStore {
         }
     }
 
-    public void populateAssociations(Association[] associations, JSONArray jsonArray, UserRegistry reg)
-            throws Exception {
+
+    public void populateAssociations(Association[] associations, JSONArray jsonArray, UserRegistry reg,
+                                     String resourcePath) throws Exception {
         for (Association association : associations) {
             String associationPath = association.getDestinationPath();
+            if(associationPath.equals("/" + resourcePath)) {
+                continue;
+            }
             Resource associatedResource = reg.get(associationPath);
-
             String processContent = new String((byte[]) associatedResource.getContent());
             Document doc = stringToXML(processContent);
             Element rootElement = doc.getDocumentElement();
@@ -843,21 +828,19 @@ public class ProcessStore {
 
                 JSONObject conObj = new JSONObject();
                 JSONArray subprocessArray = new JSONArray();
-                Association[] aSubprocesses = reg
-                        .getAssociations(resourcePath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
-                populateAssociations(aSubprocesses, subprocessArray, reg);
+
+                Association[] aSubprocesses = reg.getAssociations(resourcePath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
+                populateAssociations(aSubprocesses, subprocessArray, reg, resourcePath);
                 conObj.put("subprocesses", subprocessArray);
 
                 JSONArray successorArray = new JSONArray();
-                Association[] aSuccessors = reg
-                        .getAssociations(resourcePath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
-                populateAssociations(aSuccessors, successorArray, reg);
+                Association[] aSuccessors = reg.getAssociations(resourcePath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                populateAssociations(aSuccessors, successorArray, reg, resourcePath);
                 conObj.put("successors", successorArray);
 
                 JSONArray predecessorArray = new JSONArray();
-                Association[] aPredecessors = reg
-                        .getAssociations(resourcePath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
-                populateAssociations(aPredecessors, predecessorArray, reg);
+                Association[] aPredecessors = reg.getAssociations(resourcePath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                populateAssociations(aPredecessors, predecessorArray, reg, resourcePath);
                 conObj.put("predecessors", predecessorArray);
 
                 resourceString = conObj.toString();
@@ -891,9 +874,9 @@ public class ProcessStore {
                 String newProcessContent = xmlToString(doc);
                 resource.setContent(newProcessContent);
                 reg.put(processAssetPath, resource);
-                reg.getRegistryContext().getLogWriter()
-                        .addLog(ProcessCenterConstants.GREG_PATH + processAssetPath, reg.getUserName(), LogEntry.UPDATE,
-                                "OWNER");
+
+                reg.getRegistryContext().getLogWriter().addLog(ProcessCenterConstants.GREG_PATH+processAssetPath,
+                        reg.getUserName(), LogEntry.UPDATE, "OWNER");
             }
 
         } catch (Exception e) {
@@ -982,9 +965,6 @@ public class ProcessStore {
 
                     // add current process as a predecessor to the successor process
                     Resource successorProcess = reg.get(successor.getString("path"));
-                    String successorContent = new String((byte[]) successorProcess.getContent());
-                    Document sdoc = stringToXML(successorContent);
-
                 }
             }
 
@@ -1781,17 +1761,13 @@ public class ProcessStore {
 
                 if (doc.getElementsByTagName("description").getLength() != 0)
                     doc.getElementsByTagName("description").item(0).setTextContent(processDescription);
-                else {
-
-                }
 
                 String newProcessContent = xmlToString(doc);
                 resource.setContent(newProcessContent);
                 reg.put(processAssetPath, resource);
-                reg.getRegistryContext().getLogWriter()
-                        .addLog(ProcessCenterConstants.GREG_PATH + processAssetPath, reg.getUserName(), LogEntry.UPDATE,
-                                "DESCRIPTION");
 
+                reg.getRegistryContext().getLogWriter().addLog(ProcessCenterConstants.GREG_PATH + processAssetPath,
+                        reg.getUserName(), LogEntry.UPDATE, "DESCRIPTION");
                 Resource storedProcess = reg.get(processAssetPath);
                 processId = storedProcess.getUUID();
             }
@@ -1948,8 +1924,8 @@ public class ProcessStore {
 
                 for (String role : roles) {
 
-                    if (role.equalsIgnoreCase("Internal/everyone") || role.equalsIgnoreCase("Internal/store") || role
-                            .equalsIgnoreCase("Internal/publisher")) {
+                    if (role.equalsIgnoreCase("Internal/everyone")||role.equalsIgnoreCase("Internal/store")||
+                            role.equalsIgnoreCase("Internal/publisher")) {
                         continue;
                     } else {
                         //add read permission
@@ -1959,9 +1935,9 @@ public class ProcessStore {
                         AddRolePermissionUtil.addRolePermission(userRegistry, path, role, ProcessCenterConstants.WRITE,
                                 ProcessCenterConstants.ALLOW);
                         //add authorize permission
-                        AddRolePermissionUtil
-                                .addRolePermission(userRegistry, path, role, ProcessCenterConstants.AUTHORIZE,
-                                        ProcessCenterConstants.ALLOW);
+
+                        AddRolePermissionUtil.addRolePermission(userRegistry, path, role, ProcessCenterConstants.AUTHORIZE,
+                                ProcessCenterConstants.ALLOW);
                     }
                 }
                 status = "Permission set successfully";
@@ -1971,8 +1947,6 @@ public class ProcessStore {
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
-
         return status;
-
     }
 }
