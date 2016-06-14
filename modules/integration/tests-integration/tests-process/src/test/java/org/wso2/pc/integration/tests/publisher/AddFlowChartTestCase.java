@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
@@ -39,6 +40,11 @@ import java.util.HashMap;
 
 public class AddFlowChartTestCase extends PCIntegrationBaseTest{
 
+    @Factory(dataProvider = "userModeProvider")
+    public AddFlowChartTestCase(TestUserMode userMode) {
+        this.userMode = userMode;
+    }
+
     private String cookieHeader;
     private GenericRestClient genericRestClient;
     private HashMap<String, String> queryMap;
@@ -49,7 +55,7 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
 
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
-        super.init();
+        super.init(userMode);
         String publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
                 replace("services", "publisher/apis");
         genericRestClient = new GenericRestClient();
@@ -134,7 +140,10 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
     @DataProvider
     private static Object[][] userModeProvider() {
         return new TestUserMode[][]{
-                new TestUserMode[]{TestUserMode.SUPER_TENANT_ADMIN}
+                new TestUserMode[]{TestUserMode.SUPER_TENANT_ADMIN},
+//                new TestUserMode[]{TestUserMode.SUPER_TENANT_USER},
+//                new TestUserMode[]{TestUserMode.TENANT_ADMIN},
+//                new TestUserMode[]{TestUserMode.TENANT_USER}
         };
     }
 }

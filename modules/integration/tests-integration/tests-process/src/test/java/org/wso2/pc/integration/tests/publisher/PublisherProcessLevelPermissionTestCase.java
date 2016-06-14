@@ -43,15 +43,15 @@ import java.util.HashMap;
 
 public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTest {
 
-    AutomationContext automationContextUser1,automationContextUser2;
-    String cookieHeader1,cookieHeader2;
-    String publisherUrl ,APIUrl;
+    private AutomationContext automationContextUser1;
+    private String cookieHeader1;
+    private String publisherUrl ,APIUrl;
     GenericRestClient genericRestClient;
     String jSessionId;
     HashMap<String, String> queryMap;
     HashMap<String, String> headerMap;
     String resourcePath;
-    String requestBody,processId,Path;
+    private String requestBody,processId,Path;
 
     @BeforeClass(alwaysRun = true)
     public void createProcess() throws Exception {
@@ -112,7 +112,8 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
     }
 
     /**
-     * When a process is created only the process creater can edit and give permission for the process. This test case is to test allowing write permission for another role.
+     * When a process is created only the process creater can edit and give permission for the process. This test case
+     * is to test allowing write permission for another role.
      * @throws IOException
      * @throws JSONException
      * @throws XPathExpressionException
@@ -179,8 +180,8 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
 
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
-        automationContextUser2=new AutomationContext("PC","publisher","superTenant","user2");
-        cookieHeader2=login(automationContextUser2);
+        AutomationContext automationContextUser2 = new AutomationContext("PC", "publisher", "superTenant", "user2");
+        String cookieHeader2 = login(automationContextUser2);
         APIUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
                 "publisher/assets/process/apis/update_description");
 
@@ -201,7 +202,8 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
 
     }
 
-    @Test(groups = {"org.wso2.pc"}, description = "Test edit process without write permission", dependsOnMethods = { "removePermission" })
+    @Test(groups = {"org.wso2.pc"}, description = "Test edit process without write permission",
+            dependsOnMethods = { "removePermission" })
     public void checkEditProcessWithoutReadPermission() throws Exception {
 
         boolean status = isPermittedResource("role2","writeDeny",cookieHeader1);
