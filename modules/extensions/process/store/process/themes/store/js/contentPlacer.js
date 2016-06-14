@@ -40,16 +40,16 @@ $(document).ready(function () {
 
     });
 
-    $("#btnView").show(); //by default hide
-    $("#btnCollapse").hide();
+    $("#btnView").hide(); //by default hide
+    $("#btnCollapse").show();
     $("#collapsedProcessName").hide();
 
     $("#btnView").on("click", function () {
-        $(".asset-description").hide();
-        $(".margin-bottom-double").hide();
+        $(".asset-description").show();
+        $(".margin-bottom-double").show();
         $("#btnView").hide();
         $("#btnCollapse").show();
-        $("#collapsedProcessName").show();
+        $("#collapsedProcessName").hide();
 
         viewFlag = true;
     });
@@ -58,9 +58,9 @@ $(document).ready(function () {
         viewFlag = false;
         $("#btnView").show();
         $("#btnCollapse").hide();
-        $(".asset-description").show();
-        $(".margin-bottom-double").show();
-        $("#collapsedProcessName").hide();
+        $(".asset-description").hide();
+        $(".margin-bottom-double").hide();
+        $("#collapsedProcessName").show();
     });
     //get associations on click
     $("#tab-relations").on("click", function () {
