@@ -30,10 +30,11 @@ var userName = user.username;
 var responseObj = {};
 
 var server = require('store').server;
+var ref = require('utils').time;
 var user = server.current(session);
 
 try {
-    var status = ps.createProcess(processDetails, userName);
+    var status = ps.createProcess(processDetails, userName, ref.getCurrentTime());
     responseObj.error = false;
     responseObj.content = status;
     print(stringify(responseObj));
