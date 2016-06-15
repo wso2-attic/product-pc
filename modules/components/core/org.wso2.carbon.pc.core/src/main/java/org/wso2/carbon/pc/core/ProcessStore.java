@@ -95,7 +95,7 @@ public class ProcessStore {
         return builder.parse(new InputSource(new StringReader(xmlString)));
     }
 
-    public String createProcess(String processDetails, String userName) throws ProcessCenterException {
+    public String createProcess(String processDetails, String userName, String processCreatedTime) throws ProcessCenterException {
 
         String processId = "FAILED TO ADD PROCESS";
         try {
@@ -129,6 +129,7 @@ public class ProcessStore {
                 appendText(doc, overviewElement, "name", mns, processName);
                 appendText(doc, overviewElement, "version", mns, processVersion);
                 appendText(doc, overviewElement, "owner", mns, processOwner);
+                appendText(doc, overviewElement, "createdtime", mns, processCreatedTime);
 
                 if ((processDescription != null) && (!processDescription.isEmpty())) {
                     appendText(doc, overviewElement, "description", mns, processDescription);
