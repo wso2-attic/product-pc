@@ -805,6 +805,7 @@ public class ProcessStore {
             associatedProcessDetails.put("name", overviewElement.getElementsByTagName("name").item(0).getTextContent());
             associatedProcessDetails.put("path", associatedResource.getPath());
             associatedProcessDetails.put("id", associatedResource.getId());
+            associatedProcessDetails.put("processId",associatedResource.getUUID());
             associatedProcessDetails.put("version", overviewElement.getElementsByTagName("version").item(0).getTextContent());
             jsonArray.put(associatedProcessDetails);
         }

@@ -89,7 +89,9 @@ $(document).ready(function () {
                         for (var i = 0; i < associationsObj.subprocesses.length; i++) {
                             subAssets.data.push({
                                 "id": associationsObj.subprocesses[i].id,
-                                "name": associationsObj.subprocesses[i].name
+                                "name": associationsObj.subprocesses[i].name,
+                                "processId": associationsObj.subprocesses[i].processId
+
                             });
                         }
                     }
@@ -98,7 +100,8 @@ $(document).ready(function () {
                         for (var i = 0; i < associationsObj.successors.length; i++) {
                             sucAssets.data.push({
                                 "id": associationsObj.successors[i].id,
-                                "name": associationsObj.successors[i].name
+                                "name": associationsObj.successors[i].name,
+                                "processId": associationsObj.subprocesses[i].processId
                             });
                         }
                     }
@@ -107,13 +110,14 @@ $(document).ready(function () {
                         for (var i = 0; i < associationsObj.predecessors.length; i++) {
                             preAssets.data.push({
                                 "id": associationsObj.predecessors[i].id,
-                                "name": associationsObj.predecessors[i].name
+                                "name": associationsObj.predecessors[i].name,
+                                "processId": associationsObj.subprocesses[i].processId
                             });
                         }
                     }
 
                     for (var i = 0; i < preAssets.data.length; i++) {
-                        var id = preAssets.data[i].id;
+                        var id = preAssets.data[i].processId;
                         id = id.trim();
                         // check if predecessor is published
                         document.getElementById("predecessor-list-group").innerHTML +=
@@ -121,7 +125,7 @@ $(document).ready(function () {
                             '<span class="glyphicon glyphicon-chevron-right"></span> ' + preAssets.data[i].name + '</a></li>';
                     }
                     for (var i = 0; i < subAssets.data.length; i++) {
-                        var id = subAssets.data[i].id;
+                        var id = subAssets.data[i].processId;
                         id = id.trim();
                         // check if predecessor is published
                         document.getElementById("subprocess-list-group").innerHTML +=
@@ -129,7 +133,7 @@ $(document).ready(function () {
                             '<span class="glyphicon glyphicon-chevron-right"></span> ' + subAssets.data[i].name + '</a></li>';
                     }
                     for (var i = 0; i < sucAssets.data.length; i++) {
-                        var id = sucAssets.data[i].id;
+                        var id = sucAssets.data[i].processId;
                         id = id.trim();
                         document.getElementById("successor-list-group").innerHTML +=
                             '<li class="list-group-item"><a href = /store/assets/process/details/' + id + '>' +
