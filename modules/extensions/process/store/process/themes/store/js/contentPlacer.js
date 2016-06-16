@@ -76,6 +76,7 @@ $(document).ready(function () {
                 },
                 success: function (result) {
                     var associationsObj = JSON.parse(result);
+
                     var preAssets = {
                         data: []
                     };
@@ -85,14 +86,18 @@ $(document).ready(function () {
                     var sucAssets = {
                         data: []
                     };
+
                     if (associationsObj.subprocesses.length > 0) {
+
                         for (var i = 0; i < associationsObj.subprocesses.length; i++) {
                             subAssets.data.push({
                                 "id": associationsObj.subprocesses[i].id,
                                 "name": associationsObj.subprocesses[i].name,
-                                "processId": associationsObj.subprocesses[i].processId
+                                "processId": associationsObj.subprocesses[i].processId,
+                                "LCState": associationsObj.subprocesses[i].LCState
 
                             });
+
                         }
                     }
 
@@ -101,7 +106,8 @@ $(document).ready(function () {
                             sucAssets.data.push({
                                 "id": associationsObj.successors[i].id,
                                 "name": associationsObj.successors[i].name,
-                                "processId": associationsObj.subprocesses[i].processId
+                                "processId": associationsObj.successors[i].processId,
+                                "LCState": associationsObj.successors[i].LCState
                             });
                         }
                     }
@@ -111,7 +117,8 @@ $(document).ready(function () {
                             preAssets.data.push({
                                 "id": associationsObj.predecessors[i].id,
                                 "name": associationsObj.predecessors[i].name,
-                                "processId": associationsObj.subprocesses[i].processId
+                                "processId": associationsObj.predecessors[i].processId,
+                                "LCState": associationsObj.predecessors[i].LCState
                             });
                         }
                     }
@@ -120,24 +127,34 @@ $(document).ready(function () {
                         var id = preAssets.data[i].processId;
                         id = id.trim();
                         // check if predecessor is published
-                        document.getElementById("predecessor-list-group").innerHTML +=
-                            '<li class="list-group-item"><a href = /store/assets/process/details/' + id + '>' +
-                            '<span class="glyphicon glyphicon-chevron-right"></span> ' + preAssets.data[i].name + '</a></li>';
+                        var processNameStyle = '<span class="glyphicon glyphicon-chevron-right"></span>' + preAssets.data[i].name;
+
+                        if(preAssets.data[i].LCState == 'Published'){
+                            processNameStyle = '<a href = /store/assets/process/details/' + id + '>' + processNameStyle + '</a>';
+                        }
+                        document.getElementById("predecessor-list-group").innerHTML +='<li class="list-group-item">'+ processNameStyle + '</li>';
                     }
                     for (var i = 0; i < subAssets.data.length; i++) {
+
                         var id = subAssets.data[i].processId;
                         id = id.trim();
                         // check if predecessor is published
-                        document.getElementById("subprocess-list-group").innerHTML +=
-                            '<li class="list-group-item"><a href = /store/assets/process/details/' + id + '>' +
-                            '<span class="glyphicon glyphicon-chevron-right"></span> ' + subAssets.data[i].name + '</a></li>';
+                        var processNameStyle = '<span class="glyphicon glyphicon-chevron-right"></span>' + subAssets.data[i].name;
+                        if(subAssets.data[i].LCState == 'Published'){
+                            processNameStyle = '<a href = /store/assets/process/details/' + id + '>' + processNameStyle + '</a>';
+                        }
+
+                        document.getElementById("subprocess-list-group").innerHTML +='<li class="list-group-item">'+ processNameStyle + '</li>';
                     }
                     for (var i = 0; i < sucAssets.data.length; i++) {
                         var id = sucAssets.data[i].processId;
                         id = id.trim();
-                        document.getElementById("successor-list-group").innerHTML +=
-                            '<li class="list-group-item"><a href = /store/assets/process/details/' + id + '>' +
-                            '<span class="glyphicon glyphicon-chevron-right"></span> ' + sucAssets.data[i].name + '</a></li>';
+                        var processNameStyle = '<span class="glyphicon glyphicon-chevron-right"></span>' + sucAssets.data[i].name;
+
+                        if(sucAssets.data[i].LCState == 'Published'){
+                            processNameStyle = '<a href = /store/assets/process/details/' + id + '>' + processNameStyle + '</a>';
+                        }
+                        document.getElementById("successor-list-group").innerHTML +='<li class="list-group-item">'+ processNameStyle + '</li>';
                     }
 
                 }
@@ -280,5 +297,4 @@ $(document).ready(function () {
     } else {
         $("#tab-properties").html("No text content available");
     }
-
 });

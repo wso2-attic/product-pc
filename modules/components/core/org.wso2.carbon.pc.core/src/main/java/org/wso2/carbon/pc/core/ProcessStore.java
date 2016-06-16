@@ -807,6 +807,8 @@ public class ProcessStore {
             associatedProcessDetails.put("id", associatedResource.getId());
             associatedProcessDetails.put("processId",associatedResource.getUUID());
             associatedProcessDetails.put("version", overviewElement.getElementsByTagName("version").item(0).getTextContent());
+            associatedProcessDetails.put("LCState", associatedResource.getProperty("registry.lifecycle."+
+                    associatedResource.getProperty("registry.LC.name")+".state"));
             jsonArray.put(associatedProcessDetails);
         }
     }
