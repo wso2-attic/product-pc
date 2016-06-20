@@ -1444,7 +1444,7 @@ public class ProcessStore {
                 reg.put(bpmnDesignContentPath, bpmnDesignContentResource);
                 String processPath = "processes/" + processName + "/" + processVersion;
 
-                // update process by linking the pdf asset
+
                 Resource processAsset = reg.get(processPath);
                 byte[] processContentBytes = (byte[]) processAsset.getContent();
                 String processContent = new String(processContentBytes);
@@ -1459,7 +1459,7 @@ public class ProcessStore {
                 processId = storedProcessAsset.getUUID();
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("Error occured when uploading the bpmn design" ,e);
         }
         return processId;
     }

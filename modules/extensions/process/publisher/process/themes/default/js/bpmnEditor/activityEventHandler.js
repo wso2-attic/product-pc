@@ -55,12 +55,11 @@
          }
      } else {
             // In the same node
-            if (stateOfProcessDiagram.dragActive) {               
+            if (stateOfProcessDiagram.dragActive) {
                 stateOfProcessDiagram.dragActive = false;
             } else {
-               
-                if (d3.event.shiftKey) {
-                } else {
+
+                if (!d3.event.shiftKey) {
                     if (stateOfProcessDiagram.selectedArrowLink) {
                         bpmnProcessDiagram.removeSelectedFromArrowLink();
                     }
