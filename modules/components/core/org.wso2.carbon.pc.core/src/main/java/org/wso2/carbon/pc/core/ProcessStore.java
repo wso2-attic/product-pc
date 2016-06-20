@@ -1506,6 +1506,29 @@ public class ProcessStore {
     }
 
     /**
+     * Get process related tags as a String in which the seperate tags are delimitted by 3 hashes(###)
+     * i.e.  tag1###tag2###tag3
+     *
+     * @param processName
+     * @param processVersion
+     * @return
+     * @throws RegistryException
+     */
+    public String getProcessTags(String processName, String processVersion) throws RegistryException {
+        StringBuffer tagsSb = new StringBuffer();
+        RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+        if (registryService != null) {
+            UserRegistry reg = registryService.getGovernanceSystemRegistry();
+            String processPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
+            Tag[] tags = reg.getTags(processPath);
+            for (Tag tag : tags) {
+                tagsSb.append("###" + tag.getTagName());
+            }
+        }
+        return tagsSb.toString();
+    }
+
+    /**
      * @param processName
      * @param processVersion
      * @param flowchartJson
