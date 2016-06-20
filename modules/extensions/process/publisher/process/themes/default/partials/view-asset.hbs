@@ -1,230 +1,124 @@
-<h2 id="view-header">{{assets.tables.[0].fields.name.value}}</h2>
 <br/>
+<span id="view-header" name="processNameHeader" class="label label-default" style="font-size: 20px;margin-left: 25px;">
+    {{assets.tables.[0].fields.name.value}}
+</span>
+<br/>
+<hr style="margin-top: 15px; margin-bottom: 30px;border-width: 7px;">
 <div id="overviewDiv">
-    <table class="table table-responsive" style="width: 24cm;border-bottom:0px !important;">
-        <tbody>
+    <table style="width: 80%;">
         <tr>
-            <td width="20%" style="border: 0px !important;">Version:</td>
-            <td width="60%" id="process-version"
-                style="border: 0px !important;">{{assets.tables.[0].fields.version.value}}</td>
-        </tr>
-        <tr>
-            <td width="20%" style="border: 0px !important;">Owner:</td>
-            {{#if permission}}
-            <td title="Click here to edit" width="60%" id="process-owner" style="border: 0px !important;">
-                <a href="#" id="owner" data-type="text" data-placement="top" data-title="Enter Owner">
-                    {{assets.tables.[0].fields.owner.value}}
-                </a>
-            {{else}}
-                <td width="40%" style="border: 0px !important;" >{{assets.tables.[0].fields.owner.value}}</td>
-            {{/if}}
+            <td id="deatailsCellTd" ALIGN="LEFT" VALIGN="TOP" style="padding-left: 2%;width: 50%;">
+
+                <div id="deatailsCellDiv" class="panel panel-info" style="width: 95%;border-width: 4px;border-color:
+                #60b3f0 ">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading" style="background-color: #60b3f0;color: #fff;">Process Name
+                        : {{assets.tables.[0].fields.name.value}}</div>
+                    <div class="panel-body">
+                        <p style="line-height: 1.8;"><span class="label label-primary" style="background-color: rgb(131, 189, 240);
+                        ">Description</span>&nbsp;: &nbsp;&nbsp;{{assets.tables.[0].fields.description.value}}</p>
+                    </div>
+
+                    <!-- Table -->
+                    <div style="padding: 8px">
+                        <table class="table table-striped">
+                            <tbody style="font-size: 11px">
+                            <tr>
+                                <td>
+                                    <span class="label label-primary" style="background-color: rgb(179, 179, 179);">
+                                    Version
+                                    </span>
+                                </td>
+                                <td>{{assets.tables.[0].fields.version.value}}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="label label-primary" style="background-color: rgb(179, 179, 179);">
+                                    Created By(owner)
+                                    </span>
+                                </td>
+                                <td>{{assets.tables.[0].fields.owner.value}}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="label label-primary" style="background-color: rgb(179, 179, 179);">
+                                    Created Time
+                                    </span>
+                                </td>
+                                <td>{{assets.tables.[0].fields.createdtime.value}}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="label label-primary" style="background-color: rgb(179, 179, 179);">
+                                        Life Cycle State
+                                    </span>
+                                </td>
+                                <td>{{assets.lifecycleState}}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="label label-primary" style="background-color: rgb(179, 179, 179);">
+                                        Tags
+                                    </span>
+                                </td>
+                                <td>
+                                    {{#each processTagsArray}}
+                                        <span class="label label-primary" style="background-color: rgb(153, 153, 255);
+                                        ">{{this}}</span>
+                                    {{/each}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="label label-primary" style="background-color: rgb(179, 179, 179);">
+                                        Business User
+                                    </span>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="label label-primary" style="background-color: rgb(179, 179, 179);">
+                                        Business User Email
+                                    </span>
+                                </td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </td>
+
+            <td name="verticalSeperator" style="height: 100%; background-color: rgb(234, 237, 242); width:7px"></td>
+
+            <td id="thumbnailTd" ALIGN="LEFT" VALIGN="TOP" style="padding-left: 8%; padding-top: 5%;">
+                {{#if customThumbnailAvailable}}
+                    <div class="panel panel-success" style="width: 250px;border-width: 5px;border-color: #747fba; ">
+                        <div>
+                            <div>
+                                <div class="ast-name-img">
+                                    <img id="tuumbnailImg" alt="thumbnail" class="square-element img-thumbnail"
+                                         src="/publisher/storage/process/{{assets.id}}/images_thumbnail"
+                                         style="max-width: 100%;padding: 8px">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="ast-desc" style="margin-left: 30%;">
+                                <span class="label label-success">V-{{assets.tables.[0].fields.version.value}}</span>
+                            <span class="label label-primary">
+                                <i class="icon-circle lc-state-Initial"></i>
+                                Initial
+                            </span>
+                            </div>
+                            <br class="c-both">
+                        </div>
+                        <br class="c-both">
+                    </div>
+                {{/if}}
             </td>
         </tr>
-        <tr>
-            <td width="20%" style="border: 0px !important;">Description:</td>
-            {{#if permission}}
-            <td title="Click here to edit" width="60%" id="process-description" style="border: 0px !important;">
-                <a href="#" id="description" data-type="textarea" data-placement="top" data-title="Enter Description">
-                    {{assets.tables.[0].fields.description.value}}
-                </a>
-            {{else}}
-                <td width="40%" style="border: 0px !important;" >{{assets.tables.[0].fields.description.value}}</td>
-            {{/if}}
-            </td>
-        </tr>
-        </tbody>
     </table>
-
-    <div class="control-group" style="display: inline-block">
-        {{#if processTextAvaliable}}
-            <div id="vtdiv">
-                <button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View {{#if permission}}/Edit {{/if}} Process Text</button>
-            </div>
-            <div id="atdiv">
-                <button id="addTextButton" class="btn btn-primary" {{#unless permission}} disabled {{/unless }} onclick="showTextEditor()" style="display: none">
-                    Describe process in text
-                </button>
-            </div>
-        {{else}}
-            <div id="vtdiv">
-                <button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View {{#if permission}}/Edit {{/if}}Process Text
-                </button>
-            </div>
-            <div id="atdiv">
-                <button id="addTextButton" class="btn btn-primary" {{#unless permission}} disabled {{/unless }} onclick="showTextEditor()">Describe process in text
-                </button>
-            </div>
-        {{/if}}
-    </div>
-
-    <div class="control-group" style="display: inline-block">
-        {{#if bpmnAvaliable}}
-            <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
-            <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
-        {{else}}
-            <button class="btn btn-primary" {{#unless permission}} disabled {{/unless }} onclick="showBPMNUploader()">Associate a BPMN model</button>
-        {{/if}}
-    </div>
-
-    <div class="control-group" style="display: inline-block">
-        {{#if documentAvailable}}
-            <div id="sddiv">
-                <button id="viewDocumentButton" class="btn btn-primary" onclick="showDocument({{#if permission}}true{{else}}false{{/if}})">View Documents</button>
-            </div>
-        {{else}}
-            <div id="addiv">
-                <button id="addDocumentButton" class="btn btn-primary" {{#unless permission}} disabled {{/unless }} onclick="associateDoc()">Associate Documents
-                </button>
-            </div>
-        {{/if}}
-    </div>
-
-    <div class="control-group" style="display: inline-block;">
-        {{#if flowchartAvailable}}
-            <div id="sfdiv">
-                <button id="showFlowchartButton" class="btn btn-primary"
-                        onclick="showFlowchartEditor('{{assets.tables.[0].fields.name.value}}', '{{flowchartPath}}')">
-                    {{#if permission}}Edit{{else}}View{{/if}} Flowchart
-                </button>
-            </div>
-        {{else}}
-            <div id="aFdiv">
-                <button id="addFlowchartButton" class="btn btn-primary" {{#unless permission}} disabled {{/unless }} onclick="associateEditorFlowChart()">Associate
-                    Flowchart
-                </button>
-            </div>
-        {{/if}}
-    </div>
-    <br/><br/>
-
-    <form class="form-horizontal">
-        <div class="control-group">
-
-            <h2 class="field-title">
-                <a class="collapsing-h2 collapsed" aria-expanded="true" href="#subprocess" data-toggle="collapse"
-                   rel="tooltip" title="List of subprocesses for a given process">
-                    <i class="cu-btn-exp-col btn-collapsed">Subprocess</i>
-                </a>
-            </h2>
-
-            <div id="subprocess" class="responsive-form-container collapse out" aria-expanded="true" style="">
-                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
-                    &nbsp;
-                </div>
-                <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                    <div class="add-unbounded-row">
-                        {{#if permission}}
-                            <a data-name="subprocess" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
-                                Subprocess</a>{{/if}}
-                        <button {{#unless permission}}  style="display: none;" {{/unless }} class="btn btn-primary view" data-name="subprocess" id="search-process-view">
-                            <i class="fa fa-search"></i> Search Process
-                        </button>
-                    </div>
-                    <table class="tablex cu-data-table js-unbounded-table" id="table_subprocess">
-                        <thead>
-                        <tr>
-                            <th style="background: none;"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {{#each involveProcessList.subprocesses}}
-                            <tr>
-                                <td valign="top" style="width: 90%;"><span id="subprocess_Name"
-                                                                           class="subprocess_Name">{{this.name}}-{{this.version}}</span></td>
-                                <td style="width: 5%;"></td>
-                                {{#if permission}} <td style="width: 5%;"><label class="remove-process" onclick="deleteSubprocess(this)"><i
-                                        class="fa fa-trash"></i></label></td>{{/if}}
-                            </tr>
-                        {{/each}}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <h2 class="field-title">
-                <a class="collapsing-h2 collapsed" aria-expanded="true" href="#successor" data-toggle="collapse"
-                   rel="tooltip" title="List of successor processes for a given process">
-                    <i class="cu-btn-exp-col btn-collapsed">Successor</i>
-                </a>
-            </h2>
-
-            <div id="successor" class="responsive-form-container collapse out" aria-expanded="true" style="">
-                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
-                    &nbsp;
-                </div>
-                <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                    <div class="add-unbounded-row">
-                        {{#if permission}}
-                            <a data-name="successor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
-                            Successor</a>{{/if}}
-                        <button {{#unless permission}} style="display: none;" {{/unless }} class="btn btn-primary view" data-name="successor" id="search-process-view">
-                            <i class="fa fa-search"></i> Search Process
-                        </button>
-                    </div>
-                    <table class="tablex cu-data-table js-unbounded-table" id="table_successor">
-                        <thead>
-                        <tr>
-                            <th style="background: none;"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {{#each involveProcessList.successors}}
-                            <tr>
-                                <td valign="top" style="width: 90%;"><span id="successor_Name"
-                                                                           class="successor_Name">{{this.name}}-{{this.version}}</span></td>
-                                <td style="width: 5%;"></td>
-                                {{#if permission}} <td style="width: 5%;"><label class="remove-process" onclick="deleteSuccessor(this)"><i
-                                        class="fa fa-trash"></i></label></td>{{/if}}
-                            </tr>
-                        {{/each}}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-
-            <h2 class="field-title">
-                <a class="collapsing-h2 collapsed" aria-expanded="true" href="#predecessor" data-toggle="collapse"
-                   rel="tooltip" title="List of predecessor processes for a given process">
-                    <i class="cu-btn-exp-col btn-collapsed">Predecessor</i>
-                </a>
-            </h2>
-
-            <div id="predecessor" class="responsive-form-container collapse out" aria-expanded="true" style="">
-                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
-                    &nbsp;
-                </div>
-                <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                    <div class="add-unbounded-row">
-                        {{#if permission}}<a data-name="predecessor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
-                            Predecessor</a> {{/if}}
-                        <button {{#unless permission}} style="display: none;" {{/unless }} class="btn btn-primary view" data-name="predecessor" id="search-process">
-                            <i class="fa fa-search"></i> Search Process
-                        </button>
-                    </div>
-                    <table class="tablex cu-data-table js-unbounded-table" id="table_predecessor">
-                        <thead>
-                        <tr>
-                            <th style="background: none;"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {{#each involveProcessList.predecessors}}
-                            <tr>
-                                <td valign="top" style="width: 90%;"><span id="predecessor_Name"
-                                                                           class="predecessor_Name">{{this.name}}-{{this.version}}</span></td>
-                                <td style="width: 5%;"></td>
-                                {{#if permission}} <td style="width: 5%;"><label class="remove-process" onclick="deletePredecessor(this)"><i
-                                        class="fa fa-trash"></i></label></td> {{/if}}
-                            </tr>
-                        {{/each}}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-    </form>
 </div>
 
 <div id="processTextContainer" style="display: none">

@@ -345,6 +345,24 @@ asset.renderer = function(ctx) {
             else{
                 page.permission=false;
             }
+
+            var thumbnail = page.assets.tables[6].fields.thumbnail.value;
+            if (thumbnail === "images_thumbnail") {
+                page.customThumbnailAvailable = true;
+            } else {
+                page.customThumbnailAvailable = false;
+            }
+
+            var processName = page.assets.tables[0].fields.name.value; //tables[0].fields["Name"].value;
+            var processVersion = page.assets.tables[0].fields.version.value;
+            try {
+                var processTags = ps.getProcessTags(processName, processVersion);
+                var ps = new ProcessStore();
+                page.processTagsArray = processTags.split("###");
+            } catch (e) {
+                log.error("Error in retrieving process tags. Exception:" + e);
+            }
+
         },
         create: function(page) {
             var tables = page.assets.tables;
