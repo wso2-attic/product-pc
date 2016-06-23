@@ -1424,10 +1424,10 @@ public class ProcessStore {
     }
 
     /**
-     *
-     * @param processName
-     * @param processVersion
-     * @param bpmndesignJson
+     * Uploads the json file/string to the registry against the process id
+     * @param processName name of the process
+     * @param processVersion version of the process
+     * @param bpmndesignJson json to be included in the registry
      * @return the bpmn diagram json string for a process
      */
     public String uploadBpmnDesign(String processName, String processVersion, String bpmndesignJson) {
