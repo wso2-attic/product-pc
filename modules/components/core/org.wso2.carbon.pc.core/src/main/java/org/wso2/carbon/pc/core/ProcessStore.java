@@ -1432,7 +1432,9 @@ public class ProcessStore {
      */
     public String uploadBpmnDesign(String processName, String processVersion, String bpmndesignJson) {
         String processId = "NA";
-        log.debug("Creating bpmn design...");
+        if (log.isDebugEnabled()) {
+            log.debug("Creating bpmn design...");
+        }
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
