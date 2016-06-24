@@ -14,7 +14,13 @@
   ~ limitations under the License.
   -->
 <div class="form-group" xmlns="http://www.w3.org/1999/html">
-    <div class="title">Details</div>
+    <div class="title">
+        <div class="input-group">
+            Details:
+            <label id="processName"></label>_
+            <label id="processVersion"></label>
+        </div>
+    </div>
     <div class="horizontal_line"></div>
     <div class="sidebar-wrapper" id="left-sidebar"
          style="width: 260px; left: 0px; height: 399.883px; padding-top: 50px;" data-side="left" data-width="100"
@@ -22,13 +28,13 @@
         <div id="content">
             <ul class="nav nav-stacked">
                 <li id="textEditor"><a href="#" onclick="showTextEditor(this)">Describe process in
-                    text<i id="textadded" class="" style="color: red"></i></a></li>
+                    text<i id="textadded" class="" style="color: red;padding-left: 20px;"></i></a></li>
                 <li id="bpmn"><a href="#" onclick="associateBPMN(this)">Associate BPMN
-                    model<i id="bpmnadded" class="" style="color: red"></i></a></li>
+                    model<i id="bpmnadded" class="" style="color: red;padding-left: 20px;"></i></a></li>
                 <li id="flowChart"><a href="#" onclick="associateFlowChart(this)">Associate Flow
-                    Chart<i id="flowchartadded" class="" style="color: red"></i></a></li>
-                <li id="doc"><a href="#" onclick="associateDocument(this)">Associate
-                    Documents<i id="docadded" class="" style="color: red"></i></a></li>
+                    Chart<i id="flowchartadded" class="" style="color: red;padding-left: 35px;"></i></a></li>
+                <li id="doc"><a href="#" onclick="associateDocument(this,{{#if permission}}true{{else}}false{{/if}})">Associate
+                    Documents<i id="docadded" class="" style="color: red;padding-left: 30px;"></i></a></li>
             </ul>
         </div>
     </div>
@@ -54,6 +60,3 @@
         <div> {{> docView .}}</div>
     </div>
 </div>
-
-
-
