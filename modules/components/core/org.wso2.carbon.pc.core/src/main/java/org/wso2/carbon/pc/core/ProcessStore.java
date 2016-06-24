@@ -20,6 +20,7 @@ import org.activiti.bpmn.converter.util.InputStreamProvider;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.image.ProcessDiagramGenerator;
 import org.activiti.image.impl.DefaultProcessDiagramGenerator;
+import org.apache.bcel.generic.RETURN;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -44,6 +45,7 @@ import org.wso2.carbon.registry.core.exceptions.ResourceNotFoundException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.resource.services.utils.AddRolePermissionUtil;
+import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.UserRealm;
 import org.xml.sax.InputSource;
 import sun.misc.BASE64Decoder;
@@ -117,7 +119,7 @@ public class ProcessStore {
                         .setPutPermission(registryService, userName, ProcessCenterConstants.AUDIT.PROCESS_PATH);
                 String processAssetPath = "processes/" + processName + "/" + processVersion;
 
-                if(reg.resourceExists(processAssetPath)){
+                if(reg.resourceExists(processAssetPath)) {
                     String status = "duplicate";
                     return status;
                 }
@@ -192,7 +194,6 @@ public class ProcessStore {
                 processAsset.setContent(processAssetContent);
                 processAsset.setMediaType("application/vnd.wso2-process+xml");
                 reg.put(processAssetPath, processAsset);
-
                 // associate lifecycle with the process asset, so that it can be promoted to published state
                 GovernanceUtils.associateAspect(processAssetPath, "SampleLifeCycle2", reg);
 
@@ -221,6 +222,55 @@ public class ProcessStore {
         } catch (Exception e) {
             String errMsg = "Create process error:" + processDetails;
             log.error("Create process error:" + processDetails, e);
+            throw new ProcessCenterException(errMsg, e);
+        }
+        return processId;
+    }
+
+    public String updateProcess(String processDetails, String userName) throws ProcessCenterException {
+        String processId = "FAILED TO UPDATE PROCESS";
+
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+
+            JSONObject processInfo = new JSONObject(processDetails);
+            String processName = processInfo.getString("processName");
+            String processVersion = processInfo.getString("processVersion");
+            String processOwner = processInfo.getString("processOwner");
+            String processDescription = processInfo.getString("processDescription");
+            String processTags = processInfo.getString("processTags");
+            JSONObject imageObj = processInfo.getJSONObject("image");
+
+            String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                    processVersion;
+
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceUserRegistry(userName);
+                Resource resource = reg.get(processAssetPath);
+                String processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
+                NodeList overviewElemetNode = ((Element) doc.getFirstChild()).getElementsByTagName("overview");
+
+                if (doc.getElementsByTagName("description").getLength() != 0)
+                    doc.getElementsByTagName("description").item(0).setTextContent(processDescription);
+
+                    doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
+                    doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
+
+                //TODO update tags and image path
+
+                String newProcessContent = xmlToString(doc);
+                resource.setContent(newProcessContent);
+                reg.put(processAssetPath, resource);
+
+                //TODO check whether same uuid is generated for the updated resource
+                Resource storedProcess = reg.get(processAssetPath);
+                processId = storedProcess.getUUID();
+            }
+
+        } catch (Exception e) {
+            String errMsg = "Update process error:" + processDetails;
+            log.error("Update process error:" + processDetails, e);
             throw new ProcessCenterException(errMsg, e);
         }
         return processId;
@@ -811,7 +861,7 @@ public class ProcessStore {
             JSONObject associatedProcessDetails = new JSONObject();
             associatedProcessDetails.put("name", overviewElement.getElementsByTagName("name").item(0).getTextContent());
             associatedProcessDetails.put("path", associatedResource.getPath());
-            associatedProcessDetails.put("id", associatedResource.getId());
+            associatedProcessDetails.put("id", associatedResource.getUUID());
             associatedProcessDetails
                     .put("version", overviewElement.getElementsByTagName("version").item(0).getTextContent());
             jsonArray.put(associatedProcessDetails);

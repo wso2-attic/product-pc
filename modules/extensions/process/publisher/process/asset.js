@@ -78,6 +78,9 @@ asset.server = function(ctx) {
                        url: 'delete_Predecessor',
                        path: 'delete_Predecessor.jag'
                    }, {
+                       url: 'update_process',
+                       path: 'update_process.jag'
+                   }, {
                        url: 'update_owner',
                        path: 'update_owner.jag'
                    }, {
@@ -195,7 +198,7 @@ asset.renderer = function(ctx) {
         var navList = util.navList();
         if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) {
             navList.push('Add ', 'btn-add-new', util.buildUrl('create'));
-            navList.push('Audit Log', 'btn-overview', util.buildUrl('log'));
+            navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log'));
         }
         //navList.push('Configuration', 'icon-dashboard', util.buildUrl('configuration'));
         return navList.list();
@@ -208,9 +211,9 @@ asset.renderer = function(ctx) {
         var user = require('store').server.current(session);
         var username = user? user.username : null;
         //navList.push('Overview', 'btn-overview', util.buildUrl('details') + '/' + id);
-        //if (permissionAPI.hasActionPermissionforPath(path, 'write', ctx.session) && permissionAPI.hasAssetPagePermission(type,'update',user.tenantId,username)) {
-        //    navList.push('Edit', 'btn-edit', util.buildUrl('update') + '/' + id);
-        //}
+        if (permissionAPI.hasActionPermissionforPath(path, 'write', ctx.session) && permissionAPI.hasAssetPagePermission(type,'update',user.tenantId,username)) {
+           navList.push('Edit', 'btn-edit', util.buildUrl('update') + '/' + id);
+        }
         if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
             navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + id);
         }
@@ -220,7 +223,7 @@ asset.renderer = function(ctx) {
                 navList.push('Lifecycle', 'btn-lifecycle', util.buildUrl('lifecycle') + '/' + id);
             }
         }
-        navList.push('Audit Log', 'btn-overview', util.buildUrl('log') + '/' + id);
+        navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log') + '/' + id);
         //if (permissionAPI.hasActionPermissionforPath(path, 'write', ctx.session) && permissionAPI.hasAssetPagePermission(type,'update',user.tenantId,username)) {
         //navList.push('Version', 'btn-copy', util.buildUrl('copy') + '/' + id);
         //}
@@ -243,10 +246,10 @@ asset.renderer = function(ctx) {
                 if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
                     navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + page.assets.id);
                 }
-                navList.push('Audit Log', 'btn-overview', util.buildUrl('log') + '/' +page.assets.id);
+                navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log') + '/' +page.assets.id);
 
-            } else{
-                navList.push('Audit Log', 'btn-overview', util.buildUrl('log'));
+            } else {
+                navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log'));
             }
         }
         return navList.list();
@@ -353,16 +356,41 @@ asset.renderer = function(ctx) {
         create: function(page) {
             var tables = page.assets.tables;
             var providerAttribute = 'provider'; //TODO: Provider should be picked up from the provider attribute
+            var processTextPathAttribute = 'processtextpath';
+            var bpmnPathAttribute = 'bpmnpath';
             for (var index in tables) {
                 var table = tables[index];
                 if ((table.name == 'overview') && (table.fields.hasOwnProperty(providerAttribute))) {
                     table.fields[providerAttribute].value = page.cuser.cleanedUsername;
+                }
+                
+                if ((table.name == 'properties') && (table.fields.hasOwnProperty(processTextPathAttribute))) {
+                    var processTextField = table.fields[processTextPathAttribute].value;
+                    var bpmnPathField = table.fields[bpmnPathAttribute].value;
+                    page.isProcessTextAvailable = false;
+                    page.isBpmnAvailable = false;
+
+                    if(processTextField == 'NA') {
+                        page.isProcessTextAvailable = false;
+                    } else if(processTextField != null) {
+                        page.isProcessTextAvailable = true;
+                    }
+
+                    if(bpmnPathField == 'NA') {
+                        page.isBpmnAvailable = false;
+                    } else if(processTextField != null) {
+                        page.isBpmnAvailable = true;
+                    }
                 }
             }
         },
         update: function(page) {
             var tables = page.assets.tables;
             var timestampAttribute = 'createdtime';
+            var processTextPathAttribute = 'processtextpath';
+            var bpmnPathAttribute = 'bpmnpath';
+            var documentPathNameAttribute = 'name';
+            var flowchartPathAttribute = 'path';
             for (var index in tables) {
                 var table = tables[index];
                 if ((table.name == 'overview') && (table.fields.hasOwnProperty(timestampAttribute))) {
@@ -371,7 +399,66 @@ asset.renderer = function(ctx) {
                     date.setTime(value);
                     table.fields[timestampAttribute].value = date.toUTCString();
                 }
+                if ((table.name == 'properties') && (table.fields.hasOwnProperty(processTextPathAttribute))) {
+                    var processTextField = table.fields[processTextPathAttribute].value;
+                    var bpmnPathField = table.fields[bpmnPathAttribute].value;
+                    page.isProcessTextAvailable = false;
+                    page.isBpmnAvailable = false;
+
+                    if(processTextField == 'NA') {
+                        page.isProcessTextAvailable = false;
+                    } else if(processTextField != null) {
+                        page.isProcessTextAvailable = true;
+                    }
+
+                    if(bpmnPathField == 'NA') {
+                        page.isBpmnAvailable = false;
+                    } else if(processTextField != null) {
+                        page.isBpmnAvailable = true;
+                    }
+                }
+
+                if((table.name == 'document') && (table.fields.hasOwnProperty(documentPathNameAttribute))) {
+                    var documetName = table.fields[documentPathNameAttribute].value;
+                    if(documetName == null) {
+                        page.isDocumentAvailable = false;
+                    } else {
+                        page.isDocumentAvailable = true;
+                    }
+                }
+
+                if((table.name == 'flowchart') && (table.fields.hasOwnProperty(flowchartPathAttribute))) {
+                    var flowchartPath = table.fields[flowchartPathAttribute].value;
+                    if(flowchartPath == 'NA') {
+                        page.isFlowChartAvailable = false;
+                    } else {
+                        page.isFlowChartAvailable = true;
+                        page.flowchartPath = flowchartPath;
+                    }
+                }
             }
+
+            importPackage(org.wso2.carbon.pc.core);
+            var ps = new ProcessStore();
+            var resourcePath = page.assets.path;
+            var conData = ps.getSucessorPredecessorSubprocessList(resourcePath);
+            var conObject = JSON.parse(conData);
+            if (log.isDebugEnabled()) {
+                log.debug(conObject);
+            }
+            page.involveProcessList = conObject;
+            if (log.isDebugEnabled()) {
+                log.debug(page);
+            }
+
+            var permissionAPI = require('rxt').permissions;
+            if (permissionAPI.hasActionPermissionforPath(resourcePath , 'write', ctx.session)){
+                page.permission=true;
+            }
+            else{
+                page.permission=false;
+            }
+            page.isUpdateView = true;
         },
         pageDecorators: {
             leftNav: function(page) {
@@ -471,7 +558,7 @@ asset.renderer = function(ctx) {
 asset.manager = function(ctx) {
     return {
         remove: function (options) {
-            var log=new Log("rxt.asset");
+            var log = new Log("rxt.asset");
             var processUUID = options;
             var processObj= this.get(processUUID);
             var processName = this.getName(processObj);

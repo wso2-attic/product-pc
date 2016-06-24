@@ -1,0 +1,127 @@
+<!--
+  ~ Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<div class="modal fade" id="searchModal">
+    <div class="modal-dialog">
+        <div class="modal-content search-modal" style="background: #e3e3e3; none: repeat scroll 0% 0% ;">
+            <div class="modal-header custom-header">
+                <a class="close" data-dismiss="modal">&times;</a>
+
+                <h3>Search Processes</h3>
+            </div>
+            <div class="modal-body">
+                <div class="well asset-well search-form">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12 advanced-search-form-container">
+                                <form id="process-search-form">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="process-name">Name</label>
+                                                <input type="text" class="form-control"
+                                                       id="process-name"
+                                                       name="process-name"
+                                                       placeholder="Enter an asset name">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-tags">Tags</label>
+                                                <input type="text" class="form-control"
+                                                       id="process-tags"
+                                                       name="process-tags"
+                                                       placeholder="Enter a tag">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-description">Description</label>
+                                                <input type="text" class="form-control"
+                                                       id="process-description"
+                                                       name="process-description"
+                                                       placeholder="Process Description">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label>Search by content</label>&nbsp;&nbsp;
+                                                <div class="btn-group">
+                                                    <button type="button"
+                                                            class="btn btn-default dropdown-toggle"
+                                                            data-toggle="dropdown"
+                                                            aria-haspopup="true"
+                                                            aria-expanded="false">
+                                                        <span class="glyphicon glyphicon-cog"></span>
+                                                        <span class="caret"></span>
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                    </button>
+                                                    <ul class="dropdown-menu"
+                                                        style="background:white;border: medium">
+                                                        <li><a data-value="PDF"><input
+                                                                type="checkbox"/>&nbsp;PDF</a></li>
+                                                        <li><a data-value="Document"><input
+                                                                type="checkbox"/>&nbsp;Document</a>
+                                                        </li>
+                                                        <li><a data-value="Process-Text"><input
+                                                                type="checkbox"/>&nbsp;Process-Text</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <br>
+                                                <input type="text" class="form-control" id="content"
+                                                       name="content"
+                                                       placeholder="content">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="process-version">Version</label>
+                                                <input type="text" class="form-control"
+                                                       id="process-version"
+                                                       name="process-version"
+                                                       placeholder="Version Eg: 1.0.0">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-lcState">Lifecycle State</label>
+                                                <input type="text" class="form-control"
+                                                       id="process-lcState"
+                                                       name="process-lcState"
+                                                       placeholder="Lifecycle State">
+                                            </div>
+                                            <div class="form-group filter">
+                                                <label for="process-owner">Owner</label>
+                                                <input type="text" class="form-control"
+                                                       id="process-owner"
+                                                       name="process-owner"
+                                                       placeholder="Process Owner">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button id='process-search-btn' type="submit"
+                                            class="btn btn-primary">SEARCH
+                                    </button>
+                                    <button id="form-clear-btn" class="btn btn-default">CLEAR
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="process-search-results" class="well asset-well">
+                    <label>Search Results</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="btn" data-dismiss="modal">Cancel</a>
+                <a href="#!" id="okButton" data-name="view" class="btn btn-primary">Add</a>
+            </div>
+        </div>
+    </div>
+</div>

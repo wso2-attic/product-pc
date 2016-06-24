@@ -21,40 +21,26 @@ importPackage(org.wso2.carbon.pc.core);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
-    log.debug("INSIDE UPLOAD DOCUMENTS");
+    log.debug("Process update logic");
 }
-var ps = new ProcessStore();
 
-var docName = String(request.getParameter("docName"));
-var docSummary = String(request.getParameter("summaryDoc"));
-var docUrl = String(request.getParameter("docUrl"));
-var docProcessName = String(request.getParameter("docProcessName"));
-var docProcessVersion = String(request.getParameter("docProcessVersion"));
-var docExtension = String(request.getParameter("docExtension"));
+var ps = new ProcessStore();
+var processDetails = String(request.getParameter("processInfo"));
 var responseObj = {};
 
 var server = require('store').server;
 var user = server.current(session);
-
-if (docSummary == '') {
-    docSummary = "NA";
-}
-
-if (docUrl == '') {
-    docUrl = "NA";
-}
+var userName = user.username;
 
 try {
-    var processid = "NA";
-    var files = request.getAllFiles();
-    for (var name in files) {
-        processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, files[name].getStream(), docExtension, user.username);
-    }
-    response.sendRedirect('/publisher/assets/process/details/' + processid);
+    var status = ps.updateProcess(processDetails, userName);
+    responseObj.error = false;
+    responseObj.content = status;
+    print(stringify(responseObj));
 } catch (error) {
-    log.error(error);
+    log.info(error);
     responseObj.error = true;
-    responseObj.content = "Error while uploading document";
+    responseObj.content = "Process updating error.";
     print(stringify(responseObj));
 }
 %>

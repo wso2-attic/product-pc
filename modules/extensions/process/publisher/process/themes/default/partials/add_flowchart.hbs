@@ -14,10 +14,14 @@
   ~ limitations under the License.
   -->
 <div id="flowChartView" style="display:none">
-    <button class="btn btn-primary" id="flowchartSaveBtn" onclick="saveFlowchart()">Save
+    <button class="btn btn-primary" id="flowchartSaveBtn" onclick="saveFlowchart(this)">Save
     </button>
-    <button class="btn btn-primary" id="saveAsPNGBtn">Download As PNG</button>
+    <button class="btn btn-primary" id="saveAsPNGBtn" onclick="downloadAsPNG({{isUpdateView}})">Download As PNG</button>
     <br/><br/>
+    <input type="hidden" id="fcProcessName" name="fcProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
+    <input type="hidden" id="fcProcessVersion" name="fcProcessVersion"
+           value="{{assets.tables.[0].fields.version.value}}"/>
+
 
     <div style="width:100%; height: 10%; white-space:nowrap;">
                             <span style="display: inline-block; vertical-align: top; padding: 5px; width:15%">
@@ -54,7 +58,7 @@
                                   </p>
                                   <div class="jtk-demo-main" style="margin-top: 20px;">
                                       <div class="jtk-demo-canvas canvas-wide flowchart-demo jtk-surface  jtk-surface-nopan"
-                                           id="canvas">
+                                           id="{{#if isUpdateView}}editor_canvas{{else}}canvas{{/if}}">
                                       </div>
                                   </div>
                               </div>
