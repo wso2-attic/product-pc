@@ -25,6 +25,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
@@ -39,9 +40,11 @@ import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -56,9 +59,6 @@ import java.util.zip.ZipInputStream;
 public class ProcessStore {
 
     private static final Log log = LogFactory.getLog(ProcessStore.class);
-
-    private static final String mns = "http://www.wso2.org/governance/metadata";
-    private static final String OK = "OK";
 
     private Element append(Document doc, Element parent, String childName, String childNS) {
         Element childElement = doc.createElementNS(childNS, childName);
@@ -76,14 +76,14 @@ public class ProcessStore {
     private String xmlToString(Document doc) throws TransformerException {
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer transformer = tf.newTransformer();
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, ProcessStoreConstants.YES);
         StringWriter writer = new StringWriter();
         transformer.transform(new DOMSource(doc), new StreamResult(writer));
         String output = writer.getBuffer().toString().replaceAll("\n|\r", "");
         return output;
     }
 
-    private Document stringToXML(String xmlString) throws Exception {
+    private Document stringToXML(String xmlString) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         builder = factory.newDocumentBuilder();
@@ -97,13 +97,13 @@ public class ProcessStore {
 
         try {
             JSONObject processInfo = new JSONObject(processDetails);
-            String processName = processInfo.getString("processName");
-            String processVersion = processInfo.getString("processVersion");
-            String processOwner = processInfo.getString("processOwner");
-            String processTags = processInfo.getString("processTags");
-            JSONArray subprocess = processInfo.getJSONArray("subprocess");
-            JSONArray successor = processInfo.getJSONArray("successor");
-            JSONArray predecessor = processInfo.getJSONArray("predecessor");
+            String processName = processInfo.getString(ProcessStoreConstants.PROCESS_NAME);
+            String processVersion = processInfo.getString(ProcessStoreConstants.PROCESS_VERSION);
+            String processOwner = processInfo.getString(ProcessStoreConstants.PROCESS_OWNER);
+            String processTags = processInfo.getString(ProcessStoreConstants.PROCESS_TAGS);
+            JSONArray subprocess = processInfo.getJSONArray(ProcessStoreConstants.SUBPROCESS);
+            JSONArray successor = processInfo.getJSONArray(ProcessStoreConstants.SUCCESSOR);
+            JSONArray predecessor = processInfo.getJSONArray(ProcessStoreConstants.PREDECESSOR);
 
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
@@ -113,77 +113,76 @@ public class ProcessStore {
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
                 // root elements
-                String mns = "http://www.wso2.org/governance/metadata";
                 Document doc = docBuilder.newDocument();
 
-                Element rootElement = doc.createElementNS(mns, "metadata");
+                Element rootElement = doc.createElementNS(ProcessStoreConstants.MNS, ProcessStoreConstants.METADATA);
                 doc.appendChild(rootElement);
 
-                Element overviewElement = append(doc, rootElement, "overview", mns);
-                appendText(doc, overviewElement, "name", mns, processName);
-                appendText(doc, overviewElement, "version", mns, processVersion);
-                appendText(doc, overviewElement, "owner", mns, processOwner);
+                Element overviewElement = append(doc, rootElement, ProcessStoreConstants.OVERVIEW, ProcessStoreConstants.MNS);
+                appendText(doc, overviewElement, ProcessStoreConstants.NAME, ProcessStoreConstants.MNS, processName);
+                appendText(doc, overviewElement, ProcessStoreConstants.VERSION, ProcessStoreConstants.MNS, processVersion);
+                appendText(doc, overviewElement, ProcessStoreConstants.OWNER, ProcessStoreConstants.MNS, processOwner);
 
-                Element propertiesElement = append(doc, rootElement, "properties", mns);
-                appendText(doc, propertiesElement, "processtextpath", mns, "NA");
+                Element propertiesElement = append(doc, rootElement, ProcessStoreConstants.PROPERTIES, ProcessStoreConstants.MNS);
+                appendText(doc, propertiesElement, ProcessStoreConstants.PROCESS_TEXT_PATH, ProcessStoreConstants.MNS, "NA");
 
                 // fill bpmn properties with NA values
-                appendText(doc, propertiesElement, "bpmnpath", mns, "NA");
-                appendText(doc, propertiesElement, "bpmnid", mns, "NA");
+                appendText(doc, propertiesElement, ProcessStoreConstants.BPMN_PATH, ProcessStoreConstants.MNS, "NA");
+                appendText(doc, propertiesElement, ProcessStoreConstants.BPMN_ID, ProcessStoreConstants.MNS, "NA");
 
                 if (subprocess.length() != 0) {
                     for (int i = 0; i < subprocess.length(); i++) {
-                        Element successorElement = append(doc, rootElement, "subprocess", mns);
-                        appendText(doc, successorElement, "name", mns, subprocess.getJSONObject(i).getString("name"));
-                        appendText(doc, successorElement, "path", mns, subprocess.getJSONObject(i).getString("path"));
-                        appendText(doc, successorElement, "id", mns, subprocess.getJSONObject(i).getString("id"));
+                        Element successorElement = append(doc, rootElement, ProcessStoreConstants.SUBPROCESS, ProcessStoreConstants.MNS);
+                        appendText(doc, successorElement, ProcessStoreConstants.NAME, ProcessStoreConstants.MNS, subprocess.getJSONObject(i).getString(ProcessStoreConstants.NAME));
+                        appendText(doc, successorElement, ProcessStoreConstants.PATH, ProcessStoreConstants.MNS, subprocess.getJSONObject(i).getString(ProcessStoreConstants.PATH));
+                        appendText(doc, successorElement, ProcessStoreConstants.ID, ProcessStoreConstants.MNS, subprocess.getJSONObject(i).getString(ProcessStoreConstants.ID));
                     }
                 }
 
                 if (successor.length() != 0) {
                     for (int i = 0; i < successor.length(); i++) {
-                        Element successorElement = append(doc, rootElement, "successor", mns);
-                        appendText(doc, successorElement, "name", mns, successor.getJSONObject(i).getString("name"));
-                        appendText(doc, successorElement, "path", mns, successor.getJSONObject(i).getString("path"));
-                        appendText(doc, successorElement, "id", mns, successor.getJSONObject(i).getString("id"));
+                        Element successorElement = append(doc, rootElement, ProcessStoreConstants.SUCCESSOR, ProcessStoreConstants.MNS);
+                        appendText(doc, successorElement, ProcessStoreConstants.NAME, ProcessStoreConstants.MNS, successor.getJSONObject(i).getString(ProcessStoreConstants.NAME));
+                        appendText(doc, successorElement, ProcessStoreConstants.PATH, ProcessStoreConstants.MNS, successor.getJSONObject(i).getString(ProcessStoreConstants.PATH));
+                        appendText(doc, successorElement, ProcessStoreConstants.ID, ProcessStoreConstants.MNS, successor.getJSONObject(i).getString(ProcessStoreConstants.ID));
                     }
                 }
 
                 if (predecessor.length() != 0) {
                     for (int i = 0; i < predecessor.length(); i++) {
-                        Element predecessorElement = append(doc, rootElement, "predecessor", mns);
-                        appendText(doc, predecessorElement, "name", mns,
-                                predecessor.getJSONObject(i).getString("name"));
-                        appendText(doc, predecessorElement, "path", mns,
-                                predecessor.getJSONObject(i).getString("path"));
-                        appendText(doc, predecessorElement, "id", mns, predecessor.getJSONObject(i).getString("id"));
+                        Element predecessorElement = append(doc, rootElement, ProcessStoreConstants.PREDECESSOR, ProcessStoreConstants.MNS);
+                        appendText(doc, predecessorElement, ProcessStoreConstants.NAME, ProcessStoreConstants.MNS,
+                                predecessor.getJSONObject(i).getString(ProcessStoreConstants.NAME));
+                        appendText(doc, predecessorElement, ProcessStoreConstants.PATH, ProcessStoreConstants.MNS,
+                                predecessor.getJSONObject(i).getString(ProcessStoreConstants.PATH));
+                        appendText(doc, predecessorElement, ProcessStoreConstants.ID, ProcessStoreConstants.MNS, predecessor.getJSONObject(i).getString(ProcessStoreConstants.ID));
                     }
                 }
 
-                Element pdfElement = append(doc, rootElement, "pdf", mns);
-                appendText(doc, pdfElement, "path", mns, "NA");
+                Element pdfElement = append(doc, rootElement, ProcessStoreConstants.PDF, ProcessStoreConstants.MNS);
+                appendText(doc, pdfElement, ProcessStoreConstants.PATH, ProcessStoreConstants.MNS, "NA");
 
-                Element bpmnDesignElement = append(doc, rootElement, "bpmnDesign", mns);
-                appendText(doc, bpmnDesignElement, "bpmnDesignPath", mns, "NA");
+                Element bpmnDesignElement = append(doc, rootElement, ProcessStoreConstants.BPMN_DESIGN, ProcessStoreConstants.MNS);
+                appendText(doc, bpmnDesignElement, ProcessStoreConstants.BPMN_DESIGN_PATH, ProcessStoreConstants.MNS, "NA");
 
-                Element flowchartElement = append(doc, rootElement, "flowchart", mns);
-                appendText(doc, flowchartElement, "path", mns, "NA");
+                Element flowchartElement = append(doc, rootElement, ProcessStoreConstants.FLOWCHART, ProcessStoreConstants.MNS);
+                appendText(doc, flowchartElement, ProcessStoreConstants.PATH, ProcessStoreConstants.MNS, "NA");
 
-                Element documentElement = append(doc, rootElement, "document", mns);
-                appendText(doc, documentElement, "documentname", mns, "NA");
-                appendText(doc, documentElement, "summary", mns, "NA");
-                appendText(doc, documentElement, "url", mns, "NA");
-                appendText(doc, documentElement, "path", mns, "NA");
+                Element documentElement = append(doc, rootElement, ProcessStoreConstants.DOCUMENT, ProcessStoreConstants.MNS);
+                appendText(doc, documentElement, ProcessStoreConstants.DOCUMENT_NAME, ProcessStoreConstants.MNS, "NA");
+                appendText(doc, documentElement, ProcessStoreConstants.SUMMARY, ProcessStoreConstants.MNS, "NA");
+                appendText(doc, documentElement, ProcessStoreConstants.URL, ProcessStoreConstants.MNS, "NA");
+                appendText(doc, documentElement, ProcessStoreConstants.PATH, ProcessStoreConstants.MNS, "NA");
 
                 String processAssetContent = xmlToString(doc);
                 Resource processAsset = reg.newResource();
                 processAsset.setContent(processAssetContent);
-                processAsset.setMediaType("application/vnd.wso2-process+xml");
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                processAsset.setMediaType(ProcessStoreConstants.MEDIA_TYPE_APPLICATION_VND);
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 reg.put(processAssetPath, processAsset);
 
                 // associate lifecycle with the process asset, so that it can be promoted to published state
-                GovernanceUtils.associateAspect(processAssetPath, "SampleLifeCycle2", reg);
+                GovernanceUtils.associateAspect(processAssetPath, ProcessStoreConstants.SAMPLE_LIFE_CYCLE2, reg);
 
                 // apply tags to the resource
                 String[] tags = processTags.split(",");
@@ -195,8 +194,14 @@ public class ProcessStore {
                 Resource storedProcess = reg.get(processAssetPath);
                 processId = storedProcess.getUUID();
             }
-        } catch (Exception e) {
-            log.error(e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception when creating the process", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception when creating the process", e);
+        } catch (JSONException e) {
+            log.error("JSON Exception when creating the process", e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception when creating the process", e);
         }
 
         return processId;
@@ -210,23 +215,23 @@ public class ProcessStore {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 // get process asset content
-                String processPath = "processes/" + processName + "/" + processVersion;
+                String processPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
                 Resource processAsset = reg.get(processPath);
                 byte[] processContentBytes = (byte[]) processAsset.getContent();
                 String processContent = new String(processContentBytes);
                 Document doc = stringToXML(processContent);
 
                 // store process text as a separate resource
-                String processTextResourcePath = "processText/" + processName + "/" + processVersion;
+                String processTextResourcePath =  ProcessStoreConstants.PROCESS_TEXT + "/" + processName + "/" + processVersion;
                 if (processText != null && processText.length() > 0) {
                     Resource processTextResource = reg.newResource();
                     processTextResource.setContent(processText);
-                    processTextResource.setMediaType("text/html");
+                    processTextResource.setMediaType(ProcessStoreConstants.TEXT_HTML);
                     reg.put(processTextResourcePath, processTextResource);
-                    doc.getElementsByTagName("processtextpath").item(0).setTextContent(processTextResourcePath);
+                    doc.getElementsByTagName(ProcessStoreConstants.PROCESS_TEXT_PATH).item(0).setTextContent(processTextResourcePath);
                 } else {
                     reg.delete(processTextResourcePath);
-                    doc.getElementsByTagName("processtextpath").item(0).setTextContent("NA");
+                    doc.getElementsByTagName(ProcessStoreConstants.PROCESS_TEXT_PATH).item(0).setTextContent("NA");
                 }
 
                 // update process asset
@@ -234,8 +239,16 @@ public class ProcessStore {
                 processAsset.setContent(newProcessContent);
                 reg.put(processPath, processAsset);
             }
-        } catch (Exception e) {
-            log.error(e);
+        } catch (SAXException e) {
+            log.error("SAX Exception when saving the process text", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception when saving the process text", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception when saving the process text", e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception when saving the process text", e);
+        } catch (IOException e) {
+            log.error("I/O Exception when saving the process text", e);
         }
 
         return true;
@@ -253,7 +266,7 @@ public class ProcessStore {
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
-                if (type.equals("bpmn_file")) {
+                if (type.equals(ProcessStoreConstants.BPMN_FILE)) {
 
                 } else {
 
@@ -263,7 +276,7 @@ public class ProcessStore {
                     ZipEntry entry = null;
                     while ((entry = zip.getNextEntry()) != null) {
                         String entryName = entry.getName();
-                        if (entryName.endsWith(".bpmn") || entryName.endsWith(".bpmn20.xml")) {
+                        if (entryName.endsWith(ProcessStoreConstants.BPMN_EXTENSION) || entryName.endsWith(ProcessStoreConstants.BPMN_FILE_EXTENSION)) {
 
                             // add bpmn xml as a separate resource
                             StringBuilder sb = new StringBuilder();
@@ -275,32 +288,32 @@ public class ProcessStore {
                             String bpmnContent = sb.toString();
                             Resource bpmnResource = reg.newResource();
                             bpmnResource.setContent(bpmnContent);
-                            bpmnResource.setMediaType("text/xml");
+                            bpmnResource.setMediaType(ProcessStoreConstants.TEXT_XML);
                             String bpmnResourcePath = "bpmn_xml/" + entryName + "/" + version;
                             reg.put(bpmnResourcePath, bpmnResource);
 
                             // add bpmn asset
                             String bpmnAssetName = entryName;
                             String displayName = entryName;
-                            if (displayName.endsWith(".bpmn")) {
+                            if (displayName.endsWith(ProcessStoreConstants.BPMN_EXTENSION)) {
                                 displayName = displayName.substring(0, (entryName.length() - 5));
                             }
-                            String bpmnAssetPath = "bpmn/" + entryName + "/" + version;
+                            String bpmnAssetPath =  ProcessStoreConstants.BPMN + "/" + entryName + "/" + version;
                             Document bpmnDoc = docBuilder.newDocument();
-                            Element bpmnRoot = bpmnDoc.createElementNS(mns, "metadata");
+                            Element bpmnRoot = bpmnDoc.createElementNS(ProcessStoreConstants.MNS, ProcessStoreConstants.METADATA);
                             bpmnDoc.appendChild(bpmnRoot);
-                            Element bpmnOverview = append(bpmnDoc, bpmnRoot, "overview", mns);
-                            appendText(bpmnDoc, bpmnOverview, "name", mns, displayName);
-                            appendText(bpmnDoc, bpmnOverview, "version", mns, version);
-                            appendText(bpmnDoc, bpmnOverview, "processpath", mns, "");
-                            appendText(bpmnDoc, bpmnOverview, "description", mns, "");
-                            Element bpmnAssetContentElement = append(bpmnDoc, bpmnRoot, "content", mns);
-                            appendText(bpmnDoc, bpmnAssetContentElement, "contentpath", mns, bpmnResourcePath);
+                            Element bpmnOverview = append(bpmnDoc, bpmnRoot, ProcessStoreConstants.OVERVIEW, ProcessStoreConstants.MNS);
+                            appendText(bpmnDoc, bpmnOverview, ProcessStoreConstants.NAME, ProcessStoreConstants.MNS, displayName);
+                            appendText(bpmnDoc, bpmnOverview, ProcessStoreConstants.VERSION, ProcessStoreConstants.MNS, version);
+                            appendText(bpmnDoc, bpmnOverview, ProcessStoreConstants.PROCESS_PATH, ProcessStoreConstants.MNS, "");
+                            appendText(bpmnDoc, bpmnOverview, ProcessStoreConstants.DESCRIPTION, ProcessStoreConstants.MNS, "");
+                            Element bpmnAssetContentElement = append(bpmnDoc, bpmnRoot, ProcessStoreConstants.CONTENT, ProcessStoreConstants.MNS);
+                            appendText(bpmnDoc, bpmnAssetContentElement, ProcessStoreConstants.CONTENT_PATH, ProcessStoreConstants.MNS, bpmnResourcePath);
                             String bpmnAssetContent = xmlToString(bpmnDoc);
 
                             Resource bpmnAsset = reg.newResource();
                             bpmnAsset.setContent(bpmnAssetContent);
-                            bpmnAsset.setMediaType("application/vnd.wso2-bpmn+xml");
+                            bpmnAsset.setMediaType(ProcessStoreConstants.MEDIA_TYPE_APPLICATION_VND);
                             reg.put(bpmnAssetPath, bpmnAsset);
                             Resource storedBPMNAsset = reg.get(bpmnAssetPath);
                             String bpmnAssetID = storedBPMNAsset.getUUID();
@@ -312,9 +325,16 @@ public class ProcessStore {
                 String msg = "Registry service is not available.";
                 throw new ProcessCenterException(msg);
             }
-
-        } catch (Exception e) {
-            log.error("Failed to store bar archive: " + version, e);
+        } catch (ProcessCenterException e) {
+            log.error("Process Center Exception when processing the process", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception when processing the process", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception when processing the process", e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception when processing the process", e);
+        } catch (IOException e) {
+            log.error("I/O Exception when processing the process", e);
         }
     }
 
@@ -333,36 +353,35 @@ public class ProcessStore {
                 byte[] bpmnContent = IOUtils.toByteArray(bpmnStream);
                 String bpmnText = new String(bpmnContent);
                 bpmnContentResource.setContent(bpmnText);
-                bpmnContentResource.setMediaType("application/xml");
-                String bpmnContentPath = "bpmncontent/" + bpmnName + "/" + bpmnVersion;
+                bpmnContentResource.setMediaType(ProcessStoreConstants.APPLICATION_XML);
+                String bpmnContentPath = ProcessStoreConstants.BPMN_CONTENT + "/" + bpmnName + "/" + bpmnVersion;
                 reg.put(bpmnContentPath, bpmnContentResource);
 
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
                 // add bpmn asset pointing to above bpmn content
-                String mns = "http://www.wso2.org/governance/metadata";
                 Document doc = docBuilder.newDocument();
 
-                Element rootElement = doc.createElementNS(mns, "metadata");
+                Element rootElement = doc.createElementNS(ProcessStoreConstants.MNS, ProcessStoreConstants.METADATA);
                 doc.appendChild(rootElement);
 
-                Element overviewElement = append(doc, rootElement, "overview", mns);
-                appendText(doc, overviewElement, "name", mns, bpmnName);
-                appendText(doc, overviewElement, "version", mns, bpmnVersion);
-                appendText(doc, overviewElement, "description", mns, "");
-                String processPath = "processes/" + bpmnName + "/" + bpmnVersion;
-                appendText(doc, overviewElement, "processpath", mns, processPath);
+                Element overviewElement = append(doc, rootElement, ProcessStoreConstants.OVERVIEW, ProcessStoreConstants.MNS);
+                appendText(doc, overviewElement, ProcessStoreConstants.NAME, ProcessStoreConstants.MNS, bpmnName);
+                appendText(doc, overviewElement, ProcessStoreConstants.VERSION, ProcessStoreConstants.MNS, bpmnVersion);
+                appendText(doc, overviewElement, ProcessStoreConstants.DESCRIPTION, ProcessStoreConstants.MNS, "");
+                String processPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + bpmnName + "/" + bpmnVersion;
+                appendText(doc, overviewElement, ProcessStoreConstants.PROCESS_PATH, ProcessStoreConstants.MNS, processPath);
 
-                Element contentElement = append(doc, rootElement, "content", mns);
-                appendText(doc, contentElement, "contentpath", mns, bpmnContentPath);
+                Element contentElement = append(doc, rootElement, ProcessStoreConstants.CONTENT, ProcessStoreConstants.MNS);
+                appendText(doc, contentElement, ProcessStoreConstants.CONTENT_PATH, ProcessStoreConstants.MNS, bpmnContentPath);
 
                 String bpmnAssetContent = xmlToString(doc);
                 Resource bpmnAsset = reg.newResource();
                 bpmnAsset.setContent(bpmnAssetContent);
-                bpmnAsset.setMediaType("application/vnd.wso2-bpmn+xml");
+                bpmnAsset.setMediaType(ProcessStoreConstants.MEDIA_TYPE_APPLICATION_VND);
 
-                String bpmnAssetPath = "bpmn/" + bpmnName + "/" + bpmnVersion;
+                String bpmnAssetPath = ProcessStoreConstants.BPMN + "/" + bpmnName + "/" + bpmnVersion;
                 reg.put(bpmnAssetPath, bpmnAsset);
                 Resource storedBPMNAsset = reg.get(bpmnAssetPath);
                 String bpmnAssetID = storedBPMNAsset.getUUID();
@@ -373,8 +392,8 @@ public class ProcessStore {
                 byte[] processContentBytes = (byte[]) processAsset.getContent();
                 String processContent = new String(processContentBytes);
                 Document pdoc = stringToXML(processContent);
-                pdoc.getElementsByTagName("bpmnpath").item(0).setTextContent(bpmnAssetPath);
-                pdoc.getElementsByTagName("bpmnid").item(0).setTextContent(bpmnAssetID);
+                pdoc.getElementsByTagName(ProcessStoreConstants.BPMN_PATH).item(0).setTextContent(bpmnAssetPath);
+                pdoc.getElementsByTagName(ProcessStoreConstants.BPMN_ID).item(0).setTextContent(bpmnAssetID);
                 String newProcessContent = xmlToString(pdoc);
                 processAsset.setContent(newProcessContent);
                 reg.put(processPath, processAsset);
@@ -382,8 +401,16 @@ public class ProcessStore {
                 Resource storedProcessAsset = reg.get(processPath);
                 processId = storedProcessAsset.getUUID();
             }
-        } catch (Exception e) {
-            log.error(e);
+        } catch (SAXException e) {
+            log.error("SAX Exception when creating the bpmn", e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception when creating the bpmn", e);
+        } catch (IOException e) {
+            log.error("I/O Exception when creating the bpmn", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception when creating the bpmn", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception when creating the bpmn", e);
         }
 
         return processId;
@@ -410,27 +437,26 @@ public class ProcessStore {
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
                 // root elements
-                String mns = "http://www.wso2.org/governance/metadata";
                 Document doc = docBuilder.newDocument();
 
-                Element rootElement = doc.createElementNS(mns, "metadata");
+                Element rootElement = doc.createElementNS(ProcessStoreConstants.MNS, ProcessStoreConstants.METADATA);
                 doc.appendChild(rootElement);
 
-                Element overviewElement = append(doc, rootElement, "overview", mns);
-                appendText(doc, overviewElement, "name", mns, barName);
-                appendText(doc, overviewElement, "version", mns, barVersion);
-                appendText(doc, overviewElement, "description", mns, description);
+                Element overviewElement = append(doc, rootElement, ProcessStoreConstants.OVERVIEW, ProcessStoreConstants.MNS);
+                appendText(doc, overviewElement, ProcessStoreConstants.NAME, ProcessStoreConstants.MNS, barName);
+                appendText(doc, overviewElement, ProcessStoreConstants.VERSION, ProcessStoreConstants.MNS, barVersion);
+                appendText(doc, overviewElement, ProcessStoreConstants.DESCRIPTION, ProcessStoreConstants.MNS, description);
 
                 // add binary data of the bar asset as a separate resource
                 Resource barResource = reg.newResource();
                 byte[] barContent = IOUtils.toByteArray(barStream);
                 barResource.setContent(barContent);
-                barResource.setMediaType("application/bar");
-                String barResourcePath = "bpmn_archives_binary/" + barName + "/" + barVersion;
+                barResource.setMediaType(ProcessStoreConstants.APPLICATION_BAR);
+                String barResourcePath =  ProcessStoreConstants.BPMN_ARCHIVE_BINARY + "/" + barName + "/" + barVersion;
                 reg.put(barResourcePath, barResource);
 
-                Element contentElement = append(doc, rootElement, "content", mns);
-                appendText(doc, contentElement, "contentpath", mns, barResourcePath);
+                Element contentElement = append(doc, rootElement, ProcessStoreConstants.CONTENT, ProcessStoreConstants.MNS);
+                appendText(doc, contentElement, ProcessStoreConstants.CONTENT_PATH, ProcessStoreConstants.MNS, barResourcePath);
 
                 //                reg.addAssociation(barAssetPath, barResourcePath, "has_content");
 
@@ -439,7 +465,7 @@ public class ProcessStore {
                 ZipEntry entry = null;
                 while ((entry = zip.getNextEntry()) != null) {
                     String entryName = entry.getName();
-                    if (entryName.endsWith(".bpmn") || entryName.endsWith(".bpmn20.xml")) {
+                    if (entryName.endsWith(ProcessStoreConstants.BPMN_EXTENSION) || entryName.endsWith(ProcessStoreConstants.BPMN_FILE_EXTENSION)) {
 
                         // add bpmn xml as a separate resource
                         StringBuilder sb = new StringBuilder();
@@ -451,45 +477,45 @@ public class ProcessStore {
                         String bpmnContent = sb.toString();
                         Resource bpmnResource = reg.newResource();
                         bpmnResource.setContent(bpmnContent);
-                        bpmnResource.setMediaType("text/xml");
-                        String bpmnResourcePath = "bpmn_xml/" + barName + "." + entryName + "/" + barVersion;
+                        bpmnResource.setMediaType(ProcessStoreConstants.TEXT_XML);
+                        String bpmnResourcePath =  ProcessStoreConstants.BPMN_XML + "/" + barName + "." + entryName + "/" + barVersion;
                         reg.put(bpmnResourcePath, bpmnResource);
 
                         // add bpmn asset
                         String bpmnAssetName = barName + "." + entryName;
                         String displayName = entryName;
-                        if (displayName.endsWith(".bpmn")) {
+                        if (displayName.endsWith(ProcessStoreConstants.BPMN_EXTENSION)) {
                             displayName = displayName.substring(0, (entryName.length() - 5));
                         }
-                        String bpmnAssetPath = "bpmn/" + barName + "." + entryName + "/" + barVersion;
+                        String bpmnAssetPath = ProcessStoreConstants.BPMN + "/" + barName + "." + entryName + "/" + barVersion;
                         //                        String bpmnAssetContent = "<metadata xmlns='http://www.wso2.org/governance/metadata'>" +
                         //                                "<overview><name>" + bpmnAssetName + "</name><version>" + barVersion + "</version>" +
                         //                                "<description>This is a BPMN asset</description></overview></metadata>";
 
                         Document bpmnDoc = docBuilder.newDocument();
-                        Element bpmnRoot = bpmnDoc.createElementNS(mns, "metadata");
+                        Element bpmnRoot = bpmnDoc.createElementNS(ProcessStoreConstants.MNS, ProcessStoreConstants.METADATA);
                         bpmnDoc.appendChild(bpmnRoot);
-                        Element bpmnOverview = append(bpmnDoc, bpmnRoot, "overview", mns);
+                        Element bpmnOverview = append(bpmnDoc, bpmnRoot, ProcessStoreConstants.OVERVIEW, ProcessStoreConstants.MNS);
                         //                        appendText(bpmnDoc, bpmnOverview, "name", mns, bpmnAssetName);
-                        appendText(bpmnDoc, bpmnOverview, "name", mns, displayName);
-                        appendText(bpmnDoc, bpmnOverview, "version", mns, barVersion);
-                        appendText(bpmnDoc, bpmnOverview, "package", mns, barName);
-                        appendText(bpmnDoc, bpmnOverview, "description", mns, "");
-                        Element bpmnAssetContentElement = append(bpmnDoc, bpmnRoot, "content", mns);
-                        appendText(bpmnDoc, bpmnAssetContentElement, "contentpath", mns, bpmnResourcePath);
+                        appendText(bpmnDoc, bpmnOverview, ProcessStoreConstants.NAME, ProcessStoreConstants.MNS, displayName);
+                        appendText(bpmnDoc, bpmnOverview, ProcessStoreConstants.VERSION, ProcessStoreConstants.MNS, barVersion);
+                        appendText(bpmnDoc, bpmnOverview, ProcessStoreConstants.PACKAGE, ProcessStoreConstants.MNS, barName);
+                        appendText(bpmnDoc, bpmnOverview, ProcessStoreConstants.DESCRIPTION, ProcessStoreConstants.MNS, "");
+                        Element bpmnAssetContentElement = append(bpmnDoc, bpmnRoot, ProcessStoreConstants.CONTENT, ProcessStoreConstants.MNS);
+                        appendText(bpmnDoc, bpmnAssetContentElement, ProcessStoreConstants.CONTENT_PATH, ProcessStoreConstants.MNS, bpmnResourcePath);
                         String bpmnAssetContent = xmlToString(bpmnDoc);
 
                         Resource bpmnAsset = reg.newResource();
                         bpmnAsset.setContent(bpmnAssetContent);
-                        bpmnAsset.setMediaType("application/vnd.wso2-bpmn+xml");
+                        bpmnAsset.setMediaType(ProcessStoreConstants.MEDIA_TYPE_APPLICATION_VND);
                         reg.put(bpmnAssetPath, bpmnAsset);
                         Resource storedBPMNAsset = reg.get(bpmnAssetPath);
                         String bpmnAssetID = storedBPMNAsset.getUUID();
 
-                        Element bpmnElement = append(doc, rootElement, "bpmn", mns);
-                        appendText(doc, bpmnElement, "Name", mns, bpmnAssetName);
-                        appendText(doc, bpmnElement, "Path", mns, bpmnAssetPath);
-                        appendText(doc, bpmnElement, "Id", mns, bpmnAssetID);
+                        Element bpmnElement = append(doc, rootElement, ProcessStoreConstants.BPMN, ProcessStoreConstants.MNS);
+                        appendText(doc, bpmnElement, ProcessStoreConstants.NAME_UPPERCASE, ProcessStoreConstants.MNS, bpmnAssetName);
+                        appendText(doc, bpmnElement, ProcessStoreConstants.PATH, ProcessStoreConstants.MNS, bpmnAssetPath);
+                        appendText(doc, bpmnElement, ProcessStoreConstants.ID_UPPERCASE, ProcessStoreConstants.MNS, bpmnAssetID);
 
                         //                        reg.addAssociation(barAssetPath, bpmnAssetPath, "contains");
                         //                        reg.addAssociation(bpmnAssetPath, bpmnResourcePath, "has_content");
@@ -499,8 +525,8 @@ public class ProcessStore {
                 String barAssetContent = xmlToString(doc);
                 Resource barAsset = reg.newResource();
                 barAsset.setContent(barAssetContent);
-                barAsset.setMediaType("application/vnd.wso2-bar+xml");
-                String barAssetPath = "bar/admin/" + barName + "/" + barVersion;
+                barAsset.setMediaType(ProcessStoreConstants.MEDIA_TYPE_APPLICATION_VND);
+                String barAssetPath = ProcessStoreConstants.BAR_ASSET_PATH + barName + "/" + barVersion;
                 reg.put(barAssetPath, barAsset);
 
             } else {
@@ -508,8 +534,16 @@ public class ProcessStore {
                 throw new ProcessCenterException(msg);
             }
 
-        } catch (Exception e) {
-            log.error("Failed to store bar archive: " + barName + " - " + barVersion, e);
+        } catch (ProcessCenterException e) {
+            log.error("Process Center Exception when processing the bar file", e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception when processing the bar file", e);
+        } catch (IOException e) {
+            log.error("I/O Exception when processing the bar file", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception when processing the bar file", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception when processing the bar file", e);
         }
     }
 
@@ -521,7 +555,7 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                barPath = barPath.substring("/_system/governance/".length());
+                barPath = barPath.substring(ProcessStoreConstants.GREG_PATH.length());
                 Resource barAsset = reg.get(barPath);
                 String barContent = new String((byte[]) barAsset.getContent());
 
@@ -532,40 +566,48 @@ public class ProcessStore {
                 DocumentBuilder builder;
                 builder = factory.newDocumentBuilder();
                 Document document = builder.parse(new InputSource(new StringReader(barContent)));
-                Element overviewElement = (Element) document.getElementsByTagName("overview").item(0);
-                String barName = overviewElement.getElementsByTagName("name").item(0).getTextContent();
-                String barVersion = overviewElement.getElementsByTagName("version").item(0).getTextContent();
-                String barDescription = overviewElement.getElementsByTagName("description").item(0).getTextContent();
+                Element overviewElement = (Element) document.getElementsByTagName(ProcessStoreConstants.OVERVIEW).item(0);
+                String barName = overviewElement.getElementsByTagName(ProcessStoreConstants.NAME).item(0).getTextContent();
+                String barVersion = overviewElement.getElementsByTagName(ProcessStoreConstants.VERSION).item(0).getTextContent();
+                String barDescription = overviewElement.getElementsByTagName(ProcessStoreConstants.DESCRIPTION).item(0).getTextContent();
 
-                bar.put("name", barName);
-                bar.put("version", barVersion);
-                bar.put("description", barDescription);
+                bar.put(ProcessStoreConstants.NAME, barName);
+                bar.put(ProcessStoreConstants.VERSION, barVersion);
+                bar.put(ProcessStoreConstants.DESCRIPTION, barDescription);
 
-                Element contentElement = (Element) document.getElementsByTagName("content").item(0);
-                String contentPath = contentElement.getElementsByTagName("contentpath").item(0).getTextContent();
-                bar.put("contentpath", contentPath);
+                Element contentElement = (Element) document.getElementsByTagName(ProcessStoreConstants.CONTENT).item(0);
+                String contentPath = contentElement.getElementsByTagName(ProcessStoreConstants.CONTENT_PATH).item(0).getTextContent();
+                bar.put(ProcessStoreConstants.CONTENT_PATH, contentPath);
 
                 JSONArray jbpmns = new JSONArray();
-                bar.put("bpmnModels", jbpmns);
+                bar.put(ProcessStoreConstants.BPMN_MODELS, jbpmns);
 
-                NodeList bpmnElements = document.getElementsByTagName("bpmn");
+                NodeList bpmnElements = document.getElementsByTagName(ProcessStoreConstants.BPMN);
                 for (int i = 0; i < bpmnElements.getLength(); i++) {
                     Element bpmnElement = (Element) bpmnElements.item(i);
-                    String bpmnId = bpmnElement.getElementsByTagName("Id").item(0).getTextContent();
-                    String bpmnName = bpmnElement.getElementsByTagName("Name").item(0).getTextContent();
-                    String bpmnPath = bpmnElement.getElementsByTagName("Path").item(0).getTextContent();
+                    String bpmnId = bpmnElement.getElementsByTagName(ProcessStoreConstants.ID_UPPERCASE).item(0).getTextContent();
+                    String bpmnName = bpmnElement.getElementsByTagName(ProcessStoreConstants.NAME_UPPERCASE).item(0).getTextContent();
+                    String bpmnPath = bpmnElement.getElementsByTagName(ProcessStoreConstants.URL).item(0).getTextContent();
 
                     JSONObject jbpmn = new JSONObject();
-                    jbpmn.put("bpmnId", bpmnId);
-                    jbpmn.put("bpmnName", bpmnName);
-                    jbpmn.put("bpmnPath", bpmnPath);
+                    jbpmn.put(ProcessStoreConstants.BPMN_ID, bpmnId);
+                    jbpmn.put(ProcessStoreConstants.BPMN_NAME, bpmnName);
+                    jbpmn.put(ProcessStoreConstants.BPMN_PATH, bpmnPath);
                     jbpmns.put(jbpmn);
                 }
 
                 barString = bar.toString();
             }
-        } catch (Exception e) {
-            log.error("Failed to fetch BPMN archive: " + barPath);
+        } catch (SAXException e) {
+            log.error("SAX Exception when retrieving the bar file", e);
+        } catch (JSONException e) {
+            log.error("JSON Exception when retrieving the bar file", e);
+        } catch (IOException e) {
+            log.error("I/O Exception when retrieving the bar file", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception when retrieving the bar file", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception when retrieving the bar file", e);
         }
 
         return barString;
@@ -580,8 +622,8 @@ public class ProcessStore {
                 Resource textResource = reg.get(textPath);
                 textContent = new String((byte[]) textResource.getContent());
             }
-        } catch (Exception e) {
-            log.error(e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception when processing the process text", e);
         }
         return textContent;
     }
@@ -594,34 +636,44 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                bpmnPath = bpmnPath.substring("/_system/governance/".length());
+                bpmnPath = bpmnPath.substring(ProcessStoreConstants.GREG_PATH.length());
                 Resource bpmnAsset = reg.get(bpmnPath);
                 String bpmnContent = new String((byte[]) bpmnAsset.getContent());
                 JSONObject bpmn = new JSONObject();
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document document = builder.parse(new InputSource(new StringReader(bpmnContent)));
-                Element overviewElement = (Element) document.getElementsByTagName("overview").item(0);
-                String bpmnName = overviewElement.getElementsByTagName("name").item(0).getTextContent();
-                String bpmnVersion = overviewElement.getElementsByTagName("version").item(0).getTextContent();
-                String bpmnDescription = overviewElement.getElementsByTagName("description").item(0).getTextContent();
-                String processPath = overviewElement.getElementsByTagName("processpath").item(0).getTextContent();
+                Element overviewElement = (Element) document.getElementsByTagName(ProcessStoreConstants.OVERVIEW).item(0);
+                String bpmnName = overviewElement.getElementsByTagName(ProcessStoreConstants.NAME).item(0).getTextContent();
+                String bpmnVersion = overviewElement.getElementsByTagName(ProcessStoreConstants.VERSION).item(0).getTextContent();
+                String bpmnDescription = overviewElement.getElementsByTagName(ProcessStoreConstants.DESCRIPTION).item(0).getTextContent();
+                String processPath = overviewElement.getElementsByTagName(ProcessStoreConstants.PROCESS_PATH).item(0).getTextContent();
 
-                bpmn.put("name", bpmnName);
-                bpmn.put("version", bpmnVersion);
-                bpmn.put("description", bpmnDescription);
-                bpmn.put("processPath", processPath);
+                bpmn.put(ProcessStoreConstants.NAME, bpmnName);
+                bpmn.put(ProcessStoreConstants.VERSION, bpmnVersion);
+                bpmn.put(ProcessStoreConstants.DESCRIPTION, bpmnDescription);
+                bpmn.put(ProcessStoreConstants.PROCESS_PATH, processPath);
 
-                Element contentElement = (Element) document.getElementsByTagName("content").item(0);
-                String contentPath = contentElement.getElementsByTagName("contentpath").item(0).getTextContent();
-                bpmn.put("contentpath", contentPath);
+                Element contentElement = (Element) document.getElementsByTagName(ProcessStoreConstants.CONTENT).item(0);
+                String contentPath = contentElement.getElementsByTagName(ProcessStoreConstants.CONTENT_PATH).item(0).getTextContent();
+                bpmn.put(ProcessStoreConstants.CONTENT_PATH, contentPath);
                 String encodedBPMNImage = getEncodedBPMNImage(contentPath);
-                bpmn.put("bpmnImage", encodedBPMNImage);
+                bpmn.put(ProcessStoreConstants.BPMN_IMAGE, encodedBPMNImage);
 
                 bpmnString = bpmn.toString();
             }
-        } catch (Exception e) {
-            log.error("Failed to fetch BPMN model: " + bpmnPath);
+        } catch (IOException e) {
+            log.error("I/O Exception when retrieving the bpmn", e);
+        } catch (SAXException e) {
+            log.error("SAX Exception when retrieving the bpmn", e);
+        } catch (JSONException e) {
+            log.error("JSON Exception when retrieving the bpmn", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception when retrieving the bpmn", e);
+        } catch (ProcessCenterException e) {
+            log.error("Process Center Exception when retrieving the bpmn", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception when retrieving the bpmn", e);
         }
 
         return bpmnString;
@@ -633,7 +685,7 @@ public class ProcessStore {
         return imageString;
     }
 
-    public String getProcesses() throws ProcessCenterException {
+    public String getProcesses() {
 
         String processDetails = "{}";
 
@@ -645,23 +697,23 @@ public class ProcessStore {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 String[] processPaths = GovernanceUtils
-                        .findGovernanceArtifacts("application/vnd.wso2-process+xml", reg);
+                        .findGovernanceArtifacts(ProcessStoreConstants.MEDIA_TYPE_APPLICATION_VND, reg);
                 for (String processPath : processPaths) {
                     Resource processResource = reg.get(processPath);
                     String processContent = new String((byte[]) processResource.getContent());
                     Document processXML = stringToXML(processContent);
-                    String processName = processXML.getElementsByTagName("name").item(0).getTextContent();
-                    String processVersion = processXML.getElementsByTagName("version").item(0).getTextContent();
-                    String pdfPath = processXML.getElementsByTagName("pdf").item(0).getFirstChild().getTextContent();
-                    String flowchartPath = processXML.getElementsByTagName("flowchart").item(0).getFirstChild().getTextContent();
+                    String processName = processXML.getElementsByTagName(ProcessStoreConstants.NAME).item(0).getTextContent();
+                    String processVersion = processXML.getElementsByTagName(ProcessStoreConstants.VERSION).item(0).getTextContent();
+                    String pdfPath = processXML.getElementsByTagName(ProcessStoreConstants.PDF).item(0).getFirstChild().getTextContent();
+                    String flowchartPath = processXML.getElementsByTagName(ProcessStoreConstants.FLOWCHART).item(0).getFirstChild().getTextContent();
 
                     JSONObject processJSON = new JSONObject();
-                    processJSON.put("path", processPath);
-                    processJSON.put("processid", processResource.getUUID());
-                    processJSON.put("processname", processName);
-                    processJSON.put("processversion", processVersion);
-                    processJSON.put("pdfpath", pdfPath);
-                    processJSON.put("flowchartpath", flowchartPath);
+                    processJSON.put(ProcessStoreConstants.PATH, processPath);
+                    processJSON.put(ProcessStoreConstants.PROCESS_ID, processResource.getUUID());
+                    processJSON.put(ProcessStoreConstants.PROCESS_NAME, processName);
+                    processJSON.put(ProcessStoreConstants.PROCESS_VERSION, processVersion);
+                    processJSON.put(ProcessStoreConstants.PDS_PATH, pdfPath);
+                    processJSON.put(ProcessStoreConstants.FLOWCHART_PATH, flowchartPath);
                     result.put(processJSON);
                 }
 
@@ -673,10 +725,19 @@ public class ProcessStore {
                 String msg = "Registry service not available for retrieving processes.";
                 throw new ProcessCenterException(msg);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
+            log.error("I/O Exception when retrieving the processes", e);
+        } catch (SAXException e) {
+            log.error("SAX Exception when retrieving the processes", e);
+        } catch (JSONException e) {
+            log.error("JSON Exception when retrieving the processes", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception when retrieving the processes", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception when retrieving the processes", e);
+        } catch (ProcessCenterException e) {
             String msg = "Failed";
-            log.error(msg, e);
-            throw new ProcessCenterException(msg, e);
+            log.error("Process Center Exception when retrieving the processes : " + msg, e);
         }
 
         return processDetails;
@@ -704,8 +765,8 @@ public class ProcessStore {
                 String msg = "Registry service not available for fetching the BPMN image.";
                 throw new ProcessCenterException(msg);
             }
-        } catch (Exception e) {
-            String msg = "Failed to fetch BPMN model: " + path;
+        } catch (RegistryException | IOException e) {
+            String msg = "Failed to fetch bpmn model : " + path;
             log.error(msg, e);
             throw new ProcessCenterException(msg, e);
         }
@@ -725,7 +786,7 @@ public class ProcessStore {
 
             byte[] imageContent = IOUtils.toByteArray(imageStream);
             return imageContent;
-        } catch (Exception e) {
+        } catch (IOException e) {
             String msg = "Failed to fetch BPMN model: " + path;
             log.error(msg, e);
             throw new ProcessCenterException(msg, e);
@@ -752,29 +813,29 @@ public class ProcessStore {
                 JSONArray successorArray = new JSONArray();
                 JSONArray predecessorArray = new JSONArray();
 
-                conObj.put("subprocesses", subprocessArray);
-                conObj.put("successors", successorArray);
-                conObj.put("predecessors", predecessorArray);
+                conObj.put(ProcessStoreConstants.SUBPROCESSES, subprocessArray);
+                conObj.put(ProcessStoreConstants.SUCCESSORS, successorArray);
+                conObj.put(ProcessStoreConstants.PREDECESSORS, predecessorArray);
 
                 NodeList subprocessElements = ((Element) document.getFirstChild()).getElementsByTagName(
-                        "subprocess");
-                NodeList successorElements = ((Element) document.getFirstChild()).getElementsByTagName("successor");
+                        ProcessStoreConstants.SUBPROCESS);
+                NodeList successorElements = ((Element) document.getFirstChild()).getElementsByTagName(ProcessStoreConstants.SUCCESSOR);
                 NodeList predecessorElements = ((Element) document.getFirstChild()).getElementsByTagName(
-                        "predecessor");
+                        ProcessStoreConstants.PREDECESSOR);
 
                 if (subprocessElements.getLength() != 0) {
                     for (int i = 0; i < subprocessElements.getLength(); i++) {
                         Element subprocessElement = (Element) subprocessElements.item(i);
-                        String subprocessName = subprocessElement.getElementsByTagName("name").item(0).getTextContent();
-                        String subprocessPath = subprocessElement.getElementsByTagName("path").item(0).getTextContent();
-                        String subprocessId = subprocessElement.getElementsByTagName("id").item(0).getTextContent();
+                        String subprocessName = subprocessElement.getElementsByTagName(ProcessStoreConstants.NAME).item(0).getTextContent();
+                        String subprocessPath = subprocessElement.getElementsByTagName(ProcessStoreConstants.PATH).item(0).getTextContent();
+                        String subprocessId = subprocessElement.getElementsByTagName(ProcessStoreConstants.ID).item(0).getTextContent();
                         String subprocessVersion = subprocessPath.substring(subprocessPath.lastIndexOf("/") + 1).trim();
 
                         JSONObject subprocess = new JSONObject();
-                        subprocess.put("name", subprocessName);
-                        subprocess.put("path", subprocessPath);
-                        subprocess.put("id", subprocessId);
-                        subprocess.put("version", subprocessVersion);
+                        subprocess.put(ProcessStoreConstants.NAME, subprocessName);
+                        subprocess.put(ProcessStoreConstants.PATH, subprocessPath);
+                        subprocess.put(ProcessStoreConstants.ID, subprocessId);
+                        subprocess.put(ProcessStoreConstants.VERSION, subprocessVersion);
                         subprocessArray.put(subprocess);
                     }
                 }
@@ -782,16 +843,16 @@ public class ProcessStore {
                 if (successorElements.getLength() != 0) {
                     for (int i = 0; i < successorElements.getLength(); i++) {
                         Element successorElement = (Element) successorElements.item(i);
-                        String successorName = successorElement.getElementsByTagName("name").item(0).getTextContent();
-                        String successorPath = successorElement.getElementsByTagName("path").item(0).getTextContent();
-                        String successorId = successorElement.getElementsByTagName("id").item(0).getTextContent();
+                        String successorName = successorElement.getElementsByTagName(ProcessStoreConstants.NAME).item(0).getTextContent();
+                        String successorPath = successorElement.getElementsByTagName(ProcessStoreConstants.PATH).item(0).getTextContent();
+                        String successorId = successorElement.getElementsByTagName(ProcessStoreConstants.ID).item(0).getTextContent();
                         String successorVersion = successorPath.substring(successorPath.lastIndexOf("/") + 1).trim();
 
                         JSONObject successor = new JSONObject();
-                        successor.put("name", successorName);
-                        successor.put("path", successorPath);
-                        successor.put("id", successorId);
-                        successor.put("version", successorVersion);
+                        successor.put(ProcessStoreConstants.NAME, successorName);
+                        successor.put(ProcessStoreConstants.PATH, successorPath);
+                        successor.put(ProcessStoreConstants.ID, successorId);
+                        successor.put(ProcessStoreConstants.VERSION, successorVersion);
                         successorArray.put(successor);
                     }
                 }
@@ -799,26 +860,34 @@ public class ProcessStore {
                 if (predecessorElements.getLength() != 0) {
                     for (int i = 0; i < predecessorElements.getLength(); i++) {
                         Element predecessorElement = (Element) predecessorElements.item(i);
-                        String predecessorName = predecessorElement.getElementsByTagName("name").item(0)
+                        String predecessorName = predecessorElement.getElementsByTagName(ProcessStoreConstants.NAME).item(0)
                                 .getTextContent();
-                        String predecessorPath = predecessorElement.getElementsByTagName("path").item(0)
+                        String predecessorPath = predecessorElement.getElementsByTagName(ProcessStoreConstants.PATH).item(0)
                                 .getTextContent();
-                        String predecessorId = predecessorElement.getElementsByTagName("id").item(0).getTextContent();
+                        String predecessorId = predecessorElement.getElementsByTagName(ProcessStoreConstants.ID).item(0).getTextContent();
                         String predecessorVersion = predecessorPath.substring(predecessorPath.lastIndexOf("/") + 1)
                                 .trim();
 
                         JSONObject predecessor = new JSONObject();
-                        predecessor.put("name", predecessorName);
-                        predecessor.put("path", predecessorPath);
-                        predecessor.put("id", predecessorId);
-                        predecessor.put("version", predecessorVersion);
+                        predecessor.put(ProcessStoreConstants.NAME, predecessorName);
+                        predecessor.put(ProcessStoreConstants.PATH, predecessorPath);
+                        predecessor.put(ProcessStoreConstants.ID, predecessorId);
+                        predecessor.put(ProcessStoreConstants.VERSION, predecessorVersion);
                         predecessorArray.put(predecessor);
                     }
                 }
                 resourceString = conObj.toString();
             }
-        } catch (Exception e) {
-            log.error("Failed to fetch Successor Predecessor and Subprocess information: " + resourcePath, e);
+        } catch (IOException e) {
+            log.error("I/O Exception. Failed to fetch Successor Predecessor and Subprocess information: " + resourcePath, e);
+        } catch (SAXException e) {
+            log.error("SAX Exception. Failed to fetch Successor Predecessor and Subprocess information: " + resourcePath, e);
+        } catch (JSONException e) {
+            log.error("JSON Exception. Failed to fetch Successor Predecessor and Subprocess information: " + resourcePath, e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception. Failed to fetch Successor Predecessor and Subprocess information: " + resourcePath, e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception. Failed to fetch Successor Predecessor and Subprocess information: " + resourcePath, e);
         }
         return resourceString;
     }
@@ -831,9 +900,9 @@ public class ProcessStore {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 JSONObject processInfo = new JSONObject(ownerDetails);
-                String processName = processInfo.getString("processName");
-                String processVersion = processInfo.getString("processVersion");
-                String processOwner = processInfo.getString("processOwner");
+                String processName = processInfo.getString(ProcessStoreConstants.PROCESS_NAME);
+                String processVersion = processInfo.getString(ProcessStoreConstants.PROCESS_VERSION);
+                String processOwner = processInfo.getString(ProcessStoreConstants.PROCESS_OWNER);
 
                 String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
@@ -841,15 +910,25 @@ public class ProcessStore {
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
+                doc.getElementsByTagName(ProcessStoreConstants.OWNER).item(0).setTextContent(processOwner);
 
                 String newProcessContent = xmlToString(doc);
                 resource.setContent(newProcessContent);
                 reg.put(processAssetPath, resource);
             }
 
-        } catch (Exception e) {
-            log.error("Failed to update the process owner", e);
+        } catch (IOException e) {
+            log.error("I/O Exception. Failed to update the process owner", e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception. Failed to update the process owner", e);
+        } catch (SAXException e) {
+            log.error("SAX Exception.Failed to update the process owner", e);
+        } catch (JSONException e) {
+            log.error("JSON Exception. Failed to update the process owner", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception. Failed to update the process owner", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception. Failed to update the process owner", e);
         }
         return true;
     }
@@ -862,9 +941,9 @@ public class ProcessStore {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 JSONObject processInfo = new JSONObject(subprocessDetails);
-                String processName = processInfo.getString("processName");
-                String processVersion = processInfo.getString("processVersion");
-                JSONObject subprocess = processInfo.getJSONObject("subprocess");
+                String processName = processInfo.getString(ProcessStoreConstants.PROCESS_NAME);
+                String processVersion = processInfo.getString(ProcessStoreConstants.PROCESS_VERSION);
+                JSONObject subprocess = processInfo.getJSONObject(ProcessStoreConstants.SUBPROCESS);
 
                 String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
@@ -874,10 +953,10 @@ public class ProcessStore {
 
                 if (subprocess != null) {
                     Element rootElement = doc.getDocumentElement();
-                    Element subprocessElement = append(doc, rootElement, "subprocess", mns);
-                    appendText(doc, subprocessElement, "name", mns, subprocess.getString("name"));
-                    appendText(doc, subprocessElement, "path", mns, subprocess.getString("path"));
-                    appendText(doc, subprocessElement, "id", mns, subprocess.getString("id"));
+                    Element subprocessElement = append(doc, rootElement, ProcessStoreConstants.SUBPROCESS, ProcessStoreConstants.MNS);
+                    appendText(doc, subprocessElement, ProcessStoreConstants.NAME, ProcessStoreConstants.MNS, subprocess.getString(ProcessStoreConstants.NAME));
+                    appendText(doc, subprocessElement, ProcessStoreConstants.PATH, ProcessStoreConstants.MNS, subprocess.getString(ProcessStoreConstants.PATH));
+                    appendText(doc, subprocessElement, ProcessStoreConstants.ID, ProcessStoreConstants.MNS, subprocess.getString(ProcessStoreConstants.ID));
 
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
@@ -885,8 +964,18 @@ public class ProcessStore {
                 }
             }
 
-        } catch (Exception e) {
-            log.error("Failed to add a subprocess", e);
+        } catch (IOException e) {
+            log.error("I/O Exception. Failed to add a subprocess", e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception. Failed to add a subprocess", e);
+        } catch (SAXException e) {
+            log.error("SAX Exception. Failed to add a subprocess", e);
+        } catch (JSONException e) {
+            log.error("JSON Exception. Failed to add a subprocess", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception. Failed to add a subprocess", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception. Failed to add a subprocess", e);
         }
         return true;
     }
@@ -899,9 +988,9 @@ public class ProcessStore {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 JSONObject processInfo = new JSONObject(successorDetails);
-                String processName = processInfo.getString("processName");
-                String processVersion = processInfo.getString("processVersion");
-                JSONObject successor = processInfo.getJSONObject("successor");
+                String processName = processInfo.getString(ProcessStoreConstants.PROCESS_NAME);
+                String processVersion = processInfo.getString(ProcessStoreConstants.PROCESS_VERSION);
+                JSONObject successor = processInfo.getJSONObject(ProcessStoreConstants.SUCCESSOR);
 
                 String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
@@ -911,10 +1000,10 @@ public class ProcessStore {
 
                 if (successor != null) {
                     Element rootElement = doc.getDocumentElement();
-                    Element successorElement = append(doc, rootElement, "successor", mns);
-                    appendText(doc, successorElement, "name", mns, successor.getString("name"));
-                    appendText(doc, successorElement, "path", mns, successor.getString("path"));
-                    appendText(doc, successorElement, "id", mns, successor.getString("id"));
+                    Element successorElement = append(doc, rootElement, ProcessStoreConstants.SUCCESSOR, ProcessStoreConstants.MNS);
+                    appendText(doc, successorElement, ProcessStoreConstants.NAME, ProcessStoreConstants.MNS, successor.getString(ProcessStoreConstants.NAME));
+                    appendText(doc, successorElement, ProcessStoreConstants.PATH, ProcessStoreConstants.MNS, successor.getString(ProcessStoreConstants.PATH));
+                    appendText(doc, successorElement, ProcessStoreConstants.ID, ProcessStoreConstants.MNS, successor.getString(ProcessStoreConstants.ID));
 
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
@@ -922,8 +1011,18 @@ public class ProcessStore {
                 }
             }
 
-        } catch (Exception e) {
-            log.error("Failed to add a successor", e);
+        } catch (IOException e) {
+            log.error("I/O Exception. Failed to add a successor", e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception. Failed to add a successor", e);
+        } catch (SAXException e) {
+            log.error("SAX Exception. Failed to add a successor", e);
+        } catch (JSONException e) {
+            log.error("JSON Exception. Failed to add a successor", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception. Failed to add a successor", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception. Failed to add a successor", e);
         }
         return true;
     }
@@ -936,9 +1035,9 @@ public class ProcessStore {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 JSONObject processInfo = new JSONObject(predecessorDetails);
-                String processName = processInfo.getString("processName");
-                String processVersion = processInfo.getString("processVersion");
-                JSONObject predecessor = processInfo.getJSONObject("predecessor");
+                String processName = processInfo.getString(ProcessStoreConstants.PROCESS_NAME);
+                String processVersion = processInfo.getString(ProcessStoreConstants.PROCESS_VERSION);
+                JSONObject predecessor = processInfo.getJSONObject(ProcessStoreConstants.PREDECESSOR);
 
                 String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
@@ -948,10 +1047,10 @@ public class ProcessStore {
 
                 if (predecessor != null) {
                     Element rootElement = doc.getDocumentElement();
-                    Element predecessorElement = append(doc, rootElement, "predecessor", mns);
-                    appendText(doc, predecessorElement, "name", mns, predecessor.getString("name"));
-                    appendText(doc, predecessorElement, "path", mns, predecessor.getString("path"));
-                    appendText(doc, predecessorElement, "id", mns, predecessor.getString("id"));
+                    Element predecessorElement = append(doc, rootElement, ProcessStoreConstants.PREDECESSOR, ProcessStoreConstants.MNS);
+                    appendText(doc, predecessorElement, ProcessStoreConstants.NAME, ProcessStoreConstants.MNS, predecessor.getString(ProcessStoreConstants.NAME));
+                    appendText(doc, predecessorElement, ProcessStoreConstants.PATH, ProcessStoreConstants.MNS, predecessor.getString(ProcessStoreConstants.PATH));
+                    appendText(doc, predecessorElement, ProcessStoreConstants.ID, ProcessStoreConstants.MNS, predecessor.getString(ProcessStoreConstants.ID));
 
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
@@ -959,8 +1058,18 @@ public class ProcessStore {
                 }
             }
 
-        } catch (Exception e) {
-            log.error("Failed to add a predecessor", e);
+        } catch (IOException e) {
+            log.error("I/O Exception. Failed to add a predecessor", e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception. Failed to add a predecessor", e);
+        } catch (SAXException e) {
+            log.error("SAX Exception. Failed to add a predecessor", e);
+        } catch (JSONException e) {
+            log.error("JSON Exception. Failed to add a predecessor", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception. Failed to add a predecessor", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception. Failed to add a predecessor", e);
         }
         return true;
     }
@@ -973,9 +1082,9 @@ public class ProcessStore {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 JSONObject processInfo = new JSONObject(deleteSubprocess);
-                String processName = processInfo.getString("processName");
-                String processVersion = processInfo.getString("processVersion");
-                JSONObject subprocess = processInfo.getJSONObject("deleteSubprocess");
+                String processName = processInfo.getString(ProcessStoreConstants.PROCESS_NAME);
+                String processVersion = processInfo.getString(ProcessStoreConstants.PROCESS_VERSION);
+                JSONObject subprocess = processInfo.getJSONObject(ProcessStoreConstants.DELETE_SUBPROCESS);
 
                 String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
@@ -984,16 +1093,16 @@ public class ProcessStore {
                 Document doc = stringToXML(processContent);
 
                 if (subprocess != null) {
-                    NodeList subprocessElements = ((Element) doc.getFirstChild()).getElementsByTagName("subprocess");
+                    NodeList subprocessElements = ((Element) doc.getFirstChild()).getElementsByTagName(ProcessStoreConstants.SUBPROCESS);
                     for (int i = 0; i < subprocessElements.getLength(); i++) {
                         Element subprocessElement = (Element) subprocessElements.item(i);
-                        String subprocessName = subprocessElement.getElementsByTagName("name").item(0).getTextContent();
-                        String subprocessPath = subprocessElement.getElementsByTagName("path").item(0).getTextContent();
-                        String subprocessId = subprocessElement.getElementsByTagName("id").item(0).getTextContent();
+                        String subprocessName = subprocessElement.getElementsByTagName(ProcessStoreConstants.NAME).item(0).getTextContent();
+                        String subprocessPath = subprocessElement.getElementsByTagName(ProcessStoreConstants.PATH).item(0).getTextContent();
+                        String subprocessId = subprocessElement.getElementsByTagName(ProcessStoreConstants.ID).item(0).getTextContent();
 
-                        if (subprocessName.equals(subprocess.getString("name")) &&
-                                subprocessPath.equals(subprocess.getString("path")) &&
-                                subprocessId.equals(subprocess.getString("id"))) {
+                        if (subprocessName.equals(subprocess.getString(ProcessStoreConstants.NAME)) &&
+                                subprocessPath.equals(subprocess.getString(ProcessStoreConstants.PATH)) &&
+                                subprocessId.equals(subprocess.getString(ProcessStoreConstants.ID))) {
                             subprocessElement.getParentNode().removeChild(subprocessElement);
                             break;
                         }
@@ -1003,8 +1112,18 @@ public class ProcessStore {
                     reg.put(processAssetPath, resource);
                 }
             }
-        } catch (Exception e) {
-            log.error("Failed to delete a subprocess", e);
+        } catch (IOException e) {
+            log.error("I/O Exception. Failed to delete a subprocess", e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception. Failed to delete a subprocess", e);
+        } catch (SAXException e) {
+            log.error("SAX Exception. Failed to delete a subprocess", e);
+        } catch (JSONException e) {
+            log.error("JSON Exception. Failed to delete a subprocess", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception. Failed to delete a subprocess", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception. Failed to delete a subprocess", e);
         }
         return true;
     }
@@ -1017,9 +1136,9 @@ public class ProcessStore {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 JSONObject processInfo = new JSONObject(deleteSuccessor);
-                String processName = processInfo.getString("processName");
-                String processVersion = processInfo.getString("processVersion");
-                JSONObject successor = processInfo.getJSONObject("deleteSuccessor");
+                String processName = processInfo.getString(ProcessStoreConstants.PROCESS_NAME);
+                String processVersion = processInfo.getString(ProcessStoreConstants.PROCESS_VERSION);
+                JSONObject successor = processInfo.getJSONObject(ProcessStoreConstants.DELETE_SUCCESSOR);
 
                 String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
@@ -1028,16 +1147,16 @@ public class ProcessStore {
                 Document doc = stringToXML(processContent);
 
                 if (successor != null) {
-                    NodeList successorElements = ((Element) doc.getFirstChild()).getElementsByTagName("successor");
+                    NodeList successorElements = ((Element) doc.getFirstChild()).getElementsByTagName(ProcessStoreConstants.SUCCESSOR);
                     for (int i = 0; i < successorElements.getLength(); i++) {
                         Element successorElement = (Element) successorElements.item(i);
-                        String successorName = successorElement.getElementsByTagName("name").item(0).getTextContent();
-                        String successorPath = successorElement.getElementsByTagName("path").item(0).getTextContent();
-                        String successorId = successorElement.getElementsByTagName("id").item(0).getTextContent();
+                        String successorName = successorElement.getElementsByTagName(ProcessStoreConstants.NAME).item(0).getTextContent();
+                        String successorPath = successorElement.getElementsByTagName(ProcessStoreConstants.PATH).item(0).getTextContent();
+                        String successorId = successorElement.getElementsByTagName(ProcessStoreConstants.ID).item(0).getTextContent();
 
-                        if (successorName.equals(successor.getString("name")) &&
-                                successorPath.equals(successor.getString("path")) &&
-                                successorId.equals(successor.getString("id"))) {
+                        if (successorName.equals(successor.getString(ProcessStoreConstants.NAME)) &&
+                                successorPath.equals(successor.getString(ProcessStoreConstants.PATH)) &&
+                                successorId.equals(successor.getString(ProcessStoreConstants.ID))) {
                             successorElement.getParentNode().removeChild(successorElement);
                             break;
                         }
@@ -1047,8 +1166,18 @@ public class ProcessStore {
                     reg.put(processAssetPath, resource);
                 }
             }
-        } catch (Exception e) {
-            log.error("Failed to delete a successor", e);
+        } catch (IOException e) {
+            log.error("I/O Exception. Failed to delete a successor", e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception. Failed to delete a successor", e);
+        } catch (SAXException e) {
+            log.error("SAX Exception. Failed to delete a successor", e);
+        } catch (JSONException e) {
+            log.error("JSON Exception. Failed to delete a successor", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception. Failed to delete a successor", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception. Failed to delete a successor", e);
         }
         return true;
     }
@@ -1061,29 +1190,29 @@ public class ProcessStore {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 JSONObject processInfo = new JSONObject(deletePredecessor);
-                String processName = processInfo.getString("processName");
-                String processVersion = processInfo.getString("processVersion");
-                JSONObject predecessor = processInfo.getJSONObject("deletePredecessor");
+                String processName = processInfo.getString(ProcessStoreConstants.PROCESS_NAME);
+                String processVersion = processInfo.getString(ProcessStoreConstants.PROCESS_VERSION);
+                JSONObject predecessor = processInfo.getJSONObject(ProcessStoreConstants.DELETE_PREDECESSOR);
 
-                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                String processAssetPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + ProcessStoreConstants.PROCESS_NAME + "/" +
                         processVersion;
                 Resource resource = reg.get(processAssetPath);
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
                 if (predecessor != null) {
-                    NodeList predecessorElements = ((Element) doc.getFirstChild()).getElementsByTagName("predecessor");
+                    NodeList predecessorElements = ((Element) doc.getFirstChild()).getElementsByTagName(ProcessStoreConstants.PREDECESSOR);
                     for (int i = 0; i < predecessorElements.getLength(); i++) {
                         Element predecessorElement = (Element) predecessorElements.item(i);
-                        String predecessorName = predecessorElement.getElementsByTagName("name").item(0)
+                        String predecessorName = predecessorElement.getElementsByTagName(ProcessStoreConstants.NAME).item(0)
                                 .getTextContent();
-                        String predecessorPath = predecessorElement.getElementsByTagName("path").item(0)
+                        String predecessorPath = predecessorElement.getElementsByTagName(ProcessStoreConstants.PATH).item(0)
                                 .getTextContent();
-                        String predecessorId = predecessorElement.getElementsByTagName("id").item(0).getTextContent();
+                        String predecessorId = predecessorElement.getElementsByTagName(ProcessStoreConstants.ID).item(0).getTextContent();
 
-                        if (predecessorName.equals(predecessor.getString("name")) &&
-                                predecessorPath.equals(predecessor.getString("path")) &&
-                                predecessorId.equals(predecessor.getString("id"))) {
+                        if (predecessorName.equals(predecessor.getString(ProcessStoreConstants.NAME)) &&
+                                predecessorPath.equals(predecessor.getString(ProcessStoreConstants.PATH)) &&
+                                predecessorId.equals(predecessor.getString(ProcessStoreConstants.ID))) {
                             predecessorElement.getParentNode().removeChild(predecessorElement);
                             break;
                         }
@@ -1093,8 +1222,18 @@ public class ProcessStore {
                     reg.put(processAssetPath, resource);
                 }
             }
-        } catch (Exception e) {
-            log.error("Failed to delete a predecessor", e);
+        } catch (IOException e) {
+            log.error("I/O Exception. Failed to delete a predecessor", e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception. Failed to delete a predecessor", e);
+        } catch (SAXException e) {
+            log.error("SAX Exception. Failed to delete a predecessor", e);
+        } catch (JSONException e) {
+            log.error("JSON Exception. Failed to delete a predecessor", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception. Failed to delete a predecessor", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception. Failed to delete a predecessor", e);
         }
         return true;
     }
@@ -1115,7 +1254,7 @@ public class ProcessStore {
                 String docContentPath = null;
                 if (docContent.length != 0) {
                     docContentResource.setContent(docContent);
-                    docContentPath = "doccontent/" + processName + "/" + processVersion + "/" + docName +
+                    docContentPath = ProcessStoreConstants.DOC_CONTENT + processName + "/" + processVersion + "/" + docName +
                             "." + docExtension;
                     reg.put(docContentPath, docContentResource);
                 }
@@ -1126,20 +1265,20 @@ public class ProcessStore {
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                int numOfDocAttrs = doc.getElementsByTagName("document").item(0).getChildNodes().getLength();
-                NodeList nodeList = doc.getElementsByTagName("document").item(0).getChildNodes();
+                int numOfDocAttrs = doc.getElementsByTagName(ProcessStoreConstants.DOCUMENT).item(0).getChildNodes().getLength();
+                NodeList nodeList = doc.getElementsByTagName(ProcessStoreConstants.DOCUMENT).item(0).getChildNodes();
 
                 if(numOfDocAttrs != 0) {
                     for(int i = 0; i < numOfDocAttrs; i++) {
-                        if(nodeList.item(i).getNodeName().equals("documentname")) {
+                        if(nodeList.item(i).getNodeName().equals(ProcessStoreConstants.DOCUMENT_NAME)) {
                             nodeList.item(i).setTextContent(docName);
-                        }else if(nodeList.item(i).getNodeName().equals("summary")){
+                        }else if(nodeList.item(i).getNodeName().equals(ProcessStoreConstants.SUMMARY)){
                             nodeList.item(i).setTextContent(docSummary);
-                        }else if(nodeList.item(i).getNodeName().equals("url")){
+                        }else if(nodeList.item(i).getNodeName().equals(ProcessStoreConstants.URL)){
                             if ((docUrl != null) && (!docUrl.isEmpty())) {
                                 nodeList.item(i).setTextContent(docUrl);
                             }
-                        }else if(nodeList.item(i).getNodeName().equals("path")){
+                        }else if(nodeList.item(i).getNodeName().equals(ProcessStoreConstants.PATH)){
                             if (docContentPath != null) {
                                 nodeList.item(i).setTextContent(docContentPath);
                             }
@@ -1153,8 +1292,16 @@ public class ProcessStore {
                 Resource storedProcessAsset = reg.get(processAssetPath);
                 processId = storedProcessAsset.getUUID();
             }
-        } catch (Exception e) {
-            log.error("Upload documentation error.");
+        } catch (IOException e) {
+            log.error("I/O Exception when uploading a documentation", e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception when uploading a documentation", e);
+        } catch (SAXException e) {
+            log.error("SAX Exception when uploading a documentation", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception when uploading a documentation", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception when uploading a documentation", e);
         }
         return processId;
     }
@@ -1174,28 +1321,37 @@ public class ProcessStore {
                 Document document = builder.parse(new InputSource(new StringReader(resourceContent)));
 
                 JSONArray documentArray = new JSONArray();
-                NodeList documentElements = ((Element) document.getFirstChild()).getElementsByTagName("document");
+                NodeList documentElements = ((Element) document.getFirstChild()).getElementsByTagName(ProcessStoreConstants.DOCUMENT);
 
                 if (documentElements.getLength() != 0) {
                     for (int i = 0; i < documentElements.getLength(); i++) {
+
                         Element documentElement = (Element) documentElements.item(i);
-                        String docName = documentElement.getElementsByTagName("documentname").item(0).getTextContent();
-                        String docSummary = documentElement.getElementsByTagName("summary").item(0).getTextContent();
-                        String docUrl = documentElement.getElementsByTagName("url").item(0).getTextContent();
-                        String docPath = documentElement.getElementsByTagName("path").item(0).getTextContent();
+                        String docName = documentElement.getElementsByTagName(ProcessStoreConstants.DOCUMENT_NAME).item(0).getTextContent();
+                        String docSummary = documentElement.getElementsByTagName(ProcessStoreConstants.SUMMARY).item(0).getTextContent();
+                        String docUrl = documentElement.getElementsByTagName(ProcessStoreConstants.URL).item(0).getTextContent();
+                        String docPath = documentElement.getElementsByTagName(ProcessStoreConstants.PATH).item(0).getTextContent();
 
                         JSONObject processDoc = new JSONObject();
-                        processDoc.put("documentname", docName);
-                        processDoc.put("summary", docSummary);
-                        processDoc.put("url", docUrl);
-                        processDoc.put("path", docPath);
+                        processDoc.put(ProcessStoreConstants.DOCUMENT_NAME, docName);
+                        processDoc.put(ProcessStoreConstants.SUMMARY, docSummary);
+                        processDoc.put(ProcessStoreConstants.URL, docUrl);
+                        processDoc.put(ProcessStoreConstants.PATH, docPath);
                         documentArray.put(processDoc);
                     }
                 }
                 documentString = documentArray.toString();
             }
-        }catch (Exception e){
-            log.error("Failed to fetch document: " + resourcePath);
+        } catch (IOException e) {
+            log.error("I/O Exception when fetching a document: " + resourcePath, e);
+        } catch (SAXException e) {
+            log.error("SAX Exception when fetching a document: " + resourcePath, e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception when fetching a document: " + resourcePath, e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception when fetching a document: " + resourcePath, e);
+        } catch (JSONException e) {
+            log.error("JSON Exception when fetching a document: " + resourcePath, e);
         }
         return documentString;
     }
@@ -1213,16 +1369,14 @@ public class ProcessStore {
                     log.debug("Document Path:" + resourcePath);
                 }
             }
-        } catch (Exception e) {
-            log.error("Failed to fetch document: " + resourcePath);
+        } catch (RegistryException e) {
+            log.error("Registry Exception when fetching a document: " + resourcePath, e);
         }
+
         return docString;
     }
 
     public String getProcessTags() throws ProcessCenterException {
-
-        String textContent = "FAILED TO GET PROCESS TAGS";
-
         try {
             JSONObject tagsObj = new JSONObject();
 
@@ -1231,20 +1385,20 @@ public class ProcessStore {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 String[] processPaths = GovernanceUtils
-                        .findGovernanceArtifacts("application/vnd.wso2-process+xml", reg);
+                        .findGovernanceArtifacts(ProcessStoreConstants.MEDIA_TYPE_APPLICATION_VND, reg);
                 for (String processPath : processPaths) {
                     Resource processResource = reg.get(processPath);
 
                     String processContent = new String((byte[]) processResource.getContent());
                     Document processXML = stringToXML(processContent);
-                    String processName = processXML.getElementsByTagName("name").item(0).getTextContent();
-                    String processVersion = processXML.getElementsByTagName("version").item(0).getTextContent();
+                    String processName = processXML.getElementsByTagName(ProcessStoreConstants.NAME).item(0).getTextContent();
+                    String processVersion = processXML.getElementsByTagName(ProcessStoreConstants.VERSION).item(0).getTextContent();
 
                     JSONObject processJSON = new JSONObject();
-                    processJSON.put("path", processPath);
-                    processJSON.put("processid", processResource.getUUID());
-                    processJSON.put("processname", processName);
-                    processJSON.put("processversion", processVersion);
+                    processJSON.put(ProcessStoreConstants.PATH, processPath);
+                    processJSON.put(ProcessStoreConstants.PROCESS_ID, processResource.getUUID());
+                    processJSON.put(ProcessStoreConstants.PROCESS_NAME, processName);
+                    processJSON.put(ProcessStoreConstants.PROCESS_VERSION, processVersion);
                     Tag[] tags = reg.getTags(processPath);
 
                     for (Tag tag : tags) {
@@ -1277,20 +1431,17 @@ public class ProcessStore {
                     }
                 }
 
-                textContent = tagsObj.toString();
+                return tagsObj.toString();
 
             } else {
                 String msg = "Registry service not available for retrieving processes.";
                 throw new ProcessCenterException(msg);
             }
-        } catch (Exception e) {
-            String msg = "Failed";
+        } catch (RegistryException | ParserConfigurationException | SAXException | JSONException | IOException e) {
+            String msg = "Unable to process process tags";
             log.error(msg, e);
             throw new ProcessCenterException(msg, e);
         }
-
-        return textContent;
-
     }
 
     public String associatePDF(String processName, String processVersion, Object object) {
@@ -1309,10 +1460,10 @@ public class ProcessStore {
                 byte[] pdfContent = IOUtils.toByteArray(pdfStream);
 
                 pdfContentResource.setContent(pdfContent);
-                pdfContentResource.setMediaType("application/pdf");
-                String pdfContentPath = "pdf/" + processName + "/" + processVersion;
+                pdfContentResource.setMediaType(ProcessStoreConstants.APPLICATION_PDF);
+                String pdfContentPath = ProcessStoreConstants.PDF + "/" + processName + "/" + processVersion;
                 reg.put(pdfContentPath, pdfContentResource);
-                String processPath = "processes/" + processName + "/" + processVersion;
+                String processPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
 
                 // update process by linking the pdf asset
 
@@ -1321,7 +1472,7 @@ public class ProcessStore {
                 String processContent = new String(processContentBytes);
                 Document pdoc = stringToXML(processContent);
 
-                pdoc.getElementsByTagName("pdf").item(0).getFirstChild().setTextContent(pdfContentPath);
+                pdoc.getElementsByTagName(ProcessStoreConstants.PDF).item(0).getFirstChild().setTextContent(pdfContentPath);
                 String newProcessContent = xmlToString(pdoc);
                 processAsset.setContent(newProcessContent);
                 reg.put(processPath, processAsset);
@@ -1329,8 +1480,16 @@ public class ProcessStore {
                 Resource storedProcessAsset = reg.get(processPath);
                 processId = storedProcessAsset.getUUID();
             }
-        } catch (Exception e) {
-            log.error(e);
+        } catch (IOException e) {
+            log.error("I/O Exception when associating a pdf", e);
+        } catch (SAXException e) {
+            log.error("SAX Exception when associating a pdf", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception when associating a pdf ", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception when associating a pdf ", e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception when associating a pdf", e);
         }
 
         log.info("successfully added pdf asset");
@@ -1345,7 +1504,7 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                pdfPath = pdfPath.substring("/_system/governance/".length());
+                pdfPath = pdfPath.substring(ProcessStoreConstants.GREG_PATH.length());
                 Resource pdfAsset = reg.get(pdfPath);
                 byte[] pdfContent = (byte[]) pdfAsset.getContent();
                 pdfString = new sun.misc.BASE64Encoder().encode(pdfContent);
@@ -1353,8 +1512,8 @@ public class ProcessStore {
                     log.debug("PDF PATH:" + pdfPath);
                 }
             }
-        } catch (Exception e) {
-            log.error("Failed to fetch pdf: " + pdfPath);
+        } catch (RegistryException e) {
+            log.error("Registry Exception when fetching a pdf" + pdfPath, e);
         }
 
         return pdfString;
@@ -1375,10 +1534,10 @@ public class ProcessStore {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
                 Resource flowchartContentResource = reg.newResource();
                 flowchartContentResource.setContent(flowchartJson);
-                flowchartContentResource.setMediaType("application/json");
-                String flowchartContentPath = "flowchart/" + processName + "/" + processVersion;
+                flowchartContentResource.setMediaType(ProcessStoreConstants.MEDIA_TYPE_APPLICATION_JSON);
+                String flowchartContentPath = ProcessStoreConstants.FLOWCHART + "/" + processName + "/" + processVersion;
                 reg.put(flowchartContentPath, flowchartContentResource);
-                String processPath = "processes/" + processName + "/" + processVersion;
+                String processPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
 
                 // update process by linking the pdf asset
                 Resource processAsset = reg.get(processPath);
@@ -1386,7 +1545,7 @@ public class ProcessStore {
                 String processContent = new String(processContentBytes);
                 Document processXMLContent = stringToXML(processContent);
 
-                processXMLContent.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent(flowchartContentPath);
+                processXMLContent.getElementsByTagName(ProcessStoreConstants.FLOWCHART).item(0).getFirstChild().setTextContent(flowchartContentPath);
 
                 String newProcessContent = xmlToString(processXMLContent);
                 processAsset.setContent(newProcessContent);
@@ -1395,8 +1554,16 @@ public class ProcessStore {
                 Resource storedProcessAsset = reg.get(processPath);
                 processId = storedProcessAsset.getUUID();
             }
-        } catch (Exception e) {
-            log.error(e.getMessage());
+        } catch (IOException e) {
+            log.error("I/O Exception when uploading a flowchart", e);
+        } catch (SAXException e) {
+            log.error("SAX Exception when uploading a flowchart", e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception when uploading a flowchart", e);
+        } catch (RegistryException e) {
+            log.error("Registry Exception when uploading a flowchart", e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception when uploading a flowchart", e);
         }
         return processId;
     }
@@ -1412,44 +1579,46 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                flowchartPath = flowchartPath.substring("/_system/governance/".length());
+                flowchartPath = flowchartPath.substring(ProcessStoreConstants.GREG_PATH.length());
                 Resource flowchartAsset = reg.get(flowchartPath);
                 flowchartString = new String((byte[]) flowchartAsset.getContent());
             }
-        } catch (Exception e) {
-            log.error(e.getMessage());
+        } catch (RegistryException e) {
+            log.error("Registry Exception when fetching a flowchart", e);
         }
 
         return flowchartString;
     }
 
     /**
-     *
-     * @param processName
-     * @param processVersion
-     * @param bpmndesignJson
+     * Uploads the json file/string to the registry against the process id
+     * @param processName name of the process
+     * @param processVersion version of the process
+     * @param bpmndesignJson json to be included in the registry
      * @return the bpmn diagram json string for a process
      */
     public String uploadBpmnDesign(String processName, String processVersion, String bpmndesignJson) {
         String processId = "NA";
-        log.debug("Creating bpmn design...");
+        if (log.isDebugEnabled()) {
+            log.debug("Creating bpmn design...");
+        }
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
                 Resource bpmnDesignContentResource = reg.newResource();
                 bpmnDesignContentResource.setContent(bpmndesignJson);
-                bpmnDesignContentResource.setMediaType("application/json");
-                String bpmnDesignContentPath = "bpmnDesign/" + processName + "/" + processVersion;
+                bpmnDesignContentResource.setMediaType(ProcessStoreConstants.MEDIA_TYPE_APPLICATION_JSON);
+                String bpmnDesignContentPath = ProcessStoreConstants.BPMN_DESIGN + "/" + processName + "/" + processVersion;
                 reg.put(bpmnDesignContentPath, bpmnDesignContentResource);
-                String processPath = "processes/" + processName + "/" + processVersion;
+                String processPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
 
-                // update process by linking the pdf asset
+
                 Resource processAsset = reg.get(processPath);
                 byte[] processContentBytes = (byte[]) processAsset.getContent();
                 String processContent = new String(processContentBytes);
                 Document processXMLContent = stringToXML(processContent);
-                processXMLContent.getElementsByTagName("bpmnDesign").item(0).getFirstChild().setTextContent(bpmnDesignContentPath);
+                processXMLContent.getElementsByTagName(ProcessStoreConstants.BPMN_DESIGN).item(0).getFirstChild().setTextContent(bpmnDesignContentPath);
 
                 String newProcessContent = xmlToString(processXMLContent);
                 processAsset.setContent(newProcessContent);
@@ -1458,8 +1627,16 @@ public class ProcessStore {
                 Resource storedProcessAsset = reg.get(processPath);
                 processId = storedProcessAsset.getUUID();
             }
-        } catch (Exception e) {
-            log.error(e.getMessage());
+        } catch (RegistryException e) {
+            log.error("Registry Exception when uploading the bpmn design" ,e);
+        } catch (TransformerException e) {
+            log.error("Transfomer Exception when uploading the bpmn design" ,e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception when uploading the bpmn design", e);
+        } catch (SAXException e) {
+            log.error("SAX Exception when uploading the bpmn design", e);
+        } catch (IOException e) {
+            log.error("I/O Exception when uploading the bpmn design", e);
         }
         return processId;
     }
@@ -1476,12 +1653,12 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                bpmnDiagramPath = bpmnDiagramPath.substring("/_system/governance/".length());
+                bpmnDiagramPath = bpmnDiagramPath.substring(ProcessStoreConstants.GREG_PATH.length());
                 Resource bpmnDiagramAsset = reg.get(bpmnDiagramPath);
                 bpmnDiagramString = new String((byte[]) bpmnDiagramAsset.getContent());
             }
-        } catch (Exception e) {
-            log.error(e.getMessage());
+        } catch (RegistryException e) {
+            log.error("Registry Exception when reteriving the bpmn design" ,e);
         }
 
         return bpmnDiagramString;
@@ -1495,28 +1672,32 @@ public class ProcessStore {
     public void deletebpmnDiagram(String name, String version){
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
-            String flowchartContentPath = "bpmnDesign/" + name + "/" +version;
+            String flowchartContentPath = ProcessStoreConstants.BPMN_PATH + "/" + name + "/" +version;
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
                 reg.delete(flowchartContentPath);
 
-                String processPath = "processes/" + name + "/" + version;
+                String processPath = ProcessStoreConstants.PROCESS_ASSET_ROOT + name + "/" + version;
                 Resource processResource = reg.get(processPath);
 
                 String processContent = new String((byte[]) processResource.getContent());
                 Document processXML = stringToXML(processContent);
-                processXML.getElementsByTagName("bpmnDesign").item(0).getFirstChild().setTextContent("NA");
+                processXML.getElementsByTagName(ProcessStoreConstants.BPMN_DESIGN).item(0).getFirstChild().setTextContent("NA");
 
                 String newProcessContent = xmlToString(processXML);
                 processResource.setContent(newProcessContent);
                 reg.put(processPath, processResource);
             }
         } catch (RegistryException e) {
-            String errorMessage = "Failed to upload the bpmn diagram for process " + name + "-" + version;
-            log.error(errorMessage, e);
-        } catch (Exception e) {
-            String errorMessage = "Failed to upload the bpmn diagram for process " + name + "-" + version;
-            log.error(errorMessage, e);
+            log.error("Registry Exception when deleting a bpmn process diagram : " + name + "-" + version, e);
+        } catch (IOException e) {
+            log.error("I/O Exception when deleting a bpmn process diagram : " + name + "-" + version, e);
+        } catch (SAXException e) {
+            log.error("SAX Exception when deleting a bpmn process diagram  : " + name + "-" + version, e);
+        } catch (ParserConfigurationException e) {
+            log.error("Parser Configuration Exception when deleting a bpmn process diagram  : " + name + "-" + version, e);
+        } catch (TransformerException e) {
+            log.error("Transformer Exception when deleting a bpmn process diagram  : " + name + "-" + version, e);
         }
     }
 
