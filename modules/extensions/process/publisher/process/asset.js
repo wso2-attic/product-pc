@@ -115,6 +115,9 @@ asset.server = function(ctx) {
                    }, {
                        url: 'get_role_permission',
                        path: 'get_role_permission.jag'
+                   }, {
+                       url: 'export_process',
+                       path: 'export_process.jag'
                    }
             ],
             pages: [{
@@ -354,6 +357,8 @@ asset.renderer = function(ctx) {
             }
 
             var processName = page.assets.tables[0].fields.name.value; //tables[0].fields["Name"].value;
+            page.processName = page.assets.tables[0].fields.name.value;
+            page.processVersion = page.assets.tables[0].fields.version.value;
             var processVersion = page.assets.tables[0].fields.version.value;
             try {
                 var processTags = ps.getProcessTags(processName, processVersion);

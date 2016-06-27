@@ -27,7 +27,15 @@ public class ProcessCenterConstants {
     public static final String DOC_CONTENT_PATH = "doccontent/";
     public static final String UI_PERMISSION_ACTION = "ui.execute";
 
-    public static final String PROCESS_UPDATE_PERMISSION = "/permission/admin/enterprisestore/apps/publisher/features/assets/process/update";
+    public static final String PROCESS_UPDATE_PERMISSION =
+            "/permission/admin/enterprisestore/apps/publisher/features/assets/process/update";
+    public static final String PROCESS_EXPORT_DIR = "/home/samithac/Desktop/Exports/";
+    public static final String EXPORTED_PROCESS_RXT_FILE = "process_rxt.xml";
+    public static final String EXPORTED_BPMN_FILE = "bpmn.xml";
+    public static final String EXPORTED_BPMN_CONTENT_FILE = "bpmn_content.xml";
+    public static final String EXPORTED_FLOW_CHART_FILE = "flowChart.json";
+    public static final String EXPORTED_PROCESS_TEXT_FILE = "process_text.xml";
+    public static final int JSON_FILE_INDENT_FACTOR = 5;
 
     public static class AUDIT {
 

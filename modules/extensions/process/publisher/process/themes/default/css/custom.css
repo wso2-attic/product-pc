@@ -374,3 +374,21 @@
     background-color: #333;
 }
 
+.label-highlighted {
+    display: inline;
+    padding: .6em .8em .6em;
+    padding-top: 0.6em;
+    padding-right: 0.8em;
+    padding-bottom: 0.6em;
+    padding-left: 0.8em;
+    font-size: 80%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+    width: 10%;
+    background-color: rgb(194, 194, 194);
+}

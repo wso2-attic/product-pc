@@ -1180,3 +1180,29 @@ function removeBPMNDiagramListener() {
     });
     confirmModal.modal('show');
 }
+
+function exportProcess(processName,processVersion){
+    var exportWithAssociations = document.getElementById("exportWithAssociationsChkBox").checked;
+
+
+
+    $.ajax({
+        url: '/publisher/assets/process/apis/export_process',
+        type: 'POST',
+        data: {
+            'processName': processName,
+            'processVersion': processVersion
+        },
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                alertify.success ("Process Exporting Succeeded");
+            } else {
+                alertify.error(response.content);
+            }
+        },
+        error: function () {
+            alertify.error('Process Exporting Failed');
+        }
+    });
+}
