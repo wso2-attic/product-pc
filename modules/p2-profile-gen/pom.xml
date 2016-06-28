@@ -313,9 +313,23 @@
                                     org.wso2.carbon.registry:org.wso2.carbon.registry.task.feature:${carbon.registry.version}
                                 </featureArtifactDef>
 
+
+                                <!-- Dashboard features -->
                                 <feaureArtifactDef>
                                     org.wso2.carbon.dashboards:org.wso2.carbon.dashboards.shindig.feature:${carbon.dashboards.version}
                                 </feaureArtifactDef>
+
+                                <featureArtifactDef>
+                                    org.wso2.carbon.dashboards:org.wso2.carbon.dashboards.deployment.feature:${carbon.dashboards.version}
+                                </featureArtifactDef>
+
+                                <featureArtifactDef>
+                                    org.jaggeryjs.modules:i18n.feature:${i18n.feature.version}
+                                </featureArtifactDef>
+
+                                <featureArtifactDef>
+                                    org.wso2.carbon.dashboards:org.wso2.carbon.dashboards.portal.feature:${carbon.dashboards.version}
+                                </featureArtifactDef>
 
                                 <feaureArtifactDef>
                                     org.wso2.carbon.store:org.wso2.carbon.store.extensions.assets.gadget.feature:${carbon.store.version}
@@ -685,9 +699,25 @@
                                     <version>${axis2-transports.wso2.version}</version>
                                 </feature>
 
+                                <!-- Dashboards -->
                                 <feature>
                                     <id>org.wso2.carbon.dashboards.shindig.feature.group</id>
                                     <version>${carbon.dashboards.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.carbon.dashboard.deployment.feature.group</id>
+                                    <version>${carbon.dashboards.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.carbon.dashboards.portal.feature.group</id>
+                                    <version>${carbon.dashboards.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.jaggeryjs.modules.i18n.feature.group</id>
+                                    <version>${i18n.feature.version}</version>
                                 </feature>
 
                                 <!-- es extensions -->
