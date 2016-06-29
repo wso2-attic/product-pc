@@ -15,6 +15,7 @@
   -->
 <div class="control-group">
     <div class="collapse in responsive-form-container" id="collapseprocessinfo">
+        <div class="title">Overview</div>
         <form class="form-horizontal font" style="padding-top: 50px; padding-left: 50px">
             <div class="form-group">
 
@@ -51,7 +52,8 @@
                 <label class="custom-form-label col-lg-1 col-md-2 col-sm-12 col-xs-12">Description</label>
 
                 <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                        <textarea placeholder="Process Description" row="3" style="width:100%; height:70px"  name="overview_description"
+                        <textarea placeholder="Process Description" row="3" style="width:100%; height:70px"
+                                  name="overview_description"
                                   id="overview_description" class="input-large"></textarea>
                 </div>
             </div>
@@ -60,34 +62,46 @@
                 <label class="custom-form-label col-lg-1 col-md-2 col-sm-12 col-xs-12">Tags</label>
 
                 <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input type="text" id="tagbox" class="form-control"/>
+                    <input type="text" id="tag-box" class="form-control"/>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="custom-form-label col-lg-1 col-md-2 col-sm-12 col-xs-12">Image</label>
-
                 <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input type="file" class="form-control" value="" name="images_thumbnail" id="images_thumbnail"
-                           onchange="readImage(this);">
+                    <input type="file" class="filestyle form-control" value="" name="images_thumbnail"
+                           id="images_thumbnail"
+                           onchange="readImage(this);" data-buttonText="Browse">
                     <input type="hidden" id="processImage" name="processImage" value=""/>
                 </div>
             </div>
+
+            <div style="margin-left: 1000px;
+margin-top: -200px;width:250px;height: 250px;">
+                <img id="image" alt="thumbnail" class="square-element img-thumbnail"
+                     src="#" style="border: 3px solid;border-color: #003bb3;display: none">
+            </div>
+
+
         </form>
-    </div>
-    <div id="processButtons" class="form-actions">
-        <div class="form-group">
-            <div class="col-sm-offset-1 col-sm-10">
-                <button class="btn btn-success" id="saveProcessBtn" value="Save process" onclick="saveProcess(this)">
-                    Save
-                </button> &nbsp;
-                <button class="btn btn-success" id="detailsProcessBtn" value="Process Details"
-                        onclick="saveProcess(this)">
-                    Details
-                </button>
+        <div id="processButtons" class="form-actions">
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-10" style="margin-left: 40px;
+                        margin-top: 30px;">
+                    <button class="btn btn-success" id="saveProcessBtn" value="Save process"
+                            onclick="saveProcess(this)">
+                        Save
+                    </button>
+                    &nbsp;
+                    <button class="btn btn-success" id="detailsProcessBtn" value="Process Details"
+                            onclick="saveProcess(this)" style="top: 0px">
+                        Details&nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
+
 </div>
 
 

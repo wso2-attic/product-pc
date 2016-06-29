@@ -17,19 +17,19 @@
     <div class="row-fluid">
         <div class="span12">
             <!-- Row -->
-            <form id="addNewDoc" enctype="multipart/form-data" action="apis/upload_documents"
-                  onsubmit="return validateDocs()" method="POST" style="margin-left: 20px;" target="_blank">
+            <form id="addNewDoc" enctype="multipart/form-data"
+                  style="margin-left: 20px;" target="_blank">
                 <div class="container-fluid" style="padding-left:0">
                     <div id="newDoc">
                         <div class="row-fluid">
                             <div class="span6 name-column" style="float:left;width:50%;">
                                 <div class="control-group">
-                                    <label class="control-label" for="docName">Name<span
+                                    <label class="control-label font" for="docName">Name<span
                                             class="requiredAstrix"
                                             style="color: red;">*</span></label>
 
                                     <div class="controls">
-                                        <input type="text" class="required validInput"
+                                        <input type="text" class="required validInput form-control font"
                                                id="docName" name="docName"
                                                style="width:100%">
                                     </div>
@@ -39,8 +39,8 @@
                                     <label class="control-label" for="textarea">Summary</label>
 
                                     <div class="controls">
-                                        <textarea id="summaryDoc" name="summaryDoc" rows="3"
-                                                  style="width:100%"></textarea>
+                                        <textarea id="summaryDoc" class="form-control font" name="summaryDoc" rows="3"
+                                                  style="max-width: 100%;"></textarea>
                                     </div>
                                 </div>
                                 <input type="hidden" id="docProcessName" name="docProcessName"/>
@@ -49,7 +49,7 @@
                                 <input type="hidden" id="docExtension" name="docExtension"/>
                             </div>
 
-                            <div class="span6" style="float:right;width:48%;">
+                            <div class="span6" style="float:right;width:48%;margin-top: 25px;">
                                 <div class="well">
                                     <div class="control-group">
                                         <label class="control-label">Source</label>
@@ -121,7 +121,7 @@
                                 <div class="control-group">
                                     <!--<button type="button" class="btn btn-primary" id="saveDocBtn" onclick="saveDoc()">Add Document</button>-->
                                     <input type="submit" class="btn btn-primary" id="saveDocBtn"
-                                           value="Add Document">
+                                           value="Add Document" style="display: none">
                                 </div>
                             </div>
 

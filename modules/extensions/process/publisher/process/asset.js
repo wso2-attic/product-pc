@@ -248,7 +248,9 @@ asset.renderer = function(ctx) {
         return navList.list();
     };
     var buildAddLeftNav = function(page, util) {
-        return [];
+        var navList = util.navList();
+        navList.push('Processes', 'btn-stats', util.buildUrl('list'));
+        return navList.list();
     };
     var isActivatedAsset = function(assetType) {
         var app = require('rxt').app;

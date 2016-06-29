@@ -21,13 +21,13 @@ var processNames = [];
 var processListObj;
 var tagList = [];
 var allProcessTags = [];
-var pname,pversion,PID;
+var pname, pversion, PID;
 
 window.onload = function () {
     getProcessList();
     getAllProcessTags();
 
-    $('#tagbox').tokenfield({
+    $('#tag-box').tokenfield({
         autocomplete: {
             source: allProcessTags,
             delay: 100
@@ -35,31 +35,22 @@ window.onload = function () {
         showAutocompleteOnFocus: true
     });
 
-    $('#tagbox').on('tokenfield:createtoken', function (event) {
+    $('#tag-box').on('tokenfield:createtoken', function (event) {
         var existingTokens = $(this).tokenfield('getTokens');
         $.each(existingTokens, function (index, token) {
             if (token.value === event.attrs.value)
                 event.preventDefault();
         });
     });
-
     loadOverview();
-
 };
 
 function showTextEditor(element) {
-    // if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
-    //     alertify.error('please fill the required fields.');
-    // } else {
-    // saveProcess(element);
-
 
     completeTextDetails();
-    $("#processTextDiv").show();
     $("#bpmnEditDiv").hide();
     $("#docEditDiv").hide();
     $("#flowChartView").hide();
-    $("#processTextContainer").hide();
     $("#bpmnViewDiv").hide();
     $("#docViewDiv").hide();
     $('#textEditor').addClass("clicked");
@@ -67,143 +58,148 @@ function showTextEditor(element) {
     $('#flowChart').removeClass("clicked");
     $('#doc').removeClass("clicked");
 
-    tinymce.init({
-        selector: "#processContent"
-    });
-
-    if($("#textadded").hasClass("fw-check")) {
-
-        $.ajax({
-            url: '/publisher/assets/process/apis/get_process_text?process_text_path=/processText/' + pname + "/" + pversion,
-            type: 'GET',
-            success: function (data) {
-                var response = JSON.parse(data);
-                if (response.error === false) {
-                    $("#processText").html(response.content);
-                } else {
-                    alertify.error(response.content);
-                }
-            },
-            error: function () {
-                alertify.error('Text editor error');
-            }
-        });
-
-
-        if (!($(element).attr('id') == 'editText')) {
-            $("#processTextContainer").show();
-            $("#processTextDiv").hide();
-
+    if ($("#textadded").hasClass("fw-check")) {
+        getProcessText();
+        if ($(element).attr('id') == 'editText') {
+            $("#processTextView").hide();
+            $("#processTextEditDiv").show();
+            $(".active").removeClass("active");
+            $("#processTextEditDiv").addClass("active");
+        }
+        else {
+            $("#processTextEditDiv").hide();
+            $("#processTextView").show();
+            $(".active").removeClass("active");
         }
     }
 
-    // }
+    else {
+        $("#processTextView").hide();
+        $("#processTextEditDiv").show();
+        $(".active").removeClass("active");
+        $("#processTextEditDiv").addClass("active");
+
+        tinymce.init({
+            selector: "#processContent"
+        });
+    }
 }
 
+function getProcessText() {
 
-function associateBPMN(element) {
-    // if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
-    //     alertify.error('please fill the required fields.');
-    // } else {
+    $.ajax({
+        url: '/publisher/assets/process/apis/get_process_text?process_text_path=/processText/' + pname + "/" + pversion,
+        type: 'GET',
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                $("#processText").html(response.content);
+            } else {
+                alertify.error(response.content);
+            }
+        },
+        error: function () {
+            alertify.error('Text editor error');
+        }
+    });
+}
 
-    //saveProcess(element);
+function associateBPMN() {
+
     $("#bpmnProcessName").val(pname);
     $("#bpmnProcessVersion").val(pversion);
-    $("#processTextDiv").hide();
+    $("#processTextEditDiv").hide();
     $("#docEditDiv").hide();
-    $("#bpmnEditDiv").show();
     $("#flowChartView").hide();
-    $("#processTextContainer").hide();
+    $("#processTextView").hide();
     $("#bpmnViewDiv").hide();
     $("#docViewDiv").hide();
+    document.forms["bpmn_form"].reset();
+    $("#bpmnEditDiv").show();
+    $(".active").removeClass("active");
+    $("#bpmnEditDiv").addClass("active");
     $('#textEditor').removeClass("clicked");
     $('#bpmn').addClass("clicked");
     $('#flowChart').removeClass("clicked");
     $('#doc').removeClass("clicked");
 
-    if($("#bpmnadded").hasClass("fw-check")){
-
-
-        $.ajax({
-            url: '/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/' + pname + "/" + pversion,
-            type: 'GET',
-            success: function (data) {
-                var response = JSON.parse(data);
-                if (response.error === false) {
-                    var bpmnObject = JSON.parse(response.content);
-                    $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
-                } else {
-                    alertify.error(response.content);
-                }
-            },
-            error: function () {
-                alertify.error('BPMN diagram showing error');
-            }
-        });
-
-        $("#bpmnViewDiv").show();
+    if ($("#bpmnadded").hasClass("fw-check")) {
+        getBPMN();
         $("#bpmnEditDiv").hide();
-
+        $("#bpmnViewDiv").show();
+        $(".active").removeClass("active");
     }
-
-    // }
 }
 
-function associateFlowChart(element) {
-    // if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
-    //     alertify.error('please fill the required fields.');
-    // } else {
-    // saveProcess(element);
-    // $('#flow-chart-view-header').text($('#pName').val());
-    // $("#overviewDiv").hide();
-    $("#flowChartView").show();
+function getBPMN() {
+
+    $.ajax({
+        url: '/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/' + pname + "/" + pversion,
+        type: 'GET',
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                var bpmnObject = JSON.parse(response.content);
+                $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
+            } else {
+                alertify.error(response.content);
+            }
+        },
+        error: function () {
+            alertify.error('BPMN diagram showing error');
+        }
+    });
+}
+
+
+function associateFlowChart() {
+
     $("#docEditDiv").hide();
     $("#docViewDiv").hide();
     $("#bpmnEditDiv").hide();
-    $("#processTextDiv").hide();
-    $("#processTextContainer").hide();
+    $("#processTextEditDiv").hide();
+    $("#processTextView").hide();
     $("#bpmnViewDiv").hide();
+    $("#flowChartView").show();
+    $(".active").removeClass("active");
+    $("#flowChartView").addClass("active");
     $('#textEditor').removeClass("clicked");
     $('#bpmn').removeClass("clicked");
     $('#flowChart').addClass("clicked");
     $('#doc').removeClass("clicked");
-    //}
 }
 
-function associateDocument(element) {
-    // if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
-    //     alertify.error('please fill the required fields.');
-    // } else {
-    // $('#document-view-header').text($('#pName').val());
-    //saveProcess(element);
-    // $("#overviewDiv").hide();
-    $("#processTextDiv").hide();
+function associateDocument() {
+
+    $("#processTextEditDiv").hide();
     $("#bpmnEditDiv").hide();
-    $("#docEditDiv").show();
     $("#docViewDiv").hide();
     $("#flowChartView").hide();
-    $("#processTextContainer").hide();
+    $("#processTextView").hide();
     $("#bpmnViewDiv").hide();
+    document.forms["addNewDoc"].reset();
+    $("#docEditDiv").show();
+    $(".active").removeClass("active");
+    $("#docEditDiv").addClass("active");
     $('#textEditor').removeClass("clicked");
     $('#bpmn').removeClass("clicked");
     $('#flowChart').removeClass("clicked");
     $('#doc').addClass("clicked");
 
-    if($("#docadded").hasClass("fw-check")){
+    if ($("#docadded").hasClass("fw-check")) {
         $("#docEditDiv").hide();
         showDocument();
         $("#docViewDiv").show();
+        $(".active").removeClass("active");
     }
-
-    // }
 }
 
 
 function showMain() {
-    $("#mainView").show();
     $("#bpmnEditDiv").hide();
     $("#processTextView").hide();
     $("#flowChartView").hide();
+    $("#mainView").show();
 }
 
 function saveProcess(currentElement) {
@@ -211,13 +207,13 @@ function saveProcess(currentElement) {
         alertify.error('please fill the required fields.');
     } else {
         // save the process
-        pname=$("#pName").val();
-        pversion=$("#pVersion").val();
+        pname = $("#pName").val();
+        pversion = $("#pVersion").val();
         if ($(currentElement).attr('id') == 'saveProcessBtn' || $(currentElement).attr('id') == 'detailsProcessBtn') {
             var imageElement = $("#images_thumbnail");
             if (imageElement.val().length != 0) {
                 var ext = imageElement.val().split('.').pop().toLowerCase();
-                if ($.inArray(ext, ['png', 'jpeg','jpg','gif','ico']) == -1) {
+                if ($.inArray(ext, ['png', 'jpeg', 'jpg', 'gif', 'ico']) == -1) {
                     alertify.error('invalid image extension!');
                     return;
                 }
@@ -230,18 +226,19 @@ function saveProcess(currentElement) {
             success: function (data) {
                 var response = JSON.parse(data);
                 if (response.error === false) {
-                    // $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response.content);
-                    // $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response.content);
-                    // $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response.content);
-                    // $("#docOverviewLink").attr("href", "../../assets/process/details/" + response.content);
-                    PID=response.content;
+                    $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response.content);
+                    $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response.content);
+                    $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response.content);
+                    $("#docOverviewLink").attr("href", "../../assets/process/details/" + response.content);
+                    PID = response.content;
 
                     if ($(currentElement).attr('id') == 'saveProcessBtn') {
                         window.location = "../../assets/process/details/" + response.content;
                     }
-                    else if($(currentElement).attr('id') == 'detailsProcessBtn'){
+                    else if ($(currentElement).attr('id') == 'detailsProcessBtn') {
                         $('#stp1').removeClass("current");
-                        $('#stp1').addClass("completed");
+                        $('#stp1').addClass("other");
+                        $('#stp2').removeClass("other");
                         $('#stp2').addClass("current");
                         loadDetails();
                     }
@@ -257,38 +254,80 @@ function saveProcess(currentElement) {
     }
 }
 
-
-
-function processAssociations(currentElement){
+function processAssociations(currentElement) {
 
     $('#stp2').removeClass("current");
-    $('#stp2').addClass("completed");
+    $('#stp2').addClass("other");
+    $('#stp3').removeClass("other");
     $('#stp3').addClass("current");
-    $('#detailDiv').remove();
     loadAssociations();
 
 }
 
-function loadOverview(){
-    $("#overviewDiv").show();
+function loadOverview() {
     $("#detailDiv").hide();
     $("#associationDiv").hide();
+    $("#overviewDiv").show();
 }
 
 function loadDetails() {
+
+    $("#processName").html(pname);
+    $("#processVersion").html(pversion);
     $("#overviewDiv").hide();
-    $("#detailDiv").show();
     $("#associationDiv").hide();
+    $("#detailDiv").show();
+    showTextEditor();
+
 }
 
 function loadAssociations() {
+
+    $("#Name").html(pname);
+    $("#Version").html(pversion);
     $("#overviewDiv").hide();
     $("#detailDiv").hide();
     $("#associationDiv").show();
+    showSubprocess();
+}
+
+function showSubprocess() {
+    $("#subprocess").addClass("clicked");
+    $("#successor").removeClass("clicked");
+    $("#predecessor").removeClass("clicked");
+    $("#successorDiv").hide();
+    $("#predecessorDiv").hide();
+    $("#subprocessDiv").show();
+    $(".active").removeClass("active");
+    $("#subprocessDiv").addClass("active");
+}
+
+
+function showSuccessor() {
+    $("#subprocess").removeClass("clicked");
+    $("#successor").addClass("clicked");
+    $("#predecessor").removeClass("clicked");
+    $("#successorDiv").show();
+    $("#predecessorDiv").hide();
+    $("#subprocessDiv").hide();
+    $(".active").removeClass("active");
+    $("#successorDiv").addClass("active");
+}
+
+function showPredecessor() {
+    $("#subprocess").removeClass("clicked");
+    $("#successor").removeClass("clicked");
+    $("#predecessor").addClass("clicked");
+    $("#successorDiv").hide();
+    $("#predecessorDiv").show();
+    $("#subprocessDiv").hide();
+    $(".active").removeClass("active");
+    $("#predecessorDiv").addClass("active");
+
 }
 
 function getProcessInfo() {
-    tagList = $('#tagbox').val().split(",");
+    tagList = $('#tag-box').val().split(",");
     var list = [];
     var processDetails = {
         'processName': pname,
@@ -307,7 +346,7 @@ function getProcessInfo() {
 function saveProcessText(currentElement) {
     var textContent = tinyMCE.get('processContent').getContent();
     if (textContent == "") {
-        if ($(currentElement).attr('id') == 'processTxtSaveBtn') {
+        if ($(currentElement).attr('id') == 'updateBtn') {
             alertify.error('Process content is empty.');
         }
     } else {
@@ -323,10 +362,14 @@ function saveProcessText(currentElement) {
             success: function (data) {
                 var response = JSON.parse(data);
                 if (response.error === false) {
-                    if ($(currentElement).attr('id') == 'processTxtSaveBtn') {
+                    if ($(currentElement).attr('id') == 'updateBtn') {
                         alertify.success("Successfully saved the process content.");
-                        $("#processTextDiv").hide();
+                        $("#processTextEditDiv").hide();
                         $("#textadded").addClass("fw fw-check");
+                        getProcessText();
+                        $("#processTextEditDiv").hide();
+                        $("#processTextView").show();
+                        $(".active").removeClass("active");
                     }
                 } else {
                     alertify.error(response.content);
@@ -342,9 +385,6 @@ function saveProcessText(currentElement) {
 function completeBPMNDetails() {
     $("#bpmnProcessName").val(pname);
     $("#bpmnProcessVersion").val(pversion);
-    $("#bpmnEditDiv").hide();
-    alertify.success("Successfully added BPMN model.");
-    $("#bpmnadded").addClass("fw fw-check");
     return true;
 }
 
@@ -494,6 +534,9 @@ function readImage(element) {
             binaryImg: btoa(encodedImg)
         };
         preview.value = JSON.stringify(imageObj);
+        var datauri = e.target.result;
+        $("#image").attr('src', 'data:image/*;base64,' + btoa(datauri));
+        $("#image").show();
     };
     if (file) {
         reader.readAsBinaryString(file);
@@ -601,9 +644,6 @@ function validateDocs() {
         }
         $("#docExtension").val(ext);
     }
-    $("#docEditDiv").hide();
-    alertify.success("Document added successfully.");
-    $("#docadded").addClass("fw fw-check");
     return true;
 }
 
@@ -638,14 +678,102 @@ function showSearchModal(tableName) {
 }
 
 function deleteProcess(element) {
-    document.getElementById("table_" + element.getAttribute("data-name")).
-    deleteRow(element.parentElement.parentElement.rowIndex);
+    document.getElementById("table_" + element.getAttribute("data-name")).deleteRow(element.parentElement.parentElement.rowIndex);
+    var noOfRows = document.getElementById("table_" + element.getAttribute("data-name")).rows.length;
+    if (noOfRows - 1 == 0) {
+
+        if ($("#subprocessDiv").hasClass("active")) {
+            $("#subprocessadded").removeClass("fw fw-check");
+        }
+        else if ($("#successorDiv").hasClass("active")) {
+            $("#successoradded").removeClass("fw fw-check");
+        }
+        else if ($("#predecessorDiv").hasClass("active")) {
+            $("#prodecessoradded").removeClass("fw fw-check");
+        }
+
+    }
 }
 
-function updateDetails(){
+function updateDetails(element) {
 
-    if($("textEditor").cla){}
+    if ($("#processTextEditDiv").hasClass("active")) {
+        saveProcessText(element);
+    }
+    else if ($("#bpmnEditDiv").hasClass("active")) {
+        if ($("#bpmnFile").val().length > 0) {
+            $("#bpmn_form").trigger("submit");
+        }
+        else {
+            alertify.error("No file to upload.");
+        }
+    }
+    else if ($("#flowChartView").hasClass("active")) {
+        saveFlowchart();
+    }
+    else if ($("#docEditDiv").hasClass("active")) {
+        $("#addNewDoc").trigger("submit");
+    }
 }
+
+$("#bpmn_form").on("submit", function (e) {
+    e.preventDefault();
+    var isComplete = completeBPMNDetails();
+// ajaxFormSubmit();
+    if (isComplete) {
+        $('#bpmn_form').ajaxSubmit({
+            type: "POST",
+            url: "/publisher/assets/process/apis/upload_bpmn",
+            data: $('#bpmn_form').serialize(),
+            cache: false,
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === true) {
+                    alertify.error(response.content);
+                }
+                else {
+                    alertify.success("Successfully added BPMN model.");
+                    $("#bpmnadded").addClass("fw fw-check");
+                    getBPMN();
+                    $("#bpmnEditDiv").hide();
+                    $("#bpmnViewDiv").show();
+                    $(".active").removeClass("active");
+                }
+            }
+        });
+    }
+    else {
+        alertify.error("Error");
+    }
+})
+
+$("#addNewDoc").on("submit", function (e) {
+    e.preventDefault();
+// ajaxFormSubmit();
+    var is_validate = validateDocs();
+    if (is_validate) {
+        $('#addNewDoc').ajaxSubmit({
+            type: "POST",
+            url: "/publisher/assets/process/apis/upload_documents",
+            data: $('#addNewDoc').serialize(),
+            cache: false,
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === true) {
+                    alertify.error(response.content);
+                }
+                else {
+                    alertify.success("Document added successfully.");
+                    $("#docadded").addClass("fw fw-check");
+                    showDocument();
+                    $("#docEditDiv").hide();
+                    $("#docViewDiv").show();
+                    $(".active").removeClass("active");
+                }
+            }
+        });
+    }
+})
 
 $("#saveAsPNGBtn").click(function () {
     html2canvas($("#canvas"), {
@@ -743,6 +871,7 @@ function readUpdatedSubprocess(currentObj, count) {
                 if (response.error === false) {
                     if (count == 1) {
                         alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
+                        $("#subprocessadded").addClass("fw fw-check");
                     }
                 } else {
                     alertify.error(response.content);
@@ -799,6 +928,7 @@ function readUpdatedSuccessor(currentObj, count) {
                 if (response.error === false) {
                     if (count == 1) {
                         alertify.success('Process ' + successorInput + ' successfully added to the successor list.');
+                        $("#successoradded").addClass("fw fw-check");
                     }
                 } else {
                     alertify.error(response.content);
@@ -855,6 +985,7 @@ function readUpdatedPredecessor(currentObj, count) {
                 if (response.error === false) {
                     if (count == 1) {
                         alertify.success('Process ' + predecessorInput + ' successfully added to the predecessor list.');
+                        $("#prodecessoradded").addClass("fw fw-check");
                     }
                 } else {
                     alertify.error(response.content);
@@ -867,26 +998,18 @@ function readUpdatedPredecessor(currentObj, count) {
     }
 }
 
-function saveFlowchart(){
+function saveFlowchart() {
 
     _saveFlowchart();
-    $("#flowChartView").hide();
-    $("#flowchartadded").addClass("fw fw-check");
 }
-
-function close() {
-    window.close();
-}
-
 
 function editProcessText(element) {
+    getProcessText();
     $("#processContent").val($("#processText").html());
     showTextEditor(element);
 }
 
 function deleteBPMNDiagram() {
-
-    $("#bpmnadded").removeClass("fw-check");
 
     $.ajax({
         url: '/publisher/assets/process/apis/delete_bpmn',
@@ -899,6 +1022,9 @@ function deleteBPMNDiagram() {
             var response = JSON.parse(data);
             if (response.error === false) {
                 //window.location = "../../process/details/" + response.content;
+                $("#bpmnadded").removeClass("fw-check");
+                $("#bpmnViewDiv").hide();
+                associateBPMN();
             } else {
                 alertify.error(response.content);
             }
@@ -907,8 +1033,6 @@ function deleteBPMNDiagram() {
             alertify.error('BPMN diagram deleting error');
         }
     });
-
-    $("#bpmnViewDiv").hide();
 
 }
 
@@ -927,7 +1051,7 @@ function confirmDialog(question) {
     var confirmModal =
         $('<div class="modal fade">' +
             '<div class="modal-dialog">' +
-            '<div class="modal-content">' +
+            '<div class="modal-content" style="background: #e3e3e3; none: repeat scroll 0% 0% ;">' +
             '<div class="modal-header">' +
             '<a class="close" data-dismiss="modal" >&times;</a>' +
             '<h3>Confirm delete</h3>' +
@@ -944,7 +1068,6 @@ function confirmDialog(question) {
             '</div>');
     return confirmModal;
 }
-
 
 function downloadDocument(relativePath) {
     $.ajax({
@@ -973,7 +1096,7 @@ function downloadDocument(relativePath) {
             }
         },
         error: function () {
-            alertify.error('Text editor error');
+            alertify.error('Error');
         }
     });
 }
@@ -984,6 +1107,7 @@ function removeDocument(processName, processVersion, documentName, documentSumma
 
     if (document.getElementById("listDocs").rows.length == 0) {
         $('#listDocs').append('<tr><td colspan="6">No documentation associated with this process</td></tr>');
+        $("#docadded").removeClass("fw-check");
     }
 
     var removeDocInfo = {
@@ -1051,7 +1175,7 @@ function viewGoogleDocument(googleDocUrl, heading, iteration) {
     var customHeading = "Document Name : " + heading;
     var modal = '<div id="docViewModal' + iteration + '" class="modal fade" role="dialog">';
     modal += '<div class="modal-dialog" style="width:840px;height:600px">';
-    modal += '<div class="modal-content">';
+    modal += '<div class="modal-content" style="background: #e3e3e3; none: repeat scroll 0% 0% ;">';
     modal += '<div class="modal-header">';
     modal += '<a class="close" data-dismiss="modal">×</a>';
     modal += '<h4>' + customHeading + '</h4>';
@@ -1076,7 +1200,7 @@ function viewPDF(pdfUrl, heading, iteration) {
     var customHeading = "PDF Name : " + heading;
     var pdfModal = '<div id="pdfViewModal' + iteration + '" aria-labelledby="pdfModalLabel' + iteration + '" class="modal fade" role="dialog" aria-hidden="true">';
     pdfModal += '<div class="modal-dialog" style="width:840px;height:600px">';
-    pdfModal += '<div class="modal-content">';
+    pdfModal += '<div class="modal-content" style="background: #e3e3e3; none: repeat scroll 0% 0% ;">';
     pdfModal += '<div class="modal-header">';
     pdfModal += '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
     pdfModal += '<h4 class="modal-title" id="pdfModalLabel' + iteration + '">' + customHeading + '</h4>';
@@ -1106,15 +1230,16 @@ function removeDocumentConfirmListener(processName, processVersion, documentName
 }
 
 function showDocument() {
-    $("#overviewDiv").hide();
-    $("#processTextContainer").hide();
-    $("#processTextEditDiv").hide();
-    $("#bpmnViewDiv").hide();
-    $("#bpmnEditDiv").hide();
-    $("#flowChartEditorView").hide();
-    $("#docUploaderDiv").show();
+
+    $("#flowChartView").hide();
+    $("#docEditDiv").hide();
     $("#docViewDiv").show();
-    $("#addNewDoc").toggle();
+    $(".active").removeClass("active");
+    $("#bpmnEditDiv").hide();
+    $("#processTextEditDiv").hide();
+    $("#processTextView").hide();
+    $("#bpmnViewDiv").hide();
+    $("#listDocs").empty();
 
     $.ajax({
         url: '/publisher/assets/process/apis/get_process_doc?process_path=/_system/governance/processes/' + pname + "/" + pversion,
@@ -1179,16 +1304,14 @@ function showDocument() {
                         }
                         if (response[i].url != "NA" || response[i].path != "NA") {
                             var removeDocElement = document.createElement("a");
-                            if (permission) {
-                                removeDocElement.setAttribute("id", "removeDocElement" + i);
-                                removeDocElement.onclick = (function (processName, processVersion, docName, docSummary, docUrl, docPath, idVal) {
-                                    return function () {
-                                        removeDocumentConfirmListener(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
-                                    };
-                                })(fieldsName, fieldsVersion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
-                                removeDocElement.innerHTML = "remove";
-                                cellDocAction.appendChild(removeDocElement);
-                            }
+                            removeDocElement.setAttribute("id", "removeDocElement" + i);
+                            removeDocElement.onclick = (function (processName, processVersion, docName, docSummary, docUrl, docPath, idVal) {
+                                return function () {
+                                    removeDocumentConfirmListener(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
+                                };
+                            })(pname, pversion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
+                            removeDocElement.innerHTML = "remove";
+                            cellDocAction.appendChild(removeDocElement);
                         }
                     }
                 }
@@ -1202,8 +1325,53 @@ function showDocument() {
     });
 }
 
-function loadDetail(){
+function loadSummary() {
 
     window.location = "../../assets/process/details/" + PID;
 
 }
+
+$("#overview").click(function () {
+
+    if ($("#stp2").hasClass("current") || $("#stp3").hasClass("current")) {
+        $("#detailDiv").hide();
+        $("#associationDiv").hide();
+        $("#overviewDiv").show();
+        $("#stp1").removeClass("other");
+        $("#stp2").removeClass("current");
+        $("#stp2").addClass("other");
+        $("#stp3").removeClass("current");
+        $("#stp3").addClass("other");
+        $("#stp1").addClass("current");
+    }
+});
+
+$("#details").click(function () {
+
+    if (($("#stp1").hasClass("current") || $("#stp3").hasClass("current")) && !pname.isEmpty) {
+        $("#associationDiv").hide();
+        $("#overviewDiv").hide();
+        $("#detailDiv").show();
+        $("#stp2").removeClass("other");
+        $("#stp1").removeClass("current");
+        $("#stp3").removeClass("current");
+        $("#stp1").addClass("other");
+        $("#stp3").addClass("other");
+        $("#stp2").addClass("current");
+    }
+});
+
+$("#associations").click(function () {
+
+    if (($("#stp2").hasClass("current") || $("#stp1").hasClass("current")) && !pname.isEmpty) {
+        $("#detailDiv").hide();
+        $("#overviewDiv").hide();
+        $("#associationDiv").show();
+        $("#stp3").removeClass("other");
+        $("#stp2").removeClass("current");
+        $("#stp1").removeClass("current");
+        $("#stp2").addClass("other");
+        $("#stp1").addClass("other");
+        $("#stp3").addClass("current");
+    }
+});
