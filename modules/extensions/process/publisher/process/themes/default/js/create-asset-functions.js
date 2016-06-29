@@ -237,7 +237,8 @@ function saveProcess(currentElement) {
                     }
                     else if ($(currentElement).attr('id') == 'detailsProcessBtn') {
                         $('#stp1').removeClass("current");
-                        $('#stp1').addClass("completed");
+                        $('#stp1').addClass("other");
+                        $('#stp2').removeClass("other");
                         $('#stp2').addClass("current");
                         loadDetails();
                     }
@@ -256,7 +257,8 @@ function saveProcess(currentElement) {
 function processAssociations(currentElement) {
 
     $('#stp2').removeClass("current");
-    $('#stp2').addClass("completed");
+    $('#stp2').addClass("other");
+    $('#stp3').removeClass("other");
     $('#stp3').addClass("current");
     loadAssociations();
 
@@ -293,9 +295,11 @@ function showSubprocess() {
     $("#subprocess").addClass("clicked");
     $("#successor").removeClass("clicked");
     $("#predecessor").removeClass("clicked");
-    $("#successorDiv").hide()
-    $("#predecessorDiv").hide()
-    $("#subprocessDiv").show()
+    $("#successorDiv").hide();
+    $("#predecessorDiv").hide();
+    $("#subprocessDiv").show();
+    $(".active").removeClass("active");
+    $("#subprocessDiv").addClass("active");
 }
 
 
@@ -303,18 +307,22 @@ function showSuccessor() {
     $("#subprocess").removeClass("clicked");
     $("#successor").addClass("clicked");
     $("#predecessor").removeClass("clicked");
-    $("#successorDiv").show()
-    $("#predecessorDiv").hide()
-    $("#subprocessDiv").hide()
+    $("#successorDiv").show();
+    $("#predecessorDiv").hide();
+    $("#subprocessDiv").hide();
+    $(".active").removeClass("active");
+    $("#successorDiv").addClass("active");
 }
 
 function showPredecessor() {
     $("#subprocess").removeClass("clicked");
     $("#successor").removeClass("clicked");
     $("#predecessor").addClass("clicked");
-    $("#successorDiv").hide()
-    $("#predecessorDiv").show()
-    $("#subprocessDiv").hide()
+    $("#successorDiv").hide();
+    $("#predecessorDiv").show();
+    $("#subprocessDiv").hide();
+    $(".active").removeClass("active");
+    $("#predecessorDiv").addClass("active");
 
 }
 
@@ -526,6 +534,9 @@ function readImage(element) {
             binaryImg: btoa(encodedImg)
         };
         preview.value = JSON.stringify(imageObj);
+        var datauri = e.target.result;
+        $("#image").attr('src', 'data:image/*;base64,' + btoa(datauri));
+        $("#image").show();
     };
     if (file) {
         reader.readAsBinaryString(file);
@@ -668,6 +679,20 @@ function showSearchModal(tableName) {
 
 function deleteProcess(element) {
     document.getElementById("table_" + element.getAttribute("data-name")).deleteRow(element.parentElement.parentElement.rowIndex);
+    var noOfRows = document.getElementById("table_" + element.getAttribute("data-name")).rows.length;
+    if (noOfRows - 1 == 0) {
+
+        if ($("#subprocessDiv").hasClass("active")) {
+            $("#subprocessadded").removeClass("fw fw-check");
+        }
+        else if ($("#successorDiv").hasClass("active")) {
+            $("#successoradded").removeClass("fw fw-check");
+        }
+        else if ($("#predecessorDiv").hasClass("active")) {
+            $("#prodecessoradded").removeClass("fw fw-check");
+        }
+
+    }
 }
 
 function updateDetails(element) {
@@ -721,13 +746,6 @@ $("#bpmn_form").on("submit", function (e) {
         alertify.error("Error");
     }
 })
-
-function updateAssociations() {
-
-    // readUpdatedSubprocess(this, 1);
-    // readUpdatedSuccessor(this, 1);
-    // readUpdatedPredecessor(this, 1);
-}
 
 $("#addNewDoc").on("submit", function (e) {
     e.preventDefault();
@@ -853,6 +871,7 @@ function readUpdatedSubprocess(currentObj, count) {
                 if (response.error === false) {
                     if (count == 1) {
                         alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
+                        $("#subprocessadded").addClass("fw fw-check");
                     }
                 } else {
                     alertify.error(response.content);
@@ -909,6 +928,7 @@ function readUpdatedSuccessor(currentObj, count) {
                 if (response.error === false) {
                     if (count == 1) {
                         alertify.success('Process ' + successorInput + ' successfully added to the successor list.');
+                        $("#successoradded").addClass("fw fw-check");
                     }
                 } else {
                     alertify.error(response.content);
@@ -965,6 +985,7 @@ function readUpdatedPredecessor(currentObj, count) {
                 if (response.error === false) {
                     if (count == 1) {
                         alertify.success('Process ' + predecessorInput + ' successfully added to the predecessor list.');
+                        $("#prodecessoradded").addClass("fw fw-check");
                     }
                 } else {
                     alertify.error(response.content);
@@ -1309,3 +1330,48 @@ function loadSummary() {
     window.location = "../../assets/process/details/" + PID;
 
 }
+
+$("#overview").click(function () {
+
+    if ($("#stp2").hasClass("current") || $("#stp3").hasClass("current")) {
+        $("#detailDiv").hide();
+        $("#associationDiv").hide();
+        $("#overviewDiv").show();
+        $("#stp1").removeClass("other");
+        $("#stp2").removeClass("current");
+        $("#stp2").addClass("other");
+        $("#stp3").removeClass("current");
+        $("#stp3").addClass("other");
+        $("#stp1").addClass("current");
+    }
+});
+
+$("#details").click(function () {
+
+    if (($("#stp1").hasClass("current") || $("#stp3").hasClass("current")) && !pname.isEmpty) {
+        $("#associationDiv").hide();
+        $("#overviewDiv").hide();
+        $("#detailDiv").show();
+        $("#stp2").removeClass("other");
+        $("#stp1").removeClass("current");
+        $("#stp3").removeClass("current");
+        $("#stp1").addClass("other");
+        $("#stp3").addClass("other");
+        $("#stp2").addClass("current");
+    }
+});
+
+$("#associations").click(function () {
+
+    if (($("#stp2").hasClass("current") || $("#stp1").hasClass("current")) && !pname.isEmpty) {
+        $("#detailDiv").hide();
+        $("#overviewDiv").hide();
+        $("#associationDiv").show();
+        $("#stp3").removeClass("other");
+        $("#stp2").removeClass("current");
+        $("#stp1").removeClass("current");
+        $("#stp2").addClass("other");
+        $("#stp1").addClass("other");
+        $("#stp3").addClass("current");
+    }
+});
