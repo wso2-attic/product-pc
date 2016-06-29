@@ -29,6 +29,7 @@ var bpmnVersion = String(request.getParameter("bpmnProcessVersion"));
 
 var server = require('store').server;
 var user = server.current(session);
+var responseObj = {};
 
 try {
     var processid = "NA";
@@ -36,8 +37,13 @@ try {
     for (var name in files) {
         processid = ps.createBPMN(bpmnName, bpmnVersion, files[name].getStream(), user.username);
     }
-    response.sendRedirect('/publisher/assets/process/details/' + processid);
+    //response.sendRedirect('/publisher/assets/process/details/' + processid);
+    responseObj.error = false;
+    print(stringify(responseObj));
 } catch (error) {
     log.error(error);
+    responseObj.error = true;
+    responseObj.content = "Error while uploading file";
+    print(stringify(responseObj));
 }
 %>

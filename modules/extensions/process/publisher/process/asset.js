@@ -26,7 +26,6 @@ asset.server = function(ctx) {
         onUserLoggedIn: function() {},
         endpoints: {
             apis: [{
-
                        url: 'assets',
                        path: 'assets.jag'
                    }, {
@@ -255,7 +254,9 @@ asset.renderer = function(ctx) {
         return navList.list();
     };
     var buildAddLeftNav = function(page, util) {
-        return [];
+        var navList = util.navList();
+        navList.push('Processes', 'btn-stats', util.buildUrl('list'));
+        return navList.list();
     };
     var isActivatedAsset = function(assetType) {
         var app = require('rxt').app;
@@ -352,6 +353,24 @@ asset.renderer = function(ctx) {
             else{
                 page.permission=false;
             }
+
+            var thumbnail = page.assets.tables[6].fields.thumbnail.value;
+            if (thumbnail === "images_thumbnail") {
+                page.customThumbnailAvailable = true;
+            } else {
+                page.customThumbnailAvailable = false;
+            }
+
+            var processName = page.assets.tables[0].fields.name.value; //tables[0].fields["Name"].value;
+            var processVersion = page.assets.tables[0].fields.version.value;
+            try {
+                var ps = new ProcessStore();
+                var processTags = ps.getProcessTags();
+                page.processTagsArray = processTags.split("###");
+            } catch (e) {
+                log.error("Error in retrieving process tags. Exception:" + e);
+            }
+
         },
         create: function(page) {
             var tables = page.assets.tables;

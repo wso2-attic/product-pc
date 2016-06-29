@@ -509,6 +509,7 @@ jsPlumb.ready(function () {
                         var response = JSON.parse(data);
                         if (response.error == false) {
                             alertify.success("Successfully saved the flowchart.");
+                            $("#flowchartadded").addClass("fw fw-check");
                             $("#flowchartOverviewLink").attr("href", "../process/details/" + response.content);
                         } else {
                             alertify.error(response.content);

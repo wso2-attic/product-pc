@@ -14,7 +14,13 @@
   ~ limitations under the License.
   -->
 <div class="form-group" xmlns="http://www.w3.org/1999/html">
-    <div class="title">Details</div>
+    <div class="title">
+        <div class="input-group">
+            Details:
+            <label id="processName"></label>_
+            <label id="processVersion"></label>
+        </div>
+    </div>
     <div class="horizontal_line"></div>
     <div class="sidebar-wrapper" id="left-sidebar"
          style="width: 260px; left: 0px; height: 399.883px; padding-top: 50px;" data-side="left" data-width="100"
@@ -25,19 +31,20 @@
                                        onclick="{{#if isUpdateView}}loadTextEditor(this){{else}}showTextEditor(this){{/if}}">{{#if isUpdateView}}
                     Update process
                     text{{else}}Describe process in
-                    text{{/if}}<i id="textadded" class="" style="color: red"></i></a></li>
+                    text{{/if}}<i id="textadded" class="" style="color: red;padding-left: 20px;"></i></a></li>
                 <li id="bpmn"><a href="#" onclick="associateBPMN(this)">BPMN
-                    model<i id="bpmnadded" class="" style="color: red"></i></a></li>
+                    model<i id="bpmnadded" class="" style="color: red;padding-left: 20px;"></i></a></li>
                 <li id="flowChart"><a href="#" onclick="{{#if isUpdateView}}editAssociatedFlowChart(this,'{{flowchartPath}}') {{else}}associateFlowChart(this){{/if}}">Flow
-                    Charts<i id="flowchartadded" class="" style="color: red"></i></a></li>
+                    Charts<i id="flowchartadded" class="" style="color: red;padding-left: 35px;"></i></a></li>
                 <li id="doc"><a href="#" onclick="{{#if isUpdateView}}editAssociatedDocument(this,{{permission}}){{else}}associateDocument(this){{/if}}">Documents<i id="docadded" class=""
-                                                                                       style="color: red"></i></a></li>
+                                                                                       style="color: red;padding-left: 30px;"></i></a></li>
             </ul>
             <input type="hidden" id="updateViewCheck" value="{{isUpdateView}}">
             <input type="hidden" id="processTextHolder" name="processTextHolder" value="{{isProcessTextAvailable}}"/>
             <input type="hidden" id="bpmnAvailableCheck" value="{{isBpmnAvailable}}">
             <input type="hidden" id="documentAvailableCheck" value="{{isDocumentAvailable}}">
             <input type="hidden" id="flowchartAvailableCheck" value="{{isFlowChartAvailable}}">
+            <input type="hidden" id="permissionCheck" value="{{permission}}">
         </div>
     </div>
     <div class="row">
@@ -62,6 +69,5 @@
         <div> {{> docView .}}</div>
     </div>
 </div>
-
 
 

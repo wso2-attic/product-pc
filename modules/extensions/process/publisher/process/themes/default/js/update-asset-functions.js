@@ -21,6 +21,7 @@
 var pname,pversion;
 var tagList = [];
 var processTagsObj;
+var isEditorActive = false;
 
 window.onload = function () {
 
@@ -28,7 +29,7 @@ window.onload = function () {
     getProcessList();
     getProcessTags();
 
-    $('#tagbox').tokenfield({
+    $('#tag-box').tokenfield({
         autocomplete: {
             source: allProcessTags,
             delay: 100
@@ -36,7 +37,7 @@ window.onload = function () {
         showAutocompleteOnFocus: true
     });
 
-    $('#tagbox').on('tokenfield:createtoken', function (event) {
+    $('#tag-box').on('tokenfield:createtoken', function (event) {
         var existingTokens = $(this).tokenfield('getTokens');
         $.each(existingTokens, function (index, token) {
             if (token.value === event.attrs.value)
@@ -46,10 +47,7 @@ window.onload = function () {
 };
 
 function loadOverviewDiv() {
-    $("#overviewDiv").show();
-    $("#detailDiv").hide();
-    $("#associationDiv").hide();
-
+    loadOverview();
     loadOverviewDescription();
 }
 
@@ -154,7 +152,7 @@ function getProcessTags() {
                             }
                         }
                     }
-                    $('#tagbox').val(tagStr);
+                    $('#tag-box').val(tagStr);
                 }
             } else {
                 alertify.error(response.content);
@@ -219,24 +217,10 @@ function showTextEditr(element) {
 
 }
 
-function loadTextEditor() {
-    completeTextDetails();
+function textEditorInit() {
     $("#processTextEditDiv").hide();
     $("#processTextView").show();
-    $("#bpmnEditDiv").hide();
-    $("#docEditDiv").hide();
-    $("#flowChartView").hide();
-    $("#bpmnViewDiv").hide();
-    $("#docViewDiv").hide();
-    $("#textEditor").addClass("clicked");
-    $("#bpmn").removeClass("clicked");
-    $("#flowChart").removeClass("clicked");
-    $("#doc").removeClass("clicked");
-
-    tinymce.init({
-        selector: "#processContent"
-    });
-
+    isEditorActive = true;
 
     if($('#processTextHolder').val()) {
 
@@ -247,7 +231,8 @@ function loadTextEditor() {
                 var response = JSON.parse(data);
                 if (response.error === false) {
                     $("#processText").html(response.content);
-                    $("#processContent").val(response.content);
+                    // $("#processContent").val(response.content);
+                    tinyMCE.activeEditor.setContent(response.content);
                 } else {
                     alertify.error(response.content);
                 }
@@ -263,6 +248,48 @@ function loadTextEditor() {
         //     $("#processTextDiv").hide();
         // }
     }
+}
+
+function loadTextEditor() {
+    completeTextDetails();
+    $("#processTextEditDiv").show();
+    $("#processTextView").hide();
+    $("#bpmnEditDiv").hide();
+    $("#docEditDiv").hide();
+    $("#flowChartView").hide();
+    $("#bpmnViewDiv").hide();
+    $("#docViewDiv").hide();
+    $("#textEditor").addClass("clicked");
+    $("#bpmn").removeClass("clicked");
+    $("#flowChart").removeClass("clicked");
+    $("#doc").removeClass("clicked");
+
+    if ($("#textadded").hasClass("fw-check")) {
+        getProcessText();
+        if ($(element).attr('id') == 'editText') {
+            $("#processTextView").hide();
+            $("#processTextEditDiv").show();
+            $(".active").removeClass("active");
+            $("#processTextEditDiv").addClass("active");
+        }
+        else {
+            $("#processTextEditDiv").hide();
+            $("#processTextView").show();
+            $(".active").removeClass("active");
+        }
+    } else {
+        $("#processTextView").hide();
+        $("#processTextEditDiv").show();
+        $(".active").removeClass("active");
+        $("#processTextEditDiv").addClass("active");
+
+        tinymce.init({
+            selector: "#processContent",
+            init_instance_callback : "textEditorInit"
+        });
+    }
+
+
 }
 
 function editProcessTxt(element) {
@@ -282,11 +309,14 @@ function editAssociatedDocument(element, permission) {
     $("#processTextEditDiv").hide();
     $("#bpmnEditDiv").hide();
     $("#addNewDoc").show();
-    $("#docEditDiv").show();
     $("#docViewDiv").hide();
     $("#flowChartView").hide();
     $("#processTextView").hide();
     $("#bpmnViewDiv").hide();
+    document.forms["addNewDoc"].reset();
+    $("#docEditDiv").show();
+    $(".active").removeClass("active");
+    $("#docEditDiv").addClass("active");
     $('#textEditor').removeClass("clicked");
     $('#bpmn').removeClass("clicked");
     $('#flowChart').removeClass("clicked");
@@ -297,10 +327,12 @@ function editAssociatedDocument(element, permission) {
         $("#addNewDoc").hide();
         showDocument(permission);
         $("#docViewDiv").show();
+        // $(".active").removeClass("active");
     } else if ($("#documentAvailableCheck").val() === "true") {
         $("#addNewDoc").hide();
         showDocument(permission);
         $("#docViewDiv").show();
+        // $(".active").removeClass("active");
     }
     // }
 }
@@ -319,6 +351,8 @@ function editAssociatedFlowChart(element, flowchartPath) {
     $("#processTextEditDiv").hide();
     $("#processTextView").hide();
     $("#bpmnViewDiv").hide();
+    $(".active").removeClass("active");
+    $("#flowChartView").addClass("active");
     $('#textEditor').removeClass("clicked");
     $('#bpmn').removeClass("clicked");
     $('#flowChart').addClass("clicked");
@@ -343,6 +377,8 @@ function editAssociatedFlowChart(element, flowchartPath) {
                 alertify.error('Error retrieving flowchart');
             }
         });
+
+        $("#flowchartAvailableCheck").val("false");
     }
 
     //}

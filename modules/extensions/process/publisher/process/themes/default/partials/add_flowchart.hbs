@@ -16,7 +16,7 @@
 <div id="flowChartView" style="display:none">
     <button class="btn btn-primary" id="flowchartSaveBtn" onclick="saveFlowchart(this)">Save
     </button>
-    <button class="btn btn-primary" id="saveAsPNGBtn" onclick="downloadAsPNG({{isUpdateView}})">Download As PNG</button>
+    <!--<button class="btn btn-primary" id="saveAsPNGBtn" onclick="downloadAsPNG({{isUpdateView}})">Download As PNG</button>-->
     <br/><br/>
     <input type="hidden" id="fcProcessName" name="fcProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
     <input type="hidden" id="fcProcessVersion" name="fcProcessVersion"
@@ -64,4 +64,6 @@
                               </div>
                             </span>
     </div>
+    <br/>
+    <button class="btn btn-primary" id="saveAsPNGBtn" onclick="downloadAsPNG({{isUpdateView}})">Download As PNG</button>
 </div>
