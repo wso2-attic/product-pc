@@ -25,6 +25,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.openjpa.persistence.jest.JSON;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,7 +50,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import sun.misc.BASE64Decoder;
 
-import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -58,7 +58,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -66,6 +68,7 @@ public class ProcessStore {
 
     private static final Log log = LogFactory.getLog(ProcessStore.class);
     private static final String mns = "http://www.wso2.org/governance/metadata";
+    private List<String> exportedProcessList;
 
     private Element append(Document doc, Element parent, String childName, String childNS) {
         Element childElement = doc.createElementNS(childNS, childName);
@@ -1919,51 +1922,81 @@ public class ProcessStore {
         return status;
     }
 
-    public String initiateExportProcess(String processName, String processVersion, String user)
-            throws ProcessCenterException, IOException, JSONException {
+    public String initiateExportProcess(String processName, String processVersion, String exportWithAssociations,
+            String user) throws
+            Exception {
+        exportedProcessList = new ArrayList<String>();
         new File(ProcessCenterConstants.PROCESS_EXPORT_DIR).mkdirs();
+        Boolean exportWithAssociationsBool = Boolean.valueOf(exportWithAssociations);
+        try {
+            // save details about the exported zip and the core process
+            String exportRootPath = ProcessCenterConstants
+                    .PROCESS_EXPORT_DIR+"/"+processName+"-"+processVersion+"-PC-Package/";
+            new File(exportRootPath).mkdirs();
+            /*FileOutputStream out = new FileOutputStream(exportRootPath + "METADATA.json");
+            JSONObject metaData = new JSONObject();
+            metaData.put("core-process-name", processName);
+            metaData.put("core-process-varsion", processVersion);
+            String jsonString = metaData.toString(ProcessCenterConstants.JSON_FILE_INDENT_FACTOR);
+            out.write(jsonString.getBytes());
+            out.close();*/
 
-        // save details about the exported zip and the core process
-        FileOutputStream out = new FileOutputStream(ProcessCenterConstants.PROCESS_EXPORT_DIR+"METADATA.json");
-        JSONObject metaData = new JSONObject();
-        metaData.put("core-process-name",processName);
-        metaData.put("core-process-varsion",processVersion);
-        String jsonString = metaData.toString(ProcessCenterConstants.JSON_FILE_INDENT_FACTOR);
-        out.write(jsonString.getBytes());
-        out.close();
+            exportProcess(exportRootPath,processName, processVersion, exportWithAssociationsBool, user);
 
-        exportProcess(processName,processVersion,user);
-        return "EXPORT PATH";
+            //zip the folder
+            FolderZiper folderZiper = new FolderZiper();
+            String zipFileName = processName+"-"+processVersion+"-PC-Package.zip";
+            folderZiper.zipFolder(exportRootPath, zipFileName);
 
+            //encode zip file
+            String encodedZip = encodeFileToBase64Binary(zipFileName);
+            return encodedZip;
+
+        }catch (Exception e){
+            String errMsg = "Failed to export process:"+processName+"-"+processVersion;
+            log.error(errMsg,e);
+            throw new ProcessCenterException(errMsg, e);
+        }
     }
 
-    public String exportProcess(String processName, String processVersion, String user) throws
+    public void exportProcess(String exportRootPath, String processName, String processVersion, boolean exportWithAssociations, String user)
+            throws
             ProcessCenterException {
+
+        if(exportedProcessList.contains(processName+"-"+processVersion)){
+            return;
+        }
+        exportedProcessList.add(processName+"-"+processVersion);
+
         try {
 
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(user);
-                String contentPath = ProcessCenterConstants.PROCESS_EXPORT_DIR+"/"+processName+"-"+processVersion;
-                new File(contentPath).mkdirs();
+
+                String exportProcessPath = exportRootPath + processName +"-"+processVersion+"/";
+                new File(exportProcessPath+"documents/").mkdirs();
 
                 //save the process rxt registry entry >> xml
                 downloadResource(reg, ProcessCenterConstants.PROCESS_ASSET_ROOT,
-                        ProcessCenterConstants.EXPORTED_PROCESS_RXT_FILE, processName, processVersion, "xml");
+                        ProcessCenterConstants.EXPORTED_PROCESS_RXT_FILE, processName, processVersion, "xml",exportProcessPath);
                 //save bpmn registry entry >> xml
                 downloadResource(reg, ProcessCenterConstants.BPMN_PATH, ProcessCenterConstants.EXPORTED_BPMN_FILE,
-                        processName, processVersion, "xml");
+                        processName, processVersion, "xml", exportProcessPath);
                 //save bpmncontent registry entry >> xml
                 downloadResource(reg, ProcessCenterConstants.BPMN_CONTENT_PATH,
-                        ProcessCenterConstants.EXPORTED_BPMN_CONTENT_FILE, processName, processVersion, "xml");
+                        ProcessCenterConstants.EXPORTED_BPMN_CONTENT_FILE, processName, processVersion, "xml",
+                        exportProcessPath);
                 //save flowchart registry entry >> json
                 downloadResource(reg, ProcessCenterConstants.AUDIT.PROCESS_FLOW_CHART_PATH,
-                        ProcessCenterConstants.EXPORTED_FLOW_CHART_FILE, processName, processVersion, "json");
+                        ProcessCenterConstants.EXPORTED_FLOW_CHART_FILE, processName, processVersion, "json",
+                        exportProcessPath);
                 //save processText registry entry
                 downloadResource(reg, ProcessCenterConstants.PROCESS_TEXT_PATH,
-                        ProcessCenterConstants.EXPORTED_PROCESS_TEXT_FILE, processName, processVersion, "txt");
+                        ProcessCenterConstants.EXPORTED_PROCESS_TEXT_FILE, processName, processVersion, "txt",
+                        exportProcessPath);
 
-                //save doccontent registry entry >> doc, docx, pdf
+                //save doccontent registry entries >> doc, docx, pdf
                 String processResourcePath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
                 JSONArray jsonArray = new JSONArray(
@@ -1974,81 +2007,186 @@ public class ProcessStore {
                         String docResourcePath = jsonObj.getString("path");
                         Resource docResource = reg.get(docResourcePath);
                         String[] tempStrArr = docResourcePath.split("/");
-                        String docFileName =
-                                ProcessCenterConstants.PROCESS_EXPORT_DIR +processName+"-"+processVersion+"/"
-                                        + tempStrArr[tempStrArr.length - 1];
+                        String docFileName = exportProcessPath +"documents/"+ tempStrArr[tempStrArr.length - 1];
                         FileOutputStream docFileOutPutStream = new FileOutputStream(docFileName);
                         IOUtils.copy(docResource.getContentStream(), docFileOutPutStream);
                         docFileOutPutStream.close();
                     }
                 }
 
-                //write details on process associations in a file
-                FileOutputStream out = new FileOutputStream(ProcessCenterConstants
-                        .PROCESS_EXPORT_DIR+processName+"-"+processVersion+"/" +"process_associations.json");
-                JSONObject successorPredecessorSubprocessListJSON = new JSONObject(getSucessorPredecessorSubprocessList
-                        (ProcessCenterConstants.GREG_PATH+processResourcePath));
-                out.write(successorPredecessorSubprocessListJSON.toString(ProcessCenterConstants.JSON_FILE_INDENT_FACTOR).getBytes());
-                out.close();
+                //download process image thumbnail
+                downloadProcessThumbnailImage(reg,processName,processVersion,exportProcessPath);
+
+                //write process tags in a file
+                FileOutputStream tagsFileOutputStream = new FileOutputStream(exportProcessPath + "process_tags.txt");
+                tagsFileOutputStream.write(getProcessTags(processName,processVersion).getBytes());
+                tagsFileOutputStream.close();
 
                 ////export process associations
+                if(exportWithAssociations) {
+                    //write details on process associations (sub-processes/predecessors/successors) in a json file
+                    FileOutputStream out = new FileOutputStream(exportProcessPath + "process_associations.json");
+                    JSONObject successorPredecessorSubprocessListJSON = new JSONObject(
+                            getSucessorPredecessorSubprocessList(ProcessCenterConstants.GREG_PATH + processResourcePath));
+                    out.write(successorPredecessorSubprocessListJSON.toString(ProcessCenterConstants.JSON_FILE_INDENT_FACTOR).getBytes());
+                    out.close();
+/*
+                    JSONArray subprocessesJArray = successorPredecessorSubprocessListJSON.getJSONArray("subprocesses");
+                    JSONArray predecessorsJArray = successorPredecessorSubprocessListJSON.getJSONArray("predecessors");
+                    JSONArray successorsJArray = successorPredecessorSubprocessListJSON.getJSONArray("successors");
 
-                JSONArray subprocessesJArray = successorPredecessorSubprocessListJSON.getJSONArray("subprocesses");
-                JSONArray predecessorsJArray = successorPredecessorSubprocessListJSON.getJSONArray("predecessors");
-                JSONArray successorsJArray = successorPredecessorSubprocessListJSON.getJSONArray("successors");
+                    //export sub processes
+                    for (int i = 0; i < subprocessesJArray.length(); i++) {
+                        String subProcessName = subprocessesJArray.getJSONObject(i).getString("name");
+                        String subProcessVersion = subprocessesJArray.getJSONObject(i).getString("version");
+                        exportProcess(exportRootPath, subProcessName, subProcessVersion, exportWithAssociations, user);
+                    }
+                    //export predecessors
+                    for (int i = 0; i < predecessorsJArray.length(); i++) {
+                        String predecessorName = predecessorsJArray.getJSONObject(i).getString("name");
+                        String predecessorVersion = predecessorsJArray.getJSONObject(i).getString("version");
+                        exportProcess(exportRootPath, predecessorName, predecessorVersion, exportWithAssociations, user);
+                    }
+                    //export successors
+                    for (int i = 0; i < successorsJArray.length(); i++) {
+                        String successorName = successorsJArray.getJSONObject(i).getString("name");
+                        String successorVersion = successorsJArray.getJSONObject(i).getString("version");
+                        exportProcess(exportRootPath, successorName, successorVersion,exportWithAssociations, user);
+                    }*/
+                    exportAssociatedProcesses(successorPredecessorSubprocessListJSON,exportRootPath,
+                            exportWithAssociations,"subprocesses",user);
+                    exportAssociatedProcesses(successorPredecessorSubprocessListJSON,exportRootPath,
+                            exportWithAssociations,"predecessors",user);
+                    exportAssociatedProcesses(successorPredecessorSubprocessListJSON,exportRootPath,
+                            exportWithAssociations,"successors",user);
+                }
 
-                //export sub processes
-                for (int i = 0;i<subprocessesJArray.length();i++){
-                    String subProcessName = subprocessesJArray.getJSONObject(i).getString("name");
-                    String subProcessVersion = subprocessesJArray.getJSONObject(i).getString("version");
-                    exportProcess(subProcessName,subProcessVersion,user);
-                }
-                //export predecessors
-                for (int i = 0;i<predecessorsJArray.length();i++){
-                    String predecessorName = predecessorsJArray.getJSONObject(i).getString("name");
-                    String predecessorVersion = predecessorsJArray.getJSONObject(i).getString("version");
-                    exportProcess(predecessorName,predecessorVersion,user);
-                }
-                //export successors
-                for (int i = 0;i<successorsJArray.length();i++){
-                    String successorName = successorsJArray.getJSONObject(i).getString("name");
-                    String successorVersion = successorsJArray.getJSONObject(i).getString("version");
-                    exportProcess(successorName,successorVersion,user);
-                }
+
+
+
             }
         } catch (Exception e) {
             String errMsg = "Failed to export process:"+processName+"-"+processVersion;
-            log.error(e);
+            log.error(errMsg,e);
             throw new ProcessCenterException(errMsg, e);
         }
-        return "Exported Path";
     }
 
+    /**
+     * Export accociated process (sub process/predecessor/successor) - The related files are saved in the respective
+     * directory
+     *
+     * @param successorPredecessorSubprocessListJSON
+     * @param exportRootPath
+     * @param exportWithAssociations
+     * @param assocationType
+     * @param user
+     * @throws JSONException
+     * @throws ProcessCenterException
+     */
+    public void exportAssociatedProcesses(JSONObject successorPredecessorSubprocessListJSON,String exportRootPath,
+            boolean exportWithAssociations,String assocationType, String user)
+            throws JSONException, ProcessCenterException {
+        JSONArray associatedProcessesJArray = successorPredecessorSubprocessListJSON.getJSONArray(assocationType);
+
+        for (int i = 0; i < associatedProcessesJArray.length(); i++) {
+            String processName = associatedProcessesJArray.getJSONObject(i).getString("name");
+            String processVersion = associatedProcessesJArray.getJSONObject(i).getString("version");
+            exportProcess(exportRootPath, processName, processVersion, exportWithAssociations, user);
+        }
+    }
+
+    /**
+     * Download non-document process related resources (i.e: flow chart, bpmn, process text)
+     * @param reg
+     * @param resourceRoot
+     * @param savingFileName
+     * @param processName
+     * @param processVersion
+     * @param exportedFileType
+     * @param exportProcessPath
+     * @throws RegistryException
+     * @throws IOException
+     * @throws JSONException
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws TransformerException
+     */
     public void downloadResource(UserRegistry reg, String resourceRoot, String savingFileName, String processName,
-            String processVersion, String exportedFileType)
+            String processVersion, String exportedFileType, String exportProcessPath)
             throws RegistryException, IOException, JSONException, ParserConfigurationException, SAXException,
             TransformerException {
         String resourcePath = resourceRoot + processName + "/" + processVersion;
 
         if (reg.resourceExists(resourcePath)) {
             Resource resource = reg.get(resourcePath);
-            FileOutputStream fileOutputStream = new FileOutputStream(
-                    ProcessCenterConstants.PROCESS_EXPORT_DIR + processName + "-" + processVersion + "/"
-                            + savingFileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(exportProcessPath + savingFileName);
 
             if (exportedFileType.equals("json")) {
                 String stringContent = IOUtils
                         .toString(resource.getContentStream(), String.valueOf(StandardCharsets.UTF_8));
                 //create JSONObject to pretty-print content
                 JSONObject contentInJSON = new JSONObject(stringContent);
-                fileOutputStream.write(contentInJSON.toString(ProcessCenterConstants.JSON_FILE_INDENT_FACTOR).getBytes());
+                fileOutputStream
+                        .write(contentInJSON.toString(ProcessCenterConstants.JSON_FILE_INDENT_FACTOR).getBytes());
                 fileOutputStream.close();
             } else if (exportedFileType.equals("xml")) {
-                IOUtils.copy(resource.getContentStream(),fileOutputStream);
+                IOUtils.copy(resource.getContentStream(), fileOutputStream);
             } else { //.pdf, doc, docx, txt
-                IOUtils.copy(resource.getContentStream(),fileOutputStream);
+                IOUtils.copy(resource.getContentStream(), fileOutputStream);
             }
         }
     }
 
+    public String encodeFileToBase64Binary(String fileName)
+            throws IOException {
+
+        File file = new File(fileName);
+        byte[] bytes = loadFile(file);
+        byte[] encoded = Base64.encodeBase64(bytes);
+        String encodedString = new String(encoded);
+
+        return encodedString;
+    }
+
+    public static byte[] loadFile(File file) throws IOException {
+        InputStream is = new FileInputStream(file);
+
+        long length = file.length();
+        if (length > Integer.MAX_VALUE) {
+            // File is too large
+        }
+        byte[] bytes = new byte[(int)length];
+
+        int offset = 0;
+        int numRead = 0;
+        while (offset < bytes.length
+                && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+            offset += numRead;
+        }
+
+        if (offset < bytes.length) {
+            throw new IOException("Could not completely read file "+file.getName());
+        }
+
+        is.close();
+        return bytes;
+    }
+
+    public void downloadProcessThumbnailImage(UserRegistry reg, String processName, String processVersion,
+            String exportProcessPath) throws RegistryException, IOException {
+        String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                processVersion;
+        Resource storedProcess = reg.get(processAssetPath);
+        String processId = storedProcess.getUUID();
+        String imageResourcePath =
+                ProcessCenterConstants.PROCESS_ASSET_RESOURCE_REG_PATH + processId + "/images_thumbnail";
+
+        if (reg.resourceExists(imageResourcePath)) {
+            Resource resource = reg.get(imageResourcePath);
+            FileOutputStream fileOutputStream = new FileOutputStream(exportProcessPath + "process_image_thumbnail");
+            IOUtils.copy(resource.getContentStream(), fileOutputStream);
+            fileOutputStream.close();
+        }
+    }
 }

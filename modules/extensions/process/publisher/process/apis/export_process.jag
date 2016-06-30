@@ -27,15 +27,14 @@ if (log.isDebugEnabled()) {
 var ps = new ProcessStore();
 var processName = String(request.getParameter("processName"));
 var processVersion = String(request.getParameter("processVersion"));
-
+var exportWithAssociations = String(request.getParameter("exportWithAssociations"));
 var server = require('store').server;
 var user = server.current(session);
-
 
 var responseObj = {};
 
 try {
-    var exportedPath = ps.initiateExportProcess(processName,processVersion,user);
+    var exportedPath = ps.initiateExportProcess(processName,processVersion,exportWithAssociations,user);
     responseObj.error = false;
     responseObj.content = exportedPath;
     print(stringify(responseObj));

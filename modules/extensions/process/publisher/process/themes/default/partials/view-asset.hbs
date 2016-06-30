@@ -131,7 +131,197 @@
         </tr>
     </table>
 </div>
+<div class="control-group" style="display: inline-block">
+    {{#if processTextAvaliable}}
+        <div id="vtdiv">
+            <button id="viewTextButton" class="btn btn-primary" onclick="viewText()">View {{#if permission}}/Edit {{/if}} Process Text</button>
+        </div>
+        <div id="atdiv">
+            <button id="addTextButton" class="btn btn-primary" {{#unless permission}} disabled {{/unless }} onclick="showTextEditor()" style="display: none">
+                Describe process in text
+            </button>
+        </div>
+    {{else}}
+        <div id="vtdiv">
+            <button id="viewTextButton" class="btn btn-primary" onclick="viewText()" style="display: none">View {{#if permission}}/Edit {{/if}}Process Text
+            </button>
+        </div>
+        <div id="atdiv">
+            <button id="addTextButton" class="btn btn-primary" {{#unless permission}} disabled {{/unless }} onclick="showTextEditor()">Describe process in text
+            </button>
+        </div>
+    {{/if}}
+</div>
 
+<div class="control-group" style="display: inline-block">
+    {{#if bpmnAvaliable}}
+        <button class="btn btn-primary" onclick="showBPMN()">Show BPMN</button>
+        <!--<a href="../../bpmn/details/{{assets.tables.[1].fields.bpmnid.value}}">Show BPMN</a>-->
+    {{else}}
+        <button class="btn btn-primary" {{#unless permission}} disabled {{/unless }} onclick="showBPMNUploader()">Associate a BPMN model</button>
+    {{/if}}
+</div>
+
+<div class="control-group" style="display: inline-block">
+    {{#if documentAvailable}}
+        <div id="sddiv">
+            <button id="viewDocumentButton" class="btn btn-primary" onclick="showDocument({{#if permission}}true{{else}}false{{/if}})">View Documents</button>
+        </div>
+    {{else}}
+        <div id="addiv">
+            <button id="addDocumentButton" class="btn btn-primary" {{#unless permission}} disabled {{/unless }} onclick="associateDoc()">Associate Documents
+            </button>
+        </div>
+    {{/if}}
+</div>
+
+<div class="control-group" style="display: inline-block;">
+    {{#if flowchartAvailable}}
+        <div id="sfdiv">
+            <button id="showFlowchartButton" class="btn btn-primary"
+                    onclick="showFlowchartEditor('{{assets.tables.[0].fields.name.value}}', '{{flowchartPath}}')">
+                {{#if permission}}Edit{{else}}View{{/if}} Flowchart
+            </button>
+        </div>
+    {{else}}
+        <div id="aFdiv">
+            <button id="addFlowchartButton" class="btn btn-primary" {{#unless permission}} disabled {{/unless }} onclick="associateEditorFlowChart()">Associate
+                Flowchart
+            </button>
+        </div>
+    {{/if}}
+</div>
+<br/><br/>
+
+<form class="form-horizontal">
+    <div class="control-group">
+
+        <h2 class="field-title">
+            <a class="collapsing-h2 collapsed" aria-expanded="true" href="#subprocess" data-toggle="collapse"
+               rel="tooltip" title="List of subprocesses for a given process">
+                <i class="cu-btn-exp-col btn-collapsed">Subprocess</i>
+            </a>
+        </h2>
+
+        <div id="subprocess" class="responsive-form-container collapse out" aria-expanded="true" style="">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+                &nbsp;
+            </div>
+            <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                <div class="add-unbounded-row">
+                    {{#if permission}}
+                        <a data-name="subprocess" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
+                            Subprocess</a>{{/if}}
+                    <button {{#unless permission}}  style="display: none;" {{/unless }} class="btn btn-primary view" data-name="subprocess" id="search-process-view">
+                        <i class="fa fa-search"></i> Search Process
+                    </button>
+                </div>
+                <table class="tablex cu-data-table js-unbounded-table" id="table_subprocess">
+                    <thead>
+                    <tr>
+                        <th style="background: none;"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each involveProcessList.subprocesses}}
+                        <tr>
+                            <td valign="top" style="width: 90%;"><span id="subprocess_Name"
+                                                                       class="subprocess_Name">{{this.name}}-{{this.version}}</span></td>
+                            <td style="width: 5%;"></td>
+                            {{#if permission}} <td style="width: 5%;"><label class="remove-process" onclick="deleteSubprocess(this)"><i
+                                    class="fa fa-trash"></i></label></td>{{/if}}
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h2 class="field-title">
+            <a class="collapsing-h2 collapsed" aria-expanded="true" href="#successor" data-toggle="collapse"
+               rel="tooltip" title="List of successor processes for a given process">
+                <i class="cu-btn-exp-col btn-collapsed">Successor</i>
+            </a>
+        </h2>
+
+        <div id="successor" class="responsive-form-container collapse out" aria-expanded="true" style="">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+                &nbsp;
+            </div>
+            <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                <div class="add-unbounded-row">
+                    {{#if permission}}
+                        <a data-name="successor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
+                            Successor</a>{{/if}}
+                    <button {{#unless permission}} style="display: none;" {{/unless }} class="btn btn-primary view" data-name="successor" id="search-process-view">
+                        <i class="fa fa-search"></i> Search Process
+                    </button>
+                </div>
+                <table class="tablex cu-data-table js-unbounded-table" id="table_successor">
+                    <thead>
+                    <tr>
+                        <th style="background: none;"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each involveProcessList.successors}}
+                        <tr>
+                            <td valign="top" style="width: 90%;"><span id="successor_Name"
+                                                                       class="successor_Name">{{this.name}}-{{this.version}}</span></td>
+                            <td style="width: 5%;"></td>
+                            {{#if permission}} <td style="width: 5%;"><label class="remove-process" onclick="deleteSuccessor(this)"><i
+                                    class="fa fa-trash"></i></label></td>{{/if}}
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <h2 class="field-title">
+            <a class="collapsing-h2 collapsed" aria-expanded="true" href="#predecessor" data-toggle="collapse"
+               rel="tooltip" title="List of predecessor processes for a given process">
+                <i class="cu-btn-exp-col btn-collapsed">Predecessor</i>
+            </a>
+        </h2>
+
+        <div id="predecessor" class="responsive-form-container collapse out" aria-expanded="true" style="">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
+                &nbsp;
+            </div>
+            <div style="border:0px solid #ff0000; padding:0" class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                <div class="add-unbounded-row">
+                    {{#if permission}}<a data-name="predecessor" onclick="addUnboundedRow(this)"><i class="fa fa-plus-circle"></i> Add
+                        Predecessor</a> {{/if}}
+                    <button {{#unless permission}} style="display: none;" {{/unless }} class="btn btn-primary view" data-name="predecessor" id="search-process">
+                        <i class="fa fa-search"></i> Search Process
+                    </button>
+                </div>
+                <table class="tablex cu-data-table js-unbounded-table" id="table_predecessor">
+                    <thead>
+                    <tr>
+                        <th style="background: none;"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each involveProcessList.predecessors}}
+                        <tr>
+                            <td valign="top" style="width: 90%;"><span id="predecessor_Name"
+                                                                       class="predecessor_Name">{{this.name}}-{{this.version}}</span></td>
+                            <td style="width: 5%;"></td>
+                            {{#if permission}} <td style="width: 5%;"><label class="remove-process" onclick="deletePredecessor(this)"><i
+                                    class="fa fa-trash"></i></label></td> {{/if}}
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</form>
+</div>
 
 <div id="processTextContainer" style="display: none">
     <div class="form-group">

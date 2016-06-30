@@ -1183,22 +1183,29 @@ function removeBPMNDiagramListener() {
 
 function exportProcess(processName,processVersion){
     var exportWithAssociations = document.getElementById("exportWithAssociationsChkBox").checked;
-
-
-
     $.ajax({
         url: '/publisher/assets/process/apis/export_process',
         type: 'POST',
         data: {
             'processName': processName,
-            'processVersion': processVersion
+            'processVersion': processVersion,
+            'exportWithAssociations':exportWithAssociations
         },
         success: function (data) {
             var response = JSON.parse(data);
             if (response.error === false) {
-                alertify.success ("Process Exporting Succeeded");
+                var byteCharacters = atob(response.content);
+                var byteNumbers = new Array(byteCharacters.length);
+                for (var i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                var contentType = 'application/zip';
+                var byteArray = new Uint8Array(byteNumbers);
+                var blob = new Blob([byteArray], {type: contentType});
+                saveAs(blob, processName+"-"+processVersion+"-PC-Package.zip");
+                alertify.success("Succeeded Exportable zip Packaging. Save it to a prefered location");
             } else {
-                alertify.error(response.content);
+                alertify.error('Process Exporting Failed');
             }
         },
         error: function () {
