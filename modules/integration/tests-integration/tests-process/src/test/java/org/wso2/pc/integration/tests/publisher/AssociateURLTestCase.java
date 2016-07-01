@@ -99,8 +99,8 @@ public class AssociateURLTestCase extends PCIntegrationBaseTest{
         PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_GDOC_NAME,
                 ASSOCIATES_GDOC_SUMMARY,"",GDOC_URL,"file", PROCESS_NAME,PROCESS_VERSION,
                 cookieHeader,url,PCIntegrationConstants.APPLICATION_OCTET_STREAM);
-        Assert.assertTrue(httpMethod.getStatusCode() == 302,
-                "Wrong status code ,Expected 302 ,Received " + httpMethod.getStatusCode());
+        Assert.assertTrue(httpMethod.getStatusCode() == 200,
+                "Wrong status code ,Expected 200 ,Received " + httpMethod.getStatusCode());
     }
 
     @Test(groups = {"org.wso2.pc"}, description = "Check associated GDOC document existence",

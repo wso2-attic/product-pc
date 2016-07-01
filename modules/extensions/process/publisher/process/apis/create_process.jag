@@ -29,20 +29,21 @@ var processDetails = String(request.getParameter("processInfo"));
 var responseObj = {};
 
 var server = require('store').server;
+var ref = require('utils').time;
 var user = server.current(session);
 var userName = user.username;
 
 try {
-    var status = ps.createProcess(processDetails, userName);
+    var status = ps.createProcess(processDetails, userName, ref.getCurrentTime());
 
-    if(status == "duplicate") {
+  /*  if(status == "duplicate") {
         responseObj.error = true;
         responseObj.content = "Process already exists";
 
-    } else {
+    } else { */
         responseObj.error = false;
         responseObj.content = status;
-    }
+ //   }
     print(stringify(responseObj));
 } catch (error) {
     log.info(error);

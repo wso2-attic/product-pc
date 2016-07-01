@@ -29,7 +29,7 @@ var resources = function (page, meta) {
         css: ['flowchart/jsPlumb-defaults.css', 'flowchart/jsPlumb-demo.css', 'bootstrap-select.min.css',
             'alertify.css', 'default.css', 'datepick/smoothness.datepick.css', 'grid.css',
             'select2.min.css', 'jquery-ui.css', 'flowchart/flowchart.css', 'font-awesome.css', 'search.css', 'build.css',
-            'auto-complete-tags/bootstrap-tokenfield.min.css', 'auto-complete-tags/tokenfield-typehead.min.css', 'custom.css'],
+            'auto-complete-tags/bootstrap-tokenfield.min.css', 'auto-complete-tags/tokenfield-typehead.min.css','add-process.css','custom.css'],
         code: ['publisher.assets.hbs']
     };
 };

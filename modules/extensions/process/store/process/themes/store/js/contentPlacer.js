@@ -40,16 +40,16 @@ $(document).ready(function () {
 
     });
 
-    $("#btnView").show(); //by default hide
-    $("#btnCollapse").hide();
+    $("#btnView").hide(); //by default hide
+    $("#btnCollapse").show();
     $("#collapsedProcessName").hide();
 
     $("#btnView").on("click", function () {
-        $(".asset-description").hide();
-        $(".margin-bottom-double").hide();
+        $(".asset-description").show();
+        $(".margin-bottom-double").show();
         $("#btnView").hide();
         $("#btnCollapse").show();
-        $("#collapsedProcessName").show();
+        $("#collapsedProcessName").hide();
 
         viewFlag = true;
     });
@@ -58,9 +58,9 @@ $(document).ready(function () {
         viewFlag = false;
         $("#btnView").show();
         $("#btnCollapse").hide();
-        $(".asset-description").show();
-        $(".margin-bottom-double").show();
-        $("#collapsedProcessName").hide();
+        $(".asset-description").hide();
+        $(".margin-bottom-double").hide();
+        $("#collapsedProcessName").show();
     });
     //get associations on click
     $("#tab-relations").on("click", function () {
@@ -76,6 +76,7 @@ $(document).ready(function () {
                 },
                 success: function (result) {
                     var associationsObj = JSON.parse(result);
+
                     var preAssets = {
                         data: []
                     };
@@ -85,12 +86,18 @@ $(document).ready(function () {
                     var sucAssets = {
                         data: []
                     };
+
                     if (associationsObj.subprocesses.length > 0) {
+
                         for (var i = 0; i < associationsObj.subprocesses.length; i++) {
                             subAssets.data.push({
                                 "id": associationsObj.subprocesses[i].id,
-                                "name": associationsObj.subprocesses[i].name
+                                "name": associationsObj.subprocesses[i].name,
+                                "processId": associationsObj.subprocesses[i].processId,
+                                "LCState": associationsObj.subprocesses[i].LCState
+
                             });
+
                         }
                     }
 
@@ -98,7 +105,9 @@ $(document).ready(function () {
                         for (var i = 0; i < associationsObj.successors.length; i++) {
                             sucAssets.data.push({
                                 "id": associationsObj.successors[i].id,
-                                "name": associationsObj.successors[i].name
+                                "name": associationsObj.successors[i].name,
+                                "processId": associationsObj.successors[i].processId,
+                                "LCState": associationsObj.successors[i].LCState
                             });
                         }
                     }
@@ -107,33 +116,45 @@ $(document).ready(function () {
                         for (var i = 0; i < associationsObj.predecessors.length; i++) {
                             preAssets.data.push({
                                 "id": associationsObj.predecessors[i].id,
-                                "name": associationsObj.predecessors[i].name
+                                "name": associationsObj.predecessors[i].name,
+                                "processId": associationsObj.predecessors[i].processId,
+                                "LCState": associationsObj.predecessors[i].LCState
                             });
                         }
                     }
 
                     for (var i = 0; i < preAssets.data.length; i++) {
-                        var id = preAssets.data[i].id;
+                        var id = preAssets.data[i].processId;
                         id = id.trim();
                         // check if predecessor is published
-                        document.getElementById("predecessor-list-group").innerHTML +=
-                            '<li class="list-group-item"><a href = /store/assets/process/details/' + id + '>' +
-                            '<span class="glyphicon glyphicon-chevron-right"></span> ' + preAssets.data[i].name + '</a></li>';
+                        var processNameStyle = '<span class="glyphicon glyphicon-chevron-right"></span>' + preAssets.data[i].name;
+
+                        if(preAssets.data[i].LCState == 'Published'){
+                            processNameStyle = '<a href = /store/assets/process/details/' + id + '>' + processNameStyle + '</a>';
+                        }
+                        document.getElementById("predecessor-list-group").innerHTML +='<li class="list-group-item">'+ processNameStyle + '</li>';
                     }
                     for (var i = 0; i < subAssets.data.length; i++) {
-                        var id = subAssets.data[i].id;
+
+                        var id = subAssets.data[i].processId;
                         id = id.trim();
                         // check if predecessor is published
-                        document.getElementById("subprocess-list-group").innerHTML +=
-                            '<li class="list-group-item"><a href = /store/assets/process/details/' + id + '>' +
-                            '<span class="glyphicon glyphicon-chevron-right"></span> ' + subAssets.data[i].name + '</a></li>';
+                        var processNameStyle = '<span class="glyphicon glyphicon-chevron-right"></span>' + subAssets.data[i].name;
+                        if(subAssets.data[i].LCState == 'Published'){
+                            processNameStyle = '<a href = /store/assets/process/details/' + id + '>' + processNameStyle + '</a>';
+                        }
+
+                        document.getElementById("subprocess-list-group").innerHTML +='<li class="list-group-item">'+ processNameStyle + '</li>';
                     }
                     for (var i = 0; i < sucAssets.data.length; i++) {
-                        var id = sucAssets.data[i].id;
+                        var id = sucAssets.data[i].processId;
                         id = id.trim();
-                        document.getElementById("successor-list-group").innerHTML +=
-                            '<li class="list-group-item"><a href = /store/assets/process/details/' + id + '>' +
-                            '<span class="glyphicon glyphicon-chevron-right"></span> ' + sucAssets.data[i].name + '</a></li>';
+                        var processNameStyle = '<span class="glyphicon glyphicon-chevron-right"></span>' + sucAssets.data[i].name;
+
+                        if(sucAssets.data[i].LCState == 'Published'){
+                            processNameStyle = '<a href = /store/assets/process/details/' + id + '>' + processNameStyle + '</a>';
+                        }
+                        document.getElementById("successor-list-group").innerHTML +='<li class="list-group-item">'+ processNameStyle + '</li>';
                     }
 
                 }
@@ -276,5 +297,4 @@ $(document).ready(function () {
     } else {
         $("#tab-properties").html("No text content available");
     }
-
 });

@@ -59,7 +59,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -97,7 +99,7 @@ public class ProcessStore {
         return builder.parse(new InputSource(new StringReader(xmlString)));
     }
 
-    public String createProcess(String processDetails, String userName) throws ProcessCenterException {
+    public String createProcess(String processDetails, String userName, String processCreatedTime) throws ProcessCenterException {
 
         String processId = "FAILED TO ADD PROCESS";
         try {
@@ -119,10 +121,10 @@ public class ProcessStore {
                         .setPutPermission(registryService, userName, ProcessCenterConstants.AUDIT.PROCESS_PATH);
                 String processAssetPath = "processes/" + processName + "/" + processVersion;
 
-                if(reg.resourceExists(processAssetPath)) {
-                    String status = "duplicate";
-                    return status;
-                }
+//                if(reg.resourceExists(processAssetPath)) {
+//                    String status = "duplicate";
+//                    return status;
+//                }
 
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -138,6 +140,7 @@ public class ProcessStore {
                 appendText(doc, overviewElement, "name", mns, processName);
                 appendText(doc, overviewElement, "version", mns, processVersion);
                 appendText(doc, overviewElement, "owner", mns, processOwner);
+                appendText(doc, overviewElement, "createdtime", mns, processCreatedTime);
 
                 if ((processDescription != null) && (!processDescription.isEmpty())) {
                     appendText(doc, overviewElement, "description", mns, processDescription);
@@ -258,6 +261,29 @@ public class ProcessStore {
                     doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
 
                 //TODO update tags and image path
+
+                List<String> tags = Arrays.asList(processTags.split(","));
+                Tag[] curTags = reg.getTags(processAssetPath);
+
+                for (Tag tag: curTags) {
+                        reg.removeTag(processAssetPath, tag.getTagName());
+                }
+
+                for (String tag : tags) {
+                    tag = tag.trim();
+                    reg.applyTag(processAssetPath, tag);
+                }
+
+                if (imageObj.length() != 0) {
+                    String imageRegPath = ProcessCenterConstants.IMAGE_PATH + processId + "/" +
+                            imageObj.getString("imgValue");
+                    Resource imageContentResource = reg.newResource();
+                    BASE64Decoder decoder = new BASE64Decoder();
+                    byte[] imageContent = decoder.decodeBuffer(imageObj.getString("binaryImg"));
+                    imageContentResource.setContent(imageContent);
+                    reg.put(imageRegPath, imageContentResource);
+                }
+
 
                 String newProcessContent = xmlToString(doc);
                 resource.setContent(newProcessContent);
@@ -861,9 +887,12 @@ public class ProcessStore {
             JSONObject associatedProcessDetails = new JSONObject();
             associatedProcessDetails.put("name", overviewElement.getElementsByTagName("name").item(0).getTextContent());
             associatedProcessDetails.put("path", associatedResource.getPath());
-            associatedProcessDetails.put("id", associatedResource.getUUID());
-            associatedProcessDetails
-                    .put("version", overviewElement.getElementsByTagName("version").item(0).getTextContent());
+
+            associatedProcessDetails.put("id", associatedResource.getId());
+            associatedProcessDetails.put("processId",associatedResource.getUUID());
+            associatedProcessDetails.put("version", overviewElement.getElementsByTagName("version").item(0).getTextContent());
+            associatedProcessDetails.put("LCState", associatedResource.getProperty("registry.lifecycle."+
+                    associatedResource.getProperty("registry.LC.name")+".state"));
             jsonArray.put(associatedProcessDetails);
         }
     }
@@ -1608,6 +1637,29 @@ public class ProcessStore {
             throw new ProcessCenterException(msg, e);
         }
         return textContent;
+    }
+
+    /**
+     * Get process related tags as a String in which the seperate tags are delimitted by 3 hashes(###)
+     * i.e.  tag1###tag2###tag3
+     *
+     * @param processName
+     * @param processVersion
+     * @return
+     * @throws RegistryException
+     */
+    public String getProcessTags(String processName, String processVersion) throws RegistryException {
+        StringBuffer tagsSb = new StringBuffer();
+        RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+        if (registryService != null) {
+            UserRegistry reg = registryService.getGovernanceSystemRegistry();
+            String processPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
+            Tag[] tags = reg.getTags(processPath);
+            for (Tag tag : tags) {
+                tagsSb.append("###" + tag.getTagName());
+            }
+        }
+        return tagsSb.toString();
     }
 
     /**

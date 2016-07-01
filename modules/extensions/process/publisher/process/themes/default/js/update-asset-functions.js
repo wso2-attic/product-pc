@@ -84,10 +84,12 @@ function updateProcess(currentElement) {
                     alertify.success("process updated successfully");
                     if ($(currentElement).attr('id') == 'detailsProcessBtn') {
                         $('#stp1').removeClass("current");
-                        $('#stp1').addClass("completed");
+                        $('#stp1').addClass("other");
                         $('#stp2').addClass("current");
                     }
                     loadDetails();
+                    $("#processName").html(pname);
+                    $("#processVersion").html(pversion);
                 } else {
                     alertify.error(response.content);
                 }

@@ -364,8 +364,9 @@ asset.renderer = function(ctx) {
             var processName = page.assets.tables[0].fields.name.value; //tables[0].fields["Name"].value;
             var processVersion = page.assets.tables[0].fields.version.value;
             try {
+
+                var processTags = ps.getProcessTags(processName, processVersion);
                 var ps = new ProcessStore();
-                var processTags = ps.getProcessTags();
                 page.processTagsArray = processTags.split("###");
             } catch (e) {
                 log.error("Error in retrieving process tags. Exception:" + e);
@@ -455,6 +456,14 @@ asset.renderer = function(ctx) {
                         page.flowchartPath = flowchartPath;
                     }
                 }
+            }
+
+            var thumbnail = page.assets.tables[6].fields.thumbnail.value;
+            log.info(thumbnail);
+            if (thumbnail === "images_thumbnail") {
+                page.customThumbnailAvailable = true;
+            } else {
+                page.customThumbnailAvailable = false;
             }
 
             importPackage(org.wso2.carbon.pc.core);

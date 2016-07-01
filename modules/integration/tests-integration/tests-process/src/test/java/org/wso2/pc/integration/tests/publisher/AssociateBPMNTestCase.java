@@ -96,7 +96,7 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
         String url = publisherAPIBaseUrl + "upload_bpmn";
         PostMethod httpMethod = ArtifactUploadUtil.uploadBPMN(resourcePath1,
                 PROCESS_NAME, PROCESS_VERSION, "BPMN", cookieHeader, url);
-        Assert.assertTrue(httpMethod.getStatusCode() == 302,
+        Assert.assertTrue(httpMethod.getStatusCode() == 200,
                 "Wrong status code ,Expected 302 ,Received " + httpMethod.getStatusCode());
     }
 
