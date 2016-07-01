@@ -260,7 +260,6 @@ public class ProcessStore {
                     doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
                     doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
 
-                //TODO update tags and image path
 
                 List<String> tags = Arrays.asList(processTags.split(","));
                 Tag[] curTags = reg.getTags(processAssetPath);
@@ -274,6 +273,14 @@ public class ProcessStore {
                     reg.applyTag(processAssetPath, tag);
                 }
 
+                String newProcessContent = xmlToString(doc);
+                resource.setContent(newProcessContent);
+                reg.put(processAssetPath, resource);
+
+                //TODO check whether same uuid is generated for the updated resource
+                Resource storedProcess = reg.get(processAssetPath);
+                processId = storedProcess.getUUID();
+
                 if (imageObj.length() != 0) {
                     String imageRegPath = ProcessCenterConstants.IMAGE_PATH + processId + "/" +
                             imageObj.getString("imgValue");
@@ -284,14 +291,6 @@ public class ProcessStore {
                     reg.put(imageRegPath, imageContentResource);
                 }
 
-
-                String newProcessContent = xmlToString(doc);
-                resource.setContent(newProcessContent);
-                reg.put(processAssetPath, resource);
-
-                //TODO check whether same uuid is generated for the updated resource
-                Resource storedProcess = reg.get(processAssetPath);
-                processId = storedProcess.getUUID();
             }
 
         } catch (Exception e) {

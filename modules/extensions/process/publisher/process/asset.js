@@ -459,7 +459,6 @@ asset.renderer = function(ctx) {
             }
 
             var thumbnail = page.assets.tables[6].fields.thumbnail.value;
-            log.info(thumbnail);
             if (thumbnail === "images_thumbnail") {
                 page.customThumbnailAvailable = true;
             } else {
