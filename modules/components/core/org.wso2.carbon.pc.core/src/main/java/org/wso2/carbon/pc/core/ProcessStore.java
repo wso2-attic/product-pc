@@ -121,10 +121,6 @@ public class ProcessStore {
                         .setPutPermission(registryService, userName, ProcessCenterConstants.AUDIT.PROCESS_PATH);
                 String processAssetPath = "processes/" + processName + "/" + processVersion;
 
-//                if(reg.resourceExists(processAssetPath)) {
-//                    String status = "duplicate";
-//                    return status;
-//                }
 
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
