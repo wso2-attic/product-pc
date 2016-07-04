@@ -27,15 +27,25 @@
          data-fixed-offset-top="0" data-offset-top="80">
         <div id="content">
             <ul class="nav nav-stacked">
-                <li id="textEditor"><a href="#" onclick="showTextEditor(this)">Describe process in
-                    text<i id="textadded" class="" style="color: red;padding-left: 20px;"></i></a></li>
-                <li id="bpmn"><a href="#" onclick="associateBPMN(this)">Associate BPMN
+                <li id="textEditor"><a href="#" id="textEditorLink"
+                                       onclick="{{#if isUpdateView}}loadTextEditor(this){{else}}showTextEditor(this){{/if}}">{{#if isUpdateView}}
+                    Update process
+                    text{{else}}Describe process in
+                    text{{/if}}<i id="textadded" class="" style="color: red;padding-left: 20px;"></i></a></li>
+                <li id="bpmn"><a href="#" onclick="associateBPMN(this)">BPMN
                     model<i id="bpmnadded" class="" style="color: red;padding-left: 20px;"></i></a></li>
-                <li id="flowChart"><a href="#" onclick="associateFlowChart(this)">Associate Flow
-                    Chart<i id="flowchartadded" class="" style="color: red;padding-left: 35px;"></i></a></li>
-                <li id="doc"><a href="#" onclick="associateDocument(this)">Associate
-                    Documents<i id="docadded" class="" style="color: red;padding-left: 30px;"></i></a></li>
+                <li id="flowChart"><a href="#" onclick="{{#if isUpdateView}}editAssociatedFlowChart(this,'{{flowchartPath}}') {{else}}associateFlowChart(this){{/if}}">Flow
+                    Charts<i id="flowchartadded" class="" style="color: red;padding-left: 35px;"></i></a></li>
+                <li id="doc"><a href="#" onclick="{{#if isUpdateView}}editAssociatedDocument(this,{{permission}}){{else}}associateDocument(this){{/if}}">Documents<i id="docadded" class=""
+                                                                                       style="color: red;padding-left: 30px;"></i></a></li>
             </ul>
+            <input type="hidden" id="updateViewCheck" value="{{isUpdateView}}">
+            <input type="hidden" id="processTextHolder" name="processTextHolder" value="{{isProcessTextAvailable}}"/>
+            <input type="hidden" id="bpmnAvailableCheck" value="{{isBpmnAvailable}}">
+            <input type="hidden" id="documentAvailableCheck" value="{{isDocumentAvailable}}">
+            <input type="hidden" id="flowchartAvailableCheck" value="{{isFlowChartAvailable}}">
+            <input type="hidden" id="permissionCheck" value="{{permission}}">
+
         </div>
     </div>
     <div class="row">
@@ -60,3 +70,4 @@
         <div> {{> docView .}}</div>
     </div>
 </div>
+

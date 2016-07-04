@@ -49,6 +49,7 @@ public class ProcessCenterConstants {
         public static final String PROCESS_LIFECYCLE_HISTORY = "/_system/governance/repository/components/org.wso2.carbon.governance/lifecycles/history/__system_governance_processes_";
         public static final String AC_PROCESS_PATH = "/_system/governance/processes/";
 
+        public static final String ADMIN_ROLE = "admin";
         public static final String PUBLISHER_ROLE = "Internal/publisher";
         public static final String PRIVATE_USER_ROLE = "Internal/private_";
         public static final String ASSET_TYPE = "asset";

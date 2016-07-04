@@ -21,7 +21,7 @@ importPackage(org.wso2.carbon.pc.core);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
-    log.debug("Process creation logic");
+    log.debug("Process update logic");
 }
 
 var ps = new ProcessStore();
@@ -29,26 +29,18 @@ var processDetails = String(request.getParameter("processInfo"));
 var responseObj = {};
 
 var server = require('store').server;
-var ref = require('utils').time;
 var user = server.current(session);
 var userName = user.username;
 
 try {
-    var status = ps.createProcess(processDetails, userName, ref.getCurrentTime());
-
-  /*  if(status == "duplicate") {
-        responseObj.error = true;
-        responseObj.content = "Process already exists";
-
-    } else { */
-        responseObj.error = false;
-        responseObj.content = status;
- //   }
+    var status = ps.updateProcess(processDetails, userName);
+    responseObj.error = false;
+    responseObj.content = status;
     print(stringify(responseObj));
 } catch (error) {
     log.info(error);
     responseObj.error = true;
-    responseObj.content = "Process creating error.";
+    responseObj.content = "Process updating error.";
     print(stringify(responseObj));
 }
 %>

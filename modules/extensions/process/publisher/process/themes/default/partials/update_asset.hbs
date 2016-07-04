@@ -1,17 +1,38 @@
-{{#with assets}}
-<div class="well asset-well">
-    <div class="container-fluid">
+<!--
+  ~ Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<div class="container-fluid">
+    <div class="body-wrapper">
         <div class="row">
-            <div class="col-lg-2">
-                {{>asset-thumbnail .}}
-            </div>
-            <div class="col-lg-10">
-                <h1 class="asset-name" style="padding-left: 1cm">{{name}}</h1>
-                <i class="fa fa-circle" style="padding-left: 1cm"></i> {{lifecycleState}}
-                <div class="well-description padding-bottom-lg" style="padding-left: 1cm">{{tables.0.fields.createdtime.value}}</div>
+            <div class="wizard add-padding add-padding-top-2x">
+                <div class="wizard-inner">
+                    <ol class="wiz-nav-inner">
+                        <li id="stp1" class="wiz-step current"><span
+                                class="hidden-xs">Overview</span></li>
+                        <li id="stp2" class="wiz-step"><span class="hidden-xs">Details</span>
+                        </li>
+                        <li id="stp3" class="wiz-step"><span
+                                class="hidden-xs">Associations</span></li>
+                    </ol>
+                </div>
+                <div class="wiz-content">
+                    <div id="overviewDiv" style="display: none">{{> create_asset_overview .}}</div>
+                    <div id="detailDiv" style="display: none">{{> create_asset_details .}}</div>
+                    <div id="associationDiv" style="display: none">{{> create_asset_associations .}}</div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-{{/with}}
-{{> update_form .}}
