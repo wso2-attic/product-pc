@@ -129,7 +129,7 @@ function associateBPMN() {
         $("#bpmnViewDiv").show();
         $(".active").removeClass("active");
     } else if($('#bpmnAvailableCheck').val()==="true") {
-       
+
         getBPMN();
         $("#bpmnEditDiv").hide();
 		$("#bpmnViewDiv").show();
@@ -157,7 +157,7 @@ function getBPMN() {
 }
 
 function associateFlowChart() {
-    
+
     $("#docEditDiv").hide();
     $("#docViewDiv").hide();
     $("#bpmnEditDiv").hide();
@@ -908,7 +908,7 @@ function readUpdatedSubprocess(currentObj, count) {
                 if (response.error === false) {
                     if (count == 1) {
                         alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
-                        
+
                         $("#table_subprocess").hide();
                         $("#table_subprocess").empty();
                         $("#subProcessTable").show("default" , function () {
