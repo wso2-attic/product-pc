@@ -76,9 +76,6 @@ public class AddProcessTestCase extends PCIntegrationBaseTest {
                 requestBody, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
-
-        Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
-                "Expected 200 OK, Received " + response.getStatusCode());
         Assert.assertTrue(responseObject.get("error").toString().equals("false"),
                 "Error while creating the process");
     }
