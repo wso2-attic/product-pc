@@ -1572,9 +1572,13 @@ function deletePredecessor(element) {
     confirmModal.modal('show');
 }
 
-function loadSummary() {
-
+function loadSummary(update_view) {
     window.location = "../../assets/process/details/" + PID;
+    if(update_view) {
+    window.location = "../../../assets/process/details/" + PID;
+    } else {
+    window.location = "../../assets/process/details/" + PID;
+    }
 
 }
 
