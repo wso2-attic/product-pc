@@ -56,6 +56,7 @@
                             !org.wso2.carbon.pc.core.audit.util,
                             !org.wso2.carbon.pc.core.audit.bean,
                             org.wso2.carbon.pc.core.audit,
+                            org.wso2.carbon.pc.core.import_export,
                             org.wso2.carbon.pc.core;version=${project.version}
                         </Export-Package>
                         <Import-Package>
@@ -72,6 +73,14 @@
                             *;resolution:=optional
                         </Import-Package>
                     </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 

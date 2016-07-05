@@ -118,7 +118,11 @@ asset.server = function(ctx) {
                    }, {
                        url: 'export_process',
                        path: 'export_process.jag'
+                   }, {
+                       url: 'import_process',
+                       path: 'import_process.jag'
                    }
+
             ],
             pages: [{
                         title: 'Asset: ' + typeSingularLabel,
@@ -173,6 +177,10 @@ asset.server = function(ctx) {
                         title: 'Log: ',
                         url: 'log',
                         path: 'log.jag'
+                    },{
+                        title: 'Import Process: ',
+                        url: 'import_process',
+                        path: 'import_process.jag'
                     }]
         }
     };
@@ -195,6 +203,17 @@ asset.renderer = function(ctx) {
         if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) {
             navList.push('Add ', 'btn-add-new', util.buildUrl('create'));
             navList.push('Audit Log', 'btn-overview', util.buildUrl('log'));
+            navList.push('Import Process', 'btn-overview', util.buildUrl('import_process'));
+        }
+        //navList.push('Configuration', 'icon-dashboard', util.buildUrl('configuration'));
+        return navList.list();
+    };
+    var importProcessLeftNav = function(page, util) {
+        var navList = util.navList();
+        if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) {
+            navList.push('Add ', 'btn-add-new', util.buildUrl('create'));
+            navList.push('Audit Log', 'btn-overview', util.buildUrl('log'));
+            navList.push('Import Process', 'btn-overview', util.buildUrl('import_process'));
         }
         //navList.push('Configuration', 'icon-dashboard', util.buildUrl('configuration'));
         return navList.list();
@@ -410,6 +429,9 @@ asset.renderer = function(ctx) {
                     case 'statistics':
                         page.leftNav = buildListLeftNav(page, this);
                         break;
+                    case 'import_process':
+                        page.leftNav = importProcessLeftNav(page,this);
+                        break;
                     default:
                         page.leftNav = buildDefaultLeftNav(page, this);
                         break;
@@ -434,10 +456,10 @@ asset.renderer = function(ctx) {
                     //Only populate the link if the asset type is activated and the logged in user has permission to that asset
                     if ((isActivatedAsset(assetType.shortName)) && (permissionAPI.hasAssetPermission(permissionAPI.ASSET_LIST, assetType.shortName, ctx.session))) {
                         assetTypes.push({
-                                            url: this.buildBaseUrl(assetType.shortName) + '/list',
-                                            assetIcon: assetType.ui.icon || DEFAULT_ICON,
-                                            assetTitle: assetType.pluralLabel
-                                        });
+                            url: this.buildBaseUrl(assetType.shortName) + '/list',
+                            assetIcon: assetType.ui.icon || DEFAULT_ICON,
+                            assetTitle: assetType.pluralLabel
+                        });
                     }
                 }
                 ribbon.currentType = page.rxt.singularLabel;

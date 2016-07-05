@@ -37,6 +37,9 @@ public class ProcessCenterConstants {
     public static final String EXPORTED_PROCESS_TEXT_FILE = "process_text.xml";
     public static final int JSON_FILE_INDENT_FACTOR = 5;
     public static final String PROCESS_ASSET_RESOURCE_REG_PATH = "store/asset_resources/process/";
+    public static final String PROCESS_TAGS_FILE = "process_tags.txt";
+    public static final String PROCESS_ASSOCIATIONS_FILE = "process_associations.json";
+
     public static class AUDIT {
 
         public static final String PROCESS = "process";

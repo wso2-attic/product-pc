@@ -59,6 +59,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -2018,41 +2019,21 @@ public class ProcessStore {
                 downloadProcessThumbnailImage(reg,processName,processVersion,exportProcessPath);
 
                 //write process tags in a file
-                FileOutputStream tagsFileOutputStream = new FileOutputStream(exportProcessPath + "process_tags.txt");
+                FileOutputStream tagsFileOutputStream = new FileOutputStream(exportProcessPath +
+                        ProcessCenterConstants.PROCESS_TAGS_FILE);
                 tagsFileOutputStream.write(getProcessTags(processName,processVersion).getBytes());
                 tagsFileOutputStream.close();
 
-                ////export process associations
+                //export process associations
                 if(exportWithAssociations) {
                     //write details on process associations (sub-processes/predecessors/successors) in a json file
-                    FileOutputStream out = new FileOutputStream(exportProcessPath + "process_associations.json");
+                    FileOutputStream out = new FileOutputStream(exportProcessPath + ProcessCenterConstants
+                            .PROCESS_ASSOCIATIONS_FILE);
                     JSONObject successorPredecessorSubprocessListJSON = new JSONObject(
                             getSucessorPredecessorSubprocessList(ProcessCenterConstants.GREG_PATH + processResourcePath));
                     out.write(successorPredecessorSubprocessListJSON.toString(ProcessCenterConstants.JSON_FILE_INDENT_FACTOR).getBytes());
                     out.close();
-/*
-                    JSONArray subprocessesJArray = successorPredecessorSubprocessListJSON.getJSONArray("subprocesses");
-                    JSONArray predecessorsJArray = successorPredecessorSubprocessListJSON.getJSONArray("predecessors");
-                    JSONArray successorsJArray = successorPredecessorSubprocessListJSON.getJSONArray("successors");
 
-                    //export sub processes
-                    for (int i = 0; i < subprocessesJArray.length(); i++) {
-                        String subProcessName = subprocessesJArray.getJSONObject(i).getString("name");
-                        String subProcessVersion = subprocessesJArray.getJSONObject(i).getString("version");
-                        exportProcess(exportRootPath, subProcessName, subProcessVersion, exportWithAssociations, user);
-                    }
-                    //export predecessors
-                    for (int i = 0; i < predecessorsJArray.length(); i++) {
-                        String predecessorName = predecessorsJArray.getJSONObject(i).getString("name");
-                        String predecessorVersion = predecessorsJArray.getJSONObject(i).getString("version");
-                        exportProcess(exportRootPath, predecessorName, predecessorVersion, exportWithAssociations, user);
-                    }
-                    //export successors
-                    for (int i = 0; i < successorsJArray.length(); i++) {
-                        String successorName = successorsJArray.getJSONObject(i).getString("name");
-                        String successorVersion = successorsJArray.getJSONObject(i).getString("version");
-                        exportProcess(exportRootPath, successorName, successorVersion,exportWithAssociations, user);
-                    }*/
                     exportAssociatedProcesses(successorPredecessorSubprocessListJSON,exportRootPath,
                             exportWithAssociations,"subprocesses",user);
                     exportAssociatedProcesses(successorPredecessorSubprocessListJSON,exportRootPath,
@@ -2060,10 +2041,6 @@ public class ProcessStore {
                     exportAssociatedProcesses(successorPredecessorSubprocessListJSON,exportRootPath,
                             exportWithAssociations,"successors",user);
                 }
-
-
-
-
             }
         } catch (Exception e) {
             String errMsg = "Failed to export process:"+processName+"-"+processVersion;
@@ -2189,4 +2166,6 @@ public class ProcessStore {
             fileOutputStream.close();
         }
     }
+
+
 }

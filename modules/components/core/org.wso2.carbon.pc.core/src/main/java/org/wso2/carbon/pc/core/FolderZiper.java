@@ -7,9 +7,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class FolderZiper {
-    /*public static void main(String[] a) throws Exception {
-        zipFolder("c:\\a", "c:\\a.zip");
-    }*/
 
     static public void zipFolder(String srcFolder, String destZipFile) throws Exception {
         ZipOutputStream zip = null;
