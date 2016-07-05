@@ -54,5 +54,14 @@
             <SignResponse>true</SignResponse>
             <CustomLoginPage>/process-center/login.jag</CustomLoginPage>
         </ServiceProvider>
+        <ServiceProvider>
+            <Issuer>portal</Issuer>
+            <AssertionConsumerServiceURLs>
+                <AssertionConsumerServiceURL>https://localhost:9443/portal/acs</AssertionConsumerServiceURL>
+            </AssertionConsumerServiceURLs>
+            <DefaultAssertionConsumerServiceURL>https://localhost:9443/portal/acs</DefaultAssertionConsumerServiceURL>
+            <SignResponse>true</SignResponse>
+            <CustomLoginPage>/portal/login.jag</CustomLoginPage>
+        </ServiceProvider>
     </ServiceProviders>
 </SSOIdentityProviderConfig>

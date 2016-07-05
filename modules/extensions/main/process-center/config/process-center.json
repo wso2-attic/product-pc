@@ -17,7 +17,8 @@
     },
     "apps": {
         "publisher": "%https.host%/publisher",
-        "store": "%https.host%/store"
+        "store": "%https.host%/store",
+        "portal": "%https.host%/portal"
     },
     "lifeCycleBehaviour": {
         "visibleIn": ["Published"]

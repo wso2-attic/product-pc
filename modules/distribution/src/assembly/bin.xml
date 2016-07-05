@@ -762,6 +762,13 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+
+        <!-- Configuring SSO for portal-->
+        <file>
+            <source>../../modules/extensions/process/portal/process/designer.json</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/configs</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
         <!-- Files of PC ends from here -->
     </files>
 
