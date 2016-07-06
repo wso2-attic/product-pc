@@ -1,39 +1,52 @@
 package org.wso2.carbon.pc.core.import_export;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
+import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
+import org.wso2.carbon.pc.core.audit.util.RegPermissionUtil;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.user.api.UserStoreException;
+import sun.misc.BASE64Decoder;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class ProcessImport {
     private static final Log log = LogFactory.getLog(ProcessImport.class);
+    File[] listOfProcessDirs;
+    RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+    UserRegistry reg;
+    String user;
 
     public void importProcesses(InputStream processZipInputStream, String user)
-            throws IOException, RegistryException, ProcessCenterException {
+            throws IOException, RegistryException, ProcessCenterException, UserStoreException {
 
+        reg = registryService.getGovernanceUserRegistry(user);
+        this.user = user;
+        //extract zip file stream to the system disk
         byte[] buffer = new byte[2048];
         ZipInputStream zipInputStream = new ZipInputStream(processZipInputStream);
-       // String outdir = "Imports";
         new File(ImportExportConstants.IMPORTS_DIR).mkdirs();
 
         try {
             ZipEntry entry;
-            int counter = 0;
+            //int counter = 0;
             while ((entry = zipInputStream.getNextEntry()) != null) {
-                counter++;
+                //counter++;
                 String outpath = ImportExportConstants.IMPORTS_DIR + "/" + entry.getName();
                 String dirPath = outpath.substring(0, outpath.lastIndexOf("/"));
                 new File(dirPath).mkdirs();
@@ -45,8 +58,9 @@ public class ProcessImport {
                         fileOutputStream.write(buffer, 0, len);
                     }
                 } finally {
-                    if (fileOutputStream != null)
+                    if (fileOutputStream != null) {
                         fileOutputStream.close();
+                    }
                 }
             }
         } finally {
@@ -54,26 +68,62 @@ public class ProcessImport {
         }
 
         //check if the importing processes are already available
-        boolean processesAlreadyAvaiableInPC = checkIsAlreadyAvailble();
-        if (processesAlreadyAvaiableInPC){
+        if (isProcessesAlreadyAvailble()) {
             return;
         }
 
+        if (registryService != null) {
+
+            //else do the process importing for each process
+            for (File processDir : listOfProcessDirs) {
+                if(processDir.isDirectory()) {
+                    String processDirName = processDir.getName();
+                    String processDirPath = processDir.getPath();
+                    String processRxtPath = processDirPath + "/" + "process_rxt.xml";
+                    String processName = processDirName.substring(0, processDirName.lastIndexOf("-"));
+                    String processVersion = processDirName.substring(processDirName.lastIndexOf("-") + 1, processDirName.length());
+                    putProcessRxt(processName, processVersion, processRxtPath);
+                    setImageThumbnail(processName, processVersion,processDirPath);
+                }
+            }
+        }
     }
 
-    private boolean checkIsAlreadyAvailble() throws IOException, ProcessCenterException, RegistryException {
+    private void setImageThumbnail(String processName, String processVersion, String processDirPath)
+            throws RegistryException, IOException {
+        String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                processVersion;
+        Resource storedProcess = reg.get(processAssetPath);
+        String processId = storedProcess.getUUID();
+
+        String imageResourcePath =
+                ProcessCenterConstants.PROCESS_ASSET_RESOURCE_REG_PATH + processId + "/images_thumbnail";
+
+        Resource imageContentResource = reg.newResource();
+
+        File imageThumbnailFile = new File(processDirPath+"/"+"process_image_thumbnail");
+        byte[] imageContent = Files.readAllBytes(imageThumbnailFile.toPath());
+
+        //BASE64Decoder decoder = new BASE64Decoder();
+        //byte[] imageContent = decoder.decodeBuffer(imageObj.getString("binaryImg"));
+        imageContentResource.setContent(imageContent);
+        reg.put(imageResourcePath, imageContentResource);
+
+    }
+
+    public boolean isProcessesAlreadyAvailble() throws IOException, ProcessCenterException, RegistryException {
         File folder = new File(ImportExportConstants.IMPORTS_DIR);
         File[] listOfFiles = folder.listFiles();
         if (listOfFiles[0].isDirectory() && listOfFiles.length == 1) {
             String zipHomeDirectoryName = listOfFiles[0].getPath();
             File packageFolder = new File(zipHomeDirectoryName);
-            File[] listOfProcessDirs = packageFolder.listFiles();
+            listOfProcessDirs = packageFolder.listFiles();
             ArrayList<String> processListinPC = getProcessList();
 
-            for (File file : listOfProcessDirs) {
-                if (file.isDirectory()) {
-                    String fileName = file.getName();
-                    if(processListinPC.contains(fileName)){
+            for (File processDir : listOfProcessDirs) {
+                if (processDir.isDirectory()) {
+                    String fileName = processDir.getName();
+                    if (processListinPC.contains(fileName)) {
                         return true;
                     }
                 }
@@ -102,22 +152,17 @@ public class ProcessImport {
         return processList;
     }
 
-    public void putProcessRxt(String userName) throws RegistryException, UserStoreException {
-       /* File fXmlFile = new File("Imports/staff.xml");
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(fXmlFile);
+    public void putProcessRxt(String processName, String processVersion, String processRxtPath) throws RegistryException, UserStoreException, IOException {
+        File rxtFile = new File(processRxtPath);
 
-        RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
-        if (registryService != null) {
-            UserRegistry reg = registryService.getGovernanceUserRegistry(userName);
-            RegPermissionUtil.setPutPermission(registryService, userName, ProcessCenterConstants.AUDIT.PROCESS_PATH);
-            String processAssetContent = xmlToString(doc);
-            Resource processAsset = reg.newResource();
-            processAsset.setContent(processAssetContent);
-            processAsset.setMediaType("application/vnd.wso2-process+xml");
-            String processAssetPath = "processes/" + processName + "/" + processVersion;
-            reg.put(processAssetPath, processAsset);
-        }*/
+        RegPermissionUtil.setPutPermission(registryService, user, ProcessCenterConstants.PROCESS_ASSET_ROOT);
+        String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                processVersion;
+        Resource processRxt = reg.newResource();
+        processRxt.setContentStream(FileUtils.openInputStream(rxtFile));
+        processRxt.setMediaType("application/vnd.wso2-process+xml");
+        reg.put(processAssetPath, processRxt);
+
+
     }
 }
