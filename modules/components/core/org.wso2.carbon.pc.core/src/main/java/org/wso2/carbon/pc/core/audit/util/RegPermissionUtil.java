@@ -60,7 +60,7 @@ public class RegPermissionUtil {
 
             if (ac.isUserAuthorized(user, ProcessCenterConstants.PROCESS_UPDATE_PERMISSION,
                     ProcessCenterConstants.UI_PERMISSION_ACTION)) {
-                if (!(roleList.contains(ProcessCenterConstants.AUDIT.PUBLISHER_ROLE) || roleList.contains(ProcessCenterConstants.AUDIT.ADMIN_ROLE)) && roleList
+                if (!roleList.contains(ProcessCenterConstants.AUDIT.PUBLISHER_ROLE) && roleList
                         .contains(privateUserRole)) {
                     ac.authorizeRole(privateUserRole, path, ActionConstants.PUT);
                     ac.authorizeRole(privateUserRole, ProcessCenterConstants.AUDIT.AC_PROCESS_PATH,

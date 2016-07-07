@@ -54,20 +54,9 @@
 
 .remove-process {
     color: #337ab7;
-    padding-left: 1em;
 }
 
 .remove-process:hover, .remove-process:focus {
-    color: #23527c;
-    cursor: pointer;
-}
-
-.view-process {
-    color: #337ab7;
-    padding-left: 1em;
-}
-
-.view-process:hover, .view-process:focus {
     color: #23527c;
     cursor: pointer;
 }

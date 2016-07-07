@@ -20,7 +20,6 @@ import org.activiti.bpmn.converter.util.InputStreamProvider;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.image.ProcessDiagramGenerator;
 import org.activiti.image.impl.DefaultProcessDiagramGenerator;
-import org.apache.bcel.generic.RETURN;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -45,7 +44,6 @@ import org.wso2.carbon.registry.core.exceptions.ResourceNotFoundException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.resource.services.utils.AddRolePermissionUtil;
-import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.UserRealm;
 import org.xml.sax.InputSource;
 import sun.misc.BASE64Decoder;
@@ -59,9 +57,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -117,14 +113,7 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(userName);
-                RegPermissionUtil
-                        .setPutPermission(registryService, userName, ProcessCenterConstants.AUDIT.PROCESS_PATH);
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
-
-//                if(reg.resourceExists(processAssetPath)) {
-//                    String status = "duplicate";
-//                    return status;
-//                }
+                RegPermissionUtil.setPutPermission(registryService, userName, ProcessCenterConstants.AUDIT.PROCESS_PATH);
 
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -196,7 +185,9 @@ public class ProcessStore {
                 Resource processAsset = reg.newResource();
                 processAsset.setContent(processAssetContent);
                 processAsset.setMediaType("application/vnd.wso2-process+xml");
+                String processAssetPath = "processes/" + processName + "/" + processVersion;
                 reg.put(processAssetPath, processAsset);
+
                 // associate lifecycle with the process asset, so that it can be promoted to published state
                 GovernanceUtils.associateAspect(processAssetPath, "SampleLifeCycle2", reg);
 
@@ -225,77 +216,6 @@ public class ProcessStore {
         } catch (Exception e) {
             String errMsg = "Create process error:" + processDetails;
             log.error("Create process error:" + processDetails, e);
-            throw new ProcessCenterException(errMsg, e);
-        }
-        return processId;
-    }
-
-    public String updateProcess(String processDetails, String userName) throws ProcessCenterException {
-        String processId = "FAILED TO UPDATE PROCESS";
-
-        try {
-            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
-
-            JSONObject processInfo = new JSONObject(processDetails);
-            String processName = processInfo.getString("processName");
-            String processVersion = processInfo.getString("processVersion");
-            String processOwner = processInfo.getString("processOwner");
-            String processDescription = processInfo.getString("processDescription");
-            String processTags = processInfo.getString("processTags");
-            JSONObject imageObj = processInfo.getJSONObject("image");
-
-            String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
-                    processVersion;
-
-            if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceUserRegistry(userName);
-                Resource resource = reg.get(processAssetPath);
-                String processContent = new String((byte[]) resource.getContent());
-                Document doc = stringToXML(processContent);
-                NodeList overviewElemetNode = ((Element) doc.getFirstChild()).getElementsByTagName("overview");
-
-                if (doc.getElementsByTagName("description").getLength() != 0)
-                    doc.getElementsByTagName("description").item(0).setTextContent(processDescription);
-
-                    doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
-                    doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
-
-
-                List<String> tags = Arrays.asList(processTags.split(","));
-                Tag[] curTags = reg.getTags(processAssetPath);
-
-                for (Tag tag: curTags) {
-                        reg.removeTag(processAssetPath, tag.getTagName());
-                }
-
-                for (String tag : tags) {
-                    tag = tag.trim();
-                    reg.applyTag(processAssetPath, tag);
-                }
-
-                String newProcessContent = xmlToString(doc);
-                resource.setContent(newProcessContent);
-                reg.put(processAssetPath, resource);
-
-                //TODO check whether same uuid is generated for the updated resource
-                Resource storedProcess = reg.get(processAssetPath);
-                processId = storedProcess.getUUID();
-
-                if (imageObj.length() != 0) {
-                    String imageRegPath = ProcessCenterConstants.IMAGE_PATH + processId + "/" +
-                            imageObj.getString("imgValue");
-                    Resource imageContentResource = reg.newResource();
-                    BASE64Decoder decoder = new BASE64Decoder();
-                    byte[] imageContent = decoder.decodeBuffer(imageObj.getString("binaryImg"));
-                    imageContentResource.setContent(imageContent);
-                    reg.put(imageRegPath, imageContentResource);
-                }
-
-            }
-
-        } catch (Exception e) {
-            String errMsg = "Update process error:" + processDetails;
-            log.error("Update process error:" + processDetails, e);
             throw new ProcessCenterException(errMsg, e);
         }
         return processId;
@@ -530,8 +450,8 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            String errMsg = "Error has been occurred while removing BPMN diagram in the process:" + processName + "-"
-                    + processVersion;
+            String errMsg = "Error has been occurred while removing BPMN diagram in the process:"
+                    + processName + "-" + processVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
@@ -870,7 +790,6 @@ public class ProcessStore {
         }
     }
 
-
     public void populateAssociations(Association[] associations, JSONArray jsonArray, UserRegistry reg,
                                      String resourcePath) throws Exception {
         for (Association association : associations) {
@@ -886,7 +805,6 @@ public class ProcessStore {
             JSONObject associatedProcessDetails = new JSONObject();
             associatedProcessDetails.put("name", overviewElement.getElementsByTagName("name").item(0).getTextContent());
             associatedProcessDetails.put("path", associatedResource.getPath());
-
             associatedProcessDetails.put("id", associatedResource.getId());
             associatedProcessDetails.put("processId",associatedResource.getUUID());
             associatedProcessDetails.put("version", overviewElement.getElementsByTagName("version").item(0).getTextContent());
@@ -906,7 +824,6 @@ public class ProcessStore {
 
                 JSONObject conObj = new JSONObject();
                 JSONArray subprocessArray = new JSONArray();
-
                 Association[] aSubprocesses = reg.getAssociations(resourcePath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
                 populateAssociations(aSubprocesses, subprocessArray, reg, resourcePath);
                 conObj.put("subprocesses", subprocessArray);
@@ -929,12 +846,12 @@ public class ProcessStore {
         return resourceString;
     }
 
-    public boolean updateOwner(String ownerDetails, String userName) throws ProcessCenterException {
+    public boolean updateOwner(String ownerDetails, String user) throws ProcessCenterException {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
 
             if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceUserRegistry(userName);
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
                 JSONObject processInfo = new JSONObject(ownerDetails);
                 String processName = processInfo.getString("processName");
@@ -952,7 +869,6 @@ public class ProcessStore {
                 String newProcessContent = xmlToString(doc);
                 resource.setContent(newProcessContent);
                 reg.put(processAssetPath, resource);
-
                 reg.getRegistryContext().getLogWriter().addLog(ProcessCenterConstants.GREG_PATH+processAssetPath,
                         reg.getUserName(), LogEntry.UPDATE, "OWNER");
             }
@@ -995,8 +911,7 @@ public class ProcessStore {
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
                     reg.addAssociation(processAssetPath, subprocessPath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
-                    reg.addAssociation(subprocessPath, processAssetPath,
-                            ProcessCenterConstants.PARENTPROCESS_ASSOCIATION);
+                    reg.addAssociation(subprocessPath, processAssetPath, ProcessCenterConstants.PARENTPROCESS_ASSOCIATION);
                 }
             }
 
@@ -1305,8 +1220,7 @@ public class ProcessStore {
         for (int iteratorValue = 0; iteratorValue < processDocs.length(); iteratorValue++) {
             String path = ((JSONObject) processDocs.get(iteratorValue)).get("path").toString();
             if ((getAssociatedDocFileName(path).equals(docName + "." + docExtension))) {
-                throw new ProcessCenterException(
-                        "Associated document " + getAssociatedDocFileName(path) + " exits in " + processName
+                throw new ProcessCenterException("Associated document " + getAssociatedDocFileName(path) + " exits in " + processName
                                 + " version" + processVersion);
             }
         }
@@ -1315,6 +1229,7 @@ public class ProcessStore {
             InputStream docStream = s.getStream();
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
+                //                UserRegistry reg = registryService.getGovernanceSystemRegistry();
                 UserRegistry reg = registryService.getGovernanceUserRegistry(user);
                 RegPermissionUtil
                         .setPutPermission(registryService, user, ProcessCenterConstants.AUDIT.PROCESS_DOC_PATH);
@@ -1508,54 +1423,6 @@ public class ProcessStore {
             throw new ProcessCenterException(errMsg, e);
         }
         return true;
-    }
-
-    /**
-     * Updates document details including name and summary
-     *
-     * @param documentDetails
-     * @param user
-     * @throws ProcessCenterException
-     */
-    public String updateDocumentDetails(String documentDetails, String user) throws ProcessCenterException {
-
-        String processId = "NA";
-
-        RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
-        try {
-            if (registryService != null) {
-                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
-                JSONObject processInfo = new JSONObject(documentDetails);
-                String processName = processInfo.getString("processName");
-                String processVersion = processInfo.getString("processVersion");
-                String documentName = processInfo.getString("value");
-                String docIndex = processInfo.getString("name").replace("docName", "");
-
-                String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
-                        processVersion;
-                Resource resource = reg.get(processAssetPath);
-                String processContent = new String((byte[]) resource.getContent());
-
-                Document doc = stringToXML(processContent);
-
-                NodeList documentElements = ((Element) doc.getFirstChild()).getElementsByTagName("document");
-                if (documentElements.getLength() != 0) {
-                    Element documentElement = (Element) documentElements.item(Integer.valueOf(docIndex));
-                    documentElement.getElementsByTagName("name").item(0).setTextContent(documentName);
-                }
-                String newProcessContent = xmlToString(doc);
-                resource.setContent(newProcessContent);
-                reg.put(processAssetPath, resource);
-
-                Resource storedProcess = reg.get(processAssetPath);
-                processId = storedProcess.getUUID();
-            }
-        } catch (Exception e) {
-            String msg = "Failed to update document details of " + documentDetails;
-            log.error(msg, e);
-            throw new ProcessCenterException(msg, e);
-        }
-        return processId;
     }
 
     public String getProcessTags() throws ProcessCenterException {
@@ -1764,7 +1631,8 @@ public class ProcessStore {
 
                 String processContent = new String((byte[]) processResource.getContent());
                 Document processXML = stringToXML(processContent);
-                processXML.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent("NA");
+                processXML.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent(
+                        "NA");
 
                 String newProcessContent = xmlToString(processXML);
                 processResource.setContent(newProcessContent);
@@ -1849,6 +1717,7 @@ public class ProcessStore {
 
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(user);
+
                 JSONObject processInfo = new JSONObject(descriptionDetails);
                 String processName = processInfo.getString("processName");
                 String processVersion = processInfo.getString("processVersion");
@@ -1866,7 +1735,6 @@ public class ProcessStore {
                 String newProcessContent = xmlToString(doc);
                 resource.setContent(newProcessContent);
                 reg.put(processAssetPath, resource);
-
                 reg.getRegistryContext().getLogWriter().addLog(ProcessCenterConstants.GREG_PATH + processAssetPath,
                         reg.getUserName(), LogEntry.UPDATE, "DESCRIPTION");
                 Resource storedProcess = reg.get(processAssetPath);
@@ -1887,8 +1755,8 @@ public class ProcessStore {
      * @param processName
      * @param processVersion
      */
-    public void deleteProcessRelatedArtifacts(String processName, String processVersion, String user)
-            throws ProcessCenterException {
+    public void deleteProcessRelatedArtifacts(String processName, String processVersion, String user) throws
+            ProcessCenterException {
 
         String processResourcePath =
                 ProcessCenterConstants.GREG_PATH + ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/"
@@ -1920,7 +1788,6 @@ public class ProcessStore {
             throw new ProcessCenterException(errMsg, e);
         }
     }
-
     /**
      * Adds a new tag for a process asset at the publisher
      *
@@ -2009,7 +1876,7 @@ public class ProcessStore {
     public String setPermission(String userName, String processName, String processVersion)
             throws ProcessCenterException {
 
-        String status = "Failed to set permission";
+        String status="Failed to set permission";
 
         try {
 
@@ -2018,17 +1885,18 @@ public class ProcessStore {
             if (registryService != null) {
                 UserRegistry userRegistry = registryService.getGovernanceSystemRegistry();
                 UserRealm userRealm = userRegistry.getUserRealm();
-                String[] roles = userRealm.getUserStoreManager().getRoleListOfUser(userName);
+                String[] roles=userRealm.getUserStoreManager().getRoleListOfUser(userName);
 
                 String path = "/_system/governance/processes/" + processName + "/" +
                         processVersion;
 
-                for (String role : roles) {
+                for (String role:roles) {
 
                     if (role.equalsIgnoreCase("Internal/everyone")||role.equalsIgnoreCase("Internal/store")||
                             role.equalsIgnoreCase("Internal/publisher")) {
                         continue;
-                    } else {
+                    }
+                    else {
                         //add read permission
                         AddRolePermissionUtil.addRolePermission(userRegistry, path, role, ProcessCenterConstants.READ,
                                 ProcessCenterConstants.ALLOW);
@@ -2036,15 +1904,14 @@ public class ProcessStore {
                         AddRolePermissionUtil.addRolePermission(userRegistry, path, role, ProcessCenterConstants.WRITE,
                                 ProcessCenterConstants.ALLOW);
                         //add authorize permission
-
                         AddRolePermissionUtil.addRolePermission(userRegistry, path, role, ProcessCenterConstants.AUTHORIZE,
                                 ProcessCenterConstants.ALLOW);
                     }
                 }
-                status = "Permission set successfully";
+                status="Permission set successfully";
             }
-        } catch (Exception e) {
-            String errMsg = "Failed to update Permission";
+        }catch (Exception e) {
+            String errMsg = "Failed to update Permission" ;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }

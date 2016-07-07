@@ -28,7 +28,6 @@
         <ul class="nav nav-stacked">
             <li id="subprocess"><a href="#" onclick="showSubprocess()"
                                    rel="tooltip" title="List of subprocesses for a given process">
-
                 Subprocess<i id="subprocessadded" class="" style="color: red;padding-left: 25px;"></i></a></li>
             <li id="successor"><a href="#" onclick="showSuccessor()"
                                   title="List of successor processes for a given process">
@@ -47,9 +46,6 @@
             <div>{{> search_model .}}</div>
         </div>
     </div>
-    <input type="hidden" id="view-header-field" value="{{assets.tables.[0].fields.name.value}}">
-    <input type="hidden" id="process-version-field" value="{{assets.tables.[0].fields.version.value}}">
-
     <div class="vertical_line" style="bottom: 80px;"></div>
     <div id="processButtonsGroup">
         <!--<button class="btn btn-success" id="updateAssociationsBtn" value="Update"-->
