@@ -341,7 +341,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
      *
      * @throws IOException
      */
-    public void uploadPDF() throws IOException, JSONException {
+    public void uploadPDF() throws IOException {
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                 File.separator + "PDF" + File.separator + PCIntegrationConstants.TEST_PDF_NAME;
@@ -350,8 +350,9 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
                 .uploadDocument(resourcePath1, ASSOCIATED_PDF_NAME, ASSOCIATED_PDF_SUMMARY,
                         PCIntegrationConstants.PDF_EXTENSION, "NA", "file", TEST_PROCESS_AS2_NAME,
                         TEST_PROCESS_2_VERSION, cookieHeader, url, PCIntegrationConstants.APPLICATION_PDF_TYPE);
-        Assert.assertTrue(new JSONObject(httpMethod.getResponseBodyAsString()).get("error").toString().equals("false"),
-                "PDF uploading to a testing process failed.");
+        Assert.assertTrue(httpMethod.getStatusCode() == 200,
+                "Wrong status code ,Expected 200 ,Received " + httpMethod.getStatusCode()
+                        + ", PDF uploading to a testing process failed.");
     }
 
     /**
@@ -359,7 +360,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
      *
      * @throws IOException
      */
-    public void uploadMSDoc() throws IOException, JSONException {
+    public void uploadMSDoc() throws IOException {
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                 File.separator + "MSDoc" + File.separator + PCIntegrationConstants.TEST_MSDOC_NAME;
@@ -368,8 +369,9 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
                 .uploadDocument(resourcePath1, ASSOCIATED_MSDOC_NAME, ASSOCIATES_MSDOC_SUMMARY,
                         PCIntegrationConstants.MSDOC_EXTENSION, "NA", "file", TEST_PROCESS_AS3_NAME,
                         TEST_PROCESS_3_VERSION, cookieHeader, url, PCIntegrationConstants.APPLICATION_MSWORD_TYPE);
-        Assert.assertTrue(new JSONObject(httpMethod.getResponseBodyAsString()).get("error").toString().equals("false"),
-                "MSDoc uploading to a testing process failed.");
+        Assert.assertTrue(httpMethod.getStatusCode() == 200,
+                "Wrong status code ,Expected 200 ,Received " + httpMethod.getStatusCode()
+                        + ",PDF uploading to a testing process failed.");
     }
 
 }

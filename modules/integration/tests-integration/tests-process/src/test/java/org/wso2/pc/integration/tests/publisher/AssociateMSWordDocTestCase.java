@@ -74,13 +74,15 @@ public class AssociateMSWordDocTestCase extends PCIntegrationBaseTest{
         response.getStatusCode();
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
 
+        Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
+                "Expected 200 OK, Received " + response.getStatusCode());
         Assert.assertTrue(responseObject.get("error").toString().equals("false"),
                 "Error while creating the process");
     }
 
     @Test(groups = {"org.wso2.pc"}, description = "Associating PDF to the process",
             dependsOnMethods = "addProcess")
-    public void uploadMSDoc() throws IOException, JSONException {
+    public void uploadMSDoc() throws IOException {
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                 File.separator + "MSDoc" + File.separator + "TestMSDoc.doc";
@@ -88,8 +90,8 @@ public class AssociateMSWordDocTestCase extends PCIntegrationBaseTest{
         PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_MSDOC_NAME,
                 ASSOCIATES_MSDOC_SUMMARY,PCIntegrationConstants.MSDOC_EXTENSION,"NA","file",
                 "TestProcess1","1.0",cookieHeader,url,PCIntegrationConstants.APPLICATION_MSWORD_TYPE);
-        Assert.assertTrue(new JSONObject(httpMethod.getResponseBodyAsString()).get("error").toString().equals("false"),
-                "Error while uploading DOC resource to the process");
+        Assert.assertTrue(httpMethod.getStatusCode() == 200,
+                "Wrong status code ,Expected 200 ,Received " + httpMethod.getStatusCode());
     }
 
     @Test(groups = {"org.wso2.pc"}, description = "Download associated PDF document",
@@ -117,6 +119,8 @@ public class AssociateMSWordDocTestCase extends PCIntegrationBaseTest{
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
                         "delete_document",MediaType.APPLICATION_FORM_URLENCODED,
                 MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
+        Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
+                "Expected 200 OK, Received " + response.getStatusCode());
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
         Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
                 equals("false"),"Couldn't delete associated MSDoc");

@@ -88,7 +88,7 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
 
     @Test(groups = {"org.wso2.pc"}, description = "Associating BPMN to the process",
             dependsOnMethods = "addProcess")
-    public void uploadBPMN() throws IOException, JSONException {
+    public void uploadBPMN() throws IOException {
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                 File.separator + "BPMN"
@@ -96,8 +96,8 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
         String url = publisherAPIBaseUrl + "upload_bpmn";
         PostMethod httpMethod = ArtifactUploadUtil.uploadBPMN(resourcePath1,
                 PROCESS_NAME, PROCESS_VERSION, "BPMN", cookieHeader, url);
-        Assert.assertTrue(new JSONObject(httpMethod.getResponseBodyAsString()).get("error").toString().equals("false"),
-                "Error while uploading BPMN to the process");
+        Assert.assertTrue(httpMethod.getStatusCode() == 200,
+                "Wrong status code ,Expected 302 ,Received " + httpMethod.getStatusCode());
     }
 
     @Test(groups = {"org.wso2.pc"}, description = "Checking associated BPMN",
@@ -117,7 +117,8 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
                 "delete_bpmn",MediaType.APPLICATION_FORM_URLENCODED,MediaType.APPLICATION_JSON,null,
                 queryMap,headerMap,cookieHeader);
-
+        Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
+                "Expected 200 OK, Received " + response.getStatusCode());
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
         Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
                 equals("false"),"Couldn't delete BPMN");

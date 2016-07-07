@@ -90,7 +90,6 @@ function updateProcess(currentElement) {
                     loadDetails();
                     $("#processName").html(pname);
                     $("#processVersion").html(pversion);
-                    PID = response.content;
                 } else {
                     alertify.error(response.content);
                 }

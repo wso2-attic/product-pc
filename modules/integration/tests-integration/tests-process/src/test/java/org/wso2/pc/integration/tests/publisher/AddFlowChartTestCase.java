@@ -84,6 +84,8 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
         response.getStatusCode();
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
 
+        Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
+                "Expected 200 OK, Received " + response.getStatusCode());
         Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
                 equals("false"), "Error while creating the process");
     }
@@ -102,6 +104,9 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
                 null, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
+
+        Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
+                "Expected 200 OK, Received " + response.getStatusCode());
         Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
                 equals("false"), "Error while creating the process");
     }
@@ -123,6 +128,8 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
     public void deleteFlowchart() throws JSONException {
         ClientResponse response = genericRestClient.geneticRestRequestGet(publisherAPIBaseUrl +
                 "delete_flowchart",queryMap,headerMap,cookieHeader);
+        Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
+                "Expected 200 OK, Received " + response.getStatusCode());
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
         Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
                 equals("false"),"Error while deleting flowchart");
