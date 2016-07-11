@@ -425,6 +425,14 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/app/store-search-apis
             </outputDirectory>
         </fileSet>
+
+        <!--analytics gadget related-->
+        <fileSet>
+            <directory>../extensions/apps/portal/store</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/store
+            </outputDirectory>
+        </fileSet>
         <!-- permission related-->
         <fileSet>
             <directory>../extensions/main/process-center/extensions/app/greg-permissions</directory>

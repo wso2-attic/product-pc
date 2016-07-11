@@ -15,11 +15,11 @@
   -->
 <div id="processTextView" style="display: none">
     <div class="form-group">
-        <button id="editText" class="btn btn-primary" onclick="editProcessText(this)">Edit</button>
+        <button id="editText" class="btn btn-primary" onclick="{{#if isUpdateView}}editProcessTxt(this){{else}}editProcessText(this){{/if}}">Edit</button>
     </div>
     <div class="panel panel-default">
         <div id="processText" class="panel-body">
-            Place holder for rendering process text
+            No process text available
         </div>
     </div>
 </div>
