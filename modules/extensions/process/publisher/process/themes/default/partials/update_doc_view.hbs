@@ -1,0 +1,153 @@
+<div class="row-fluid">
+    <div class="span12">
+        <div id="docUploaderDivContainer"></div>
+
+        <div id="docEditDiv" style="display:none">
+            <div class="row-fluid">
+                <div class="control-group">
+                    <div id="addDoc">
+                        <a onclick="newDocFormToggle()" id="toggleAnchor" href="#">
+                            <i class="fa fa-plus-circle"></i> Add New Document
+                        </a>
+                    </div>
+                    <div id="updateDoc" style="display:none;">
+                        <h4></h4>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Row -->
+            <form id="addNewDoc" enctype="multipart/form-data"
+                  onsubmit="return validateDocs()" style="margin-left: 20px;" target="_blank">
+                <div class="container-fluid" style="padding-left:0">
+                    <div id="newDoc">
+                        <div class="row-fluid">
+                            <div class="span6 name-column" style="float:left;width:50%;">
+                                <div class="control-group">
+                                    <label class="control-label" for="docName">Name<span
+                                            class="requiredAstrix"
+                                            style="color: red;">*</span></label>
+
+                                    <div class="controls">
+                                        <input type="text" class="required validInput"
+                                               id="docName" name="docName"
+                                               style="width:100%">
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label" for="textarea">Summary</label>
+
+                                    <div class="controls">
+                                        <textarea id="summaryDoc" name="summaryDoc" rows="3"
+                                                  style="width:100%"></textarea>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="docProcessName" name="docProcessName"/>
+                                <input type="hidden" id="docProcessVersion"
+                                       name="docProcessVersion"/>
+                                <input type="hidden" id="docExtension" name="docExtension"/>
+                            </div>
+
+                            <div class="span6" style="float:right;width:48%;">
+                                <div class="well">
+                                    <div class="control-group">
+                                        <label class="control-label">Source</label>
+
+                                        <div class="controls">
+                                            <label class="radio" style="margin-left:20px">
+                                                <input type="radio" name="optionsRadios1"
+                                                       id="optionsRadios7"
+                                                       value="url"
+                                                       onclick="javascript:$('#sourceUrlDoc').toggle('slow');$('#sourceFile').hide('slow')">URL
+                                                (Eg: google doc)
+                                                <a class="icon-question-sign help_popup"
+                                                   data-original-title=""
+                                                   title=""></a>
+
+                                                <p id="urlDoc_help" class="hide">Link to
+                                                    documentation managed by an
+                                                    external configuration management system</p>
+                                            </label>
+
+                                            <div id="sourceUrlDoc" class="controls"
+                                                 style="display: none;">
+                                                                        <span class="requiredAstrix"
+                                                                              style="color: red;">*</span> <input
+                                                    type="text" class="required"
+                                                    style="width:98%" id="docUrl"
+                                                    name="docUrl">
+                                            </div>
+                                            <label class="radio" style="margin-left:20px">
+                                                <input type="radio" name="optionsRadios1"
+                                                       id="optionsRadios8"
+                                                       value="file"
+                                                       onclick="javascript:$('#sourceFile').toggle('slow');$('#sourceUrlDoc').hide('slow')">Document
+                                                <a class="icon-question-sign help_popup"
+                                                   data-original-title=""
+                                                   title=""></a>
+
+                                                <p id="fileDoc_help" class="hide">Upload a
+                                                    documentation file</p>
+                                            </label>
+
+                                            <div id="fileNameDiv" style="display:none;"></div>
+                                            <a onclick="javascript:$('#sourceFile').toggle('slow')"
+                                               id="toggleFileDoc"
+                                               style="display:none;">
+                                                Change File
+                                            </a>
+
+                                            <div id="sourceFile" class="controls"
+                                                 style="display:none;">
+                                                                        <span class="requiredAstrix"
+                                                                              style="color: red;">*</span> <input
+                                                    type="file" class="required"
+                                                    style="width:98%"
+                                                    name="docLocation"
+                                                    id="docLocation">
+
+                                                <p id="fileType_help">eg : .docx, .doc</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="clear:both; font-size:1px;"></div>
+                        </div>
+                        <br/>
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="control-group">
+                                    <!--<button type="button" class="btn btn-primary" id="saveDocBtn" onclick="saveDoc()">Add Document</button>-->
+                                    <input type="submit" class="btn btn-primary" id="saveDocBtn"
+                                           value="Add Document">
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- End of row -->
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="docViewDiv" style="display:none">
+            <table class="table table-bordered" id="docTable">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Summary</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="listDocs">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="googleDocViewer">
+    </div>
+    <div id="pdfDocViewer">
+    </div>
+</div>
