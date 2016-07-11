@@ -21,7 +21,8 @@ var processNames = [];
 var processListObj;
 var tagList = [];
 var allProcessTags = [];
-var pname, pversion, PID;
+var pname, pversion, PID, textContent;
+
 
 window.onload = function () {
     getProcessList();
@@ -71,9 +72,8 @@ function showTextEditor(element) {
             $("#processTextView").show();
             $(".active").removeClass("active");
         }
-    }
+    } else {
 
-    else {
         $("#processTextView").hide();
         $("#processTextEditDiv").show();
         $(".active").removeClass("active");
@@ -124,10 +124,15 @@ function associateBPMN() {
     $('#doc').removeClass("clicked");
 
     if ($("#bpmnadded").hasClass("fw-check")) {
-        getBPMN();
-        $("#bpmnEditDiv").hide();
+    	getBPMN();
+		$("#bpmnEditDiv").hide();
         $("#bpmnViewDiv").show();
         $(".active").removeClass("active");
+    } else if($('#bpmnAvailableCheck').val()==="true") {
+
+        getBPMN();
+        $("#bpmnEditDiv").hide();
+		$("#bpmnViewDiv").show();
     }
 }
 
@@ -150,7 +155,6 @@ function getBPMN() {
         }
     });
 }
-
 
 function associateFlowChart() {
 
@@ -268,6 +272,9 @@ function loadOverview() {
     $("#detailDiv").hide();
     $("#associationDiv").hide();
     $("#overviewDiv").show();
+    var wizElements = document.getElementsByClassName("wiz-content");
+    wizElements[0].style["boxShadow"] = "0px 2px 2px 2px rgba(0, 0, 0, 0.1)";
+
 }
 
 function loadDetails() {
@@ -298,6 +305,9 @@ function showSubprocess() {
     $("#successorDiv").hide();
     $("#predecessorDiv").hide();
     $("#subprocessDiv").show();
+    if($("#subProcessCountHolder").val() == 0) {
+        $("#subProcessTable").hide();
+    }
     $(".active").removeClass("active");
     $("#subprocessDiv").addClass("active");
 }
@@ -307,6 +317,12 @@ function showSuccessor() {
     $("#subprocess").removeClass("clicked");
     $("#successor").addClass("clicked");
     $("#predecessor").removeClass("clicked");
+    $("#successorDiv").show()
+    $("#predecessorDiv").hide()
+    $("#subprocessDiv").hide()
+    if($("#successorCountHolder").val() == 0) {
+        $("#successorTable").hide();
+    }
     $("#successorDiv").show();
     $("#predecessorDiv").hide();
     $("#subprocessDiv").hide();
@@ -318,12 +334,17 @@ function showPredecessor() {
     $("#subprocess").removeClass("clicked");
     $("#successor").removeClass("clicked");
     $("#predecessor").addClass("clicked");
+    $("#successorDiv").hide()
+    $("#predecessorDiv").show()
+    $("#subprocessDiv").hide()
+    if($("#predecessorCountHolder").val() == 0) {
+        $("#predecessorTable").hide();
+    }
     $("#successorDiv").hide();
     $("#predecessorDiv").show();
     $("#subprocessDiv").hide();
     $(".active").removeClass("active");
     $("#predecessorDiv").addClass("active");
-
 }
 
 function getProcessInfo() {
@@ -352,7 +373,7 @@ function saveProcessText(currentElement) {
     } else {
         // save the process
         $.ajax({
-            url: 'apis/save_process_text',
+            url: '/publisher/assets/process/apis/save_process_text',
             type: 'POST',
             data: {
                 'processName': pname,
@@ -388,6 +409,14 @@ function completeBPMNDetails() {
     return true;
 }
 
+function newDocFormToggle() {
+
+    $("#addNewDoc").trigger("reset");
+    $('#sourceFile').hide();
+    $("#addNewDoc").toggle("slow");
+}
+
+
 function completeTextDetails() {
     $("#textProcessName").val(pname);
     $("#textProcessVersion").val(pversion);
@@ -407,7 +436,7 @@ function isAlreadyExist(value, tableName) {
 function subProcessNamesAutoComplete() {
     var temp = processNames.slice();
     for (var i = 0; i < processNames.length; i++) {
-        if (isAlreadyExist(processNames[i], "subprocess")) {
+        if (isAlreadyExist(processNames[i], "subprocess") || processNames[i] == getMainProcess()) {
             temp[i] = "";
         }
     }
@@ -420,7 +449,7 @@ function subProcessNamesAutoComplete() {
 function successorNameAutoComplete() {
     var temp = processNames.slice();
     for (var i = 0; i < processNames.length; i++) {
-        if (isAlreadyExist(processNames[i], "successor")) {
+        if (isAlreadyExist(processNames[i], "successor") || processNames[i] == getMainProcess()) {
             temp[i] = "";
         }
     }
@@ -433,7 +462,7 @@ function successorNameAutoComplete() {
 function predecessorNameAutoComplete() {
     var temp = processNames.slice();
     for (var i = 0; i < processNames.length; i++) {
-        if (isAlreadyExist(processNames[i], "predecessor")) {
+        if (isAlreadyExist(processNames[i], "predecessor") || processNames[i] == getMainProcess()) {
             temp[i] = "";
         }
     }
@@ -775,8 +804,12 @@ $("#addNewDoc").on("submit", function (e) {
     }
 })
 
-$("#saveAsPNGBtn").click(function () {
-    html2canvas($("#canvas"), {
+function downloadAsPNG(updateView) {
+    var canvasId = "#canvas";
+    if(updateView) {
+        canvasId = "#editor_canvas";
+    }
+    html2canvas($(canvasId), {
         onrendered: function (canvas) {
             ctx = canvas.getContext('2d');
 
@@ -811,7 +844,7 @@ $("#saveAsPNGBtn").click(function () {
             }
         }
     });
-});
+}
 
 function isProcessNotAvailableInList(processName) {
     for (var i = 0; i < processNames.length; i++) {
@@ -837,7 +870,8 @@ function readUpdatedSubprocess(currentObj, count) {
     } else if (subprocessInput == getMainProcess()) {
         alertify.warning('You cannot assign the process name as its subprocess.');
     } else {
-        $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='subprocess_Name' class='subprocess_Name'>" + subprocessInput + "</span>");
+        // $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='subprocess_Name' class='subprocess_Name'>" + subprocessInput + "</span>");
+        var tableId = "listSubProcesses";
         $(currentObj).hide();
         var subprocessPath, subprocessId;
         for (var i = 0; i < processListObj.length; i++) {
@@ -861,6 +895,9 @@ function readUpdatedSubprocess(currentObj, count) {
             'subprocess': subprocessInfo
         };
 
+        var subprocessTableData = '<td valign="top" style="width: 30%;"><span id="subprocess_Name" class="subprocess_Name">'+subprocessInput+'</span></td>';
+        var actionInput = '<td style="width: 10%;"><label class="view-process"><a target="_blank" href="../details/'+subprocessId+'" class="fa fa-eye" aria-hidden="true"></a></label><label class="remove-process" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></label></td>';
+
         $.ajax({
             async: false,
             url: '/publisher/assets/process/apis/update_subprocess',
@@ -871,6 +908,14 @@ function readUpdatedSubprocess(currentObj, count) {
                 if (response.error === false) {
                     if (count == 1) {
                         alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
+
+                        $("#table_subprocess").hide();
+                        $("#table_subprocess").empty();
+                        $("#subProcessTable").show("default" , function () {
+
+                        });
+                        $("#subProcessCountHolder").val(count);
+                        updateAssociationTable(tableId, subprocessTableData, actionInput);
                         $("#subprocessadded").addClass("fw fw-check");
                     }
                 } else {
@@ -894,7 +939,8 @@ function readUpdatedSuccessor(currentObj, count) {
     } else if (successorInput == getMainProcess()) {
         alertify.warning('You cannot assign the process name as its successor.');
     } else {
-        $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='successor_Name' class='successor_Name'>" + successorInput + "</span>");
+        // $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='successor_Name' class='successor_Name'>" + successorInput + "</span>");
+        var tableId = "listSuccessors";
         $(currentObj).hide();
         var successorPath, successorId;
         for (var i = 0; i < processListObj.length; i++) {
@@ -918,6 +964,9 @@ function readUpdatedSuccessor(currentObj, count) {
             'successor': successorInfo
         };
 
+        var successorTableData = '<td valign="top" style="width: 30%;"><span id="successor_Name" class="successor_Name">'+ successorInput +'</span></td>'
+        var actionInput = '<td style="width: 10%;"><label class="view-process"><a target="_blank" href="../details/'+successorId+'" class="fa fa-eye" aria-hidden="true"></a></label><label class="remove-process" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></label></td>';
+
         $.ajax({
             async: false,
             url: '/publisher/assets/process/apis/update_successor',
@@ -928,6 +977,11 @@ function readUpdatedSuccessor(currentObj, count) {
                 if (response.error === false) {
                     if (count == 1) {
                         alertify.success('Process ' + successorInput + ' successfully added to the successor list.');
+                        $("#table_successor").hide();
+                        $("#table_successor").empty();
+                        $("#successorTable").show();
+                        $("#successorCountHolder").val(count);
+                        updateAssociationTable(tableId, successorTableData, actionInput);
                         $("#successoradded").addClass("fw fw-check");
                     }
                 } else {
@@ -951,7 +1005,8 @@ function readUpdatedPredecessor(currentObj, count) {
     } else if (predecessorInput == getMainProcess()) {
         alertify.warning('You cannot assign the process name as its predecessor.');
     } else {
-        $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='predecessor_Name' class='predecessor_Name'>" + predecessorInput + "</span>");
+        // $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='predecessor_Name' class='predecessor_Name'>" + predecessorInput + "</span>");
+        var tableId = "listPredecessors";
         $(currentObj).hide();
         var predecessorPath, predecessorId;
         for (var i = 0; i < processListObj.length; i++) {
@@ -975,6 +1030,9 @@ function readUpdatedPredecessor(currentObj, count) {
             'predecessor': predecessorInfo
         };
 
+        var predecessorTableData = '<td valign="top" style="width: 30%;"><span id="predecessor_Name" class="predecessor_Name">'+ predecessorInput+'</span></td>';
+        var actionInput = '<td style="width: 10%;"><label class="view-process"><a target="_blank" href="../details/'+predecessorId+'" class="fa fa-eye" aria-hidden="true"></a></label><label class="remove-process" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></label></td>';
+
         $.ajax({
             async: false,
             url: '/publisher/assets/process/apis/update_predecessor',
@@ -985,6 +1043,11 @@ function readUpdatedPredecessor(currentObj, count) {
                 if (response.error === false) {
                     if (count == 1) {
                         alertify.success('Process ' + predecessorInput + ' successfully added to the predecessor list.');
+                        $("#table_predecessor").hide();
+                        $("#table_predecessor").empty();
+                        $("#predecessorTable").show();
+                        $("#predecessorCountHolder").val(count);
+                        updateAssociationTable(tableId, predecessorTableData, actionInput);
                         $("#prodecessoradded").addClass("fw fw-check");
                     }
                 } else {
@@ -998,9 +1061,33 @@ function readUpdatedPredecessor(currentObj, count) {
     }
 }
 
-function saveFlowchart() {
+function updateAssociationTable(tableId, input, action) {
 
-    _saveFlowchart();
+    var table = document.getElementById(tableId);
+    var rowCount = table.rows.length;
+    var row = table.insertRow(rowCount);
+    var cellName = row.insertCell(0);
+    var cellSummary = row.insertCell(1);
+    var cellAction = row.insertCell(2);
+    cellName.innerHTML = input;
+    cellAction.innerHTML = action;
+
+}
+
+function saveFlowchart(element){
+
+    if($("#updateViewCheck").val() === "true"){
+        _saveEditedFlowchart();
+    }
+    else {
+        _saveFlowchart();
+    }
+    // $("#flowChartView").hide();
+    $("#flowchartadded").addClass("fw fw-check");
+}
+
+function close() {
+    window.close();
 }
 
 function editProcessText(element) {
@@ -1010,6 +1097,9 @@ function editProcessText(element) {
 }
 
 function deleteBPMNDiagram() {
+
+    $("#bpmnadded").removeClass("fw-check");
+    $('#bpmnAvailableCheck').val("false");
 
     $.ajax({
         url: '/publisher/assets/process/apis/delete_bpmn',
@@ -1021,6 +1111,7 @@ function deleteBPMNDiagram() {
         success: function (data) {
             var response = JSON.parse(data);
             if (response.error === false) {
+                $("#bpmnEditDiv").show();
                 //window.location = "../../process/details/" + response.content;
                 $("#bpmnadded").removeClass("fw-check");
                 $("#bpmnViewDiv").hide();
@@ -1229,10 +1320,9 @@ function removeDocumentConfirmListener(processName, processVersion, documentName
     confirmModal.modal('show');
 }
 
-function showDocument() {
-
+function showDocument(permission) {
+    $("#overviewDiv").hide();
     $("#flowChartView").hide();
-    $("#docEditDiv").hide();
     $("#docViewDiv").show();
     $(".active").removeClass("active");
     $("#bpmnEditDiv").hide();
@@ -1304,14 +1394,17 @@ function showDocument() {
                         }
                         if (response[i].url != "NA" || response[i].path != "NA") {
                             var removeDocElement = document.createElement("a");
-                            removeDocElement.setAttribute("id", "removeDocElement" + i);
-                            removeDocElement.onclick = (function (processName, processVersion, docName, docSummary, docUrl, docPath, idVal) {
-                                return function () {
-                                    removeDocumentConfirmListener(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
-                                };
-                            })(pname, pversion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
-                            removeDocElement.innerHTML = "remove";
-                            cellDocAction.appendChild(removeDocElement);
+                            if (permission) {
+                                removeDocElement.setAttribute("id", "removeDocElement" + i);
+                                removeDocElement.onclick = (function (processName, processVersion, docName, docSummary, docUrl, docPath, idVal) {
+                                    return function () {
+                                        removeDocumentConfirmListener(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
+                                    };
+                                })(pname, pversion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
+                                removeDocElement.innerHTML = "remove";
+                                cellDocAction.appendChild(removeDocElement);
+                            }
+
                         }
                     }
                 }
@@ -1325,9 +1418,167 @@ function showDocument() {
     });
 }
 
-function loadSummary() {
+function deleteSubprocess(element) {
+    var deleteSubInput = $(element).parent().closest("tr").find("span").text();
+    var question = "Are you sure you want to delete sub process " + deleteSubInput + "?";
+    var confirmModal = confirmDialog(question);
+    confirmModal.find('#okButton').click(function (event) {
+        if (!isProcessNotAvailableInList(deleteSubInput)) {
+            var deleteSubPath, deleteSubId;
+            for (var i = 0; i < processListObj.length; i++) {
+                if (processListObj[i].processname == deleteSubInput.split("-")[0] &&
+                    processListObj[i].processversion == deleteSubInput.split("-")[1]) {
+                    deleteSubPath = processListObj[i].path;
+                    deleteSubId = processListObj[i].processid;
+                    break;
+                }
+            }
 
+            var deleteSubInfo = {
+                name: deleteSubInput.split("-")[0],
+                path: deleteSubPath,
+                id: deleteSubId
+            };
+
+            var deleteSubObj = {
+                'processName': $('#view-header-field').val(),
+                'processVersion': $('#process-version-field').val(),
+                'deleteSubprocess': deleteSubInfo
+            };
+
+            $.ajax({
+                url: '/publisher/assets/process/apis/delete_subprocess',
+                type: 'POST',
+                data: {'deleteSubprocessDetails': JSON.stringify(deleteSubObj)},
+                success: function (data) {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        console.log($(element).parent().closest("tr").index());
+                        document.getElementById("subProcessTable").deleteRow($(element).parent().closest("tr").index()+1);
+                        alertify.success('Successfully deleted ' + deleteSubInput + ' from the subprocess list.');
+                    } else {
+                        alertify.error(response.content);
+                    }
+                },
+                error: function () {
+                    alertify.error('Subprocess deleting error');
+                }
+            });
+        }
+        confirmModal.modal('hide');
+    });
+    confirmModal.modal('show');
+}
+
+function deleteSuccessor(element) {
+    var deleteSuccessorInput = $(element).parent().closest("tr").find("span").text();
+    var question = "Are you sure you want to delete successor " + deleteSuccessorInput + "?";
+    var confirmModal = confirmDialog(question);
+    confirmModal.find('#okButton').click(function (event) {
+        if (!isProcessNotAvailableInList(deleteSuccessorInput)) {
+            var deleteSuccessorPath, deleteSuccessorId;
+            for (var i = 0; i < processListObj.length; i++) {
+                if (processListObj[i].processname == deleteSuccessorInput.split("-")[0] &&
+                    processListObj[i].processversion == deleteSuccessorInput.split("-")[1]) {
+                    deleteSuccessorPath = processListObj[i].path;
+                    deleteSuccessorId = processListObj[i].processid;
+                    break;
+                }
+            }
+
+            var deleteSuccessorInfo = {
+                name: deleteSuccessorInput.split("-")[0],
+                path: deleteSuccessorPath,
+                id: deleteSuccessorId
+            };
+
+            var deleteSuccessorObj = {
+                'processName': $('#view-header-field').val(),
+                'processVersion': $('#process-version-field').val(),
+                'deleteSuccessor': deleteSuccessorInfo
+            };
+
+            $.ajax({
+                url: '/publisher/assets/process/apis/delete_successor',
+                type: 'POST',
+                data: {'deleteSuccessorDetails': JSON.stringify(deleteSuccessorObj)},
+                success: function (data) {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        document.getElementById("successorTable").deleteRow($(element).parent().closest("tr").index() + 1);
+                        alertify.success('Successfully deleted ' + deleteSuccessorInput + ' from the successor list.');
+                    } else {
+                        alertify.error(response.content);
+                    }
+                },
+                error: function () {
+                    alertify.error('Successor deleting error');
+                }
+            });
+        }
+        confirmModal.modal('hide');
+    });
+    confirmModal.modal('show');
+}
+
+function deletePredecessor(element) {
+    var deletePredecessorInput = $(element).parent().closest("tr").find("span").text();
+    var question = "Are you sure you want to delete predecessor " + deletePredecessorInput + "?";
+    var confirmModal = confirmDialog(question);
+    confirmModal.find('#okButton').click(function (event) {
+        if (!isProcessNotAvailableInList(deletePredecessorInput)) {
+            var deletePredecessorPath, deletePredecessorId;
+            for (var i = 0; i < processListObj.length; i++) {
+                if (processListObj[i].processname == deletePredecessorInput.split("-")[0] &&
+                    processListObj[i].processversion == deletePredecessorInput.split("-")[1]) {
+                    deletePredecessorPath = processListObj[i].path;
+                    deletePredecessorId = processListObj[i].processid;
+                    break;
+                }
+            }
+
+            var deletePredecessorInfo = {
+                name: deletePredecessorInput.split("-")[0],
+                path: deletePredecessorPath,
+                id: deletePredecessorId
+            };
+
+            var deletePredecessorObj = {
+                'processName': $('#view-header-field').val(),
+                'processVersion': $('#process-version-field').val(),
+                'deletePredecessor': deletePredecessorInfo
+            };
+
+            $.ajax({
+                url: '/publisher/assets/process/apis/delete_Predecessor',
+                type: 'POST',
+                data: {'deletePredecessorDetails': JSON.stringify(deletePredecessorObj)},
+                success: function (data) {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        document.getElementById("predecessorTable").deleteRow($(element).parent().closest("tr").index() + 1);
+                        alertify.success('Successfully deleted ' + deletePredecessorInput + ' from the predecessor list.');
+                    } else {
+                        alertify.error(response.content);
+                    }
+                },
+                error: function () {
+                    alertify.error('Predecessor deleting error');
+                }
+            });
+        }
+        confirmModal.modal('hide');
+    });
+    confirmModal.modal('show');
+}
+
+function loadSummary(update_view) {
     window.location = "../../assets/process/details/" + PID;
+    if(update_view) {
+    window.location = "../../../assets/process/details/" + PID;
+    } else {
+    window.location = "../../assets/process/details/" + PID;
+    }
 
 }
 

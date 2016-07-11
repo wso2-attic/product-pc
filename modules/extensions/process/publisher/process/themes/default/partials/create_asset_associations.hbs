@@ -46,13 +46,16 @@
             <div>{{> search_model .}}</div>
         </div>
     </div>
+    <input type="hidden" id="view-header-field" value="{{assets.tables.[0].fields.name.value}}">
+    <input type="hidden" id="process-version-field" value="{{assets.tables.[0].fields.version.value}}">
+
     <div class="vertical_line" style="bottom: 80px;"></div>
     <div id="processButtonsGroup">
         <!--<button class="btn btn-success" id="updateAssociationsBtn" value="Update"-->
         <!--onclick="updateAssociations()" style="margin-left:40px; position: absolute; bottom: 100px;">-->
         <!--Update-->
         <!--</button>-->
-        <button class="btn btn-success" id="finishBtn" value="Finish" onclick="loadSummary()"
+        <button class="btn btn-success" id="finishBtn" value="Finish" onclick="loadSummary({{isUpdateView}})"
                 style="margin-left: 100px; position: absolute; bottom: 100px;">
             Finish
         </button>

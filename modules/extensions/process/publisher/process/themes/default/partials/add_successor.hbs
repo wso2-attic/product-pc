@@ -14,10 +14,11 @@
   ~ limitations under the License.
   -->
 <div id="successorDiv" class="responsive-form-container"
-     style="display: none;">
-    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">
-        &nbsp;
-    </div>
+     style="">
+    <!--<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding:0">-->
+        <!--&nbsp;-->
+    <!--</div>-->
+
     <div style="border:0px solid #ff0000; padding:0"
          class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
         <div class="add-unbounded-row">
@@ -36,6 +37,34 @@
             </tr>
             </thead>
         </table>
+    </div>
+
+    <div id="successorViewDiv" style="clear: left">
+        <div class="row-fluid">
+            <div class="span12">
+                <input type="hidden" id="successorCountHolder" value="{{involveProcessList.successors.length}}">
+                <table class="table table-bordered" id="successorTable">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="listSuccessors">
+                    {{#each involveProcessList.successors}}
+                        <tr>
+                            <td valign="top" style="width: 30%;"><span id="successor_Name"
+                                                                       class="successor_Name">{{this.name}}-{{this.version}}</span></td>
+                            <td style="width: 60%;"></td>
+                            <td style="width: 10%;"><a target="_blank" href="../details/{{this.id}}" class="fa fa-eye" aria-hidden="true"></a><label class="remove-process" onclick="deleteSuccessor(this)"><i
+                                    class="fa fa-trash"></i></label></td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
