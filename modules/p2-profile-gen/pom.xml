@@ -199,6 +199,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.governance:org.wso2.carbon.governance.metadata.feature:${carbon.governance.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.governance:org.wso2.carbon.governance.taxonomy.management.feature:${carbon.governance.version}
+                                </featureArtifactDef>
                                 <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra.explorer.feature:${carbon.platform.version}
                                 </featureArtifactDef-->
@@ -309,6 +312,9 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.registry:org.wso2.carbon.registry.task.feature:${carbon.registry.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.store:taxonomy.feature:${carbon.store.version}
                                 </featureArtifactDef>
 
 
@@ -751,6 +757,14 @@
                                 <feature>
                                     <id>org.wso2.store.modules.carbon-metrics.feature.group</id>
                                     <version>${carbon.store.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.store.modules.taxonomy.feature.group</id>
+                                    <version>${carbon.store.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.governance.taxonomy.management.feature.group</id>
+                                    <version>${carbon.governance.version}</version>
                                 </feature>
                             </features>
                         </configuration>
