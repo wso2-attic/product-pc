@@ -164,23 +164,21 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.security.mgt.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.basicauth.server.feature:${carbon.identity.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.basicauth.server.feature:${identity.application.auth.basic.auth.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authentication.framework.server.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.authenticator.saml2.sso.server.feature:${carbon.identity.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.authenticator.saml2.sso.server.feature:${identity.auth.saml2.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.authenticator.saml2.sso.ui.feature:${carbon.identity.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.authenticator.saml2.sso.ui.feature:${identity.auth.saml2.version}
                                 </featureArtifactDef>
                                 <feaureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.sso.saml.feature:${carbon.identity.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.sso.saml.feature:${identity.inbound.auth.saml.version}
                                 </feaureArtifactDef>
-                                <!--feaureArtifactDef>
-                                    org.wso2.carbon:org.wso2.stratos.identity.saml2.sso.mgt.feature:${carbon.platform.version}
-                                </feaureArtifactDef-->
+
                                 <!-- SSO Fix-->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.user.profile.feature:${carbon.identity.version}
@@ -540,7 +538,7 @@
                                     <id>
                                         org.wso2.carbon.identity.application.authenticator.basicauth.server.feature.group
                                     </id>
-                                    <version>${carbon.identity.version}</version>
+                                    <version>${identity.application.auth.basic.auth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -550,16 +548,13 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.saml2.sso.server.feature.group</id>
-                                    <version>${carbon.identity.version}</version>
+                                    <version>${identity.auth.saml2.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.saml2.sso.ui.feature.group</id>
-                                    <version>${carbon.identity.version}</version>
+                                    <version>${identity.auth.saml2.version}</version>
                                 </feature>
-                                <!--feature>
-                                    <id>org.wso2.stratos.identity.saml2.sso.mgt.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
-                                </feature-->
+
                                 <!-- SSO Fix-->
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.profile.feature.group</id>
