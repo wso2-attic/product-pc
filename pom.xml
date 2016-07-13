@@ -565,11 +565,6 @@
                 <artifactId>org.wso2.carbon.ui</artifactId>
                 <version>4.4.5</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.greg</groupId>
-                <artifactId>org.wso2.carbon.pc.styles</artifactId>
-                <version>1.0.0-SNAPSHO</version>
-            </dependency>
 
             <!-- Integration tests depedencies-->
             <dependency>
