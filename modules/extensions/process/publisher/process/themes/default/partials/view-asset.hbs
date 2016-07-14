@@ -1,125 +1,89 @@
-<br/>
-<span id="view-header" name="processNameHeader" class="label label-default" style="font-size: 20px;margin-left: 25px;">
-    {{assets.tables.[0].fields.name.value}}
-</span>
-<br/>
-<hr style="margin-top: 15px; margin-bottom: 30px;border-width: 7px;">
-<div id="overviewDiv">
-    <table style="width: 80%;">
-        <tr>
-            <td id="deatailsCellTd" ALIGN="LEFT" VALIGN="TOP" style="padding-left: 2%;width: 50%;">
+<div id="overviewDiv" class="row-fluid wiz-content" style="box-shadow: 0px 2px 2px 2px rgba(0, 0, 0, 0.1);">
+    <div class="title">{{assets.tables.[0].fields.name.value}}</div>
 
-                <div id="deatailsCellDiv" class="panel panel-info" style="width: 95%;border-width: 4px;border-color:
-                #60b3f0 ">
-                    <!-- Default panel contents -->
-                    <div class="panel-heading" style="background-color: #60b3f0;color: #fff;">Process Name
-                        : {{assets.tables.[0].fields.name.value}}</div>
-                    <div class="panel-body">
-                        <p style="line-height: 1.8;"><span class="label label-primary" style="background-color: rgb(131, 189, 240);
-                        ">Description</span>&nbsp;: &nbsp;&nbsp;{{assets.tables.[0].fields.description.value}}</p>
-                    </div>
-
-                    <!-- Table -->
-                    <div style="padding: 8px">
-                        <table class="table table-striped">
-                            <tbody style="font-size: 11px">
-                            <tr>
-                                <td>
-                                    <span class="label label-primary" style="background-color: rgb(179, 179, 179);">
-                                    Version
-                                    </span>
-                                </td>
-                                <td>{{assets.tables.[0].fields.version.value}}</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="label label-primary" style="background-color: rgb(179, 179, 179);">
-                                    Created By(owner)
-                                    </span>
-                                </td>
-                                <td>{{assets.tables.[0].fields.owner.value}}</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="label label-primary" style="background-color: rgb(179, 179, 179);">
-                                    Created Time
-                                    </span>
-                                </td>
-                                <td>{{assets.tables.[0].fields.createdtime.value}}</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="label label-primary" style="background-color: rgb(179, 179, 179);">
-                                        Life Cycle State
-                                    </span>
-                                </td>
-                                <td>{{assets.lifecycleState}}</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="label label-primary" style="background-color: rgb(179, 179, 179);">
-                                        Tags
-                                    </span>
-                                </td>
-                                <td>
-                                    {{#each processTagsArray}}
-                                        <span class="label label-primary" style="background-color: rgb(153, 153, 255);
-                                        ">{{this}}</span>
-                                    {{/each}}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="label label-primary" style="background-color: rgb(179, 179, 179);">
-                                        Business User
-                                    </span>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="label label-primary" style="background-color: rgb(179, 179, 179);">
-                                        Business User Email
-                                    </span>
-                                </td>
-                                <td></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+    <div id="thumbnailTd" class="col-sm-2" style="display: inline; float: left; padding: 20px">
+        {{#if customThumbnailAvailable}}
+            <div class="row-fluid">
+                <div class="col-md-12 well well-sm">
+                    <img id="tuumbnailImg" alt="thumbnail" class="img-thumbnail img-rounded center-block"
+                         src="/publisher/storage/process/{{assets.id}}/images_thumbnail">
+                    <ul class="nav nav-list">
+                        <li><span class="glyphicon glyphicon-th" aria-hidden="true"></span>&nbsp;{{assets.tables.[0].fields.version.value}}</li>
+                        <li><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;{{assets.lifecycleState}}</li>
+                    </ul>
                 </div>
-            </td>
+            </div>
+        {{/if}}
+    </div>
 
-            <td name="verticalSeperator" style="height: 100%; background-color: rgb(234, 237, 242); width:7px"></td>
+    <div class="col-sm-8" style="display: inline; float: left;padding: 20px">
+        <table class="table table-bordered table-striped">
+            <tbody>
+            <tr>
+                <td class="col-sm-3">
+                                    Version
+                </td>
+                <td>{{assets.tables.[0].fields.version.value}}</td>
+            </tr>
+            <tr>
+                <td class="col-sm-3">
+                    Description
+                </td>
+                <td>{{assets.tables.[0].fields.description.value}}</td>
+            </tr>
+            <tr>
+                <td class="col-sm-3">
+                                    Created By(owner)
+                </td>
+                <td>{{assets.tables.[0].fields.owner.value}}</td>
+            </tr>
+            <tr>
+                <td class="col-sm-3">
+                                    Created Time
+                </td>
+                <td>{{assets.tables.[0].fields.createdtime.value}}</td>
+            </tr>
+            <tr>
+                <td class="col-sm-3">
+                                        Life Cycle State
+                </td>
+                <td>{{assets.lifecycleState}}</td>
+            </tr>
+            <tr>
+                <td class="col-sm-3">
+                                        Tags
+                </td>
+                <td>
+                    {{#each processTagsArray}}
+                        <span class="label label-primary
+                                        ">{{this}}</span>
+                    {{/each}}
+                </td>
+            </tr>
+            <tr>
+                <td class="col-sm-3">
+                                        Business User
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="col-sm-3">
+                                        Business User Email
+                </td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
-            <td id="thumbnailTd" ALIGN="LEFT" VALIGN="TOP" style="padding-left: 8%; padding-top: 5%;">
-                {{#if customThumbnailAvailable}}
-                    <div class="panel panel-success" style="width: 250px;border-width: 5px;border-color: #747fba; ">
-                        <div>
-                            <div>
-                                <div class="ast-name-img">
-                                    <img id="tuumbnailImg" alt="thumbnail" class="square-element img-thumbnail"
-                                         src="/publisher/storage/process/{{assets.id}}/images_thumbnail"
-                                         style="max-width: 100%;padding: 8px">
-                                </div>
-                            </div>
-                            <br>
-                            <div class="ast-desc" style="margin-left: 30%;">
-                                <span class="label label-success">V-{{assets.tables.[0].fields.version.value}}</span>
-                            <span class="label label-primary">
-                                <i class="icon-circle lc-state-Initial"></i>
-                                Initial
-                            </span>
-                            </div>
-                            <br class="c-both">
-                        </div>
-                        <br class="c-both">
-                    </div>
-                {{/if}}
-            </td>
-        </tr>
-    </table>
 </div>
+
+<!--<div class="row-fluid">-->
+    <!--<div class="col-sm-2" style="float: left">-->
+        <!--<button class="btn btn-primary" onclick="">Analitics</button>-->
+    <!--</div>-->
+<!--</div>-->
+
 
 <div id="processTextContainer" style="display: none">
     <div class="form-group">
