@@ -487,3 +487,7 @@
     top: 340px;
     bottom: 100px;
 }
+
+.img-thumbnail {
+    border: 0 none;
+}

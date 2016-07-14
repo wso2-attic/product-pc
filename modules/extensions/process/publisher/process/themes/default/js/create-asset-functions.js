@@ -1324,7 +1324,7 @@ function showDocument(permission) {
     $("#overviewDiv").hide();
     $("#flowChartView").hide();
     $("#docViewDiv").show();
-    $(".active").removeClass("active");
+    // $(".active").removeClass("active");
     $("#bpmnEditDiv").hide();
     $("#processTextEditDiv").hide();
     $("#processTextView").hide();
