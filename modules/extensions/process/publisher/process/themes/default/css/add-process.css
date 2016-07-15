@@ -491,3 +491,7 @@
 .img-thumbnail {
     border: 0 none;
 }
+
+.wiz-step:hover {
+    background-color: #237bd5;
+}

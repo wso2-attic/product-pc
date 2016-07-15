@@ -395,6 +395,12 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/store
             </outputDirectory>
         </fileSet>
+        <fileSet>
+            <directory>../extensions/apps/portal/libs</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/libs
+            </outputDirectory>
+        </fileSet>
         <!-- permission related-->
         <fileSet>
             <directory>../extensions/main/process-center/extensions/app/greg-permissions</directory>

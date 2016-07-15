@@ -16,92 +16,103 @@
 <div class="control-group">
     <div class="collapse in responsive-form-container" id="collapseprocessinfo">
         <div class="title">Overview</div>
-        <form class="form-horizontal font" style="padding-top: 50px; padding-left: 50px">
-            <div class="form-group">
+        <div class="row-fluid">
 
-                <label class="custom-form-label col-lg-1 col-md-2 col-sm-12 col-xs-12">Process name<sup
-                        class="required-field">*</sup></label>
+            <div class="col-sm-6" style="display: inline;float: left;">
+                <form class="form-horizontal font" style="padding-top: 50px; padding-left: 50px">
+                        <div class="form-group">
 
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text" placeholder="Enter Process Name" name="overview_name"
-                           id="pName" class="form-control" required=""
-                           {{#if isUpdateView}}value="{{assets.tables.[0].fields.name.value}}" disabled {{/if}}>
-                </div>
-            </div>
+                            <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Process name<sup
+                                    class="required-field">*</sup></label>
 
-            <div class="form-group">
-                <label class="custom-form-label col-lg-1 col-md-2 col-sm-12 col-xs-12">Version<sup
-                        class="required-field">*</sup></label>
+                            <div class="custom-form-right col-lg-10 col-md-8 col-sm-8 col-xs-12">
+                                <input onblur="blurIt()" type="text" placeholder="Enter Process Name"
+                                       name="overview_name"
+                                       id="pName" class="form-control" required=""
+                                    {{#if isUpdateView}}value="{{assets.tables.[0].fields.name.value}}"
+                                       disabled {{/if}}>
+                            </div>
+                        </div>
 
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text" placeholder="1.0.0" name="overview_version"
-                           id="pVersion" class="form-control" required=""
-                           {{#if isUpdateView}}value="{{assets.tables.[0].fields.version.value}}" disabled {{/if}}>
-                </div>
-            </div>
+                        <div class="form-group">
+                            <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Version<sup
+                                    class="required-field">*</sup></label>
 
-            <div class="form-group">
-                <label class="custom-form-label col-lg-1 col-md-2 col-sm-12 col-xs-12">Created by<sup
-                        class="required-field">*</sup></label>
+                            <div class="custom-form-right col-lg-10 col-md-8 col-sm-8 col-xs-12">
+                                <input onblur="blurIt()" type="text" placeholder="1.0.0" name="overview_version"
+                                       id="pVersion" class="form-control" required=""
+                                    {{#if isUpdateView}}value="{{assets.tables.[0].fields.version.value}}"
+                                       disabled {{/if}}>
+                            </div>
+                        </div>
 
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input onblur="blurIt()" type="text" placeholder="Enter Process Owner" name="overview_owner"
-                           id="pOwner" class="form-control" required="" value="{{cuser.username}}">
-                </div>
-            </div>
+                        <div class="form-group">
+                            <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Created by<sup
+                                    class="required-field">*</sup></label>
 
-            <div class="form-group">
-                <label class="custom-form-label col-lg-1 col-md-2 col-sm-12 col-xs-12">Description</label>
+                            <div class="custom-form-right col-lg-10 col-md-8 col-sm-8 col-xs-12">
+                                <input onblur="blurIt()" type="text" placeholder="Enter Process Owner"
+                                       name="overview_owner"
+                                       id="pOwner" class="form-control" required="" value="{{cuser.username}}">
+                            </div>
+                        </div>
 
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
+                        <div class="form-group">
+                            <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Description</label>
+
+                            <div class="custom-form-right col-lg-10 col-md-8 col-sm-8 col-xs-12">
                     <textarea placeholder="Process Description" row="3" style="width:100%; height:70px"
                               name="overview_description" id="overview_description"
                               class="input-large">{{#if isUpdateView}}{{assets.tables.[0].fields.description.value}}{{/if}}</textarea>
-                </div>
-            </div>
+                            </div>
+                        </div>
 
-            <div class="form-group">
-                <label class="custom-form-label col-lg-1 col-md-2 col-sm-12 col-xs-12">Tags</label>
+                        <div class="form-group">
+                            <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Tags</label>
 
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input type="text" id="tag-box" class="form-control"/>
-                </div>
-            </div>
+                            <div class="custom-form-right col-lg-10 col-md-8 col-sm-8 col-xs-12">
+                                <input type="text" id="tag-box" class="form-control"/>
+                            </div>
+                        </div>
 
-            <div class="form-group">
-                <label class="custom-form-label col-lg-1 col-md-2 col-sm-12 col-xs-12">Image</label>
-                <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                    <input type="file" class="filestyle form-control" value="" name="images_thumbnail"
-                           id="images_thumbnail"
-                           onchange="readImage(this);" data-buttonText="Browse">
-                    <input type="hidden" id="processImage" name="processImage" value=""/>
-                </div>
-            </div>
+                        <div class="form-group">
+                            <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Image</label>
+                            <div class="custom-form-right col-lg-10 col-md-8 col-sm-8 col-xs-12">
+                                <input type="file" class="filestyle form-control" value="" name="images_thumbnail"
+                                       id="images_thumbnail"
+                                       onchange="readImage(this);" data-buttonText="Browse">
+                                <input type="hidden" id="processImage" name="processImage" value=""/>
+                            </div>
+                        </div>
 
-            <div style="margin-left: 1000px;
-margin-top: -200px;width:250px;height: 250px;">
-                <img id="image" alt="thumbnail" class="square-element img-thumbnail"
-                     src="{{#if customThumbnailAvailable}}/publisher/storage/process/{{assets.id}}/images_thumbnail{{else}}#{{/if}}" style="border: 3px solid;border-color: #003bb3;display:{{#if customThumbnailAvailable}}block{{else}} none{{/if}}">
-            </div>
+                </form>
 
-
-        </form>
-    <div id="processButtons" class="form-actions">
-        <div class="form-group">
-            <div class="col-sm-offset-1 col-sm-10" style="margin-left: 40px;
+                <div id="processButtons" class="form-actions">
+                    <div class="form-group">
+                        <div class="col-sm-offset-1 col-sm-10" style="margin-left: 40px;
                         margin-top: 30px;">
-                <button class="btn btn-primary" id="saveProcessBtn" value="Save process"
-                        onclick="{{#if isUpdateView}}updateProcess(this){{else}} saveProcess(this){{/if}}">
-                    Save
-                </button>
-                &nbsp;
-                <button class="btn btn-primary" id="detailsProcessBtn" value="Process Details"
-                        onclick="{{#if isUpdateView}}updateProcess(this){{else}} saveProcess(this){{/if}}" style="top: 0px">
-                        Details&nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span>
-                </button>
-				</div>
+                            <button class="btn btn-primary" id="saveProcessBtn" value="Save process"
+                                    onclick="{{#if isUpdateView}}updateProcess(this){{else}} saveProcess(this){{/if}}">
+                                Save
+                            </button>
+                            &nbsp;
+                            <button class="btn btn-primary" id="detailsProcessBtn" value="Process Details"
+                                    onclick="{{#if isUpdateView}}updateProcess(this){{else}} saveProcess(this){{/if}}"
+                                    style="top: 0px">
+                                Details&nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+        </div>
 
+            <div class="col-sm-2 well well-sm" style="display: inline;float: left;margin-left: 20px; margin-top: 50px;">
+                <img id="image" alt="thumbnail" class="square-element img-thumbnail"
+                     src="{{#if customThumbnailAvailable}}/publisher/storage/process/{{assets.id}}/images_thumbnail{{else}}#{{/if}}"
+                     style="display:{{#if customThumbnailAvailable}}block{{else}} none{{/if}}">
             </div>
+
+
         </div>
     </div>
 

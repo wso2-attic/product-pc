@@ -21,7 +21,7 @@
 var pname,pversion;
 var tagList = [];
 var processTagsObj;
-var isEditorActive = false;
+var isEditorActive = false, curWindow;
 
 window.onload = function () {
 
@@ -44,6 +44,44 @@ window.onload = function () {
                 event.preventDefault();
         });
     });
+
+    $('#stp1').click(function () {
+        loadOverviewDiv();
+        curWindow = 'stp1';
+        $('#stp1').addClass('current');
+        $('#stp1').removeClass('other');
+        $('#stp2').addClass('other');
+        $('#stp2').removeClass('current');
+        $('#stp3').addClass('other');
+        $('#stp3').removeClass('current');
+    });
+
+    $('#stp2').click(function () {
+        if(curWindow == 'stp3') {
+            $('#stp1').addClass('other');
+            $('#stp1').removeClass('current');
+            $('#stp2').addClass('current');
+            $('#stp2').removeClass('other');
+            $('#stp3').addClass('other');
+            $('#stp3').removeClass('current');
+            loadDetails();
+        } else {
+            updateProcess();
+        }
+        curWindow = 'stp2';
+    });
+
+    $('#stp3').click(function () {
+        $('#stp1').addClass('other');
+        $('#stp1').removeClass('current');
+        $('#stp2').addClass('other');
+        $('#stp2').removeClass('current');
+        $('#stp3').addClass('current');
+        $('#stp3').removeClass('other');
+        processAssociations();
+        curWindow = 'stp3';
+    });
+
 };
 
 function loadOverviewDiv() {
@@ -65,40 +103,43 @@ function loadOverviewDescription() {
     if(overview === "NA") {
         $('#overview_description').val("");
     }
+    $('#stp2').addClass('other')
+    $('#stp3').addClass('other');
 }
 
-function updateProcess(currentElement) {
+function updateProcess(flag) {
+    $('#stp1').addClass('other')
+    $('#stp2').removeClass('other');
+    $('#stp3').addClass('other');
     if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
         alertify.error('please fill the required fields.');
     } else {
         pname=$("#pName").val();
         pversion=$("#pVersion").val();
-        
-        $.ajax({
-            url: '/publisher/assets/process/apis/update_process',
-            type: 'POST',
-            data: {'processInfo': getProcessInfo()},
-            success: function (data) {
-                var response = JSON.parse(data);
-                if (response.error === false) {
-                    alertify.success("process updated successfully");
-                    if ($(currentElement).attr('id') == 'detailsProcessBtn') {
-                        $('#stp1').removeClass("current");
-                        $('#stp1').addClass("other");
-                        $('#stp2').addClass("current");
+            $.ajax({
+                url: '/publisher/assets/process/apis/update_process',
+                type: 'POST',
+                data: {'processInfo': getProcessInfo()},
+                success: function (data) {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        // if ($(currentElement).attr('id') == 'detailsProcessBtn') {
+                            $('#stp1').removeClass("current");
+                            $('#stp1').addClass("other");
+                            $('#stp2').addClass("current");
+                        // }
+                        loadDetails();
+                        $("#processName").html(pname);
+                        $("#processVersion").html(pversion);
+                        PID = response.content;
+                    } else {
+                        alertify.error(response.content);
                     }
-                    loadDetails();
-                    $("#processName").html(pname);
-                    $("#processVersion").html(pversion);
-                    PID = response.content;
-                } else {
-                    alertify.error(response.content);
+                },
+                error: function () {
+                    alertify.error('Process update error');
                 }
-            },
-            error: function () {
-                alertify.error('Process update error');
-            }
-        });
+            });
     }
 }
 
