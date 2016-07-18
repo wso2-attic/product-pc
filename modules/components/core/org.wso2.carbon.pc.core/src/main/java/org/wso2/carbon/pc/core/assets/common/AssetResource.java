@@ -43,6 +43,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+/**
+ * Abstract class for registry assets and resources
+ */
 public abstract class AssetResource {
 
     private static final Log log = LogFactory.getLog(AssetResource.class);
