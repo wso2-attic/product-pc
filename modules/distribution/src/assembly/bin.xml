@@ -727,7 +727,7 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../extensions/process/package.rxt</source>
+            <source>../extensions/package/package.rxt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/rxts</outputDirectory>
             <fileMode>644</fileMode>
         </file>
