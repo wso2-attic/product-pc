@@ -24,7 +24,6 @@ import org.w3c.dom.Document;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
-import org.wso2.carbon.pc.core.ProcessContentSearchConstants;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.common.AttributeSearchService;
 import org.wso2.carbon.registry.common.ResourceData;
@@ -52,10 +51,11 @@ public class ProcessContentSearchService {
 
     static {
         Map<String, String> aMap = new HashMap<>();
-        aMap.put(ProcessContentSearchConstants.PDF, ProcessContentSearchConstants.PDF_MEDIATYPE);
-        aMap.put(ProcessContentSearchConstants.DOCUMENT, ProcessContentSearchConstants.DOCUMENT_MEDIATYPE);
-        aMap.put(ProcessContentSearchConstants.PROCESS_TEXT, ProcessContentSearchConstants.PROCESS_TEXT_MEDIATYPE);
-        aMap.put(ProcessContentSearchConstants.PROCESS, ProcessContentSearchConstants.PROCESS_MEDIATYPE);
+        aMap.put(ProcessCenterConstants.PROCESS_CONTENT_SEARCH.PDF, ProcessCenterConstants.PROCESS_CONTENT_SEARCH
+                .PDF_MEDIATYPE);
+        aMap.put(ProcessCenterConstants.PROCESS_CONTENT_SEARCH.DOCUMENT, ProcessCenterConstants.PROCESS_CONTENT_SEARCH.DOCUMENT_MEDIATYPE);
+        aMap.put(ProcessCenterConstants.PROCESS_CONTENT_SEARCH.PROCESS_TEXT, ProcessCenterConstants.PROCESS_CONTENT_SEARCH.PROCESS_TEXT_MEDIATYPE);
+        aMap.put(ProcessCenterConstants.PROCESS_CONTENT_SEARCH.PROCESS, ProcessCenterConstants.PROCESS_CONTENT_SEARCH.PROCESS_MEDIATYPE);
         mediatypes = Collections.unmodifiableMap(aMap);
     }
 
@@ -71,7 +71,7 @@ public class ProcessContentSearchService {
         String processString = "FAILED TO GET PROCESS LIST";
         String mediaTypeStr;
 
-        AttributeSearchService attributeSearchService = ProcessCenterServerHolder.getInstance()
+        AttributeSearchService attributeSearchService =  ProcessCenterServerHolder.getInstance()
                 .getAttributeSearchService();
         try {
             //get current logged in user.
@@ -126,7 +126,7 @@ public class ProcessContentSearchService {
                             processJSON.put("type", "process");
                             processJSON.put("path", destinationPath);
                             processJSON.put("lifecycle", "SampleLifeCycle2");
-                            processJSON.put("mediaType", ProcessContentSearchConstants.PROCESS_MEDIATYPE);
+                            processJSON.put("mediaType", ProcessCenterConstants.PROCESS_CONTENT_SEARCH.PROCESS_MEDIATYPE);
                             processJSON.put("name", processName);
                             processJSON.put("version", processVersion);
                             processJSON.put("lifecycleState", lifecycleState);

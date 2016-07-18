@@ -42,7 +42,8 @@ import java.util.Map;
 public class DocumentIndexer implements Indexer {
     public static final Log log = LogFactory.getLog(DocumentIndexer.class);
 
-    @Override public IndexDocument getIndexedDocument(AsyncIndexer.File2Index fileData)
+    @Override
+    public IndexDocument getIndexedDocument(AsyncIndexer.File2Index fileData)
             throws SolrException, RegistryException {
         try {
             String wordText = null;
