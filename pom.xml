@@ -627,6 +627,11 @@
                 <artifactId>org.wso2.carbon.registry.ws.client</artifactId>
                 <version>${carbon.registry.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.business-process</groupId>
+                <artifactId>org.wso2.carbon.bpmn.stub</artifactId>
+                <version>${carbon.business-process.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <scm>
@@ -820,6 +825,9 @@
         <testng.version>6.8.5</testng.version>
         <carbon.metrics.version>1.2.1</carbon.metrics.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
+
+        <!-- Carbon business process version -->
+        <carbon.business-process.version>4.4.10-SNAPSHOT</carbon.business-process.version>
 
         <!-- Activiti Version -->
         <org.activiti.version>5.19.0</org.activiti.version>
