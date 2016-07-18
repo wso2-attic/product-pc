@@ -36,6 +36,49 @@
                     </sourceExcludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>xmlbeans-maven-plugin</artifactId>
+                <version>2.3.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>xmlbeans</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <schemaDirectory>src/main/resources/schemas</schemaDirectory>
+                    <xmlConfigs>
+                        <xmlConfig implementation="java.io.File">
+                            src/main/resources/schemas/xmlbeans.conf
+                        </xmlConfig>
+                    </xmlConfigs>
+                    <noUpa>false</noUpa>
+                    <sourceGenerationDirectory>
+                        target/generated-code/src
+                    </sourceGenerationDirectory>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>target/generated-code/src</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -56,7 +99,7 @@
                             !org.wso2.carbon.pc.core.audit.util,
                             !org.wso2.carbon.pc.core.audit.bean,
                             org.wso2.carbon.pc.core.audit,
-                            org.wso2.carbon.pc.core;version=${project.version}
+                            org.wso2.carbon.pc.core.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.wso2.carbon.registry.indexing.*; version="4.5.4",
@@ -69,6 +112,9 @@
                             org.apache.commons.io; version="2.4.0",
                             org.apache.commons.codec.binary; version="1.4.0",
                             org.activiti.*; version="${org.activiti.version}",
+                            org.apache.xmlbeans.impl.schema,
+                            org.apache.xmlbeans.impl.values,
+                            org.apache.xmlbeans,
                             *;resolution:=optional
                         </Import-Package>
                     </instructions>
@@ -121,8 +167,8 @@
         </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon</groupId>-->
-            <!--<artifactId>org.wso2.carbon.registry.resource</artifactId>-->
+        <!--<groupId>org.wso2.carbon</groupId>-->
+        <!--<artifactId>org.wso2.carbon.registry.resource</artifactId>-->
         <!--</dependency>-->
 
         <dependency>
@@ -134,10 +180,13 @@
             <artifactId>org.wso2.carbon.governance.api</artifactId>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon</groupId>-->
-            <!--<artifactId>org.wso2.carbon.governance.api</artifactId>-->
+        <!--<groupId>org.wso2.carbon</groupId>-->
+        <!--<artifactId>org.wso2.carbon.governance.api</artifactId>-->
         <!--</dependency>-->
+        <dependency>
+            <groupId>org.wso2.carbon.business-process</groupId>
+            <artifactId>org.wso2.carbon.bpmn.stub</artifactId>
+            <version>4.4.10-SNAPSHOT</version>
+        </dependency>
     </dependencies>
-
-
 </project>
