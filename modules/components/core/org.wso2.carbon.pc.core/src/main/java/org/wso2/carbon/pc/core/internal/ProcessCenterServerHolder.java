@@ -35,18 +35,28 @@ import java.util.List;
 
 public class ProcessCenterServerHolder {
 
-    private static final Log log = LogFactory.getLog(org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder.class);
-    private static org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder instance = new org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder();
+    private static final Log log = LogFactory.getLog(ProcessCenterServerHolder.class);
+
+    private static ProcessCenterServerHolder instance = new ProcessCenterServerHolder();
+
     private RegistryService registryService;
+
     private ContentSearchService contentSearchService;
+
     private AttributeSearchService attributeSearchService;
+
     private ProcessCenter processCenter;
 
     private ProcessCenterServerHolder() {
     }
 
-    public static org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder getInstance() {
+    public static ProcessCenterServerHolder getInstance() {
         return instance;
+    }
+
+    public void setRegistryService(RegistryService registrySvc) {
+        this.registryService = registrySvc;
+        updateArtifactPathPermissions();
     }
 
     public void unsetRegistryService(RegistryService registryService) {
@@ -55,11 +65,6 @@ public class ProcessCenterServerHolder {
 
     public RegistryService getRegistryService() {
         return registryService;
-    }
-
-    public void setRegistryService(RegistryService registrySvc) {
-        this.registryService = registrySvc;
-        updateArtifactPathPermissions();
     }
 
     public void unsetContentSearchService(ContentSearchService contentSearchService) {
@@ -88,8 +93,8 @@ public class ProcessCenterServerHolder {
 
     private void updateArtifactPathPermissions() {
         try {
-            String[] artifactPaths = {"/_system/governance/flowchart", "/_system/governance/doccontent",
-                    "/_system/governance/processText"};
+            String[] artifactPaths = { "/_system/governance/flowchart", "/_system/governance/doccontent",
+                    "/_system/governance/processText" };
 
             if (this.registryService != null) {
                 UserRegistry registry = this.registryService.getGovernanceSystemRegistry();

@@ -36,9 +36,9 @@ import org.wso2.carbon.registry.indexing.service.ContentSearchService;
  */
 public class ProcessCenterServiceComponent {
 
-    private static Log log = LogFactory.getLog(org.wso2.carbon.pc.core.internal.ProcessCenterServiceComponent.class);
+    private static Log log = LogFactory.getLog(ProcessCenterServiceComponent.class);
 
-    protected void activate(ComponentContext componentContext) {
+    protected void activate(ComponentContext ctxt) {
         log.info("Initializing the PC core component...");
         try {
             ProcessCenterServerHolder processCenterServerHolder = ProcessCenterServerHolder.getInstance();
@@ -46,7 +46,7 @@ public class ProcessCenterServiceComponent {
             ProcessCenterService processCenterService = new ProcessCenterService();
             processCenterService.setProcessCenter(processCenterServerHolder.getProcessCenter());
             // Register Process Center OSGI Service
-            componentContext.getBundleContext().registerService(ProcessCenterService.class.getName(),
+            ctxt.getBundleContext().registerService(ProcessCenterService.class.getName(),
                     processCenterService, null);
 
         } catch (Throwable e) {
