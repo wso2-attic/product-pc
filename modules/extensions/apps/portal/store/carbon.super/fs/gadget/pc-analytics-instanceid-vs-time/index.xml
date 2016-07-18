@@ -2,7 +2,7 @@
 <!--Gadget definition start-->
 <Module>
     <!--Gadget name, description, tags etc.. goes here-->
-    <ModulePrefs title="PC Analytics"
+    <ModulePrefs title="PC Analytics(instance id vs exec time)"
                  height="350"
                  description="This shows pc analytics charts"
                  tags="analytics">
@@ -55,9 +55,11 @@
                         wso2.gadgets.controls.showGadget();
                         $("#from").val(data.from);
                         $("#to").val(data.to);
-                        drawAvgExecuteTimeVsProcessIdResult();
+                        drawExecutionTimeVsProcessInstanceIdResult();
                     });
                 };
+
+
         </script>
 
     </head>
@@ -66,20 +68,23 @@
         <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        process vs avg time chart
+                        process instance id vs exec. time
                     </h3>
                 </div>
                 <div class="panel-body">
                     <div style="padding-top: 10px;padding-left: 10px;padding-right: 10px;">
                         <div class="form-inline" role="form">
                              <div class="form-group">
-                                 <select id="processIdAvgExecTimeOrder" class="selectpicker form-control">
+                                <select id="processInstanceIdExecTimeProcessList" class="selectpicker form-control"></select>
+                             </div>
+                             <div class="form-group">
+                                 <select id="processInstanceIdExecTimeOrder" class="selectpicker form-control">
                                     <option value="top">Top</option>
                                     <option value="bottom">Bottom</option>
                                  </select>
-                              </div>
+                             </div>
                               <div class="form-group">
-                                 <select id="processIdAvgExecTimeCount" class="selectpicker form-control" onchange="">
+                                 <select id="processInstanceIdExecTimeLimit" class="selectpicker form-control" onchange="">
                                     <option value="other">Set a new value</option>
                                     <option selected="selected" value="3">3</option>
                                     <option value="5">5</option>
@@ -88,7 +93,7 @@
                                     <option value="100">100</option>
                                  </select>
                               </div>
-                            <button class="btn btn-default btn-primary" onclick="drawAvgExecuteTimeVsProcessIdResult()">Apply Filter</button>
+                            <button class="btn btn-default btn-primary" onclick="drawExecutionTimeVsProcessInstanceIdResult()">Apply Filter</button>
                         </div>
                     </div>
                     <div id="chartA" style="height:100%"></div>

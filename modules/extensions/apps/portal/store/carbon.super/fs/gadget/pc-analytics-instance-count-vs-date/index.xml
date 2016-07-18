@@ -2,7 +2,7 @@
 <!--Gadget definition start-->
 <Module>
     <!--Gadget name, description, tags etc.. goes here-->
-    <ModulePrefs title="PC Analytics"
+    <ModulePrefs title="PC Analytics[process instance count vs date]"
                  height="350"
                  description="This shows pc analytics charts"
                  tags="analytics">
@@ -36,6 +36,7 @@
 
         <!-- Custom CSS -->
         <link rel="stylesheet" href="/portal/libs/pc-analytics-libs/css/VizGrammar.css" type="text/css">
+        <link rel="stylesheet" href="/portal/libs/pc-analytics-libs/css/bootstrap-select.min.css" type="text/css">
 
         <script src="/portal/libs/analytics-wso2_5.0.12/d3.min.js"></script>
         <script src="/portal/libs/analytics-wso2_5.0.12/vega.js"></script>
@@ -46,6 +47,7 @@
 
         <script src="/portal/libs/jquery_1.11.0/jquery-1.11.3.min.js"></script>
         <script src="/portal/libs/bootstrap_3.3.5/js/bootstrap.min.js"></script>
+        <script src="/portal/libs/pc-analytics-libs/js/bootstrap-select.min.js"></script>
         <script>
                 gadgets.HubSettings.onConnect = function() {
                     gadgets.Hub.subscribe('Daterange', function(topic, data, subscriberData) {
@@ -66,29 +68,16 @@
         <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        process vs avg time chart
+                        process instance count vs date chart
                     </h3>
                 </div>
                 <div class="panel-body">
                     <div style="padding-top: 10px;padding-left: 10px;padding-right: 10px;">
                         <div class="form-inline" role="form">
-                             <div class="form-group">
-                                 <select id="processIdAvgExecTimeOrder" class="selectpicker form-control">
-                                    <option value="top">Top</option>
-                                    <option value="bottom">Bottom</option>
-                                 </select>
-                              </div>
                               <div class="form-group">
-                                 <select id="processIdAvgExecTimeCount" class="selectpicker form-control" onchange="">
-                                    <option value="other">Set a new value</option>
-                                    <option selected="selected" value="3">3</option>
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                 </select>
+                                <select id="processInstanceCountDateProcessList" class="selectpicker form-control" multiple></select>
                               </div>
-                            <button class="btn btn-default btn-primary" onclick="drawAvgExecuteTimeVsProcessIdResult()">Apply Filter</button>
+                            <button class="btn btn-default btn-primary" onclick="drawDateVsProcessInstanceCountResult()">Apply Filter</button>
                         </div>
                     </div>
                     <div id="chartA" style="height:100%"></div>

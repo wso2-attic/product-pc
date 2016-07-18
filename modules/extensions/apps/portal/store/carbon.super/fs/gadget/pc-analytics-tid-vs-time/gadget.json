@@ -1,0 +1,20 @@
+{
+  "id": "pc-analytics-tid-vs-time",
+  "title": "PC Analytics[task id vs avg time]",
+  "type": "gadget",
+  "category": "Subscribers",
+  "thumbnail": "gadget/pc-analytics-tid-vs-time/index.png",
+  "settings": {
+    "personalize": true
+  },
+  "data": {
+    "url": "gadget/pc-analytics-tid-vs-time/index.xml"
+  },
+  "description": "This shows pc analytics charts",
+  "listen": {
+    "Daterange": {
+      "type": "dateRange",
+      "description": "Listening to date range"
+    }
+  }
+}

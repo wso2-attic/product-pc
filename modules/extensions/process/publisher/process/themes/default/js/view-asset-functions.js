@@ -64,6 +64,15 @@ window.onload = function () {
 
 };
 
+function loadAnalytics() {
+    var url = "../../../../portal/dashboards/process-charts?pname="+$('#process-name').val();
+    if($('#process-name').val()){
+        window.open(url, '_blank');
+    } else {
+        alertify.error("process name cannot be empty");
+    }
+}
+
 function getMainProcess() {
     var mainProcess = $('#view-header').text() + "-" + $('#process-version').text();
     return mainProcess;
