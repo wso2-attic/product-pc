@@ -202,7 +202,7 @@ public class Deployment extends AssetResource {
                     //Evaluate XPath against RXT Document to get runtime environment
                     XPath xPath = XPathFactory.newInstance().newXPath();
                     NodeList runtimeEnvironment = ((NodeList) xPath.evaluate("/metadata/runtimeEnvironment",
-                                    packageDocument.getDocumentElement(), XPathConstants.NODESET));
+                            packageDocument.getDocumentElement(), XPathConstants.NODESET));
                     if (runtimeEnvironment != null && runtimeEnvironment.getLength() > 0) {
                         Element runtimeElement = (Element) (runtimeEnvironment.item(0));
                         NodeList deploymentIDNode = runtimeElement.getElementsByTagName("deploymentID");
@@ -252,6 +252,7 @@ public class Deployment extends AssetResource {
 
     /**
      * Associate runtime deployment for already uploaded package
+     *
      * @param packageName
      * @param packageVersion
      * @param userName
@@ -402,13 +403,11 @@ public class Deployment extends AssetResource {
                     }
                 }
             }
-        } catch (RegistryException e) {
-            String errMsg = "Error occurred while getting deployment ID for package: " + packageName + " version " +
-                    packageVersion;
+        } catch (RegistryException | JSONException e) {
+            String errMsg = "Error occurred while associating runtime processes for package: " + packageName +
+                    " version " + packageVersion + " deployment ID: " + deploymentID;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 

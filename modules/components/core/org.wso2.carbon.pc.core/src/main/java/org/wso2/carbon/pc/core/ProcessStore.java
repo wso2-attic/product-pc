@@ -1984,20 +1984,6 @@ public class ProcessStore {
     private static String getAssociatedDocFileName(String filepath) {
         return filepath.substring(filepath.lastIndexOf("/") + 1);
     }
-    //    public static void main(String[] args) {
-    //        String path = "/home/chathura/temp/t5/TestProcess1.bpmn";
-    //        String outpath = "/home/chathura/temp/t5/TestProcess1image.png";
-    //        try {
-    ////            byte[] image = new ProcessStore().getBPMNImage2(path);
-    ////            FileUtils.writeByteArrayToFile(new File(outpath), image);
-    //
-    //            String imageString = new ProcessStore().getEncodedBPMNImage(path, null);
-    //            FileUtils.write(new File(outpath), imageString);
-    //
-    //        } catch (Exception e) {
-    //            e.printStackTrace();
-    //        }
-    //    }
 
     public String setPermission(String userName, String processName, String processVersion)
             throws ProcessCenterException {
