@@ -1,0 +1,8 @@
+.modal-header {
+   color: #fff;
+ }
+#bpmnDiagramView .modal-body {
+	overflow: scroll;
+  background-color: #fff;
+}
+#bpmnDiagramView .modal-dialog  {width:50%;height:50%;}
