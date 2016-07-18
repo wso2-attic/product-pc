@@ -487,3 +487,11 @@
     top: 340px;
     bottom: 100px;
 }
+
+.img-thumbnail {
+    border: 0 none;
+}
+
+.wiz-step:hover {
+    background-color: #237bd5;
+}

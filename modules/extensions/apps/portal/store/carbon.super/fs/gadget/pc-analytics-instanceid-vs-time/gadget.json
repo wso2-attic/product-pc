@@ -1,0 +1,20 @@
+{
+  "id": "pc-analytics-instanceid-vs-time",
+  "title": "PC Analytics[process instance vs time]",
+  "type": "gadget",
+  "category": "Subscribers",
+  "thumbnail": "gadget/pc-analytics-instanceid-vs-time/index.png",
+  "settings": {
+    "personalize": true
+  },
+  "data": {
+    "url": "gadget/pc-analytics-instanceid-vs-time/index.xml"
+  },
+  "description": "This shows pc analytics charts",
+  "listen": {
+    "Daterange": {
+      "type": "dateRange",
+      "description": "Listening to date range"
+    }
+  }
+}
