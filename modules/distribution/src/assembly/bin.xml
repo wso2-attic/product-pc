@@ -334,6 +334,12 @@
             </outputDirectory>
         </fileSet>
         <fileSet>
+            <directory>../extensions/package/publisher</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
+            </outputDirectory>
+        </fileSet>
+        <fileSet>
             <directory>../extensions/process/store</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/assets
@@ -409,9 +415,15 @@
         </fileSet>
         <!-- global config to update product name in publisher -->
         <fileSet>
-            <directory>../extensions/themes</directory>
+            <directory>../extensions/themes/process-center-theme</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/views/themes
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/views/themes/process-center-theme
+            </outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../extensions/themes/publisher/default</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/themes/default
             </outputDirectory>
         </fileSet>
         <!--fileSet>
@@ -508,6 +520,11 @@
         </file>
         <file>
             <source>src/repository/conf/carbon.xml</source>
+            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/repository/conf/process-center.xml</source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>
@@ -693,6 +710,11 @@
 
         <file>
             <source>../extensions/process/process.rxt</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/rxts</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../extensions/process/package.rxt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/rxts</outputDirectory>
             <fileMode>644</fileMode>
         </file>
