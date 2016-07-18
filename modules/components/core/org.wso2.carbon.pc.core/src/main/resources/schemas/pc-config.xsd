@@ -1,0 +1,33 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://wso2.org/pc/config"
+            xmlns:tns="http://wso2.org/pc/config"
+            elementFormDefault="qualified">
+    <xsd:element name="ProcessCenter" type="tns:tProcessCenter"/>
+    <xsd:complexType name="tProcessCenter">
+        <xsd:sequence>
+            <xsd:element name="Analytics" type="tns:tAnalytics"/>
+            <xsd:element name="Runtime" type="tns:tRuntime"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="tAnalytics">
+        <xsd:sequence>
+            <xsd:element name="Enabled" type="xsd:boolean"/>
+            <xsd:element name="DASServerUrl" type="xsd:string"/>
+            <xsd:element name="DASUsername" type="xsd:string"/>
+            <xsd:element name="DASPassword" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="tRuntime">
+        <xsd:sequence>
+            <xsd:element name="Environment" type="tns:tEnvironment" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="tEnvironment">
+        <xsd:sequence>
+            <xsd:element name="Name" type="xsd:string"/>
+            <xsd:element name="ServerUrl" type="xsd:string"/>
+            <xsd:element name="Username" type="xsd:string"/>
+            <xsd:element name="Password" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

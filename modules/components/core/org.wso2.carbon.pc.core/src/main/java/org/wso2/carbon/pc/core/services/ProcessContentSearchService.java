@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.pc.core;
+package org.wso2.carbon.pc.core.services;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,6 +22,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.pc.core.ProcessCenterConstants;
+import org.wso2.carbon.pc.core.ProcessCenterException;
+import org.wso2.carbon.pc.core.ProcessContentSearchConstants;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.common.AttributeSearchService;
 import org.wso2.carbon.registry.common.ResourceData;

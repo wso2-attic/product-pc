@@ -17,6 +17,7 @@ package org.wso2.carbon.pc.core.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.pc.core.ProcessCenter;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.registry.common.AttributeSearchService;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -27,7 +28,6 @@ import org.wso2.carbon.registry.resource.beans.PermissionBean;
 import org.wso2.carbon.registry.resource.beans.PermissionEntry;
 import org.wso2.carbon.registry.resource.services.utils.AddRolePermissionUtil;
 import org.wso2.carbon.registry.resource.services.utils.PermissionUtil;
-import org.wso2.carbon.user.core.UserStoreException;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -35,26 +35,18 @@ import java.util.List;
 
 public class ProcessCenterServerHolder {
 
-    private static final Log log = LogFactory.getLog(ProcessCenterServerHolder.class);
-
-    private static ProcessCenterServerHolder instance = new ProcessCenterServerHolder();
-
+    private static final Log log = LogFactory.getLog(org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder.class);
+    private static org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder instance = new org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder();
     private RegistryService registryService;
-
     private ContentSearchService contentSearchService;
-
     private AttributeSearchService attributeSearchService;
+    private ProcessCenter processCenter;
 
     private ProcessCenterServerHolder() {
     }
 
-    public static ProcessCenterServerHolder getInstance() {
+    public static org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder getInstance() {
         return instance;
-    }
-
-    public void setRegistryService(RegistryService registrySvc) {
-        this.registryService = registrySvc;
-        updateArtifactPathPermissions();
     }
 
     public void unsetRegistryService(RegistryService registryService) {
@@ -63,6 +55,11 @@ public class ProcessCenterServerHolder {
 
     public RegistryService getRegistryService() {
         return registryService;
+    }
+
+    public void setRegistryService(RegistryService registrySvc) {
+        this.registryService = registrySvc;
+        updateArtifactPathPermissions();
     }
 
     public void unsetContentSearchService(ContentSearchService contentSearchService) {
@@ -91,8 +88,8 @@ public class ProcessCenterServerHolder {
 
     private void updateArtifactPathPermissions() {
         try {
-            String[] artifactPaths = { "/_system/governance/flowchart", "/_system/governance/doccontent",
-                    "/_system/governance/processText" };
+            String[] artifactPaths = {"/_system/governance/flowchart", "/_system/governance/doccontent",
+                    "/_system/governance/processText"};
 
             if (this.registryService != null) {
                 UserRegistry registry = this.registryService.getGovernanceSystemRegistry();
@@ -131,4 +128,11 @@ public class ProcessCenterServerHolder {
         registry.put(ProcessCenterConstants.AUDIT.FLOW_CHART, registry.newCollection());
     }
 
+    public ProcessCenter getProcessCenter() {
+        return processCenter;
+    }
+
+    public void setProcessCenter(ProcessCenter processCenter) {
+        this.processCenter = processCenter;
+    }
 }

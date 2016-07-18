@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.pc.core;
+package org.wso2.carbon.pc.core.indexing;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
