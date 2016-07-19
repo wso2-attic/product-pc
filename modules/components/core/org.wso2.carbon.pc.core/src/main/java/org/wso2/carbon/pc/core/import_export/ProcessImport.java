@@ -84,6 +84,10 @@ public class ProcessImport {
                     String processVersion = processDirName.substring(processDirName.lastIndexOf("-") + 1, processDirName.length());
                     putProcessRxt(processName, processVersion, processRxtPath);
                     setImageThumbnail(processName, processVersion,processDirPath);
+
+                    //set process documents
+                    //set process tags
+                    //Finally remove the Contents of Imports folder
                 }
             }
         }
