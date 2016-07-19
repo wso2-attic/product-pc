@@ -60,6 +60,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -221,6 +222,77 @@ public class ProcessStore {
         } catch (Exception e) {
             String errMsg = "Create process error:" + processDetails;
             log.error("Create process error:" + processDetails, e);
+            throw new ProcessCenterException(errMsg, e);
+        }
+        return processId;
+    }
+
+    public String updateProcess(String processDetails, String userName) throws ProcessCenterException {
+        String processId = "FAILED TO UPDATE PROCESS";
+
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+
+            JSONObject processInfo = new JSONObject(processDetails);
+            String processName = processInfo.getString("processName");
+            String processVersion = processInfo.getString("processVersion");
+            String processOwner = processInfo.getString("processOwner");
+            String processDescription = processInfo.getString("processDescription");
+            String processTags = processInfo.getString("processTags");
+            JSONObject imageObj = processInfo.getJSONObject("image");
+
+            String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                    processVersion;
+
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceUserRegistry(userName);
+                Resource resource = reg.get(processAssetPath);
+                String processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
+                NodeList overviewElemetNode = ((Element) doc.getFirstChild()).getElementsByTagName("overview");
+
+                if (doc.getElementsByTagName("description").getLength() != 0)
+                    doc.getElementsByTagName("description").item(0).setTextContent(processDescription);
+
+                    doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
+                    doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
+
+
+                List<String> tags = Arrays.asList(processTags.split(","));
+                Tag[] curTags = reg.getTags(processAssetPath);
+
+                for (Tag tag: curTags) {
+                        reg.removeTag(processAssetPath, tag.getTagName());
+                }
+
+                for (String tag : tags) {
+                    tag = tag.trim();
+                    reg.applyTag(processAssetPath, tag);
+                }
+
+                String newProcessContent = xmlToString(doc);
+                resource.setContent(newProcessContent);
+                reg.put(processAssetPath, resource);
+
+                //TODO check whether same uuid is generated for the updated resource
+                Resource storedProcess = reg.get(processAssetPath);
+                processId = storedProcess.getUUID();
+
+                if (imageObj.length() != 0) {
+                    String imageRegPath = ProcessCenterConstants.IMAGE_PATH + processId + "/" +
+                            imageObj.getString("imgValue");
+                    Resource imageContentResource = reg.newResource();
+                    BASE64Decoder decoder = new BASE64Decoder();
+                    byte[] imageContent = decoder.decodeBuffer(imageObj.getString("binaryImg"));
+                    imageContentResource.setContent(imageContent);
+                    reg.put(imageRegPath, imageContentResource);
+                }
+
+            }
+
+        } catch (Exception e) {
+            String errMsg = "Update process error:" + processDetails;
+            log.error("Update process error:" + processDetails, e);
             throw new ProcessCenterException(errMsg, e);
         }
         return processId;
@@ -1428,6 +1500,54 @@ public class ProcessStore {
             throw new ProcessCenterException(errMsg, e);
         }
         return true;
+    }
+
+    /**
+     * Updates document details including name and summary
+     *
+     * @param documentDetails
+     * @param user
+     * @throws ProcessCenterException
+     */
+    public String updateDocumentDetails(String documentDetails, String user) throws ProcessCenterException {
+
+        String processId = "NA";
+
+        RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+        try {
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
+                JSONObject processInfo = new JSONObject(documentDetails);
+                String processName = processInfo.getString("processName");
+                String processVersion = processInfo.getString("processVersion");
+                String documentName = processInfo.getString("value");
+                String docIndex = processInfo.getString("name").replace("docName", "");
+
+                String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                        processVersion;
+                Resource resource = reg.get(processAssetPath);
+                String processContent = new String((byte[]) resource.getContent());
+
+                Document doc = stringToXML(processContent);
+
+                NodeList documentElements = ((Element) doc.getFirstChild()).getElementsByTagName("document");
+                if (documentElements.getLength() != 0) {
+                    Element documentElement = (Element) documentElements.item(Integer.valueOf(docIndex));
+                    documentElement.getElementsByTagName("name").item(0).setTextContent(documentName);
+                }
+                String newProcessContent = xmlToString(doc);
+                resource.setContent(newProcessContent);
+                reg.put(processAssetPath, resource);
+
+                Resource storedProcess = reg.get(processAssetPath);
+                processId = storedProcess.getUUID();
+            }
+        } catch (Exception e) {
+            String msg = "Failed to update document details of " + documentDetails;
+            log.error(msg, e);
+            throw new ProcessCenterException(msg, e);
+        }
+        return processId;
     }
 
     public String getProcessTags() throws ProcessCenterException {

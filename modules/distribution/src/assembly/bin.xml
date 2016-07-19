@@ -38,7 +38,7 @@
                 <exclude>**/version.txt</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/registry.xml</exclude>
-                <!--<exclude>**/pc.xml</exclude>-->
+                <exclude>**/pc.xml</exclude>
                 <exclude>**/axis2/axis2.xml</exclude>
                 <exclude>**/master-datasources.xml</exclude>
                 <exclude>**/org.wso2.carbon.identity.relyingparty.ui-3.1.0.SNAPSHOT.jar</exclude>
@@ -51,6 +51,7 @@
                 <exclude>**/cipher-text.properties</exclude>
                 <exclude>**/cipher-tool.properties</exclude>
                 <exclude>**/lib/org.wso2.ciphertool-1.0.0-wso2v3.jar</exclude>
+                <exclude>**/Owasp.CsrfGuard.Carbon.properties</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -80,19 +81,6 @@
                 <include>**/tenant-mgt.xml</include>
             </includes>
         </fileSet>
-        <!--fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pc.version}/repository/conf</outputDirectory>
-            <includes>
-                <include>**/identity.xml</include>
-            </includes>
-            <excludes>
-                <exclude>**/catalina-server.xml</exclude>
-                <exclude>**/axis2/*</exclude>
-            </excludes>
-        </fileSet-->
 
         <fileSet>
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources
@@ -147,6 +135,7 @@
             <excludes>
                 <exclude>publisher/extensions/app/publisher-apis/app.js</exclude>
                 <exclude>sso/jaggery.conf</exclude>
+                <exclude>portal/configs/designer.json</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -308,32 +297,6 @@
             </includes>
         </fileSet>
 
-        <!--fileSet>
-            <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0001</directory>
-            <outputDirectory>${project.artifactId}-${pc.version}/repository/components/patches/</outputDirectory>
-            <includes>
-                <include>**/patch0001/*.*</include>
-            </includes>
-        </fileSet-->
-        <!--
-           <fileSet>
-               <directory>${project.basedir}/../components/asset-client/target</directory>
-               <includes>
-                   <include>*.jar</include>
-               </includes>
-               <outputDirectory>${project.artifactId}-${pc.version}/lib</outputDirectory>
-           </fileSet>
-           <fileSet>
-              <directory>${project.basedir}/../components/asset-client/src/samples</directory>
-               <includes>
-                   <include>build.xml</include>
-                   <include>*.txt</include>
-                   <include>sample-gadgets*/*/*</include>
-                   <include>sample-gadgets/*.json</include>
-               </includes>
-              <outputDirectory>${project.artifactId}-${pc.version}/samples</outputDirectory>
-          </fileSet>
-        -->
         <fileSet>
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/samples</directory>
             <outputDirectory>${project.artifactId}-${pc.version}/samples</outputDirectory>
@@ -424,6 +387,20 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/app/store-search-apis
             </outputDirectory>
         </fileSet>
+
+        <!--analytics gadget related-->
+        <fileSet>
+            <directory>../extensions/apps/portal/store</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/store
+            </outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../extensions/apps/portal/libs</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/libs
+            </outputDirectory>
+        </fileSet>
         <!-- permission related-->
         <fileSet>
             <directory>../extensions/main/process-center/extensions/app/greg-permissions</directory>
@@ -450,26 +427,26 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules
             </outputDirectory>
         </fileSet-->
-        <!--<fileSet>-->
-        <!--<directory>../components/analytics/web/org.wso2.carbon.pc.analytics.web/src/web</directory>-->
-        <!--<outputDirectory>-->
-        <!--${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/bpmn-analytics-explorer-->
-        <!--</outputDirectory>-->
-        <!--</fileSet>-->
-        <!--<fileSet>-->
-        <!--<directory>../components/analytics/udf/org.wso2.carbon.pc.analytics.udf/target</directory>-->
-        <!--<outputDirectory>${project.artifactId}-${pc.version}/analytics</outputDirectory>-->
-        <!--<includes>-->
-        <!--<include>**/PCAnalyticsUDF.jar</include>-->
-        <!--</includes>-->
-        <!--</fileSet>-->
-        <!--<fileSet>-->
-        <!--<directory>../components/analytics/capp/org.wso2.carbon.pc.analytics.capp/target</directory>-->
-        <!--<outputDirectory>${project.artifactId}-${pc.version}/analytics</outputDirectory>-->
-        <!--<includes>-->
-        <!--<include>**/*.car</include>-->
-        <!--</includes>-->
-        <!--</fileSet>-->
+        <fileSet>
+        <directory>../components/analytics/web/org.wso2.carbon.pc.analytics.web/src/web</directory>
+        <outputDirectory>
+        ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/bpmn-analytics-explorer
+        </outputDirectory>
+        </fileSet>
+        <fileSet>
+        <directory>../components/analytics/udf/org.wso2.carbon.pc.analytics.udf/target</directory>
+        <outputDirectory>${project.artifactId}-${pc.version}/analytics</outputDirectory>
+        <includes>
+        <include>**/PCAnalyticsUDF.jar</include>
+        </includes>
+        </fileSet>
+        <fileSet>
+        <directory>../components/analytics/capp/org.wso2.carbon.pc.analytics.capp/target</directory>
+        <outputDirectory>${project.artifactId}-${pc.version}/analytics</outputDirectory>
+        <includes>
+        <include>**/*.car</include>
+        </includes>
+        </fileSet>
 
         <!-- File Sets of PC starts from here -->
 
@@ -543,6 +520,12 @@
         </file>
         <file>
             <source>src/repository/conf/registry.xml</source>
+            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+
+        <file>
+            <source>src/repository/conf/pc.xml</source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>
@@ -760,6 +743,19 @@
         <file>
             <source>../../modules/extensions/sso/jaggery.conf</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/repository/conf/security/Owasp.CsrfGuard.Carbon.properties</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/security</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+
+        <!-- Configuring SSO for portal-->
+        <file>
+            <source>../../modules/extensions/process/portal/process/designer.json</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/configs</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <!-- Files of PC ends from here -->

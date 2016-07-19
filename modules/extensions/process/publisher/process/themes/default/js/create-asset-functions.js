@@ -21,13 +21,14 @@ var processNames = [];
 var processListObj;
 var tagList = [];
 var allProcessTags = [];
-var pname,pversion,PID;
+var pname, pversion, PID, textContent;
+
 
 window.onload = function () {
     getProcessList();
     getAllProcessTags();
 
-    $('#tagbox').tokenfield({
+    $('#tag-box').tokenfield({
         autocomplete: {
             source: allProcessTags,
             delay: 100
@@ -35,31 +36,22 @@ window.onload = function () {
         showAutocompleteOnFocus: true
     });
 
-    $('#tagbox').on('tokenfield:createtoken', function (event) {
+    $('#tag-box').on('tokenfield:createtoken', function (event) {
         var existingTokens = $(this).tokenfield('getTokens');
         $.each(existingTokens, function (index, token) {
             if (token.value === event.attrs.value)
                 event.preventDefault();
         });
     });
-
     loadOverview();
-
 };
 
 function showTextEditor(element) {
-    // if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
-    //     alertify.error('please fill the required fields.');
-    // } else {
-    // saveProcess(element);
-
 
     completeTextDetails();
-    $("#processTextDiv").show();
     $("#bpmnEditDiv").hide();
     $("#docEditDiv").hide();
     $("#flowChartView").hide();
-    $("#processTextContainer").hide();
     $("#bpmnViewDiv").hide();
     $("#docViewDiv").hide();
     $('#textEditor').addClass("clicked");
@@ -67,143 +59,151 @@ function showTextEditor(element) {
     $('#flowChart').removeClass("clicked");
     $('#doc').removeClass("clicked");
 
-    tinymce.init({
-        selector: "#processContent"
-    });
-
-    if($("#textadded").hasClass("fw-check")) {
-
-        $.ajax({
-            url: '/publisher/assets/process/apis/get_process_text?process_text_path=/processText/' + pname + "/" + pversion,
-            type: 'GET',
-            success: function (data) {
-                var response = JSON.parse(data);
-                if (response.error === false) {
-                    $("#processText").html(response.content);
-                } else {
-                    alertify.error(response.content);
-                }
-            },
-            error: function () {
-                alertify.error('Text editor error');
-            }
-        });
-
-
-        if (!($(element).attr('id') == 'editText')) {
-            $("#processTextContainer").show();
-            $("#processTextDiv").hide();
-
+    if ($("#textadded").hasClass("fw-check")) {
+        getProcessText();
+        if ($(element).attr('id') == 'editText') {
+            $("#processTextView").hide();
+            $("#processTextEditDiv").show();
+            $(".active").removeClass("active");
+            $("#processTextEditDiv").addClass("active");
         }
-    }
+        else {
+            $("#processTextEditDiv").hide();
+            $("#processTextView").show();
+            $(".active").removeClass("active");
+        }
+    } else {
 
-    // }
+        $("#processTextView").hide();
+        $("#processTextEditDiv").show();
+        $(".active").removeClass("active");
+        $("#processTextEditDiv").addClass("active");
+
+        tinymce.init({
+            selector: "#processContent"
+        });
+    }
 }
 
+function getProcessText() {
 
-function associateBPMN(element) {
-    // if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
-    //     alertify.error('please fill the required fields.');
-    // } else {
+    $.ajax({
+        url: '/publisher/assets/process/apis/get_process_text?process_text_path=/processText/' + pname + "/" + pversion,
+        type: 'GET',
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                $("#processText").html(response.content);
+            } else {
+                alertify.error(response.content);
+            }
+        },
+        error: function () {
+            alertify.error('Text editor error');
+        }
+    });
+}
 
-    //saveProcess(element);
+function associateBPMN() {
+
     $("#bpmnProcessName").val(pname);
     $("#bpmnProcessVersion").val(pversion);
-    $("#processTextDiv").hide();
+    $("#processTextEditDiv").hide();
     $("#docEditDiv").hide();
-    $("#bpmnEditDiv").show();
     $("#flowChartView").hide();
-    $("#processTextContainer").hide();
+    $("#processTextView").hide();
     $("#bpmnViewDiv").hide();
     $("#docViewDiv").hide();
+    document.forms["bpmn_form"].reset();
+    $("#bpmnEditDiv").show();
+    $(".active").removeClass("active");
+    $("#bpmnEditDiv").addClass("active");
     $('#textEditor').removeClass("clicked");
     $('#bpmn').addClass("clicked");
     $('#flowChart').removeClass("clicked");
     $('#doc').removeClass("clicked");
 
-    if($("#bpmnadded").hasClass("fw-check")){
-
-
-        $.ajax({
-            url: '/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/' + pname + "/" + pversion,
-            type: 'GET',
-            success: function (data) {
-                var response = JSON.parse(data);
-                if (response.error === false) {
-                    var bpmnObject = JSON.parse(response.content);
-                    $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
-                } else {
-                    alertify.error(response.content);
-                }
-            },
-            error: function () {
-                alertify.error('BPMN diagram showing error');
-            }
-        });
-
+    if ($("#bpmnadded").hasClass("fw-check")) {
+    	getBPMN();
+		$("#bpmnEditDiv").hide();
         $("#bpmnViewDiv").show();
+        $(".active").removeClass("active");
+    } else if($('#bpmnAvailableCheck').val()==="true") {
+
+        getBPMN();
         $("#bpmnEditDiv").hide();
-
+		$("#bpmnViewDiv").show();
     }
-
-    // }
 }
 
-function associateFlowChart(element) {
-    // if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
-    //     alertify.error('please fill the required fields.');
-    // } else {
-    // saveProcess(element);
-    // $('#flow-chart-view-header').text($('#pName').val());
-    // $("#overviewDiv").hide();
-    $("#flowChartView").show();
+function getBPMN() {
+
+    $.ajax({
+        url: '/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/' + pname + "/" + pversion,
+        type: 'GET',
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                var bpmnObject = JSON.parse(response.content);
+                $("#bpmnImage").attr("src", "data:image/png;base64," + bpmnObject.bpmnImage);
+            } else {
+                alertify.error(response.content);
+            }
+        },
+        error: function () {
+            alertify.error('BPMN diagram showing error');
+        }
+    });
+}
+
+function associateFlowChart() {
+
     $("#docEditDiv").hide();
     $("#docViewDiv").hide();
     $("#bpmnEditDiv").hide();
-    $("#processTextDiv").hide();
-    $("#processTextContainer").hide();
+    $("#processTextEditDiv").hide();
+    $("#processTextView").hide();
     $("#bpmnViewDiv").hide();
+    $("#flowChartView").show();
+    $(".active").removeClass("active");
+    $("#flowChartView").addClass("active");
     $('#textEditor').removeClass("clicked");
     $('#bpmn').removeClass("clicked");
     $('#flowChart').addClass("clicked");
     $('#doc').removeClass("clicked");
-    //}
 }
 
-function associateDocument(element) {
-    // if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
-    //     alertify.error('please fill the required fields.');
-    // } else {
-    // $('#document-view-header').text($('#pName').val());
-    //saveProcess(element);
-    // $("#overviewDiv").hide();
-    $("#processTextDiv").hide();
+function associateDocument() {
+
+    $("#processTextEditDiv").hide();
     $("#bpmnEditDiv").hide();
-    $("#docEditDiv").show();
     $("#docViewDiv").hide();
     $("#flowChartView").hide();
-    $("#processTextContainer").hide();
+    $("#processTextView").hide();
     $("#bpmnViewDiv").hide();
+    document.forms["addNewDoc"].reset();
+    $("#docEditDiv").show();
+    $(".active").removeClass("active");
+    $("#docEditDiv").addClass("active");
     $('#textEditor').removeClass("clicked");
     $('#bpmn').removeClass("clicked");
     $('#flowChart').removeClass("clicked");
     $('#doc').addClass("clicked");
 
-    if($("#docadded").hasClass("fw-check")){
+    if ($("#docadded").hasClass("fw-check")) {
         $("#docEditDiv").hide();
         showDocument();
         $("#docViewDiv").show();
+        $(".active").removeClass("active");
     }
-
-    // }
 }
 
 
 function showMain() {
-    $("#mainView").show();
     $("#bpmnEditDiv").hide();
     $("#processTextView").hide();
     $("#flowChartView").hide();
+    $("#mainView").show();
 }
 
 function saveProcess(currentElement) {
@@ -211,13 +211,13 @@ function saveProcess(currentElement) {
         alertify.error('please fill the required fields.');
     } else {
         // save the process
-        pname=$("#pName").val();
-        pversion=$("#pVersion").val();
+        pname = $("#pName").val();
+        pversion = $("#pVersion").val();
         if ($(currentElement).attr('id') == 'saveProcessBtn' || $(currentElement).attr('id') == 'detailsProcessBtn') {
             var imageElement = $("#images_thumbnail");
             if (imageElement.val().length != 0) {
                 var ext = imageElement.val().split('.').pop().toLowerCase();
-                if ($.inArray(ext, ['png', 'jpeg','jpg','gif','ico']) == -1) {
+                if ($.inArray(ext, ['png', 'jpeg', 'jpg', 'gif', 'ico']) == -1) {
                     alertify.error('invalid image extension!');
                     return;
                 }
@@ -230,18 +230,19 @@ function saveProcess(currentElement) {
             success: function (data) {
                 var response = JSON.parse(data);
                 if (response.error === false) {
-                    // $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response.content);
-                    // $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response.content);
-                    // $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response.content);
-                    // $("#docOverviewLink").attr("href", "../../assets/process/details/" + response.content);
-                    PID=response.content;
+                    $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response.content);
+                    $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response.content);
+                    $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response.content);
+                    $("#docOverviewLink").attr("href", "../../assets/process/details/" + response.content);
+                    PID = response.content;
 
                     if ($(currentElement).attr('id') == 'saveProcessBtn') {
                         window.location = "../../assets/process/details/" + response.content;
                     }
-                    else if($(currentElement).attr('id') == 'detailsProcessBtn'){
+                    else if ($(currentElement).attr('id') == 'detailsProcessBtn') {
                         $('#stp1').removeClass("current");
-                        $('#stp1').addClass("completed");
+                        $('#stp1').addClass("other");
+                        $('#stp2').removeClass("other");
                         $('#stp2').addClass("current");
                         loadDetails();
                     }
@@ -257,38 +258,97 @@ function saveProcess(currentElement) {
     }
 }
 
-
-
-function processAssociations(currentElement){
+function processAssociations(currentElement) {
 
     $('#stp2').removeClass("current");
-    $('#stp2').addClass("completed");
+    $('#stp2').addClass("other");
+    $('#stp3').removeClass("other");
     $('#stp3').addClass("current");
-    $('#detailDiv').remove();
     loadAssociations();
 
 }
 
-function loadOverview(){
-    $("#overviewDiv").show();
+function loadOverview() {
     $("#detailDiv").hide();
     $("#associationDiv").hide();
+    $("#overviewDiv").show();
+    var wizElements = document.getElementsByClassName("wiz-content");
+    wizElements[0].style["boxShadow"] = "0px 2px 2px 2px rgba(0, 0, 0, 0.1)";
+
 }
 
 function loadDetails() {
+
+    $("#processName").html(pname);
+    $("#processVersion").html(pversion);
     $("#overviewDiv").hide();
-    $("#detailDiv").show();
     $("#associationDiv").hide();
+    $("#detailDiv").show();
+    showTextEditor();
+
 }
 
 function loadAssociations() {
+
+    $("#Name").html(pname);
+    $("#Version").html(pversion);
     $("#overviewDiv").hide();
     $("#detailDiv").hide();
     $("#associationDiv").show();
+    showSubprocess();
+}
+
+function showSubprocess() {
+    $("#subprocess").addClass("clicked");
+    $("#successor").removeClass("clicked");
+    $("#predecessor").removeClass("clicked");
+    $("#successorDiv").hide();
+    $("#predecessorDiv").hide();
+    $("#subprocessDiv").show();
+    if($("#subProcessCountHolder").val() == 0) {
+        $("#subProcessTable").hide();
+    }
+    $(".active").removeClass("active");
+    $("#subprocessDiv").addClass("active");
+}
+
+
+function showSuccessor() {
+    $("#subprocess").removeClass("clicked");
+    $("#successor").addClass("clicked");
+    $("#predecessor").removeClass("clicked");
+    $("#successorDiv").show()
+    $("#predecessorDiv").hide()
+    $("#subprocessDiv").hide()
+    if($("#successorCountHolder").val() == 0) {
+        $("#successorTable").hide();
+    }
+    $("#successorDiv").show();
+    $("#predecessorDiv").hide();
+    $("#subprocessDiv").hide();
+    $(".active").removeClass("active");
+    $("#successorDiv").addClass("active");
+}
+
+function showPredecessor() {
+    $("#subprocess").removeClass("clicked");
+    $("#successor").removeClass("clicked");
+    $("#predecessor").addClass("clicked");
+    $("#successorDiv").hide()
+    $("#predecessorDiv").show()
+    $("#subprocessDiv").hide()
+    if($("#predecessorCountHolder").val() == 0) {
+        $("#predecessorTable").hide();
+    }
+    $("#successorDiv").hide();
+    $("#predecessorDiv").show();
+    $("#subprocessDiv").hide();
+    $(".active").removeClass("active");
+    $("#predecessorDiv").addClass("active");
 }
 
 function getProcessInfo() {
-    tagList = $('#tagbox').val().split(",");
+    tagList = $('#tag-box').val().split(",");
     var list = [];
     var processDetails = {
         'processName': pname,
@@ -307,13 +367,13 @@ function getProcessInfo() {
 function saveProcessText(currentElement) {
     var textContent = tinyMCE.get('processContent').getContent();
     if (textContent == "") {
-        if ($(currentElement).attr('id') == 'processTxtSaveBtn') {
+        if ($(currentElement).attr('id') == 'updateBtn') {
             alertify.error('Process content is empty.');
         }
     } else {
         // save the process
         $.ajax({
-            url: 'apis/save_process_text',
+            url: '/publisher/assets/process/apis/save_process_text',
             type: 'POST',
             data: {
                 'processName': pname,
@@ -323,10 +383,14 @@ function saveProcessText(currentElement) {
             success: function (data) {
                 var response = JSON.parse(data);
                 if (response.error === false) {
-                    if ($(currentElement).attr('id') == 'processTxtSaveBtn') {
+                    if ($(currentElement).attr('id') == 'updateBtn') {
                         alertify.success("Successfully saved the process content.");
-                        $("#processTextDiv").hide();
+                        $("#processTextEditDiv").hide();
                         $("#textadded").addClass("fw fw-check");
+                        getProcessText();
+                        $("#processTextEditDiv").hide();
+                        $("#processTextView").show();
+                        $(".active").removeClass("active");
                     }
                 } else {
                     alertify.error(response.content);
@@ -342,11 +406,16 @@ function saveProcessText(currentElement) {
 function completeBPMNDetails() {
     $("#bpmnProcessName").val(pname);
     $("#bpmnProcessVersion").val(pversion);
-    $("#bpmnEditDiv").hide();
-    alertify.success("Successfully added BPMN model.");
-    $("#bpmnadded").addClass("fw fw-check");
     return true;
 }
+
+function newDocFormToggle() {
+
+    $("#addNewDoc").trigger("reset");
+    $('#sourceFile').hide();
+    $("#addNewDoc").toggle("slow");
+}
+
 
 function completeTextDetails() {
     $("#textProcessName").val(pname);
@@ -367,7 +436,7 @@ function isAlreadyExist(value, tableName) {
 function subProcessNamesAutoComplete() {
     var temp = processNames.slice();
     for (var i = 0; i < processNames.length; i++) {
-        if (isAlreadyExist(processNames[i], "subprocess")) {
+        if (isAlreadyExist(processNames[i], "subprocess") || processNames[i] == getMainProcess()) {
             temp[i] = "";
         }
     }
@@ -380,7 +449,7 @@ function subProcessNamesAutoComplete() {
 function successorNameAutoComplete() {
     var temp = processNames.slice();
     for (var i = 0; i < processNames.length; i++) {
-        if (isAlreadyExist(processNames[i], "successor")) {
+        if (isAlreadyExist(processNames[i], "successor") || processNames[i] == getMainProcess()) {
             temp[i] = "";
         }
     }
@@ -393,7 +462,7 @@ function successorNameAutoComplete() {
 function predecessorNameAutoComplete() {
     var temp = processNames.slice();
     for (var i = 0; i < processNames.length; i++) {
-        if (isAlreadyExist(processNames[i], "predecessor")) {
+        if (isAlreadyExist(processNames[i], "predecessor") || processNames[i] == getMainProcess()) {
             temp[i] = "";
         }
     }
@@ -494,6 +563,9 @@ function readImage(element) {
             binaryImg: btoa(encodedImg)
         };
         preview.value = JSON.stringify(imageObj);
+        var datauri = e.target.result;
+        $("#image").attr('src', 'data:image/*;base64,' + btoa(datauri));
+        $("#image").show();
     };
     if (file) {
         reader.readAsBinaryString(file);
@@ -601,9 +673,6 @@ function validateDocs() {
         }
         $("#docExtension").val(ext);
     }
-    $("#docEditDiv").hide();
-    alertify.success("Document added successfully.");
-    $("#docadded").addClass("fw fw-check");
     return true;
 }
 
@@ -638,17 +707,109 @@ function showSearchModal(tableName) {
 }
 
 function deleteProcess(element) {
-    document.getElementById("table_" + element.getAttribute("data-name")).
-    deleteRow(element.parentElement.parentElement.rowIndex);
+    document.getElementById("table_" + element.getAttribute("data-name")).deleteRow(element.parentElement.parentElement.rowIndex);
+    var noOfRows = document.getElementById("table_" + element.getAttribute("data-name")).rows.length;
+    if (noOfRows - 1 == 0) {
+
+        if ($("#subprocessDiv").hasClass("active")) {
+            $("#subprocessadded").removeClass("fw fw-check");
+        }
+        else if ($("#successorDiv").hasClass("active")) {
+            $("#successoradded").removeClass("fw fw-check");
+        }
+        else if ($("#predecessorDiv").hasClass("active")) {
+            $("#prodecessoradded").removeClass("fw fw-check");
+        }
+
+    }
 }
 
-function updateDetails(){
+function updateDetails(element) {
 
-    if($("textEditor").cla){}
+    if ($("#processTextEditDiv").hasClass("active")) {
+        saveProcessText(element);
+    }
+    else if ($("#bpmnEditDiv").hasClass("active")) {
+        if ($("#bpmnFile").val().length > 0) {
+            $("#bpmn_form").trigger("submit");
+        }
+        else {
+            alertify.error("No file to upload.");
+        }
+    }
+    else if ($("#flowChartView").hasClass("active")) {
+        saveFlowchart();
+    }
+    else if ($("#docEditDiv").hasClass("active")) {
+        $("#addNewDoc").trigger("submit");
+    }
 }
 
-$("#saveAsPNGBtn").click(function () {
-    html2canvas($("#canvas"), {
+$("#bpmn_form").on("submit", function (e) {
+    e.preventDefault();
+    var isComplete = completeBPMNDetails();
+// ajaxFormSubmit();
+    if (isComplete) {
+        $('#bpmn_form').ajaxSubmit({
+            type: "POST",
+            url: "/publisher/assets/process/apis/upload_bpmn",
+            data: $('#bpmn_form').serialize(),
+            cache: false,
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === true) {
+                    alertify.error(response.content);
+                }
+                else {
+                    alertify.success("Successfully added BPMN model.");
+                    $("#bpmnadded").addClass("fw fw-check");
+                    getBPMN();
+                    $("#bpmnEditDiv").hide();
+                    $("#bpmnViewDiv").show();
+                    $(".active").removeClass("active");
+                }
+            }
+        });
+    }
+    else {
+        alertify.error("Error");
+    }
+})
+
+$("#addNewDoc").on("submit", function (e) {
+    e.preventDefault();
+// ajaxFormSubmit();
+    var is_validate = validateDocs();
+    if (is_validate) {
+        $('#addNewDoc').ajaxSubmit({
+            type: "POST",
+            url: "/publisher/assets/process/apis/upload_documents",
+            data: $('#addNewDoc').serialize(),
+            cache: false,
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === true) {
+                    alertify.error(response.content);
+                }
+                else {
+                    alertify.success("Document added successfully.");
+                    $("#docadded").addClass("fw fw-check");
+                    showDocument();
+                    $("#docEditDiv").hide();
+                    $("#docViewDiv").show();
+                    $(".active").removeClass("active");
+                }
+            }
+        });
+    }
+})
+
+function downloadAsPNG(updateView) {
+    var canvasId = "#canvas";
+    if(updateView) {
+        canvasId = "#editor_canvas";
+    }
+    html2canvas($(canvasId), {
         onrendered: function (canvas) {
             ctx = canvas.getContext('2d');
 
@@ -683,7 +844,7 @@ $("#saveAsPNGBtn").click(function () {
             }
         }
     });
-});
+}
 
 function isProcessNotAvailableInList(processName) {
     for (var i = 0; i < processNames.length; i++) {
@@ -709,7 +870,8 @@ function readUpdatedSubprocess(currentObj, count) {
     } else if (subprocessInput == getMainProcess()) {
         alertify.warning('You cannot assign the process name as its subprocess.');
     } else {
-        $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='subprocess_Name' class='subprocess_Name'>" + subprocessInput + "</span>");
+        // $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='subprocess_Name' class='subprocess_Name'>" + subprocessInput + "</span>");
+        var tableId = "listSubProcesses";
         $(currentObj).hide();
         var subprocessPath, subprocessId;
         for (var i = 0; i < processListObj.length; i++) {
@@ -733,6 +895,9 @@ function readUpdatedSubprocess(currentObj, count) {
             'subprocess': subprocessInfo
         };
 
+        var subprocessTableData = '<td valign="top" style="width: 30%;"><span id="subprocess_Name" class="subprocess_Name">'+subprocessInput+'</span></td>';
+        var actionInput = '<td style="width: 10%;"><label class="view-process"><a target="_blank" href="../details/'+subprocessId+'" class="fa fa-eye" aria-hidden="true"></a></label><label class="remove-process" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></label></td>';
+
         $.ajax({
             async: false,
             url: '/publisher/assets/process/apis/update_subprocess',
@@ -743,6 +908,15 @@ function readUpdatedSubprocess(currentObj, count) {
                 if (response.error === false) {
                     if (count == 1) {
                         alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
+
+                        $("#table_subprocess").hide();
+                        $("#table_subprocess").empty();
+                        $("#subProcessTable").show("default" , function () {
+
+                        });
+                        $("#subProcessCountHolder").val(count);
+                        updateAssociationTable(tableId, subprocessTableData, actionInput);
+                        $("#subprocessadded").addClass("fw fw-check");
                     }
                 } else {
                     alertify.error(response.content);
@@ -765,7 +939,8 @@ function readUpdatedSuccessor(currentObj, count) {
     } else if (successorInput == getMainProcess()) {
         alertify.warning('You cannot assign the process name as its successor.');
     } else {
-        $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='successor_Name' class='successor_Name'>" + successorInput + "</span>");
+        // $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='successor_Name' class='successor_Name'>" + successorInput + "</span>");
+        var tableId = "listSuccessors";
         $(currentObj).hide();
         var successorPath, successorId;
         for (var i = 0; i < processListObj.length; i++) {
@@ -789,6 +964,9 @@ function readUpdatedSuccessor(currentObj, count) {
             'successor': successorInfo
         };
 
+        var successorTableData = '<td valign="top" style="width: 30%;"><span id="successor_Name" class="successor_Name">'+ successorInput +'</span></td>'
+        var actionInput = '<td style="width: 10%;"><label class="view-process"><a target="_blank" href="../details/'+successorId+'" class="fa fa-eye" aria-hidden="true"></a></label><label class="remove-process" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></label></td>';
+
         $.ajax({
             async: false,
             url: '/publisher/assets/process/apis/update_successor',
@@ -799,6 +977,12 @@ function readUpdatedSuccessor(currentObj, count) {
                 if (response.error === false) {
                     if (count == 1) {
                         alertify.success('Process ' + successorInput + ' successfully added to the successor list.');
+                        $("#table_successor").hide();
+                        $("#table_successor").empty();
+                        $("#successorTable").show();
+                        $("#successorCountHolder").val(count);
+                        updateAssociationTable(tableId, successorTableData, actionInput);
+                        $("#successoradded").addClass("fw fw-check");
                     }
                 } else {
                     alertify.error(response.content);
@@ -821,7 +1005,8 @@ function readUpdatedPredecessor(currentObj, count) {
     } else if (predecessorInput == getMainProcess()) {
         alertify.warning('You cannot assign the process name as its predecessor.');
     } else {
-        $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='predecessor_Name' class='predecessor_Name'>" + predecessorInput + "</span>");
+        // $(currentObj).parent().closest("tr").find("input").replaceWith("<span id='predecessor_Name' class='predecessor_Name'>" + predecessorInput + "</span>");
+        var tableId = "listPredecessors";
         $(currentObj).hide();
         var predecessorPath, predecessorId;
         for (var i = 0; i < processListObj.length; i++) {
@@ -845,6 +1030,9 @@ function readUpdatedPredecessor(currentObj, count) {
             'predecessor': predecessorInfo
         };
 
+        var predecessorTableData = '<td valign="top" style="width: 30%;"><span id="predecessor_Name" class="predecessor_Name">'+ predecessorInput+'</span></td>';
+        var actionInput = '<td style="width: 10%;"><label class="view-process"><a target="_blank" href="../details/'+predecessorId+'" class="fa fa-eye" aria-hidden="true"></a></label><label class="remove-process" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></label></td>';
+
         $.ajax({
             async: false,
             url: '/publisher/assets/process/apis/update_predecessor',
@@ -855,6 +1043,12 @@ function readUpdatedPredecessor(currentObj, count) {
                 if (response.error === false) {
                     if (count == 1) {
                         alertify.success('Process ' + predecessorInput + ' successfully added to the predecessor list.');
+                        $("#table_predecessor").hide();
+                        $("#table_predecessor").empty();
+                        $("#predecessorTable").show();
+                        $("#predecessorCountHolder").val(count);
+                        updateAssociationTable(tableId, predecessorTableData, actionInput);
+                        $("#prodecessoradded").addClass("fw fw-check");
                     }
                 } else {
                     alertify.error(response.content);
@@ -867,10 +1061,28 @@ function readUpdatedPredecessor(currentObj, count) {
     }
 }
 
-function saveFlowchart(){
+function updateAssociationTable(tableId, input, action) {
 
-    _saveFlowchart();
-    $("#flowChartView").hide();
+    var table = document.getElementById(tableId);
+    var rowCount = table.rows.length;
+    var row = table.insertRow(rowCount);
+    var cellName = row.insertCell(0);
+    var cellSummary = row.insertCell(1);
+    var cellAction = row.insertCell(2);
+    cellName.innerHTML = input;
+    cellAction.innerHTML = action;
+
+}
+
+function saveFlowchart(element){
+
+    if($("#updateViewCheck").val() === "true"){
+        _saveEditedFlowchart();
+    }
+    else {
+        _saveFlowchart();
+    }
+    // $("#flowChartView").hide();
     $("#flowchartadded").addClass("fw fw-check");
 }
 
@@ -878,8 +1090,8 @@ function close() {
     window.close();
 }
 
-
 function editProcessText(element) {
+    getProcessText();
     $("#processContent").val($("#processText").html());
     showTextEditor(element);
 }
@@ -887,6 +1099,7 @@ function editProcessText(element) {
 function deleteBPMNDiagram() {
 
     $("#bpmnadded").removeClass("fw-check");
+    $('#bpmnAvailableCheck').val("false");
 
     $.ajax({
         url: '/publisher/assets/process/apis/delete_bpmn',
@@ -898,7 +1111,11 @@ function deleteBPMNDiagram() {
         success: function (data) {
             var response = JSON.parse(data);
             if (response.error === false) {
+                $("#bpmnEditDiv").show();
                 //window.location = "../../process/details/" + response.content;
+                $("#bpmnadded").removeClass("fw-check");
+                $("#bpmnViewDiv").hide();
+                associateBPMN();
             } else {
                 alertify.error(response.content);
             }
@@ -907,8 +1124,6 @@ function deleteBPMNDiagram() {
             alertify.error('BPMN diagram deleting error');
         }
     });
-
-    $("#bpmnViewDiv").hide();
 
 }
 
@@ -927,7 +1142,7 @@ function confirmDialog(question) {
     var confirmModal =
         $('<div class="modal fade">' +
             '<div class="modal-dialog">' +
-            '<div class="modal-content">' +
+            '<div class="modal-content" style="background: #e3e3e3; none: repeat scroll 0% 0% ;">' +
             '<div class="modal-header">' +
             '<a class="close" data-dismiss="modal" >&times;</a>' +
             '<h3>Confirm delete</h3>' +
@@ -944,7 +1159,6 @@ function confirmDialog(question) {
             '</div>');
     return confirmModal;
 }
-
 
 function downloadDocument(relativePath) {
     $.ajax({
@@ -973,7 +1187,7 @@ function downloadDocument(relativePath) {
             }
         },
         error: function () {
-            alertify.error('Text editor error');
+            alertify.error('Error');
         }
     });
 }
@@ -984,6 +1198,7 @@ function removeDocument(processName, processVersion, documentName, documentSumma
 
     if (document.getElementById("listDocs").rows.length == 0) {
         $('#listDocs').append('<tr><td colspan="6">No documentation associated with this process</td></tr>');
+        $("#docadded").removeClass("fw-check");
     }
 
     var removeDocInfo = {
@@ -1051,7 +1266,7 @@ function viewGoogleDocument(googleDocUrl, heading, iteration) {
     var customHeading = "Document Name : " + heading;
     var modal = '<div id="docViewModal' + iteration + '" class="modal fade" role="dialog">';
     modal += '<div class="modal-dialog" style="width:840px;height:600px">';
-    modal += '<div class="modal-content">';
+    modal += '<div class="modal-content" style="background: #e3e3e3; none: repeat scroll 0% 0% ;">';
     modal += '<div class="modal-header">';
     modal += '<a class="close" data-dismiss="modal">×</a>';
     modal += '<h4>' + customHeading + '</h4>';
@@ -1076,7 +1291,7 @@ function viewPDF(pdfUrl, heading, iteration) {
     var customHeading = "PDF Name : " + heading;
     var pdfModal = '<div id="pdfViewModal' + iteration + '" aria-labelledby="pdfModalLabel' + iteration + '" class="modal fade" role="dialog" aria-hidden="true">';
     pdfModal += '<div class="modal-dialog" style="width:840px;height:600px">';
-    pdfModal += '<div class="modal-content">';
+    pdfModal += '<div class="modal-content" style="background: #e3e3e3; none: repeat scroll 0% 0% ;">';
     pdfModal += '<div class="modal-header">';
     pdfModal += '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
     pdfModal += '<h4 class="modal-title" id="pdfModalLabel' + iteration + '">' + customHeading + '</h4>';
@@ -1105,16 +1320,16 @@ function removeDocumentConfirmListener(processName, processVersion, documentName
     confirmModal.modal('show');
 }
 
-function showDocument() {
+function showDocument(permission) {
     $("#overviewDiv").hide();
-    $("#processTextContainer").hide();
-    $("#processTextEditDiv").hide();
-    $("#bpmnViewDiv").hide();
-    $("#bpmnEditDiv").hide();
-    $("#flowChartEditorView").hide();
-    $("#docUploaderDiv").show();
+    $("#flowChartView").hide();
     $("#docViewDiv").show();
-    $("#addNewDoc").toggle();
+    // $(".active").removeClass("active");
+    $("#bpmnEditDiv").hide();
+    $("#processTextEditDiv").hide();
+    $("#processTextView").hide();
+    $("#bpmnViewDiv").hide();
+    $("#listDocs").empty();
 
     $.ajax({
         url: '/publisher/assets/process/apis/get_process_doc?process_path=/_system/governance/processes/' + pname + "/" + pversion,
@@ -1185,10 +1400,11 @@ function showDocument() {
                                     return function () {
                                         removeDocumentConfirmListener(processName, processVersion, docName, docSummary, docUrl, docPath, idVal);
                                     };
-                                })(fieldsName, fieldsVersion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
+                                })(pname, pversion, response[i].name, response[i].summary, response[i].url, response[i].path, "removeDocElement" + i);
                                 removeDocElement.innerHTML = "remove";
                                 cellDocAction.appendChild(removeDocElement);
                             }
+
                         }
                     }
                 }
@@ -1202,8 +1418,211 @@ function showDocument() {
     });
 }
 
-function loadDetail(){
+function deleteSubprocess(element) {
+    var deleteSubInput = $(element).parent().closest("tr").find("span").text();
+    var question = "Are you sure you want to delete sub process " + deleteSubInput + "?";
+    var confirmModal = confirmDialog(question);
+    confirmModal.find('#okButton').click(function (event) {
+        if (!isProcessNotAvailableInList(deleteSubInput)) {
+            var deleteSubPath, deleteSubId;
+            for (var i = 0; i < processListObj.length; i++) {
+                if (processListObj[i].processname == deleteSubInput.split("-")[0] &&
+                    processListObj[i].processversion == deleteSubInput.split("-")[1]) {
+                    deleteSubPath = processListObj[i].path;
+                    deleteSubId = processListObj[i].processid;
+                    break;
+                }
+            }
 
+            var deleteSubInfo = {
+                name: deleteSubInput.split("-")[0],
+                path: deleteSubPath,
+                id: deleteSubId
+            };
+
+            var deleteSubObj = {
+                'processName': $('#view-header-field').val(),
+                'processVersion': $('#process-version-field').val(),
+                'deleteSubprocess': deleteSubInfo
+            };
+
+            $.ajax({
+                url: '/publisher/assets/process/apis/delete_subprocess',
+                type: 'POST',
+                data: {'deleteSubprocessDetails': JSON.stringify(deleteSubObj)},
+                success: function (data) {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        console.log($(element).parent().closest("tr").index());
+                        document.getElementById("subProcessTable").deleteRow($(element).parent().closest("tr").index()+1);
+                        alertify.success('Successfully deleted ' + deleteSubInput + ' from the subprocess list.');
+                    } else {
+                        alertify.error(response.content);
+                    }
+                },
+                error: function () {
+                    alertify.error('Subprocess deleting error');
+                }
+            });
+        }
+        confirmModal.modal('hide');
+    });
+    confirmModal.modal('show');
+}
+
+function deleteSuccessor(element) {
+    var deleteSuccessorInput = $(element).parent().closest("tr").find("span").text();
+    var question = "Are you sure you want to delete successor " + deleteSuccessorInput + "?";
+    var confirmModal = confirmDialog(question);
+    confirmModal.find('#okButton').click(function (event) {
+        if (!isProcessNotAvailableInList(deleteSuccessorInput)) {
+            var deleteSuccessorPath, deleteSuccessorId;
+            for (var i = 0; i < processListObj.length; i++) {
+                if (processListObj[i].processname == deleteSuccessorInput.split("-")[0] &&
+                    processListObj[i].processversion == deleteSuccessorInput.split("-")[1]) {
+                    deleteSuccessorPath = processListObj[i].path;
+                    deleteSuccessorId = processListObj[i].processid;
+                    break;
+                }
+            }
+
+            var deleteSuccessorInfo = {
+                name: deleteSuccessorInput.split("-")[0],
+                path: deleteSuccessorPath,
+                id: deleteSuccessorId
+            };
+
+            var deleteSuccessorObj = {
+                'processName': $('#view-header-field').val(),
+                'processVersion': $('#process-version-field').val(),
+                'deleteSuccessor': deleteSuccessorInfo
+            };
+
+            $.ajax({
+                url: '/publisher/assets/process/apis/delete_successor',
+                type: 'POST',
+                data: {'deleteSuccessorDetails': JSON.stringify(deleteSuccessorObj)},
+                success: function (data) {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        document.getElementById("successorTable").deleteRow($(element).parent().closest("tr").index() + 1);
+                        alertify.success('Successfully deleted ' + deleteSuccessorInput + ' from the successor list.');
+                    } else {
+                        alertify.error(response.content);
+                    }
+                },
+                error: function () {
+                    alertify.error('Successor deleting error');
+                }
+            });
+        }
+        confirmModal.modal('hide');
+    });
+    confirmModal.modal('show');
+}
+
+function deletePredecessor(element) {
+    var deletePredecessorInput = $(element).parent().closest("tr").find("span").text();
+    var question = "Are you sure you want to delete predecessor " + deletePredecessorInput + "?";
+    var confirmModal = confirmDialog(question);
+    confirmModal.find('#okButton').click(function (event) {
+        if (!isProcessNotAvailableInList(deletePredecessorInput)) {
+            var deletePredecessorPath, deletePredecessorId;
+            for (var i = 0; i < processListObj.length; i++) {
+                if (processListObj[i].processname == deletePredecessorInput.split("-")[0] &&
+                    processListObj[i].processversion == deletePredecessorInput.split("-")[1]) {
+                    deletePredecessorPath = processListObj[i].path;
+                    deletePredecessorId = processListObj[i].processid;
+                    break;
+                }
+            }
+
+            var deletePredecessorInfo = {
+                name: deletePredecessorInput.split("-")[0],
+                path: deletePredecessorPath,
+                id: deletePredecessorId
+            };
+
+            var deletePredecessorObj = {
+                'processName': $('#view-header-field').val(),
+                'processVersion': $('#process-version-field').val(),
+                'deletePredecessor': deletePredecessorInfo
+            };
+
+            $.ajax({
+                url: '/publisher/assets/process/apis/delete_Predecessor',
+                type: 'POST',
+                data: {'deletePredecessorDetails': JSON.stringify(deletePredecessorObj)},
+                success: function (data) {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        document.getElementById("predecessorTable").deleteRow($(element).parent().closest("tr").index() + 1);
+                        alertify.success('Successfully deleted ' + deletePredecessorInput + ' from the predecessor list.');
+                    } else {
+                        alertify.error(response.content);
+                    }
+                },
+                error: function () {
+                    alertify.error('Predecessor deleting error');
+                }
+            });
+        }
+        confirmModal.modal('hide');
+    });
+    confirmModal.modal('show');
+}
+
+function loadSummary(update_view) {
     window.location = "../../assets/process/details/" + PID;
+    if(update_view) {
+    window.location = "../../../assets/process/details/" + PID;
+    } else {
+    window.location = "../../assets/process/details/" + PID;
+    }
 
 }
+
+$("#overview").click(function () {
+
+    if ($("#stp2").hasClass("current") || $("#stp3").hasClass("current")) {
+        $("#detailDiv").hide();
+        $("#associationDiv").hide();
+        $("#overviewDiv").show();
+        $("#stp1").removeClass("other");
+        $("#stp2").removeClass("current");
+        $("#stp2").addClass("other");
+        $("#stp3").removeClass("current");
+        $("#stp3").addClass("other");
+        $("#stp1").addClass("current");
+    }
+});
+
+$("#details").click(function () {
+
+    if (($("#stp1").hasClass("current") || $("#stp3").hasClass("current")) && !pname.isEmpty) {
+        $("#associationDiv").hide();
+        $("#overviewDiv").hide();
+        $("#detailDiv").show();
+        $("#stp2").removeClass("other");
+        $("#stp1").removeClass("current");
+        $("#stp3").removeClass("current");
+        $("#stp1").addClass("other");
+        $("#stp3").addClass("other");
+        $("#stp2").addClass("current");
+    }
+});
+
+$("#associations").click(function () {
+
+    if (($("#stp2").hasClass("current") || $("#stp1").hasClass("current")) && !pname.isEmpty) {
+        $("#detailDiv").hide();
+        $("#overviewDiv").hide();
+        $("#associationDiv").show();
+        $("#stp3").removeClass("other");
+        $("#stp2").removeClass("current");
+        $("#stp1").removeClass("current");
+        $("#stp2").addClass("other");
+        $("#stp1").addClass("other");
+        $("#stp3").addClass("current");
+    }
+});

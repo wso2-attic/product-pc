@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--Gadget definition start-->
+<Module>
+    <!--Gadget name, description, tags etc.. goes here-->
+    <ModulePrefs title="PC Analytics(instance id vs exec time)"
+                 height="350"
+                 description="This shows pc analytics charts"
+                 tags="analytics">
+        <Require feature="dynamic-height"/>
+        <Require feature="wso2-gadgets-controls" />
+        <Require feature="pubsub-2">
+            <Param name="topics">
+                <![CDATA[
+                <Topic title="PC Analytics"
+                    name="org.wso2.ues.samples.ch"
+                    type="object"
+                    subscribe="true"/>
+               ]]>
+            </Param>
+        </Require>
+    </ModulePrefs>
+
+    <Content type="html">
+        <![CDATA[
+     <html>
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Bar Chart Test</title>
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="/portal/libs/bootstrap_3.3.5/css/bootstrap.min.css"
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/portal/libs/pc-analytics-libs/css/VizGrammar.css" type="text/css">
+
+        <script src="/portal/libs/analytics-wso2_5.0.12/d3.min.js"></script>
+        <script src="/portal/libs/analytics-wso2_5.0.12/vega.js"></script>
+        <script src="/portal/libs/analytics-wso2_5.0.12/VizGrammar.min.js"></script>
+        <script src="/portal/libs/pc-analytics-libs/js/topojson.js"></script>
+        <script src="/portal/libs/pc-analytics-libs/js/VizGrammarSettings.js"></script>
+        <script src="js/actions.js"></script>
+
+        <script src="/portal/libs/jquery_1.11.0/jquery-1.11.3.min.js"></script>
+        <script src="/portal/libs/bootstrap_3.3.5/js/bootstrap.min.js"></script>
+        <script>
+                gadgets.HubSettings.onConnect = function() {
+                    gadgets.Hub.subscribe('Daterange', function(topic, data, subscriberData) {
+                        if(data.type === 'clear') {
+                            return;
+                        }
+                        wso2.gadgets.controls.showGadget();
+                        $("#from").val(data.from);
+                        $("#to").val(data.to);
+                        drawExecutionTimeVsTaskInstanceIdResult();
+                    });
+                };
+
+
+        </script>
+
+    </head>
+
+    <body>
+        <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        process instance id vs exec. time
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div style="padding-top: 10px;padding-left: 10px;padding-right: 10px;">
+                        <div class="form-inline" role="form">
+                               <div class="form-group">
+                                 <select id="taskInstanceIdExecTimeTaskList" class="selectpicker form-control"></select>
+                               </div>
+
+                              <div class="form-group">
+                                 <select id="taskInstanceIdExecTimeOrder" class="selectpicker form-control">
+                                    <option value="top">Top</option>
+                                    <option value="bottom">Bottom</option>
+                                 </select>
+                              </div>
+                              <div class="form-group">
+                                 <select id="taskInstanceIdExecTimeLimit" class="selectpicker form-control" onchange="selectPickerValChange(this)">
+                                    <option value="other">Set a new value</option>
+                                    <option selected="selected" value="3">3</option>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                 </select>
+                              </div>
+                            <button class="btn btn-default btn-primary" onclick="drawExecutionTimeVsTaskInstanceIdResult()">Apply Filter</button>
+                        </div>
+                    </div>
+                    <div id="chartA" style="height:100%"></div>
+                    <input type="hidden" id="from" value="0">
+                    <input type="hidden" id="to" value="0">
+                </div>
+        </div>
+    </body>
+</html>
+     ]]>
+    </Content>
+</Module>

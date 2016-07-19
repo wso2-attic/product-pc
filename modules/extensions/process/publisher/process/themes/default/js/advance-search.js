@@ -136,13 +136,13 @@ $('#okButton').click(function () {
                 $('input[type="text"]', newRow).val($("label[for='" + $elements[j].id + "']").text());
                 table.show().append(newRow);
                 if ($(this).attr('data-name') == "view") {
-                    if(tableName == "subprocess") {
+                    if (tableName == "subprocess") {
                         readUpdatedSubprocess($(newRow).find("span")[0], $elements.length);
                     }
-                    if(tableName == "successor") {
+                    if (tableName == "successor") {
                         readUpdatedSuccessor($(newRow).find("span")[0], $elements.length);
                     }
-                    if(tableName == "predecessor") {
+                    if (tableName == "predecessor") {
                         readUpdatedPredecessor($(newRow).find("span")[0], $elements.length);
                     }
                 }

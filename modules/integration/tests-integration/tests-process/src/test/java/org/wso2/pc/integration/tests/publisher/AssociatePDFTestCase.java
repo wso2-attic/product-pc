@@ -90,8 +90,8 @@ public class AssociatePDFTestCase extends PCIntegrationBaseTest{
         PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_PDF_NAME,
                 ASSOCIATED_PDF_SUMMARY,PCIntegrationConstants.PDF_EXTENSION,"NA","file",
                 "TestProcess1","1.0",cookieHeader,url,PCIntegrationConstants.APPLICATION_PDF_TYPE);
-        Assert.assertTrue(httpMethod.getStatusCode() == 302,
-                "Wrong status code ,Expected 302 ,Received " + httpMethod.getStatusCode());
+        Assert.assertTrue(httpMethod.getStatusCode() == 200,
+                "Wrong status code ,Expected 200 ,Received " + httpMethod.getStatusCode());
     }
 
     @Test(groups = {"org.wso2.pc"}, description = "Associating copy PDF to the process",

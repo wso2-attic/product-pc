@@ -76,7 +76,7 @@ public class LogEntryProcessUtils {
                         LogEntry.ALL, null, null, new Date(), true));
 
         ArrayList<LogEntry> list = new ArrayList<>(Arrays.asList(logBean.getProcessEntries()));
-        filterProcessCreation(list, path);
+        filterProcessCreationLogs(list, path);
         LogEntry[] processEntriesArr = list.toArray(new LogEntry[list.size()]);
 
         processLogEntryResponse(processEntriesArr, ProcessCenterConstants.AUDIT.PROCESS, path, logResult);
@@ -106,38 +106,21 @@ public class LogEntryProcessUtils {
 
         for (LogEntry logEntry : entries) {
             try {
-                JSONObject entryObj = new JSONObject();
-                if (logEntry.getAction() == LogEntry.UPDATE) {
-                    entryObj.put(ProcessCenterConstants.AUDIT.ASSET_TYPE, processPath);
-                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION, "update");
-                    entryObj.put(ProcessCenterConstants.AUDIT.USER, logEntry.getUserName());
-                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION_TYPE, type);
-                    entryObj.put(ProcessCenterConstants.AUDIT.TIME_STAMP, logEntry.getDate().getTime());
-                    result.put(entryObj);
-
-                } else if (logEntry.getAction() == LogEntry.ADD) {
-                    entryObj.put(ProcessCenterConstants.AUDIT.ASSET_TYPE, processPath);
-                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION, "add");
-                    entryObj.put(ProcessCenterConstants.AUDIT.USER, logEntry.getUserName());
-                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION_TYPE, type);
-                    entryObj.put(ProcessCenterConstants.AUDIT.TIME_STAMP, logEntry.getDate().getTime());
-                    result.put(entryObj);
-
-                } else if (logEntry.getAction() == LogEntry.DELETE_RESOURCE) {
-                    entryObj.put(ProcessCenterConstants.AUDIT.ASSET_TYPE, processPath);
-                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION, "delete");
-                    entryObj.put(ProcessCenterConstants.AUDIT.USER, logEntry.getUserName());
-                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION_TYPE, type);
-                    entryObj.put(ProcessCenterConstants.AUDIT.TIME_STAMP, logEntry.getDate().getTime());
-                    result.put(entryObj);
-
-                } else if (logEntry.getAction() == LogEntry.TAG) {
-                    entryObj.put(ProcessCenterConstants.AUDIT.ASSET_TYPE, processPath);
-                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION, "tag");
-                    entryObj.put(ProcessCenterConstants.AUDIT.USER, logEntry.getUserName());
-                    entryObj.put(ProcessCenterConstants.AUDIT.ACTION_TYPE, type);
-                    entryObj.put(ProcessCenterConstants.AUDIT.TIME_STAMP, logEntry.getDate().getTime());
-                    result.put(entryObj);
+                switch (logEntry.getAction()) {
+                case LogEntry.UPDATE:
+                    if (ProcessCenterConstants.AUDIT.PROCESS.equals(type))
+                        filterProcessUpdateLogs(logEntry);
+                    getLogEntryJson(logEntry, "update", type, processPath, result);
+                    break;
+                case LogEntry.ADD:
+                    getLogEntryJson(logEntry, "add", type, processPath, result);
+                    break;
+                case LogEntry.DELETE_RESOURCE:
+                    getLogEntryJson(logEntry, "delete", type, processPath, result);
+                    break;
+                case LogEntry.TAG:
+                    getLogEntryJson(logEntry, "tag", type, processPath, result);
+                    break;
                 }
             } catch (JSONException e) {
                 String msg = "Error processing log entries for process in " + processPath;
@@ -153,7 +136,7 @@ public class LogEntryProcessUtils {
      * @param entries log entries taken from the registry logs
      * @param path    the path to process asset
      */
-    private void filterProcessCreation(ArrayList<LogEntry> entries, String path) {
+    private void filterProcessCreationLogs(ArrayList<LogEntry> entries, String path) {
 
         int count = 0;
         for (ListIterator<LogEntry> iterator = entries.listIterator(entries.size()); iterator.hasPrevious(); ) {
@@ -167,6 +150,21 @@ public class LogEntryProcessUtils {
             }
             count++;
         }
+    }
+
+    private void filterProcessUpdateLogs(LogEntry logEntry) {
+
+    }
+
+    private void getLogEntryJson(LogEntry logEntry, String action, String type, String processPath, JSONArray result)
+            throws JSONException {
+        JSONObject entryObj = new JSONObject();
+        entryObj.put(ProcessCenterConstants.AUDIT.ASSET_TYPE, processPath);
+        entryObj.put(ProcessCenterConstants.AUDIT.ACTION, action);
+        entryObj.put(ProcessCenterConstants.AUDIT.USER, logEntry.getUserName());
+        entryObj.put(ProcessCenterConstants.AUDIT.ACTION_TYPE, type);
+        entryObj.put(ProcessCenterConstants.AUDIT.TIME_STAMP, logEntry.getDate().getTime());
+        result.put(entryObj);
     }
 
 }
