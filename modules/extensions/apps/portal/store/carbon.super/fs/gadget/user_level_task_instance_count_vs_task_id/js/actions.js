@@ -14,6 +14,7 @@
  ~ limitations under the License.
  */
 var jsonObj = [];
+var user;
 
 function drawGraph() {
 
@@ -44,6 +45,7 @@ function drawGraph() {
 
                     responseStr = responseStr.slice(0, -1);
                     var jsonArrObj = JSON.parse('[' + responseStr + ']');
+                    //console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhh"+jsonObj);
                     jsonObj[0].data = jsonArrObj;
 
                     var barChart = new vizg(jsonObj, config);
@@ -68,12 +70,33 @@ function drawGraph() {
 }
 function loadUserList(dropdownId) {
     var dropdownElementID = '#' + dropdownId;
+    user = getUrlVars()["user"];
 
+    $.getJSON("/portal/store/carbon.super/fs/gadget/user_level_task_instance_count_vs_task_id/js/meta-data-userleveltaskInstanceCountVsTaskID.json.js", function (result) {
+        $.each(result, function (i, field) {
+            jsonObj.push(field);
+            if (user) {
+                var el = document.createElement("option");
+                el.textContent = user;
+                el.value = user;
+                $(dropdownElementID).append(el);
+                $(dropdownElementID).attr("disabled", true);
+                $(dropdownElementID).selectpicker("refresh");
+                drawGraph();
+            }
+            else {
+                loadList();
+            }
+        });
+    });
+
+}
+function loadList() {
     $.ajax({
         type: 'POST',
         url: '../../bpmn-analytics-explorer/user_id_list',
         success: function (data) {
-            if (!$.isEmptyObject(dataStr)) {
+            if (!$.isEmptyObject(data)) {
                 var dataStr = JSON.parse(data);
                 for (var i = 0; i < dataStr.length; i++) {
                     var opt = dataStr[i].assignUser;
@@ -83,15 +106,9 @@ function loadUserList(dropdownId) {
                     $(dropdownElementID).append(el);
                 }
                 $(dropdownElementID).selectpicker("refresh");
-
-                $.getJSON("/portal/store/carbon.super/fs/gadget/user_level_task_instance_count_vs_task_id/js/meta-data-userleveltaskInstanceCountVsTaskID.json.js", function (result) {
-                    $.each(result, function (i, field) {
-                        jsonObj.push(field);
-                        drawGraph();
-                    });
-                });
+                drawGraph();
             }
-            else{
+            else {
                 console.log('Empty User ID list.');
             }
         },
@@ -121,4 +138,17 @@ function selectPickerValChange(selectPickerElement) {
 
 function isInteger(param) {
     return (Math.floor(param) == param && $.isNumeric(param));
+}
+
+function getUrlVars() {
+    var vars = [], hash;
+    var hashes = top.location.href.slice(top.location.href.indexOf('?') + 1).split('&');
+
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+
+    return vars;
 }

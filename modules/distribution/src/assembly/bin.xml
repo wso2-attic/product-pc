@@ -758,6 +758,12 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/configs</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>../extensions/apps/portal/extensions/dashboards/autodeployable.json</source>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/extensions/dashboards</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
         <!-- Files of PC ends from here -->
     </files>
 
