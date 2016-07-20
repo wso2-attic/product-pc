@@ -1,0 +1,13 @@
+{
+  "id": "avg_execution_time_vs_task_id",
+  "title": "Average Execution Time vs Task ID",
+  "type": "gadget",
+  "thumbnail": "gadget/avg_execution_time_vs_task_id/index.png",
+  "settings": {
+    "personalize": true
+  },
+  "data": {
+    "url": "gadget/avg_execution_time_vs_task_id/index.xml"
+  },
+  "description": "PC analytics graphs"
+}
