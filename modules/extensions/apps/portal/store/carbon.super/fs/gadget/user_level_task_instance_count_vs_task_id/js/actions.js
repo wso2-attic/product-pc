@@ -85,13 +85,13 @@ function loadUserList(dropdownId) {
                 drawGraph();
             }
             else {
-                loadList();
+                loadList(dropdownElementID);
             }
         });
     });
 
 }
-function loadList() {
+function loadList(dropdownElementID) {
     $.ajax({
         type: 'POST',
         url: '../../bpmn-analytics-explorer/user_id_list',

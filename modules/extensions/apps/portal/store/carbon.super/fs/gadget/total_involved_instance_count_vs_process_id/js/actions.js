@@ -112,13 +112,13 @@ function loadUserList(dropdownId) {
                 drawGraph();
             }
             else {
-                loadList();
+                loadList(dropdownElementID);
             }
         });
     });
 }
 
-function loadList() {
+function loadList(dropdownElementID) {
 
     $.ajax({
         type: 'POST',
