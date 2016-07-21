@@ -75,7 +75,7 @@ function loadTaskList(dropdownId) {
         type: 'POST',
         url: '../../bpmn-analytics-explorer/task_definition_key_list',
         success: function (data) {
-            if (!$.isEmptyObject(dataStr)) {
+            if (!$.isEmptyObject(data)) {
                 var dataStr = JSON.parse(data);
                 for (var i = 0; i < dataStr.length; i++) {
                     var opt = dataStr[i].taskDefId;
