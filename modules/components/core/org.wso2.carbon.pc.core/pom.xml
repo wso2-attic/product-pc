@@ -107,7 +107,7 @@
                             org.wso2.carbon.registry.core.*; version="${carbon.kernel.registry.imp.pkg.version}",
                             org.wso2.carbon.governance.api.util; version="0.0.0",
                             org.wso2.carbon.context; version="${carbon.kernel.version}",
-                            org.jaggeryjs.hostobjects.stream; version="${jaggery.version}",
+                            org.jaggeryjs.hostobjects.stream; version="${jaggery.feature.version}",
                             org.apache.commons.logging; version="${version.commons.logging}",
                             org.apache.commons.io; version="2.4.0",
                             org.apache.commons.codec.binary; version="1.4.0",
@@ -130,7 +130,7 @@
             <artifactId>js</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-io.wso2</groupId>
+            <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
@@ -186,7 +186,6 @@
         <dependency>
             <groupId>org.wso2.carbon.business-process</groupId>
             <artifactId>org.wso2.carbon.bpmn.stub</artifactId>
-            <version>4.4.10-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

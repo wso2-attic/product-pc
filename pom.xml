@@ -253,15 +253,15 @@
             </dependency>
 
             <dependency>
-                <groupId>commons-io.wso2</groupId>
+                <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>${commons-io.wso2.version}</version>
+                <version>${commons-io.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.jaggeryjs</groupId>
                 <artifactId>org.jaggeryjs.hostobjects.stream</artifactId>
-                <version>${jaggery.version}</version>
+                <version>${jaggery.feature.version}</version>
             </dependency>
 
             <dependency>
@@ -630,7 +630,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.business-process</groupId>
                 <artifactId>org.wso2.carbon.bpmn.stub</artifactId>
-                <version>${carbon.business-process.version}</version>
+                <version>${carbon.business.process.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -742,7 +742,7 @@
     </organization>
     <issueManagement>
         <system>JIRA</system>
-        <url>http://wso2.org/jira/browse/STORE</url>
+        <url>https://wso2.org/jira/browse/PC</url>
     </issueManagement>
     <properties>
 
@@ -754,8 +754,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <carbon.kernel.version>4.4.7</carbon.kernel.version>
-        <carbon.social.version>2.4.0</carbon.social.version>
-        <carbon.store.version>2.4.0</carbon.store.version>
+        <carbon.social.version>2.4.1</carbon.social.version>
+        <carbon.store.version>2.4.1</carbon.store.version>
         <carbon.dashboards.version>1.0.19</carbon.dashboards.version>
         <i18n.feature.version>1.5.2</i18n.feature.version>
 
@@ -765,10 +765,10 @@
 
         <!--repo versions-->
         <carbon.commons.version>4.5.4</carbon.commons.version>
-        <carbon.registry.version>4.5.6</carbon.registry.version>
-        <carbon.governance.version>4.6.4</carbon.governance.version>
+        <carbon.registry.version>4.6.0</carbon.registry.version>
+        <carbon.governance.version>4.7.0</carbon.governance.version>
         <carbon.deployment.version>4.7.0</carbon.deployment.version>
-        <carbon.identity.version>5.2.0</carbon.identity.version>
+        <carbon.identity.framework.version>5.2.0</carbon.identity.framework.version>
         <identity.application.auth.basic.auth.version>5.1.1</identity.application.auth.basic.auth.version>
         <identity.auth.saml2.version>5.1.1</identity.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.1.1</identity.inbound.auth.saml.version>
@@ -820,14 +820,13 @@
         <javax.mail.version>1.4.4</javax.mail.version>
         <log4j.version>1.2.17</log4j.version>
         <commons-io.version>2.2</commons-io.version>
-        <commons-io.wso2.version>2.0.0.wso2v2</commons-io.wso2.version>
         <google.guava.version>16.0.1</google.guava.version>
         <testng.version>6.8.5</testng.version>
         <carbon.metrics.version>1.2.1</carbon.metrics.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
 
         <!-- Carbon business process version -->
-        <carbon.business-process.version>4.4.10-SNAPSHOT</carbon.business-process.version>
+        <carbon.business.process.version>4.4.10-SNAPSHOT</carbon.business.process.version>
 
         <!-- Activiti Version -->
         <org.activiti.version>5.19.0</org.activiti.version>
@@ -835,8 +834,6 @@
         <!-- JSON Version -->
         <orbit.version.json>1.0.0.wso2v1</orbit.version.json>
 
-        <!--Jaggery -->
-        <jaggery.version>0.12.2</jaggery.version>
         <!--Analytics-->
         <carbon.analytics.common.version>5.0.8</carbon.analytics.common.version>
         <version.commons.logging>1.2</version.commons.logging>

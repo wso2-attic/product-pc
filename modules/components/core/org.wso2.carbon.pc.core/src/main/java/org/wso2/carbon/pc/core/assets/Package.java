@@ -399,22 +399,27 @@ public class Package extends AssetResource {
                                                     StandardCharsets.UTF_8);
                                             Document processDocument = stringToXML(processContent);
                                             if (processDocument != null) {
-                                                NodeList processName = processDocument.getElementsByTagName
+                                                NodeList processAssetName = processDocument.getElementsByTagName
                                                         (ProcessCenterConstants.NAME);
-                                                if (processName.getLength() > 0) {
+                                                if (processAssetName.getLength() > 0) {
                                                     bpmnResource.put(ProcessCenterConstants.PROCESS_ASSET_NAME,
-                                                            processName
+                                                            processAssetName
                                                                     .item(0).getTextContent());
                                                 }
-                                                NodeList processVersion = processDocument.getElementsByTagName
+                                                NodeList processAssetVersion = processDocument.getElementsByTagName
                                                         (ProcessCenterConstants.VERSION);
-                                                if (processVersion.getLength() > 0) {
+                                                if (processAssetVersion.getLength() > 0) {
                                                     bpmnResource.put(ProcessCenterConstants.PROCESS_ASSET_VERSION,
-                                                            processVersion
+                                                            processAssetVersion
                                                                     .item(0).getTextContent());
                                                 }
                                             }
                                         }
+                                    String bpmnProcessName = bpmnRegistryResource.getProperty
+                                            (ProcessCenterConstants.PROCESS_NAME);
+                                    if (bpmnProcessName != null) {
+                                        bpmnResource.put(ProcessCenterConstants.PROCESS_NAME, bpmnProcessName);
+                                    }
                                     bpmnResource.put(ProcessCenterConstants.PACKAGE_BPMN_ARCHIVE_FILE_NAME,
                                             bpmnRegistryResource.getPath()
                                                     .replaceFirst
@@ -427,8 +432,8 @@ public class Package extends AssetResource {
                 }
             }
         } catch (RegistryException e) {
-            String errMsg = "Error occurred while getting bpmn resources for package: " + packageName + " version " +
-                    packageVersion;
+            String errMsg = "Registry Error occurred while getting bpmn resources for package: " + packageName + " " +
+                    "version " + packageVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         } catch (JSONException e) {

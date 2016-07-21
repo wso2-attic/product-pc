@@ -19,13 +19,13 @@
 <ProcessCenter xmlns="http://wso2.org/pc/config">
     <!--Configurations for Process Analytics-->
     <Analytics>
-        <DASServerUrl>https://localhost:9445/</DASServerUrl>
+        <DASServerUrl>https://localhost:9445</DASServerUrl>
         <DASUsername>admin</DASUsername>
         <DASPassword>admin</DASPassword>
     </Analytics>
     <!--Configurations for runtime Environment-->
     <RuntimeEnvironment>
-        <ServerUrl>https://localhost:9444/</ServerUrl>
+        <ServerUrl>https://localhost:9444</ServerUrl>
         <Username>admin</Username>
         <Password>admin</Password>
     </RuntimeEnvironment>

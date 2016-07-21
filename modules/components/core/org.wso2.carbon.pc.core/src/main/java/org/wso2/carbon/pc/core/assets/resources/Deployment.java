@@ -194,6 +194,8 @@ public class Deployment extends AssetResource {
             if (registryService != null) {
                 UserRegistry userRegistry = registryService.getGovernanceUserRegistry(userName);
                 Resource packageAsset = userRegistry.get(packageRegistryPath);
+                String deploymentName = packageAsset.getProperty(ProcessCenterConstants
+                        .PACKAGE_BPMN_ARCHIVE_FILE_NAME);
                 String processContent = new String((byte[]) packageAsset.getContent(),
                         StandardCharsets.UTF_8);
                 Document packageDocument = stringToXML(processContent);
@@ -231,6 +233,9 @@ public class Deployment extends AssetResource {
                                     userName));
                         }
                     }
+                }
+                if (deploymentName != null) {
+                    runtimeDeployment.put("deploymentName", deploymentName);
                 }
             }
             response.put("runtimeDeployment", runtimeDeployment);
@@ -475,5 +480,103 @@ public class Deployment extends AssetResource {
             throw new ProcessCenterException(errMsg, e);
         }
         return bpmnResources;
+    }
+
+    /**
+     * Undeploy package
+     *
+     * @param packageName
+     * @param packageVersion
+     * @param username
+     * @return
+     * @throws ProcessCenterException
+     */
+    public String undeploy(String packageName, String packageVersion, String username) throws
+            ProcessCenterException {
+        JSONObject response = new JSONObject();
+        try {
+            ProcessServer processServer = ProcessCenterServerHolder.getInstance().getProcessCenter().getProcessServer();
+            if (processServer == null) {
+                // If runtime environment is not configured we cannot do any process server operations.
+                response.put(ProcessCenterConstants.ERROR, true);
+                response.put(ProcessCenterConstants.MESSAGE, "Runtime Environment has not been configured.");
+                return response.toString();
+            }
+            String packageRegistryPath = Package.getPackageRegistryPath(packageName, packageVersion);
+            String packageBPMNContentRegistryPath = Package.getPackageBPMNContentRegistryPath
+                    (Package.getPackageBPMNRegistryPath(Package.getPackageAssetRegistryPath(packageName,
+                            packageVersion)));
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(username);
+                if (userRegistry != null) {
+
+                    if (userRegistry.resourceExists(packageRegistryPath)) {
+                        Resource packageAsset = userRegistry.get(packageRegistryPath);
+                        if (packageAsset != null) {
+
+                            String packageContent = new String((byte[]) packageAsset.getContent(), StandardCharsets
+                                    .UTF_8);
+                            String deploymentName = FilenameUtils.getBaseName(packageAsset.getProperty
+                                    (ProcessCenterConstants.PACKAGE_BPMN_ARCHIVE_FILE_NAME));
+                            processServer.unDeploy(deploymentName);
+                            Document packageDocument = stringToXML(packageContent);
+                            //Evaluate XPath against RXT document to get runtime environments
+                            XPath xPath = XPathFactory.newInstance().newXPath();
+                            NodeList evaluate = ((NodeList) xPath.evaluate("/metadata/runtimeEnvironment",
+                                    packageDocument.getDocumentElement(), XPathConstants.NODESET));
+                            if (evaluate != null) {
+                                for (int i = 0; i < evaluate.getLength(); i++) {
+                                    evaluate.item(i).getParentNode().removeChild(evaluate.item(i));
+                                }
+                            }
+                            String newProcessContent = xmlToString(packageDocument);
+                            packageAsset.setContent(newProcessContent);
+                            userRegistry.put(packageRegistryPath, packageAsset);
+                            String bpmnResourceCount = packageAsset.getProperty(ProcessCenterConstants
+                                    .BPMN_RESOURCES_COUNT);
+                            if (bpmnResourceCount != null) {
+                                // Get bpmn file registry registry collection
+                                Collection bpmnResourceCollection = userRegistry.get(packageBPMNContentRegistryPath, 0,
+                                        Integer.parseInt(bpmnResourceCount));
+                                if (bpmnResourceCollection != null) {
+                                    String[] bpmnResourcePaths = (String[]) bpmnResourceCollection.getContent();
+                                    // Read each bpmn file
+                                    for (String bpmnResourcePath : bpmnResourcePaths) {
+                                        Resource bpmnRegistryResource = userRegistry.get(bpmnResourcePath);
+                                        bpmnRegistryResource.removeProperty(ProcessCenterConstants.PROCESS_ID);
+                                        userRegistry.put(bpmnResourcePath, bpmnRegistryResource);
+
+                                    }
+                                }
+                            }
+                        }
+                        response.put(ProcessCenterConstants.ERROR, false);
+                    } else {
+                        response.put(ProcessCenterConstants.ERROR, true);
+                        response.put(ProcessCenterConstants.MESSAGE, "Package Assetresource cannot be found.");
+                        return response.toString();
+                    }
+                }
+            }
+        } catch (RegistryException e) {
+            String errMsg = "Registry error while deploying the package " + packageName +
+                    " version " + packageVersion + " in the server";
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        } catch (IOException e) {
+            String errMsg = "Error occurred while deploying the package " + packageName +
+                    " version " + packageVersion + " in the server ";
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        } catch (XPathExpressionException | JSONException | TransformerException | SAXException |
+                ParserConfigurationException e) {
+            String errMsg = "Error occurred while deploying the package " + packageName +
+                    " file " + packageVersion;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        }
+
+        return response.toString();
     }
 }
