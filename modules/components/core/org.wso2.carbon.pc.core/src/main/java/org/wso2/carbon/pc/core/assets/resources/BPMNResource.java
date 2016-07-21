@@ -24,9 +24,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.derby.impl.store.access.UTF;
 import org.wso2.carbon.pc.core.ProcessCenterException;
-import org.wso2.carbon.pc.core.assets.common.AssetResource;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.pc.core.util.PCInputStreamProvider;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -39,13 +37,12 @@ import java.nio.charset.StandardCharsets;
  * Class for BPMN resource
  */
 public class BPMNResource {
-
-    private static final Log log = LogFactory.getLog(AssetResource.class);
-
+    private static final Log log = LogFactory.getLog(BPMNResource.class);
 
 
     /**
      * Gets encoded image from registry path
+     *
      * @param path
      * @return
      * @throws ProcessCenterException
@@ -57,6 +54,7 @@ public class BPMNResource {
 
     /**
      * Gets BPMN image for given bpmn file from registry
+     *
      * @param path
      * @return
      * @throws ProcessCenterException
@@ -86,6 +84,7 @@ public class BPMNResource {
             String msg = "Failed to fetch BPMN model: " + path;
             log.error(msg, e);
             throw new ProcessCenterException(msg, e);
+
         }
     }
 }

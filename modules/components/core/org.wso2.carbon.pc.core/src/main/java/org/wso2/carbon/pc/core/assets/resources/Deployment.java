@@ -163,8 +163,7 @@ public class Deployment extends AssetResource {
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         } catch (XPathExpressionException | JSONException | TransformerException | NoSuchAlgorithmException |
-                SAXException |
-                ParserConfigurationException e) {
+                SAXException | ParserConfigurationException e) {
             String errMsg = "Error occurred while deploying the package " + packageName +
                     " file " + packageVersion;
             log.error(errMsg, e);
@@ -236,13 +235,13 @@ public class Deployment extends AssetResource {
             }
             response.put("runtimeDeployment", runtimeDeployment);
         } catch (RegistryException e) {
-            String errMsg = "Error occurred while getting deployment ID for package: " + packageName + " version " +
-                    packageVersion;
+            String errMsg = "Error occurred while accessing registry for getting deployment information for package: " +
+                    packageName + " " + "version " + packageVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         } catch (JSONException | XPathExpressionException | IOException | SAXException | ParserConfigurationException
                 e) {
-            String errMsg = "Error occurred while getting deployment ID for package " + packageName +
+            String errMsg = "Error occurred while getting deployment information for package " + packageName +
                     " version " + packageVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
@@ -336,14 +335,14 @@ public class Deployment extends AssetResource {
             response.put("deploymentID", deploymentID);
             response.put(ProcessCenterConstants.ERROR, false);
         } catch (RegistryException e) {
-            String errMsg = "Error occurred while getting deployment ID for package: " + packageName + " version " +
-                    packageVersion;
+            String errMsg = "Error occurred while accessing registry for associating deployment ID for package: " +
+                    packageName + " version " + packageVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         } catch (JSONException | XPathExpressionException | IOException | SAXException | TransformerException
                 | ParserConfigurationException e) {
-            String errMsg = "Error occurred while getting deployment ID for package " + packageName +
-                    " file " + packageVersion;
+            String errMsg = "Error occurred while associating deployment ID for package " + packageName + " file " +
+                    packageVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
@@ -469,14 +468,9 @@ public class Deployment extends AssetResource {
                     }
                 }
             }
-        } catch (RegistryException e) {
+        } catch (RegistryException | JSONException e) {
             String errMsg = "Error occurred while getting bpmn resources for package: " + packageName + " version " +
                     packageVersion;
-            log.error(errMsg, e);
-            throw new ProcessCenterException(errMsg, e);
-        } catch (JSONException e) {
-            String errMsg = "Error with JSON operation while getting bpmn resources for package: " + packageName + " " +
-                    "version" + packageVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
