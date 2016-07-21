@@ -83,7 +83,7 @@
                             <option value="100">100</option>
                         </select>
                     </div>
-                    <button class="btn btn-default btn-info" onclick="drawGraph()">Apply Filter</button>
+                    <button class="btn btn-primary" onclick="drawGraph()">Apply Filter</button>
                 </div>
             </div>
             <div id="chartA"></div>

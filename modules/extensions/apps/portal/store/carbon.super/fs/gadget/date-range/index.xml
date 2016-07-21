@@ -53,8 +53,8 @@
                     <label class="input-group-addon" id="end_date">End Date</label>
                     <input id="endDate" class="form-control" type="text"/>
                 </div>
-                <Button class="btn btn-default btn-info" id="applyBtn" onclick="publish()">Publish</Button>
-                <Button class="btn btn-default btn-info" id="resetBtn" onclick="reset()">Reset</Button>
+                <Button class="btn btn-primary" id="applyBtn" onclick="publish()">Publish</Button>
+                <Button class="btn btn-primary" id="resetBtn" onclick="reset()">Reset</Button>
             </div>
         </div>
     </div>
