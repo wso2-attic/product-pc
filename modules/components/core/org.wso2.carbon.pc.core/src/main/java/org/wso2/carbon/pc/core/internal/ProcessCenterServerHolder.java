@@ -17,6 +17,7 @@ package org.wso2.carbon.pc.core.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.pc.core.ProcessCenter;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.registry.common.AttributeSearchService;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -27,7 +28,6 @@ import org.wso2.carbon.registry.resource.beans.PermissionBean;
 import org.wso2.carbon.registry.resource.beans.PermissionEntry;
 import org.wso2.carbon.registry.resource.services.utils.AddRolePermissionUtil;
 import org.wso2.carbon.registry.resource.services.utils.PermissionUtil;
-import org.wso2.carbon.user.core.UserStoreException;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -44,6 +44,8 @@ public class ProcessCenterServerHolder {
     private ContentSearchService contentSearchService;
 
     private AttributeSearchService attributeSearchService;
+
+    private ProcessCenter processCenter;
 
     private ProcessCenterServerHolder() {
     }
@@ -131,4 +133,11 @@ public class ProcessCenterServerHolder {
         registry.put(ProcessCenterConstants.AUDIT.FLOW_CHART, registry.newCollection());
     }
 
+    public ProcessCenter getProcessCenter() {
+        return processCenter;
+    }
+
+    public void setProcessCenter(ProcessCenter processCenter) {
+        this.processCenter = processCenter;
+    }
 }

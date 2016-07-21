@@ -33,8 +33,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
-import org.wso2.carbon.pc.core.audit.util.RegPermissionUtil;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
+import org.wso2.carbon.pc.core.util.PCInputStreamProvider;
+import org.wso2.carbon.pc.core.audit.util.RegPermissionUtil;
 import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.LogEntry;
 import org.wso2.carbon.registry.core.Resource;
@@ -56,7 +57,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -1979,20 +1984,6 @@ public class ProcessStore {
     private static String getAssociatedDocFileName(String filepath) {
         return filepath.substring(filepath.lastIndexOf("/") + 1);
     }
-    //    public static void main(String[] args) {
-    //        String path = "/home/chathura/temp/t5/TestProcess1.bpmn";
-    //        String outpath = "/home/chathura/temp/t5/TestProcess1image.png";
-    //        try {
-    ////            byte[] image = new ProcessStore().getBPMNImage2(path);
-    ////            FileUtils.writeByteArrayToFile(new File(outpath), image);
-    //
-    //            String imageString = new ProcessStore().getEncodedBPMNImage(path, null);
-    //            FileUtils.write(new File(outpath), imageString);
-    //
-    //        } catch (Exception e) {
-    //            e.printStackTrace();
-    //        }
-    //    }
 
     public String setPermission(String userName, String processName, String processVersion)
             throws ProcessCenterException {
