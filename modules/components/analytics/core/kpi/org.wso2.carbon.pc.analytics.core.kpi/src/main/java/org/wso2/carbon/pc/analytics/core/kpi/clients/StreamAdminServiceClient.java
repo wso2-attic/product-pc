@@ -28,10 +28,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2.carbon.pc.analytics.core.kpi.AnalyticsConfigConstants;
-/*
-import org.wso2.carbon.pc.analytics.core.kpi.stubs.EventStreamAdminServiceStub;
-import org.wso2.carbon.pc.analytics.core.kpi.stubs.EventStreamAdminServiceStub.AddEventStreamDefinitionAsString;
-import org.wso2.carbon.pc.analytics.core.kpi.stubs.EventStreamAdminServiceStub.AddEventStreamDefinitionAsStringResponse;*/
 
 import org.wso2.carbon.event.stream.stub.EventStreamAdminServiceStub;
 import org.wso2.carbon.pc.core.ProcessCenterException;
@@ -56,7 +52,6 @@ public class StreamAdminServiceClient {
     }
 
     /**
-     *
      * @param session
      * @param streamName
      * @param streamVersion

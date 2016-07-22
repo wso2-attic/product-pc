@@ -40,12 +40,7 @@ public class ReceiverAdminServiceClient {
     private static final Log log = LogFactory.getLog(ReceiverAdminServiceClient.class);
 
     /**
-     *
      * @param backEndUrl
-     * @param sessionCookie
-     * @param receiverName
-     * @param streamId
-     * @param wso2event
      * @throws AxisFault
      */
     public ReceiverAdminServiceClient(String backEndUrl) throws AxisFault {
@@ -80,7 +75,7 @@ public class ReceiverAdminServiceClient {
         } catch (RemoteException e) {
             String errMsg = "Error in deploying event receiver";
             log.error(errMsg, e);
-            throw new ProcessCenterException(errMsg,e);
+            throw new ProcessCenterException(errMsg, e);
         }
     }
 }

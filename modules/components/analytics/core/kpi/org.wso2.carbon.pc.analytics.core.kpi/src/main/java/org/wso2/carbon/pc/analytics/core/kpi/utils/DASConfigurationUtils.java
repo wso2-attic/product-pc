@@ -86,14 +86,16 @@ public class DASConfigurationUtils {
             String errMsg = "Governance Registry access error, wile checking isDasConfigedForAnalytics";
             throw new ProcessCenterException(errMsg, e);
         } catch (Exception e) {
-            String errMsg = "Registry process.rxt String to XML conversion error, wile checking isDasConfigedForAnalytics ";
+            String errMsg = "Registry process.rxt String to XML conversion error, wile checking "
+                    + "isDasConfigedForAnalytics ";
             throw new ProcessCenterException(errMsg, e);
         }
         return false;
     }
 
     /**
-     * Set the Property isDasConfigedForAnalytics in the process related .rxt to flag that analytics configurations (with DAS) is made for the respective process
+     * Set the Property isDasConfigedForAnalytics in the process related .rxt to flag that analytics configurations
+     * (with DAS) is made for the respective process
      *
      * @param processName
      * @param processVersion
@@ -138,8 +140,8 @@ public class DASConfigurationUtils {
             throw new ProcessCenterException(errMsg, e);
         } catch (Exception e) {
             String errMsg =
-                    "Exception in setting property isDASAnalyticsConfigured in process.rxt while converting xml to string for the process:"
-                            + processName + ":" + processVersion;
+                    "Exception in setting property isDASAnalyticsConfigured in process.rxt while converting xml to "
+                            + "string for the process:" + processName + ":" + processVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
@@ -174,7 +176,6 @@ public class DASConfigurationUtils {
                     .getText();
             if (baseUrl != null && !baseUrl.isEmpty()) {
                 if (baseUrl.endsWith(File.separator)) {
-                    //baseUrl += File.separator;
                     return baseUrl.substring(0, baseUrl.length() - 1);
                 }
                 return baseUrl;
@@ -211,7 +212,7 @@ public class DASConfigurationUtils {
         OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.ANALYTICS));
 
         String userName = null;
-        char[] password=null;
+        char[] password = null;
         if (analyticsElement != null) {
             userName = analyticsElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.CONFIG_USER_NAME))
                     .getText();
@@ -220,7 +221,8 @@ public class DASConfigurationUtils {
                     password = secretResolver.resolve(AnalyticsConfigConstants.SECRET_ALIAS_BPS_PASSWORD).toCharArray();
                 } else {
                     password = analyticsElement
-                            .getFirstChildWithName(new QName(AnalyticsConfigConstants.CONFIG_PASSWORD)).getText().toCharArray();
+                            .getFirstChildWithName(new QName(AnalyticsConfigConstants.CONFIG_PASSWORD)).getText()
+                            .toCharArray();
                 }
             } else {
                 password = analyticsElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.CONFIG_PASSWORD))
@@ -232,7 +234,7 @@ public class DASConfigurationUtils {
             byte[] encodedBytes = headerPortion.getBytes("UTF-8");
             String encodedString = DatatypeConverter.printBase64Binary(encodedBytes);
             //requestHeader += encodedString;
-            return AnalyticsConfigConstants.REQUEST_HEADER_BASIC+" " + encodedString;
+            return AnalyticsConfigConstants.REQUEST_HEADER_BASIC + " " + encodedString;
         }
         return null;
     }

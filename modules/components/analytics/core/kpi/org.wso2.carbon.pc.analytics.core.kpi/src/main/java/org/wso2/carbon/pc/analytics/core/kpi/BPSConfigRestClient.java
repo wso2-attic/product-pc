@@ -39,7 +39,7 @@ public class BPSConfigRestClient {
     /**
      * Send post request to a BPS BPMN rest web service
      *
-     * @param dasConfigDetails        is the request message that need to be sent to the web service
+     * @param dasConfigDetails is the request message that need to be sent to the web service
      * @param processName
      * @param processVersion
      * @return the result as a String
@@ -50,7 +50,8 @@ public class BPSConfigRestClient {
         String bpsurl = DASConfigurationUtils.getBPSURL();
         RegistryUtils.setTrustStoreSystemProperties();
         HttpClient httpClient = new HttpClient();
-        String requestUrl = bpsurl + AnalyticsConfigConstants.BPS_PROCESS_VAR_PUBLISH_REST_PATH + processName + "_" + processVersion;
+        String requestUrl = bpsurl + AnalyticsConfigConstants.BPS_PROCESS_VAR_PUBLISH_REST_PATH + processName + "_"
+                + processVersion;
 
         PostMethod postRequest = new PostMethod(requestUrl);
         postRequest.setRequestHeader("Authorization", DASConfigurationUtils.getAuthorizationHeader());
@@ -69,11 +70,11 @@ public class BPSConfigRestClient {
             log.debug("Output from Server .... \n");
         }
 
-        while ((output = br.readLine()) != null){
+        while ((output = br.readLine()) != null) {
             totalOutput.append(output);
         }
 
-        String responseMsg= totalOutput.toString();
+        String responseMsg = totalOutput.toString();
 
         postRequest.releaseConnection();
         if (br != null) {
@@ -86,14 +87,16 @@ public class BPSConfigRestClient {
         }
 
         //deal with the response
-        if(returnCode == HttpStatus.SC_OK){
+        if (returnCode == HttpStatus.SC_OK) {
             log.info("BPS was acknowleged the Analytics Configuration details");
-        }else if (returnCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+        } else if (returnCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
             log.info(responseMsg);
             throw new RuntimeException(responseMsg);
-        }else{
+        } else {
             String errMsg =
-                  "Failed : Sending the REST Post call to the WSO2 BPS to communicate the analytics configuration details to the BPS from PC\n: HTTP Error code : " + returnCode;
+                    "Failed : Sending the REST Post call to the WSO2 BPS to communicate the analytics configuration "
+                            + "details to the BPS from PC\n: HTTP Error code : "
+                            + returnCode;
             log.info(errMsg);
             throw new RuntimeException(responseMsg);
         }

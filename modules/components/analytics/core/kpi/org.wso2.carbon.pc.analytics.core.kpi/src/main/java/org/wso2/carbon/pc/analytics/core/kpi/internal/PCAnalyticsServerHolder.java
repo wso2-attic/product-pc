@@ -19,11 +19,8 @@ import org.wso2.carbon.pc.analytics.core.kpi.clients.LoginAdminServiceClient;
 import org.wso2.carbon.pc.analytics.core.kpi.clients.ReceiverAdminServiceClient;
 import org.wso2.carbon.pc.analytics.core.kpi.clients.StreamAdminServiceClient;
 
-/**
- * Created by samithac on 29/4/16.
- */
 public class PCAnalyticsServerHolder {
-    private static PCAnalyticsServerHolder instance=new PCAnalyticsServerHolder();
+    private static PCAnalyticsServerHolder instance = new PCAnalyticsServerHolder();
     private LoginAdminServiceClient loginAdminServiceClient;
     private StreamAdminServiceClient streamAdminServiceClient;
     private ReceiverAdminServiceClient receiverAdminServiceClient;

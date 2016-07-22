@@ -1,7 +1,22 @@
+/*
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.wso2.carbon.pc.core.import_export;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
@@ -14,8 +29,6 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.user.api.UserStoreException;
-import sun.misc.BASE64Decoder;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,6 +45,15 @@ public class ProcessImport {
     UserRegistry reg;
     String user;
 
+    /**
+     *
+     * @param processZipInputStream
+     * @param user
+     * @throws IOException
+     * @throws RegistryException
+     * @throws ProcessCenterException
+     * @throws UserStoreException
+     */
     public void importProcesses(InputStream processZipInputStream, String user)
             throws IOException, RegistryException, ProcessCenterException, UserStoreException {
 
@@ -44,7 +66,6 @@ public class ProcessImport {
 
         try {
             ZipEntry entry;
-            //int counter = 0;
             while ((entry = zipInputStream.getNextEntry()) != null) {
                 //counter++;
                 String outpath = ImportExportConstants.IMPORTS_DIR + "/" + entry.getName();
@@ -93,6 +114,14 @@ public class ProcessImport {
         }
     }
 
+    /**
+     *
+     * @param processName
+     * @param processVersion
+     * @param processDirPath
+     * @throws RegistryException
+     * @throws IOException
+     */
     private void setImageThumbnail(String processName, String processVersion, String processDirPath)
             throws RegistryException, IOException {
         String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
@@ -107,14 +136,18 @@ public class ProcessImport {
 
         File imageThumbnailFile = new File(processDirPath+"/"+"process_image_thumbnail");
         byte[] imageContent = Files.readAllBytes(imageThumbnailFile.toPath());
-
-        //BASE64Decoder decoder = new BASE64Decoder();
-        //byte[] imageContent = decoder.decodeBuffer(imageObj.getString("binaryImg"));
         imageContentResource.setContent(imageContent);
         reg.put(imageResourcePath, imageContentResource);
 
     }
 
+    /**
+     *
+     * @return
+     * @throws IOException
+     * @throws ProcessCenterException
+     * @throws RegistryException
+     */
     public boolean isProcessesAlreadyAvailble() throws IOException, ProcessCenterException, RegistryException {
         File folder = new File(ImportExportConstants.IMPORTS_DIR);
         File[] listOfFiles = folder.listFiles();
@@ -136,6 +169,12 @@ public class ProcessImport {
         return false;
     }
 
+    /**
+     *
+     * @return
+     * @throws ProcessCenterException
+     * @throws RegistryException
+     */
     public ArrayList<String> getProcessList() throws ProcessCenterException, RegistryException {
 
         ArrayList<String> processList = new ArrayList<String>();
@@ -156,6 +195,15 @@ public class ProcessImport {
         return processList;
     }
 
+    /**
+     *
+     * @param processName
+     * @param processVersion
+     * @param processRxtPath
+     * @throws RegistryException
+     * @throws UserStoreException
+     * @throws IOException
+     */
     public void putProcessRxt(String processName, String processVersion, String processRxtPath) throws RegistryException, UserStoreException, IOException {
         File rxtFile = new File(processRxtPath);
 

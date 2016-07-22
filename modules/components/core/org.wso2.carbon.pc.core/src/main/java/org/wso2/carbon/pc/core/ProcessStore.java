@@ -25,7 +25,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.openjpa.persistence.jest.JSON;
 import org.jaggeryjs.hostobjects.stream.StreamHostObject;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -106,7 +105,8 @@ public class ProcessStore {
         return builder.parse(new InputSource(new StringReader(xmlString)));
     }
 
-    public String createProcess(String processDetails, String userName, String processCreatedTime) throws ProcessCenterException {
+    public String createProcess(String processDetails, String userName, String processCreatedTime)
+            throws ProcessCenterException {
 
         String processId = "FAILED TO ADD PROCESS";
         try {
@@ -124,7 +124,8 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(userName);
-                RegPermissionUtil.setPutPermission(registryService, userName, ProcessCenterConstants.AUDIT.PROCESS_PATH);
+                RegPermissionUtil
+                        .setPutPermission(registryService, userName, ProcessCenterConstants.AUDIT.PROCESS_PATH);
 
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -259,15 +260,14 @@ public class ProcessStore {
                 if (doc.getElementsByTagName("description").getLength() != 0)
                     doc.getElementsByTagName("description").item(0).setTextContent(processDescription);
 
-                    doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
-                    doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
-
+                doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
+                doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
 
                 List<String> tags = Arrays.asList(processTags.split(","));
                 Tag[] curTags = reg.getTags(processAssetPath);
 
-                for (Tag tag: curTags) {
-                        reg.removeTag(processAssetPath, tag.getTagName());
+                for (Tag tag : curTags) {
+                    reg.removeTag(processAssetPath, tag.getTagName());
                 }
 
                 for (String tag : tags) {
@@ -532,8 +532,8 @@ public class ProcessStore {
                 }
             }
         } catch (Exception e) {
-            String errMsg = "Error has been occurred while removing BPMN diagram in the process:"
-                    + processName + "-" + processVersion;
+            String errMsg = "Error has been occurred while removing BPMN diagram in the process:" + processName + "-"
+                    + processVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
@@ -554,7 +554,8 @@ public class ProcessStore {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
 
                 // add the bar asset
-                //                String barAssetContent = "<metadata xmlns='http://www.wso2.org/governance/metadata'>" +
+                //                String barAssetContent = "<metadata xmlns='http://www.wso2
+                // .org/governance/metadata'>" +
                 //                        "<overview><name>" + barName + "</name><version>" + barVersion + "</version>
                 // <description>This is a test process2</description></overview></metadata>";
 
@@ -873,10 +874,10 @@ public class ProcessStore {
     }
 
     public void populateAssociations(Association[] associations, JSONArray jsonArray, UserRegistry reg,
-                                     String resourcePath) throws Exception {
+            String resourcePath) throws Exception {
         for (Association association : associations) {
             String associationPath = association.getDestinationPath();
-            if(associationPath.equals("/" + resourcePath)) {
+            if (associationPath.equals("/" + resourcePath)) {
                 continue;
             }
             Resource associatedResource = reg.get(associationPath);
@@ -888,10 +889,11 @@ public class ProcessStore {
             associatedProcessDetails.put("name", overviewElement.getElementsByTagName("name").item(0).getTextContent());
             associatedProcessDetails.put("path", associatedResource.getPath());
             associatedProcessDetails.put("id", associatedResource.getId());
-            associatedProcessDetails.put("processId",associatedResource.getUUID());
-            associatedProcessDetails.put("version", overviewElement.getElementsByTagName("version").item(0).getTextContent());
-            associatedProcessDetails.put("LCState", associatedResource.getProperty("registry.lifecycle."+
-                    associatedResource.getProperty("registry.LC.name")+".state"));
+            associatedProcessDetails.put("processId", associatedResource.getUUID());
+            associatedProcessDetails
+                    .put("version", overviewElement.getElementsByTagName("version").item(0).getTextContent());
+            associatedProcessDetails.put("LCState", associatedResource.getProperty("registry.lifecycle." +
+                    associatedResource.getProperty("registry.LC.name") + ".state"));
             jsonArray.put(associatedProcessDetails);
         }
     }
@@ -906,17 +908,20 @@ public class ProcessStore {
 
                 JSONObject conObj = new JSONObject();
                 JSONArray subprocessArray = new JSONArray();
-                Association[] aSubprocesses = reg.getAssociations(resourcePath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
+                Association[] aSubprocesses = reg
+                        .getAssociations(resourcePath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
                 populateAssociations(aSubprocesses, subprocessArray, reg, resourcePath);
                 conObj.put("subprocesses", subprocessArray);
 
                 JSONArray successorArray = new JSONArray();
-                Association[] aSuccessors = reg.getAssociations(resourcePath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                Association[] aSuccessors = reg
+                        .getAssociations(resourcePath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
                 populateAssociations(aSuccessors, successorArray, reg, resourcePath);
                 conObj.put("successors", successorArray);
 
                 JSONArray predecessorArray = new JSONArray();
-                Association[] aPredecessors = reg.getAssociations(resourcePath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                Association[] aPredecessors = reg
+                        .getAssociations(resourcePath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
                 populateAssociations(aPredecessors, predecessorArray, reg, resourcePath);
                 conObj.put("predecessors", predecessorArray);
 
@@ -951,8 +956,9 @@ public class ProcessStore {
                 String newProcessContent = xmlToString(doc);
                 resource.setContent(newProcessContent);
                 reg.put(processAssetPath, resource);
-                reg.getRegistryContext().getLogWriter().addLog(ProcessCenterConstants.GREG_PATH+processAssetPath,
-                        reg.getUserName(), LogEntry.UPDATE, "OWNER");
+                reg.getRegistryContext().getLogWriter()
+                        .addLog(ProcessCenterConstants.GREG_PATH + processAssetPath, reg.getUserName(), LogEntry.UPDATE,
+                                "OWNER");
             }
 
         } catch (Exception e) {
@@ -993,7 +999,8 @@ public class ProcessStore {
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
                     reg.addAssociation(processAssetPath, subprocessPath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
-                    reg.addAssociation(subprocessPath, processAssetPath, ProcessCenterConstants.PARENTPROCESS_ASSOCIATION);
+                    reg.addAssociation(subprocessPath, processAssetPath,
+                            ProcessCenterConstants.PARENTPROCESS_ASSOCIATION);
                 }
             }
 
@@ -1302,7 +1309,8 @@ public class ProcessStore {
         for (int iteratorValue = 0; iteratorValue < processDocs.length(); iteratorValue++) {
             String path = ((JSONObject) processDocs.get(iteratorValue)).get("path").toString();
             if ((getAssociatedDocFileName(path).equals(docName + "." + docExtension))) {
-                throw new ProcessCenterException("Associated document " + getAssociatedDocFileName(path) + " exits in " + processName
+                throw new ProcessCenterException(
+                        "Associated document " + getAssociatedDocFileName(path) + " exits in " + processName
                                 + " version" + processVersion);
             }
         }
@@ -1761,8 +1769,7 @@ public class ProcessStore {
 
                 String processContent = new String((byte[]) processResource.getContent());
                 Document processXML = stringToXML(processContent);
-                processXML.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent(
-                        "NA");
+                processXML.getElementsByTagName("flowchart").item(0).getFirstChild().setTextContent("NA");
 
                 String newProcessContent = xmlToString(processXML);
                 processResource.setContent(newProcessContent);
@@ -1776,7 +1783,8 @@ public class ProcessStore {
     }
 
     /**
-     * Delete the resource collection (directory) created in the governance registry for the process to keep its documents
+     * Delete the resource collection (directory) created in the governance registry for the process to keep its
+     * documents
      *
      * @param processName
      * @param processVersion
@@ -1865,8 +1873,9 @@ public class ProcessStore {
                 String newProcessContent = xmlToString(doc);
                 resource.setContent(newProcessContent);
                 reg.put(processAssetPath, resource);
-                reg.getRegistryContext().getLogWriter().addLog(ProcessCenterConstants.GREG_PATH + processAssetPath,
-                        reg.getUserName(), LogEntry.UPDATE, "DESCRIPTION");
+                reg.getRegistryContext().getLogWriter()
+                        .addLog(ProcessCenterConstants.GREG_PATH + processAssetPath, reg.getUserName(), LogEntry.UPDATE,
+                                "DESCRIPTION");
                 Resource storedProcess = reg.get(processAssetPath);
                 processId = storedProcess.getUUID();
             }
@@ -1885,8 +1894,8 @@ public class ProcessStore {
      * @param processName
      * @param processVersion
      */
-    public void deleteProcessRelatedArtifacts(String processName, String processVersion, String user) throws
-            ProcessCenterException {
+    public void deleteProcessRelatedArtifacts(String processName, String processVersion, String user)
+            throws ProcessCenterException {
 
         String processResourcePath =
                 ProcessCenterConstants.GREG_PATH + ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/"
@@ -1918,6 +1927,7 @@ public class ProcessStore {
             throw new ProcessCenterException(errMsg, e);
         }
     }
+
     /**
      * Adds a new tag for a process asset at the publisher
      *
@@ -1992,7 +2002,7 @@ public class ProcessStore {
     public String setPermission(String userName, String processName, String processVersion)
             throws ProcessCenterException {
 
-        String status="Failed to set permission";
+        String status = "Failed to set permission";
 
         try {
 
@@ -2001,18 +2011,17 @@ public class ProcessStore {
             if (registryService != null) {
                 UserRegistry userRegistry = registryService.getGovernanceSystemRegistry();
                 UserRealm userRealm = userRegistry.getUserRealm();
-                String[] roles=userRealm.getUserStoreManager().getRoleListOfUser(userName);
+                String[] roles = userRealm.getUserStoreManager().getRoleListOfUser(userName);
 
                 String path = "/_system/governance/processes/" + processName + "/" +
                         processVersion;
 
-                for (String role:roles) {
+                for (String role : roles) {
 
-                    if (role.equalsIgnoreCase("Internal/everyone")||role.equalsIgnoreCase("Internal/store")||
+                    if (role.equalsIgnoreCase("Internal/everyone") || role.equalsIgnoreCase("Internal/store") ||
                             role.equalsIgnoreCase("Internal/publisher")) {
                         continue;
-                    }
-                    else {
+                    } else {
                         //add read permission
                         AddRolePermissionUtil.addRolePermission(userRegistry, path, role, ProcessCenterConstants.READ,
                                 ProcessCenterConstants.ALLOW);
@@ -2020,14 +2029,15 @@ public class ProcessStore {
                         AddRolePermissionUtil.addRolePermission(userRegistry, path, role, ProcessCenterConstants.WRITE,
                                 ProcessCenterConstants.ALLOW);
                         //add authorize permission
-                        AddRolePermissionUtil.addRolePermission(userRegistry, path, role, ProcessCenterConstants.AUTHORIZE,
-                                ProcessCenterConstants.ALLOW);
+                        AddRolePermissionUtil
+                                .addRolePermission(userRegistry, path, role, ProcessCenterConstants.AUTHORIZE,
+                                        ProcessCenterConstants.ALLOW);
                     }
                 }
-                status="Permission set successfully";
+                status = "Permission set successfully";
             }
-        }catch (Exception e) {
-            String errMsg = "Failed to update Permission" ;
+        } catch (Exception e) {
+            String errMsg = "Failed to update Permission";
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
@@ -2035,15 +2045,14 @@ public class ProcessStore {
     }
 
     public String initiateExportProcess(String processName, String processVersion, String exportWithAssociations,
-            String user) throws
-            Exception {
+            String user) throws Exception {
         exportedProcessList = new ArrayList<String>();
         new File(ProcessCenterConstants.PROCESS_EXPORT_DIR).mkdirs();
         Boolean exportWithAssociationsBool = Boolean.valueOf(exportWithAssociations);
         try {
             // save details about the exported zip and the core process
-            String exportRootPath = ProcessCenterConstants
-                    .PROCESS_EXPORT_DIR+"/"+processName+"-"+processVersion+"-PC-Package/";
+            String exportRootPath = ProcessCenterConstants.PROCESS_EXPORT_DIR + "/" + processName + "-" + processVersion
+                    + "-PC-Package/";
             new File(exportRootPath).mkdirs();
             /*FileOutputStream out = new FileOutputStream(exportRootPath + "METADATA.json");
             JSONObject metaData = new JSONObject();
@@ -2053,32 +2062,31 @@ public class ProcessStore {
             out.write(jsonString.getBytes());
             out.close();*/
 
-            exportProcess(exportRootPath,processName, processVersion, exportWithAssociationsBool, user);
+            exportProcess(exportRootPath, processName, processVersion, exportWithAssociationsBool, user);
 
             //zip the folder
             FolderZiper folderZiper = new FolderZiper();
-            String zipFileName = processName+"-"+processVersion+"-PC-Package.zip";
+            String zipFileName = processName + "-" + processVersion + "-PC-Package.zip";
             folderZiper.zipFolder(exportRootPath, zipFileName);
 
             //encode zip file
             String encodedZip = encodeFileToBase64Binary(zipFileName);
             return encodedZip;
 
-        }catch (Exception e){
-            String errMsg = "Failed to export process:"+processName+"-"+processVersion;
-            log.error(errMsg,e);
+        } catch (Exception e) {
+            String errMsg = "Failed to export process:" + processName + "-" + processVersion;
+            log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
     }
 
-    public void exportProcess(String exportRootPath, String processName, String processVersion, boolean exportWithAssociations, String user)
-            throws
-            ProcessCenterException {
+    public void exportProcess(String exportRootPath, String processName, String processVersion,
+            boolean exportWithAssociations, String user) throws ProcessCenterException {
 
-        if(exportedProcessList.contains(processName+"-"+processVersion)){
+        if (exportedProcessList.contains(processName + "-" + processVersion)) {
             return;
         }
-        exportedProcessList.add(processName+"-"+processVersion);
+        exportedProcessList.add(processName + "-" + processVersion);
 
         try {
 
@@ -2086,12 +2094,13 @@ public class ProcessStore {
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(user);
 
-                String exportProcessPath = exportRootPath + processName +"-"+processVersion+"/";
-                new File(exportProcessPath+"documents/").mkdirs();
+                String exportProcessPath = exportRootPath + processName + "-" + processVersion + "/";
+                new File(exportProcessPath + "documents/").mkdirs();
 
                 //save the process rxt registry entry >> xml
                 downloadResource(reg, ProcessCenterConstants.PROCESS_ASSET_ROOT,
-                        ProcessCenterConstants.EXPORTED_PROCESS_RXT_FILE, processName, processVersion, "xml",exportProcessPath);
+                        ProcessCenterConstants.EXPORTED_PROCESS_RXT_FILE, processName, processVersion, "xml",
+                        exportProcessPath);
                 //save bpmn registry entry >> xml
                 downloadResource(reg, ProcessCenterConstants.BPMN_PATH, ProcessCenterConstants.EXPORTED_BPMN_FILE,
                         processName, processVersion, "xml", exportProcessPath);
@@ -2119,7 +2128,7 @@ public class ProcessStore {
                         String docResourcePath = jsonObj.getString("path");
                         Resource docResource = reg.get(docResourcePath);
                         String[] tempStrArr = docResourcePath.split("/");
-                        String docFileName = exportProcessPath +"documents/"+ tempStrArr[tempStrArr.length - 1];
+                        String docFileName = exportProcessPath + "documents/" + tempStrArr[tempStrArr.length - 1];
                         FileOutputStream docFileOutPutStream = new FileOutputStream(docFileName);
                         IOUtils.copy(docResource.getContentStream(), docFileOutPutStream);
                         docFileOutPutStream.close();
@@ -2127,35 +2136,37 @@ public class ProcessStore {
                 }
 
                 //download process image thumbnail
-                downloadProcessThumbnailImage(reg,processName,processVersion,exportProcessPath);
+                downloadProcessThumbnailImage(reg, processName, processVersion, exportProcessPath);
 
                 //write process tags in a file
-                FileOutputStream tagsFileOutputStream = new FileOutputStream(exportProcessPath +
-                        ProcessCenterConstants.PROCESS_TAGS_FILE);
-                tagsFileOutputStream.write(getProcessTags(processName,processVersion).getBytes());
+                FileOutputStream tagsFileOutputStream = new FileOutputStream(
+                        exportProcessPath + ProcessCenterConstants.PROCESS_TAGS_FILE);
+                tagsFileOutputStream.write(getProcessTags(processName, processVersion).getBytes());
                 tagsFileOutputStream.close();
 
                 //export process associations
-                if(exportWithAssociations) {
+                if (exportWithAssociations) {
                     //write details on process associations (sub-processes/predecessors/successors) in a json file
-                    FileOutputStream out = new FileOutputStream(exportProcessPath + ProcessCenterConstants
-                            .PROCESS_ASSOCIATIONS_FILE);
+                    FileOutputStream out = new FileOutputStream(
+                            exportProcessPath + ProcessCenterConstants.PROCESS_ASSOCIATIONS_FILE);
                     JSONObject successorPredecessorSubprocessListJSON = new JSONObject(
-                            getSucessorPredecessorSubprocessList(ProcessCenterConstants.GREG_PATH + processResourcePath));
-                    out.write(successorPredecessorSubprocessListJSON.toString(ProcessCenterConstants.JSON_FILE_INDENT_FACTOR).getBytes());
+                            getSucessorPredecessorSubprocessList(
+                                    ProcessCenterConstants.GREG_PATH + processResourcePath));
+                    out.write(successorPredecessorSubprocessListJSON
+                            .toString(ProcessCenterConstants.JSON_FILE_INDENT_FACTOR).getBytes());
                     out.close();
 
-                    exportAssociatedProcesses(successorPredecessorSubprocessListJSON,exportRootPath,
-                            exportWithAssociations,"subprocesses",user);
-                    exportAssociatedProcesses(successorPredecessorSubprocessListJSON,exportRootPath,
-                            exportWithAssociations,"predecessors",user);
-                    exportAssociatedProcesses(successorPredecessorSubprocessListJSON,exportRootPath,
-                            exportWithAssociations,"successors",user);
+                    exportAssociatedProcesses(successorPredecessorSubprocessListJSON, exportRootPath,
+                            exportWithAssociations, "subprocesses", user);
+                    exportAssociatedProcesses(successorPredecessorSubprocessListJSON, exportRootPath,
+                            exportWithAssociations, "predecessors", user);
+                    exportAssociatedProcesses(successorPredecessorSubprocessListJSON, exportRootPath,
+                            exportWithAssociations, "successors", user);
                 }
             }
         } catch (Exception e) {
-            String errMsg = "Failed to export process:"+processName+"-"+processVersion;
-            log.error(errMsg,e);
+            String errMsg = "Failed to export process:" + processName + "-" + processVersion;
+            log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
     }
@@ -2172,8 +2183,8 @@ public class ProcessStore {
      * @throws JSONException
      * @throws ProcessCenterException
      */
-    public void exportAssociatedProcesses(JSONObject successorPredecessorSubprocessListJSON,String exportRootPath,
-            boolean exportWithAssociations,String assocationType, String user)
+    public void exportAssociatedProcesses(JSONObject successorPredecessorSubprocessListJSON, String exportRootPath,
+            boolean exportWithAssociations, String assocationType, String user)
             throws JSONException, ProcessCenterException {
         JSONArray associatedProcessesJArray = successorPredecessorSubprocessListJSON.getJSONArray(assocationType);
 
@@ -2186,6 +2197,7 @@ public class ProcessStore {
 
     /**
      * Download non-document process related resources (i.e: flow chart, bpmn, process text)
+     *
      * @param reg
      * @param resourceRoot
      * @param savingFileName
@@ -2226,8 +2238,7 @@ public class ProcessStore {
         }
     }
 
-    public String encodeFileToBase64Binary(String fileName)
-            throws IOException {
+    public String encodeFileToBase64Binary(String fileName) throws IOException {
 
         File file = new File(fileName);
         byte[] bytes = loadFile(file);
@@ -2244,17 +2255,16 @@ public class ProcessStore {
         if (length > Integer.MAX_VALUE) {
             // File is too large
         }
-        byte[] bytes = new byte[(int)length];
+        byte[] bytes = new byte[(int) length];
 
         int offset = 0;
         int numRead = 0;
-        while (offset < bytes.length
-                && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+        while (offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
             offset += numRead;
         }
 
         if (offset < bytes.length) {
-            throw new IOException("Could not completely read file "+file.getName());
+            throw new IOException("Could not completely read file " + file.getName());
         }
 
         is.close();
@@ -2315,14 +2325,16 @@ public class ProcessStore {
                                 .getTextContent();
                         String processVariableType = processVariableElement.getElementsByTagName("type").item(0)
                                 .getTextContent();
-                        String isAnalyzeData = processVariableElement.getElementsByTagName("isAnalyzeData").item(0).getTextContent();
-                        String isDrillDownVariable = processVariableElement.getElementsByTagName("isDrillDownVariable").item(0).getTextContent();
+                        String isAnalyzeData = processVariableElement.getElementsByTagName("isAnalyzeData").item(0)
+                                .getTextContent();
+                        String isDrillDownVariable = processVariableElement.getElementsByTagName("isDrillDownVariable")
+                                .item(0).getTextContent();
 
                         JSONObject processVariable = new JSONObject();
                         processVariable.put("name", processVariableName);
                         processVariable.put("type", processVariableType);
-                        processVariable.put("isAnalyzeData",isAnalyzeData);
-                        processVariable.put("isDrillDownVariable",isDrillDownVariable);
+                        processVariable.put("isAnalyzeData", isAnalyzeData);
+                        processVariable.put("isDrillDownVariable", isDrillDownVariable);
                         variableArray.put(processVariable);
                     }
                 }
@@ -2373,7 +2385,8 @@ public class ProcessStore {
                     appendText(doc, variableElement, "name", ProcessCenterConstants.MNS, variableName);
                     appendText(doc, variableElement, "type", ProcessCenterConstants.MNS, variableType);
                     appendText(doc, variableElement, "isAnalyzeData", ProcessCenterConstants.MNS, isAnalyzeData);
-                    appendText(doc, variableElement, "isDrillDownVariable", ProcessCenterConstants.MNS, isDrillDownVariable);
+                    appendText(doc, variableElement, "isDrillDownVariable", ProcessCenterConstants.MNS,
+                            isDrillDownVariable);
 
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
@@ -2433,7 +2446,7 @@ public class ProcessStore {
                         .getTextContent();
 
                 JSONObject dasConfigInfoJOb = new JSONObject();
-                dasConfigInfoJOb.put("processDefinitionId",processDefinitionId);
+                dasConfigInfoJOb.put("processDefinitionId", processDefinitionId);
                 dasConfigInfoJOb.put("eventStreamName", eventStreamName);
                 dasConfigInfoJOb.put("eventStreamVersion", eventStreamVersion);
                 dasConfigInfoJOb.put("eventStreamDescription", eventStreamDescription);

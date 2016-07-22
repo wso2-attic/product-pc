@@ -37,15 +37,15 @@ public class LoginAdminServiceClient {
     private AuthenticationAdminStub authenticationAdminStub;
     private String endPoint;
     private static final Log log = LogFactory.getLog(LoginAdminServiceClient.class);
-    private String dasURL=null;
+    private String dasURL = null;
 
     /**
      * @param DASUrl
      * @throws AxisFault
      */
     public LoginAdminServiceClient(String DASUrl) throws AxisFault {
-        this.dasURL=DASUrl;
-        this.endPoint = DASUrl + "/"+AnalyticsConfigConstants.SERVICES+"/" + serviceName;
+        this.dasURL = DASUrl;
+        this.endPoint = DASUrl + "/" + AnalyticsConfigConstants.SERVICES + "/" + serviceName;
         authenticationAdminStub = new AuthenticationAdminStub(endPoint);
     }
 
@@ -62,12 +62,12 @@ public class LoginAdminServiceClient {
             throws RemoteException, LoginAuthenticationExceptionException {
 
         String sessionCookie = null;
-        String dasHostName=dasURL.substring(dasURL.indexOf("/")+2)
-                .substring(0,dasURL.substring(dasURL.indexOf("/")+2).indexOf(":"));
+        String dasHostName = dasURL.substring(dasURL.indexOf("/") + 2)
+                .substring(0, dasURL.substring(dasURL.indexOf("/") + 2).indexOf(":"));
         if (authenticationAdminStub.login(userName, String.valueOf(password), dasHostName)) {
-            Arrays.fill(password,' ');
-            password=null;
-            if(log.isDebugEnabled()) {
+            Arrays.fill(password, ' ');
+            password = null;
+            if (log.isDebugEnabled()) {
                 log.debug("Login successful to DAS Admin Services.");
             }
             ServiceContext serviceContext = authenticationAdminStub.
@@ -85,7 +85,7 @@ public class LoginAdminServiceClient {
      */
     public void logOut() throws RemoteException, LogoutAuthenticationExceptionException {
         authenticationAdminStub.logout();
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Logout from DAS Admin Services");
         }
     }
