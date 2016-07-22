@@ -24,9 +24,9 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.pc.analytics.core.kpi.AnalyticsConfigConstants;
+import org.wso2.carbon.pc.analytics.core.kpi.internal.PCAnalyticsServerHolder;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
-import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -62,7 +62,7 @@ public class DASConfigurationUtils {
         String processContent = null;
         ProcessStore ps = new ProcessStore();
         try {
-            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            RegistryService registryService = PCAnalyticsServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
                 String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
@@ -106,7 +106,7 @@ public class DASConfigurationUtils {
         String processContent = null;
         ProcessStore ps = new ProcessStore();
         try {
-            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            RegistryService registryService = PCAnalyticsServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
                 String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +

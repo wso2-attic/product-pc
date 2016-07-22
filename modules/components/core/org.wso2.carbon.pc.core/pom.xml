@@ -89,11 +89,15 @@
                     <instructions>
                         <Bundle-Vendor>WSO2</Bundle-Vendor>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Export-Package>
+                        <Private-Package>
                             org.wso2.carbon.pc.core.internal,
-                            org.wso2.carbon.pc.core.audit,
-                            org.wso2.carbon.pc.core.import_export,
-                            org.wso2.carbon.pc.core;version=${project.version}
+                            org.wso2.carbon.pc.core.audit.util,
+                            org.wso2.carbon.pc.core.audit.bean
+                        </Private-Package>
+                        <Export-Package>
+                            !org.wso2.carbon.pc.core.internal,
+                            !org.wso2.carbon.pc.core.audit.util,
+                            !org.wso2.carbon.pc.core.audit.bean,
                             org.wso2.carbon.pc.core.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>

@@ -18,12 +18,16 @@ package org.wso2.carbon.pc.analytics.core.kpi.internal;
 import org.wso2.carbon.pc.analytics.core.kpi.clients.LoginAdminServiceClient;
 import org.wso2.carbon.pc.analytics.core.kpi.clients.ReceiverAdminServiceClient;
 import org.wso2.carbon.pc.analytics.core.kpi.clients.StreamAdminServiceClient;
+import org.wso2.carbon.pc.core.ProcessCenter;
+import org.wso2.carbon.registry.core.service.RegistryService;
 
 public class PCAnalyticsServerHolder {
     private static PCAnalyticsServerHolder instance = new PCAnalyticsServerHolder();
     private LoginAdminServiceClient loginAdminServiceClient;
     private StreamAdminServiceClient streamAdminServiceClient;
     private ReceiverAdminServiceClient receiverAdminServiceClient;
+    private RegistryService registryService;
+    private ProcessCenter processCenter;
 
     public static PCAnalyticsServerHolder getInstance() {
         return instance;
@@ -51,5 +55,21 @@ public class PCAnalyticsServerHolder {
 
     public ReceiverAdminServiceClient getReceiverAdminServiceClient() {
         return receiverAdminServiceClient;
+    }
+
+    public ProcessCenter getProcessCenter() {
+        return processCenter;
+    }
+
+    public void setProcessCenter(ProcessCenter processCenter) {
+        this.processCenter = processCenter;
+    }
+
+    public RegistryService getRegistryService() {
+        return registryService;
+    }
+
+    public void setRegistryService(RegistryService registryService) {
+        this.registryService = registryService;
     }
 }

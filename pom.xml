@@ -640,6 +640,39 @@
                 <artifactId>org.wso2.carbon.bpmn.stub</artifactId>
                 <version>${carbon.business.process.version}</version>
             </dependency>
+
+            <!-- Analytics Configuration Dependencies-->
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
+                <version>${org.wso2.carbon.authenticator.stub.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2.wso2</groupId>
+                <artifactId>axis2-client</artifactId>
+                <version>${axis2-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.event.receiver.stub</artifactId>
+                <version>${org.wso2.carbon.event.receiver.stub.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.event.stream.stub</artifactId>
+                <version>${org.wso2.carbon.event.stream.stub.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.maven.scm.wso2</groupId>
+                <artifactId>maven-scm</artifactId>
+                <version>${maven-scm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.pc</groupId>
+                <artifactId>org.wso2.carbon.pc.core</artifactId>
+                <version>${org.wso2.carbon.pc.core.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <scm>
@@ -859,6 +892,11 @@
         <eclipse.equinox.jsp.jasper.version>1.0.1.R33x_v20070816</eclipse.equinox.jsp.jasper.version>
         <carbon.kernel.imp.pkg.version>[4.4.1, 4.5.0)</carbon.kernel.imp.pkg.version>
         <org.wso2.carbon.authenticator.stub.version>4.0.0</org.wso2.carbon.authenticator.stub.version>
+        <axis2-client.version>1.6.1.wso2v5</axis2-client.version>
+        <org.wso2.carbon.event.receiver.stub.version>5.0.8</org.wso2.carbon.event.receiver.stub.version>
+        <org.wso2.carbon.event.stream.stub.version>5.0.8</org.wso2.carbon.event.stream.stub.version>
+        <maven-scm.version>1.7.0.wso2v1</maven-scm.version>
+        <org.wso2.carbon.pc.core.version>1.0.0-SNAPSHOT</org.wso2.carbon.pc.core.version>
 
     </properties>
 </project>
