@@ -26,13 +26,15 @@
     </h2>
 
     <div class="collapse in responsive-form-container" id="collapsevariableinfo">
-        <div class="add-unbounded-row" float="left" width="100%" style="width:auto; float:left;"><a
-                id="btn_addProcessVariablesRow" onclick="addProcessVariableRow('dataTable')"><i
-                class="fa fa-plus-circle"></i> Add Process Variable</a></div>
-        <div class="add-unbounded-row" style="width:auto;padding-left: 25pt; margin-left:10%;"><a
-                id="btn_deleteProcessVariablesRow" onclick="deleteProcessVariableRow('dataTable')"><i
-                class="fa fa-plus-circle"></i> Delete Process Variable</a></div>
-        <br>
+        {{#unless DASAnalyticsConfigured}}
+            <div class="add-unbounded-row" float="left" width="100%" style="width:auto; float:left;"><a
+                    id="btn_addProcessVariablesRow" onclick="addProcessVariableRow('dataTable')"><i
+                    class="fa fa-plus-circle"></i> Add Process Variable</a></div>
+            <div class="add-unbounded-row" style="width:auto;padding-left: 25pt; margin-left:10%;"><a
+                    id="btn_deleteProcessVariablesRow" onclick="deleteProcessVariableRow('dataTable')"><i
+                    class="fa fa-plus-circle"></i> Delete Process Variable</a></div>
+            <br>
+        {{/unless}}
 
         <table id="dataTable" class="tablex cu-data-tableX js-unbounded-table" width="40%">
             <thead>
