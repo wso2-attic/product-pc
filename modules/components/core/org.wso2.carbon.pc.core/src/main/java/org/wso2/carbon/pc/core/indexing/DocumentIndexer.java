@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.pc.core;
+package org.wso2.carbon.pc.core.indexing;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,7 +42,8 @@ import java.util.Map;
 public class DocumentIndexer implements Indexer {
     public static final Log log = LogFactory.getLog(DocumentIndexer.class);
 
-    @Override public IndexDocument getIndexedDocument(AsyncIndexer.File2Index fileData)
+    @Override
+    public IndexDocument getIndexedDocument(AsyncIndexer.File2Index fileData)
             throws SolrException, RegistryException {
         try {
             String wordText = null;

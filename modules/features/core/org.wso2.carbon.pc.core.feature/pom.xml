@@ -21,6 +21,10 @@
             <groupId>org.wso2.pc</groupId>
             <artifactId>org.wso2.carbon.pc.core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.business-process</groupId>
+            <artifactId>org.wso2.carbon.bpmn.stub</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -49,6 +53,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>org.wso2.pc:org.wso2.carbon.pc.core</bundleDef>
+                                <bundleDef>org.wso2.carbon.business-process:org.wso2.carbon.bpmn.stub</bundleDef>
                             </bundles>
                             <importBundles>
                                 <importBundleDef>org.wso2.orbit.org.activiti:activiti-all:${org.activiti.wso2.version}</importBundleDef>

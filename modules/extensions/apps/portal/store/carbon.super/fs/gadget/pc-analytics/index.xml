@@ -88,7 +88,7 @@
                                     <option value="100">100</option>
                                  </select>
                               </div>
-                            <button class="btn btn-default btn-primary" onclick="drawAvgExecuteTimeVsProcessIdResult()">Apply Filter</button>
+                            <button class="btn btn-primary" onclick="drawAvgExecuteTimeVsProcessIdResult()">Apply Filter</button>
                         </div>
                     </div>
                     <div id="chartA" style="height:100%"></div>

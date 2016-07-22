@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.services);
 
 var username = require('store').server.current(session).username;
 

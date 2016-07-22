@@ -36,6 +36,49 @@
                     </sourceExcludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>xmlbeans-maven-plugin</artifactId>
+                <version>2.3.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>xmlbeans</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <schemaDirectory>src/main/resources/schemas</schemaDirectory>
+                    <xmlConfigs>
+                        <xmlConfig implementation="java.io.File">
+                            src/main/resources/schemas/xmlbeans.conf
+                        </xmlConfig>
+                    </xmlConfigs>
+                    <noUpa>false</noUpa>
+                    <sourceGenerationDirectory>
+                        target/generated-code/src
+                    </sourceGenerationDirectory>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>target/generated-code/src</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -51,6 +94,7 @@
                             org.wso2.carbon.pc.core.audit,
                             org.wso2.carbon.pc.core.import_export,
                             org.wso2.carbon.pc.core;version=${project.version}
+                            org.wso2.carbon.pc.core.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.wso2.carbon.registry.indexing.*; version="4.5.4",
@@ -58,11 +102,14 @@
                             org.wso2.carbon.registry.core.*; version="${carbon.kernel.registry.imp.pkg.version}",
                             org.wso2.carbon.governance.api.util; version="0.0.0",
                             org.wso2.carbon.context; version="${carbon.kernel.version}",
-                            org.jaggeryjs.hostobjects.stream; version="${jaggery.version}",
+                            org.jaggeryjs.hostobjects.stream; version="${jaggery.feature.version}",
                             org.apache.commons.logging; version="${version.commons.logging}",
                             org.apache.commons.io; version="2.4.0",
                             org.apache.commons.codec.binary; version="1.4.0",
                             org.activiti.*; version="${org.activiti.version}",
+                            org.apache.xmlbeans.impl.schema,
+                            org.apache.xmlbeans.impl.values,
+                            org.apache.xmlbeans,
                             *;resolution:=optional
                         </Import-Package>
                     </instructions>
@@ -86,7 +133,7 @@
             <artifactId>js</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-io.wso2</groupId>
+            <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
@@ -123,8 +170,8 @@
         </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon</groupId>-->
-            <!--<artifactId>org.wso2.carbon.registry.resource</artifactId>-->
+        <!--<groupId>org.wso2.carbon</groupId>-->
+        <!--<artifactId>org.wso2.carbon.registry.resource</artifactId>-->
         <!--</dependency>-->
 
         <dependency>
@@ -136,10 +183,12 @@
             <artifactId>org.wso2.carbon.governance.api</artifactId>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon</groupId>-->
-            <!--<artifactId>org.wso2.carbon.governance.api</artifactId>-->
+        <!--<groupId>org.wso2.carbon</groupId>-->
+        <!--<artifactId>org.wso2.carbon.governance.api</artifactId>-->
         <!--</dependency>-->
+        <dependency>
+            <groupId>org.wso2.carbon.business-process</groupId>
+            <artifactId>org.wso2.carbon.bpmn.stub</artifactId>
+        </dependency>
     </dependencies>
-
-
 </project>

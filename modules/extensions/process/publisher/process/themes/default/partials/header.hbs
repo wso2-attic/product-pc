@@ -30,10 +30,27 @@
                 </a>
             </div>
             <div class="wr-auth pull-right">
-                <a class="auth-img" href="/portal" target="_blank">
-                    <i class="fa fa-line-chart"></i>
-                    <span>Go to Analytics</span>
+                <a href="#" data-toggle="dropdown" class="">
+                    <div class="auth-img">
+                        <span>PC Analytics</span>
+                        <span class="caret"></span>
+                    </div>
                 </a>
+                <div class="dropdown-menu" style="right: 240px;">
+                    <div class="cu-arrow"></div>
+                    <div class="dropdown-menu-content" style="border-bottom: 2px solid #5c5c5c;">
+                        <a class="filter-item" href="/portal" target="_blank">
+                            <i class="fa fa-line-chart"></i>
+                            <span class="es-user-name">Process Analytics</span>
+                        </a>
+                    </div>
+                    <div class="dropdown-menu-content">
+                        <a class="filter-item" href="/portal/dashboards/user-analytics?user={{cuser.username}}" target="_blank">
+                            <i class="fa fa-line-chart"></i>
+                            <span>User Analytics</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
