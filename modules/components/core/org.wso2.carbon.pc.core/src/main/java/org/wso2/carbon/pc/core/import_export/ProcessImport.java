@@ -29,6 +29,7 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.user.api.UserStoreException;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -46,7 +47,6 @@ public class ProcessImport {
     String user;
 
     /**
-     *
      * @param processZipInputStream
      * @param user
      * @throws IOException
@@ -57,54 +57,55 @@ public class ProcessImport {
     public void importProcesses(InputStream processZipInputStream, String user)
             throws IOException, RegistryException, ProcessCenterException, UserStoreException {
 
-        reg = registryService.getGovernanceUserRegistry(user);
-        this.user = user;
-        //extract zip file stream to the system disk
-        byte[] buffer = new byte[2048];
-        ZipInputStream zipInputStream = new ZipInputStream(processZipInputStream);
-        new File(ImportExportConstants.IMPORTS_DIR).mkdirs();
+        if (registryService != null) {
+            reg = registryService.getGovernanceUserRegistry(user);
+            this.user = user;
+            //extract zip file stream to the system disk
+            byte[] buffer = new byte[2048];
+            ZipInputStream zipInputStream = new ZipInputStream(processZipInputStream);
+            new File(ImportExportConstants.IMPORTS_DIR).mkdirs();
 
-        try {
-            ZipEntry entry;
-            while ((entry = zipInputStream.getNextEntry()) != null) {
-                //counter++;
-                String outpath = ImportExportConstants.IMPORTS_DIR + "/" + entry.getName();
-                String dirPath = outpath.substring(0, outpath.lastIndexOf("/"));
-                new File(dirPath).mkdirs();
-                FileOutputStream fileOutputStream = null;
-                try {
-                    fileOutputStream = new FileOutputStream(outpath);
-                    int len = 0;
-                    while ((len = zipInputStream.read(buffer)) > 0) {
-                        fileOutputStream.write(buffer, 0, len);
-                    }
-                } finally {
-                    if (fileOutputStream != null) {
-                        fileOutputStream.close();
+            try {
+                ZipEntry entry;
+                while ((entry = zipInputStream.getNextEntry()) != null) {
+                    //counter++;
+                    String outpath = ImportExportConstants.IMPORTS_DIR + "/" + entry.getName();
+                    String dirPath = outpath.substring(0, outpath.lastIndexOf("/"));
+                    new File(dirPath).mkdirs();
+                    FileOutputStream fileOutputStream = null;
+                    try {
+                        fileOutputStream = new FileOutputStream(outpath);
+                        int len = 0;
+                        while ((len = zipInputStream.read(buffer)) > 0) {
+                            fileOutputStream.write(buffer, 0, len);
+                        }
+                    } finally {
+                        if (fileOutputStream != null) {
+                            fileOutputStream.close();
+                        }
                     }
                 }
+            } finally {
+                zipInputStream.close();
             }
-        } finally {
-            zipInputStream.close();
-        }
 
-        //check if the importing processes are already available
-        if (isProcessesAlreadyAvailble()) {
-            return;
-        }
-
-        if (registryService != null) {
+            //check if the importing processes are already available
+            boolean isProcessAvailableAlready = isProcessesAlreadyAvailble();
+            if (isProcessAvailableAlready) {
+                return;
+            }
 
             //else do the process importing for each process
             for (File processDir : listOfProcessDirs) {
-                if(processDir.isDirectory()) {
+                if (processDir.isDirectory()) {
                     String processDirName = processDir.getName();
                     String processDirPath = processDir.getPath();
                     String processRxtPath = processDirPath + "/" + "process_rxt.xml";
                     String processName = processDirName.substring(0, processDirName.lastIndexOf("-"));
-                    String processVersion = processDirName.substring(processDirName.lastIndexOf("-") + 1, processDirName.length());
+                    String processVersion = processDirName
+                            .substring(processDirName.lastIndexOf("-") + 1, processDirName.length());
                     putProcessRxt(processName, processVersion, processRxtPath);
-                    setImageThumbnail(processName, processVersion,processDirPath);
+                    setImageThumbnail(processName, processVersion, processDirPath);
 
                     //set process documents
                     //set process tags
@@ -115,7 +116,6 @@ public class ProcessImport {
     }
 
     /**
-     *
      * @param processName
      * @param processVersion
      * @param processDirPath
@@ -134,7 +134,7 @@ public class ProcessImport {
 
         Resource imageContentResource = reg.newResource();
 
-        File imageThumbnailFile = new File(processDirPath+"/"+"process_image_thumbnail");
+        File imageThumbnailFile = new File(processDirPath + "/" + "process_image_thumbnail");
         byte[] imageContent = Files.readAllBytes(imageThumbnailFile.toPath());
         imageContentResource.setContent(imageContent);
         reg.put(imageResourcePath, imageContentResource);
@@ -142,7 +142,6 @@ public class ProcessImport {
     }
 
     /**
-     *
      * @return
      * @throws IOException
      * @throws ProcessCenterException
@@ -151,17 +150,19 @@ public class ProcessImport {
     public boolean isProcessesAlreadyAvailble() throws IOException, ProcessCenterException, RegistryException {
         File folder = new File(ImportExportConstants.IMPORTS_DIR);
         File[] listOfFiles = folder.listFiles();
-        if (listOfFiles[0].isDirectory() && listOfFiles.length == 1) {
-            String zipHomeDirectoryName = listOfFiles[0].getPath();
-            File packageFolder = new File(zipHomeDirectoryName);
-            listOfProcessDirs = packageFolder.listFiles();
-            ArrayList<String> processListinPC = getProcessList();
+        if(listOfFiles!=null) {
+            if (listOfFiles[0].isDirectory() && listOfFiles.length == 1) {
+                String zipHomeDirectoryName = listOfFiles[0].getPath();
+                File packageFolder = new File(zipHomeDirectoryName);
+                listOfProcessDirs = packageFolder.listFiles();
+                ArrayList<String> processListinPC = getProcessList();
 
-            for (File processDir : listOfProcessDirs) {
-                if (processDir.isDirectory()) {
-                    String fileName = processDir.getName();
-                    if (processListinPC.contains(fileName)) {
-                        return true;
+                for (File processDir : listOfProcessDirs) {
+                    if (processDir.isDirectory()) {
+                        String fileName = processDir.getName();
+                        if (processListinPC.contains(fileName)) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -170,7 +171,6 @@ public class ProcessImport {
     }
 
     /**
-     *
      * @return
      * @throws ProcessCenterException
      * @throws RegistryException
@@ -196,7 +196,6 @@ public class ProcessImport {
     }
 
     /**
-     *
      * @param processName
      * @param processVersion
      * @param processRxtPath
@@ -204,7 +203,8 @@ public class ProcessImport {
      * @throws UserStoreException
      * @throws IOException
      */
-    public void putProcessRxt(String processName, String processVersion, String processRxtPath) throws RegistryException, UserStoreException, IOException {
+    public void putProcessRxt(String processName, String processVersion, String processRxtPath)
+            throws RegistryException, UserStoreException, IOException {
         File rxtFile = new File(processRxtPath);
 
         RegPermissionUtil.setPutPermission(registryService, user, ProcessCenterConstants.PROCESS_ASSET_ROOT);
@@ -214,7 +214,6 @@ public class ProcessImport {
         processRxt.setContentStream(FileUtils.openInputStream(rxtFile));
         processRxt.setMediaType("application/vnd.wso2-process+xml");
         reg.put(processAssetPath, processRxt);
-
 
     }
 }
