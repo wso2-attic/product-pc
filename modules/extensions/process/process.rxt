@@ -29,7 +29,7 @@
             <field type="text-area">
                 <name>Description</name>
             </field>
-             <field type="text">
+            <field type="text">
                 <name>Createdtime</name>
             </field>
         </table>
@@ -45,6 +45,9 @@
             </field>
             <field type="text" required="false">
                 <name>server</name>
+            </field>
+            <field type="text" required="false">
+                <name>isDasConfigedForAnalytics</name>
             </field>
         </table>
         <table name="Subprocess" maxoccurs="unbounded">
@@ -80,9 +83,17 @@
                 <name>Id</name>
             </field>
         </table>
-        <table name="Document" maxoccurs="unbounded">
+        <table name="Process_Variable" maxoccurs="unbounded">
             <field type="text" required="true">
                 <name>name</name>
+            </field>
+            <field type="text" required="true">
+                <name>type</name>
+            </field>
+        </table>
+        <table name="Document">
+            <field type="text" required="true">
+                <name>documentname</name>
             </field>
             <field type="text" required="false">
                 <name>summary</name>
@@ -92,6 +103,11 @@
             </field>
             <field type="text" readonly="true">
                 <name>path</name>
+            </field>
+        </table>
+        <table name="PDF">
+            <field type="text" required="true">
+                <name>Path</name>
             </field>
         </table>
         <table name="Images">
@@ -104,7 +120,32 @@
         </table>
         <table name="Flowchart">
             <field type="text" required="false">
-               <name>Path</name>
+                <name>Path</name>
+            </field>
+        </table>
+        <table name="bpmnDesign">
+            <field type="text" required="true">
+                <name>bpmnDesignPath</name>
+            </field>
+        </table>
+        <table name="Analytics_Config_Info" >
+            <field type="text" required="true">
+                <name>processDefinitionId</name>
+            </field>
+            <field type="text" required="true">
+                <name>eventStreamName</name>
+            </field>
+            <field type="text" required="true">
+                <name>eventStreamVersion</name>
+            </field>
+            <field type="text" required="true">
+                <name>eventStreamDescription</name>
+            </field>
+            <field type="text" required="true">
+                <name>eventStreamNickName</name>
+            </field>
+            <field type="text" required="true">
+                <name>eventReceiverName</name>
             </field>
         </table>
     </content>

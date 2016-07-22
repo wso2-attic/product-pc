@@ -78,14 +78,14 @@ public class ProcessStore {
         return childElement;
     }
 
-    private Element appendText(Document doc, Element parent, String childName, String childNS, String text) {
+    public Element appendText(Document doc, Element parent, String childName, String childNS, String text) {
         Element childElement = doc.createElementNS(childNS, childName);
         childElement.setTextContent(text);
         parent.appendChild(childElement);
         return childElement;
     }
 
-    private String xmlToString(Document doc) throws TransformerException {
+    public String xmlToString(Document doc) throws TransformerException {
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer transformer = tf.newTransformer();
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
@@ -94,7 +94,7 @@ public class ProcessStore {
         return writer.getBuffer().toString().replaceAll("\n|\r", "");
     }
 
-    private Document stringToXML(String xmlString) throws Exception {
+    public Document stringToXML(String xmlString) throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         builder = factory.newDocumentBuilder();
@@ -2287,5 +2287,253 @@ public class ProcessStore {
         }
     }
 
+    /**
+     * Get a list of configured process variables and their types, for analytics
+     *
+     * @param resourcePath
+     * @return JSON Object in string representation, which includes the configured process variables for analytics
+     * @throws ProcessCenterException
+     */
+    public String getProcessVariablesList(String resourcePath) throws ProcessCenterException {
+        String resourceString = "";
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                resourcePath = resourcePath.substring(ProcessCenterConstants.GREG_PATH.length());
+                Resource resourceAsset = reg.get(resourcePath);
+                String resourceContent = new String((byte[]) resourceAsset.getContent());
+
+                JSONObject procVariablesJob = new JSONObject();
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder;
+                builder = factory.newDocumentBuilder();
+                Document document = builder.parse(new InputSource(new StringReader(resourceContent)));
+
+                JSONArray variableArray = new JSONArray();
+
+                procVariablesJob.put("processVariables", variableArray);
+
+                NodeList processVariableElements = ((Element) document.getFirstChild())
+                        .getElementsByTagName("process_variable");
+
+                if (processVariableElements.getLength() != 0) {
+                    for (int i = 0; i < processVariableElements.getLength(); i++) {
+                        Element processVariableElement = (Element) processVariableElements.item(i);
+                        String processVariableName = processVariableElement.getElementsByTagName("name").item(0)
+                                .getTextContent();
+                        String processVariableType = processVariableElement.getElementsByTagName("type").item(0)
+                                .getTextContent();
+                        String isAnalyzeData = processVariableElement.getElementsByTagName("isAnalyzeData").item(0).getTextContent();
+                        String isDrillDownVariable = processVariableElement.getElementsByTagName("isDrillDownVariable").item(0).getTextContent();
+
+                        JSONObject processVariable = new JSONObject();
+                        processVariable.put("name", processVariableName);
+                        processVariable.put("type", processVariableType);
+                        processVariable.put("isAnalyzeData",isAnalyzeData);
+                        processVariable.put("isDrillDownVariable",isDrillDownVariable);
+                        variableArray.put(processVariable);
+                    }
+                }
+                resourceString = procVariablesJob.toString();
+            }
+        } catch (Exception e) {
+            String errMsg = "Failed to get the process variables list";
+            throw new ProcessCenterException(errMsg, e);
+        }
+        return resourceString;
+    }
+
+    /**
+     * Save the process variables in process rxt which need to be configured for analytics
+     *
+     * @param processVariableDetails
+     * @return
+     */
+    public void saveProcessVariables(String processVariableDetails) throws ProcessCenterException {
+        String processContent = null;
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+                JSONObject processInfo = new JSONObject(processVariableDetails);
+                String processName = processInfo.getString(ProcessCenterConstants.PROCESS_NAME);
+                String processVersion = processInfo.getString(ProcessCenterConstants.PROCESS_VERSION);
+                String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                        processVersion;
+                Resource resource = reg.get(processAssetPath);
+                processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
+
+                JSONObject processVariablesJOb = processInfo.getJSONObject("processVariables");
+
+                Iterator<?> keys = processVariablesJOb.keys();
+                //saving pracess variable name,type as sub elements
+                while (keys.hasNext()) {
+                    String variableName = (String) keys.next();
+                    String[] varMetaData = processVariablesJOb.get(variableName).toString().split("##");
+                    String variableType = varMetaData[0];
+                    String isAnalyzeData = varMetaData[1];
+                    String isDrillDownVariable = varMetaData[2];
+                    Element rootElement = doc.getDocumentElement();
+                    Element variableElement = append(doc, rootElement, "process_variable", ProcessCenterConstants.MNS);
+                    appendText(doc, variableElement, "name", ProcessCenterConstants.MNS, variableName);
+                    appendText(doc, variableElement, "type", ProcessCenterConstants.MNS, variableType);
+                    appendText(doc, variableElement, "isAnalyzeData", ProcessCenterConstants.MNS, isAnalyzeData);
+                    appendText(doc, variableElement, "isDrillDownVariable", ProcessCenterConstants.MNS, isDrillDownVariable);
+
+                    String newProcessContent = xmlToString(doc);
+                    resource.setContent(newProcessContent);
+                    reg.put(processAssetPath, resource);
+                }
+                log.info("Saved process variables to configure analytics");
+                if (log.isDebugEnabled()) {
+                    log.debug("Saved process variables to configure analytics.Saved info:" + processVariableDetails);
+                }
+            }
+        } catch (TransformerException | JSONException | RegistryException e) {
+            String errMsg =
+                    "Failed to save processVariables with info,\n" + processVariableDetails + "\n,to the process.rxt";
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        } catch (Exception e) {
+            String errMsg = "Failed to convert " + processContent + " registry resource to XML";
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        }
+    }
+
+    /**
+     * Get the configured event stream and receiver information (for analytics with DAS), of the process
+     *
+     * @param resourcePath path for the process resource, in governance registry
+     * @return Information of Event Stream and Reciever, configured for the process
+     * @throws ProcessCenterException
+     */
+    public String getStreamAndReceiverInfo(String resourcePath) throws ProcessCenterException {
+        String resourceString = "";
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                resourcePath = resourcePath.substring(ProcessCenterConstants.GREG_PATH.length());
+                Resource resourceAsset = reg.get(resourcePath);
+                String resourceContent = new String((byte[]) resourceAsset.getContent());
+
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                Document document = builder.parse(new InputSource(new StringReader(resourceContent)));
+                JSONArray variableArray = new JSONArray();
+                Element dasConfigInfoElement = (Element) ((Element) document.getFirstChild())
+                        .getElementsByTagName("analytics_config_info").item(0);
+                String processDefinitionId = dasConfigInfoElement.getElementsByTagName("processDefinitionId").item(0)
+                        .getTextContent();
+                String eventStreamName = dasConfigInfoElement.getElementsByTagName("eventStreamName").item(0)
+                        .getTextContent();
+                String eventStreamVersion = dasConfigInfoElement.getElementsByTagName("eventStreamVersion").item(0)
+                        .getTextContent();
+                String eventStreamDescription = dasConfigInfoElement.getElementsByTagName("eventStreamDescription")
+                        .item(0).getTextContent();
+                String eventStreamNickName = dasConfigInfoElement.getElementsByTagName("eventStreamNickName").item(0)
+                        .getTextContent();
+                String eventReceiverName = dasConfigInfoElement.getElementsByTagName("eventReceiverName").item(0)
+                        .getTextContent();
+
+                JSONObject dasConfigInfoJOb = new JSONObject();
+                dasConfigInfoJOb.put("processDefinitionId",processDefinitionId);
+                dasConfigInfoJOb.put("eventStreamName", eventStreamName);
+                dasConfigInfoJOb.put("eventStreamVersion", eventStreamVersion);
+                dasConfigInfoJOb.put("eventStreamDescription", eventStreamDescription);
+                dasConfigInfoJOb.put("eventStreamNickName", eventStreamNickName);
+                dasConfigInfoJOb.put("eventReceiverName", eventReceiverName);
+
+                resourceString = dasConfigInfoJOb.toString();
+            }
+        } catch (Exception e) {
+            String errMsg = "Failed to get the event stream and receeiver info";
+            throw new ProcessCenterException(errMsg, e);
+        }
+        return resourceString;
+    }
+
+    /**
+     * Save event stream and reciever information configured for analytics with DAS, for this process, in governance
+     * registry in the process.rxt
+     *
+     * @param dasConfigData
+     * @param processName
+     * @param processVersion
+     * @throws ProcessCenterException
+     */
+    public void saveStreamAndReceiverInfo(String dasConfigData, String processName, String processVersion)
+            throws ProcessCenterException {
+        String processContent = null;
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+                JSONObject dasConfigDataJOb = new JSONObject(dasConfigData);
+               /* String processName = processInfo.getString(ProcessCenterConstants.PROCESS_NAME);
+                String processVersion = processInfo.getString(ProcessCenterConstants.PROCESS_VERSION);*/
+
+                String processDefinitionId = dasConfigDataJOb.getString(ProcessCenterConstants.PROCESS_DEFINITION_ID);
+                String eventStreamName = dasConfigDataJOb.getString(ProcessCenterConstants.EVENT_STREAM_NAME);
+                String eventStreamVersion = dasConfigDataJOb.getString(ProcessCenterConstants.EVENT_STREAM_VERSION);
+                String eventStreamDescription = dasConfigDataJOb
+                        .getString(ProcessCenterConstants.EVENT_STREAM_DESCRIPTION);
+                String eventStreamNickName = dasConfigDataJOb.getString(ProcessCenterConstants.EVENT_STREAM_NICK_NAME);
+                String eventReceiverName = dasConfigDataJOb.getString(ProcessCenterConstants.EVENT_RECEIVER_NAME);
+
+                String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                        processVersion;
+                Resource resource = reg.get(processAssetPath);
+                processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
+
+                //  while (keys.hasNext()) {
+                // String variableName = (String) keys.next();
+                //if (Debugger.isEnabled())
+                // log.debug(variableName);
+                //String variableType = processVariablesJOb.get(variableName).toString();
+                //JSONObject processVariableJOb= (JSONObject) processVariablesArray.get(i);
+                Element rootElement = doc.getDocumentElement();
+                Element dasConfigInfoElement = append(doc, rootElement, "analytics_config_info",
+                        ProcessCenterConstants.MNS);
+                appendText(doc, dasConfigInfoElement, "processDefinitionId", ProcessCenterConstants.MNS,
+                        processDefinitionId);
+                appendText(doc, dasConfigInfoElement, "eventStreamName", ProcessCenterConstants.MNS, eventStreamName);
+                appendText(doc, dasConfigInfoElement, "eventStreamVersion", ProcessCenterConstants.MNS,
+                        eventStreamVersion);
+                appendText(doc, dasConfigInfoElement, "eventStreamDescription", ProcessCenterConstants.MNS,
+                        eventStreamDescription);
+                appendText(doc, dasConfigInfoElement, "eventStreamNickName", ProcessCenterConstants.MNS,
+                        eventStreamNickName);
+                appendText(doc, dasConfigInfoElement, "eventReceiverName", ProcessCenterConstants.MNS,
+                        eventReceiverName);
+
+                String newProcessContent = xmlToString(doc);
+                resource.setContent(newProcessContent);
+                reg.put(processAssetPath, resource);
+                // }
+                log.info("Saved das configuration details in the registry");
+                if (log.isDebugEnabled()) {
+                    log.debug("The Saved das configuration details:" + dasConfigData);
+                }
+            }
+        } catch (TransformerException | JSONException | RegistryException e) {
+            String errMsg =
+                    "Failed to save das configuration details with info,\n" + dasConfigData + "\n,to the process.rxt";
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        } catch (Exception e) {
+            String errMsg = "Failed to convert " + processContent + " registry resource to XML";
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        }
+    }
 
 }

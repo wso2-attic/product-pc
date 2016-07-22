@@ -40,12 +40,14 @@
     <modules>
         <module>modules/styles</module>
         <module>modules/components/core/org.wso2.carbon.pc.core</module>
-        <module>modules/components/analytics/core/org.wso2.carbon.pc.analytics.core</module>
+        <module>modules/components/analytics/core/generic/org.wso2.carbon.pc.analytics.core.generic</module>
+        <module>modules/components/analytics/core/kpi/org.wso2.carbon.pc.analytics.core.kpi</module>
         <module>modules/components/analytics/web/org.wso2.carbon.pc.analytics.web</module>
         <module>modules/components/analytics/udf/org.wso2.carbon.pc.analytics.udf</module>
         <module>modules/components/analytics/capp/org.wso2.carbon.pc.analytics.capp</module>
         <module>modules/features/core/org.wso2.carbon.pc.core.feature</module>
-        <module>modules/features/analytics-core/org.wso2.carbon.pc.analytics.core.feature</module>
+        <module>modules/features/analytics-core-generic/org.wso2.carbon.pc.analytics.core.generic.feature</module>
+        <module>modules/features/analytics-core-kpi/org.wso2.carbon.pc.analytics.core.kpi.feature</module>
         <module>modules/features/pc-styles/org.wso2.carbon.pc.styles.feature</module>
         <module>modules/p2-profile-gen</module>
         <module>modules/distribution</module>
@@ -224,7 +226,13 @@
 
             <dependency>
                 <groupId>org.wso2.pc</groupId>
-                <artifactId>org.wso2.carbon.pc.analytics.core</artifactId>
+                <artifactId>org.wso2.carbon.pc.analytics.core.generic</artifactId>
+                <version>${pc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.pc</groupId>
+                <artifactId>org.wso2.carbon.pc.analytics.core.kpi</artifactId>
                 <version>${pc.version}</version>
             </dependency>
 
@@ -845,6 +853,7 @@
         <apache.felix.framework.version>1.0.3</apache.felix.framework.version>
         <eclipse.equinox.jsp.jasper.version>1.0.1.R33x_v20070816</eclipse.equinox.jsp.jasper.version>
         <carbon.kernel.imp.pkg.version>[4.4.1, 4.5.0)</carbon.kernel.imp.pkg.version>
+        <org.wso2.carbon.authenticator.stub.version>4.0.0</org.wso2.carbon.authenticator.stub.version>
 
     </properties>
 </project>

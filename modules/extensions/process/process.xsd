@@ -26,6 +26,7 @@
             <xs:element name="bpmnid" type="xs:string"/>
             <xs:element name="processtextpath" type="xs:string"/>
             <xs:element name="server" type="xs:string"/>
+            <xs:element name="isDasConfigedForAnalytics" type="xs:boolean"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="processRefType">

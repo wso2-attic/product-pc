@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.pc</groupId>
+        <artifactId>wso2pc-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../../..</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.wso2.carbon.pc.analytics.core.kpi.feature</artifactId>
+    <packaging>pom</packaging>
+    <name>WSO2 Carbon - PC - KPI Analytics Feature</name>
+    <url>http://wso2.org</url>
+    <description>This feature contains the bundles required for Process Center KPI Analytics Configurations</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.pc</groupId>
+            <artifactId>org.wso2.carbon.pc.analytics.core.kpi</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.wso2.maven</groupId>
+                <artifactId>carbon-p2-plugin</artifactId>
+                <version>${maven.carbon.p2plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>3-p2-feature-generation</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>p2-feature-gen</goal>
+                        </goals>
+                        <configuration>
+                            <id>org.wso2.carbon.pc.analytics.core.kpi</id>
+                            <propertiesFile>../../etc/feature.properties</propertiesFile>
+                            <adviceFile>
+                                <properties>
+                                    <propertyDef>org.wso2.carbon.p2.category.type:server
+                                    </propertyDef>
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:false
+                                    </propertyDef>
+                                </properties>
+                            </adviceFile>
+                            <bundles>
+                                <bundleDef>org.wso2.pc:org.wso2.carbon.pc.analytics.core.kpi</bundleDef>
+                                <bundleDef>org.wso2.carbon.analytics-common:org.wso2.carbon.event.receiver.stub:5.0.8</bundleDef>
+                                <bundleDef>org.wso2.carbon.analytics-common:org.wso2.carbon.event.stream.stub:5.0.8</bundleDef>
+                            </bundles>
+                            <importBundles>
+                                <importBundleDef>org.wso2.orbit.org.activiti:activiti-all:5.16.3.wso2v2</importBundleDef>
+                                <importBundleDef>org.apache.commons:commons-lang3:3.3.2</importBundleDef>
+                                <importBundleDef>org.apache.geronimo.specs:geronimo-jpa_2.0_spec:1.1</importBundleDef>
+                            </importBundles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -124,11 +124,19 @@ asset.server = function(ctx) {
                    }, {
                        url: 'import_process',
                        path: 'import_process.jag'
-                   },{
-
+                   }, {
                         url: 'update_document_details',
                         path: 'update_document_details.jag'
-                    }
+                   }, {
+                        url: 'config_das_analytics',
+                        path: 'config_das_analytics.jag'
+                   }, {
+                        url: 'save_process_variables',
+                        path: 'save_process_variables.jag'
+                   }, {
+                        url: 'get_process_variables_list',
+                        path: 'get_process_variables_list.jag'
+                   }
             ],
             pages: [{
                         title: 'Asset: ' + typeSingularLabel,
@@ -187,6 +195,10 @@ asset.server = function(ctx) {
                         title: 'Import Process: ',
                         url: 'import_process',
                         path: 'import_process.jag'
+                    },{
+                        title: 'Configure Analytics: ',
+                        url: 'config_analytics',
+                        path: 'config_analytics.jag'
                     }]
         }
     };
@@ -221,7 +233,6 @@ asset.renderer = function(ctx) {
             navList.push('Audit Log', 'btn-overview', util.buildUrl('log'));
             navList.push('Import Process', 'btn-overview', util.buildUrl('import_process'));
         }
-        //navList.push('Configuration', 'icon-dashboard', util.buildUrl('configuration'));
         return navList.list();
     };
     var buildDefaultLeftNav = function(page, util) {
@@ -233,7 +244,7 @@ asset.renderer = function(ctx) {
         var username = user? user.username : null;
         //navList.push('Overview', 'btn-overview', util.buildUrl('details') + '/' + id);
         if (permissionAPI.hasActionPermissionforPath(path, 'write', ctx.session) && permissionAPI.hasAssetPagePermission(type,'update',user.tenantId,username)) {
-           navList.push('Edit', 'btn-edit', util.buildUrl('update') + '/' + id);
+            navList.push('Edit', 'btn-edit', util.buildUrl('update') + '/' + id);
         }
         if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
             navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + id);
@@ -245,6 +256,7 @@ asset.renderer = function(ctx) {
             }
         }
         navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log') + '/' + id);
+        navList.push('Config Analytics', 'btn-configAnalytics', util.buildUrl('config_analytics') + '/' + id);
         //if (permissionAPI.hasActionPermissionforPath(path, 'write', ctx.session) && permissionAPI.hasAssetPagePermission(type,'update',user.tenantId,username)) {
         //navList.push('Version', 'btn-copy', util.buildUrl('copy') + '/' + id);
         //}
@@ -360,7 +372,7 @@ asset.renderer = function(ctx) {
                 log.debug(page);
             }
 
-            var flowchartPath = page.assets.tables[7].fields.path.value;
+            var flowchartPath = page.assets.tables[9].fields.path.value;
             if(flowchartPath != "NA"){
                 page.flowchartAvailable = true;
                 page.flowchartPath = flowchartPath;
@@ -376,7 +388,7 @@ asset.renderer = function(ctx) {
                 page.permission=false;
             }
 
-            var thumbnail = page.assets.tables[6].fields.thumbnail.value;
+            var thumbnail = page.assets.tables[8].fields.thumbnail.value;
             if (thumbnail === "images_thumbnail") {
                 page.customThumbnailAvailable = true;
             } else {
@@ -396,6 +408,25 @@ asset.renderer = function(ctx) {
                 log.error("Error in retrieving process tags. Exception:" + e);
             }
 
+            importPackage(org.wso2.carbon.pc.analytics.core.generic.utils);
+            page.DASAnalyticsEnabled = AnalyticsUtils.isDASAnalyticsActivated();
+            importPackage(org.wso2.carbon.pc.analytics.core.kpi.utils);
+            page.DASAnalyticsConfigured = DASConfigurationUtils.isDASAnalyticsConfigured(processName, processVersion);
+
+            if (page.DASAnalyticsConfigured) {
+                var processVariablesJObArrStr = ps.getProcessVariablesList(resourcePath);
+                var processVariablesJObArr = JSON.parse(processVariablesJObArrStr);
+                page.processVariableList = processVariablesJObArr;
+                var streamAndReceiverInfo = JSON.parse(ps.getStreamAndReceiverInfo(resourcePath));
+
+                page.eventStreamName = streamAndReceiverInfo["eventStreamName"];
+                page.eventStreamVersion = streamAndReceiverInfo["eventStreamVersion"];
+                page.eventStreamDescription = streamAndReceiverInfo["eventStreamDescription"];
+                page.eventStreamNickName = streamAndReceiverInfo["eventStreamNickName"];
+                page.eventReceiverName = streamAndReceiverInfo["eventReceiverName"];
+                page.processDefinitionId = streamAndReceiverInfo["processDefinitionId"];
+            }
+
         },
         create: function(page) {
             var tables = page.assets.tables;
@@ -407,7 +438,7 @@ asset.renderer = function(ctx) {
                 if ((table.name == 'overview') && (table.fields.hasOwnProperty(providerAttribute))) {
                     table.fields[providerAttribute].value = page.cuser.cleanedUsername;
                 }
-                
+
                 if ((table.name == 'properties') && (table.fields.hasOwnProperty(processTextPathAttribute))) {
                     var processTextField = table.fields[processTextPathAttribute].value;
                     var bpmnPathField = table.fields[bpmnPathAttribute].value;
