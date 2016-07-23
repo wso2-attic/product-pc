@@ -2044,6 +2044,15 @@ public class ProcessStore {
         return status;
     }
 
+    /**
+     *
+     * @param processName
+     * @param processVersion
+     * @param exportWithAssociations
+     * @param user
+     * @return
+     * @throws Exception
+     */
     public String initiateExportProcess(String processName, String processVersion, String exportWithAssociations,
             String user) throws Exception {
         exportedProcessList = new ArrayList<String>();
@@ -2054,14 +2063,6 @@ public class ProcessStore {
             String exportRootPath = ProcessCenterConstants.PROCESS_EXPORT_DIR + "/" + processName + "-" + processVersion
                     + "-PC-Package/";
             new File(exportRootPath).mkdirs();
-            /*FileOutputStream out = new FileOutputStream(exportRootPath + "METADATA.json");
-            JSONObject metaData = new JSONObject();
-            metaData.put("core-process-name", processName);
-            metaData.put("core-process-varsion", processVersion);
-            String jsonString = metaData.toString(ProcessCenterConstants.JSON_FILE_INDENT_FACTOR);
-            out.write(jsonString.getBytes());
-            out.close();*/
-
             exportProcess(exportRootPath, processName, processVersion, exportWithAssociationsBool, user);
 
             //zip the folder
@@ -2196,7 +2197,7 @@ public class ProcessStore {
     }
 
     /**
-     * Download non-document process related resources (i.e: flow chart, bpmn, process text)
+     * Download non-document process related resources (i.e: flow chart, bpmn, process text) for exporting the process
      *
      * @param reg
      * @param resourceRoot
@@ -2271,6 +2272,15 @@ public class ProcessStore {
         return bytes;
     }
 
+    /**
+     * Download process thumbnail image, for process exporting
+     * @param reg
+     * @param processName
+     * @param processVersion
+     * @param exportProcessPath
+     * @throws RegistryException
+     * @throws IOException
+     */
     public void downloadProcessThumbnailImage(UserRegistry reg, String processName, String processVersion,
             String exportProcessPath) throws RegistryException, IOException {
         String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +

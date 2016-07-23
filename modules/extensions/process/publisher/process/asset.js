@@ -372,7 +372,7 @@ asset.renderer = function(ctx) {
                 log.debug(page);
             }
 
-            var flowchartPath = page.assets.tables[9].fields.path.value;
+            var flowchartPath = page.assets.tables[8].fields.path.value;
             if(flowchartPath != "NA"){
                 page.flowchartAvailable = true;
                 page.flowchartPath = flowchartPath;
@@ -388,7 +388,7 @@ asset.renderer = function(ctx) {
                 page.permission=false;
             }
 
-            var thumbnail = page.assets.tables[8].fields.thumbnail.value;
+            var thumbnail = page.assets.tables[7].fields.thumbnail.value;
             if (thumbnail === "images_thumbnail") {
                 page.customThumbnailAvailable = true;
             } else {
@@ -513,7 +513,7 @@ asset.renderer = function(ctx) {
                 }
             }
 
-            var thumbnail = page.assets.tables[6].fields.thumbnail.value;
+            var thumbnail = page.assets.tables[7].fields.thumbnail.value;
             if (thumbnail === "images_thumbnail") {
                 page.customThumbnailAvailable = true;
             } else {
