@@ -489,6 +489,9 @@ public class ProcessStore {
 
                 Resource storedProcessAsset = reg.get(processPath);
                 processId = storedProcessAsset.getUUID();
+
+                //add reg association
+                reg.addAssociation(bpmnContentPath, processPath, ProcessCenterConstants.ASSOCIATION_TYPE);
             }
         } catch (Exception e) {
             String errMsg = "Create BPMN error:" + bpmnName + " - " + bpmnVersion;
@@ -1708,6 +1711,10 @@ public class ProcessStore {
 
                 Resource storedProcessAsset = reg.get(processPath);
                 processId = storedProcessAsset.getUUID();
+
+                //add reg association
+                reg.addAssociation(flowchartContentPath, processPath, ProcessCenterConstants.ASSOCIATION_TYPE);
+
             }
         } catch (Exception e) {
             String errMsg =
