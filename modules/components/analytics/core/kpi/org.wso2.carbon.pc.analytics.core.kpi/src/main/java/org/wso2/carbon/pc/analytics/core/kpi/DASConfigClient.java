@@ -127,8 +127,7 @@ public class DASConfigClient {
 
             //create event receiver
             PCAnalyticsServerHolder.getInstance().getReceiverAdminServiceClient()
-                    .deployEventReceiverConfiguration(session, receiverName, streamId,
-                            AnalyticsConfigConstants.WSO2_EVENT);
+                    .deployEventReceiverConfiguration(session, receiverName, streamId);
             if (log.isDebugEnabled()) {
                 log.debug("Created the Event Receiver: " + receiverName + " for the " + streamId + " in WSO2 DAS");
             }
@@ -137,15 +136,9 @@ public class DASConfigClient {
             // BPS from PC
             BPSConfigRestClient.post(dasConfigDetails, processName, processVersion);
 
-            //logging out from DAS Admin Services
-            loginServiceClient.logOut();
         } catch (LoginAuthenticationExceptionException e) {
             String errMsg = "Error in Login to DAS at :" + dasUrl + "trying to login with username : " + dasUsername
                     + " and the given password";
-            log.error(errMsg, e);
-            throw new ProcessCenterException(errMsg, e);
-        } catch (LogoutAuthenticationExceptionException e) {
-            String errMsg = "Error in Logout from DAS at :" + dasUrl;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         } catch (AxisFault | JSONException | XMLStreamException e) {
@@ -167,6 +160,7 @@ public class DASConfigClient {
             log.error(e.getMessage(), e);
             throw new ProcessCenterException(e.getMessage(), e);
         } finally {
+            //logging out from DAS Admin Services
             loginServiceClient.logOut();
         }
     }

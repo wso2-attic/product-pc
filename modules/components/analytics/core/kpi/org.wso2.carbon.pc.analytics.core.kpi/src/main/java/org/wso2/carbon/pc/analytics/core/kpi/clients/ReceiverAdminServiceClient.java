@@ -31,32 +31,31 @@ import org.wso2.carbon.pc.core.ProcessCenterException;
  * Access DAS EventReceiverAdminService and creates the event receiver.
  */
 public class ReceiverAdminServiceClient {
-    private final String serviceName = "EventReceiverAdminService";
+    private static final String SERVICE_NAME = "EventReceiverAdminService";
     private EventReceiverAdminServiceStub eventReceiverAdminServiceStub;
     private String endPoint;
-    private String receiverName;
-    private String streamId;
-    private String eventAdapterType = "wso2event";
+    private static final String EVENT_ADAPTER_TYPE = "wso2event";
     private static final Log log = LogFactory.getLog(ReceiverAdminServiceClient.class);
+    private static final String INPUT_PROP_CONFIG_KEY = "events.duplicated.in.cluster";
 
     /**
      * @param backEndUrl
      * @throws AxisFault
      */
     public ReceiverAdminServiceClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + "/" + AnalyticsConfigConstants.SERVICES + "/" + serviceName;
+        this.endPoint = backEndUrl + "/" + AnalyticsConfigConstants.SERVICES + "/" + SERVICE_NAME;
         eventReceiverAdminServiceStub = new EventReceiverAdminServiceStub(endPoint);
     }
 
     /**
-     * Deploy Event Receiver for the perticular process, configuring the previously created Event Stream
-     *
+     * Deploy Event Receiver for the particular process, configuring the previously created Event Stream
+     * @param sessionCookie
+     * @param receiverName
+     * @param streamId
      * @throws ProcessCenterException
      */
-    public void deployEventReceiverConfiguration(String sessionCookie, String receiverName, String streamId,
-            String wso2event) throws ProcessCenterException {
-        this.receiverName = receiverName;
-        this.streamId = streamId;
+    public void deployEventReceiverConfiguration(String sessionCookie, String receiverName, String streamId)
+            throws ProcessCenterException {
 
         // Authenticate stub from sessionCooke
         ServiceClient serviceClient = eventReceiverAdminServiceStub._getServiceClient();
@@ -66,11 +65,11 @@ public class ReceiverAdminServiceClient {
 
         BasicInputAdapterPropertyDto props[] = new BasicInputAdapterPropertyDto[1];
         props[0] = new BasicInputAdapterPropertyDto();
-        props[0].setKey("events.duplicated.in.cluster");
+        props[0].setKey(INPUT_PROP_CONFIG_KEY);
         props[0].setValue("false");
         try {
             eventReceiverAdminServiceStub
-                    .deployWso2EventReceiverConfiguration(receiverName, streamId, eventAdapterType, null, null, null,
+                    .deployWso2EventReceiverConfiguration(receiverName, streamId, EVENT_ADAPTER_TYPE, null, null, null,
                             props, false, "");
         } catch (RemoteException e) {
             String errMsg = "Error in deploying event receiver";

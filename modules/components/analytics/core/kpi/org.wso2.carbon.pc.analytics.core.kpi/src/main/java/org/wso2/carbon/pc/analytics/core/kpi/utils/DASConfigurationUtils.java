@@ -83,11 +83,13 @@ public class DASConfigurationUtils {
                 }
             }
         } catch (RegistryException e) {
-            String errMsg = "Governance Registry access error, wile checking isDasConfigedForAnalytics";
+            String errMsg = "Governance Registry access error, while checking whether "
+                    + "analytics configurations are done for process: " + processName + ":" + processVersion;
             throw new ProcessCenterException(errMsg, e);
         } catch (Exception e) {
-            String errMsg = "Registry process.rxt String to XML conversion error, wile checking "
-                    + "isDasConfigedForAnalytics ";
+            String errMsg =
+                    "Error, while checking whether analytics configurations are done for process: " + processName + ":"
+                            + processVersion;
             throw new ProcessCenterException(errMsg, e);
         }
         return false;
@@ -129,19 +131,19 @@ public class DASConfigurationUtils {
                     reg.put(processAssetPath, resource);
 
                     if (log.isDebugEnabled()) {
-                        log.debug("isDasConfigedForAnalytics property in process.rxt set as true");
+                        log.debug("isDasConfigedForAnalytics property in process.rxt is set as true");
                     }
                 }
             }
         } catch (TransformerException | RegistryException e) {
-            String errMsg = "Exception in setting property isDASAnalyticsConfigured in process.rxt for the process:"
+            String errMsg = "Error in setting property isDASAnalyticsConfigured in process.rxt for the process: "
                     + processName + ":" + processVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         } catch (Exception e) {
             String errMsg =
-                    "Exception in setting property isDASAnalyticsConfigured in process.rxt while converting xml to "
-                            + "string for the process:" + processName + ":" + processVersion;
+                    "Error in setting property isDASAnalyticsConfigured in process.rxt for the process: " + processName
+                            + ":" + processVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }

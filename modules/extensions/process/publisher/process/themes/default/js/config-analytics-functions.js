@@ -117,9 +117,6 @@ function saveProcessVariables(tableID, callback) {
     processVariablesInfo["processName"] = processName;
     processVariablesInfo["processVersion"] = processVersion;
 
-    //put processInstanceId as a compulsory field in the stream
-    //processVariables["processInstanceId"] = "string";
-
     //add process instanceId field to the process variables objects array, so that there will be a field (as
     // 1st field) for that processInstanceId too in the event Stream that will be created in DAS
     var procInstancIdItem = {};
