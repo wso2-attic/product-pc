@@ -213,14 +213,16 @@ asset.renderer = function(ctx) {
         if (permissionAPI.hasActionPermissionforPath(path, 'write', ctx.session) && permissionAPI.hasAssetPagePermission(type,'update',user.tenantId,username)) {
            navList.push('Edit', 'btn-edit', util.buildUrl('update') + '/' + id);
         }
-        if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
-            navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + id);
-        }
+
         //Only render the view if the asset has a
         if ((isLCViewEnabled) && (isAssetWithLifecycle(page.assets))) {
             if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_LIFECYCLE, ctx.assetType, ctx.session)) {
                 navList.push('Lifecycle', 'btn-lifecycle', util.buildUrl('lifecycle') + '/' + id);
             }
+        }
+
+        if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
+            navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + id);
         }
         navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log') + '/' + id);
         //if (permissionAPI.hasActionPermissionforPath(path, 'write', ctx.session) && permissionAPI.hasAssetPagePermission(type,'update',user.tenantId,username)) {
@@ -236,7 +238,7 @@ asset.renderer = function(ctx) {
         if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) {
             //    log.info(page.assets);
             if(page.assets.id != null) {
-                navList.push('Overview', 'btn-overview', util.buildUrl('details') + '/' + page.assets.id);
+                navList.push('Edit', 'btn-edit', util.buildUrl('update') + '/' + page.assets.id);
                 if ((isLCViewEnabled) && (isAssetWithLifecycle(page.assets))) {
                     if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_LIFECYCLE, ctx.assetType, ctx.session)) {
                         navList.push('Life Cycle', 'btn-lifecycle', util.buildUrl('lifecycle') + '/' + page.assets.id);

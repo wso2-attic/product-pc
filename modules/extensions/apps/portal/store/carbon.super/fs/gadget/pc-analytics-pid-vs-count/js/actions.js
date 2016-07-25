@@ -17,6 +17,7 @@ var callbackmethod = function(event, item) {
 }
 
 window.onload = function() {
+    
     $.getJSON("/portal/store/carbon.super/fs/gadget/pc-analytics-pid-vs-count/js/meta-data.json.js", function(result){
         $.each(result, function(i, field){
             jsonObj.push(field);
@@ -66,6 +67,8 @@ function drawProcessInstanceCountVsProcessIdResult() {
             jsonObj[0].data = jsonArrObj;
             // console.log(jsonObj);
 
+            config.width = $('#chartA').width();
+            config.height = $('#chartA').height() - $('#chartA').height()/5;
             $("#chartA").hide();
             var barChart = new vizg(jsonObj, config);
             barChart.draw("#chartA", [{type:"click", callback:callbackmethod}]);

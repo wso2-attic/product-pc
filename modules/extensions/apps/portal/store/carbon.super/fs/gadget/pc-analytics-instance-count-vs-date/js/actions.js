@@ -94,6 +94,8 @@ function drawDateVsProcessInstanceCountResult() {
             var jsonArrObj = JSON.parse('[' + responseStr + ']');
             jsonObj[0].data = jsonArrObj;
             // console.log(jsonObj);
+            config.width = $('#chartA').width();
+            config.height = $('#chartA').height() - $('#chartA').height()/5;
 
             var barChart = new vizg(jsonObj, config);
             $("#chartA").hide();

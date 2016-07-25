@@ -72,15 +72,17 @@
                     </h3>
                 </div>
                 <div class="panel-body">
-                    <div style="padding-top: 10px;padding-left: 10px;padding-right: 10px;">
-                        <div class="form-inline" role="form">
-                              <div class="form-group">
+                    <div class="container" style="padding-top: 10px;padding-left: 10px;padding-right: 10px;">
+                        <div class="row" role="form">
+                              <div class="col-xs-2" style="padding-right:0">
                                 <select id="processInstanceCountDateProcessList" class="selectpicker form-control" multiple></select>
                               </div>
-                            <button class="btn btn-default btn-primary" onclick="drawDateVsProcessInstanceCountResult()">Apply Filter</button>
+                            <button class="btn btn-primary col-xs-2" onclick="drawDateVsProcessInstanceCountResult()">Apply Filter</button>
+                        </div>
+                        <div class="row">
+                            <div id="chartA" style="height:100%; width:100%"></div>
                         </div>
                     </div>
-                    <div id="chartA" style="height:100%"></div>
                     <input type="hidden" id="from" value="0">
                     <input type="hidden" id="to" value="0">
                 </div>

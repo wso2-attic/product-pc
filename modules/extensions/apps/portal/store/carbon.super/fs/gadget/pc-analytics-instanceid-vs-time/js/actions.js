@@ -81,6 +81,8 @@ function drawExecutionTimeVsProcessInstanceIdResult() {
                 jsonObj[0].data = jsonArrObj;
                 // console.log(jsonObj);
 
+                config.width = $('#chartA').width();
+                config.height = $('#chartA').height() - $('#chartA').height()/5;
                 $("#chartA").hide();
                 var barChart = new vizg(jsonObj, config);
                 barChart.draw("#chartA", [{type: "click", callback: callbackmethod}]);

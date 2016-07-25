@@ -68,6 +68,8 @@ function drawProcessInstanceCountVsProcessVersionResult() {
                 var jsonArrObj = JSON.parse('[' + responseStr + ']');
                 jsonObj[0].data = jsonArrObj;
 
+                config.width = $('#chartA').width();
+                config.height = $('#chartA').height() - $('#chartA').height()/5;
                 $("#chartA").hide();
                 var barChart = new vizg(jsonObj, config);
                 barChart.draw("#chartA", [{type: "click", callback: callbackmethod}]);

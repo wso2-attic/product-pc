@@ -18,7 +18,7 @@ var callbackmethod = function(event, item) {
 }
 
 window.onload = function() {
-    $.getJSON("/portal/store/carbon.super/fs/gadget/pc-analytics-wait-time-vs-user-id/js/meta-data.json.js", function(result){
+    $.getJSON("/portal/store/carbon.super/fs/gadget/pc-analytics-wait-time-vs-user-id/js/meta-data.json.js", function(result) {
         $.each(result, function(i, field) {
             jsonObj.push(field);
             loadTaskList('userIdAvgExecTimeTaskList');
@@ -67,6 +67,8 @@ function drawAvgExecuteTimeVsUserIdResult() {
                 var jsonArrObj = JSON.parse('[' + responseStr + ']');
                 jsonObj[0].data = jsonArrObj;
 
+                config.width = $('#chartA').width();
+                config.height = $('#chartA').height() - $('#chartA').height()/5;
                 $("#chartA").hide();
                 var barChart = new vizg(jsonObj, config);
                 barChart.draw("#chartA", [{type: "click", callback: callbackmethod}]);

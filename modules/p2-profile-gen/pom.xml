@@ -766,6 +766,7 @@
                                     <id>org.wso2.carbon.governance.taxonomy.management.feature.group</id>
                                     <version>${carbon.governance.version}</version>
                                 </feature>
+
                             </features>
                         </configuration>
                     </execution>

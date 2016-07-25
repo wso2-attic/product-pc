@@ -1,0 +1,263 @@
+{
+  "id": "process-charts",
+  "title": "process-charts",
+  "description": "",
+  "permissions": {
+    "viewers": [
+      "Internal/process-charts-viewer"
+    ],
+    "editors": [
+      "Internal/process-charts-editor"
+    ],
+    "owners": [
+      "Internal/process-charts-owner"
+    ]
+  },
+  "pages": [
+    {
+      "id": "landing",
+      "title": "Home",
+      "layout": {
+        "content": {
+          "loggedIn": {
+            "blocks": [
+              {
+                "id": "f5b8e0092fa46d3846060c061820892c",
+                "x": 0,
+                "y": 20,
+                "width": 10,
+                "height": 8,
+                "banner": false
+              },
+              {
+                "id": "748a72f902b01780414b2d420e3a70e1",
+                "x": 0,
+                "y": 12,
+                "width": 10,
+                "height": 8,
+                "banner": false
+              },
+              {
+                "id": "80bbd36de3ffd2fe71083f53d5b2f1e4",
+                "x": 0,
+                "y": 4,
+                "width": 10,
+                "height": 8,
+                "banner": false
+              },
+              {
+                "id": "32024f59828b13e5ac85d5b711d72a37",
+                "x": 0,
+                "y": 0,
+                "width": 8,
+                "height": 4,
+                "banner": false
+              }
+            ]
+          }
+        },
+        "fluidLayout": false
+      },
+      "isanon": false,
+      "content": {
+        "default": {
+          "32024f59828b13e5ac85d5b711d72a37": [
+            {
+              "id": "date-range-0",
+              "content": {
+                "id": "date-range",
+                "title": "Date Range Picker",
+                "type": "gadget",
+                "category": "Publishers",
+                "thumbnail": "fs://gadget/date-range/dateRange.png",
+                "data": {
+                  "url": "fs://gadget/date-range/index.xml"
+                },
+                "styles": {
+                  "borders": true,
+                  "title": "Date Range Picker"
+                },
+                "notify": {
+                  "date_range": {
+                    "type": "dateRange",
+                    "description": "This notifies selected date range"
+                  }
+                },
+                "options": {},
+                "locale_titles": {}
+              }
+            }
+          ],
+          "80bbd36de3ffd2fe71083f53d5b2f1e4": [
+            {
+              "id": "pc-analytics-tid-vs-time-0",
+              "content": {
+                "id": "pc-analytics-tid-vs-time",
+                "title": "PC Analytics[task id vs avg time]",
+                "type": "gadget",
+                "category": "Subscribers",
+                "thumbnail": "fs://gadget/pc-analytics-tid-vs-time/index.png",
+                "settings": {
+                  "personalize": true
+                },
+                "data": {
+                  "url": "fs://gadget/pc-analytics-tid-vs-time/index.xml"
+                },
+                "description": "This shows pc analytics charts",
+                "listen": {
+                  "Daterange": {
+                    "type": "dateRange",
+                    "description": "Listening to date range"
+                  }
+                },
+                "styles": {
+                  "title": "PC Analytics[task id vs avg time]",
+                  "borders": true
+                },
+                "options": {},
+                "locale_titles": {}
+              }
+            }
+          ],
+          "748a72f902b01780414b2d420e3a70e1": [
+            {
+              "id": "pc-analytics-instance-count-vs-date-0",
+              "content": {
+                "id": "pc-analytics-instance-count-vs-date",
+                "title": "PC Analytics[process instance count vs date]",
+                "type": "gadget",
+                "category": "Subscribers",
+                "thumbnail": "fs://gadget/pc-analytics-instance-count-vs-date/index.png",
+                "settings": {
+                  "personalize": true,
+                  "priority": "5"
+                },
+                "data": {
+                  "url": "fs://gadget/pc-analytics-instance-count-vs-date/index.xml"
+                },
+                "description": "This shows pc analytics charts",
+                "listen": {
+                  "Daterange": {
+                    "type": "dateRange",
+                    "description": "Listening to date range",
+                    "on": [
+                      {
+                        "from": "date-range-0",
+                        "event": "date_range"
+                      }
+                    ]
+                  }
+                },
+                "styles": {
+                  "no_heading": false,
+                  "hide_gadget": false,
+                  "titlePosition": "left",
+                  "title": "PC Analytics[process instance count vs date]"
+                },
+                "options": {},
+                "locale_titles": {
+                  "en-US": "PC Analytics[process instance count vs date]"
+                }
+              }
+            }
+          ],
+          "f5b8e0092fa46d3846060c061820892c": [
+            {
+              "id": "pc-analytics-instanceid-vs-time-0",
+              "content": {
+                "id": "pc-analytics-instanceid-vs-time",
+                "title": "PC Analytics[process instance vs time]",
+                "type": "gadget",
+                "category": "Subscribers",
+                "thumbnail": "fs://gadget/pc-analytics-instanceid-vs-time/index.png",
+                "settings": {
+                  "personalize": true,
+                  "priority": "5"
+                },
+                "data": {
+                  "url": "fs://gadget/pc-analytics-instanceid-vs-time/index.xml"
+                },
+                "description": "This shows pc analytics charts",
+                "listen": {
+                  "Daterange": {
+                    "type": "dateRange",
+                    "description": "Listening to date range",
+                    "on": [
+                      {
+                        "from": "date-range-0",
+                        "event": "date_range"
+                      }
+                    ]
+                  }
+                },
+                "styles": {
+                  "no_heading": false,
+                  "hide_gadget": false,
+                  "titlePosition": "left",
+                  "title": "PC Analytics[process instance vs time]"
+                },
+                "options": {},
+                "locale_titles": {
+                  "en-US": "PC Analytics[process instance vs time]"
+                }
+              }
+            }
+          ],
+          "66a4702b1496f69c74c1342ef8a8a7a2": [
+            {
+              "id": "date-picker-widget-0",
+              "content": {
+                "id": "date-picker-widget",
+                "title": "Date Picker Widget",
+                "type": "widget",
+                "category": "Widgets",
+                "thumbnail": "fs://gadget/date-picker-widget/index.png",
+                "data": {
+                  "url": "fs://gadget/date-picker-widget/index.xml"
+                },
+                "options": {},
+                "styles": {
+                  "borders": false,
+                  "title": "Date Picker Widget"
+                },
+                "notify": {
+                  "date-selected": {
+                    "type": "message",
+                    "description": "This notifies selected date"
+                  }
+                },
+                "locale_titles": {}
+              }
+            }
+          ]
+        },
+        "anon": {}
+      }
+    }
+  ],
+  "menu": [
+    {
+      "id": "landing",
+      "isanon": false,
+      "ishidden": false,
+      "title": "Home",
+      "subordinates": []
+    }
+  ],
+  "hideAllMenuItems": false,
+  "identityServerUrl": "",
+  "accessTokenUrl": "",
+  "apiKey": "",
+  "apiSecret": "",
+  "theme": "Default Theme",
+  "shareDashboard": false,
+  "isUserCustom": false,
+  "isEditorEnable": true,
+  "banner": {
+    "globalBannerExists": false,
+    "customBannerExists": false
+  },
+  "landing": "landing",
+  "isanon": false,
+  "enableOauth": true
+}

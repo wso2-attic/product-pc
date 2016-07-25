@@ -4,10 +4,12 @@ var config = {
     highlight : "multi",
     charts : [{type: "bar",  y : "Time"}],
     maxLength: 200,
+    padding: {"top": 50, "left": 80, "bottom": 80, "right": 0},
     transform:[60,70],
     width: 800,
     height: 400
 }
+
 
 var jsonObj = [];
 
@@ -63,6 +65,8 @@ function drawAvgExecuteTimeVsProcessIdResult() {
             var jsonArrObj = JSON.parse('[' + responseStr + ']');
             jsonObj[0].data = jsonArrObj;
 
+            config.width = $('#chartA').width();
+            config.height = $('#chartA').height() - $('#chartA').height()/5;
             var barChart = new vizg(jsonObj, config);
             barChart.draw("#chartA", [{type:"click", callback:callbackmethod}]);
         },
