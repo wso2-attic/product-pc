@@ -119,9 +119,24 @@ asset.server = function(ctx) {
                        url: 'get_role_permission',
                        path: 'get_role_permission.jag'
                    }, {
+                       url: 'export_process',
+                       path: 'export_process.jag'
+                   }, {
+                       url: 'import_process',
+                       path: 'import_process.jag'
+                   }, {
                         url: 'update_document_details',
                         path: 'update_document_details.jag'
-                    }
+                   }, {
+                        url: 'config_das_analytics',
+                        path: 'config_das_analytics.jag'
+                   }, {
+                        url: 'save_process_variables',
+                        path: 'save_process_variables.jag'
+                   }, {
+                        url: 'get_process_variables_list',
+                        path: 'get_process_variables_list.jag'
+                   }
             ],
             pages: [{
                         title: 'Asset: ' + typeSingularLabel,
@@ -176,6 +191,14 @@ asset.server = function(ctx) {
                         title: 'Log: ',
                         url: 'log',
                         path: 'log.jag'
+                    },{
+                        title: 'Import Process: ',
+                        url: 'import_process',
+                        path: 'import_process.jag'
+                    },{
+                        title: 'Configure Analytics: ',
+                        url: 'config_analytics',
+                        path: 'config_analytics.jag'
                     }]
         }
     };
@@ -198,8 +221,18 @@ asset.renderer = function(ctx) {
         if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) {
             navList.push('Add ', 'btn-add-new', util.buildUrl('create'));
             navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log'));
+            navList.push('Import Process', 'btn-overview', util.buildUrl('import_process'));
         }
         //navList.push('Configuration', 'icon-dashboard', util.buildUrl('configuration'));
+        return navList.list();
+    };
+    var importProcessLeftNav = function(page, util) {
+        var navList = util.navList();
+        if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) {
+            navList.push('Add ', 'btn-add-new', util.buildUrl('create'));
+            navList.push('Audit Log', 'btn-overview', util.buildUrl('log'));
+            navList.push('Import Process', 'btn-overview', util.buildUrl('import_process'));
+        }
         return navList.list();
     };
     var buildDefaultLeftNav = function(page, util) {
@@ -211,7 +244,7 @@ asset.renderer = function(ctx) {
         var username = user? user.username : null;
         //navList.push('Overview', 'btn-overview', util.buildUrl('details') + '/' + id);
         if (permissionAPI.hasActionPermissionforPath(path, 'write', ctx.session) && permissionAPI.hasAssetPagePermission(type,'update',user.tenantId,username)) {
-           navList.push('Edit', 'btn-edit', util.buildUrl('update') + '/' + id);
+            navList.push('Edit', 'btn-edit', util.buildUrl('update') + '/' + id);
         }
         if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
             navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + id);
@@ -223,6 +256,7 @@ asset.renderer = function(ctx) {
             }
         }
         navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log') + '/' + id);
+        navList.push('Config Analytics', 'btn-configAnalytics', util.buildUrl('config_analytics') + '/' + id);
         //if (permissionAPI.hasActionPermissionforPath(path, 'write', ctx.session) && permissionAPI.hasAssetPagePermission(type,'update',user.tenantId,username)) {
         //navList.push('Version', 'btn-copy', util.buildUrl('copy') + '/' + id);
         //}
@@ -338,7 +372,7 @@ asset.renderer = function(ctx) {
                 log.debug(page);
             }
 
-            var flowchartPath = page.assets.tables[7].fields.path.value;
+            var flowchartPath = page.assets.tables[8].fields.path.value;
             if(flowchartPath != "NA"){
                 page.flowchartAvailable = true;
                 page.flowchartPath = flowchartPath;
@@ -354,7 +388,7 @@ asset.renderer = function(ctx) {
                 page.permission=false;
             }
 
-            var thumbnail = page.assets.tables[6].fields.thumbnail.value;
+            var thumbnail = page.assets.tables[7].fields.thumbnail.value;
             if (thumbnail === "images_thumbnail") {
                 page.customThumbnailAvailable = true;
             } else {
@@ -362,6 +396,8 @@ asset.renderer = function(ctx) {
             }
 
             var processName = page.assets.tables[0].fields.name.value; //tables[0].fields["Name"].value;
+            page.processName = page.assets.tables[0].fields.name.value;
+            page.processVersion = page.assets.tables[0].fields.version.value;
             var processVersion = page.assets.tables[0].fields.version.value;
             try {
 
@@ -370,6 +406,25 @@ asset.renderer = function(ctx) {
                 page.processTagsArray = processTags.split("###");
             } catch (e) {
                 log.error("Error in retrieving process tags. Exception:" + e);
+            }
+
+            importPackage(org.wso2.carbon.pc.analytics.core.generic.utils);
+            page.DASAnalyticsEnabled = AnalyticsUtils.isDASAnalyticsActivated();
+            importPackage(org.wso2.carbon.pc.analytics.core.kpi.utils);
+            page.DASAnalyticsConfigured = DASConfigurationUtils.isDASAnalyticsConfigured(processName, processVersion);
+
+            if (page.DASAnalyticsConfigured) {
+                var processVariablesJObArrStr = ps.getProcessVariablesList(resourcePath);
+                var processVariablesJObArr = JSON.parse(processVariablesJObArrStr);
+                page.processVariableList = processVariablesJObArr;
+                var streamAndReceiverInfo = JSON.parse(ps.getStreamAndReceiverInfo(resourcePath));
+
+                page.eventStreamName = streamAndReceiverInfo["eventStreamName"];
+                page.eventStreamVersion = streamAndReceiverInfo["eventStreamVersion"];
+                page.eventStreamDescription = streamAndReceiverInfo["eventStreamDescription"];
+                page.eventStreamNickName = streamAndReceiverInfo["eventStreamNickName"];
+                page.eventReceiverName = streamAndReceiverInfo["eventReceiverName"];
+                page.processDefinitionId = streamAndReceiverInfo["processDefinitionId"];
             }
 
         },
@@ -383,7 +438,7 @@ asset.renderer = function(ctx) {
                 if ((table.name == 'overview') && (table.fields.hasOwnProperty(providerAttribute))) {
                     table.fields[providerAttribute].value = page.cuser.cleanedUsername;
                 }
-                
+
                 if ((table.name == 'properties') && (table.fields.hasOwnProperty(processTextPathAttribute))) {
                     var processTextField = table.fields[processTextPathAttribute].value;
                     var bpmnPathField = table.fields[bpmnPathAttribute].value;
@@ -458,7 +513,7 @@ asset.renderer = function(ctx) {
                 }
             }
 
-            var thumbnail = page.assets.tables[6].fields.thumbnail.value;
+            var thumbnail = page.assets.tables[7].fields.thumbnail.value;
             if (thumbnail === "images_thumbnail") {
                 page.customThumbnailAvailable = true;
             } else {
@@ -505,6 +560,9 @@ asset.renderer = function(ctx) {
                     case 'statistics':
                         page.leftNav = buildListLeftNav(page, this);
                         break;
+                    case 'import_process':
+                        page.leftNav = importProcessLeftNav(page,this);
+                        break;
                     default:
                         page.leftNav = buildDefaultLeftNav(page, this);
                         break;
@@ -529,10 +587,10 @@ asset.renderer = function(ctx) {
                     //Only populate the link if the asset type is activated and the logged in user has permission to that asset
                     if ((isActivatedAsset(assetType.shortName)) && (permissionAPI.hasAssetPermission(permissionAPI.ASSET_LIST, assetType.shortName, ctx.session))) {
                         assetTypes.push({
-                                            url: this.buildBaseUrl(assetType.shortName) + '/list',
-                                            assetIcon: assetType.ui.icon || DEFAULT_ICON,
-                                            assetTitle: assetType.pluralLabel
-                                        });
+                            url: this.buildBaseUrl(assetType.shortName) + '/list',
+                            assetIcon: assetType.ui.icon || DEFAULT_ICON,
+                            assetTitle: assetType.pluralLabel
+                        });
                     }
                 }
                 ribbon.currentType = page.rxt.singularLabel;
