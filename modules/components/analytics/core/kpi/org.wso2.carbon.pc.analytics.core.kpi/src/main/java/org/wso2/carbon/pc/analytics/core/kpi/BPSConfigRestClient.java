@@ -47,35 +47,31 @@ public class BPSConfigRestClient {
     public static void post(String dasConfigDetails, String processName, String processVersion)
             throws IOException, XMLStreamException, RuntimeException {
 
-        String bpsurl = DASConfigurationUtils.getBPSURL();
+        if(log.isDebugEnabled()){
+            log.debug("Sending POST request to WSO2 BPS, to communicate the analytics configuration details and "
+                    + "configure BPS for analytics");
+        }
+        String bpsUrl = DASConfigurationUtils.getBPSURL();
         RegistryUtils.setTrustStoreSystemProperties();
         HttpClient httpClient = new HttpClient();
-        String requestUrl = bpsurl + AnalyticsConfigConstants.BPS_PROCESS_VAR_PUBLISH_REST_PATH + processName + "_"
+        String requestUrl = bpsUrl + AnalyticsConfigConstants.BPS_PROCESS_VAR_PUBLISH_REST_PATH + processName + "_"
                 + processVersion;
 
         PostMethod postRequest = new PostMethod(requestUrl);
         postRequest.setRequestHeader("Authorization", DASConfigurationUtils.getAuthorizationHeader());
         StringRequestEntity input = new StringRequestEntity(dasConfigDetails, "application/json", "UTF-8");
         postRequest.setRequestEntity(input);
-
         int returnCode = httpClient.executeMethod(postRequest);
 
         InputStreamReader reader = new InputStreamReader((postRequest.getResponseBodyAsStream()));
         BufferedReader br = new BufferedReader(reader);
-
         String output = null;
         StringBuilder totalOutput = new StringBuilder();
-
-        if (log.isDebugEnabled()) {
-            log.debug("Output from Server .... \n");
-        }
 
         while ((output = br.readLine()) != null) {
             totalOutput.append(output);
         }
-
         String responseMsg = totalOutput.toString();
-
         postRequest.releaseConnection();
         if (br != null) {
             try {
@@ -85,19 +81,17 @@ public class BPSConfigRestClient {
                 log.error(errMsg, e);
             }
         }
-
         //deal with the response
         if (returnCode == HttpStatus.SC_OK) {
-            log.info("BPS was acknowleged the Analytics Configuration details");
-        } else if (returnCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-            log.info(responseMsg);
-            throw new RuntimeException(responseMsg);
+            if (log.isDebugEnabled()) {
+                log.debug("BPS was configured with analytics configuration details.");
+            }
         } else {
             String errMsg =
                     "Failed : Sending the REST Post call to the WSO2 BPS to communicate the analytics configuration "
                             + "details to the BPS from PC\n: HTTP Error code : "
                             + returnCode;
-            log.info(errMsg);
+            log.error(errMsg);
             throw new RuntimeException(responseMsg);
         }
     }
