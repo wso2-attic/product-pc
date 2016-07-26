@@ -15,20 +15,31 @@
 */
 package org.wso2.carbon.pc.core.assets;
 
+import org.activiti.bpmn.converter.util.InputStreamProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
+import org.wso2.carbon.pc.core.assets.resources.BPMN;
 import org.wso2.carbon.pc.core.assets.resources.BPMNResource;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
+import org.wso2.carbon.pc.core.util.PCInputStreamProvider;
 import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 
 /**
  * Class represents Process asset
@@ -36,7 +47,14 @@ import org.wso2.carbon.registry.core.session.UserRegistry;
 public class Process {
 
     private static final Log log = LogFactory.getLog(Process.class);
+    private BPMN bpmn;
 
+public Process(String processDetails,String username) throws ProcessCenterException, JSONException {
+    JSONObject processInfo = new JSONObject(processDetails);
+    String processName = processInfo.getString("processName");
+    String processVersion = processInfo.getString("processVersion");
+    this.bpmn = new BPMN(getBpmnResource(processName,processVersion,username));
+}
     /**
      * Get Process Registry Path .
      * ex. /_system/governance/processes/ProcessName/
@@ -49,9 +67,11 @@ public class Process {
     }
 
 
-    public String getBpmnResources(String processName, String processVersion, String username) throws
+    public Document getBpmnResource(String processName, String processVersion, String username) throws
             ProcessCenterException {
-        JSONArray bpmnResources = new JSONArray();
+        Document BPMNDocument = null;
+        DocumentBuilderFactory factory = null;
+        DocumentBuilder builder = null;
         String processRegistryPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
@@ -61,36 +81,28 @@ public class Process {
                 Association[] processAssociations = userRegistry.getAssociations(processRegistryPath,
                         ProcessCenterConstants.PACKAGE_PROCESS_ASSOCIATION);
                 if (processAssociations != null && processAssociations.length > 0) {
-                    for (Association processAssociation : processAssociations) {
-                        Resource bpmnRegistryResource = userRegistry.get(processAssociation.getSourcePath());
-
-                        JSONObject bpmnResource = new JSONObject();
-                        String processID = bpmnRegistryResource.getProperty
-                                (ProcessCenterConstants.PROCESS_ID);
-                        if (processID != null) {
-                            bpmnResource.put(ProcessCenterConstants.PROCESS_ID, processID);
-                        }
-                        String bpmnProcessName = bpmnRegistryResource.getProperty
-                                (ProcessCenterConstants.PROCESS_NAME);
-                        if (processID != null) {
-                            bpmnResource.put(ProcessCenterConstants.PROCESS_ID, processID);
-                        }
-                        if (processName != null) {
-                            bpmnResource.put(ProcessCenterConstants.PROCESS_NAME, bpmnProcessName);
-                        }
-                        bpmnResource.put(ProcessCenterConstants.PACKAGE_BPMN_ARCHIVE_FILE_NAME,
-                                bpmnRegistryResource.getPath().replaceFirst
-                                        ("/" + processAssociation.getSourcePath(), ""));
-                        bpmnResources.put(bpmnResource);
-                    }
+//                    for (Association processAssociation : processAssociations) {
+                        Resource bpmnRegistryResource = userRegistry.get(processAssociations[0].getSourcePath());
+                        byte[] bpmnContent = (byte[]) bpmnRegistryResource.getContent();
+                    InputStreamProvider inputStreamProvider = new PCInputStreamProvider(bpmnContent);
+                    factory = DocumentBuilderFactory.newInstance();
+                    builder = factory.newDocumentBuilder();
+                    BPMNDocument = builder.parse(new InputSource(inputStreamProvider.getInputStream()));
+//                    }
                 }
             }
-        } catch (RegistryException | JSONException e) {
+        } catch (RegistryException | ParserConfigurationException  | SAXException | IOException e) {
             String errMsg = "Error occurred while getting bpmn resources for process : " + processName + " version " +
-                    processVersion ;
+                    processVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
-        return bpmnResources.toString();
+
+        return BPMNDocument;
     }
+
+public BPMN getBpmn(){
+    return bpmn;
+}
+
 }

@@ -156,4 +156,9 @@ public class ProcessCenterConstants {
         public static final String PROCESS_MEDIATYPE = "application/vnd.wso2-process+xml";
         public static final String PACKAGE_MEDIATYPE = "application/vnd.wso2-package+xml";
     }
+
+    //BPMN related constants
+    public static final String TYPE= "type";
+    public static final String ACTIVITI_FORM_PROPERTY = "activiti:formProperty";
+    public static final String VARIABLE = "variable" ;
 }

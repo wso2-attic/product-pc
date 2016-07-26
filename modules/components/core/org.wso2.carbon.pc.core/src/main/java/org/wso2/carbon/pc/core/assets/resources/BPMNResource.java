@@ -24,14 +24,25 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
+import org.w3c.dom.NodeList;
+import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.pc.core.util.PCInputStreamProvider;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class for BPMN resource
@@ -69,8 +80,10 @@ public class BPMNResource {
                 byte[] bpmnContent = (byte[]) bpmnXMLResource.getContent();
                 InputStreamProvider inputStreamProvider = new PCInputStreamProvider(bpmnContent);
 
+
                 BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();
                 BpmnModel bpmnModel = bpmnXMLConverter.convertToBpmnModel(inputStreamProvider, false, false);
+
 
                 ProcessDiagramGenerator generator = new DefaultProcessDiagramGenerator();
                 InputStream imageStream = generator.generatePngDiagram(bpmnModel);
@@ -87,4 +100,5 @@ public class BPMNResource {
 
         }
     }
+
 }
