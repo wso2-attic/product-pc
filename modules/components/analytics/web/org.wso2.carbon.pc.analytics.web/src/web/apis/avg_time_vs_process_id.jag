@@ -15,7 +15,7 @@
  ~ limitations under the License.
 */
 
-importPackage(org.wso2.carbon.pc.analytics.core);
+importPackage(org.wso2.carbon.pc.analytics.core.generic);
 
 var log = new Log();
 if(log.isDebugEnabled()){

@@ -814,6 +814,7 @@
         <identity.auth.saml2.version>5.1.1</identity.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.1.1</identity.inbound.auth.saml.version>
         <carbon.multitenancy.version>4.5.2</carbon.multitenancy.version>
+        <carbon.data.version>4.3.6-SNAPSHOT</carbon.data.version>
 
         <operadriver.version>0.8.1</operadriver.version>
 
@@ -876,7 +877,9 @@
         <orbit.version.json>1.0.0.wso2v1</orbit.version.json>
 
         <!--Analytics-->
-        <carbon.analytics.common.version>5.0.8</carbon.analytics.common.version>
+        <carbon.analytics.version>1.2.0-SNAPSHOT</carbon.analytics.version>
+        <carbon.analytics.common.version>5.1.1-SNAPSHOT</carbon.analytics.common.version>
+        <carbon.event-processing.version>2.1.1-SNAPSHOT</carbon.event-processing.version>
         <version.commons.logging>1.2</version.commons.logging>
         <orbit.version.commons.io>2.4.0.wso2v1</orbit.version.commons.io>
         <carbon.kernel.registry.imp.pkg.version>[1.0.1, 2.0.0)</carbon.kernel.registry.imp.pkg.version>

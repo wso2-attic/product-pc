@@ -229,7 +229,6 @@ function updateProcessText(currentElement) {
                 if (response.error === false) {
                     if ($(currentElement).attr('id') == 'processTxtSaveBtn') {
                         alertify.success("Successfully saved the process content.");
-                        $("#processTextEditDiv").hide();
                         $("#textadded").addClass("fw fw-check");
                     }
                 } else {
@@ -262,8 +261,6 @@ function showTextEditr(element) {
 }
 
 function textEditorInit() {
-    $("#processTextEditDiv").hide();
-    $("#processTextView").show();
     isEditorActive = true;
 
     if($('#processTextHolder').val()) {
@@ -317,8 +314,8 @@ function loadTextEditor() {
             $("#processTextEditDiv").addClass("active");
         }
         else {
-            $("#processTextEditDiv").hide();
-            $("#processTextView").show();
+            // $("#processTextEditDiv").hide();
+            // $("#processTextView").show();
             $(".active").removeClass("active");
         }
     } else {
