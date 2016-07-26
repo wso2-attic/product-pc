@@ -23,8 +23,6 @@ import java.util.List;
  * Holds the constants of ProcessStore
  */
 public class ProcessCenterConstants {
-
-
     /**
      * Asset Registry Properties
      **/
@@ -106,6 +104,16 @@ public class ProcessCenterConstants {
     public static final String AUTHORIZE = "5";
     public static final String ALLOW = "1";
 
+    public static final String PROCESS_EXPORT_DIR = "Exports/";
+    public static final String EXPORTED_PROCESS_RXT_FILE = "process_rxt.xml";
+    public static final String EXPORTED_BPMN_FILE = "bpmn.xml";
+    public static final String EXPORTED_BPMN_CONTENT_FILE = "bpmn_content.xml";
+    public static final String EXPORTED_FLOW_CHART_FILE = "flowChart.json";
+    public static final String EXPORTED_PROCESS_TEXT_FILE = "process_text.xml";
+    public static final int JSON_FILE_INDENT_FACTOR = 5;
+    public static final String PROCESS_ASSET_RESOURCE_REG_PATH = "store/asset_resources/process/";
+    public static final String PROCESS_TAGS_FILE = "process_tags.txt";
+    public static final String PROCESS_ASSOCIATIONS_FILE = "process_associations.json";
     // Make the constructor private, since it is a utility class
     private ProcessCenterConstants() {
     }
@@ -140,6 +148,16 @@ public class ProcessCenterConstants {
         public static final String ACTION_TYPE = "type";
         public static final String TIME_STAMP = "timestamp";
     }
+
+    public static final String PROCESS_VERSION = "processVersion";
+    public static final String MNS = "http://www.wso2.org/governance/metadata";
+
+    public static final String EVENT_STREAM_NAME = "eventStreamName" ;
+    public static final String EVENT_STREAM_VERSION = "eventStreamVersion";
+    public static final String EVENT_STREAM_DESCRIPTION = "eventStreamDescription";
+    public static final String EVENT_STREAM_NICK_NAME = "eventStreamNickName";
+    public static final String EVENT_RECEIVER_NAME = "eventReceiverName";
+    public static final String PROCESS_DEFINITION_ID = "processDefinitionId";
 
     public static class PROCESS_CONTENT_SEARCH {
 
