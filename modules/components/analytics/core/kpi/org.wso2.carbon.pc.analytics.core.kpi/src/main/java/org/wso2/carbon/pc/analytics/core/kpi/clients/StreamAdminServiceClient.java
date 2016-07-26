@@ -28,16 +28,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2.carbon.pc.analytics.core.kpi.AnalyticsConfigConstants;
-
 import org.wso2.carbon.event.stream.stub.EventStreamAdminServiceStub;
 import org.wso2.carbon.pc.core.ProcessCenterException;
-
 import java.rmi.RemoteException;
 
 public class StreamAdminServiceClient {
-    private EventStreamAdminServiceStub serviceAdminStub;
 
+    private EventStreamAdminServiceStub serviceAdminStub;
     private static final Log log = LogFactory.getLog(StreamAdminServiceClient.class);
+    private static final String STREAM_ID_KEY = "streamId";
+    private static final String STREAM_NAME_KEY = "name";
+    private static final String STREAM_VERSION_KEY = "version";
+    private static final String STREAM_NICK_NAME_KEY = "nickName";
+    private static final String STREAM_DESCRIPTION_KEY = "description";
+    private static final String PAYLOAD_DATA = "payloadData";
 
     /**
      * Create EventStreamAdminServiceStub object
@@ -77,17 +81,17 @@ public class StreamAdminServiceClient {
             option.setManageSession(true);
             option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, session);
 
-            streamDefinitionJsonOb.put("streamId", streamId);
-            streamDefinitionJsonOb.put("name", streamName);
-            streamDefinitionJsonOb.put("version", streamVersion);
-            streamDefinitionJsonOb.put("nickName", streamNickName);
-            streamDefinitionJsonOb.put("description", streamDescription);
+            streamDefinitionJsonOb.put(STREAM_ID_KEY, streamId);
+            streamDefinitionJsonOb.put(STREAM_NAME_KEY, streamName);
+            streamDefinitionJsonOb.put(STREAM_VERSION_KEY, streamVersion);
+            streamDefinitionJsonOb.put(STREAM_NICK_NAME_KEY, streamNickName);
+            streamDefinitionJsonOb.put(STREAM_DESCRIPTION_KEY, streamDescription);
 
             //setting process variables as payloadData into the eventStream definition
-            streamDefinitionJsonOb.put("payloadData", processVariables);
+            streamDefinitionJsonOb.put(PAYLOAD_DATA, processVariables);
 
             if (log.isDebugEnabled()) {
-                log.debug("Strem Definition Json Object:" + streamDefinitionJsonOb.toString());
+                log.debug("Stream Definition Json Object:" + streamDefinitionJsonOb.toString());
             }
 
             serviceAdminStub.addEventStreamDefinitionAsString(streamDefinitionJsonOb.toString());
