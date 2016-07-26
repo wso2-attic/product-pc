@@ -18,6 +18,7 @@ package org.wso2.carbon.pc.core.internal;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.pc.core.ProcessCenter;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.registry.common.AttributeSearchService;
 import org.wso2.carbon.registry.core.Resource;
@@ -29,12 +30,10 @@ import org.wso2.carbon.registry.resource.beans.PermissionBean;
 import org.wso2.carbon.registry.resource.beans.PermissionEntry;
 import org.wso2.carbon.registry.resource.services.utils.AddRolePermissionUtil;
 import org.wso2.carbon.registry.resource.services.utils.PermissionUtil;
-import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -51,6 +50,8 @@ public class ProcessCenterServerHolder {
     private ContentSearchService contentSearchService;
 
     private AttributeSearchService attributeSearchService;
+
+    private ProcessCenter processCenter;
 
     private ProcessCenterServerHolder() {
     }
@@ -154,7 +155,7 @@ public class ProcessCenterServerHolder {
                 dashboardResource.setContent(jsonText);
                 dashboardResource.setMediaType("application/json");
                 String dashboardPath = "ues/dashboards/process-charts";
-                if(!registry.resourceExists(dashboardPath)) {
+                if (!registry.resourceExists(dashboardPath)) {
                     registry.put(dashboardPath, dashboardResource);
                 }
             }
@@ -163,5 +164,13 @@ public class ProcessCenterServerHolder {
             String msg = "Error occurred uploading dashboard to registry";
             log.error(msg, e);
         }
+    }
+
+    public ProcessCenter getProcessCenter() {
+        return processCenter;
+    }
+
+    public void setProcessCenter(ProcessCenter processCenter) {
+        this.processCenter = processCenter;
     }
 }

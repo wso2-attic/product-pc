@@ -1,125 +1,131 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!--
+~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~      http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
 <Module>
-    <ModulePrefs title="Date Range Picker">
+    <ModulePrefs title="Date Range Picker" height="1000">
         <Require feature="pubsub-2"/>
         <Require feature="dynamic-height"/>
         <Require feature="wso2-gadgets-controls"/>
     </ModulePrefs>
     <Content type="html">
         <![CDATA[
-        <head>
-            <meta charset="utf-8">
-            <title>jQuery UI Datepicker - Default functionality</title>
-            <link rel="stylesheet" href="/portal/libs/bootstrap_3.3.5/css/bootstrap.min.css">
-            <link rel="stylesheet" href="css/bootstrap-datepicker.min.css" type="text/css"/>
-            <style>
-                .datepicker-inline {
-                    margin:0 auto;
-                }
-                .date_label {
-                    width: 100px;
-                    padding: 12px 12px;
-                    margin: 20px;
-                    font-size: 14px;
-                    font-weight: 400;
-                    line-height: 1;
-                    color: #555;
-                    text-align: center;
-                    background-color: #eee;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                }
-                .actionButton {
-                    margin-top:80px;
-                }
-            </style>
-            <script src="/portal/libs/jquery_1.11.0/jquery-1.11.3.min.js"></script>
-            <script src="/portal/libs/bootstrap_3.3.5/js/bootstrap.min.js"></script>
-            <script src="js/bootstrap-datepicker.min.js"></script>
-            <script>
-                var from = 0;
-                var to = 0;
+          <html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Datepicker - Default functionality</title>
+    <link rel="stylesheet" href="/portal/libs/bootstrap_3.3.5/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap-datepicker.min.css" type="text/css"/>
+    <style type="text/css">
+        body {
+            padding: 12px;
+            box-sizing: border-box;
+            background-color: transparent;
+        }
+    </style>
+    <script src="/portal/libs/jquery_1.11.0/jquery-1.11.3.min.js"></script>
+    <script src="/portal/libs/bootstrap_3.3.5/js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-datepicker.min.js"></script>
 
-                $(function() {
-
-                    $("#fromDate").datepicker({
-                       orientation: 'top'
-                    }).on('changeDate', function(e) {
-                       var fromdate = e.date;
-                       from = fromdate.getTime();
-                       $("#startDate").val(fromdate.getFullYear()+"-"+(fromdate.getMonth()+1)+"-"+fromdate.getDate());
-                       $("#fromDate").hide();
-                    });
-
-                    wso2.gadgets.controls.addLostFocusListener(function() {
-                        $( "#fromDate" ).hide();
-                        $( "#toDate" ).hide();
-                   });
-
-                    $("#toDate").datepicker({
-                        orientation: 'top'
-                    }).on('changeDate', function(e) {
-                        var todate = e.date;
-                        to = todate.getTime();
-                        $("#endDate").val(todate.getFullYear()+"-"+(todate.getMonth()+1)+"-"+todate.getDate());
-                        $("#toDate").hide();
-                    });
-                });
-
-                 function publish() {
-                    if(from!=0 && to!=0){
-                        gadgets.Hub.publish('date_range', {
-                            from: from,
-                            to: to
-                        });
-                        from = 0;
-                        to = 0;
-                    }
-                    else{
-                         alert('Please fill both dates');
-                    }
-                 }
-            </script>
-        </head>
-        <body>
-            <div class="container-fluid">
-                <div class="row">
-                <h1 style="font-family:Roboto; margin-top :30px">Select start and end date</h1>
-                    <div class="col-xs-4">
-                        <label class="date_label" id="start_date">Start Date</label>
-                        <input id="startDate" class="form-control" type="text" onfocus="setStartDatePicker()" style="width:50%">
-                        <div id="fromDate" style="display:none;margin-left: -225px;"></div>
-                    </div>
-                    <div class="col-xs-4">
-                        <label class="date_label" id="start_date">End Date</label>
-                        <input id="endDate" class="form-control" type="text" onfocus="setEndDatePicker()" style="width:50%">
-                        <div id="toDate"  style="display:none;margin-left: -225px;"></div>
-                    </div>
-                    <div class="col-xs-4">
-                        <Button class="actionButton btn btn-success" id="applyBtn" onclick="publish()" style="margin-left:30px;">Apply</Button>
-                        <Button class="actionButton btn btn-success" id="resetBtn" onclick="reset()" style="margin-left:40px;">Reset</Button>
-                    </div>
+</head>
+<body>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div style="padding-top: 10px;padding-left: 10px;padding-right: 10px;">
+            <div class="form-inline well well-sm" role="form">
+                <div class="input-group form-group">
+                    <label class="input-group-addon" id="start_date" for="startDate">Start Date</label>
+                    <input id="startDate" class="form-control" type="text"/>
+                </div>
+                <div class="input-group form-group">
+                    <label class="input-group-addon" id="end_date">End Date</label>
+                    <input id="endDate" class="form-control" type="text"/>
+                </div>
+                <Button class="btn btn-primary" id="applyBtn" onclick="publish()">Publish</Button>
+                <Button class="btn btn-primary" id="resetBtn" onclick="reset()">Reset</Button>
+                <div class="col-sm-4 input-group " role="alert" style="margin-left: 2%">
+                      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                      This is used to filter analytics data by date range. Default date range 3 months from the current date is applied if user is not selected any date.
                 </div>
             </div>
-            <script type="text/javascript">
-            function setStartDatePicker(){
-                $("#fromDate").show();
-                $("#toDate").hide();
-            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
 
-            function setEndDatePicker(){
-                $("#fromDate").hide();
-                $("#toDate").show();
-            }
+    var from = 0;
+    var to = 0;
 
-             function reset(){
-                $("#startDate").val("");
-                $("#endDate").val("");
-                $("#fromDate").hide();
-                $("#toDate").hide();
-            }
-            </script>
-        </body>
+    function reset() {
+        $("#startDate").val("");
+        $("#endDate").val("");
+    }
+
+    function publish() {
+        if ((from != 0) && (to != 0)) {
+            gadgets.Hub.publish('date_range', {
+                from: from,
+                to: to
+            });
+            from = 0;
+            to = 0;
+            alert("Data published successfully!");
+        }
+        else {
+            alert('Please fill both dates');
+        }
+    }
+
+    $(document).ready(function () {
+        $(function () {
+            $("#startDate").datepicker({}).on('focusin', function () {
+                wso2.gadgets.controls.resizeGadget({
+                    height: '400px'
+                });
+            });
+            $("#endDate").datepicker({}).on('focusin', function () {
+                wso2.gadgets.controls.resizeGadget({
+                    height: '400px'
+                });
+            });
+
+            wso2.gadgets.controls.addLostFocusListener(function () {
+                $("#startDate").datepicker('hide');
+                $("#endDate").datepicker('hide');
+                wso2.gadgets.controls.restoreGadget();
+            });
+        });
+
+        $("#startDate").datepicker({}).on('changeDate', function (e) {
+            var fromdate = e.date;
+            from = fromdate.getTime();
+            $("#startDate").datepicker('hide');
+            wso2.gadgets.controls.restoreGadget();
+        });
+
+        $("#endDate").datepicker({}).on('changeDate', function (e) {
+            var todate = e.date;
+            to = todate.getTime();
+            $("#endDate").datepicker('hide');
+            wso2.gadgets.controls.restoreGadget();
+        });
+    });
+</script>
+</body>
+</html>
         ]]>
     </Content>
 </Module>
+

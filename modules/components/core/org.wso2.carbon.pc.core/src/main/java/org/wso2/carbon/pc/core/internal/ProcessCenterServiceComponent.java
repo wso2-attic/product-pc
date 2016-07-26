@@ -18,6 +18,9 @@ package org.wso2.carbon.pc.core.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.pc.core.ProcessCenter;
+import org.wso2.carbon.pc.core.ProcessCenterException;
+import org.wso2.carbon.pc.core.ProcessCenterService;
 import org.wso2.carbon.registry.common.AttributeSearchService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.indexing.service.ContentSearchService;
@@ -38,7 +41,14 @@ public class ProcessCenterServiceComponent {
     protected void activate(ComponentContext ctxt) {
         log.info("Initializing the PC core component...");
         try {
-            ProcessCenterServerHolder holder = ProcessCenterServerHolder.getInstance();
+            ProcessCenterServerHolder processCenterServerHolder = ProcessCenterServerHolder.getInstance();
+            initProcessCenter(processCenterServerHolder);
+            ProcessCenterService processCenterService = new ProcessCenterService();
+            processCenterService.setProcessCenter(processCenterServerHolder.getProcessCenter());
+            // Register Process Center OSGI Service
+            ctxt.getBundleContext().registerService(ProcessCenterService.class.getName(),
+                    processCenterService, null);
+
         } catch (Throwable e) {
             log.error("Failed to initialize the PC core component.", e);
         }
@@ -88,6 +98,14 @@ public class ProcessCenterServiceComponent {
             log.debug("AttributeSearchService unbound from the PC component");
         }
         ProcessCenterServerHolder.getInstance().unsetAttributeSearchService(attributeSearchService);
+    }
+
+    // Initializing the process center .
+    private void initProcessCenter(ProcessCenterServerHolder processCenterServerHolder)
+            throws ProcessCenterException {
+        processCenterServerHolder.setProcessCenter(new ProcessCenter());
+        log.info("Initialising Process Center");
+        processCenterServerHolder.getProcessCenter().init();
     }
 
 }

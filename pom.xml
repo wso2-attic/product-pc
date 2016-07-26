@@ -40,12 +40,14 @@
     <modules>
         <module>modules/styles</module>
         <module>modules/components/core/org.wso2.carbon.pc.core</module>
-        <module>modules/components/analytics/core/org.wso2.carbon.pc.analytics.core</module>
+        <module>modules/components/analytics/core/generic/org.wso2.carbon.pc.analytics.core.generic</module>
+        <module>modules/components/analytics/core/kpi/org.wso2.carbon.pc.analytics.core.kpi</module>
         <module>modules/components/analytics/web/org.wso2.carbon.pc.analytics.web</module>
         <module>modules/components/analytics/udf/org.wso2.carbon.pc.analytics.udf</module>
         <module>modules/components/analytics/capp/org.wso2.carbon.pc.analytics.capp</module>
         <module>modules/features/core/org.wso2.carbon.pc.core.feature</module>
-        <module>modules/features/analytics-core/org.wso2.carbon.pc.analytics.core.feature</module>
+        <module>modules/features/analytics-core-generic/org.wso2.carbon.pc.analytics.core.generic.feature</module>
+        <module>modules/features/analytics-core-kpi/org.wso2.carbon.pc.analytics.core.kpi.feature</module>
         <module>modules/features/pc-styles/org.wso2.carbon.pc.styles.feature</module>
         <module>modules/p2-profile-gen</module>
         <module>modules/distribution</module>
@@ -224,7 +226,13 @@
 
             <dependency>
                 <groupId>org.wso2.pc</groupId>
-                <artifactId>org.wso2.carbon.pc.analytics.core</artifactId>
+                <artifactId>org.wso2.carbon.pc.analytics.core.generic</artifactId>
+                <version>${pc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.pc</groupId>
+                <artifactId>org.wso2.carbon.pc.analytics.core.kpi</artifactId>
                 <version>${pc.version}</version>
             </dependency>
 
@@ -253,15 +261,15 @@
             </dependency>
 
             <dependency>
-                <groupId>commons-io.wso2</groupId>
+                <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>${commons-io.wso2.version}</version>
+                <version>${commons-io.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.jaggeryjs</groupId>
                 <artifactId>org.jaggeryjs.hostobjects.stream</artifactId>
-                <version>${jaggery.version}</version>
+                <version>${jaggery.feature.version}</version>
             </dependency>
 
             <dependency>
@@ -627,6 +635,44 @@
                 <artifactId>org.wso2.carbon.registry.ws.client</artifactId>
                 <version>${carbon.registry.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.business-process</groupId>
+                <artifactId>org.wso2.carbon.bpmn.stub</artifactId>
+                <version>${carbon.business.process.version}</version>
+            </dependency>
+
+            <!-- Analytics Configuration Dependencies-->
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
+                <version>${org.wso2.carbon.authenticator.stub.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2.wso2</groupId>
+                <artifactId>axis2-client</artifactId>
+                <version>${axis2-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.event.receiver.stub</artifactId>
+                <version>${org.wso2.carbon.event.receiver.stub.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.event.stream.stub</artifactId>
+                <version>${org.wso2.carbon.event.stream.stub.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.maven.scm.wso2</groupId>
+                <artifactId>maven-scm</artifactId>
+                <version>${maven-scm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.pc</groupId>
+                <artifactId>org.wso2.carbon.pc.core</artifactId>
+                <version>${org.wso2.carbon.pc.core.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <scm>
@@ -737,7 +783,7 @@
     </organization>
     <issueManagement>
         <system>JIRA</system>
-        <url>http://wso2.org/jira/browse/STORE</url>
+        <url>https://wso2.org/jira/browse/PC</url>
     </issueManagement>
     <properties>
 
@@ -749,8 +795,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <carbon.kernel.version>4.4.7</carbon.kernel.version>
-        <carbon.social.version>2.4.0</carbon.social.version>
-        <carbon.store.version>2.4.0</carbon.store.version>
+        <carbon.social.version>2.4.1</carbon.social.version>
+        <carbon.store.version>2.4.1</carbon.store.version>
         <carbon.dashboards.version>1.0.19</carbon.dashboards.version>
         <i18n.feature.version>1.5.2</i18n.feature.version>
 
@@ -760,10 +806,10 @@
 
         <!--repo versions-->
         <carbon.commons.version>4.5.4</carbon.commons.version>
-        <carbon.registry.version>4.5.6</carbon.registry.version>
-        <carbon.governance.version>4.6.4</carbon.governance.version>
+        <carbon.registry.version>4.6.0</carbon.registry.version>
+        <carbon.governance.version>4.7.0</carbon.governance.version>
         <carbon.deployment.version>4.7.0</carbon.deployment.version>
-        <carbon.identity.version>5.2.0</carbon.identity.version>
+        <carbon.identity.framework.version>5.2.0</carbon.identity.framework.version>
         <identity.application.auth.basic.auth.version>5.1.1</identity.application.auth.basic.auth.version>
         <identity.auth.saml2.version>5.1.1</identity.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.1.1</identity.inbound.auth.saml.version>
@@ -816,11 +862,13 @@
         <javax.mail.version>1.4.4</javax.mail.version>
         <log4j.version>1.2.17</log4j.version>
         <commons-io.version>2.2</commons-io.version>
-        <commons-io.wso2.version>2.0.0.wso2v2</commons-io.wso2.version>
         <google.guava.version>16.0.1</google.guava.version>
         <testng.version>6.8.5</testng.version>
         <carbon.metrics.version>1.2.1</carbon.metrics.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
+
+        <!-- Carbon business process version -->
+        <carbon.business.process.version>4.4.10-SNAPSHOT</carbon.business.process.version>
 
         <!-- Activiti Version -->
         <org.activiti.version>5.19.0</org.activiti.version>
@@ -828,8 +876,6 @@
         <!-- JSON Version -->
         <orbit.version.json>1.0.0.wso2v1</orbit.version.json>
 
-        <!--Jaggery -->
-        <jaggery.version>0.12.2</jaggery.version>
         <!--Analytics-->
         <carbon.analytics.version>1.2.0-SNAPSHOT</carbon.analytics.version>
         <carbon.analytics.common.version>5.1.1-SNAPSHOT</carbon.analytics.common.version>
@@ -848,6 +894,12 @@
         <apache.felix.framework.version>1.0.3</apache.felix.framework.version>
         <eclipse.equinox.jsp.jasper.version>1.0.1.R33x_v20070816</eclipse.equinox.jsp.jasper.version>
         <carbon.kernel.imp.pkg.version>[4.4.1, 4.5.0)</carbon.kernel.imp.pkg.version>
+        <org.wso2.carbon.authenticator.stub.version>4.0.0</org.wso2.carbon.authenticator.stub.version>
+        <axis2-client.version>1.6.1.wso2v5</axis2-client.version>
+        <org.wso2.carbon.event.receiver.stub.version>5.0.8</org.wso2.carbon.event.receiver.stub.version>
+        <org.wso2.carbon.event.stream.stub.version>5.0.8</org.wso2.carbon.event.stream.stub.version>
+        <maven-scm.version>1.7.0.wso2v1</maven-scm.version>
+        <org.wso2.carbon.pc.core.version>1.0.0-SNAPSHOT</org.wso2.carbon.pc.core.version>
 
     </properties>
 </project>

@@ -14,7 +14,7 @@ app.server = function(ctx) {
         },
         configs:{
             landingPage:'/assets/process/list',
-            disabledAssets:['gadget','site','ebook', 'api', 'wsdl', 'service','policy','proxy','schema','sequence','servicex','uri','wadl','endpoint','swagger','restservice','comments','soapservice']
+            disabledAssets:['package','gadget','site','ebook', 'api', 'wsdl', 'service','policy','proxy','schema','sequence','servicex','uri','wadl','endpoint','swagger','restservice','comments','soapservice']
         }
     }
 };
