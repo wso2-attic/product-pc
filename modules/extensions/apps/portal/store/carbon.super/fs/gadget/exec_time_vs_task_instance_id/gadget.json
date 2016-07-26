@@ -1,0 +1,20 @@
+{
+  "id": "exec_time_vs_task_instance_id",
+  "title": "Execution Time vs Task Instance ID",
+  "type": "gadget",
+  "category": "Subscribers",
+  "thumbnail": "gadget/exec_time_vs_task_instance_id/index.png",
+  "settings": {
+    "personalize": true
+  },
+  "data": {
+    "url": "gadget/exec_time_vs_task_instance_id/index.xml"
+  },
+  "description": "This shows pc analytics charts",
+  "listen": {
+    "Daterange": {
+      "type": "dateRange",
+      "description": "Listening to date range"
+    }
+  }
+}

@@ -267,7 +267,7 @@
 }
 
 .wiz-step.current {
-    background-color: #3598db;
+    background-color: #237bd5;
     color: #fff;
 }
 
@@ -276,7 +276,7 @@
 }
 
 .wiz-step.current:after {
-    border-left-color: #3598db;
+    border-left-color: #237bd5;
 }
 
 .wiz-step.other {
@@ -471,9 +471,6 @@
     border-image: none;
     border-style: solid;
     border-color: rgb(237, 237, 237);
-    margin-top: 30px;
-    margin-left: 20px;
-    margin-right: 20px;
 }
 
 .vertical_line {
@@ -484,7 +481,7 @@
     border-color: rgb(237, 237, 237);
     margin-left: 280px;
     position: absolute;
-    top: 340px;
+    top: 220px;
     bottom: 100px;
 }
 
@@ -493,5 +490,30 @@
 }
 
 .wiz-step:hover {
-    background-color: #237bd5;
+    background-color: #3598db;
+    cursor: pointer;
+}
+
+.wiz-step:hover::after {
+    border-left-color: #3598db;
+    cursor: pointer;
+}
+
+hr {
+    border: none;
+    height: 2px;
+    color: rgb(237, 237, 237);
+    background-color: rgb(237, 237, 237);
+}
+
+.nav-header {
+    color: #FFFFFF;
+    font-size: 14px;
+    padding-left: 20px;
+    text-shadow: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background: #344860;
+    margin-top: 0;
+    text-transform: none;
 }

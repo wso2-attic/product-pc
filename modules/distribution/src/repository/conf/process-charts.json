@@ -1,0 +1,433 @@
+{
+  "id": "process-charts",
+  "title": "process-charts",
+  "description": "",
+  "permissions": {
+    "viewers": [
+      "Internal/process-charts-viewer"
+    ],
+    "editors": [
+      "Internal/process-charts-editor"
+    ],
+    "owners": [
+      "Internal/process-charts-owner"
+    ]
+  },
+  "pages": [
+    {
+      "id": "landing",
+      "title": "Home",
+      "layout": {
+        "content": {
+          "loggedIn": {
+            "blocks": [
+              {
+                "id": "32024f59828b13e5ac85d5b711d72a37",
+                "x": 0,
+                "y": 0,
+                "width": 12,
+                "height": 3,
+                "banner": false
+              },
+              {
+                "id": "e2ba353a7f6605a9b665f98e166151c8",
+                "x": 0,
+                "y": 15,
+                "width": 6,
+                "height": 6,
+                "banner": false
+              },
+              {
+                "id": "9809bf5a679d8ae623b8acda8116a3fa",
+                "x": 6,
+                "y": 15,
+                "width": 6,
+                "height": 6,
+                "banner": false
+              },
+              {
+                "id": "16541b05b879cb934051bf76c31f5cdc",
+                "x": 6,
+                "y": 9,
+                "width": 6,
+                "height": 6,
+                "banner": false
+              },
+              {
+                "id": "7e7c952c9f6360cd07d81c8ddc27feab",
+                "x": 0,
+                "y": 21,
+                "width": 6,
+                "height": 6,
+                "banner": false
+              },
+              {
+                "id": "a5bf8deb732fe2da3623df967f3beb91",
+                "x": 0,
+                "y": 9,
+                "width": 6,
+                "height": 6,
+                "banner": false
+              },
+              {
+                "id": "6a416c4d5747be7ae851961c4dac0f3e",
+                "x": 6,
+                "y": 3,
+                "width": 6,
+                "height": 6,
+                "banner": false
+              },
+              {
+                "id": "96fbe09b911a07edfdb05acd289840cc",
+                "x": 0,
+                "y": 3,
+                "width": 6,
+                "height": 6,
+                "banner": false
+              }
+            ]
+          }
+        },
+        "fluidLayout": false
+      },
+      "isanon": false,
+      "content": {
+        "default": {
+          "32024f59828b13e5ac85d5b711d72a37": [
+            {
+              "id": "date-range-0",
+              "content": {
+                "id": "date-range",
+                "title": "Date Range Picker",
+                "type": "gadget",
+                "category": "Publishers",
+                "thumbnail": "fs://gadget/date-range/dateRange.png",
+                "data": {
+                  "url": "fs://gadget/date-range/index.xml"
+                },
+                "styles": {
+                  "borders": true,
+                  "title": "Date Range Picker"
+                },
+                "notify": {
+                  "date_range": {
+                    "type": "dateRange",
+                    "description": "This notifies selected date range"
+                  }
+                },
+                "options": {},
+                "locale_titles": {}
+              }
+            }
+          ],
+          "80bbd36de3ffd2fe71083f53d5b2f1e4": [
+            {
+              "id": "pc-analytics-0",
+              "content": {
+                "id": "pc-analytics",
+                "title": "PC Analytics",
+                "type": "gadget",
+                "category": "Subscribers",
+                "thumbnail": "fs://gadget/pc-analytics/index.png",
+                "settings": {
+                  "personalize": true,
+                  "priority": "5"
+                },
+                "data": {
+                  "url": "fs://gadget/pc-analytics/index.xml"
+                },
+                "description": "This shows pc analytics charts",
+                "listen": {
+                  "Daterange": {
+                    "type": "dateRange",
+                    "description": "Listening to date range",
+                    "on": [
+                      {
+                        "from": "date-range-0",
+                        "event": "date_range"
+                      }
+                    ]
+                  }
+                },
+                "styles": {
+                  "no_heading": false,
+                  "hide_gadget": false,
+                  "titlePosition": "left",
+                  "title": "PC Analytics"
+                },
+                "options": {},
+                "locale_titles": {
+                  "en-US": "PC Analytics"
+                }
+              }
+            },
+            {
+              "id": "avg_time_vs_process_id-0",
+              "content": {
+                "id": "avg_time_vs_process_id",
+                "title": "Average Execution Time vs Process ID",
+                "type": "gadget",
+                "category": "Subscribers",
+                "thumbnail": "fs://gadget/avg_time_vs_process_id/index.png",
+                "settings": {
+                  "personalize": true
+                },
+                "data": {
+                  "url": "fs://gadget/avg_time_vs_process_id/index.xml"
+                },
+                "description": "This shows pc analytics charts",
+                "listen": {
+                  "Daterange": {
+                    "type": "dateRange",
+                    "description": "Listening to date range"
+                  }
+                },
+                "styles": {
+                  "title": "Average Execution Time vs Process ID",
+                  "borders": true
+                },
+                "options": {},
+                "locale_titles": {}
+              }
+            }
+          ],
+          "748a72f902b01780414b2d420e3a70e1": [],
+          "f5b8e0092fa46d3846060c061820892c": [],
+          "66a4702b1496f69c74c1342ef8a8a7a2": [
+            {
+              "id": "date-picker-widget-0",
+              "content": {
+                "id": "date-picker-widget",
+                "title": "Date Picker Widget",
+                "type": "widget",
+                "category": "Widgets",
+                "thumbnail": "fs://gadget/date-picker-widget/index.png",
+                "data": {
+                  "url": "fs://gadget/date-picker-widget/index.xml"
+                },
+                "options": {},
+                "styles": {
+                  "borders": false,
+                  "title": "Date Picker Widget"
+                },
+                "notify": {
+                  "date-selected": {
+                    "type": "message",
+                    "description": "This notifies selected date"
+                  }
+                },
+                "locale_titles": {}
+              }
+            }
+          ],
+          "e2ba353a7f6605a9b665f98e166151c8": [
+            {
+              "id": "avg_time_vs_process_version-0",
+              "content": {
+                "id": "avg_time_vs_process_version",
+                "title": "Average time vs Process Version",
+                "type": "gadget",
+                "category": "Subscribers",
+                "thumbnail": "fs://gadget/avg_time_vs_process_version/index.png",
+                "settings": {
+                  "personalize": true
+                },
+                "data": {
+                  "url": "fs://gadget/avg_time_vs_process_version/index.xml"
+                },
+                "description": "This shows pc analytics charts",
+                "listen": {
+                  "Daterange": {
+                    "type": "dateRange",
+                    "description": "Listening to date range"
+                  }
+                },
+                "styles": {
+                  "title": "Average time vs Process Version",
+                  "borders": true
+                },
+                "options": {},
+                "locale_titles": {}
+              }
+            }
+          ],
+          "9809bf5a679d8ae623b8acda8116a3fa": [
+            {
+              "id": "process_instance_count_vs_process_version-0",
+              "content": {
+                "id": "process_instance_count_vs_process_version",
+                "title": "Process Instance Count vs Process Version",
+                "type": "gadget",
+                "category": "Subscribers",
+                "thumbnail": "fs://gadget/process_instance_count_vs_process_version/index.png",
+                "settings": {
+                  "personalize": true
+                },
+                "data": {
+                  "url": "fs://gadget/process_instance_count_vs_process_version/index.xml"
+                },
+                "description": "This shows pc analytics charts",
+                "listen": {
+                  "Daterange": {
+                    "type": "dateRange",
+                    "description": "Listening to date range"
+                  }
+                },
+                "styles": {
+                  "title": "Process Instance Count vs Process Version",
+                  "borders": true
+                },
+                "options": {},
+                "locale_titles": {}
+              }
+            }
+          ],
+          "96fbe09b911a07edfdb05acd289840cc": [
+            {
+              "id": "exec_time_vs_process_instance_id-0",
+              "content": {
+                "id": "exec_time_vs_process_instance_id",
+                "title": "Execution Time vs Process Instance",
+                "type": "gadget",
+                "category": "Subscribers",
+                "thumbnail": "fs://gadget/exec_time_vs_process_instance_id/index.png",
+                "settings": {
+                  "personalize": true
+                },
+                "data": {
+                  "url": "fs://gadget/exec_time_vs_process_instance_id/index.xml"
+                },
+                "description": "This shows pc analytics charts",
+                "listen": {
+                  "Daterange": {
+                    "type": "dateRange",
+                    "description": "Listening to date range"
+                  }
+                },
+                "styles": {
+                  "title": "Execution Time vs Process Instance",
+                  "borders": true
+                },
+                "options": {},
+                "locale_titles": {}
+              }
+            }
+          ],
+          "6a416c4d5747be7ae851961c4dac0f3e": [
+            {
+              "id": "task_instance_count_vs_task_id-0",
+              "content": {
+                "id": "task_instance_count_vs_task_id",
+                "title": "Task Instance Count vs Task ID",
+                "type": "gadget",
+                "thumbnail": "fs://gadget/task_instance_count_vs_task_id/index.png",
+                "settings": {
+                  "personalize": true
+                },
+                "data": {
+                  "url": "fs://gadget/task_instance_count_vs_task_id/index.xml"
+                },
+                "description": "PC analytics graphs",
+                "styles": {
+                  "title": "Task Instance Count vs Task ID",
+                  "borders": true
+                },
+                "options": {},
+                "locale_titles": {}
+              }
+            }
+          ],
+          "a5bf8deb732fe2da3623df967f3beb91": [
+            {
+              "id": "avg_time_vs_task_id-0",
+              "content": {
+                "id": "avg_time_vs_task_id",
+                "title": "Average Time vs Task ID",
+                "type": "gadget",
+                "category": "Subscribers",
+                "thumbnail": "fs://gadget/avg_time_vs_task_id/index.png",
+                "settings": {
+                  "personalize": true
+                },
+                "data": {
+                  "url": "fs://gadget/avg_time_vs_task_id/index.xml"
+                },
+                "description": "This shows pc analytics charts",
+                "listen": {
+                  "Daterange": {
+                    "type": "dateRange",
+                    "description": "Listening to date range"
+                  }
+                },
+                "styles": {
+                  "title": "Average Time vs Task ID",
+                  "borders": true
+                },
+                "options": {},
+                "locale_titles": {}
+              }
+            }
+          ],
+          "16541b05b879cb934051bf76c31f5cdc": [
+            {
+              "id": "total_involved_time_vs_user_id-2",
+              "content": {
+                "id": "total_involved_time_vs_user_id",
+                "title": "Total Involved Time vs User ID",
+                "type": "gadget",
+                "category": "Subscribers",
+                "thumbnail": "fs://gadget/total_involved_time_vs_user_id/index.png",
+                "settings": {
+                  "personalize": true
+                },
+                "data": {
+                  "url": "fs://gadget/total_involved_time_vs_user_id/index.xml"
+                },
+                "description": "PC analytics graphs",
+                "listen": {
+                  "channel5": {
+                    "type": "dateRange",
+                    "description": "Listening to date range"
+                  }
+                },
+                "styles": {
+                  "title": "Total Involved Time vs User ID",
+                  "borders": true
+                },
+                "options": {},
+                "locale_titles": {}
+              }
+            }
+          ]
+        },
+        "anon": {}
+      }
+    }
+  ],
+  "menu": [
+    {
+      "id": "landing",
+      "isanon": false,
+      "ishidden": false,
+      "title": "Home",
+      "subordinates": []
+    }
+  ],
+  "hideAllMenuItems": false,
+  "identityServerUrl": "",
+  "accessTokenUrl": "",
+  "apiKey": "",
+  "apiSecret": "",
+  "theme": "custom-theme",
+  "shareDashboard": false,
+  "isUserCustom": false,
+  "isEditorEnable": false,
+  "banner": {
+    "globalBannerExists": false,
+    "customBannerExists": false
+  },
+  "landing": "landing",
+  "isanon": false,
+  "enableOauth": true,
+  "defaultPriority": "5"
+}
