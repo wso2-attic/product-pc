@@ -15,11 +15,13 @@
  */
 package org.wso2.carbon.pc.core.internal;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.pc.core.ProcessCenter;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.registry.common.AttributeSearchService;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -28,7 +30,11 @@ import org.wso2.carbon.registry.resource.beans.PermissionBean;
 import org.wso2.carbon.registry.resource.beans.PermissionEntry;
 import org.wso2.carbon.registry.resource.services.utils.AddRolePermissionUtil;
 import org.wso2.carbon.registry.resource.services.utils.PermissionUtil;
+import org.wso2.carbon.utils.CarbonUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,6 +63,8 @@ public class ProcessCenterServerHolder {
     public void setRegistryService(RegistryService registrySvc) {
         this.registryService = registrySvc;
         updateArtifactPathPermissions();
+        deployAnalyticsDashboard("process-charts");
+        deployAnalyticsDashboard("user-analytics");
     }
 
     public void unsetRegistryService(RegistryService registryService) {
@@ -131,6 +139,32 @@ public class ProcessCenterServerHolder {
         registry.put(ProcessCenterConstants.AUDIT.PROCESS_TEXT, registry.newCollection());
         registry.put(ProcessCenterConstants.AUDIT.DOC_CONTENT, registry.newCollection());
         registry.put(ProcessCenterConstants.AUDIT.FLOW_CHART, registry.newCollection());
+    }
+
+    private void deployAnalyticsDashboard(String file_name) {
+        String path = CarbonUtils.getCarbonConfigDirPath() + File.separator + file_name + ".json";
+
+        try {
+            File dashBoardJson = new File(path);
+            InputStream stream = new FileInputStream(dashBoardJson);
+            if (this.registryService != null) {
+
+                UserRegistry registry = this.registryService.getConfigSystemRegistry();
+                Resource dashboardResource = registry.newResource();
+                byte[] content = IOUtils.toByteArray(stream);
+                String jsonText = new String(content);
+                dashboardResource.setContent(jsonText);
+                dashboardResource.setMediaType("application/json");
+                String dashboardPath = "ues/dashboards/" + file_name;
+                if (!registry.resourceExists(dashboardPath)) {
+                    registry.put(dashboardPath, dashboardResource);
+                }
+            }
+
+        } catch (Exception e) {
+            String msg = "Error occurred uploading dashboard to registry";
+            log.error(msg, e);
+        }
     }
 
     public ProcessCenter getProcessCenter() {

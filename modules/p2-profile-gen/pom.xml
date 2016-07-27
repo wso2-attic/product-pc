@@ -75,6 +75,9 @@
                                 <featureArtifactDef>org.wso2.pc:org.wso2.carbon.pc.core.feature:${pc.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.pc:org.wso2.carbon.pc.styles.feature:${pc.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.pc:org.wso2.carbon.pc.analytics.core.feature:${pc.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.pc:org.wso2.carbon.pc.analytics.core.generic.feature:${pc.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.pc:org.wso2.carbon.pc.analytics.core.kpi.feature:${pc.version}</featureArtifactDef>
+
                                 <!-- Features of ES -->
 
                                 <featureArtifactDef>org.jaggeryjs:org.jaggeryjs.feature:${jaggery.feature.version}
@@ -384,14 +387,16 @@
                                     <id>org.wso2.carbon.pc.core.feature.group</id>
                                     <version>${pc.version}</version>
                                 </feature>
-
                                 <feature>
-                                    <id>org.wso2.carbon.pc.styles.feature.group</id>
+                                    <id>org.wso2.carbon.pc.analytics.core.kpi.feature.group</id>
                                     <version>${pc.version}</version>
                                 </feature>
-
                                 <feature>
-                                    <id>org.wso2.carbon.pc.analytics.core.feature.group</id>
+                                    <id>org.wso2.carbon.pc.analytics.core.generic.feature.group</id>
+                                    <version>${pc.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.pc.styles.feature.group</id>
                                     <version>${pc.version}</version>
                                 </feature>
                                 <!-- Features of ES -->
@@ -766,6 +771,7 @@
                                     <id>org.wso2.carbon.governance.taxonomy.management.feature.group</id>
                                     <version>${carbon.governance.version}</version>
                                 </feature>
+
                             </features>
                         </configuration>
                     </execution>

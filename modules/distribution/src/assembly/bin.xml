@@ -137,6 +137,8 @@
                 <exclude>publisher/themes/default/partials/product-title.hbs</exclude>
                 <exclude>sso/jaggery.conf</exclude>
                 <exclude>portal/configs/designer.json</exclude>
+                <exclude>portal/store/carbon.super/fs/gadget/**</exclude>
+                <exclude>portal/css/dashboard.css</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -399,13 +401,19 @@
         <fileSet>
             <directory>../extensions/apps/portal/store</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/store
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/store/
             </outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../extensions/apps/portal/libs</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/libs
+            </outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../extensions/apps/portal/css</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/css
             </outputDirectory>
         </fileSet>
         <!-- permission related-->
@@ -460,6 +468,7 @@
         <include>**/*.car</include>
         </includes>
         </fileSet>
+
 
         <!-- File Sets of PC starts from here -->
 
@@ -544,6 +553,16 @@
 
         <file>
             <source>src/repository/conf/pc.xml</source>
+            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/repository/conf/process-charts.json</source>
+            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/repository/conf/user-analytics.json</source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>
@@ -782,6 +801,7 @@
             <fileMode>644</fileMode>
         </file>
         <!-- Files of PC ends from here -->
+
     </files>
 
     <!--

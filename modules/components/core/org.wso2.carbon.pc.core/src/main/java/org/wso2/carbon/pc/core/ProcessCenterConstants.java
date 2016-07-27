@@ -24,9 +24,7 @@ import java.util.List;
  */
 public class ProcessCenterConstants {
 
-    // Make the constructor private, since it is a utility class
-    private ProcessCenterConstants() {
-    }
+
     /**
      * Asset Registry Properties
      **/
@@ -48,7 +46,7 @@ public class ProcessCenterConstants {
     public static final String IMAGE_THUMBNAIL_VALUE = "images_thumbnail";
     public static final String ERROR = "error";
     public static final String MESSAGE = "message";
-    public static final String NO_FILE_SPECIFIED= "no-file-specified";
+    public static final String NO_FILE_SPECIFIED = "no-file-specified";
     /**
      * Package asset
      */
@@ -108,7 +106,6 @@ public class ProcessCenterConstants {
     public static final String WRITE = "3";
     public static final String AUTHORIZE = "5";
     public static final String ALLOW = "1";
-
     // Media types
     public static final String PDF_MEDIA_TYPE = "application/pdf";
     public static final String DOCUMENT_MEDIA_TYPE = "application/msword";
@@ -117,13 +114,38 @@ public class ProcessCenterConstants {
     public static final String PACKAGE_MEDIA_TYPE = "application/vnd.wso2-package+xml";
     public static final String ZIP_MEDIA_TYPE = "application/zip";
     public static final String BAR_EXTENSION = ".bar";
-
-
     // UI constants
     public static final String PDF = "PDF";
     public static final String DOCUMENT = "Document";
     public static final String PROCESS_TEXT = "Process-Text";
     public static final String PROCESS_TYPE = "Process";
+    public static final String PROCESS_EXPORT_DIR = "Exports/";
+    public static final String EXPORTED_PROCESS_RXT_FILE = "process_rxt.xml";
+    public static final String EXPORTED_BPMN_FILE = "bpmn.xml";
+    public static final String EXPORTED_BPMN_CONTENT_FILE = "bpmn_content.xml";
+    public static final String EXPORTED_FLOW_CHART_FILE = "flowChart.json";
+    public static final String EXPORTED_PROCESS_TEXT_FILE = "process_text.xml";
+    public static final int JSON_FILE_INDENT_FACTOR = 5;
+    public static final String PROCESS_ASSET_RESOURCE_REG_PATH = "store/asset_resources/process/";
+    public static final String PROCESS_TAGS_FILE = "process_tags.txt";
+    public static final String PROCESS_ASSOCIATIONS_FILE = "process_associations.json";
+    public static final String PROCESS_VERSION = "processVersion";
+    public static final String MNS = "http://www.wso2.org/governance/metadata";
+    public static final String EVENT_STREAM_NAME = "eventStreamName";
+    public static final String EVENT_STREAM_VERSION = "eventStreamVersion";
+    public static final String EVENT_STREAM_DESCRIPTION = "eventStreamDescription";
+    public static final String EVENT_STREAM_NICK_NAME = "eventStreamNickName";
+    public static final String EVENT_RECEIVER_NAME = "eventReceiverName";
+    public static final String PROCESS_DEFINITION_ID = "processDefinitionId";
+
+    //BPMN related constants
+    public static final String TYPE = "type";
+    public static final String ACTIVITI_FORM_PROPERTY = "activiti:formProperty";
+    public static final String VARIABLE = "variable";
+
+    // Make the constructor private, since it is a utility class
+    private ProcessCenterConstants() {
+    }
 
     public static class AUDIT {
 
@@ -155,6 +177,4 @@ public class ProcessCenterConstants {
         public static final String ACTION_TYPE = "type";
         public static final String TIME_STAMP = "timestamp";
     }
-
-
 }

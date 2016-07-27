@@ -15,11 +15,10 @@
   -->
 <div class="control-group">
     <div class="collapse in responsive-form-container" id="collapseprocessinfo">
-        <div class="title">Overview</div>
         <div class="row-fluid">
 
             <div class="col-sm-6" style="display: inline;float: left;">
-                <form class="form-horizontal font" style="padding-top: 50px; padding-left: 50px">
+                <form class="form-horizontal font" style="padding-top: 80px; padding-left: 50px">
                         <div class="form-group">
 
                             <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Process name<sup
@@ -106,13 +105,26 @@
                 </div>
         </div>
 
-            <div class="col-sm-2 well well-sm" style="display: inline;float: left;margin-left: 20px; margin-top: 50px;">
-                <img id="image" alt="thumbnail" class="square-element img-thumbnail"
-                     src="{{#if customThumbnailAvailable}}/publisher/storage/process/{{assets.id}}/images_thumbnail{{else}}#{{/if}}"
-                     style="display:{{#if customThumbnailAvailable}}block{{else}} none{{/if}}">
+            <div id="process-thumbnail-div" class="col-sm-2 well well-sm" style="display: inline;float: left;margin-left: 30px; margin-top: 80px;">
+                {{#if isUpdateView}}
+                    {{#if customThumbnailAvailable}}
+                        <img id="image" alt="thumbnail" class="square-element img-thumbnail"
+                             src="/publisher/storage/process/{{assets.id}}/images_thumbnail"
+                             style="display:{{#if customThumbnailAvailable}}block{{else}} none{{/if}}">
+                    {{else}}
+                        <div class="ast-img setbgcolor" style="background: {{assets.uniqueColor}};width: 100%;" title="{{name}}">
+                                    <span class="ast-type-icon" title="{{assets.singularLabel}}">
+                                      <i class="{{assets.icon}} fw-lg"></i>
+                                    </span>
+                            <div class="ast-name-icon" style="max-width: 100%;max-height: 100%">{{assets.nameToChar}}</div>
+                        </div>
+                    {{/if}}
+                {{else}}
+                    <img id="image" alt="thumbnail" class="square-element img-thumbnail"
+                         src="#"
+                         style="display:{{#if customThumbnailAvailable}}block{{else}} none{{/if}}">
+                {{/if}}
             </div>
-
-
         </div>
     </div>
 

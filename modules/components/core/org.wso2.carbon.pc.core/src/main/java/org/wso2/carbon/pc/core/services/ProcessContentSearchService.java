@@ -51,11 +51,10 @@ public class ProcessContentSearchService {
 
     static {
         Map<String, String> aMap = new HashMap<>();
-        aMap.put(ProcessCenterConstants.PROCESS_CONTENT_SEARCH.PDF, ProcessCenterConstants.PROCESS_CONTENT_SEARCH
-                .PDF_MEDIATYPE);
-        aMap.put(ProcessCenterConstants.PROCESS_CONTENT_SEARCH.DOCUMENT, ProcessCenterConstants.PROCESS_CONTENT_SEARCH.DOCUMENT_MEDIATYPE);
-        aMap.put(ProcessCenterConstants.PROCESS_CONTENT_SEARCH.PROCESS_TEXT, ProcessCenterConstants.PROCESS_CONTENT_SEARCH.PROCESS_TEXT_MEDIATYPE);
-        aMap.put(ProcessCenterConstants.PROCESS_CONTENT_SEARCH.PROCESS, ProcessCenterConstants.PROCESS_CONTENT_SEARCH.PROCESS_MEDIATYPE);
+        aMap.put(ProcessCenterConstants.PDF, ProcessCenterConstants.PDF_MEDIA_TYPE);
+        aMap.put(ProcessCenterConstants.DOCUMENT, ProcessCenterConstants.DOCUMENT_MEDIA_TYPE);
+        aMap.put(ProcessCenterConstants.PROCESS_TEXT, ProcessCenterConstants.PROCESS_TEXT_MEDIA_TYPE);
+        aMap.put(ProcessCenterConstants.PROCESS_TYPE, ProcessCenterConstants.PROCESS_MEDIA_TYPE);
         mediatypes = Collections.unmodifiableMap(aMap);
     }
 
@@ -89,7 +88,7 @@ public class ProcessContentSearchService {
 
             Map<String, String> input = new HashMap<>();
             input.put(IndexingConstants.FIELD_MEDIA_TYPE, mediaTypeStr);
-            input.put(IndexingConstants.FIELD_CONTENT, searchQuery);
+            input.put(IndexingConstants.FIELD_RESOURCE_NAME, searchQuery);
             ResourceData[] resources = attributeSearchService.search(input);
 
             if (resources != null && resources.length > 0) {
@@ -126,7 +125,7 @@ public class ProcessContentSearchService {
                             processJSON.put("type", "process");
                             processJSON.put("path", destinationPath);
                             processJSON.put("lifecycle", "SampleLifeCycle2");
-                            processJSON.put("mediaType", ProcessCenterConstants.PROCESS_CONTENT_SEARCH.PROCESS_MEDIATYPE);
+                            processJSON.put("mediaType", ProcessCenterConstants.PROCESS_MEDIA_TYPE);
                             processJSON.put("name", processName);
                             processJSON.put("version", processVersion);
                             processJSON.put("lifecycleState", lifecycleState);

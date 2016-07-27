@@ -44,6 +44,7 @@ window.onload = function () {
         });
     });
     loadOverview();
+    $('#process-thumbnail-div').hide();
 };
 
 function showTextEditor(element) {
@@ -68,8 +69,6 @@ function showTextEditor(element) {
             $("#processTextEditDiv").addClass("active");
         }
         else {
-            $("#processTextEditDiv").hide();
-            $("#processTextView").show();
             $(".active").removeClass("active");
         }
     } else {
@@ -385,11 +384,8 @@ function saveProcessText(currentElement) {
                 if (response.error === false) {
                     if ($(currentElement).attr('id') == 'updateBtn') {
                         alertify.success("Successfully saved the process content.");
-                        $("#processTextEditDiv").hide();
                         $("#textadded").addClass("fw fw-check");
                         getProcessText();
-                        $("#processTextEditDiv").hide();
-                        $("#processTextView").show();
                         $(".active").removeClass("active");
                     }
                 } else {
@@ -566,6 +562,7 @@ function readImage(element) {
         var datauri = e.target.result;
         $("#image").attr('src', 'data:image/*;base64,' + btoa(datauri));
         $("#image").show();
+        $('#process-thumbnail-div').show();
     };
     if (file) {
         reader.readAsBinaryString(file);
@@ -795,7 +792,7 @@ $("#addNewDoc").on("submit", function (e) {
                     alertify.success("Document added successfully.");
                     $("#docadded").addClass("fw fw-check");
                     showDocument();
-                    $("#docEditDiv").hide();
+                    // $("#docEditDiv").hide();
                     $("#docViewDiv").show();
                     $(".active").removeClass("active");
                 }
