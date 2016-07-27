@@ -29,7 +29,7 @@ function addProcessVariableRow(tableID) {
 
     row.innerHTML =
             '<td><input type="checkbox" name="chk"/></td>' +
-            '<td><input type="text" name="txt" style="display:table-cell; width:100%; padding-left: 8px;" width:100%"/>' +
+            '<td><input type="text" name="txt" id="process_variable" onkeydown="processVariableAutoComplete(this)" style="display:table-cell; width:100%; padding-left: 8px;" width:100%"/>' +
             '</td>' + '<td>' +
             '<select id="selVarType_' + beginRowNo + '" name="varType" style="display:table-cell; width:100%" ' +
             'onchange="disableCheckBox(' + beginRowNo + ')">' +
@@ -44,6 +44,32 @@ function addProcessVariableRow(tableID) {
             'type="checkbox" name="chkAnalyzedData" /></td>' +
             '<td align="center" style="outline: thin solid #66c2ff"><input id="chkDrillData_' + beginRowNo + '" ' +
             'type="checkbox" name="chkDrillData" disabled/></td>';
+}
+
+function processVariableAutoComplete(me){
+  $.ajax({
+        url: '/publisher/assets/process/apis/get_process_variables?processName=oiio&processVersion=io',
+        type: 'GET',
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error == false) {
+                processListObj = JSON.parse(response.content);
+                alertify.error(response.content[0])
+                for (var i = 0; i < processListObj.length; i++) {
+                    alertify.error("malinthaa")
+                    processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
+                }
+            } else {
+                alertify.error(response.content);
+            }
+        },
+        error: function () {
+            alertify.error('Process List error');
+        }
+    });
+   $(me).autocomplete(
+       { source: ["c++", "java", "php", "coldfusion", "javascript", "asp", "ruby"] }
+   );
 }
 
 /*
@@ -249,7 +275,7 @@ function configAnalytics() {
                 $('#eventReceiverName').attr("readonly", "true");
                 $('#processDefinitionId').attr("readonly", "true");
 
-                $("#dataTable tr").each(function () {
+                $("#dataTuuable tr").each(function () {
                     $(this).children().each(function () {
                         $(this).find("input").attr("readonly", "true");
                         $(this).find("select").attr("disabled", "true");

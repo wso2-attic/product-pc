@@ -15,6 +15,7 @@
 */
 package org.wso2.carbon.pc.core.assets;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,11 +26,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
 import org.wso2.carbon.pc.core.assets.common.AssetResource;
-import org.wso2.carbon.pc.core.assets.resources.BPMNResource;
+import org.wso2.carbon.pc.core.assets.common.BPMNResource;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Collection;
@@ -43,9 +43,17 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -105,18 +113,18 @@ public class Package extends AssetResource {
     /**
      * Create new Package
      *
-     * @param packageName
-     * @param packageVersion
-     * @param provider
-     * @param description
-     * @param createdTime
-     * @param tags
-     * @param imageFileStream
-     * @param packageFileStream
+     * @param packageName       Name of the Package
+     * @param packageVersion    - Version of the Package
+     * @param username          - Provider of the Package
+     * @param description       - Package description
+     * @param createdTime       - Create time of the Package
+     * @param tags              -Tags associated with Package
+     * @param imageFileStream   - Image file stream
+     * @param packageFileStream - Deploy-able archive file stream
      * @return
      * @throws ProcessCenterException
      */
-    public String create(String packageName, String packageVersion, String provider, String description, String
+    public String create(String packageName, String packageVersion, String username, String description, String
             createdTime, String tags, String packageFileName, InputStream imageFileStream, InputStream
                                  packageFileStream) throws
             ProcessCenterException {
@@ -127,12 +135,10 @@ public class Package extends AssetResource {
                 packageVersion));
         String packageBPMNContentRegistryPath = getPackageBPMNContentRegistryPath
                 (packageBPMNRegistryPath);
-        int bpmnResourcesCount = 0;
-        byte[] buffer = new byte[1024];
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
-                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(provider);
+                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(username);
                 if (userRegistry != null) {
                     // Check whether package already exists with same name and version
                     if (userRegistry.resourceExists(packageRegistryPath)) {
@@ -146,67 +152,28 @@ public class Package extends AssetResource {
                     if (userRegistry.resourceExists(packageBPMNRegistryPath)) {
                         userRegistry.delete(packageBPMNRegistryPath);
                     }
-                    bpmnResourcesCount = 0;
+                    /* Add bpmn archive to the registry
+                    Extract the bpmn archive and add bpmn files to registry
+                    */
                     Resource packageZipContentResource = userRegistry.newResource();
                     packageZipContentResource.setContentStream(packageFileStream);
+                    packageZipContentResource.setMediaType(ProcessCenterConstants.ZIP_MEDIA_TYPE);
                     userRegistry.put(packageBPMNRegistryPath + "/" + packageFileName,
                             packageZipContentResource);
                     InputStream inputStream = packageZipContentResource.getContentStream();
-                    if (inputStream != null) {
-                        try (final ZipInputStream packageZIPInoutStream = new ZipInputStream(inputStream)) {
-                            ZipEntry zipEntry = packageZIPInoutStream.getNextEntry();
-                            while (zipEntry != null) {
-                                if (!zipEntry.isDirectory() && isBpmnResource(zipEntry.getName())) {
-                                    try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-                                        int len;
-                                        while ((len = packageZIPInoutStream.read(buffer)) > 0) {
-                                            byteArrayOutputStream.write(buffer, 0, len);
-                                        }
-                                        String bpmnProcessID = null;
-                                        Document bpmnResource = getXMLDocument(byteArrayOutputStream
-                                                .toByteArray());
-                                        if (bpmnResource != null) {
-                                            NodeList processElement = bpmnResource.getElementsByTagName
-                                                    (ProcessCenterConstants.PROCESS);
-                                            if (processElement.getLength() > 0) {
-                                                Node processNameAttribute = processElement.item(0).getAttributes()
-                                                        .getNamedItem(ProcessCenterConstants.NAME);
-                                                if (processNameAttribute != null) {
-                                                    bpmnProcessID = processNameAttribute.getNodeValue();
-                                                }
-                                            }
-                                        }
-                                        if (bpmnProcessID != null) {
-                                            Resource packageBPMNContentResource = userRegistry.newResource();
-                                            packageBPMNContentResource.setProperty(ProcessCenterConstants.PROCESS_NAME,
-                                                    bpmnProcessID);
-                                            packageBPMNContentResource.setContent(byteArrayOutputStream.toByteArray());
-                                            userRegistry.put(packageBPMNContentRegistryPath + "/" + zipEntry.getName(),
-                                                    packageBPMNContentResource);
-                                            bpmnResourcesCount++;
-                                        } else if (log.isDebugEnabled()) {
-                                            log.debug("Process ID cannot be found for bpmn resource " + zipEntry
-                                                    .getName() + "to create new package " +
-                                                    packageName + " version " + packageVersion);
-                                        }
-                                    } catch (SAXException e) {
-                                        throw new ProcessCenterException("Error while getting process id from bpmn file"
-                                                + zipEntry.getName(), e);
-                                    }
-                                }
-                                zipEntry = packageZIPInoutStream.getNextEntry();
-                            }
-                            packageZIPInoutStream.closeEntry();
-                        }
-                        if (bpmnResourcesCount == 0) {
-                            // If bar does not contain any bpmn files we will send invalidate message
-                            response.put("error", true);
-                            response.put("message", "Package file doesn't contain any bpmn files");
-                            return response.toString();
-                        }
+                    List<String> newBpmnResources = extractPackageAndStoreBPMNFiles(userRegistry,
+                            packageBPMNRegistryPath, packageBPMNContentRegistryPath, inputStream,
+                            packageFileName, packageName, packageVersion);
 
+                    // If bar does not contain any bpmn files we will send invalidate message
+                    if (newBpmnResources.size() == 0) {
+                        if (userRegistry.resourceExists(packageBPMNRegistryPath)) {
+                            userRegistry.delete(packageBPMNRegistryPath);
+                        }
+                        response.put(ProcessCenterConstants.ERROR, true);
+                        response.put(ProcessCenterConstants.MESSAGE, "Package file doesn't contain any bpmn files");
+                        return response.toString();
                     }
-
                     DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                     DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
@@ -224,7 +191,7 @@ public class Package extends AssetResource {
                     appendText(doc, overviewElement, ProcessCenterConstants.VERSION, ProcessCenterConstants
                             .METADATA_NAMESPACE, packageVersion);
                     appendText(doc, overviewElement, ProcessCenterConstants.PROVIDER, ProcessCenterConstants
-                            .METADATA_NAMESPACE, provider);
+                            .METADATA_NAMESPACE, username);
                     appendText(doc, overviewElement, ProcessCenterConstants.CREATED_TIME, ProcessCenterConstants
                             .METADATA_NAMESPACE, createdTime);
 
@@ -236,24 +203,29 @@ public class Package extends AssetResource {
                                 .METADATA_NAMESPACE, ProcessCenterConstants
                                 .NOT_APPLICABLE);
                     }
+
+                    Element imageElement = append(doc, rootElement, ProcessCenterConstants.IMAGES,
+                            ProcessCenterConstants.METADATA_NAMESPACE);
+
                     if (imageFileStream != null) {
-                        Element imageElement = append(doc, rootElement, ProcessCenterConstants.IMAGES,
-                                ProcessCenterConstants.METADATA_NAMESPACE);
                         appendText(doc, imageElement, ProcessCenterConstants.THUMBNAIL, ProcessCenterConstants
                                 .METADATA_NAMESPACE, ProcessCenterConstants
                                 .IMAGE_THUMBNAIL_VALUE);
+                    } else {
+                        appendText(doc, imageElement, ProcessCenterConstants.THUMBNAIL, ProcessCenterConstants
+                                .METADATA_NAMESPACE, ProcessCenterConstants
+                                .NO_FILE_SPECIFIED);
                     }
+
+
                     String packageAssetContent = xmlToString(doc);
                     Resource packageAsset = userRegistry.newResource();
                     packageAsset.setContent(packageAssetContent);
-                    packageAsset.setMediaType(ProcessCenterConstants.PROCESS_CONTENT_SEARCH.PACKAGE_MEDIATYPE);
+                    packageAsset.setMediaType(ProcessCenterConstants.PACKAGE_MEDIA_TYPE);
                     packageAsset.setProperty(ProcessCenterConstants.PACKAGE_BPMN_ARCHIVE_FILE_NAME, packageFileName);
                     packageAsset.setProperty(ProcessCenterConstants.BPMN_RESOURCES_COUNT, String.valueOf
-                            (bpmnResourcesCount));
+                            (newBpmnResources.size()));
                     userRegistry.put(packageRegistryPath, packageAsset);
-                    // associate lifecycle with the package asset, so that it can be promoted to published state
-                    GovernanceUtils.associateAspect(packageRegistryPath, ProcessCenterConstants
-                            .SAMPLE_LIFECYCLE2_NAME, userRegistry);
 
                     // apply tags to the resource
                     String[] tagsList = tags.split(",");
@@ -279,7 +251,7 @@ public class Package extends AssetResource {
 
                     // set package Permission
                     setPermission(ProcessCenterConstants.GREG_PATH + ProcessCenterConstants.PACKAGES_ASSET_ROOT,
-                            provider,
+                            username,
                             packageName, packageVersion);
                     response.put(ProcessCenterConstants.ERROR, false);
                     response.put(ProcessCenterConstants.ID, packageId);
@@ -318,16 +290,238 @@ public class Package extends AssetResource {
         return response.toString();
     }
 
+
     /**
-     * Delete Package
+     * Create new Package
      *
-     * @param packageName    Name of the package
-     * @param packageVersion Version of the package
-     * @param provider       Provider of the package
+     * @param packageName        Name of the Package
+     * @param packageVersion     - Version of the Package
+     * @param username           - Provider of the Package
+     * @param description        - Package description
+     * @param newPackageFileName - Package File name
+     * @param imageFileStream    - Image file stream
+     * @param packageFileStream  - Deploy-able archive file stream
      * @return
      * @throws ProcessCenterException
      */
-    public void delete(String packageName, String packageVersion, String provider) throws
+    public String update(String packageName, String packageVersion, String username, String description, String
+            newPackageFileName, InputStream imageFileStream, InputStream
+                                 packageFileStream) throws
+            ProcessCenterException {
+
+        JSONObject response = new JSONObject();
+        String packageRegistryPath = getPackageRegistryPath(packageName, packageVersion);
+        String packageBPMNRegistryPath = getPackageBPMNRegistryPath(getPackageAssetRegistryPath(packageName,
+                packageVersion));
+        String packageBPMNContentRegistryPath = getPackageBPMNContentRegistryPath
+                (packageBPMNRegistryPath);
+
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(username);
+                if (userRegistry != null) {
+                    // Check whether package exists with same name and version
+                    if (!userRegistry.resourceExists(packageRegistryPath)) {
+                        response.put(ProcessCenterConstants.ERROR, true);
+                        response.put(ProcessCenterConstants.MESSAGE, "Package does not exists with name " +
+                                packageName + " version:" + packageVersion);
+                        return response.toString();
+                    }
+                    Resource packageAsset = userRegistry.get(packageRegistryPath);
+                     /*
+                     Update bpmn archive to the registry
+                     Extract the bpmn archive and add bpmn files to registry
+                    */
+                    if (newPackageFileName != null && packageFileStream != null) {
+
+                        String packageFileName = packageAsset.getProperty(ProcessCenterConstants
+                                .PACKAGE_BPMN_ARCHIVE_FILE_NAME);
+                        String bpmnResourceCount = packageAsset.getProperty(ProcessCenterConstants
+                                .BPMN_RESOURCES_COUNT);
+                        // Store existing bpmn resource paths
+                        String[] existingBpmnResourcePaths = null;
+                        // Store new bpmn resource paths
+
+                        if (bpmnResourceCount != null) {
+                            // Get bpmn file registry registry collection
+                            Collection bpmnResourceCollection = userRegistry.get(packageBPMNContentRegistryPath, 0,
+                                    Integer.parseInt(bpmnResourceCount));
+                            if (bpmnResourceCollection != null) {
+                                existingBpmnResourcePaths = (String[]) bpmnResourceCollection.getContent();
+                            }
+                        }
+
+                        byte[] buffer = new byte[1024];
+                        InputStream packageInputStream, packageInputStreamCopy;
+                        try (ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream()) {
+                            int len;
+                            while ((len = packageFileStream.read(buffer)) > -1) {
+                                arrayOutputStream.write(buffer, 0, len);
+                            }
+                            arrayOutputStream.flush();
+                            packageInputStream = new ByteArrayInputStream(arrayOutputStream.toByteArray());
+                            packageInputStreamCopy = new ByteArrayInputStream(arrayOutputStream.toByteArray());
+                        }
+
+                        List<String> bpmnResources = extractPackageAndStoreBPMNFiles(userRegistry,
+                                packageBPMNRegistryPath, packageBPMNContentRegistryPath, packageInputStream,
+                                packageFileName, packageName, packageVersion);
+
+                        // If bar does not contain any bpmn files we will send invalidate message
+                        if (bpmnResources.size() == 0) {
+                            userRegistry.rollbackTransaction();
+                            response.put(ProcessCenterConstants.ERROR, true);
+                            response.put(ProcessCenterConstants.MESSAGE, "Package file doesn't contain any bpmn files");
+                            return response.toString();
+                        }
+                        // Delete old bpmn files extracted using old bpmn zip.
+                        // We will not remove the same bpmn files to keep old associations to processes.
+                        if (existingBpmnResourcePaths != null) {
+                            java.util.Collection oldBpmnResourcePaths = CollectionUtils.removeAll(Arrays.asList
+                                            (existingBpmnResourcePaths),
+                                    bpmnResources);
+                            for (Object oldBpmnResourcePath : oldBpmnResourcePaths) {
+                                if (userRegistry.resourceExists(oldBpmnResourcePath.toString())) {
+                                    userRegistry.delete(oldBpmnResourcePath.toString());
+                                }
+                            }
+                        }
+
+                        // Add zip to Registry
+                        Resource packageZipContentResource = userRegistry.newResource();
+                        packageZipContentResource.setContentStream(packageInputStreamCopy);
+
+                        packageZipContentResource.setMediaType(ProcessCenterConstants.ZIP_MEDIA_TYPE);
+                        userRegistry.put(packageBPMNRegistryPath + "/" + newPackageFileName,
+                                packageZipContentResource);
+
+                        // Add new package file to package asset
+                        packageAsset.setProperty(ProcessCenterConstants.PACKAGE_BPMN_ARCHIVE_FILE_NAME,
+                                newPackageFileName);
+                        packageAsset.setProperty(ProcessCenterConstants.BPMN_RESOURCES_COUNT, String.valueOf
+                                (bpmnResources.size()));
+                        // Remove old package file
+                        if (!packageFileName.equals(newPackageFileName)) {
+                            userRegistry.delete(packageBPMNRegistryPath + "/" + packageFileName);
+                        }
+                    }
+                    String packageContent = new String((byte[]) packageAsset.getContent(),
+                            StandardCharsets.UTF_8);
+                    Document packageDocument = stringToXML(packageContent);
+                    XPath xPath = XPathFactory.newInstance().newXPath();
+                    NodeList metadataElement = ((NodeList) xPath.evaluate("/metadata",
+                            packageDocument.getDocumentElement(), XPathConstants.NODESET));
+
+
+                    if (metadataElement != null && metadataElement.getLength() > 0) {
+                        Element metadataRootElement = (Element) (metadataElement.item(0));
+
+                        // Update the description
+                        if (description != null) {
+                            NodeList overviewNode = metadataRootElement.getElementsByTagName(ProcessCenterConstants
+                                    .OVERVIEW);
+                            if (overviewNode != null && overviewNode.getLength() > 0) {
+                                Element overviewRootElement = (Element) (overviewNode.item(0));
+                                NodeList descriptionNode = metadataRootElement.getElementsByTagName
+                                        (ProcessCenterConstants
+                                                .DESCRIPTION);
+                                if (descriptionNode != null && descriptionNode.getLength() > 0) {
+                                    descriptionNode.item(0).setTextContent(description);
+                                } else {
+                                    appendText(packageDocument, overviewRootElement, ProcessCenterConstants.DESCRIPTION,
+                                            ProcessCenterConstants.METADATA_NAMESPACE, ProcessCenterConstants
+                                                    .NOT_APPLICABLE);
+                                }
+                            }
+                        }
+                        //Update image stream
+                        if (imageFileStream != null) {
+                            NodeList imagesElement = metadataRootElement.getElementsByTagName(ProcessCenterConstants
+                                    .IMAGES);
+                            if (imagesElement != null && imagesElement.getLength() > 0) {
+                                Element imageRootElement = (Element) (imagesElement.item(0));
+                                NodeList imageNode = imageRootElement.getElementsByTagName(ProcessCenterConstants
+                                        .THUMBNAIL);
+                                // Update the description
+                                if (imageNode != null && imageNode.getLength() > 0) {
+                                    imageNode.item(0).setTextContent(ProcessCenterConstants
+                                            .IMAGE_THUMBNAIL_VALUE);
+                                } else {
+                                    Element imageElement = append(packageDocument, imageRootElement,
+                                            ProcessCenterConstants.IMAGES,
+                                            ProcessCenterConstants.METADATA_NAMESPACE);
+                                    appendText(packageDocument, imageElement, ProcessCenterConstants.THUMBNAIL,
+                                            ProcessCenterConstants.METADATA_NAMESPACE, ProcessCenterConstants
+                                                    .IMAGE_THUMBNAIL_VALUE);
+                                }
+                            }
+                        }
+                    }
+
+                    // Update asset with new rxt content
+                    packageAsset.setContent(xmlToString(packageDocument));
+                    packageAsset.setMediaType(ProcessCenterConstants.PACKAGE_MEDIA_TYPE);
+                    userRegistry.put(packageRegistryPath, packageAsset);
+
+                    Resource storedPackage = userRegistry.get(packageRegistryPath);
+                    if (storedPackage == null) {
+                        throw new ProcessCenterException("Couldn't find the package in the registry for path " +
+                                packageRegistryPath);
+                    }
+                    String packageId = storedPackage.getUUID();
+                    String imageRegPath = ProcessCenterConstants.IMAGE_PATH_PACKAGE + packageId + "/" +
+                            ProcessCenterConstants.IMAGE_THUMBNAIL_VALUE;
+
+                    // Update image thumbnail file
+                    if (imageFileStream != null) {
+                        Resource imageContentResource = userRegistry.newResource();
+                        imageContentResource.setContent(imageFileStream);
+                        userRegistry.put(imageRegPath, imageContentResource);
+                    }
+                    response.put(ProcessCenterConstants.ERROR, false);
+                    response.put(ProcessCenterConstants.ID, packageId);
+                    response.put(ProcessCenterConstants.NAME, packageName);
+                }
+            }
+
+        } catch (ProcessCenterException e) {
+            String errMsg = "Update package error: " + packageName + " version " + packageVersion;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        } catch (SAXException | TransformerException | ParserConfigurationException | XPathExpressionException e) {
+            String errMsg = "Error occurred while processing xml to string to update new package " + packageName +
+                    " version " + packageVersion;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        } catch (RegistryException e) {
+            String errMsg = "Error occurred while accessing registry for updating package " + packageName +
+                    " version " + packageVersion;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        } catch (IOException e) {
+            String errMsg = "Error occurred while accessing package archive file for updating package " + packageName +
+                    " file " + newPackageFileName;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        } catch (JSONException e) {
+            String errMsg = "JSON Error occurred while updating package  " + packageName + " version " +
+                    packageVersion;
+            log.error(errMsg, e);
+        }
+        return response.toString();
+    }
+
+    /**
+     * Delete Package
+     *
+     * @param packageName    Name of the Package
+     * @param packageVersion - Version of the Package
+     * @param username       - Provider of the Package
+     * @return
+     * @throws ProcessCenterException
+     */
+    public void delete(String packageName, String packageVersion, String username) throws
             ProcessCenterException {
 
         String packageAssetRegistryPath = getPackageAssetRegistryPath(packageName,
@@ -335,15 +529,18 @@ public class Package extends AssetResource {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
-                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(provider);
+                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(username);
                 if (userRegistry != null) {
 
                     // Remove the bpmn bar file directory if exist
                     if (userRegistry.resourceExists(packageAssetRegistryPath)) {
                         userRegistry.delete(packageAssetRegistryPath);
-                        log.info("Deleting bpmn path");
                     }
                 }
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("Package : " + packageName + " version : " + packageVersion
+                        + " has been successfully deleted.");
             }
         } catch (RegistryException e) {
             String errMsg = "Error occurred while accessing registry for deleting package " + packageName +
@@ -356,13 +553,13 @@ public class Package extends AssetResource {
     /**
      * Get list of  BPMN resources related to the Package
      *
-     * @param packageName
-     * @param packageVersion
-     * @param userName
-     * @return
+     * @param packageName    Name of the Package
+     * @param packageVersion - Version of the Package
+     * @param username       - provider
+     * @return bpmn resources as json string
      * @throws ProcessCenterException
      */
-    public String getBpmnResources(String packageName, String packageVersion, String userName) throws
+    public String getBpmnResources(String packageName, String packageVersion, String username) throws
             ProcessCenterException {
 
         JSONArray bpmnResources = new JSONArray();
@@ -372,7 +569,7 @@ public class Package extends AssetResource {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
-                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(userName);
+                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(username);
                 Resource packageAsset = userRegistry.get(packageRegistryPath);
                 if (packageAsset != null) {
                     String bpmnResourceCount = packageAsset.getProperty(ProcessCenterConstants
@@ -454,16 +651,16 @@ public class Package extends AssetResource {
     /**
      * Add process association to given process
      *
-     * @param processName
-     * @param processVersion
-     * @param packageName
-     * @param packageVersion
-     * @param bpmnResourcePath
-     * @param userName
+     * @param processName      Name of the Process
+     * @param processVersion   - Version of the Process
+     * @param packageName      Name of the Package
+     * @param packageVersion   - Version of the Package
+     * @param bpmnResourcePath - bpmn file path
+     * @param username         - Provider of the Package
      * @throws ProcessCenterException
      */
     public void associateProcess(String processName, String processVersion, String packageName, String
-            packageVersion, String bpmnResourcePath, String userName)
+            packageVersion, String bpmnResourcePath, String username)
             throws ProcessCenterException {
 
         String processRegistryPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
@@ -472,7 +669,7 @@ public class Package extends AssetResource {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
-                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(userName);
+                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(username);
                 // Remove existing prcoess associations in bpmn resource. We should have only one association for bpmn
                 // resource with a process.
                 Association[] bpmnAssociations = userRegistry.getAssociations(packageBPMNContentRegistryPath,
@@ -509,9 +706,9 @@ public class Package extends AssetResource {
     /**
      * Get BPMN Image
      *
-     * @param packageName
-     * @param packageVersion
-     * @param bpmnResourcePath
+     * @param packageName      Name of the Package
+     * @param packageVersion   - Version of the Package
+     * @param bpmnResourcePath BPMN resource path
      * @throws ProcessCenterException
      */
     public String getBpmnImage(String packageName, String packageVersion, String bpmnResourcePath) throws
@@ -532,17 +729,166 @@ public class Package extends AssetResource {
     }
 
     /**
+     * Get deployment file name
+     *
+     * @param packageName    Name of the Package
+     * @param packageVersion - Version of the Package
+     * @param username       - Provider of the Package
+     * @throws ProcessCenterException
+     */
+    public String getDeploymentFileName(String packageName, String packageVersion, String username) throws
+            ProcessCenterException {
+        try {
+            String packageRegistryPath = Package.getPackageRegistryPath(packageName, packageVersion);
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(username);
+                if (userRegistry != null) {
+                    if (userRegistry.resourceExists(packageRegistryPath)) {
+                        Resource packageAsset = userRegistry.get(packageRegistryPath);
+                        return packageAsset.getProperty(ProcessCenterConstants.PACKAGE_BPMN_ARCHIVE_FILE_NAME);
+                    }
+                }
+            }
+        } catch (RegistryException e) {
+            String errMsg = "Registry error while getting deployment file name for the package " + packageName +
+                    " version " + packageVersion + " in the server";
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        }
+        return null;
+    }
+
+    /**
+     * Download the bpmn bar file
+     *
+     * @param packageName    Name of the Package
+     * @param packageVersion - Version of the Package
+     * @param username       - Provider of the Package
+     * @return bpmn bar file content as  a String
+     */
+    public String downloadPackageFile(String packageName, String packageVersion, String username) throws
+            ProcessCenterException {
+        try {
+            String packageRegistryPath = Package.getPackageRegistryPath(packageName, packageVersion);
+            String packageBPMNRegistryPath = Package.getPackageBPMNRegistryPath(Package.getPackageAssetRegistryPath
+                    (packageName,
+                            packageVersion));
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(username);
+                if (userRegistry != null) {
+                    if (userRegistry.resourceExists(packageRegistryPath)) {
+                        Resource packageAsset = userRegistry.get(packageRegistryPath);
+                        String packageFileName = packageAsset.getProperty(ProcessCenterConstants
+                                .PACKAGE_BPMN_ARCHIVE_FILE_NAME);
+                        if (userRegistry.resourceExists(packageBPMNRegistryPath + packageFileName)) {
+                            Resource packageArchive = userRegistry.get(packageBPMNRegistryPath + packageFileName);
+                            byte[] docContent = (byte[]) packageArchive.getContent();
+                            return new sun.misc.BASE64Encoder().encode(docContent);
+                        }
+                    }
+                }
+            }
+        } catch (RegistryException e) {
+            String errMsg = "Registry error while downloading deployment file for the package " + packageName +
+                    " version " + packageVersion + " in the server";
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        }
+        return null;
+    }
+
+    /**
      * Check whether the given xml is BPMN resource
      *
-     * @param resourceName
+     * @param resourceName - bpmn resource name
      * @return
      */
-    protected boolean isBpmnResource(String resourceName) {
+    private boolean isBpmnResource(String resourceName) {
         for (String suffix : ProcessCenterConstants.BPMN_RESOURCE_SUFFIXES) {
             if (resourceName.endsWith(suffix)) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * @param userRegistry                   User registry where we need to store the bpmn files
+     * @param packageBPMNRegistryPath        Package bpmn archive path
+     * @param packageBPMNContentRegistryPath Extracted bpmn files archive path
+     * @param packageFileInputStream         Package file stream
+     * @param packageFileName                Package file name
+     * @param packageName                    Name of the package
+     * @param packageVersion                 Version of the package
+     * @return bpmn file count
+     * @throws RegistryException
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws ProcessCenterException
+     */
+    private List<String> extractPackageAndStoreBPMNFiles(UserRegistry userRegistry, String packageBPMNRegistryPath,
+                                                         String packageBPMNContentRegistryPath, InputStream
+                                                                 packageFileInputStream, String packageFileName, String
+                                                                 packageName, String packageVersion) throws
+            RegistryException,
+            IOException, ParserConfigurationException, ProcessCenterException {
+        List<String> bpmnResources = new LinkedList<String>();
+        byte[] buffer = new byte[1024];
+        if (packageFileInputStream != null) {
+            try (final ZipInputStream packageZIPInoutStream = new ZipInputStream(packageFileInputStream)) {
+                ZipEntry zipEntry = packageZIPInoutStream.getNextEntry();
+                while (zipEntry != null) {
+                    if (!zipEntry.isDirectory() && isBpmnResource(zipEntry.getName())) {
+                        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream
+                                ()) {
+                            int len;
+                            while ((len = packageZIPInoutStream.read(buffer)) > 0) {
+                                byteArrayOutputStream.write(buffer, 0, len);
+                            }
+                            String bpmnProcessID = null;
+                            Document bpmnResource = getXMLDocument(byteArrayOutputStream
+                                    .toByteArray());
+                            if (bpmnResource != null) {
+                                NodeList processElement = bpmnResource.getElementsByTagName
+                                        (ProcessCenterConstants.PROCESS);
+                                if (processElement.getLength() > 0) {
+                                    Node processNameAttribute = processElement.item(0).getAttributes()
+                                            .getNamedItem(ProcessCenterConstants.NAME);
+                                    if (processNameAttribute != null) {
+                                        bpmnProcessID = processNameAttribute.getNodeValue();
+                                    }
+                                }
+                            }
+                            if (bpmnProcessID != null) {
+                                Resource packageBPMNContentResource = userRegistry.newResource();
+                                packageBPMNContentResource.setProperty(ProcessCenterConstants
+                                                .PROCESS_NAME,
+                                        bpmnProcessID);
+                                packageBPMNContentResource.setContent(byteArrayOutputStream
+                                        .toByteArray());
+                                userRegistry.put(packageBPMNContentRegistryPath + zipEntry
+                                                .getName(),
+                                        packageBPMNContentResource);
+                                bpmnResources.add("/" + packageBPMNContentRegistryPath + zipEntry
+                                        .getName());
+                            } else if (log.isDebugEnabled()) {
+                                log.debug("Process ID cannot be found for bpmn resource " + zipEntry
+                                        .getName() + "to create new package " +
+                                        packageName + " version " + packageVersion);
+                            }
+                        } catch (SAXException e) {
+                            throw new ProcessCenterException("Error while getting process id from " +
+                                    "bpmn file"
+                                    + zipEntry.getName(), e);
+                        }
+                    }
+                    zipEntry = packageZIPInoutStream.getNextEntry();
+                }
+                packageZIPInoutStream.closeEntry();
+            }
+        }
+        return bpmnResources;
     }
 }

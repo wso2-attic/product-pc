@@ -134,6 +134,7 @@
             </outputDirectory>
             <excludes>
                 <exclude>publisher/extensions/app/publisher-apis/app.js</exclude>
+                <exclude>publisher/themes/default/partials/product-title.hbs</exclude>
                 <exclude>sso/jaggery.conf</exclude>
                 <exclude>portal/configs/designer.json</exclude>
                 <exclude>portal/store/carbon.super/fs/gadget/**</exclude>
@@ -557,6 +558,11 @@
         </file>
         <file>
             <source>src/repository/conf/process-charts.json</source>
+            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/repository/conf/user-analytics.json</source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>

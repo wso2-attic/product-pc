@@ -1,7 +1,7 @@
 <%
 var caramel;
 require('/modules/publisher.js').exec(function (ctx) {
-    importPackage(org.wso2.carbon.pc.core.assets.resources);
+    importPackage(org.wso2.carbon.pc.core.assets.common);
     caramel = require('caramel');
     var ui = require('rxt').ui;
     var asset = require('rxt').asset;

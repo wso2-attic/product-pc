@@ -23,6 +23,8 @@ import java.util.List;
  * Holds the constants of ProcessStore
  */
 public class ProcessCenterConstants {
+
+
     /**
      * Asset Registry Properties
      **/
@@ -44,6 +46,7 @@ public class ProcessCenterConstants {
     public static final String IMAGE_THUMBNAIL_VALUE = "images_thumbnail";
     public static final String ERROR = "error";
     public static final String MESSAGE = "message";
+    public static final String NO_FILE_SPECIFIED = "no-file-specified";
     /**
      * Package asset
      */
@@ -103,7 +106,19 @@ public class ProcessCenterConstants {
     public static final String WRITE = "3";
     public static final String AUTHORIZE = "5";
     public static final String ALLOW = "1";
-
+    // Media types
+    public static final String PDF_MEDIA_TYPE = "application/pdf";
+    public static final String DOCUMENT_MEDIA_TYPE = "application/msword";
+    public static final String PROCESS_TEXT_MEDIA_TYPE = "text/html";
+    public static final String PROCESS_MEDIA_TYPE = "application/vnd.wso2-process+xml";
+    public static final String PACKAGE_MEDIA_TYPE = "application/vnd.wso2-package+xml";
+    public static final String ZIP_MEDIA_TYPE = "application/zip";
+    public static final String BAR_EXTENSION = ".bar";
+    // UI constants
+    public static final String PDF = "PDF";
+    public static final String DOCUMENT = "Document";
+    public static final String PROCESS_TEXT = "Process-Text";
+    public static final String PROCESS_TYPE = "Process";
     public static final String PROCESS_EXPORT_DIR = "Exports/";
     public static final String EXPORTED_PROCESS_RXT_FILE = "process_rxt.xml";
     public static final String EXPORTED_BPMN_FILE = "bpmn.xml";
@@ -114,6 +129,20 @@ public class ProcessCenterConstants {
     public static final String PROCESS_ASSET_RESOURCE_REG_PATH = "store/asset_resources/process/";
     public static final String PROCESS_TAGS_FILE = "process_tags.txt";
     public static final String PROCESS_ASSOCIATIONS_FILE = "process_associations.json";
+    public static final String PROCESS_VERSION = "processVersion";
+    public static final String MNS = "http://www.wso2.org/governance/metadata";
+    public static final String EVENT_STREAM_NAME = "eventStreamName";
+    public static final String EVENT_STREAM_VERSION = "eventStreamVersion";
+    public static final String EVENT_STREAM_DESCRIPTION = "eventStreamDescription";
+    public static final String EVENT_STREAM_NICK_NAME = "eventStreamNickName";
+    public static final String EVENT_RECEIVER_NAME = "eventReceiverName";
+    public static final String PROCESS_DEFINITION_ID = "processDefinitionId";
+
+    //BPMN related constants
+    public static final String TYPE = "type";
+    public static final String ACTIVITI_FORM_PROPERTY = "activiti:formProperty";
+    public static final String VARIABLE = "variable";
+
     // Make the constructor private, since it is a utility class
     private ProcessCenterConstants() {
     }
@@ -148,35 +177,4 @@ public class ProcessCenterConstants {
         public static final String ACTION_TYPE = "type";
         public static final String TIME_STAMP = "timestamp";
     }
-
-    public static final String PROCESS_VERSION = "processVersion";
-    public static final String MNS = "http://www.wso2.org/governance/metadata";
-
-    public static final String EVENT_STREAM_NAME = "eventStreamName" ;
-    public static final String EVENT_STREAM_VERSION = "eventStreamVersion";
-    public static final String EVENT_STREAM_DESCRIPTION = "eventStreamDescription";
-    public static final String EVENT_STREAM_NICK_NAME = "eventStreamNickName";
-    public static final String EVENT_RECEIVER_NAME = "eventReceiverName";
-    public static final String PROCESS_DEFINITION_ID = "processDefinitionId";
-
-    public static class PROCESS_CONTENT_SEARCH {
-
-        //UI constants
-        public static final String PDF = "PDF";
-        public static final String DOCUMENT = "Document";
-        public static final String PROCESS_TEXT = "Process-Text";
-        public static final String PROCESS = "Process";
-
-        //media types for for indexing
-        public static final String PDF_MEDIATYPE = "application/pdf";
-        public static final String DOCUMENT_MEDIATYPE = "application/msword";
-        public static final String PROCESS_TEXT_MEDIATYPE = "text/html";
-        public static final String PROCESS_MEDIATYPE = "application/vnd.wso2-process+xml";
-        public static final String PACKAGE_MEDIATYPE = "application/vnd.wso2-package+xml";
-    }
-
-    //BPMN related constants
-    public static final String TYPE= "type";
-    public static final String ACTIVITI_FORM_PROPERTY = "activiti:formProperty";
-    public static final String VARIABLE = "variable" ;
 }

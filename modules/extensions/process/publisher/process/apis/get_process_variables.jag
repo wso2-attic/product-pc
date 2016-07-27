@@ -18,6 +18,7 @@
  *
  */
  importPackage(org.wso2.carbon.pc.core);
+ importPackage(org.wso2.carbon.pc.core.assets);
 
  var log = new Log();
  if (log.isDebugEnabled()) {
@@ -25,8 +26,13 @@
  }
 
  var userName = user.username;
- var processDetails = String(request.getParameter("processInfo"));
- var process = new Process(processDetails, userName);
+ var processName = String(request.getParameter("processName"));
+ var processVersion = String(request.getParameter("processVersion"));
+ log.info(processName)
+ log.info(processVersion)
+ log.info(userName)
+ var process = new Process(processName,processVersion, userName);
+ var processVariables = process.getBpmn().getProcessVariables();
  var responseObj = {};
 
  var server = require('store').server;

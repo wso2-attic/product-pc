@@ -32,7 +32,7 @@ var render = function(theme, data, meta, require) {
             context:data
         }],
         listassets: [{
-            partial: 'deploy',
+            partial: 'deployment',
             context: data
         }]
     });

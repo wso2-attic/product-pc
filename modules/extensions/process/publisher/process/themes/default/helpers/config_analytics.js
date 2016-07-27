@@ -16,10 +16,14 @@
  *  under the License.
  *
  */
-
 var resources = function (page, meta) {
     return {
-        js: ['config-analytics-functions.js','jquery-file-upload/alertify.js'],
+        js: ['config-analytics-functions.js','flowchart/jsPlumb-2.0.7.js', 'libs/jquery.form.min.js', 'publisher-utils.js', 'jquery-ui.js','jquery-file-upload/alertify.js', 'jquery-file-upload/bootstrap-filestyle.js', 'jquery.cookie.js', 'common/option_text.js',
+                                                        "tinymce/tinymce.min.js", 'tags/tags-init-create-asset.js', 'notify.min.js', 'messages.js',
+                                                        'jquery-file-upload/jquery.iframe-transport.js', 'jquery-file-upload/jquery.fileupload.js',
+                                                        'jquery-file-upload/vendor/jquery.ui.widget.js', 'create-asset-functions.js', 'flowchart/create-flowchart.js',
+                                                        'advance-search.js', 'jquery.form.js', 'flowchart/base64.js','flowchart/canvas2image.js', 'flowchart/canvg.js',
+                                                        'flowchart/html2canvas.js', 'auto-complete-tags/bootstrap-tokenfield.min.js','audit-log-functions.js','create_asset.js'],
         css: ['bootstrap-select.min.css', 'alertify.css']
     };
 };
