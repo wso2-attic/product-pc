@@ -88,7 +88,7 @@ public class ProcessContentSearchService {
 
             Map<String, String> input = new HashMap<>();
             input.put(IndexingConstants.FIELD_MEDIA_TYPE, mediaTypeStr);
-            input.put(IndexingConstants.FIELD_RESOURCE_NAME, searchQuery);
+            input.put(IndexingConstants.FIELD_CONTENT, searchQuery);
             ResourceData[] resources = attributeSearchService.search(input);
 
             if (resources != null && resources.length > 0) {
