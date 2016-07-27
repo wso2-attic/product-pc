@@ -24,7 +24,9 @@ import java.util.List;
  */
 public class ProcessCenterConstants {
 
-
+    // Make the constructor private, since it is a utility class
+    private ProcessCenterConstants() {
+    }
     /**
      * Asset Registry Properties
      **/
@@ -46,6 +48,7 @@ public class ProcessCenterConstants {
     public static final String IMAGE_THUMBNAIL_VALUE = "images_thumbnail";
     public static final String ERROR = "error";
     public static final String MESSAGE = "message";
+    public static final String NO_FILE_SPECIFIED= "no-file-specified";
     /**
      * Package asset
      */
@@ -106,9 +109,21 @@ public class ProcessCenterConstants {
     public static final String AUTHORIZE = "5";
     public static final String ALLOW = "1";
 
-    // Make the constructor private, since it is a utility class
-    private ProcessCenterConstants() {
-    }
+    // Media types
+    public static final String PDF_MEDIA_TYPE = "application/pdf";
+    public static final String DOCUMENT_MEDIA_TYPE = "application/msword";
+    public static final String PROCESS_TEXT_MEDIA_TYPE = "text/html";
+    public static final String PROCESS_MEDIA_TYPE = "application/vnd.wso2-process+xml";
+    public static final String PACKAGE_MEDIA_TYPE = "application/vnd.wso2-package+xml";
+    public static final String ZIP_MEDIA_TYPE = "application/zip";
+    public static final String BAR_EXTENSION = ".bar";
+
+
+    // UI constants
+    public static final String PDF = "PDF";
+    public static final String DOCUMENT = "Document";
+    public static final String PROCESS_TEXT = "Process-Text";
+    public static final String PROCESS_TYPE = "Process";
 
     public static class AUDIT {
 
@@ -141,19 +156,5 @@ public class ProcessCenterConstants {
         public static final String TIME_STAMP = "timestamp";
     }
 
-    public static class PROCESS_CONTENT_SEARCH {
 
-        //UI constants
-        public static final String PDF = "PDF";
-        public static final String DOCUMENT = "Document";
-        public static final String PROCESS_TEXT = "Process-Text";
-        public static final String PROCESS = "Process";
-
-        //media types for for indexing
-        public static final String PDF_MEDIATYPE = "application/pdf";
-        public static final String DOCUMENT_MEDIATYPE = "application/msword";
-        public static final String PROCESS_TEXT_MEDIATYPE = "text/html";
-        public static final String PROCESS_MEDIATYPE = "application/vnd.wso2-process+xml";
-        public static final String PACKAGE_MEDIATYPE = "application/vnd.wso2-package+xml";
-    }
 }
