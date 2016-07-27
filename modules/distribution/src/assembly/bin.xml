@@ -134,6 +134,7 @@
             </outputDirectory>
             <excludes>
                 <exclude>publisher/extensions/app/publisher-apis/app.js</exclude>
+                <exclude>publisher/themes/default/partials/product-title.hbs</exclude>
                 <exclude>sso/jaggery.conf</exclude>
                 <exclude>portal/configs/designer.json</exclude>
             </excludes>
