@@ -27,50 +27,50 @@ function addProcessVariableRow(tableID) {
     beginRowNo++;
     var row = table.insertRow(table.rows.length);
 
-    row.innerHTML =
+     row.innerHTML =
             '<td><input type="checkbox" name="chk"/></td>' +
             '<td><input type="text" name="txt" id="process_variable" onkeydown="processVariableAutoComplete(this)" style="display:table-cell; width:100%; padding-left: 8px;" width:100%"/>' +
-            '</td>' + '<td>' +
-            '<select id="selVarType_' + beginRowNo + '" name="varType" style="display:table-cell; width:100%" ' +
-            'onchange="disableCheckBox(' + beginRowNo + ')">' +
-            '<option value="int">int</option>' +
-            '<option value="long">long</option>' +
-            '<option value="double">double</option>' +
-            '<option value="float">float</option>' +
-            '<option value="string">string</option>' +
-            '<option value="bool">bool</option>' +
-            '</select>' + '</td>' +
+            '</td>' + '<td><input type="text" disabled="true" name="txt" id="process_variable_type" style="display:table-cell; width:100%; padding-left: 8px;" width:100%"/>' +'</td>'
+            +
             '<td align="center" style="outline: thin solid #66c2ff"><input id="chkAnalyzedData_' + beginRowNo + '" ' +
             'type="checkbox" name="chkAnalyzedData" /></td>' +
             '<td align="center" style="outline: thin solid #66c2ff"><input id="chkDrillData_' + beginRowNo + '" ' +
             'type="checkbox" name="chkDrillData" disabled/></td>';
 }
 
-function processVariableAutoComplete(me){
-  $.ajax({
-        url: '/publisher/assets/process/apis/get_process_variables?processName=oiio&processVersion=io',
-        type: 'GET',
-        success: function (data) {
-            var response = JSON.parse(data);
-            if (response.error == false) {
-                processListObj = JSON.parse(response.content);
-                alertify.error(response.content[0])
-                for (var i = 0; i < processListObj.length; i++) {
-                    alertify.error("malinthaa")
-                    processNames.push(processListObj[i].processname + "-" + processListObj[i].processversion);
+    function processVariableAutoComplete(me){
+      var processVariables = []
+      var processVariablesObj
+      $.ajax({
+            url: '/publisher/assets/process/apis/get_process_variables?processName='+$('#processNameHiddenElement').
+            val()+'&processVersion='+$('#processVersionHiddenElement').val(),
+            type: 'GET',
+            async: false,
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error == false) {
+                    processVariablesObj = JSON.parse(response.content);
+                    for (var i = 0; i < Object.keys(processVariablesObj).length; i++) {
+                        processVariables.push(Object.keys(processVariablesObj)[i]);
+                    }
+                } else {
+                    alertify.error(response.content);
                 }
-            } else {
-                alertify.error(response.content);
+            },
+            error: function () {
+                alertify.error('Process List error');
             }
-        },
-        error: function () {
-            alertify.error('Process List error');
-        }
-    });
-   $(me).autocomplete(
-       { source: ["c++", "java", "php", "coldfusion", "javascript", "asp", "ruby"] }
-   );
-}
+        });
+       $(me).autocomplete(
+           { source: processVariables },
+           {select: function(e, ui) {
+                   $(me).parent().parent().children().eq(2).children().eq(0).val(processVariablesObj[ui.item.value]);
+
+                }
+           }
+
+       );
+    }
 
 /*
  Disable process variable's "Analyzing Data" and "Drill Down Variable" check boxes accordingly to the data type of the variable

@@ -28,9 +28,6 @@
  var userName = user.username;
  var processName = String(request.getParameter("processName"));
  var processVersion = String(request.getParameter("processVersion"));
- log.info(processName)
- log.info(processVersion)
- log.info(userName)
  var process = new Process(processName,processVersion, userName);
  var processVariables = process.getBpmn().getProcessVariables();
  var responseObj = {};

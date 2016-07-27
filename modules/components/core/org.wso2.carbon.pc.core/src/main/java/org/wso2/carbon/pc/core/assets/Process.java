@@ -25,7 +25,7 @@ import org.w3c.dom.Document;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
 import org.wso2.carbon.pc.core.assets.resources.BPMN;
-import org.wso2.carbon.pc.core.assets.resources.BPMNResource;
+import org.wso2.carbon.pc.core.assets.common.BPMNResource;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.pc.core.util.PCInputStreamProvider;
 import org.wso2.carbon.registry.core.Association;
