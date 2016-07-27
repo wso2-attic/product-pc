@@ -54,16 +54,13 @@ public class Process {
 
     /**
      *
-     * @param processDetails - Process details including process name and process version
      * @param username - username
      * @throws ProcessCenterException
      * @throws JSONException
      */
-    public Process(String processDetails, String username) throws ProcessCenterException, JSONException {
-        JSONObject processInfo = new JSONObject(processDetails);
-        log.info(processDetails);
-        processName = processInfo.getString("processName");
-        processVersion = processInfo.getString("processVersion");
+    public Process(String processName, String processVersion, String username) throws ProcessCenterException, JSONException {
+        this.processName = processName;
+        this.processVersion = processVersion;
         this.username = username;
         this.bpmn = new BPMN(getBpmnResource());
     }
