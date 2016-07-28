@@ -8,16 +8,6 @@
                  tags="analytics">
         <Require feature="dynamic-height"/>
         <Require feature="wso2-gadgets-controls" />
-        <Require feature="pubsub-2">
-            <Param name="topics">
-                <![CDATA[
-                <Topic title="PC Analytics"
-                    name="org.wso2.ues.samples.ch"
-                    type="object"
-                    subscribe="true"/>
-               ]]>
-            </Param>
-        </Require>
     </ModulePrefs>
 
     <Content type="html">
@@ -46,18 +36,6 @@
 
         <script src="/portal/libs/jquery_1.11.0/jquery-1.11.3.min.js"></script>
         <script src="/portal/libs/bootstrap_3.3.5/js/bootstrap.min.js"></script>
-        <script>
-                gadgets.HubSettings.onConnect = function() {
-                    gadgets.Hub.subscribe('Daterange', function(topic, data, subscriberData) {
-                        if(data.type === 'clear') {
-                            return;
-                        }
-                        wso2.gadgets.controls.showGadget();
-                        $("#from").val(data.from);
-                        $("#to").val(data.to);
-                    });
-                };
-        </script>
 
     </head>
 
@@ -96,8 +74,6 @@
                             <div id="chartA" style="height:100%"></div>
                         </div>
                     </div>
-                    <input type="hidden" id="from" value="0">
-                    <input type="hidden" id="to" value="0">
                 </div>
         </div>
     </body>

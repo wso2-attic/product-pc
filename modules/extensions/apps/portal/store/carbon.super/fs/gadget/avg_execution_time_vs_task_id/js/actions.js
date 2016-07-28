@@ -26,7 +26,7 @@ function drawGraph() {
             'order': $('#TaskDefOrder').val(),
             'count': parseInt($('#TaskDefCount').val())
         };
-
+        
         $.ajax({
             type: 'POST',
             url: '../../bpmn-analytics-explorer/user_level_avg_time_vs_task_id',
@@ -47,14 +47,18 @@ function drawGraph() {
                     var jsonArrObj = JSON.parse('[' + responseStr + ']');
                     jsonObj[0].data = jsonArrObj;
 
+                    config.width = $('#chartA').width();
+                    config.height = $('#chartA').height() - $('#chartA').height()/5;
                     var barChart = new vizg(jsonObj, config);
-                    barChart.draw("#chartA", [{type: "click", callback: callbackmethod}]);
+                    barChart.draw("#chartA", [{type: "click"}]);
 
                 }
                 else {
                     jsonObj[0].data = [];
+                    config.width = $('#chartA').width();
+                    config.height = $('#chartA').height() - $('#chartA').height()/5;
                     var barChart = new vizg(jsonObj, config);
-                    barChart.draw("#chartA", [{type: "click", callback: callbackmethod}]);
+                    barChart.draw("#chartA", [{type: "click"}]);
                 }
             },
             error: function (xhr, status, error) {
