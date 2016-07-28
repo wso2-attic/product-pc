@@ -4,16 +4,14 @@ var config = {
     highlight : "multi",
     charts : [{type: "bar",  y : "Time"}],
     maxLength: 200,
-    padding: {"top": 50, "left": 80, "bottom": 80, "right": 0},
-    transform:[60,70],
-    width: 800,
-    height: 400
+    xAxisAngle:true,
+    padding: {"top": 20, "left": 80, "bottom": 100, "right": 0},
+    transform:[60,70]
 }
 
 var jsonObj = [];
 
 var callbackmethod = function(event, item) {
-    alert('chart clicked');
 }
 
 window.onload = function() {
@@ -34,6 +32,7 @@ window.onload = function() {
             }
         });
     });
+	$('#collapse').collapse("hide");
 }
 
 function drawExecutionTimeVsProcessInstanceIdResult() {
@@ -46,20 +45,7 @@ function drawExecutionTimeVsProcessInstanceIdResult() {
         'order': $('#processInstanceIdExecTimeOrder').val(),
         'limit': parseInt($('#processInstanceIdExecTimeLimit').val())
     };
-
-    $("g.mark-text").ready(function () {
-        $("g.mark-text").first().children().hide();
-        setTimeout(function() {
-            $("svg").css("height", "100%");
-            $("g.mark-text").first().children().show();
-            $("g.mark-text").first().children().attr("text-anchor", "end");
-            $("g.mark-text").first().children().each(function(){
-                $(this).attr("transform", $(this).attr("transform") + " rotate(-65)");
-            })
-            $("#chartA").show();
-        }, 200);
-    })
-
+    
     if (processId != '') {
         $.ajax({
             url: '../../bpmn-analytics-explorer/exec_time_vs_process_instance_id',
@@ -82,8 +68,7 @@ function drawExecutionTimeVsProcessInstanceIdResult() {
                 // console.log(jsonObj);
 
                 config.width = $('#chartA').width();
-                config.height = $('#chartA').height() - $('#chartA').height()/5;
-                $("#chartA").hide();
+                config.height = $('#chartA').height();
                 var barChart = new vizg(jsonObj, config);
                 barChart.draw("#chartA", [{type: "click", callback: callbackmethod}]);
             },
@@ -92,6 +77,7 @@ function drawExecutionTimeVsProcessInstanceIdResult() {
                 alert(errorJson.message);
             }
         });
+        $('.collapse').collapse("hide");
     }
 }
 
