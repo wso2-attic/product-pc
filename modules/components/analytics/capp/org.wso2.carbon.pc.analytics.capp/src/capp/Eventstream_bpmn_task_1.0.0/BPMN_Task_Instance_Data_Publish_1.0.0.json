@@ -13,6 +13,10 @@
       "type": "STRING"
     },
     {
+      "name": "processDefinitionId",
+      "type": "STRING"
+    },
+    {
       "name": "processInstanceId",
       "type": "STRING"
     },
