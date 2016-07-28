@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package org.wso2.carbon.pc.core.assets.resources;
+package org.wso2.carbon.pc.core.assets.common;
 
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.converter.util.InputStreamProvider;
@@ -43,8 +43,8 @@ public class BPMNResource {
     /**
      * Gets encoded image from registry path
      *
-     * @param path
-     * @return
+     * @param path path of the bpmn file
+     * @return Encoded image string
      * @throws ProcessCenterException
      */
     public String getEncodedBPMNImage(String path) throws ProcessCenterException {
@@ -55,8 +55,8 @@ public class BPMNResource {
     /**
      * Gets BPMN image for given bpmn file from registry
      *
-     * @param path
-     * @return
+     * @param path Path of the bpmn file
+     * @return Byte array of bpmn image
      * @throws ProcessCenterException
      */
     private byte[] getBPMNImage(String path) throws ProcessCenterException {

@@ -70,6 +70,7 @@ function drawAvgExecuteTimeVsTaskIdResult() {
 
                 config.width = $('#chartA').width();
                 config.height = $('#chartA').height();
+
                 var barChart = new vizg(jsonObj, config);
                 barChart.draw("#chartA", [{type: "click", callback: callbackmethod}]);
             },

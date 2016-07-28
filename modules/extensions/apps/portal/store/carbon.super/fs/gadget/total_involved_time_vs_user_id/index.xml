@@ -48,12 +48,14 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/portal/libs/bootstrap_3.3.5/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/portal/libs/font-wso2_1.0.0/css/font-wso2.css" type="text/css">
     <link rel="stylesheet" href="/portal/libs/pc-analytics-libs/css/bootstrap.min.css"/>
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css"/>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/portal/libs/pc-analytics-libs/css/VizGrammar.css"/>
+    <link rel="stylesheet" href="/portal/libs/pc-analytics-libs/css/custom.css" type="text/css">
 
     <script src="/portal/libs/jquery_1.11.0/jquery-1.11.3.min.js"></script>
 
@@ -73,13 +75,6 @@
                     return;
                 }
                 wso2.gadgets.controls.showGadget();
-                var start = new Date(data.from);
-                var startDate=start.getFullYear()+"-"+(start.getMonth()+1)+"-"+start.getDate();
-                var end=new Date(data.to);
-                var endDate=end.getFullYear()+"-"+(end.getMonth()+1)+"-"+end.getDate();
-
-                $("#StartDate").val(startDate);
-                $("#EndDate").val(endDate);
                 $("#from").val(data.from);
                 $("#to").val(data.to);
                 drawGraph();
@@ -89,19 +84,14 @@
 </head>
 
 <body>
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div>
+        <div class="panel-body" style="width:100%; height:95%">
             <div style="padding-top: 10px;padding-left: 10px;padding-right: 10px;">
-                <div class="form-inline" role="form">
-                    <div class="input-group form-group">
-                        <label class="input-group-addon" for="StartDate">Start Date</label>
-                        <input id="StartDate" name="StartDate" type="text" class="form-control" readonly/>
-                    </div>
-                    <div class="input-group form-group">
-                        <label class="input-group-addon" for="EndDate">End Date</label>
-                        <input id="EndDate" name="EndDate" type="text" class="form-control" readonly/>
-                    </div>
-                    <div class="form-group">
+            <a data-toggle="collapse" data-target="#inline-form" href="#">
+                            <i class="fw fw-filter" aria-hidden="true"></i>&nbsp;Add Filter
+                        </a>
+                        <div id="inline-form" class="form-inline collapse" role="form">
+                             <div class="form-group" style="padding-right:0">
                         <select id="TasksOrder" class="selectpicker form-control">
                             <option value="top">Top</option>
                             <option value="bottom">Bottom</option>
@@ -124,7 +114,7 @@
                     <button class="btn btn-primary" onclick="drawGraph()">Apply Filter</button>
                 </div>
             </div>
-            <div id="chartA"></div>
+            <div id="chartA" style="width:100%; height:100%; padding-top:20px"></div>
         </div>
     </div>
 
@@ -135,28 +125,22 @@
             x : "User",
             highlight : "multi",
             charts : [{type: "bar", y : "Time"}],
-            maxLength: 6,
-            transform:[60,70],
-            width: 800,
-            height: 400,
-            padding: 80
-        }
-
-        var callbackmethod = function(event, item) {
-            alert('chart clicked');
+            maxLength: 200,
+            xAxisAngle:true,
+            padding: {"top": 10, "left": 80, "bottom": 100, "right": 0},
+            transform:[60,70]
         }
 
         window.onload = function() {
+            $('#collapse').collapse("hide");
             $('.selectpicker').selectpicker({
                 style: 'btn',
                 size: 4
             });
 
             var today = new Date();
-            $("#EndDate").val(today.getFullYear()+"-"+(today.getMonth()+1)+"-"+today.getDate());
             $("#to").val(today.getTime());
-            var startDate = new Date(2016,0,1);
-            $("#StartDate").val(startDate.getFullYear()+"-"+(startDate.getMonth()+1)+"-"+startDate.getDate());
+            var startDate = new Date(today.getFullYear(),(today.getMonth()+1-3),today.getDate());
             $("#from").val(startDate.getTime());
 
             $.getJSON("/portal/store/carbon.super/fs/gadget/total_involved_time_vs_user_id/js/meta-data-totalInvolvedTimeVsUserID.json.js",

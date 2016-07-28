@@ -34,40 +34,47 @@ require('/modules/publisher.js').exec(function (ctx) {
     var session = ctx.session;
     var uriMatcher = new URIMatcher(req.getRequestURI());
     var CREATE_URL = '/{context}/assets/package/apis/packages';
-    var ASSOCIATE_PROCESS_URL = '/{context}/assets/package/apis/packages/associate';
-    var GET_BPMN_DIAGRAM_URL = '/{context}/assets/package/apis/packages/bpmn/';
+    var UPDATE_URL = '/{context}/assets/package/apis/packages/{packageId}';
+    var GET_BPMN_DIAGRAM_URL = '/{context}/assets/package/apis/packages/resources/bpmn/';
+    var GET_PACKAGE_ARCHIVE_URL = '/{context}/assets/package/apis/packages/resources/archive/';
     var method = req.getMethod();  
     var userName = user.username;
     var requestProcessData = req.getAllParameters('UTF-8');
     switch (method) {
-        case 'POST':// POST endpoints
+        case 'POST':
+            var packageInputStream = Packages.java.io.InputStream;
+            var imageInputStream = Packages.java.io.InputStream;
+
+            //get the uploaded zip file.
+            var files = req.getAllFiles();
+            if(files != null){
+                var package_file = files["package_file"];
+                var image_file = files["images_thumbnail"];
+                if(requestProcessData._tags == null){
+                    requestProcessData._tags = "";
+                }
+                if(requestProcessData.description == null){
+                    requestProcessData.description = "";
+                }
+                if(package_file != null){
+                    packageInputStream = package_file.getStream().getStream();
+                } else {
+                    packageInputStream = null;
+                }
+
+                if(image_file != null){
+                    imageInputStream = image_file.getStream().getStream();
+                } else{
+                    imageInputStream = null;
+                }
+            } else {
+                packageInputStream = null;
+                imageInputStream = null;
+            }
+            
+            // POST endpoints
             if (uriMatcher.match(CREATE_URL)) {//to create package
                 try {
-                    //get the file with entry 'wsdl_zip'
-                    var packageInputStream = Packages.java.io.InputStream;
-                    var imageInputStream = Packages.java.io.InputStream;
-
-                    //get the uploaded zip file.
-                    var files = req.getAllFiles();
-                    var package_file = files["package_file"];
-                    var image_file = files["images_thumbnail"];
-                    if(requestProcessData._tags == null){
-                        requestProcessData._tags = "";
-                    }
-                    if(requestProcessData.description == null){
-                        requestProcessData.description = "";
-                    }
-                    if(package_file != null){
-                        packageInputStream = package_file.getStream().getStream();
-                    } else {
-                        packageInputStream = null;
-                    }
-
-                    if(image_file != null){
-                        imageInputStream = image_file.getStream().getStream();
-                    } else{
-                        imageInputStream = null;
-                    }
                     var packageInstance = Package();
                     var assetCreationResponse = packageInstance.create(requestProcessData.overview_name, requestProcessData.overview_version, userName, 
                                             requestProcessData.overview_description, ref.getCurrentTime(), requestProcessData._tags,
@@ -95,27 +102,34 @@ require('/modules/publisher.js').exec(function (ctx) {
                         log.debug("Error while creating package for the request : " + e);
                     }
                 }
-            } else if (uriMatcher.match(ASSOCIATE_PROCESS_URL)) {
-            //to associate package
+            } else if (uriMatcher.match(UPDATE_URL)) {//to create package
                 try {
+                    
                     var packageInstance = Package();
-                    packageInstance.associateProcess(requestProcessData.processName, requestProcessData.processVersion, requestProcessData.packageName, 
-                        requestProcessData.packageVersion, requestProcessData.bpmnResourcePath, userName);
-                    var responseObj = {};
-                    responseObj.error = false;
-                    response = responseProcessor.buildSuccessResponseDefault(constants.STATUS_CODES.OK, res, responseObj);
+                    var assetUpdateResponse = packageInstance.update(requestProcessData.packageName, requestProcessData.packageVersion, userName, 
+                                            requestProcessData.overview_description, requestProcessData.package_file_name, 
+                                            imageInputStream, packageInputStream);
+                    var updatedAsset = parse(String(assetUpdateResponse));
+                    
+                    if(updatedAsset.error == true){
+                        return responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on update asset', res, 'Failed to update asset of type: ' + options.type, updatedAsset.message, []);
+                    }
+
+                    response = responseProcessor.buildSuccessResponseDefault(constants.STATUS_CODES.CREATED, res, updatedAsset);
+                    response.addHeader('Location', req.getRequestURI() + '/' + updatedAsset.packageId + '?type=package');
+                    return; 
                 } catch (e) {
                     if (e.hasOwnProperty('message') && e.hasOwnProperty('code')) {
-                        log.error("Error while creating package for the request due to " + e.message);
+                        log.error("Error while updating package for the request due to " + e.message);
 
-                        response = responseProcessor.buildErrorResponseDefault(e.code, 'error on create package', res,
-                                        'Failed to create package of type: ' + options.type, e.message, []);
+                        response = responseProcessor.buildErrorResponseDefault(e.code, 'error on update package', res,
+                                        'Failed to update package of type: ' + options.type, e.message, []);
                         return;
                     }
                     log.error(e.message, e);
-                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on create package', res, 'Failed to create package of type: ' + options.type, 'more information on create package error', []);
+                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on update package', res, 'Failed to update package of type: ' + options.type, 'more information on update package error', []);
                     if (log.isDebugEnabled()) {
-                        log.debug("Error while creating package for the request : " + e);
+                        log.debug("Error while updating package for the request : " + e);
                     }
                 }
             } 
@@ -130,12 +144,28 @@ require('/modules/publisher.js').exec(function (ctx) {
                     responseObj.content = bpmnData;
                     response = responseProcessor.buildSuccessResponseDefault(constants.STATUS_CODES.OK, res, responseObj);
                 } catch (e) {
+                    log.error(e.message, e);
                     var responseObj = {};
                     responseObj.error = true;
                     responseObj.content = "Error occurred while getting bpmn diagram";
                     response = responseProcessor.buildErrorResponseDefault(e.code, 'error on getting bpmn diagram ', res, responseObj);
                 }
-            } 
+            } else  if (uriMatcher.match(GET_PACKAGE_ARCHIVE_URL)) {//to create package
+                try {
+                    var packageInstance = Package();
+                    var packageFileDate = packageInstance.downloadPackageFile(requestProcessData.packageName,requestProcessData.packageVersion,requestProcessData.bpmnResourcePath);
+                    var responseObj = {};
+                    responseObj.error = false;
+                    responseObj.content = packageFileDate;
+                    response = responseProcessor.buildSuccessResponseDefault(constants.STATUS_CODES.OK, res, responseObj);
+                } catch (e) {
+                    log.error(e.message, e);
+                    var responseObj = {};
+                    responseObj.error = true;
+                    responseObj.content = "Error occurred while getting package archive file";
+                    response = responseProcessor.buildErrorResponseDefault(e.code, 'error on getting bpmn diagram ', res, responseObj);
+                }
+            }
         break;
         default://other un-implemented endpoints
             response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.NOT_IMPLEMENTED, 'Not Implemented API endpoints', res, 'The endpoint that you have requested is not implemented for the ' + method + ' method.Try making the request with the appropriate verb' + '(hint: create/update operations use POST).', []);

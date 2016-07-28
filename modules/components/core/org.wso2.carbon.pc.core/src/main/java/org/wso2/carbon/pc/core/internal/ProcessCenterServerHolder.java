@@ -63,7 +63,8 @@ public class ProcessCenterServerHolder {
     public void setRegistryService(RegistryService registrySvc) {
         this.registryService = registrySvc;
         updateArtifactPathPermissions();
-        deployAnalyticsDashboard();
+        deployAnalyticsDashboard("process-monitoring");
+        deployAnalyticsDashboard("user-analytics");
     }
 
     public void unsetRegistryService(RegistryService registryService) {
@@ -140,8 +141,8 @@ public class ProcessCenterServerHolder {
         registry.put(ProcessCenterConstants.AUDIT.FLOW_CHART, registry.newCollection());
     }
 
-    private void deployAnalyticsDashboard() {
-        String path = CarbonUtils.getCarbonConfigDirPath() + File.separator + "process-charts.json";
+    private void deployAnalyticsDashboard(String file_name) {
+        String path = CarbonUtils.getCarbonConfigDirPath() + File.separator + file_name + ".json";
 
         try {
             File dashBoardJson = new File(path);
@@ -154,7 +155,7 @@ public class ProcessCenterServerHolder {
                 String jsonText = new String(content);
                 dashboardResource.setContent(jsonText);
                 dashboardResource.setMediaType("application/json");
-                String dashboardPath = "ues/dashboards/process-charts";
+                String dashboardPath = "ues/dashboards/" + file_name;
                 if (!registry.resourceExists(dashboardPath)) {
                     registry.put(dashboardPath, dashboardResource);
                 }

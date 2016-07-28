@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -20,8 +20,9 @@
 $(document).ready(function() {
 
     $('#btn-deploy-con').on('click', function(e) {
+        var path = caramel.url('/assets/package/apis/deployments/');
         $.ajax({
-            url: '/publisher/assets/package/apis/deployments/',
+            url: path,
             type: 'POST',
             data: {
                 'packageName': $('#packageName').val(),
@@ -42,8 +43,10 @@ $(document).ready(function() {
     });
 
     $('#btn-undeploy-con').on('click', function(e) {
+        var path = caramel.url('/assets/package/apis/deployments');
         $.ajax({
-            url: "/publisher/assets/package/apis/deployments?packageName=" + $('#packageName').val() + "&packageVersion=" + $('#packageVersion').val(),
+            url: path + "?packageName=" + $('#packageName').val() 
+            + "&packageVersion=" + $('#packageVersion').val(),
             type: 'DELETE',
             success: function (data) {
                 if (data.error === false) {
@@ -60,8 +63,9 @@ $(document).ready(function() {
     });
 
     $('#btn-associate_deployment').on('click', function(e) {
+        var path = caramel.url('/assets/package/apis/associations/deployment');
         $.ajax({
-            url: '/publisher/assets/package/apis/deployments/associate',
+            url: path,
             type: 'POST',
             data: {
                 'packageName': $('#packageName').val(),

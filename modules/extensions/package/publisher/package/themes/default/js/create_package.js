@@ -16,10 +16,16 @@
  *  under the License.
  *
  */
+$(function () {
 
-var resources = function (page, meta) {
-    return {
-    	css: ['process-associations.css'],
-        js: ['process-associations.js','prcoess-center-advance-search.js']
-    };
-};
+    var fileInput = $('input[name="package_file"]');
+    if(fileInput.val() != undefined && fileInput.val().length > 0){
+        var fileName = fileInput.val().split('\\').reverse()[0];
+        $('#package_file_name').val(fileName);
+    }
+    
+    $('input[name="package_file"]').change(function(){
+        var fileName = fileInput.val().split('\\').reverse()[0];
+        $('#package_file_name').val(fileName);
+    });
+});

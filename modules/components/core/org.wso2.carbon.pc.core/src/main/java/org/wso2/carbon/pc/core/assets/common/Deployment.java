@@ -13,9 +13,8 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package org.wso2.carbon.pc.core.assets.resources;
+package org.wso2.carbon.pc.core.assets.common;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -28,7 +27,6 @@ import org.wso2.carbon.bpmn.core.mgt.model.xsd.BPMNProcess;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
 import org.wso2.carbon.pc.core.assets.Package;
-import org.wso2.carbon.pc.core.assets.common.AssetResource;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.pc.core.runtime.ProcessServer;
 import org.wso2.carbon.pc.core.util.Utils;
@@ -61,8 +59,9 @@ public class Deployment extends AssetResource {
     /**
      * Deploy package in given server
      *
-     * @param packageName
-     * @param packageVersion
+     * @param packageName Name of the Package
+     * @param packageVersion - Version of the Package
+     * @param username - Provider of the Package
      */
     public String deploy(String packageName, String packageVersion, String username) throws
             ProcessCenterException {
@@ -97,7 +96,7 @@ public class Deployment extends AssetResource {
 
                         }
                         Resource packageArchive = userRegistry.get(packageBPMNRegistryPath + packageFileName);
-                        String deploymentName = FilenameUtils.getBaseName(packageFileName);
+                        String deploymentName = getDeploymentName(packageName, packageVersion);
                         /**
                          * archiveChecksum- We need to store checksum of the package to check wheter the deployed
                          * package is same as
@@ -110,7 +109,10 @@ public class Deployment extends AssetResource {
                          */
                         String archiveChecksum = Utils.getMD5Checksum(packageArchive.getContentStream());
                         String latestChecksum = processServer.getLatestDeploymentChecksum(deploymentName);
-                        String deploymentID = processServer.deploy(packageFileName, packageArchive.getContentStream());
+                        String deploymentID = processServer.deploy(deploymentName.concat(ProcessCenterConstants.BAR_EXTENSION),
+                                packageArchive
+                                .getContentStream
+                                ());
                         String packageContent = new String((byte[]) packageAsset.getContent(), StandardCharsets.UTF_8);
                         Document packageDocument = stringToXML(packageContent);
                         Element rootElement = packageDocument.getDocumentElement();
@@ -176,13 +178,13 @@ public class Deployment extends AssetResource {
     /**
      * Get deployment
      *
-     * @param packageName
-     * @param packageVersion
-     * @param userName
-     * @return
+     * @param packageName Name of the Package
+     * @param packageVersion - Version of the Package
+     * @param username - Provider of the Package
+     * @return JSON string of deployment information
      * @throws ProcessCenterException
      */
-    public String getDeploymentInformation(String packageName, String packageVersion, String userName) throws
+    public String getDeploymentInformation(String packageName, String packageVersion, String username) throws
             ProcessCenterException {
 
         JSONObject response = new JSONObject();
@@ -192,51 +194,54 @@ public class Deployment extends AssetResource {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
-                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(userName);
+                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(username);
                 Resource packageAsset = userRegistry.get(packageRegistryPath);
-                String deploymentName = packageAsset.getProperty(ProcessCenterConstants
-                        .PACKAGE_BPMN_ARCHIVE_FILE_NAME);
-                String processContent = new String((byte[]) packageAsset.getContent(),
-                        StandardCharsets.UTF_8);
-                Document packageDocument = stringToXML(processContent);
-                if (packageDocument != null) {
-                    //Evaluate XPath against RXT Document to get runtime environment
-                    XPath xPath = XPathFactory.newInstance().newXPath();
-                    NodeList runtimeEnvironment = ((NodeList) xPath.evaluate("/metadata/runtimeEnvironment",
-                            packageDocument.getDocumentElement(), XPathConstants.NODESET));
-                    if (runtimeEnvironment != null && runtimeEnvironment.getLength() > 0) {
-                        Element runtimeElement = (Element) (runtimeEnvironment.item(0));
-                        NodeList deploymentIDNode = runtimeElement.getElementsByTagName("deploymentID");
-                        NodeList status = runtimeElement.getElementsByTagName("status");
-                        NodeList lastupdatedUsername = runtimeElement.getElementsByTagName("username");
-                        NodeList lastUpdatedTime = runtimeElement.getElementsByTagName("lastUpdatedTime");
+                if (packageAsset != null) {
+                    String packageFileName = packageAsset.getProperty(ProcessCenterConstants
+                            .PACKAGE_BPMN_ARCHIVE_FILE_NAME);
+                    String processContent = new String((byte[]) packageAsset.getContent(),
+                            StandardCharsets.UTF_8);
+                    Document packageDocument = stringToXML(processContent);
+                    if (packageDocument != null) {
+                        //Evaluate XPath against RXT Document to get runtime environment
+                        XPath xPath = XPathFactory.newInstance().newXPath();
+                        NodeList runtimeEnvironment = ((NodeList) xPath.evaluate("/metadata/runtimeEnvironment",
+                                packageDocument.getDocumentElement(), XPathConstants.NODESET));
+                        if (runtimeEnvironment != null && runtimeEnvironment.getLength() > 0) {
+                            Element runtimeElement = (Element) (runtimeEnvironment.item(0));
+                            NodeList deploymentIDNode = runtimeElement.getElementsByTagName("deploymentID");
+                            NodeList status = runtimeElement.getElementsByTagName("status");
+                            NodeList lastupdatedUsername = runtimeElement.getElementsByTagName("username");
+                            NodeList lastUpdatedTime = runtimeElement.getElementsByTagName("lastUpdatedTime");
 
-                        if (deploymentIDNode != null && deploymentIDNode.getLength() > 0) {
-                            deploymentID = deploymentIDNode.item(0).getTextContent();
-                            runtimeDeployment.put("deploymentID", deploymentID);
-                        }
-                        if (status != null && status.getLength() > 0) {
-                            runtimeDeployment.put("status", status.item(0).getTextContent());
-                        }
-                        if (lastupdatedUsername != null && lastupdatedUsername.getLength() > 0) {
-                            runtimeDeployment.put("username", lastupdatedUsername.item(0).getTextContent());
-                        }
-                        if (lastUpdatedTime != null && lastUpdatedTime.getLength() > 0) {
-                            runtimeDeployment.put("lastUpdatedTime", lastUpdatedTime.item(0).getTextContent());
-                            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            runtimeDeployment.put("lastUpdatedDate", dateFormatter.format(new Date(Long.parseLong
-                                    (lastUpdatedTime.item(0).getTextContent()))));
-                        }
-                        if (deploymentID != null) {
-                            // Get BPMN resources list
-                            runtimeDeployment.put("bpmnResources", getBpmnResources(packageName, packageVersion,
-                                    userName));
+                            if (deploymentIDNode != null && deploymentIDNode.getLength() > 0) {
+                                deploymentID = deploymentIDNode.item(0).getTextContent();
+                                runtimeDeployment.put("deploymentID", deploymentID);
+                            }
+                            if (status != null && status.getLength() > 0) {
+                                runtimeDeployment.put("status", status.item(0).getTextContent());
+                            }
+                            if (lastupdatedUsername != null && lastupdatedUsername.getLength() > 0) {
+                                runtimeDeployment.put("username", lastupdatedUsername.item(0).getTextContent());
+                            }
+                            if (lastUpdatedTime != null && lastUpdatedTime.getLength() > 0) {
+                                runtimeDeployment.put("lastUpdatedTime", lastUpdatedTime.item(0).getTextContent());
+                                SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                runtimeDeployment.put("lastUpdatedDate", dateFormatter.format(new Date(Long.parseLong
+                                        (lastUpdatedTime.item(0).getTextContent()))));
+                            }
+                            if (deploymentID != null) {
+                                // Get BPMN resources list
+                                runtimeDeployment.put("bpmnResources", getBpmnResources(packageName, packageVersion,
+                                        username));
+                            }
                         }
                     }
+                    if (packageFileName != null) {
+                        runtimeDeployment.put("packageFileName", packageFileName);
+                    }
                 }
-                if (deploymentName != null) {
-                    runtimeDeployment.put("deploymentName", deploymentName);
-                }
+
             }
             response.put("runtimeDeployment", runtimeDeployment);
         } catch (RegistryException e) {
@@ -257,13 +262,13 @@ public class Deployment extends AssetResource {
     /**
      * Associate runtime deployment for already uploaded package
      *
-     * @param packageName
-     * @param packageVersion
-     * @param userName
-     * @return
+     * @param packageName Name of the Package
+     * @param packageVersion - Version of the Package
+     * @param username - Provider of the Package
+     * @return associated deployment id
      * @throws ProcessCenterException
      */
-    public String associateDeploymentID(String packageName, String packageVersion, String userName) throws
+    public String associateDeploymentID(String packageName, String packageVersion, String username) throws
             ProcessCenterException {
 
         JSONObject response = new JSONObject();
@@ -279,12 +284,11 @@ public class Deployment extends AssetResource {
             String packageRegistryPath = Package.getPackageRegistryPath(packageName, packageVersion);
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
-                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(userName);
+                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(username);
                 Resource packageAsset = userRegistry.get(packageRegistryPath);
                 String processContent = new String((byte[]) packageAsset.getContent(),
                         StandardCharsets.UTF_8);
-                String deploymentName = FilenameUtils.getBaseName(packageAsset.getProperty
-                        (ProcessCenterConstants.PACKAGE_BPMN_ARCHIVE_FILE_NAME));
+                String deploymentName = getDeploymentName(packageName, packageVersion);
                 Document packageDocument = stringToXML(processContent);
                 if (packageDocument != null) {
                     // Evaluate XPath against Document to get runtime environment
@@ -358,11 +362,12 @@ public class Deployment extends AssetResource {
     /**
      * Associate runtime process to bpmn resources
      *
-     * @param userRegistry
-     * @param packageAsset
-     * @param packageName
-     * @param packageVersion
-     * @param deploymentID
+     * @param userRegistry User registry where bpmn xml files are stored
+     * @param packageName Name of the Package
+     * @param packageVersion - Version of the Package
+     * @param packageAsset - Package registry resource
+     * @param processServer - Process server
+     * @param deploymentID - Deployment id in the process server
      * @return
      * @throws ProcessCenterException
      */
@@ -418,13 +423,13 @@ public class Deployment extends AssetResource {
     /**
      * Get list of  BPMN resources related to the Package
      *
-     * @param packageName
-     * @param packageVersion
-     * @param userName
+     * @param packageName Name of the Package
+     * @param packageVersion - Version of the Package
+     * @param username - Provider of the Package
      * @return
      * @throws ProcessCenterException
      */
-    public JSONArray getBpmnResources(String packageName, String packageVersion, String userName) throws
+    public JSONArray getBpmnResources(String packageName, String packageVersion, String username) throws
             ProcessCenterException {
 
         JSONArray bpmnResources = new JSONArray();
@@ -434,7 +439,7 @@ public class Deployment extends AssetResource {
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
-                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(userName);
+                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(username);
                 Resource packageAsset = userRegistry.get(packageRegistryPath);
                 if (packageAsset != null) {
                     String bpmnResourceCount = packageAsset.getProperty(ProcessCenterConstants
@@ -485,10 +490,10 @@ public class Deployment extends AssetResource {
     /**
      * Undeploy package
      *
-     * @param packageName
-     * @param packageVersion
-     * @param username
-     * @return
+     * @param packageName Name of the Package
+     * @param packageVersion - Version of the Package
+     * @param username - Provider of the Package
+     * @return JSON string contains the status of the undeployment
      * @throws ProcessCenterException
      */
     public String undeploy(String packageName, String packageVersion, String username) throws
@@ -517,8 +522,7 @@ public class Deployment extends AssetResource {
 
                             String packageContent = new String((byte[]) packageAsset.getContent(), StandardCharsets
                                     .UTF_8);
-                            String deploymentName = FilenameUtils.getBaseName(packageAsset.getProperty
-                                    (ProcessCenterConstants.PACKAGE_BPMN_ARCHIVE_FILE_NAME));
+                            String deploymentName = getDeploymentName(packageName, packageVersion);
                             processServer.unDeploy(deploymentName);
                             Document packageDocument = stringToXML(packageContent);
                             //Evaluate XPath against RXT document to get runtime environments
@@ -578,5 +582,15 @@ public class Deployment extends AssetResource {
         }
 
         return response.toString();
+    }
+
+    /**
+     *
+     * @param packageName Name of the Package
+     * @param packageVersion - Version of the Package
+     * @return Deployment name for package to be deployed in process server
+     */
+    private String getDeploymentName(String packageName, String packageVersion) {
+        return packageName + "-" + packageVersion;
     }
 }

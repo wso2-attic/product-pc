@@ -51,7 +51,7 @@
                     <schemaDirectory>src/main/resources/schemas</schemaDirectory>
                     <xmlConfigs>
                         <xmlConfig implementation="java.io.File">
-                            src/main/resources/schemas/xmlbeans.conf
+                            src/main/resources/schemas/xmlbeans.xsdconfig
                         </xmlConfig>
                     </xmlConfigs>
                     <noUpa>false</noUpa>
@@ -118,6 +118,10 @@
                         </Import-Package>
                     </instructions>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
 
         </plugins>

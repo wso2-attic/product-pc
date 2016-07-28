@@ -134,10 +134,12 @@
             </outputDirectory>
             <excludes>
                 <exclude>publisher/extensions/app/publisher-apis/app.js</exclude>
+                <exclude>publisher/themes/default/partials/product-title.hbs</exclude>
                 <exclude>sso/jaggery.conf</exclude>
                 <exclude>portal/configs/designer.json</exclude>
                 <exclude>portal/store/carbon.super/fs/gadget/**</exclude>
                 <exclude>portal/css/dashboard.css</exclude>
+                <exclude>portal/extensions/locales/locale_default.json</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -616,7 +618,12 @@
             <filtered>true</filtered>
         </file>
         <file>
-            <source>src/repository/conf/process-charts.json</source>
+            <source>src/repository/conf/process-monitoring.json</source>
+            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/repository/conf/user-analytics.json</source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>
@@ -849,6 +856,13 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/configs</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+
+        <file>
+            <source>../../modules/extensions/process/portal/process/locale_default.json</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/extensions/locales</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
         <!-- Files of PC ends from here -->
 
 

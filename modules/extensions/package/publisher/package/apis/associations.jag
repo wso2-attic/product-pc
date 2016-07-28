@@ -19,13 +19,13 @@
  Filename : packages.jag
  * custom api to manage operations
 
- ENDPOINTS:
+ ENDPOINTS:L
  CREATE
- /assets/package/apis/packages
+ /assets/package/apis/associations
 
  */
 require('/modules/publisher.js').exec(function (ctx) {
-    importPackage(org.wso2.carbon.pc.core.assets.resources);
+    importPackage(org.wso2.carbon.pc.core.assets);
     var log = new Log('package_api_endpoints');
     var responseProcessor = require('utils').response;
     var ref = require('utils').time;
@@ -33,34 +33,38 @@ require('/modules/publisher.js').exec(function (ctx) {
     var req = ctx.request;
     var session = ctx.session;
     var uriMatcher = new URIMatcher(req.getRequestURI());
-    var DEPLOYMENT_URL = '/{context}/assets/package/apis/deployments';
-    var ASSOCIATE_DEPLOYMENT_BPMN_URL = '/{context}/assets/package/apis/deployments/associate';
+    var ASSOCIATE_PACKAGE_URL = '/{context}/assets/package/apis/associations/package';
+    var ASSOCIATE_DEPLOYMENT_URL = '/{context}/assets/package/apis/associations/deployment';
     var method = req.getMethod();  
     var userName = user.username;
-    var requestProcessData = req.getAllParameters('UTF-8');      
+    var requestProcessData = req.getAllParameters('UTF-8');
     switch (method) {
-        case 'POST':// POST endpoints
-            if (uriMatcher.match(DEPLOYMENT_URL)) {
+        case 'POST':
+            // POST endpoints
+            if (uriMatcher.match(ASSOCIATE_PACKAGE_URL)) {
             //to associate package
                 try {
-                    var deployInstance = Deployment();
-                    var responseObj = deployInstance.deploy(requestProcessData.packageName, requestProcessData.packageVersion, userName);
+                    var packageInstance = Package();
+                    packageInstance.associateProcess(requestProcessData.processName, requestProcessData.processVersion, requestProcessData.packageName, 
+                        requestProcessData.packageVersion, requestProcessData.bpmnResourcePath, userName);
+                    var responseObj = {};
+                    responseObj.error = false;
                     response = responseProcessor.buildSuccessResponseDefault(constants.STATUS_CODES.OK, res, responseObj);
                 } catch (e) {
                     if (e.hasOwnProperty('message') && e.hasOwnProperty('code')) {
-                        log.error("Error while deploying package for the request due to " + e.message);
+                        log.error("Error while creating package for the request due to " + e.message);
 
-                        response = responseProcessor.buildErrorResponseDefault(e.code, 'error on deploy package', res,
-                                        'Failed to deploying package of type: ' + options.type, e.message, []);
+                        response = responseProcessor.buildErrorResponseDefault(e.code, 'error on create package', res,
+                                        'Failed to create package of type: ' + options.type, e.message, []);
                         return;
                     }
-                    log.error(e);
-                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on deploy package', res, 'Failed to deploy package of type: ' + options.type, 'more information on deploy package error', []);
+                    log.error(e.message, e);
+                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on create package', res, 'Failed to create package of type: ' + options.type, 'more information on create package error', []);
                     if (log.isDebugEnabled()) {
-                        log.debug("Error while deploying package for the request : " + e);
+                        log.debug("Error while creating package for the request : " + e);
                     }
                 }
-            } else if (uriMatcher.match(ASSOCIATE_DEPLOYMENT_BPMN_URL)) {
+            }  else if (uriMatcher.match(ASSOCIATE_DEPLOYMENT_URL)) {
                 //to associate deployment
                 try {
                     var deployInstance = Deployment();
@@ -78,29 +82,6 @@ require('/modules/publisher.js').exec(function (ctx) {
                     response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on associate deployment', res, 'Failed to associate deployment to package of type: ' + options.type, 'more information on associate deployment error', []);
                     if (log.isDebugEnabled()) {
                         log.debug("Error while associating deployment for the request : " + e);
-                    }
-                }
-            }
-        break;
-        case 'DELETE':// POST endpoints
-            if (uriMatcher.match(DEPLOYMENT_URL)) {
-            //to associate package
-                try {
-                    var deployInstance = Deployment();
-                    var responseObj= deployInstance.undeploy(requestProcessData.packageName, requestProcessData.packageVersion, userName);
-                    response = responseProcessor.buildSuccessResponseDefault(constants.STATUS_CODES.OK, res, responseObj);
-                } catch (e) {
-                    if (e.hasOwnProperty('message') && e.hasOwnProperty('code')) {
-                        log.error("Error while undeploying for the request due to " + e.message);
-
-                        response = responseProcessor.buildErrorResponseDefault(e.code, 'error on undeploy package', res,
-                                        'Failed to undeploying of type: ' + options.type, e.message, []);
-                        return;
-                    }
-                    log.error(e);
-                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on undeploy package', res, 'Failed to undeploy package of type: ' + options.type, 'more information on undeploy package error', []);
-                    if (log.isDebugEnabled()) {
-                        log.debug("Error while undeploying for the request : " + e);
                     }
                 }
             } 

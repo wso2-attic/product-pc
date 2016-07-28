@@ -24,7 +24,11 @@ asset.server = function(ctx) {
                    },
                    {
                         url: 'deployments',
-                        path: 'deploy.jag'
+                        path: 'deployments.jag'
+                   },
+                   {
+                        url: 'associations',
+                        path: 'associations.jag'
                    }],
             pages: [{
                         title: 'Processes',
@@ -33,8 +37,8 @@ asset.server = function(ctx) {
                     },
                     {
                         title: 'Deployment',
-                        url: 'deploy',
-                        path: 'deploy.jag'
+                        url: 'deployment',
+                        path: 'deployment.jag'
                     }]
         }
     };
@@ -82,9 +86,9 @@ asset.renderer = function(ctx) {
         }
         **/
         if (permissionAPI.hasActionPermissionforPath(path, 'write', ctx.session) && permissionAPI.hasAssetPagePermission(type,'update',user.tenantId,username)) {
-           navList.push('Version', 'btn-copy', util.buildUrl('copy') + '/' + id);
+           //navList.push('Version', 'btn-copy', util.buildUrl('copy') + '/' + id);
            navList.push('Processes', 'btn-copy', util.buildUrl('processes') + '/' + id);
-           navList.push('Deployment', 'btn-delete', util.buildUrl('deploy') + '/' + id);
+           navList.push('Deployment', 'btn-delete', util.buildUrl('deployment') + '/' + id);
         }
 
         return navList.list();
@@ -127,11 +131,18 @@ asset.renderer = function(ctx) {
             var timestampAttribute = 'createdtime'; //ctx.rxtManager.getTimeStampAttribute(this.assetType);
             for (var index in tables) {
                 var table = tables[index];
-                if ((table.name == 'overview') && (table.fields.hasOwnProperty(timestampAttribute))) {
-                    var value = table.fields[timestampAttribute].value || '';
-                    var date = new Date();
-                    date.setTime(value);
-                    table.fields[timestampAttribute].value = date.toUTCString();
+                if (table.name == 'overview') {
+                    if (table.fields.hasOwnProperty(timestampAttribute)) {
+                        var value = table.fields[timestampAttribute].value || '';
+                        var date = new Date();
+                        date.setTime(value);
+                        table.fields[timestampAttribute].value = date.toUTCString();
+                    }
+                    // Get package file name
+                    importPackage(org.wso2.carbon.pc.core.assets);
+                    var packageInstance = Package();
+                    var packageFileName = packageInstance.getDeploymentFileName(table.fields.name.value, table.fields.version.value, page.cuser.cleanedUsername);
+                    page.assets.packageFileName = packageFileName;
                 }
             }
         },
@@ -146,15 +157,23 @@ asset.renderer = function(ctx) {
             }
         },
         update: function(page) {
+       
             var tables = page.assets.tables;
             var timestampAttribute = 'createdtime';
             for (var index in tables) {
                 var table = tables[index];
-                if ((table.name == 'overview') && (table.fields.hasOwnProperty(timestampAttribute))) {
-                    var value = table.fields[timestampAttribute].value;
-                    var date = new Date();
-                    date.setTime(value);
-                    table.fields[timestampAttribute].value = date.toUTCString();
+                if (table.name == 'overview') {
+                    if (table.fields.hasOwnProperty(timestampAttribute)) {
+                        var value = table.fields[timestampAttribute].value || '';
+                        var date = new Date();
+                        date.setTime(value);
+                        table.fields[timestampAttribute].value = date.toUTCString();
+                    }
+                    // Get package file name
+                    importPackage(org.wso2.carbon.pc.core.assets);
+                    var packageInstance = Package();
+                    var packageFileName = packageInstance.getDeploymentFileName(table.fields.name.value, table.fields.version.value, page.cuser.cleanedUsername);
+                    page.assets.packageFileName = packageFileName;
                 }
             }
         },

@@ -27,10 +27,10 @@ function addProcessVariableRow(tableID) {
     beginRowNo++;
     var row = table.insertRow(table.rows.length);
 
-    row.innerHTML =
+     row.innerHTML =
             '<td><input type="checkbox" name="chk"/></td>' +
-            '<td><input type="text" name="txt" style="display:table-cell; width:100%; padding-left: 8px;" width:100%"/>' +
-            '</td>' + '<td>' +
+            '<td><input type="text" name="txt" id="process_variable" onkeydown="processVariableAutoComplete(this)" style="display:table-cell; width:100%; padding-left: 8px;" width:100%"/>'
+            + '<td>' +
             '<select id="selVarType_' + beginRowNo + '" name="varType" style="display:table-cell; width:100%" ' +
             'onchange="disableCheckBox(' + beginRowNo + ')">' +
             '<option value="int">int</option>' +
@@ -39,12 +39,45 @@ function addProcessVariableRow(tableID) {
             '<option value="float">float</option>' +
             '<option value="string">string</option>' +
             '<option value="bool">bool</option>' +
-            '</select>' + '</td>' +
+            '</select>' + '</td>'+
             '<td align="center" style="outline: thin solid #66c2ff"><input id="chkAnalyzedData_' + beginRowNo + '" ' +
             'type="checkbox" name="chkAnalyzedData" /></td>' +
             '<td align="center" style="outline: thin solid #66c2ff"><input id="chkDrillData_' + beginRowNo + '" ' +
             'type="checkbox" name="chkDrillData" disabled/></td>';
 }
+
+    function processVariableAutoComplete(me){
+      var processVariables = []
+      var processVariablesObj
+      $.ajax({
+            url: '/publisher/assets/process/apis/get_process_variables?processName='+$('#processNameHiddenElement').
+            val()+'&processVersion='+$('#processVersionHiddenElement').val(),
+            type: 'GET',
+            async: false,
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error == false) {
+                    processVariablesObj = JSON.parse(response.content);
+                    for (var i = 0; i < Object.keys(processVariablesObj).length; i++) {
+                        processVariables.push(Object.keys(processVariablesObj)[i]);
+                    }
+                } else {
+                    alertify.error(response.content);
+                }
+            },
+
+        });
+       $(me).autocomplete(
+           { source: processVariables },
+           {select: function(e, ui) {
+                   $(me).parent().parent().children().eq(2).children().eq(0).val(processVariablesObj[ui.item.value]);
+                   $(me).parent().parent().children().eq(3).children().eq(0).prop('disabled', true);
+
+                }
+           }
+
+       );
+    }
 
 /*
  Disable process variable's "Analyzing Data" and "Drill Down Variable" check boxes accordingly to the data type of the variable
@@ -249,7 +282,7 @@ function configAnalytics() {
                 $('#eventReceiverName').attr("readonly", "true");
                 $('#processDefinitionId').attr("readonly", "true");
 
-                $("#dataTable tr").each(function () {
+                $("#dataTuuable tr").each(function () {
                     $(this).children().each(function () {
                         $(this).find("input").attr("readonly", "true");
                         $(this).find("select").attr("disabled", "true");
