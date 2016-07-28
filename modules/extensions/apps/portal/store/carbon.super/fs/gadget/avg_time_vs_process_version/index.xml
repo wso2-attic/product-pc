@@ -8,16 +8,6 @@
                  tags="analytics">
         <Require feature="dynamic-height"/>
         <Require feature="wso2-gadgets-controls" />
-        <Require feature="pubsub-2">
-            <Param name="topics">
-                <![CDATA[
-                <Topic title="PC Analytics(p-ver vs exec-time)"
-                    name="org.wso2.ues.samples.ch"
-                    type="object"
-                    subscribe="true"/>
-               ]]>
-            </Param>
-        </Require>
     </ModulePrefs>
 
     <Content type="html">

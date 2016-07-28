@@ -23,34 +23,34 @@
             "blocks": [
               {
                 "id": "a",
-                "x": 0,
-                "y": 7,
-                "width": 12,
-                "height": 3,
+                "x": 6,
+                "y": 3,
+                "width": 6,
+                "height": 7,
                 "banner": false
               },
               {
                 "id": "b",
                 "x": 0,
                 "y": 10,
-                "width": 12,
-                "height": 3,
+                "width": 6,
+                "height": 7,
                 "banner": false
               },
               {
                 "id": "c",
-                "x": 0,
-                "y": 13,
-                "width": 12,
-                "height": 3,
+                "x": 6,
+                "y": 10,
+                "width": 6,
+                "height": 7,
                 "banner": false
               },
               {
                 "id": "110c431445e6fa4afe236bf6a014e6b3",
                 "x": 0,
-                "y": 4,
-                "width": 12,
-                "height": 3,
+                "y": 3,
+                "width": 6,
+                "height": 7,
                 "banner": false
               },
               {
@@ -58,7 +58,7 @@
                 "x": 0,
                 "y": 0,
                 "width": 12,
-                "height": 4,
+                "height": 3,
                 "banner": false
               }
             ]
@@ -252,7 +252,7 @@
   "theme": "Default Theme",
   "shareDashboard": false,
   "isUserCustom": false,
-  "isEditorEnable": true,
+  "isEditorEnable": false,
   "banner": {
     "globalBannerExists": false,
     "customBannerExists": false

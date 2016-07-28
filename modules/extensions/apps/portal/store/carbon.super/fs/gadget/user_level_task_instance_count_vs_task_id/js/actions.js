@@ -17,7 +17,6 @@ var jsonObj = [];
 var user;
 
 function drawGraph() {
-
     var userId = $('#UserList').val();
 
     if (userId != '') {
@@ -45,17 +44,20 @@ function drawGraph() {
 
                     responseStr = responseStr.slice(0, -1);
                     var jsonArrObj = JSON.parse('[' + responseStr + ']');
-                    //console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhh"+jsonObj);
                     jsonObj[0].data = jsonArrObj;
-
+                    
+                    config.width = $('#chartA').width();
+                    config.height = $('#chartA').height() - $('#chartA').height()/5;
                     var barChart = new vizg(jsonObj, config);
-                    barChart.draw("#chartA", [{type: "click", callback: callbackmethod}]);
+                    barChart.draw("#chartA", [{type: "click"}]);
 
                 }
                 else {
                     jsonObj[0].data = [];
+                    config.width = $('#chartA').width();
+                    config.height = $('#chartA').height() - $('#chartA').height()/5;
                     var barChart = new vizg(jsonObj, config);
-                    barChart.draw("#chartA", [{type: "click", callback: callbackmethod}]);
+                    barChart.draw("#chartA", [{type: "click"}]);
                 }
             },
             error: function (xhr, status, error) {

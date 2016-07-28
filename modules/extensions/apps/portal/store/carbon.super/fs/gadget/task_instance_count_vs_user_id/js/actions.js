@@ -26,7 +26,6 @@ function drawGraph() {
             'count': parseInt($('#taskInstanceCountUserIdCount').val())
         };
 
-
         $.ajax({
             type: 'POST',
             url: '../../bpmn-analytics-explorer/task_instance_count_vs_user_id',
@@ -47,14 +46,18 @@ function drawGraph() {
                     var jsonArrObj = JSON.parse('[' + responseStr + ']');
                     jsonObj[0].data = jsonArrObj;
 
+                    config.width = $('#chartA').width();
+                    config.height = $('#chartA').height() - $('#chartA').height()/5;
                     var barChart = new vizg(jsonObj, config);
-                    barChart.draw("#chartA", [{type: "click", callback: callbackmethod}]);
+                    barChart.draw("#chartA", [{type: "click"}]);
 
                 }
                 else {
                     jsonObj[0].data = [];
+                    config.width = $('#chartA').width();
+                    config.height = $('#chartA').height() - $('#chartA').height()/5;
                     var barChart = new vizg(jsonObj, config);
-                    barChart.draw("#chartA", [{type: "click", callback: callbackmethod}]);
+                    barChart.draw("#chartA", [{type: "click"}]);
                 }
             },
             error: function (xhr, status, error) {
