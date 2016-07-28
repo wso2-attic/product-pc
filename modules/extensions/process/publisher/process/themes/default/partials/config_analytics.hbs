@@ -52,8 +52,12 @@
                         <td><input type="checkbox" name="chk" disabled="true"/></td>
                         <td><input style="display:table-cell; width:100%; padding-left: 8px;" type="text" name="txt"
                                    value="{{this.name}}" disabled="true" onkeydown="processVariableAutoComplete(this)"/></td>
-                        <td><input style="display:table-cell; width:100%; padding-left: 8px;" type="text" name="txt"
-                                   disabled="true" id="process_variable_type"/></td>
+                        <td>
+                            <select name="varType" style="display:table-cell; width:100%" disabled="true">
+                                <option value="int">{{this.type}}</option>
+                            </select>
+                        </td>
+
 
                         {{#if_equal this.isAnalyzeData "true"}}
                             <td align="center" style="outline: thin solid #6b94f1">
@@ -76,8 +80,17 @@
                 <tr>
                     <td><input type="checkbox" name="chk"/></td>
                     <td><input style="display:table-cell; width:100%; padding-left: 8px;" type="text" name="txt" onkeydown="processVariableAutoComplete(this)"/></td>
-                    <td><input style="display:table-cell; width:100%; padding-left: 8px;" type="text" name="txt"
-                               value="{{this.name}}" disabled="true" id="process_variable_type" /></td>
+                    <td>
+                        <select id="selVarType_0" style="display:table-cell; width:100%" name="varType"
+                                onchange="disableCheckBox(0,this)">
+                            <option value="int">int</option>
+                            <option value="long">long</option>
+                            <option value="double">double</option>
+                            <option value="float">float</option>
+                            <option value="string">string</option>
+                            <option value="bool">bool</option>
+                        </select>
+                    </td>
                     <td align="center" style="outline: thin solid #66c2ff"><input type="checkbox" id="chkAnalyzedData_0"
                                                                                   name="chkAnalyzedData"/></td>
                     <td align="center" style="outline: thin solid #66c2ff"><input type="checkbox" id="chkDrillData_0"
