@@ -93,29 +93,30 @@
     <div class="row" style="padding-left: 2%; padding-right: 1%;">
         <div class="col-md-4" style="float: left">
             <div class="btn-group">
-                <button id="btn-process-analytics" class="btn btn-default" style="border-radius: 4px;" onclick="javascript:$('#analytics-input-div').toggle();$('#btn-process-analytics').toggle()">Process Analytics</button>
+                <button id="btn-process-analytics" class="btn btn-default" style="border-radius: 4px;" onclick="loadAnalytics()">Process Analytics</button>
                 <button id="btnExportProcess" class="btn btn-default" style="border-radius: 4px; margin-left: 5px" onclick="exportProcess('{{processName}}','{{
                 processVersion}}')">Export Process</button>
                 <input id="exportWithAssociationsChkBox" type="checkbox" style=" margin-left: 5px" >
                 <label for="exportWithAssociationsChkBox" style="cursor: unset">Export With Associations</label>
             </div>
 
-            <div class="well col-md-7" id="analytics-input-div" style="margin-bottom: 10px;display: none">
+            <!--<div class="well col-md-7" id="analytics-input-div" style="margin-bottom: 10px;display: none">-->
 
-                <label>Process Name</label>
-                <input type="text" class="span4 required" id="process-name" style="margin-left: 20px;">
-                <div class="copy-buttons" style="padding-top: 20px;">
-                    <button type="submit" class="btn btn-primary copy-button" onclick="loadAnalytics()">Done</button>
-                    <button type="button" class="btn cancel-button"
-                            onclick="javascript:$('#analytics-input-div').toggle();$('#btn-process-analytics').toggle()">
-                        Cancel
-                    </button>
-                </div>
-            </div>
+                <!--<label>Process Name</label>-->
+                <!--<input type="text" class="span4 required" id="process-name" style="margin-left: 20px;">-->
+                <!--<div class="copy-buttons" style="padding-top: 20px;">-->
+                    <!--<button type="submit" class="btn btn-primary copy-button" onclick="loadAnalytics()">Done</button>-->
+                    <!--<button type="button" class="btn cancel-button"-->
+                            <!--onclick="javascript:$('#analytics-input-div').toggle();$('#btn-process-analytics').toggle()">-->
+                        <!--Cancel-->
+                    <!--</button>-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
 
     </div>
-
+    <input type="hidden" id="pname" value="{{processName}}">
+    <input type="hidden" id="pversion" value="{{processVersion}}">
 
 </div>
 

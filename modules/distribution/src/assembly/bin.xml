@@ -332,11 +332,11 @@
             </outputDirectory>
         </fileSet>
         <fileSet>
-          <directory>../extensions/package/publisher</directory>
-            <outputDi                                                                                                                                           rectory>
-             ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
-          </outputDirectory>
-         </fileSet>
+            <directory>../extensions/package/publisher</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
+            </outputDirectory>
+        </fileSet>
         <fileSet>
             <directory>../extensions/process/store</directory>
             <outputDirectory>
@@ -434,7 +434,7 @@
             <directory>../extensions/themes/publisher/default</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/themes/default
-        </outputDirectory>
+            </outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../components/analytics/web/org.wso2.carbon.pc.analytics.web/src/web</directory>
@@ -540,7 +540,7 @@
     </fileSets>
     <dependencySets>
         <dependencySet>
-                <outputDirectory>${project.artifactId}-${pc.version}/lib/endorsed</outputDirectory>
+            <outputDirectory>${project.artifactId}-${pc.version}/lib/endorsed</outputDirectory>
             <includes>
                 <include>javax.el:el-api:jar</include>
             </includes>
@@ -1190,4 +1190,3 @@
 
 
 </assembly>
-

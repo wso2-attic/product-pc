@@ -71,7 +71,7 @@
                         <a data-toggle="collapse" data-target="#inline-form" href="#">
                             <i class="fw fw-filter" aria-hidden="true"></i>&nbsp;Add Filter
                         </a>
-                        <div id="inline-form" class="form-inline collapse well well-sm" role="form">
+                        <div id="inline-form" class="form-inline collapse" role="form">
                              <div class="form-group">
                                  <select id="processInstanceCountProcessDefOrder" class="selectpicker form-control">
                                     <option value="top">Top</option>
