@@ -325,19 +325,18 @@
 
         <!-- File sets for PC starts from here -->
 
-        <!-- Process extensions -->
-        <!--<fileSet>-->
-        <!--<directory>../extensions/main</directory>-->
-        <!--<outputDirectory>-->
-        <!--${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps-->
-        <!--</outputDirectory>-->
-        <!--</fileSet>-->
         <fileSet>
             <directory>../extensions/process/publisher</directory>
             <outputDirectory>
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
             </outputDirectory>
         </fileSet>
+        <fileSet>
+          <directory>../extensions/package/publisher</directory>
+            <outputDi                                                                                                                                           rectory>
+             ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
+          </outputDirectory>
+         </fileSet>
         <fileSet>
             <directory>../extensions/process/store</directory>
             <outputDirectory>
@@ -426,17 +425,17 @@
         </fileSet>
         <!-- global config to update product name in publisher -->
         <fileSet>
-            <directory>../extensions/themes</directory>
+            <directory>../extensions/themes/process-center-theme</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/views/themes
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/views/themes/process-center-theme
             </outputDirectory>
         </fileSet>
-        <!--fileSet>
-            <directory>../extensions/conf/navigators</directory>
+        <fileSet>
+            <directory>../extensions/themes/publisher/default</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules
-            </outputDirectory>
-        </fileSet-->
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/themes/default
+        </outputDirectory>
+        </fileSet>
         <fileSet>
             <directory>../components/analytics/web/org.wso2.carbon.pc.analytics.web/src/web</directory>
             <outputDirectory>
@@ -627,28 +626,12 @@
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>
-        <!--file>
-            <source>src/repository/conf/log4j.properties</source>
-            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
-            <filtered>true</filtered>
-        </file-->
         <file>
             <source>src/repository/conf/multitenancy/cloud-services-desc.xml</source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/multitenancy/</outputDirectory>
             <filtered>true</filtered>
         </file>
-        <!-- Including coordination-client-config.xml file -->
-        <!--file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/etc/coordination-client-config.xml
-            </source>
-            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/etc</outputDirectory>
-        </file>
-        <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/etc/zoo.cfg
-            </source>
-            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/etc</outputDirectory>
-        </file-->
+
         <!-- Including log4j.properties file -->
         <file>
             <source>
@@ -669,17 +652,6 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-        <!--<file>
-            <source>target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat</source>
-            <outputDirectory>${project.artifactId}-${pc.version}/bin/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>-->
-        <!--file>
-            <source>conf/claim-config.xml</source>
-            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
-            <fileMode>644</fileMode>
-        </file-->
         <file>
             <source>src/repository/conf/identity.xml</source>
             <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/identity/</outputDirectory>
@@ -730,33 +702,6 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-        <!--file>
-            <source>src/repository/database/WSO2SOCIAL_DB.h2.db</source>
-            <outputDirectory>${project.artifactId}-${pc.version}/repository/database</outputDirectory>
-            <fileMode>644</fileMode>
-        </file-->
-
-
-        <!--        <file>
-            <source>conf/wso2is-user-certs.jks</source>
-            <outputDirectory>${project.artifactId}-${pc.version}/repository/resources/security/</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>-->
-        <!--       <file>
-            <source>conf/userRP.jks</source>
-            <outputDirectory>${project.artifactId}-${pc.version}/repository/resources/security/</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>-->
-
-        <!--<file>-->
-        <!--<source>-->
-        <!--../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/association-config.xml-->
-        <!--</source>-->
-        <!--<outputDirectory>${pom.artifactId}-${pc.version}/repository/conf/etc</outputDirectory>-->
-        <!--<filtered>true</filtered>-->
-        <!--<fileMode>644</fileMode>-->
-        <!--</file>-->
-
         <file>
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/governance.xml
             </source>
@@ -795,33 +740,11 @@
 
         <!-- Files of PC starts from here -->
 
-        <!-- Process rxt -->
-        <!--file>
-            <source>../extensions/conf/sso/login.jag</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/views</outputDirectory>
-            <fileMode>644</fileMode>
-        </file-->
-
         <file>
             <source>../extensions/process/process.rxt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/rxts</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-        <!--file>
-            <source>../extensions/conf/decorators/page-decorators.js</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/modules</outputDirectory>
-            <fileMode>644</fileMode>
-        </file-->
-        <!--file>
-            <source>../extensions/process/publisher/default/asset.js</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets/default</outputDirectory>
-            <fileMode>644</fileMode>
-        </file-->
-        <!--file>
-           <source>../extensions/main/process-center/controllers/assets-router.jag</source>
-           <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/controllers</outputDirectory>
-           <fileMode>644</fileMode>
-       </file-->
         <!--permission related -->
         <file>
             <source>../extensions/main/process-center/modules/greg-permission-util.js</source>
@@ -1221,6 +1144,18 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/bin/analytics-migrate.bat
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/bin/</outputDirectory>
+        </file>
+
+        <file>
+            <source>src/repository/conf/process-center.xml</source>
+            <outputDirectory>${project.artifactId}-${pc.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+
+        <file>
+            <source>../extensions/package/package.rxt</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/rxts</outputDirectory>
+            <fileMode>644</fileMode>
         </file>
 
         <!-- Including rdbms configuration file for event simulator -->
