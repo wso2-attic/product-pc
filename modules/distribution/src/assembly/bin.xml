@@ -332,11 +332,11 @@
             </outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>../extensions/package/publisher</directory>
+          <directory>../extensions/package/publisher</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
-            </outputDirectory>
-        </fileSet>
+             ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
+          </outputDirectory>
+         </fileSet>
         <fileSet>
             <directory>../extensions/process/store</directory>
             <outputDirectory>

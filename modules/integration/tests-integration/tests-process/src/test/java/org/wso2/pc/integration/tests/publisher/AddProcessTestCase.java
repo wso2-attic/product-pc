@@ -74,7 +74,8 @@ public class AddProcessTestCase extends PCIntegrationBaseTest {
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
                 "create_process" , MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
                 requestBody, queryMap, headerMap, cookieHeader);
-        response.getStatusCode();
+
+        ;
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
 
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
