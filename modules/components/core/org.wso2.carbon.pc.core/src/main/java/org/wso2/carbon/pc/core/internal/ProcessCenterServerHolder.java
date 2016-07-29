@@ -63,7 +63,7 @@ public class ProcessCenterServerHolder {
     public void setRegistryService(RegistryService registrySvc) {
         this.registryService = registrySvc;
         updateArtifactPathPermissions();
-        deployAnalyticsDashboard("process-charts");
+        deployAnalyticsDashboard("process-monitoring");
         deployAnalyticsDashboard("user-analytics");
     }
 

@@ -58,14 +58,14 @@ function drawGraph() {
                 jsonObj[0].data = jsonArrObj;
 
                 config.width = $('#chartA').width();
-                config.height = $('#chartA').height() - $('#chartA').height()/5;
+                config.height = $('#chartA').height();
                 var barChart = new vizg(jsonObj, config);
                 barChart.draw("#chartA", [{type: "click"}]);
             }
             else {
                 jsonObj[0].data = [];
                 config.width = $('#chartA').width();
-                config.height = $('#chartA').height() - $('#chartA').height()/5;
+                config.height = $('#chartA').height();
                 var barChart = new vizg(jsonObj, config);
                 barChart.draw("#chartA", [{type: "click"}]);
             }

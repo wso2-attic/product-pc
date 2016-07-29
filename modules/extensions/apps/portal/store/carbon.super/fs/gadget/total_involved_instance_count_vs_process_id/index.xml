@@ -129,7 +129,7 @@
             charts : [{type: "bar", y : "Instance Count"}],
             maxLength: 200,
             xAxisAngle:true,
-            padding: {"top": 10, "left": 80, "bottom": 150, "right": 0},
+            padding: {"top": 10, "left": 80, "bottom": 100, "right": 0},
             transform:[60,70]
         }
 
