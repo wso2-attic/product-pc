@@ -54,21 +54,6 @@ public class AnalyticsUDF {
 		}
 	}
 
-	public static int getMonth(String date) {
-		String[] dateArray = date.split(AnalyticsUDFConstants.SPACE_SEPARATOR);
-
-		Date dateMonth = null;
-		try {
-			dateMonth = new SimpleDateFormat(AnalyticsUDFConstants.MONTH_FORMAT, Locale.ENGLISH).parse(dateArray[1]);
-		} catch (ParseException e) {
-
-		}
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(dateMonth);
-
-		return cal.get(Calendar.MONTH) +1;
-	}
-
 	/**
 	 * Get time stamp
 	 *
