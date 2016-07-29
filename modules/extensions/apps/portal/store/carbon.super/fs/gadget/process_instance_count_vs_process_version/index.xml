@@ -47,7 +47,7 @@
                         <a data-toggle="collapse" data-target="#inline-form" href="#">
                             <i class="fw fw-filter" aria-hidden="true"></i>&nbsp;Add Filter
                         </a>
-                        <div id="inline-form" class="form-inline collapse well well-sm" role="form">
+                        <div id="inline-form" class="form-inline collapse" role="form">
                               <div class="form-group">
                                 <select id="processInstanceCountProcessVersionProcessList" class="selectpicker form-control"></select>
                               </div>
@@ -67,7 +67,7 @@
                                     <option value="100">100</option>
                                  </select>
                               </div>
-                            <button class="btn btn-primary" onclick="drawAvgExecuteTimeVsProcessIdResult()">Apply Filter</button>
+                            <button class="btn btn-primary" onclick="drawProcessInstanceCountVsProcessVersionResult()">Apply Filter</button>
                         </div>
                         <div class="row">
                             <div id="chartA" style="height:100%;width:100%"></div>
