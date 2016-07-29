@@ -333,7 +333,7 @@
         </fileSet>
         <fileSet>
           <directory>../extensions/package/publisher</directory>
-            <outputDi                                                                                                                                           rectory>
+            <outputDirectory>
              ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
           </outputDirectory>
          </fileSet>
