@@ -353,6 +353,8 @@ function getProcessInfo() {
         'processName': pname,
         'processVersion': pversion,
         'processOwner': $("#pOwner").val(),
+        'processUser' : $("#pUser").val(),
+        'processUserEmail' : $("#pUserEmail").val(),
         'processDescription': $("#overview_description").val(),
         'processTags': tagList.toString(),
         'subprocess': list,//readSubprocessTable(),
