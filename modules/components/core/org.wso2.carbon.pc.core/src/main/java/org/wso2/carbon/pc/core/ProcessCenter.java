@@ -80,7 +80,7 @@ public class ProcessCenter {
             log.debug("Loading Process Runtime Servers.");
         }
         // load the runtime server configs from configuration
-        if (processCenterConfiguration != null) {
+        if (processCenterConfiguration != null && processCenterConfiguration.isRuntimeEnvironmentEnabled()) {
             processServer = new ProcessServerImpl(processCenterConfiguration.getRuntimeEnvironmentURL(),
                     processCenterConfiguration.getRuntimeEnvironmentUsername(), processCenterConfiguration
                     .getRuntimeEnvironmentPassword());

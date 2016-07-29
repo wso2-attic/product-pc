@@ -21,10 +21,11 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.pc.analytics.core.kpi.clients.LoginAdminServiceClient;
 import org.wso2.carbon.pc.analytics.core.kpi.clients.ReceiverAdminServiceClient;
 import org.wso2.carbon.pc.analytics.core.kpi.clients.StreamAdminServiceClient;
-import org.wso2.carbon.pc.analytics.core.kpi.utils.DASConfigurationUtils;
 import org.wso2.carbon.pc.core.ProcessCenterService;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.core.service.RegistryService;
+
+import static org.wso2.carbon.pc.analytics.core.kpi.internal.PCAnalyticsServerHolder.getInstance;
 
 /**
  * @scr.component name="org.wso2.carbon.pc.analytics.core.kpi.internal.PCAnalticsServiceComponent" immediate="true"
@@ -35,51 +36,50 @@ import org.wso2.carbon.registry.core.service.RegistryService;
  */
 public class PCAnalticsServiceComponent {
     private static Log log = LogFactory.getLog(PCAnalticsServiceComponent.class);
-    private String DASUrl;
 
     protected void activate(ComponentContext ctxt) {
-        log.info("Initializing the PC Analytics component...");
-        try {
-            DASUrl = DASConfigurationUtils.getDASURL();
-            PCAnalyticsServerHolder holder = PCAnalyticsServerHolder.getInstance();
-            holder.setLoginAdminServiceClient(new LoginAdminServiceClient(DASUrl));
-            holder.setStreamAdminServiceClient(new StreamAdminServiceClient(DASUrl));
-            holder.setReceiverAdminServiceClient(new ReceiverAdminServiceClient(DASUrl));
-        } catch (Throwable e) {
-            log.error("Failed to initialize the PC Analytics component..", e);
-        }
+        log.info("Initializing the Process Center KPI Analytics component...");
     }
 
     protected void deactivate(ComponentContext ctxt) {
         log.info("Stopping the PC core component...");
     }
 
-
     protected void setProcessCenter(ProcessCenterService processCenterService) {
         if (log.isDebugEnabled()) {
-            log.debug("ProcessCenter bound to PC Analytics Publisher component");
+            log.debug("ProcessCenter bound to Process Center KPI Analytics Publisher component");
         }
-        PCAnalyticsServerHolder.getInstance().setProcessCenter(processCenterService.getProcessCenter());
+        getInstance().setProcessCenter(processCenterService.getProcessCenter());
+        String analyticsUrl = getInstance().getProcessCenter().getProcessCenterConfiguration().getAnalyticsServerURL();
+        if (analyticsUrl != null) {
+            try {
+                getInstance().setLoginAdminServiceClient(new LoginAdminServiceClient(analyticsUrl));
+                getInstance().setStreamAdminServiceClient(new StreamAdminServiceClient(analyticsUrl));
+                getInstance().setReceiverAdminServiceClient(new ReceiverAdminServiceClient(analyticsUrl));
+            } catch (Throwable e) {
+                log.error("Failed to set Process Center servcie..", e);
+            }
+        }
     }
 
     protected void unsetProcessCenter(
             ProcessCenterService processCenterService) {
         if (log.isDebugEnabled()) {
-            log.debug("ProcessCenter unbound from the PC Analytics Publisher component");
+            log.debug("ProcessCenter unbound from the Process Center KPI Analytics Publisher component");
         }
-        PCAnalyticsServerHolder.getInstance().setProcessCenter(null);
+        getInstance().setProcessCenter(null);
     }
 
     protected void setRegistryService(RegistryService registrySvc) {
         if (log.isDebugEnabled()) {
-            log.debug("RegistryService bound to the PC component");
+            log.debug("RegistryService bound to the Process Center KPI Analytics component");
         }
-        PCAnalyticsServerHolder.getInstance().setRegistryService(registrySvc);
+        getInstance().setRegistryService(registrySvc);
     }
 
     public void unsetRegistryService(RegistryService registryService) {
         if (log.isDebugEnabled()) {
-            log.debug("RegistryService unbound from the PC component");
+            log.debug("RegistryService unbound from the Process Center KPI Analytics component");
         }
         ProcessCenterServerHolder.getInstance().unsetRegistryService(registryService);
     }

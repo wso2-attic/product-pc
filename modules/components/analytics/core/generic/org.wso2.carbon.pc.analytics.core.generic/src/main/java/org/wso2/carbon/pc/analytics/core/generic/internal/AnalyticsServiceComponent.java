@@ -18,71 +18,39 @@ package org.wso2.carbon.pc.analytics.core.generic.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.pc.analytics.core.kpi.clients.LoginAdminServiceClient;
-import org.wso2.carbon.pc.analytics.core.kpi.clients.ReceiverAdminServiceClient;
-import org.wso2.carbon.pc.analytics.core.kpi.clients.StreamAdminServiceClient;
-import org.wso2.carbon.pc.analytics.core.kpi.utils.DASConfigurationUtils;
 import org.wso2.carbon.pc.core.ProcessCenterService;
-import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
-import org.wso2.carbon.registry.core.service.RegistryService;
+
+import static org.wso2.carbon.pc.analytics.core.generic.internal.AnalyticsServerHolder.getInstance;
 
 /**
  * @scr.component name="org.wso2.carbon.pc.analytics.core.kpi.internal.PCAnalticsServiceComponent" immediate="true"
  * @scr.reference name="process.center" interface="org.wso2.carbon.pc.core.ProcessCenterService"
  * cardinality="1..1" policy="dynamic" bind="setProcessCenter" unbind="unsetProcessCenter"
- * @scr.reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService"
- * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
  */
 public class AnalyticsServiceComponent {
     private static Log log = LogFactory.getLog(AnalyticsServiceComponent.class);
-    private String DASUrl;
 
     protected void activate(ComponentContext ctxt) {
-        log.info("Initializing the PC Analytics component...");
-        try {
-            DASUrl = DASConfigurationUtils.getDASURL();
-            AnalyticsServiceHolder holder = AnalyticsServiceHolder.getInstance();
-            holder.setLoginAdminServiceClient(new LoginAdminServiceClient(DASUrl));
-            holder.setStreamAdminServiceClient(new StreamAdminServiceClient(DASUrl));
-            holder.setReceiverAdminServiceClient(new ReceiverAdminServiceClient(DASUrl));
-        } catch (Throwable e) {
-            log.error("Failed to initialize the PC Analytics component..", e);
-        }
+        log.info("Initializing the Process Center Analytics component");
     }
 
     protected void deactivate(ComponentContext ctxt) {
-        log.info("Stopping the PC core component...");
+        log.info("Stopping the Process Center Analytics core component");
     }
-
 
     protected void setProcessCenter(ProcessCenterService processCenterService) {
         if (log.isDebugEnabled()) {
-            log.debug("ProcessCenter bound to PC Analytics Publisher component");
+            log.debug("ProcessCenter bound to Process Center Analytics Publisher component");
         }
-        AnalyticsServiceHolder.getInstance().setProcessCenter(processCenterService.getProcessCenter());
+        getInstance().setProcessCenter(processCenterService.getProcessCenter());
     }
 
     protected void unsetProcessCenter(
             ProcessCenterService processCenterService) {
         if (log.isDebugEnabled()) {
-            log.debug("ProcessCenter unbound from the PC Analytics Publisher component");
+            log.debug("ProcessCenter unbound from the Process Center Analytics Publisher component");
         }
-        AnalyticsServiceHolder.getInstance().setProcessCenter(null);
+        getInstance().setProcessCenter(null);
     }
-
-    protected void setRegistryService(RegistryService registrySvc) {
-        if (log.isDebugEnabled()) {
-            log.debug("RegistryService bound to the PC component");
-        }
-        AnalyticsServiceHolder.getInstance().setRegistryService(registrySvc);
-    }
-
-    public void unsetRegistryService(RegistryService registryService) {
-        if (log.isDebugEnabled()) {
-            log.debug("RegistryService unbound from the PC component");
-        }
-        ProcessCenterServerHolder.getInstance().unsetRegistryService(registryService);
-    }
-
 
 }
