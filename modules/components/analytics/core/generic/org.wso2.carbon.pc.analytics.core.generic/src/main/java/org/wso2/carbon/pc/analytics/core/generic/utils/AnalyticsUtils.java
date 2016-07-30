@@ -305,7 +305,8 @@ public class AnalyticsUtils {
 		JSONArray array = new JSONArray();
 		for (int i = 0; i < l.size(); i++) {
 			JSONObject o = new JSONObject();
-			o.put(key1, dateFormatter(l.get(i).getKey()));
+//			o.put(key1, dateFormatter(l.get(i).getKey()));
+			o.put(key1, l.get(i).getKey());
 			o.put(key2, l.get(i).getValue());
 			array.put(o);
 		}
