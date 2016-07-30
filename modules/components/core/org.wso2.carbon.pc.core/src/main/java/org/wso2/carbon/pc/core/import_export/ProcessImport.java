@@ -17,11 +17,15 @@
 package org.wso2.carbon.pc.core.import_export;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
+import org.wso2.carbon.pc.core.ProcessStore;
 import org.wso2.carbon.pc.core.audit.util.RegPermissionUtil;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.core.Resource;
@@ -30,10 +34,7 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.user.api.UserStoreException;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
@@ -45,6 +46,7 @@ public class ProcessImport {
     RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
     UserRegistry reg;
     String user;
+    private static final String PROCESS_ZIP_DOCUMENTS_DIR = "documents";
 
     /**
      * @param processZipInputStream
@@ -55,7 +57,7 @@ public class ProcessImport {
      * @throws UserStoreException
      */
     public void importProcesses(InputStream processZipInputStream, String user)
-            throws IOException, RegistryException, ProcessCenterException, UserStoreException {
+            throws IOException, RegistryException, ProcessCenterException, UserStoreException, JSONException {
 
         if (registryService != null) {
             reg = registryService.getGovernanceUserRegistry(user);
@@ -106,13 +108,47 @@ public class ProcessImport {
                             .substring(processDirName.lastIndexOf("-") + 1, processDirName.length());
                     putProcessRxt(processName, processVersion, processRxtPath);
                     setImageThumbnail(processName, processVersion, processDirPath);
-
+                    setProcessDocuments(processName, processVersion, processDirPath);
                     //set process documents
                     //set process tags
-                    //Finally remove the Contents of Imports folder
+                    //Finally remove the Imports folder
                 }
             }
         }
+    }
+
+    private void setProcessDocuments(String processName, String processVersion, String processDirPath)
+            throws ProcessCenterException, JSONException, RegistryException, IOException, SecurityException {
+
+        File docsFolder = new File(processDirPath + "/" + PROCESS_ZIP_DOCUMENTS_DIR);
+        if (docsFolder.exists()) {
+            File[] docFiles = docsFolder.listFiles();
+            for (File docFile : docFiles) {
+                if (docFile.isFile()) {
+                    String fileName = docFile.getName();
+
+                    String fileExt = FilenameUtils.getExtension(docFile.getPath());
+                    String docResourcePath =
+                            ProcessCenterConstants.DOC_CONTENT_PATH + processName + "/" + processVersion + "/" +
+                                    fileName;
+                    Resource docResource = reg.newResource();
+                    FileInputStream docFileInputStream = new FileInputStream(docFile);
+                    docResource.setContentStream(docFileInputStream);
+
+                    if (fileExt.equalsIgnoreCase("pdf")) {
+                        docResource.setMediaType("application/pdf");
+                    } else {
+                        docResource.setMediaType("application/msword");
+                    }
+                    String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                            processVersion;
+                    reg.put(docResourcePath, docResource);
+                    reg.addAssociation(docResourcePath, processAssetPath, ProcessCenterConstants.ASSOCIATION_TYPE);
+                    docFileInputStream.close();
+                }
+            }
+        }
+
     }
 
     /**
@@ -150,7 +186,7 @@ public class ProcessImport {
     public boolean isProcessesAlreadyAvailble() throws IOException, ProcessCenterException, RegistryException {
         File folder = new File(ImportExportConstants.IMPORTS_DIR);
         File[] listOfFiles = folder.listFiles();
-        if(listOfFiles!=null) {
+        if (listOfFiles != null) {
             if (listOfFiles[0].isDirectory() && listOfFiles.length == 1) {
                 String zipHomeDirectoryName = listOfFiles[0].getPath();
                 File packageFolder = new File(zipHomeDirectoryName);

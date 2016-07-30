@@ -1384,7 +1384,7 @@ public class ProcessStore {
     /**
      * Get details of all the documents (including Google docs) added to a certain process
      *
-     * @param resourcePath holds the process path
+     * @param resourcePath holds the process rxt path
      * @return document information
      */
     public String getUploadedDocumentDetails(String resourcePath) throws ProcessCenterException {
