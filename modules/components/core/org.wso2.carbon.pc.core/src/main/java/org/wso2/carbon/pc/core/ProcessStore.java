@@ -114,6 +114,8 @@ public class ProcessStore {
             String processName = processInfo.getString("processName");
             String processVersion = processInfo.getString("processVersion");
             String processOwner = processInfo.getString("processOwner");
+            String processUser = processInfo.getString("processUser");
+            String processUserEmail = processInfo.getString("processUserEmail");
             String processDescription = processInfo.getString("processDescription");
             String processTags = processInfo.getString("processTags");
             JSONArray subprocess = processInfo.getJSONArray("subprocess");
@@ -141,6 +143,8 @@ public class ProcessStore {
                 appendText(doc, overviewElement, "name", mns, processName);
                 appendText(doc, overviewElement, "version", mns, processVersion);
                 appendText(doc, overviewElement, "owner", mns, processOwner);
+                appendText(doc, overviewElement, "businessuser", mns, processUser);
+                appendText(doc, overviewElement, "businessuseremail", mns, processUserEmail);
                 appendText(doc, overviewElement, "createdtime", mns, processCreatedTime);
 
                 if ((processDescription != null) && (!processDescription.isEmpty())) {
@@ -243,6 +247,8 @@ public class ProcessStore {
             String processName = processInfo.getString("processName");
             String processVersion = processInfo.getString("processVersion");
             String processOwner = processInfo.getString("processOwner");
+            String processUser = processInfo.getString("processUser");
+            String processUserEmail = processInfo.getString("processUserEmail");
             String processDescription = processInfo.getString("processDescription");
             String processTags = processInfo.getString("processTags");
             JSONObject imageObj = processInfo.getJSONObject("image");
@@ -261,7 +267,8 @@ public class ProcessStore {
                     doc.getElementsByTagName("description").item(0).setTextContent(processDescription);
 
                     doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
-                    doc.getElementsByTagName("owner").item(0).setTextContent(processOwner);
+                    doc.getElementsByTagName("businessuser").item(0).setTextContent(processUser);
+                    doc.getElementsByTagName("businessuseremail").item(0).setTextContent(processUserEmail);
 
                 if (imageObj.length() != 0) {
                     if(doc.getElementsByTagName("images").getLength() != 0) {
@@ -812,6 +819,8 @@ public class ProcessStore {
                     Document processXML = stringToXML(processContent);
                     String processName = processXML.getElementsByTagName("name").item(0).getTextContent();
                     String processVersion = processXML.getElementsByTagName("version").item(0).getTextContent();
+                    String processUser = processXML.getElementsByTagName("businessuser").item(0).getTextContent();
+                    String processUserEmail = processXML.getElementsByTagName("businessuseremail").item(0).getTextContent();
                     String flowchartPath = processXML.getElementsByTagName("flowchart").item(0).getFirstChild()
                             .getTextContent();
 
@@ -820,6 +829,8 @@ public class ProcessStore {
                     processJSON.put("processid", processResource.getUUID());
                     processJSON.put("processname", processName);
                     processJSON.put("processversion", processVersion);
+                    processJSON.put("processUser",processUser);
+                    processJSON.put("processUserEmail",processUserEmail);
                     processJSON.put("flowchartpath", flowchartPath);
                     result.put(processJSON);
                 }

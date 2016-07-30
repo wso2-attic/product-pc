@@ -51,10 +51,31 @@
 
                             <div class="custom-form-right col-lg-10 col-md-8 col-sm-8 col-xs-12">
                                 <input onblur="blurIt()" type="text" placeholder="Enter Process Owner"
-                                       name="overview_owner"
+                                       name="overview_owner" disabled="disabled"
                                        id="pOwner" class="form-control" required="" value="{{cuser.username}}">
                             </div>
                         </div>
+
+                         <div class="form-group">
+                            <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Process user<sup
+                                class="required-field">*</sup></label>
+
+                            <div class="custom-form-right col-lg-10 col-md-8 col-sm-8 col-xs-12">
+                                <input onblur="blurIt()" type="text" placeholder="Enter Process User"
+                                   name="process_user"
+                                   id="pUser" class="form-control" required="" value="{{#if isUpdateView}}{{assets.tables.[0].fields.businessuser.value}}{{else}}{{cuser.username}}{{/if}}">
+                            </div>
+                        </div>
+
+                          <div class="form-group">
+                              <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Process user email<sup
+                                class="required-field">*</sup></label>
+                              <div class="custom-form-right col-lg-10 col-md-8 col-sm-8 col-xs-12">
+                                <input onblur="blurIt()" type="text" placeholder="Enter Process User email"
+                                   name="process_user_email"
+                                   id="pUserEmail" class="form-control" required="" value="{{#if isUpdateView}}{{assets.tables.[0].fields.businessuseremail.value}}{{else}}{{cuser.username}}{{/if}}">
+                              </div>
+                         </div>
 
                         <div class="form-group">
                             <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Description</label>

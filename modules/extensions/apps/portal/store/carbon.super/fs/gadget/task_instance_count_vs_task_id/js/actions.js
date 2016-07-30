@@ -46,14 +46,18 @@ function drawGraph() {
                     var jsonArrObj = JSON.parse('[' + responseStr + ']');
                     jsonObj[0].data = jsonArrObj;
 
+                    config.width = $('#chartA').width();
+                    config.height = $('#chartA').height();
                     var barChart = new vizg(jsonObj, config);
-                    barChart.draw("#chartA", [{type: "click", callback: callbackmethod}]);
+                    barChart.draw("#chartA", [{type: "click"}]);
 
                 }
                 else {
                     jsonObj[0].data = [];
+                    config.width = $('#chartA').width();
+                    config.height = $('#chartA').height();
                     var barChart = new vizg(jsonObj, config);
-                    barChart.draw("#chartA", [{type: "click", callback: callbackmethod}]);
+                    barChart.draw("#chartA", [{type: "click"}]);
                 }
             },
             error: function (xhr, status, error) {
@@ -68,7 +72,29 @@ function drawGraph() {
 }
 function loadProcessList(dropdownId) {
     var dropdownElementID = '#' + dropdownId;
+    var process= getUrlVars()["pname"];
 
+    $.getJSON("/portal/store/carbon.super/fs/gadget/task_instance_count_vs_task_id/js/meta-data-taskInstanceCountVsTaskID.json.js", function (result) {
+        $.each(result, function (i, field) {
+            jsonObj.push(field);
+            if(process) {
+                var el = document.createElement("option");
+                el.textContent = process;
+                el.value = process;
+                $(dropdownElementID).append(el);
+                $(dropdownElementID).attr("disabled", true);
+                $(dropdownElementID).selectpicker("refresh");
+                drawGraph();
+            } else {
+                loadList(dropdownElementID);
+            }
+        });
+
+    });
+
+}
+
+function loadList(dropdownElementID) {
     $.ajax({
         type: 'POST',
         url: '../../bpmn-analytics-explorer/process_definition_key_list',
@@ -82,21 +108,12 @@ function loadProcessList(dropdownId) {
                     el.value = opt;
                     $(dropdownElementID).append(el);
                 }
-
                 $(dropdownElementID).selectpicker("refresh");
-
-
-                $.getJSON("/portal/store/carbon.super/fs/gadget/task_instance_count_vs_task_id/js/meta-data-taskInstanceCountVsTaskID.json.js", function (result) {
-                    $.each(result, function (i, field) {
-                        jsonObj.push(field);
-                        drawGraph();
-                    });
-
-                });
             }
             else{
                 console.log('Empty Process ID list.');
             }
+            drawGraph();
         },
         error: function (xhr, status, error) {
             var errorJson = eval("(" + xhr.responseText + ")");
@@ -104,7 +121,6 @@ function loadProcessList(dropdownId) {
         }
     });
 }
-
 function selectPickerValChange(selectPickerElement) {
     var idx = selectPickerElement.options.selectedIndex;
     if (selectPickerElement.options[idx].value == 'other') {
@@ -124,4 +140,17 @@ function selectPickerValChange(selectPickerElement) {
 
 function isInteger(param) {
     return (Math.floor(param) == param && $.isNumeric(param));
+}
+
+function getUrlVars() {
+    var vars = [], hash;
+    var hashes = top.location.href.slice(top.location.href.indexOf('?') + 1).split('&');
+
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+
+    return vars;
 }

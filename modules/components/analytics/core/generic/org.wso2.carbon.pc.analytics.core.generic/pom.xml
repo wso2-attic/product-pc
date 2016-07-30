@@ -77,6 +77,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.wso2.pc</groupId>
+            <artifactId>org.wso2.carbon.pc.core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>

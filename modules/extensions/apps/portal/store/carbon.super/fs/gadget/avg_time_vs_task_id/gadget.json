@@ -2,7 +2,7 @@
   "id": "avg_time_vs_task_id",
   "title": "Average Time vs Task ID",
   "type": "gadget",
-  "category": "Subscribers",
+  "category": "gadget",
   "thumbnail": "gadget/avg_time_vs_task_id/index.png",
   "settings": {
     "personalize": true
@@ -10,11 +10,5 @@
   "data": {
     "url": "gadget/avg_time_vs_task_id/index.xml"
   },
-  "description": "This shows pc analytics charts",
-  "listen": {
-    "Daterange": {
-      "type": "dateRange",
-      "description": "Listening to date range"
-    }
-  }
+  "description": "This shows pc analytics charts"
 }

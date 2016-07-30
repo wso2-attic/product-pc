@@ -27,6 +27,7 @@
     </xsd:complexType>
     <xsd:complexType name="tAnalytics">
         <xsd:sequence>
+            <xsd:element name="Enabled" type="xsd:boolean"/>
             <xsd:element name="DASServerUrl" type="xsd:string"/>
             <xsd:element name="DASUsername" type="xsd:string"/>
             <xsd:element name="DASPassword" type="xsd:string"/>
@@ -34,6 +35,7 @@
     </xsd:complexType>
     <xsd:complexType name="tRuntimeEnvironment">
         <xsd:sequence>
+            <xsd:element name="Enabled" type="xsd:boolean"/>
             <xsd:element name="ServerUrl" type="xsd:string"/>
             <xsd:element name="Username" type="xsd:string"/>
             <xsd:element name="Password" type="xsd:string"/>

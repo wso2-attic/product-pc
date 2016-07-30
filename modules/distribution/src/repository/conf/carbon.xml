@@ -75,6 +75,7 @@
     -->
     <ServerRoles>
         <Role>${default.server.role}</Role>
+        <Role>${analytics.server.role}</Role>
     </ServerRoles>
 
     <!-- uncommnet this line to subscribe to a bam instance automatically -->

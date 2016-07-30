@@ -2,7 +2,7 @@
   "id": "avg_wait_time_vs_user_id",
   "title": "Average Wait Time vs User ID",
   "type": "gadget",
-  "category": "Subscribers",
+  "category": "gadget",
   "thumbnail": "gadget/avg_wait_time_vs_user_id/index.png",
   "settings": {
     "personalize": true
@@ -10,11 +10,5 @@
   "data": {
     "url": "gadget/avg_wait_time_vs_user_id/index.xml"
   },
-  "description": "This shows pc analytics charts",
-  "listen": {
-    "Daterange": {
-      "type": "dateRange",
-      "description": "Listening to date range"
-    }
-  }
+  "description": "This shows pc analytics charts"
 }

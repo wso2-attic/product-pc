@@ -4,10 +4,9 @@ var config = {
     highlight : "multi",
     charts : [{type: "bar",  y : "Avg Execution Time"}],
     maxLength: 200,
-    padding: {"top": 50, "left": 80, "bottom": 80, "right": 0},
-    transform:[60,70],
-    width: 800,
-    height: 400
+    xAxisAngle:true,
+    padding: {"top": 10, "left": 80, "bottom": 150, "right": 0},
+    transform:[60,70]
 }
 
 var jsonObj = [];
@@ -32,6 +31,7 @@ window.onload = function() {
             } else {
                 loadProcessList('taskIdAvgExecTimeProcessList');
             }
+            $('.collapse').collapse("hide");
 
         });
     });
@@ -48,19 +48,6 @@ function drawAvgExecuteTimeVsTaskIdResult() {
             'order': $('#taskIdAvgExecTimeOrder').val(),
             'count': parseInt($('#taskIdAvgExecTimeCount').val())
         };
-
-        $("g.mark-text").ready(function () {
-            $("g.mark-text").first().children().hide();
-            setTimeout(function () {
-                $("svg").css("height", "100%");
-                $("g.mark-text").first().children().show();
-                $("g.mark-text").first().children().attr("text-anchor", "end");
-                $("g.mark-text").first().children().each(function () {
-                    $(this).attr("transform", $(this).attr("transform") + " rotate(-65)");
-                });
-                $("#chartA").show();
-            }, 200);
-        })
 
         $.ajax({
             url: '../../bpmn-analytics-explorer/avg_time_vs_task_id',
@@ -81,7 +68,9 @@ function drawAvgExecuteTimeVsTaskIdResult() {
                 var jsonArrObj = JSON.parse('[' + responseStr + ']');
                 jsonObj[0].data = jsonArrObj;
 
-                $("#chartA").hide();
+                config.width = $('#chartA').width();
+                config.height = $('#chartA').height();
+
                 var barChart = new vizg(jsonObj, config);
                 barChart.draw("#chartA", [{type: "click", callback: callbackmethod}]);
             },
@@ -90,6 +79,7 @@ function drawAvgExecuteTimeVsTaskIdResult() {
                 alert(errorJson.message);
             }
         });
+        $('.collapse').collapse("hide");
     }
 }
 

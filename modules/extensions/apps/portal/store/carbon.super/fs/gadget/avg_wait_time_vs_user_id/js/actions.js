@@ -5,16 +5,14 @@ var config = {
     highlight : "multi",
     charts : [{type: "bar",  y : "Waiting Time"}],
     maxLength: 200,
-    padding: {"top": 50, "left": 80, "bottom": 80, "right": 0},
-    transform:[60,70],
-    width: 800,
-    height: 400
+    xAxisAngle:true,
+    padding: {"top": 10, "left": 80, "bottom": 100, "right": 0},
+    transform:[60,70]
 }
 
 var jsonObj = [];
 
 var callbackmethod = function(event, item) {
-    alert('chart clicked');
 }
 
 window.onload = function() {
@@ -24,6 +22,7 @@ window.onload = function() {
             loadTaskList('userIdAvgExecTimeTaskList');
         });
     });
+    $('.collapse').collapse("hide");
 }
 
 function drawAvgExecuteTimeVsUserIdResult() {
@@ -35,19 +34,6 @@ function drawAvgExecuteTimeVsUserIdResult() {
             'order': $('#userIdAvgExecTimeOrder').val(),
             'count': parseInt($('#userIdAvgExecTimeCount').val())
         };
-
-        $("g.mark-text").ready(function () {
-            $("g.mark-text").first().children().hide();
-            setTimeout(function () {
-                $("svg").css("height", "100%");
-                $("g.mark-text").first().children().show();
-                $("g.mark-text").first().children().attr("text-anchor", "end");
-                $("g.mark-text").first().children().each(function () {
-                    $(this).attr("transform", $(this).attr("transform") + " rotate(-65)");
-                });
-                $("#chartA").show();
-            }, 200);
-        })
 
         $.ajax({
             url: '../../bpmn-analytics-explorer/avg_wait_time_vs_user_id',
@@ -68,8 +54,7 @@ function drawAvgExecuteTimeVsUserIdResult() {
                 jsonObj[0].data = jsonArrObj;
 
                 config.width = $('#chartA').width();
-                config.height = $('#chartA').height() - $('#chartA').height()/5;
-                $("#chartA").hide();
+                config.height = $('#chartA').height();
                 var barChart = new vizg(jsonObj, config);
                 barChart.draw("#chartA", [{type: "click", callback: callbackmethod}]);
             },
@@ -78,6 +63,7 @@ function drawAvgExecuteTimeVsUserIdResult() {
                 alert(errorJson.message);
             }
         });
+        $('.collapse').collapse("hide");
     }
 }
 

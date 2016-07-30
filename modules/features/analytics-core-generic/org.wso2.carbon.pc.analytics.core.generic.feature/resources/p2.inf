@@ -1,0 +1,6 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.pc.analytics.core.generic_${feature.version}/pc-dashboards/json/process-monitoring.json,target:${installFolder}/../../resources/pc-dashboards/json/process-monitoring.json,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.pc.analytics.core.generic_${feature.version}/pc-dashboards/json/user-analytics.json,target:${installFolder}/../../resources/pc-dashboards/json/user-analytics.json,overwrite:true);\
+
+
+

@@ -17,7 +17,6 @@ package org.wso2.carbon.pc.analytics.core.kpi;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.HttpsURL;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.logging.Log;
@@ -29,6 +28,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Rest Client to communicate the analytics configuration details to the WSO2 BPS from PC
@@ -47,7 +47,7 @@ public class BPSConfigRestClient {
     public static void post(String dasConfigDetails, String processName, String processVersion)
             throws IOException, XMLStreamException, RuntimeException {
 
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Sending POST request to WSO2 BPS, to communicate the analytics configuration details and "
                     + "configure BPS for analytics");
         }
@@ -63,9 +63,10 @@ public class BPSConfigRestClient {
         postRequest.setRequestEntity(input);
         int returnCode = httpClient.executeMethod(postRequest);
 
-        InputStreamReader reader = new InputStreamReader((postRequest.getResponseBodyAsStream()));
+        InputStreamReader reader = new InputStreamReader((postRequest.getResponseBodyAsStream()), StandardCharsets
+                .UTF_8);
         BufferedReader br = new BufferedReader(reader);
-        String output = null;
+        String output;
         StringBuilder totalOutput = new StringBuilder();
 
         while ((output = br.readLine()) != null) {

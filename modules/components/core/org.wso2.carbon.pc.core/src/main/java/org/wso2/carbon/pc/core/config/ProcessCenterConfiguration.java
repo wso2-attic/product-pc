@@ -39,11 +39,13 @@ public class ProcessCenterConfiguration {
     private ProcessCenterDocument processCenterDocument;
 
     /* Configurations related to process analytics */
+    private boolean analyticsEnabled;
     private String analyticsServerURL;
     private String analyticsServerUsername;
     private String analyticsServerPassword;
 
     /* Configurations Related to Process Servers */
+    private boolean runtimeEnvironmentEnabled;
     private String runtimeEnvironmentURL;
     private String runtimeEnvironmentUsername;
     private String runtimeEnvironmentPassword;
@@ -117,6 +119,9 @@ public class ProcessCenterConfiguration {
      */
     private void initAnalytics(SecretResolver secretResolver, TAnalytics tAnalytics) {
 
+        // Get Enabled
+        this.analyticsEnabled = tAnalytics.getEnabled();
+        if (this.analyticsEnabled) {
             // Get URL
             this.analyticsServerURL = tAnalytics.getDASServerUrl();
             // Get Username
@@ -134,7 +139,10 @@ public class ProcessCenterConfiguration {
                     this.analyticsServerUsername = tAnalytics.getDASPassword();
                 }
             }
+
         }
+
+    }
 
 
     /**
@@ -145,6 +153,9 @@ public class ProcessCenterConfiguration {
      */
     private void initEnvironments(SecretResolver secretResolver, TRuntimeEnvironment tRuntimeEnvironment) {
 
+        // Get runtime Environment Enabled
+        this.runtimeEnvironmentEnabled = tRuntimeEnvironment.getEnabled();
+        if(this.runtimeEnvironmentEnabled){
             // Get runtime Server URL
             this.runtimeEnvironmentURL = tRuntimeEnvironment.getServerUrl();
             // Get Username
@@ -162,9 +173,19 @@ public class ProcessCenterConfiguration {
                     this.runtimeEnvironmentPassword = tRuntimeEnvironment.getPassword();
                 }
             }
+        }
     }
 
     // Getters  retrieve process center configuration elements
+
+    public boolean isAnalyticsEnabled() {
+        return analyticsEnabled;
+    }
+
+    public boolean isRuntimeEnvironmentEnabled() {
+        return runtimeEnvironmentEnabled;
+    }
+
     public String getAnalyticsServerURL() {
         return analyticsServerURL;
     }

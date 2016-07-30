@@ -139,6 +139,9 @@ asset.server = function(ctx) {
                    }, {
                         url: 'get_process_variables_list',
                         path: 'get_process_variables_list.jag'
+                   },{
+                        url: 'get_process_deployed_id',
+                        path: 'get_process_deployed_id.jag'
                    }
             ],
             pages: [{
