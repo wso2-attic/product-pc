@@ -136,7 +136,7 @@ public class ProcessCenterConfiguration {
                 }
             } else {
                 if (tAnalytics.getDASPassword() != null) {
-                    this.analyticsServerUsername = tAnalytics.getDASPassword();
+                    this.analyticsServerPassword = tAnalytics.getDASPassword();
                 }
             }
 

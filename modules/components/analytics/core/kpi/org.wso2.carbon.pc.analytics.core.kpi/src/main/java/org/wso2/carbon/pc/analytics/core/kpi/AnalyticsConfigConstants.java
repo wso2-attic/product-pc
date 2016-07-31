@@ -26,6 +26,8 @@ public class AnalyticsConfigConstants {
     public static final String EVENT_STREAM_ADMIN_SERVICE_NAME = "EventStreamAdminService";
     public static final String BPS_PROCESS_VAR_PUBLISH_REST_PATH = "/bpmn/analytics/publish-process-variables/";
 
+    public static final String IS_DAS_CONFIGED_TAG = "isDasConfigedForAnalytics";
+
     // Make the constructor private, since it is a utility class
     private AnalyticsConfigConstants() {
     }

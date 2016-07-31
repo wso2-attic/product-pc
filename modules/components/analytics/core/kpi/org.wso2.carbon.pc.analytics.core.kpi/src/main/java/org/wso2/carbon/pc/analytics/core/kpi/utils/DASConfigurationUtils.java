@@ -16,8 +16,16 @@
 
 package org.wso2.carbon.pc.analytics.core.kpi.utils;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.wso2.carbon.pc.analytics.core.kpi.AnalyticsConfigConstants;
+import org.wso2.carbon.pc.analytics.core.kpi.internal.PCAnalyticsServerHolder;
+import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
+import org.wso2.carbon.pc.core.ProcessStore;
+import org.wso2.carbon.registry.api.RegistryException;
+import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.registry.core.session.UserRegistry;
 
 import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
@@ -41,6 +49,44 @@ public class DASConfigurationUtils {
     public static boolean isDASAnalyticsConfigured()
             throws ProcessCenterException {
         return getInstance().getProcessCenter().getProcessCenterConfiguration().isAnalyticsEnabled();
+    }
+
+    public static boolean isDASAnalyticsConfigured(String processName, String processVersion)
+            throws ProcessCenterException {
+        String processContent = null;
+        ProcessStore ps = new ProcessStore();
+        try {
+            RegistryService registryService = PCAnalyticsServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+                String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                        processVersion;
+                org.wso2.carbon.registry.core.Resource resource = reg.get(processAssetPath);
+                processContent = new String((byte[]) resource.getContent());
+                Document doc = ps.stringToXML(processContent);
+
+                Element rootElement = doc.getDocumentElement();
+                Element propertiesElement = (Element) rootElement.getElementsByTagName("properties").item(0);
+
+                if (propertiesElement.getElementsByTagName(AnalyticsConfigConstants.IS_DAS_CONFIGED_TAG).getLength() > 0
+                        && propertiesElement.getElementsByTagName(AnalyticsConfigConstants.IS_DAS_CONFIGED_TAG).item(0)
+                        .getTextContent().equals("true")) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (RegistryException e) {
+            String errMsg = "Governance Registry access error, while checking whether "
+                    + "analytics configurations are done for process: " + processName + ":" + processVersion;
+            throw new ProcessCenterException(errMsg, e);
+        } catch (Exception e) {
+            String errMsg =
+                    "Error, while checking whether analytics configurations are done for process: " + processName + ":"
+                            + processVersion;
+            throw new ProcessCenterException(errMsg, e);
+        }
+        return false;
     }
 
     /**
