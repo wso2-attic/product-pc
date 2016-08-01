@@ -27,8 +27,6 @@ public class AnalyticsConfigConstants {
     public static final String BPS_PROCESS_VAR_PUBLISH_REST_PATH = "/bpmn/analytics/publish-process-variables/";
     public static final String IS_DAS_CONFIGED_TAG= "isDasConfigedForAnalytics";
 
-    public static final String IS_DAS_CONFIGED_TAG = "isDasConfigedForAnalytics";
-
     // Make the constructor private, since it is a utility class
     private AnalyticsConfigConstants() {
     }
