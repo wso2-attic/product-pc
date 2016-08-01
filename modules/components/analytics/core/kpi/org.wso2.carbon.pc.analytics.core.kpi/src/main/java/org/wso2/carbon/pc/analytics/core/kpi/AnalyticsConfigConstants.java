@@ -20,12 +20,19 @@ package org.wso2.carbon.pc.analytics.core.kpi;
  */
 public class AnalyticsConfigConstants {
 
+    public static final String IS_DAS_CONFIGED_TAG= "isDasConfigedForAnalytics";
+    public static final String EVENT_STREAM_NAME = "eventStreamName";
+    public static final String EVENT_STREAM_VERSION = "eventStreamVersion";
+    public static final String EVENT_STREAM_ID = "eventStreamId";
+    public static final String EVENT_STREAM_DESCRIPTION = "eventStreamDescription";
+    public static final String EVENT_STREAM_NICK_NAME = "eventStreamNickName";
+    public static final String EVENT_RECEIVER_NAME = "eventReceiverName";
+    public static final String PROCESS_VARIABLES = "processVariables";
     public static final String SERVICES = "services";
     public static final String AUTHENTICATION_ADMIN = "AuthenticationAdmin";
     public static final String REQUEST_HEADER_BASIC = "Basic";
     public static final String EVENT_STREAM_ADMIN_SERVICE_NAME = "EventStreamAdminService";
     public static final String BPS_PROCESS_VAR_PUBLISH_REST_PATH = "/bpmn/analytics/publish-process-variables/";
-    public static final String IS_DAS_CONFIGED_TAG= "isDasConfigedForAnalytics";
 
     // Make the constructor private, since it is a utility class
     private AnalyticsConfigConstants() {
