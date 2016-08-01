@@ -67,7 +67,7 @@ public class ProcessTextTestCase extends PCIntegrationBaseTest {
         cookieHeader = "JSESSIONID=" + jSessionId;
         queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
-        genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl + "create_process",
+        genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl + "create_process",
                 MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, requestBody, queryMap,
                 headerMap, cookieHeader);
     }
@@ -78,7 +78,7 @@ public class ProcessTextTestCase extends PCIntegrationBaseTest {
         queryMap.put(PCIntegrationConstants.PROCESS_VERSION, processVersion);
         queryMap.put(PCIntegrationConstants.PROCESS_TEXT, processText);
 
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "save_process_text", MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
                 requestBody, queryMap, headerMap, cookieHeader);
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
@@ -91,7 +91,7 @@ public class ProcessTextTestCase extends PCIntegrationBaseTest {
     public void getProcessText() throws XPathExpressionException, JSONException {
         queryMap.put("process_text_path", "/processText/" + processName + "/" + processVersion);
 
-        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherProcessAPIBaseUrl +
                 "get_process_text", queryMap, headerMap, cookieHeader);
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
         Assert.assertTrue(responseObject.get("content").toString().

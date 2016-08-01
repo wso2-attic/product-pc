@@ -88,15 +88,15 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
 
         //Adding sub process
         subProcessID = TestUtils.addProcess(readFile(subProcessResourcePath), cookieHeader,
-                publisherAPIBaseUrl);
+                publisherProcessAPIBaseUrl);
 
         //Adding predecessor process
         predecessorProcessID = TestUtils.addProcess(readFile(predecessorProcessResourcePath),
-                cookieHeader, publisherAPIBaseUrl);
+                cookieHeader, publisherProcessAPIBaseUrl);
 
         //Adding successor process
         successorProcessID = TestUtils.addProcess(readFile(successorProcessResourcePath),
-                cookieHeader, publisherAPIBaseUrl);
+                cookieHeader, publisherProcessAPIBaseUrl);
 
     }
 
@@ -120,7 +120,7 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
         jsonObject.getJSONArray("successor").put(new JSONObject(gson.toJson(successorProcess)));
 
         String processID = TestUtils.addProcess(jsonObject.toString()
-                , cookieHeader, publisherAPIBaseUrl);
+                , cookieHeader, publisherProcessAPIBaseUrl);
         Assert.assertFalse(processID.contains("error"),
                 "Error while creating process with associate processes");
     }
@@ -156,7 +156,7 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
         queryMap.put("deleteSubprocessDetails",
                 URLEncoder.encode(associateProcessDeleteRequest("deleteSubprocess",
                         PROCESS_NAME,PROCESS_VERSION,subProcess),PCIntegrationConstants.UTF_8));
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "delete_subprocess", MediaType.APPLICATION_FORM_URLENCODED,
                 MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
         Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().
@@ -169,7 +169,7 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
         queryMap.put("deletePredecessorDetails",
                 URLEncoder.encode(associateProcessDeleteRequest("deletePredecessor",
                         PROCESS_NAME,PROCESS_VERSION,predecessorProcess),PCIntegrationConstants.UTF_8));
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "delete_Predecessor", MediaType.APPLICATION_FORM_URLENCODED,
                 MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
         Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().
@@ -182,7 +182,7 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
         queryMap.put("deleteSuccessorDetails",
                 URLEncoder.encode(associateProcessDeleteRequest("deleteSuccessor",
                         PROCESS_NAME,PROCESS_VERSION,successorProcess),PCIntegrationConstants.UTF_8));
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "delete_successor", MediaType.APPLICATION_FORM_URLENCODED,
                 MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
         Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().

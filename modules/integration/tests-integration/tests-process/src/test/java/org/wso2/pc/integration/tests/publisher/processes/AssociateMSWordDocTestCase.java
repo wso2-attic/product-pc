@@ -68,7 +68,7 @@ public class AssociateMSWordDocTestCase extends PCIntegrationBaseTest{
         String requestBody = readFile(resourcePath);
         queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "create_process", MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
                 requestBody, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
@@ -86,7 +86,7 @@ public class AssociateMSWordDocTestCase extends PCIntegrationBaseTest{
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                 File.separator + "MSDoc" + File.separator + "TestMSDoc.doc";
-        String url = publisherAPIBaseUrl + "upload_documents";
+        String url = publisherProcessAPIBaseUrl + "upload_documents";
         PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_MSDOC_NAME,
                 ASSOCIATES_MSDOC_SUMMARY,PCIntegrationConstants.MSDOC_EXTENSION,"NA","file",
                 "TestProcess1","1.0",cookieHeader,url,PCIntegrationConstants.APPLICATION_MSWORD_TYPE);
@@ -103,7 +103,7 @@ public class AssociateMSWordDocTestCase extends PCIntegrationBaseTest{
                 PROCESS_NAME,PROCESS_VERSION,
                 ASSOCIATED_MSDOC_NAME,
                 PCIntegrationConstants.MSDOC_EXTENSION));
-        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherProcessAPIBaseUrl +
                 "download_document",queryMap,headerMap,cookieHeader);
         Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().
                 equals("false"),"Associated MSDoc doesn't exit");
@@ -116,7 +116,7 @@ public class AssociateMSWordDocTestCase extends PCIntegrationBaseTest{
                 "artifacts" + File.separator + "json" + File.separator + "process" + File.separator+ "delete-msdoc-document.json");
         queryMap.put("removeDocumentDetails", URLEncoder.
                 encode(PDFDeleteRequest,PCIntegrationConstants.UTF_8));
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "delete_document",MediaType.APPLICATION_FORM_URLENCODED,
                 MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,

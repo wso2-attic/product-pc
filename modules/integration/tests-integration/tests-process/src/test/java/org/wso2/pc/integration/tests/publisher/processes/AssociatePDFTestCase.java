@@ -68,7 +68,7 @@ public class AssociatePDFTestCase extends PCIntegrationBaseTest{
         String requestBody = readFile(resourcePath);
         queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "create_process", MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
                 requestBody, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
@@ -86,7 +86,7 @@ public class AssociatePDFTestCase extends PCIntegrationBaseTest{
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                 File.separator + "PDF" + File.separator + "TestFile.pdf";
-        String url = publisherAPIBaseUrl + "upload_documents";
+        String url = publisherProcessAPIBaseUrl + "upload_documents";
         PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_PDF_NAME,
                 ASSOCIATED_PDF_SUMMARY,PCIntegrationConstants.PDF_EXTENSION,"NA","file",
                 "TestProcess1","1.0",cookieHeader,url,PCIntegrationConstants.APPLICATION_PDF_TYPE);
@@ -100,7 +100,7 @@ public class AssociatePDFTestCase extends PCIntegrationBaseTest{
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                 File.separator + "PDF" + File.separator + "TestFile.pdf";
-        String url = publisherAPIBaseUrl + "upload_documents";
+        String url = publisherProcessAPIBaseUrl + "upload_documents";
         PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_PDF_NAME,
                 ASSOCIATED_PDF_SUMMARY,PCIntegrationConstants.PDF_EXTENSION,"NA","file",
                 "TestProcess1","1.0",cookieHeader,url,PCIntegrationConstants.APPLICATION_PDF_TYPE);
@@ -117,7 +117,7 @@ public class AssociatePDFTestCase extends PCIntegrationBaseTest{
                 PROCESS_NAME,PROCESS_VERSION,
                 ASSOCIATED_PDF_NAME,
                 PCIntegrationConstants.PDF_EXTENSION));
-        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherProcessAPIBaseUrl +
                         "download_document",queryMap,headerMap,cookieHeader);
         Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().
                 equals("false"),"Associated PDF doesn't exit");
@@ -130,7 +130,7 @@ public class AssociatePDFTestCase extends PCIntegrationBaseTest{
                 "artifacts" + File.separator + "json" + File.separator + "process" + File.separator+ "delete-pdf-document.json");
         queryMap.put("removeDocumentDetails", URLEncoder.
                 encode(PDFDeleteRequest,PCIntegrationConstants.UTF_8));
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "delete_document",MediaType.APPLICATION_FORM_URLENCODED,
                 MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,

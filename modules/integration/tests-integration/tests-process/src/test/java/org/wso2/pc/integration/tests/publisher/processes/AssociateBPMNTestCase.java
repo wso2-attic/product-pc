@@ -74,7 +74,7 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
         String requestBody = readFile(resourcePath);
         queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "create_process", MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
                 requestBody, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
@@ -93,7 +93,7 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                 File.separator + "BPMN"
                 + File.separator + "userTaskProcess.bpmn20.xml";
-        String url = publisherAPIBaseUrl + "upload_bpmn";
+        String url = publisherProcessAPIBaseUrl + "upload_bpmn";
         PostMethod httpMethod = ArtifactUploadUtil.uploadBPMN(resourcePath1,
                 PROCESS_NAME, PROCESS_VERSION, "BPMN", cookieHeader, url);
         Assert.assertTrue(httpMethod.getStatusCode() == 200,
@@ -114,7 +114,7 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
     public void deleteBPMN() throws JSONException {
         queryMap.put(PCIntegrationConstants.PROCESS_NAME, PROCESS_NAME);
         queryMap.put(PCIntegrationConstants.PROCESS_VERSION,PROCESS_VERSION);
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                 "delete_bpmn",MediaType.APPLICATION_FORM_URLENCODED,MediaType.APPLICATION_JSON,null,
                 queryMap,headerMap,cookieHeader);
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,

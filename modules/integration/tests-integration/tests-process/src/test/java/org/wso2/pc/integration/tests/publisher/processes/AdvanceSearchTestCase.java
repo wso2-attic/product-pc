@@ -116,7 +116,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
             queryMap = new HashMap<>();
             requestBody = readFile(resourcePath);
             queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
-            genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl + "create_process", MediaType.APPLICATION_JSON,
+            genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl + "create_process", MediaType.APPLICATION_JSON,
                     MediaType.APPLICATION_JSON, requestBody, queryMap, headerMap, cookieHeader);
         }
         uploadMSDoc();
@@ -334,7 +334,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         queryMap.put(PCIntegrationConstants.PROCESS_TEXT, SAMPLE_PROESS_TEXT);
 
         ClientResponse response = genericRestClient
-                .geneticRestRequestPost(publisherAPIBaseUrl + "save_process_text", MediaType.APPLICATION_JSON,
+                .geneticRestRequestPost(publisherProcessAPIBaseUrl + "save_process_text", MediaType.APPLICATION_JSON,
                         MediaType.APPLICATION_JSON, requestBody, queryMap, headerMap, cookieHeader);
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
         Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().equals("false"),
@@ -350,7 +350,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                 File.separator + "PDF" + File.separator + PCIntegrationConstants.TEST_PDF_NAME;
-        String url = publisherAPIBaseUrl + "upload_documents";
+        String url = publisherProcessAPIBaseUrl + "upload_documents";
         PostMethod httpMethod = ArtifactUploadUtil
                 .uploadDocument(resourcePath1, ASSOCIATED_PDF_NAME, ASSOCIATED_PDF_SUMMARY,
                         PCIntegrationConstants.PDF_EXTENSION, "NA", "file", TEST_PROCESS_AS2_NAME,
@@ -369,7 +369,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                 File.separator + "MSDoc" + File.separator + PCIntegrationConstants.TEST_MSDOC_NAME;
-        String url = publisherAPIBaseUrl + "upload_documents";
+        String url = publisherProcessAPIBaseUrl + "upload_documents";
         PostMethod httpMethod = ArtifactUploadUtil
                 .uploadDocument(resourcePath1, ASSOCIATED_MSDOC_NAME, ASSOCIATES_MSDOC_SUMMARY,
                         PCIntegrationConstants.MSDOC_EXTENSION, "NA", "file", TEST_PROCESS_AS3_NAME,

@@ -77,7 +77,7 @@ public class AssociateURLTestCase extends PCIntegrationBaseTest{
         String requestBody = readFile(resourcePath);
         queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "create_process", MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
                 requestBody, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
@@ -95,7 +95,7 @@ public class AssociateURLTestCase extends PCIntegrationBaseTest{
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                 File.separator + "other" + File.separator + "EmptyFile";
-        String url = publisherAPIBaseUrl + "upload_documents";
+        String url = publisherProcessAPIBaseUrl + "upload_documents";
         PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_GDOC_NAME,
                 ASSOCIATES_GDOC_SUMMARY,"",GDOC_URL,"file", PROCESS_NAME,PROCESS_VERSION,
                 cookieHeader,url,PCIntegrationConstants.APPLICATION_OCTET_STREAM);
@@ -128,7 +128,7 @@ public class AssociateURLTestCase extends PCIntegrationBaseTest{
                 "artifacts" + File.separator + "json" + File.separator + "process" + File.separator+ "delete-gdoc-document.json");
         queryMap.put("removeDocumentDetails", URLEncoder.
                 encode(PDFDeleteRequest,PCIntegrationConstants.UTF_8));
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "delete_document",MediaType.APPLICATION_FORM_URLENCODED,
                 MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
