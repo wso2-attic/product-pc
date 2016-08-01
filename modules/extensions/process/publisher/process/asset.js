@@ -406,9 +406,10 @@ asset.renderer = function(ctx) {
             }
 
             var processName = page.assets.tables[0].fields.name.value; //tables[0].fields["Name"].value;
-            page.processName = page.assets.tables[0].fields.name.value;
-            page.processVersion = page.assets.tables[0].fields.version.value;
             var processVersion = page.assets.tables[0].fields.version.value;
+            page.processName = processName;
+            page.processVersion = processVersion;
+
             try {
 
                 var processTags = ps.getProcessTags(processName, processVersion);
@@ -421,7 +422,7 @@ asset.renderer = function(ctx) {
             importPackage(org.wso2.carbon.pc.analytics.core.generic.utils);
             page.DASAnalyticsEnabled = AnalyticsUtils.isDASAnalyticsActivated();
             importPackage(org.wso2.carbon.pc.analytics.core.kpi.utils);
-            page.DASAnalyticsConfigured = DASConfigurationUtils.isDASAnalyticsConfigured();
+            page.DASAnalyticsConfigured = DASConfigurationUtils.isDASAnalyticsConfigured(processName, processVersion);
 
             if (page.DASAnalyticsConfigured) {
                 var processVariablesJObArrStr = ps.getProcessVariablesList(resourcePath);
