@@ -44,7 +44,8 @@ public class PCIntegrationBaseTest {
     protected SecurityAdminServiceClient securityAdminServiceClient;
     protected LoginLogoutClient loginLogoutClient;
     protected User userInfo;
-    protected String publisherAPIBaseUrl;
+    protected String publisherProcessAPIBaseUrl;
+    protected String publisherPackageAPIBaseUrl;
 
     protected AutomationContext storeContext;
     protected AutomationContext publisherContext;
@@ -64,8 +65,10 @@ public class PCIntegrationBaseTest {
         backendURL = automationContext.getContextUrls().getBackEndUrl();
         webAppURL = automationContext.getContextUrls().getWebAppURL();
         userInfo = automationContext.getContextTenant().getContextUser();
-        publisherAPIBaseUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
+        publisherProcessAPIBaseUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
                 "publisher/assets/process/apis/");
+        publisherPackageAPIBaseUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
+                "publisher/assets/package/apis/");
     }
 
     protected void initPublisher(String productGroupName, String instanceName,

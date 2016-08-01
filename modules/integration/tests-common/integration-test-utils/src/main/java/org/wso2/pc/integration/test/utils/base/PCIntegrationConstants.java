@@ -19,6 +19,7 @@ package org.wso2.pc.integration.test.utils.base;
 public class PCIntegrationConstants {
 
     public static final int RESPONSE_CODE_OK = 200;
+    public static final int RESPONSE_CODE_CREATED = 201;
     public static final String PROCESS_NAME = "processName";
     public static final String PROCESS_VERSION = "processVersion";
     public static final String PROCESS_TEXT = "processText";
