@@ -31,6 +31,7 @@ import org.wso2.carbon.pc.core.ProcessCenterException;
 import org.wso2.carbon.pc.core.assets.common.AssetResource;
 import org.wso2.carbon.pc.core.assets.common.BPMNResource;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
+import org.wso2.carbon.pc.core.util.Utils;
 import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Resource;
@@ -51,6 +52,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -162,8 +164,7 @@ public class Package extends AssetResource {
                             packageZipContentResource);
                     InputStream inputStream = packageZipContentResource.getContentStream();
                     List<String> newBpmnResources = extractPackageAndStoreBPMNFiles(userRegistry,
-                            packageBPMNRegistryPath, packageBPMNContentRegistryPath, inputStream,
-                            packageFileName, packageName, packageVersion);
+                            packageBPMNContentRegistryPath,inputStream,packageName,packageVersion);
 
                     // If bar does not contain any bpmn files we will send invalidate message
                     if (newBpmnResources.size() == 0) {
@@ -219,12 +220,15 @@ public class Package extends AssetResource {
 
 
                     String packageAssetContent = xmlToString(doc);
+                    String packageFileChecksum = Utils.getMD5Checksum(packageZipContentResource.getContentStream());
+
                     Resource packageAsset = userRegistry.newResource();
                     packageAsset.setContent(packageAssetContent);
                     packageAsset.setMediaType(ProcessCenterConstants.PACKAGE_MEDIA_TYPE);
                     packageAsset.setProperty(ProcessCenterConstants.PACKAGE_BPMN_ARCHIVE_FILE_NAME, packageFileName);
                     packageAsset.setProperty(ProcessCenterConstants.BPMN_RESOURCES_COUNT, String.valueOf
                             (newBpmnResources.size()));
+                    packageAsset.setProperty(ProcessCenterConstants.CHECKSUM,packageFileChecksum);
                     userRegistry.put(packageRegistryPath, packageAsset);
 
                     // apply tags to the resource
@@ -277,7 +281,7 @@ public class Package extends AssetResource {
                     " version " + packageVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
-        } catch (IOException e) {
+        } catch (NoSuchAlgorithmException | IOException e) {
             String errMsg = "Error occurred while accessing package archive file for creating package " + packageName +
                     " file " + packageFileName;
             log.error(errMsg, e);
@@ -365,12 +369,10 @@ public class Package extends AssetResource {
                         }
 
                         List<String> bpmnResources = extractPackageAndStoreBPMNFiles(userRegistry,
-                                packageBPMNRegistryPath, packageBPMNContentRegistryPath, packageInputStream,
-                                packageFileName, packageName, packageVersion);
+                                packageBPMNContentRegistryPath, packageInputStream,packageName, packageVersion);
 
                         // If bar does not contain any bpmn files we will send invalidate message
                         if (bpmnResources.size() == 0) {
-                            userRegistry.rollbackTransaction();
                             response.put(ProcessCenterConstants.ERROR, true);
                             response.put(ProcessCenterConstants.MESSAGE, "Package file doesn't contain any bpmn files");
                             return response.toString();
@@ -397,10 +399,12 @@ public class Package extends AssetResource {
                                 packageZipContentResource);
 
                         // Add new package file to package asset
+                        String packageFileChecksum = Utils.getMD5Checksum(packageFileStream);
                         packageAsset.setProperty(ProcessCenterConstants.PACKAGE_BPMN_ARCHIVE_FILE_NAME,
                                 newPackageFileName);
                         packageAsset.setProperty(ProcessCenterConstants.BPMN_RESOURCES_COUNT, String.valueOf
                                 (bpmnResources.size()));
+                        packageAsset.setProperty(ProcessCenterConstants.CHECKSUM, packageFileChecksum);
                         // Remove old package file
                         if (!packageFileName.equals(newPackageFileName)) {
                             userRegistry.delete(packageBPMNRegistryPath + "/" + packageFileName);
@@ -499,7 +503,7 @@ public class Package extends AssetResource {
                     " version " + packageVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
-        } catch (IOException e) {
+        } catch (NoSuchAlgorithmException | IOException e) {
             String errMsg = "Error occurred while accessing package archive file for updating package " + packageName +
                     " file " + newPackageFileName;
             log.error(errMsg, e);
@@ -614,8 +618,14 @@ public class Package extends AssetResource {
                                         }
                                     String bpmnProcessName = bpmnRegistryResource.getProperty
                                             (ProcessCenterConstants.PROCESS_NAME);
+                                    String processDeploymentID = bpmnRegistryResource.getProperty
+                                            (ProcessCenterConstants.PROCESS_DEPLOYMENT_ID);
                                     if (bpmnProcessName != null) {
                                         bpmnResource.put(ProcessCenterConstants.PROCESS_NAME, bpmnProcessName);
+                                    }
+                                    if (processDeploymentID != null) {
+                                        bpmnResource.put(ProcessCenterConstants.PROCESS_DEPLOYMENT_ID,
+                                                processDeploymentID);
                                     }
                                     bpmnResource.put(ProcessCenterConstants.PACKAGE_BPMN_ARCHIVE_FILE_NAME,
                                             bpmnRegistryResource.getPath()
@@ -816,10 +826,8 @@ public class Package extends AssetResource {
 
     /**
      * @param userRegistry                   User registry where we need to store the bpmn files
-     * @param packageBPMNRegistryPath        Package bpmn archive path
      * @param packageBPMNContentRegistryPath Extracted bpmn files archive path
      * @param packageFileInputStream         Package file stream
-     * @param packageFileName                Package file name
      * @param packageName                    Name of the package
      * @param packageVersion                 Version of the package
      * @return bpmn file count
@@ -828,10 +836,8 @@ public class Package extends AssetResource {
      * @throws ParserConfigurationException
      * @throws ProcessCenterException
      */
-    private List<String> extractPackageAndStoreBPMNFiles(UserRegistry userRegistry, String packageBPMNRegistryPath,
-                                                         String packageBPMNContentRegistryPath, InputStream
-                                                                 packageFileInputStream, String packageFileName, String
-                                                                 packageName, String packageVersion) throws
+    private List<String> extractPackageAndStoreBPMNFiles(UserRegistry userRegistry,String packageBPMNContentRegistryPath, InputStream
+            packageFileInputStream,  String packageName, String packageVersion) throws
             RegistryException,
             IOException, ParserConfigurationException, ProcessCenterException {
         List<String> bpmnResources = new LinkedList<String>();

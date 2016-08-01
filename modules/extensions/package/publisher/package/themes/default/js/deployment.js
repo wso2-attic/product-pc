@@ -19,6 +19,30 @@
 
 $(document).ready(function() {
 
+    $(".associate-deployment-grid-view").click(function () {
+        var deploymentID = $(this).closest('tr').children('td:eq(0)').text();
+        var path = caramel.url('/assets/package/apis/associations/deployment');
+        $.ajax({
+            url: path,
+            type: 'POST',
+            data: {
+                'packageName': $('#packageName').val(),
+                'packageVersion': $('#packageVersion').val(),
+                'deploymentID': deploymentID
+            },
+            success: function (data) {
+                if (data.error === false) {
+                    messages.alertSuccess(data.message);
+                    location.reload();
+                } else {
+                    messages.alertError(data.message);
+                }
+            },
+            error: function () {
+                messages.alertError('Error occurred while deploying package');
+            }
+        });
+    });
     $('#btn-deploy-con').on('click', function(e) {
         var path = caramel.url('/assets/package/apis/deployments/');
         $.ajax({
@@ -42,15 +66,15 @@ $(document).ready(function() {
         });
     });
 
-    $('#btn-undeploy-con').on('click', function(e) {
-        var path = caramel.url('/assets/package/apis/deployments');
+    $('#btn-delete-association').on('click', function(e) {
+        var path = caramel.url('/assets/package/apis/associations/deployment');
         $.ajax({
             url: path + "?packageName=" + $('#packageName').val() 
             + "&packageVersion=" + $('#packageVersion').val(),
             type: 'DELETE',
             success: function (data) {
                 if (data.error === false) {
-                    messages.alertSuccess("Undeployment Successful");
+                    messages.alertSuccess("Assocition removed Successfully");
                    location.reload();
                 } else {
                     messages.alertError(data.message);
