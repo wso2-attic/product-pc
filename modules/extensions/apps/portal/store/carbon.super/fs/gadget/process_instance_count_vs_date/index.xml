@@ -75,6 +75,7 @@
                         </a>
                         <div id="inline-form" class="form-inline collapse" role="form">
                               <div class="form-group" style="padding-right:0">
+                                 <label><input id="processInstanceCountDateDateRangeCheckBox" type="checkbox" value="">Show complete date range</label>
                                 <select id="processInstanceCountDateProcessList" class="selectpicker form-control" multiple></select>
                               </div>
                             <button class="btn btn-primary" onclick="drawDateVsProcessInstanceCountResult()">Apply Filter</button>

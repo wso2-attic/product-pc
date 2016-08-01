@@ -1,6 +1,6 @@
 {
   "id": "process_instance_count_vs_date",
-  "title": "Process instance count vs Date",
+  "title": "Process completions over time",
   "type": "gadget",
   "category": "Subscribers",
   "thumbnail": "gadget/process_instance_count_vs_date/index.png",
