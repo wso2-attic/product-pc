@@ -861,6 +861,8 @@ function getMainProcess() {
 
 
 function readUpdatedSubprocess(currentObj, count) {
+    pname = $("#pName").val();
+    pversion = $("#pVersion").val();
     var subprocessInput = $(currentObj).parent().closest("tr").find("input").val();
     if (subprocessInput == '') {
         alertify.error('Subprocess field is empty.');
@@ -929,6 +931,8 @@ function readUpdatedSubprocess(currentObj, count) {
 }
 
 function readUpdatedSuccessor(currentObj, count) {
+    pname = $("#pName").val();
+    pversion = $("#pVersion").val();
     var successorInput = $(currentObj).parent().closest("tr").find("input").val();
 
     if (successorInput == '') {
@@ -995,6 +999,8 @@ function readUpdatedSuccessor(currentObj, count) {
 }
 
 function readUpdatedPredecessor(currentObj, count) {
+    pname = $("#pName").val();
+    pversion = $("#pVersion").val();
     var predecessorInput = $(currentObj).parent().closest("tr").find("input").val();
 
     if (predecessorInput == '') {
