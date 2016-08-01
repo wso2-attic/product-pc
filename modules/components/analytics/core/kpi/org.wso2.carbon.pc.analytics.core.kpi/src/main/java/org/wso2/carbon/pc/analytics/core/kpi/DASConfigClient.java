@@ -20,7 +20,6 @@ package org.wso2.carbon.pc.analytics.core.kpi;
  * (initiator class in the module)
  */
 
-import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -127,24 +126,10 @@ public class DASConfigClient {
                     + " and the given password";
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
-        } catch (AxisFault | JSONException | XMLStreamException e) {
-            String errMsg = "Error in DAS configuration, using :" + dasConfigDetails;
+        } catch (JSONException | XMLStreamException | IOException | ProcessCenterException | RuntimeException e) {
+            String errMsg = "Error in DAS configuration, using : " + dasConfigDetails;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
-        } catch (RemoteException e) {
-            String errMsg = "Error in DAS configuration, using :" + dasConfigDetails;
-            log.error(errMsg, e);
-            throw new ProcessCenterException(errMsg, e);
-        } catch (IOException e) {
-            String errMsg = "Error in DAS configuration, using :" + dasConfigDetails;
-            log.error(errMsg, e);
-            throw new ProcessCenterException(errMsg, e);
-        } catch (ProcessCenterException e) {
-            log.error(e.getMessage(), e);
-            throw new ProcessCenterException(e.getMessage(), e);
-        } catch (RuntimeException e) {
-            log.error(e.getMessage(), e);
-            throw new ProcessCenterException(e.getMessage(), e);
         } finally {
             //logging out from DAS Admin Services
             if (loginServiceClient != null) {
