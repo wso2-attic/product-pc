@@ -59,6 +59,16 @@
                         $("#to").val(data.to);
                         drawExecutionTimeVsTaskInstanceIdResult();
                     });
+
+                    gadgets.Hub.subscribe('channel2', function(topic, data, subscriberData) {
+                        if(data.type === 'clear') {
+                            return;
+                        }
+                        wso2.gadgets.controls.showGadget();
+                        $("#taskInstanceIdExecTimeTaskList").val(data.task_id);
+                        $("#taskInstanceCountDateTaskList").change();
+                        drawExecutionTimeVsTaskInstanceIdResult();
+                    });
                 };
         </script>
 

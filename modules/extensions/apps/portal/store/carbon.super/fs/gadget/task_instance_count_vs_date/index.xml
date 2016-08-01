@@ -79,6 +79,16 @@
                 $("#to").val(data.to);
                 drawGraph();
             });
+
+            gadgets.Hub.subscribe('channel2', function(topic, data, subscriberData) {
+                if(data.type === 'clear') {
+                    return;
+                }
+                wso2.gadgets.controls.showGadget();
+                $("#taskInstanceCountDateTaskList option[value='" + data.task_id + "']").prop("selected", true);
+                $("#taskInstanceCountDateTaskList").change();
+                drawGraph();
+            });
         };
     </script>
 

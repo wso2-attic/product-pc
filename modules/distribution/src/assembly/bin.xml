@@ -443,14 +443,14 @@
         </fileSet>
         <fileSet>
             <directory>../components/analytics/udf/org.wso2.carbon.pc.analytics.udf/target</directory>
-            <outputDirectory>${project.artifactId}-${pc.version}/analytics</outputDirectory>
+            <outputDirectory> ${pom.artifactId}-${pom.version}/repository/components/lib</outputDirectory>
             <includes>
                 <include>**/PCAnalyticsUDF.jar</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>../components/analytics/capp/org.wso2.carbon.pc.analytics.capp/target</directory>
-            <outputDirectory>${project.artifactId}-${pc.version}/analytics</outputDirectory>
+            <outputDirectory> ${pom.artifactId}-${pom.version}/repository/deployment/server/carbonapps</outputDirectory>
             <includes>
                 <include>**/*.car</include>
             </includes>
@@ -1041,14 +1041,14 @@
         </file>
 
         <!--spark udf conf file-->
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/analytics/spark/spark-udf-config.xml
-            </source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/analytics/spark/
-            </outputDirectory>
-            <fileMode>755</fileMode>
-        </file>
+        <!--<file>-->
+            <!--<source>-->
+                <!--../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/analytics/spark/spark-udf-config.xml-->
+            <!--</source>-->
+            <!--<outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/analytics/spark/-->
+            <!--</outputDirectory>-->
+            <!--<fileMode>755</fileMode>-->
+        <!--</file>-->
 
         <!--spark log4j.properties file-->
         <file>
@@ -1159,6 +1159,17 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/cep
             </outputDirectory>
             <filtered>true</filtered>
+        </file>
+
+
+        <!--PC analytics related files-->
+        <file>
+            <source>
+                src/repository/conf/spark-udf-config.xml
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/analytics/spark/
+            </outputDirectory>
+            <fileMode>755</fileMode>
         </file>
 
     </files>

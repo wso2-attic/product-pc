@@ -23,6 +23,16 @@
                  tags="analytics">
         <Require feature="dynamic-height"/>
         <Require feature="wso2-gadgets-controls"/>
+        <Require feature="pubsub-2">
+            <Param name="topics">
+                <![CDATA[
+                <Topic title="PC Analytics"
+                    name="org.wso2.ues.samples.ch"
+                    type="object"
+                    subscribe="true"/>
+               ]]>
+            </Param>
+        </Require>
     </ModulePrefs>
 
     <Content type="html">
@@ -117,6 +127,18 @@
             });
             loadTaskList('taskInstanceCountUserIdTaskList');
         }
+
+        gadgets.HubSettings.onConnect = function() {
+            gadgets.Hub.subscribe('channel2', function(topic, data, subscriberData) {
+                if(data.type === 'clear') {
+                    return;
+                }
+                wso2.gadgets.controls.showGadget();
+                $('#taskInstanceCountUserIdTaskList').val(data.task_id);
+                $('#taskInstanceCountUserIdTaskList').change();
+                drawGraph();
+            });
+        };
 
     </script>
 </body>

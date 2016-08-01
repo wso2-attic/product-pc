@@ -15,6 +15,10 @@
     "channel1": {
       "type": "dateRange",
       "description": "Listening to date range"
+    },
+    "channel2": {
+      "type": "taskID",
+      "description": "Listening to task id"
     }
   }
 }
