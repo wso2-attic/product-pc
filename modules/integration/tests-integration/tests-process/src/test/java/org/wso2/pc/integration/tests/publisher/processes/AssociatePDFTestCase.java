@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package org.wso2.pc.integration.tests.publisher;
+package org.wso2.pc.integration.tests.publisher.processes;
 
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.wink.client.ClientResponse;
@@ -32,15 +32,15 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
-public class AssociateMSWordDocTestCase extends PCIntegrationBaseTest{
+public class AssociatePDFTestCase extends PCIntegrationBaseTest{
 
     private String cookieHeader;
     private GenericRestClient genericRestClient;
     private HashMap<String, String> queryMap;
     private HashMap<String, String> headerMap;
     private String resourcePath;
-    private static final String ASSOCIATED_MSDOC_NAME = "TestMSDocument";
-    private static final String ASSOCIATES_MSDOC_SUMMARY = "TestMSDoc Summary";
+    private static final String ASSOCIATED_PDF_NAME = "TestPDFDocument";
+    private static final String ASSOCIATED_PDF_SUMMARY = "TestPDFSummary";
     private static final String PROCESS_NAME = "TestProcess1";
     private static final String PROCESS_VERSION = "1.0";
 
@@ -53,7 +53,7 @@ public class AssociateMSWordDocTestCase extends PCIntegrationBaseTest{
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
         resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                + "json" + File.separator + "create-process.json";
+                + "json" + File.separator + "process" + File.separator+ "create-process.json";
         JSONObject objSessionPublisher =
                 new JSONObject(TestUtils.authenticate(publisherUrl, genericRestClient,
                         automationContext.getSuperTenant().getTenantAdmin().getUserName(),
@@ -68,7 +68,7 @@ public class AssociateMSWordDocTestCase extends PCIntegrationBaseTest{
         String requestBody = readFile(resourcePath);
         queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "create_process", MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
                 requestBody, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
@@ -82,47 +82,61 @@ public class AssociateMSWordDocTestCase extends PCIntegrationBaseTest{
 
     @Test(groups = {"org.wso2.pc"}, description = "Associating PDF to the process",
             dependsOnMethods = "addProcess")
-    public void uploadMSDoc() throws IOException {
+    public void uploadPDF() throws IOException {
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
-                File.separator + "MSDoc" + File.separator + "TestMSDoc.doc";
-        String url = publisherAPIBaseUrl + "upload_documents";
-        PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_MSDOC_NAME,
-                ASSOCIATES_MSDOC_SUMMARY,PCIntegrationConstants.MSDOC_EXTENSION,"NA","file",
-                "TestProcess1","1.0",cookieHeader,url,PCIntegrationConstants.APPLICATION_MSWORD_TYPE);
+                File.separator + "PDF" + File.separator + "TestFile.pdf";
+        String url = publisherProcessAPIBaseUrl + "upload_documents";
+        PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_PDF_NAME,
+                ASSOCIATED_PDF_SUMMARY,PCIntegrationConstants.PDF_EXTENSION,"NA","file",
+                "TestProcess1","1.0",cookieHeader,url,PCIntegrationConstants.APPLICATION_PDF_TYPE);
         Assert.assertTrue(httpMethod.getStatusCode() == 200,
                 "Wrong status code ,Expected 200 ,Received " + httpMethod.getStatusCode());
     }
 
+    @Test(groups = {"org.wso2.pc"}, description = "Associating copy PDF to the process",
+            dependsOnMethods = "uploadPDF")
+    public void uploadDuplicatePDF() throws IOException, JSONException {
+        queryMap.put("type", "process");
+        String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
+                File.separator + "PDF" + File.separator + "TestFile.pdf";
+        String url = publisherProcessAPIBaseUrl + "upload_documents";
+        PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_PDF_NAME,
+                ASSOCIATED_PDF_SUMMARY,PCIntegrationConstants.PDF_EXTENSION,"NA","file",
+                "TestProcess1","1.0",cookieHeader,url,PCIntegrationConstants.APPLICATION_PDF_TYPE);
+        Assert.assertTrue(new JSONObject(httpMethod.getResponseBodyAsString()).get("error").toString().equals("true"),
+                "Expected error didn't receive while uploading duplicate document");
+    }
+
     @Test(groups = {"org.wso2.pc"}, description = "Download associated PDF document",
-            dependsOnMethods = "uploadMSDoc")
-    public void checkMSDoc() throws JSONException {
+            dependsOnMethods = "uploadPDF")
+    public void checkPDF() throws JSONException {
 
         queryMap.put("process_doc_path",String.format("%s/%s/%s/%s.%s",
                 PCIntegrationConstants.DOC_CONTENT,
                 PROCESS_NAME,PROCESS_VERSION,
-                ASSOCIATED_MSDOC_NAME,
-                PCIntegrationConstants.MSDOC_EXTENSION));
-        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherAPIBaseUrl +
-                "download_document",queryMap,headerMap,cookieHeader);
+                ASSOCIATED_PDF_NAME,
+                PCIntegrationConstants.PDF_EXTENSION));
+        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherProcessAPIBaseUrl +
+                        "download_document",queryMap,headerMap,cookieHeader);
         Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().
-                equals("false"),"Associated MSDoc doesn't exit");
+                equals("false"),"Associated PDF doesn't exit");
     }
 
-    @Test(groups = {"org.wso2.pc"}, description = "MSDoc deleting test case",
-            dependsOnMethods = "checkMSDoc")
-    public void deleteMSDOC() throws JSONException, IOException {
+    @Test(groups = {"org.wso2.pc"}, description = "PDF deleting test case",
+            dependsOnMethods = "checkPDF")
+    public void deletePDF() throws JSONException, IOException {
         String PDFDeleteRequest = readFile(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "json" + File.separator + "delete-msdoc-document.json");
+                "artifacts" + File.separator + "json" + File.separator + "process" + File.separator+ "delete-pdf-document.json");
         queryMap.put("removeDocumentDetails", URLEncoder.
                 encode(PDFDeleteRequest,PCIntegrationConstants.UTF_8));
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "delete_document",MediaType.APPLICATION_FORM_URLENCODED,
                 MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
                 "Expected 200 OK, Received " + response.getStatusCode());
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
         Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
-                equals("false"),"Couldn't delete associated MSDoc");
+                equals("false"),"Couldn't delete associated PDF");
     }
 }

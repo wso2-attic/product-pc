@@ -106,7 +106,7 @@ public class AnalyticsUtils {
      * @return the base url of DAS
      */
     public static String getURL(String path) {
-        return getInstance().getProcessCenter().getProcessCenterConfiguration().getAnalyticsServerURL() + path;
+        return getInstance().getProcessCenter().getProcessCenterConfiguration().getAnalyticsServerURL() + "/" + path;
     }
 
 

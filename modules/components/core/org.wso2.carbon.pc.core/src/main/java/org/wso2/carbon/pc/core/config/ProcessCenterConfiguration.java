@@ -123,7 +123,12 @@ public class ProcessCenterConfiguration {
         this.analyticsEnabled = tAnalytics.getEnabled();
         if (this.analyticsEnabled) {
             // Get URL
-            this.analyticsServerURL = tAnalytics.getDASServerUrl();
+            if (tAnalytics.getDASServerUrl().endsWith("/")) {
+                this.analyticsServerURL = tAnalytics.getDASServerUrl().substring(0, tAnalytics.getDASServerUrl()
+                        .length() - 1);
+            } else {
+                this.analyticsServerURL = tAnalytics.getDASServerUrl();
+            }
             // Get Username
             this.analyticsServerUsername = tAnalytics.getDASUsername();
             // Get Password
@@ -155,14 +160,20 @@ public class ProcessCenterConfiguration {
 
         // Get runtime Environment Enabled
         this.runtimeEnvironmentEnabled = tRuntimeEnvironment.getEnabled();
-        if(this.runtimeEnvironmentEnabled){
+        if (this.runtimeEnvironmentEnabled) {
             // Get runtime Server URL
-            this.runtimeEnvironmentURL = tRuntimeEnvironment.getServerUrl();
+            if (tRuntimeEnvironment.getServerUrl().endsWith("/")) {
+                this.runtimeEnvironmentURL = tRuntimeEnvironment.getServerUrl().substring(0, tRuntimeEnvironment
+                        .getServerUrl().length() - 1);
+            } else {
+                this.runtimeEnvironmentURL = tRuntimeEnvironment.getServerUrl();
+            }
             // Get Username
             this.runtimeEnvironmentUsername = tRuntimeEnvironment.getUsername();
             // Get Password
             if (secretResolver != null && secretResolver.isInitialized()
-                    && secretResolver.isTokenProtected(ProcessCenterConstants.RUNTIME_ENVIRONMENT_PASSWORD_SECRET_ALIAS)) {
+                    && secretResolver.isTokenProtected(ProcessCenterConstants
+                    .RUNTIME_ENVIRONMENT_PASSWORD_SECRET_ALIAS)) {
                 this.runtimeEnvironmentPassword = secretResolver.resolve(ProcessCenterConstants
                         .RUNTIME_ENVIRONMENT_PASSWORD_SECRET_ALIAS);
                 if (log.isDebugEnabled()) {

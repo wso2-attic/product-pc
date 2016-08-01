@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package org.wso2.pc.integration.tests.publisher;
+package org.wso2.pc.integration.tests.publisher.processes;
 
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.wink.client.ClientResponse;
@@ -26,7 +26,12 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
-import org.wso2.pc.integration.test.utils.base.*;
+import org.wso2.pc.integration.test.utils.base.ArtifactUploadUtil;
+import org.wso2.pc.integration.test.utils.base.GenericRestClient;
+import org.wso2.pc.integration.test.utils.base.PCIntegrationBaseTest;
+import org.wso2.pc.integration.test.utils.base.PCIntegrationConstants;
+import org.wso2.pc.integration.test.utils.base.RegistryProviderUtil;
+import org.wso2.pc.integration.test.utils.base.TestUtils;
 import org.wso2.pc.integration.test.utils.base.models.AdvancedGenericSearchData;
 
 import javax.ws.rs.core.MediaType;
@@ -106,12 +111,12 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
 
         //add 3 testing processes
         for (String fileName : createProcessFiles) {
-            resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "json"
-                    + File.separator + fileName;
+            resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "json" +
+                    File.separator + "process" + File.separator + fileName;
             queryMap = new HashMap<>();
             requestBody = readFile(resourcePath);
             queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
-            genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl + "create_process", MediaType.APPLICATION_JSON,
+            genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl + "create_process", MediaType.APPLICATION_JSON,
                     MediaType.APPLICATION_JSON, requestBody, queryMap, headerMap, cookieHeader);
         }
         uploadMSDoc();
@@ -329,7 +334,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         queryMap.put(PCIntegrationConstants.PROCESS_TEXT, SAMPLE_PROESS_TEXT);
 
         ClientResponse response = genericRestClient
-                .geneticRestRequestPost(publisherAPIBaseUrl + "save_process_text", MediaType.APPLICATION_JSON,
+                .geneticRestRequestPost(publisherProcessAPIBaseUrl + "save_process_text", MediaType.APPLICATION_JSON,
                         MediaType.APPLICATION_JSON, requestBody, queryMap, headerMap, cookieHeader);
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
         Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().equals("false"),
@@ -345,7 +350,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                 File.separator + "PDF" + File.separator + PCIntegrationConstants.TEST_PDF_NAME;
-        String url = publisherAPIBaseUrl + "upload_documents";
+        String url = publisherProcessAPIBaseUrl + "upload_documents";
         PostMethod httpMethod = ArtifactUploadUtil
                 .uploadDocument(resourcePath1, ASSOCIATED_PDF_NAME, ASSOCIATED_PDF_SUMMARY,
                         PCIntegrationConstants.PDF_EXTENSION, "NA", "file", TEST_PROCESS_AS2_NAME,
@@ -364,7 +369,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                 File.separator + "MSDoc" + File.separator + PCIntegrationConstants.TEST_MSDOC_NAME;
-        String url = publisherAPIBaseUrl + "upload_documents";
+        String url = publisherProcessAPIBaseUrl + "upload_documents";
         PostMethod httpMethod = ArtifactUploadUtil
                 .uploadDocument(resourcePath1, ASSOCIATED_MSDOC_NAME, ASSOCIATES_MSDOC_SUMMARY,
                         PCIntegrationConstants.MSDOC_EXTENSION, "NA", "file", TEST_PROCESS_AS3_NAME,

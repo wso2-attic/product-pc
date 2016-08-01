@@ -29,11 +29,11 @@ $(document).ready(function() {
                 'packageVersion': $('#packageVersion').val()
             },
             success: function (data) {
-            	messages.alertSuccess(data);
                 if (data.error === false) {
-                   location.reload();
+                    messages.alertSuccess(data.message);
+                    location.reload();
                 } else {
-                    messages.alertError(data.content);
+                    messages.alertError(data.message);
                 }
             },
             error: function () {
@@ -72,11 +72,11 @@ $(document).ready(function() {
                 'packageVersion': $('#packageVersion').val()
             },
             success: function (data) {
-                messages.alertSuccess(data);
                 if (data.error === false) {
-                   location.reload();
+                    messages.alertSuccess(data.message);
+                    location.reload();
                 } else {
-                    messages.alertError(data.content);
+                    messages.alertError(data.message);
                 }
             },
             error: function () {

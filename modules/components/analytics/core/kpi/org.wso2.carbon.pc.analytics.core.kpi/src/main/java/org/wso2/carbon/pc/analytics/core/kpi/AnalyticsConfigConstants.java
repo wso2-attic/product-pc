@@ -25,6 +25,7 @@ public class AnalyticsConfigConstants {
     public static final String REQUEST_HEADER_BASIC = "Basic";
     public static final String EVENT_STREAM_ADMIN_SERVICE_NAME = "EventStreamAdminService";
     public static final String BPS_PROCESS_VAR_PUBLISH_REST_PATH = "/bpmn/analytics/publish-process-variables/";
+    public static final String IS_DAS_CONFIGED_TAG= "isDasConfigedForAnalytics";
 
     public static final String IS_DAS_CONFIGED_TAG = "isDasConfigedForAnalytics";
 

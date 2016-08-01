@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package org.wso2.pc.integration.tests.publisher;
+package org.wso2.pc.integration.tests.publisher.processes;
 
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.wink.client.ClientResponse;
@@ -62,7 +62,7 @@ public class AssociateURLTestCase extends PCIntegrationBaseTest{
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
         resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                + "json" + File.separator + "create-process.json";
+                + "json" + File.separator + "process" + File.separator+ "create-process.json";
         JSONObject objSessionPublisher =
                 new JSONObject(TestUtils.authenticate(publisherUrl, genericRestClient,
                         automationContext.getSuperTenant().getTenantAdmin().getUserName(),
@@ -77,7 +77,7 @@ public class AssociateURLTestCase extends PCIntegrationBaseTest{
         String requestBody = readFile(resourcePath);
         queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "create_process", MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
                 requestBody, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
@@ -95,7 +95,7 @@ public class AssociateURLTestCase extends PCIntegrationBaseTest{
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                 File.separator + "other" + File.separator + "EmptyFile";
-        String url = publisherAPIBaseUrl + "upload_documents";
+        String url = publisherProcessAPIBaseUrl + "upload_documents";
         PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_GDOC_NAME,
                 ASSOCIATES_GDOC_SUMMARY,"",GDOC_URL,"file", PROCESS_NAME,PROCESS_VERSION,
                 cookieHeader,url,PCIntegrationConstants.APPLICATION_OCTET_STREAM);
@@ -125,10 +125,10 @@ public class AssociateURLTestCase extends PCIntegrationBaseTest{
             dependsOnMethods = "checkGDoc")
     public void deleteGDOC() throws JSONException, IOException {
         String PDFDeleteRequest = readFile(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "json" + File.separator + "delete-gdoc-document.json");
+                "artifacts" + File.separator + "json" + File.separator + "process" + File.separator+ "delete-gdoc-document.json");
         queryMap.put("removeDocumentDetails", URLEncoder.
                 encode(PDFDeleteRequest,PCIntegrationConstants.UTF_8));
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "delete_document",MediaType.APPLICATION_FORM_URLENCODED,
                 MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,

@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package org.wso2.pc.integration.tests.publisher;
+package org.wso2.pc.integration.tests.publisher.processes;
 
 import org.apache.wink.client.ClientResponse;
 import org.json.JSONException;
@@ -62,7 +62,7 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
         resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                + "json" + File.separator + "create-process.json";
+                + "json" + File.separator + "process" + File.separator+ "create-process.json";
         JSONObject objSessionPublisher =
                 new JSONObject(TestUtils.authenticate(publisherUrl, genericRestClient,
                         automationContext.getSuperTenant().getTenantAdmin().getUserName(),
@@ -78,7 +78,7 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
         String requestBody = readFile(resourcePath);
         queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "create_process" , MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
                 requestBody, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
@@ -94,12 +94,12 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
             dependsOnMethods = "addProcess")
     public void addFlowChart() throws IOException, JSONException {
         String flowchartBody = readFile(FrameworkPathUtil.getSystemResourceLocation() + "artifacts"
-                + File.separator + "json" + File.separator + "TestFlowChart.json");
+                + File.separator + "json" + File.separator + "process" + File.separator+ "TestFlowChart.json");
         queryMap.put(PCIntegrationConstants.PROCESS_NAME,PROCESS_NAME);
         queryMap.put(PCIntegrationConstants.PROCESS_VERSION,PROCESS_VERSION);
         queryMap.put("flowchartJson",URLEncoder.encode(flowchartBody,PCIntegrationConstants.UTF_8));
 
-        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
                         "upload_flowchart" , MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
                 null, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
@@ -116,7 +116,7 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
     public void checkFlowchart() throws JSONException {
         queryMap.put("flowchartPath",String.format("%s%s/%s",
                 PCIntegrationConstants.REG_FLOWCHART_PATH, PROCESS_NAME, PROCESS_VERSION));
-        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherProcessAPIBaseUrl +
                 "get_process_flowchart",queryMap,headerMap,cookieHeader);
         Assert.assertTrue(new JSONObject(response.getEntity(String.class)).
                 get(PCIntegrationConstants.RESPONSE_ERROR).toString().equals("false"),
@@ -126,7 +126,7 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
     @Test(groups = {"org.wso2.pc"}, description = "Deleting flowchart testcase",
             dependsOnMethods = "checkFlowchart")
     public void deleteFlowchart() throws JSONException {
-        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherAPIBaseUrl +
+        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherProcessAPIBaseUrl +
                 "delete_flowchart",queryMap,headerMap,cookieHeader);
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
                 "Expected 200 OK, Received " + response.getStatusCode());

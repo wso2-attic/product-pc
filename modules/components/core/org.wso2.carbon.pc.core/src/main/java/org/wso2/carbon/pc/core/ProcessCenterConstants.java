@@ -33,26 +33,34 @@ public class ProcessCenterConstants {
     public static final String PROCESS = "process";
     public static final String VERSION = "version";
     public static final String PROVIDER = "provider";
+    public static final String USERNAME = "username";
     public static final String OVERVIEW = "overview";
     public static final String DESCRIPTION = "description";
     public static final String CREATED_TIME = "createdtime";
     public static final String IMAGES = "images";
     public static final String THUMBNAIL = "thumbnail";
-    public static final String PROCESS_ID = "processID";
-    public static final String DEPLOYMENT_ID = "deploymentId";
+    public static final String PROCESS_DEPLOYMENT_ID = "processDeploymentID";
+    public static final String DEPLOYMENT_ID = "deploymentID";
     public static final String METADATA = "metadata";
     public static final String METADATA_NAMESPACE = "http://www.wso2.org/governance/metadata";
     public static final String NOT_APPLICABLE = "NA";
     public static final String IMAGE_THUMBNAIL_VALUE = "images_thumbnail";
     public static final String ERROR = "error";
     public static final String MESSAGE = "message";
+    public static final String STATUS = "status";
     public static final String NO_FILE_SPECIFIED = "no-file-specified";
+    public static final String BPMN_RESOURCE = "bpmnResources";
     /**
      * Package asset
      */
     public static final String PACKAGE_BPMN_ARCHIVE_FILE_NAME = "packageBpmnFileName";
     public static final String BPMN_RESOURCES_COUNT = "bpmn_resources_count";
     public static final String PACKAGE_PROCESS_ASSOCIATION = "package_process";
+    public static final String RUNTIME_ENVIRONMENT = "runtimeEnvironment";
+    public static final String CHECKSUM = "checksum";
+    public static final String LATEST_CHECKSUM = "latestChecksum";
+    public static final String LAST_UPDATED_TIME = "lastUpdatedTime";
+
     /**
      * Service Clients
      */
@@ -137,14 +145,16 @@ public class ProcessCenterConstants {
     public static final String EVENT_STREAM_NICK_NAME = "eventStreamNickName";
     public static final String EVENT_RECEIVER_NAME = "eventReceiverName";
     public static final String PROCESS_DEFINITION_ID = "processDefinitionId";
-
     //BPMN related constants
     public static final String TYPE = "type";
     public static final String ACTIVITI_FORM_PROPERTY = "activiti:formProperty";
     public static final String VARIABLE = "variable";
-
     // Make the constructor private, since it is a utility class
     private ProcessCenterConstants() {
+    }
+
+    public enum PACKAGE_STATUS {
+        UPLOADED, DEPLOYED, UNDEPLOYED
     }
 
     public static class AUDIT {

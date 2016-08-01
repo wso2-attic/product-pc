@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ WSO2 Inc. licenses this file to you under the Apache License,
  ~ Version 2.0 (the "License"); you may not use this file except
@@ -20,7 +20,7 @@
     <!--Configurations for Process Analytics-->
     <Analytics>
         <Enabled>false</Enabled>
-        <DASServerUrl>https://localhost:9445</DASServerUrl>
+        <DASServerUrl>https://localhost:9443</DASServerUrl>
         <DASUsername>admin</DASUsername>
         <DASPassword>admin</DASPassword>
     </Analytics>

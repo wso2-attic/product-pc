@@ -406,9 +406,10 @@ asset.renderer = function(ctx) {
             }
 
             var processName = page.assets.tables[0].fields.name.value; //tables[0].fields["Name"].value;
-            page.processName = page.assets.tables[0].fields.name.value;
-            page.processVersion = page.assets.tables[0].fields.version.value;
             var processVersion = page.assets.tables[0].fields.version.value;
+            page.processName = processName;
+            page.processVersion = processVersion;
+
             try {
 
                 var processTags = ps.getProcessTags(processName, processVersion);
