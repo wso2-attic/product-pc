@@ -29,7 +29,7 @@
  var processName = String(request.getParameter("processName"));
  var processVersion = String(request.getParameter("processVersion"));
  var process = new Process(processName,processVersion, userName);
- var processVariables = process.getBpmn().getProcessVariables();
+
  var responseObj = {};
 
  var server = require('store').server;
@@ -37,13 +37,17 @@
  var user = server.current(session);
 
  try {
-     var status = process.getBpmn().getProcessVariables();
+      var processVariables = null;
+      var processBPMN = process.getBpmn();
+      if (processBPMN != null){
+         processVariables= processBPMN.getProcessVariables();
+      }
      responseObj.error = false;
-     responseObj.content = status;
+     responseObj.content = processVariables;
      print(stringify(responseObj));
  } catch (error) {
      responseObj.error = true;
-     responseObj.content = "Process creating error.";
+     responseObj.content = "Error while extracting process variables";
      print(stringify(responseObj));
  }
  %>
