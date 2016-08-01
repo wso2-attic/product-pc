@@ -37,7 +37,7 @@ window.onload = function() {
 }
 
 var callbackmethod = function(event, item) {
-    
+
 }
 
 function drawDateVsProcessInstanceCountResult() {
@@ -66,9 +66,18 @@ function drawDateVsProcessInstanceCountResult() {
         type: 'POST',
         data: {'filters': JSON.stringify(body)},
         success: function (data) {
+
             var responseJsonArr = [];
             if(!$.isEmptyObject(data))
                 responseJsonArr = JSON.parse(data);
+
+            if ($('#processInstanceCountDateDateRangeCheckBox').is(":checked")) {
+                responseJsonArr = fillEmptyDates(responseJsonArr);
+                config.charts[0].type = "line";
+            } else {
+                responseJsonArr = formatDates(responseJsonArr);
+                config.charts[0].type = "bar";
+            }
 
             var responseStr = '';
             for(var i = 0; i < responseJsonArr.length; i++) {
@@ -93,6 +102,67 @@ function drawDateVsProcessInstanceCountResult() {
     });
     $('.collapse').collapse("hide");
 }
+
+function formatDates(valueDates) {
+    var filledDates = [];
+
+    for (var i = 0; i < valueDates.length; i++) {
+        var fTime = valueDates[i].finishTime;
+        var processInstanceCount = valueDates[i].processInstanceCount;
+        var fDate = new Date(fTime);
+        var formatedDate = getFormatedDate(fDate);
+        filledDates.push({finishTime:formatedDate, processInstanceCount:processInstanceCount});
+    }
+    return filledDates;
+}
+
+/**
+ Given a map M1 : (date -> value), creates a new map M2 : (date -> value), where each missing date in M1
+ between its lowest and highest dates are filled with dates with 0 values.
+ */
+function fillEmptyDates(valueDates) {
+    var valuesMap = {};
+    var minDate = Number.MAX_VALUE;
+    var maxDate = 0;
+
+    for (var i = 0; i < valueDates.length; i++) {
+        var fTime = valueDates[i].finishTime;
+        if (fTime < minDate) {
+            minDate = fTime;
+        }
+        if (fTime > maxDate) {
+            maxDate = fTime;
+        }
+
+        var processInstanceCount = valueDates[i].processInstanceCount;
+        var fDate = new Date(fTime);
+        var formatedDate = getFormatedDate(fDate);
+        valuesMap[formatedDate] = processInstanceCount;
+    }
+    var minD = new Date(minDate);
+    var maxD = new Date(maxDate);
+    var dayInMillis = 1000 * 60 * 60 * 24;
+
+    var numDays = Math.ceil((maxDate - minDate) / dayInMillis);
+
+    var filledDates = [];
+    for (var k = 0; k < numDays + 1; k++) {
+        var fillDate = new Date(minDate);
+        fillDate.setDate(fillDate.getDate() + k);
+        var formatedDate = getFormatedDate(fillDate);
+        var piCount = valuesMap[formatedDate];
+        if (piCount == null) piCount = 0;
+
+        filledDates.push({finishTime:formatedDate, processInstanceCount:piCount});
+    }
+    return filledDates;
+}
+
+function getFormatedDate(fDate) {
+    var formatedDate = fDate.getFullYear() + "-" + (fDate.getMonth() + 1) + "-" + fDate.getDate();
+    return formatedDate;
+}
+
 
 function loadProcessList(dropdownId) {
     var dropdownElementID = '#' + dropdownId;

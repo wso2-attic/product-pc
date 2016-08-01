@@ -47,7 +47,7 @@ import java.io.IOException;
 public class Process {
 
     private static final Log log = LogFactory.getLog(Process.class);
-    private BPMN bpmn;
+    private BPMN bpmn = null;
     private String processName;
     private String processVersion;
     private String username;
@@ -62,7 +62,10 @@ public class Process {
         this.processName = processName;
         this.processVersion = processVersion;
         this.username = username;
-        this.bpmn = new BPMN(getBpmnResource());
+        Document bpmn = getBpmnResource();
+        if(bpmn != null) {
+            this.bpmn = new BPMN(bpmn);
+        }
     }
 
     /**
