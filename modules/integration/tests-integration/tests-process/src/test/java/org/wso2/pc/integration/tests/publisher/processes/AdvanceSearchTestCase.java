@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package org.wso2.pc.integration.tests.publisher;
+package org.wso2.pc.integration.tests.publisher.processes;
 
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.wink.client.ClientResponse;
@@ -26,7 +26,12 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
-import org.wso2.pc.integration.test.utils.base.*;
+import org.wso2.pc.integration.test.utils.base.ArtifactUploadUtil;
+import org.wso2.pc.integration.test.utils.base.GenericRestClient;
+import org.wso2.pc.integration.test.utils.base.PCIntegrationBaseTest;
+import org.wso2.pc.integration.test.utils.base.PCIntegrationConstants;
+import org.wso2.pc.integration.test.utils.base.RegistryProviderUtil;
+import org.wso2.pc.integration.test.utils.base.TestUtils;
 import org.wso2.pc.integration.test.utils.base.models.AdvancedGenericSearchData;
 
 import javax.ws.rs.core.MediaType;
@@ -106,8 +111,8 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
 
         //add 3 testing processes
         for (String fileName : createProcessFiles) {
-            resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "json"
-                    + File.separator + fileName;
+            resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "json" +
+                    File.separator + "process" + File.separator + fileName;
             queryMap = new HashMap<>();
             requestBody = readFile(resourcePath);
             queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));

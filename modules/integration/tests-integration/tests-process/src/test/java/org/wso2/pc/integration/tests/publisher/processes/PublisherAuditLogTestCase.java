@@ -1,4 +1,4 @@
-package org.wso2.pc.integration.tests.publisher;
+package org.wso2.pc.integration.tests.publisher.processes;
 
 import org.apache.wink.client.ClientResponse;
 import org.json.JSONArray;
@@ -10,7 +10,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
-import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.pc.integration.test.utils.base.*;
 
 import javax.ws.rs.core.MediaType;
@@ -18,7 +17,6 @@ import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class PublisherAuditLogTestCase extends PCIntegrationBaseTest{
@@ -41,7 +39,7 @@ public class PublisherAuditLogTestCase extends PCIntegrationBaseTest{
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
         resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                + "json" + File.separator + "create-process.json";
+                + "json" + File.separator + "process" + File.separator+ "create-process.json";
         JSONObject objSessionPublisher =
                 new JSONObject(TestUtils.authenticate(publisherUrl, genericRestClient,
                         automationContext.getSuperTenant().getTenantAdmin().getUserName(),

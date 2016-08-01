@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package org.wso2.pc.integration.tests.publisher;
+package org.wso2.pc.integration.tests.publisher.processes;
 
 
 import org.apache.wink.client.ClientResponse;
@@ -63,7 +63,7 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
         cookieHeader1 = login(automationContextUser1);
 
         resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                + "json" + File.separator + "process.json";
+                + "json" + File.separator + "process" + File.separator+ "process.json";
         requestBody = readFile(resourcePath);
         queryMap.put("processInfo", URLEncoder.encode(requestBody, "UTF-8"));
         APIUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
@@ -125,7 +125,7 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
         queryMap = new HashMap<>();
         requestBody = String.
                 format(readFile(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                                + "json" + File.separator + "publisherPermissionAdd.json"),
+                                + "json" + File.separator + "process" + File.separator+ "publisherPermissionAdd.json"),
                         processId, Path);
         ClientResponse response = genericRestClient.
                 geneticRestRequestPost(publisherUrl + "/permissions", MediaType.APPLICATION_JSON,
@@ -187,7 +187,7 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
 
         requestBody = String.
                 format(readFile(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                                + "json" + File.separator + "edit-process.json"),
+                                + "json" + File.separator + "process" + File.separator+ "edit-process.json"),
                         processId, Path);
         queryMap.put("descriptionDetails", URLEncoder.encode(requestBody, "UTF-8"));
         ClientResponse response = genericRestClient.geneticRestRequestPost(APIUrl,

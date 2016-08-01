@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package org.wso2.pc.integration.tests.publisher;
+package org.wso2.pc.integration.tests.publisher.processes;
 
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.wink.client.ClientResponse;
@@ -23,33 +23,24 @@ import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
-import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.pc.integration.test.utils.base.*;
-import org.xml.sax.InputSource;
 
 import javax.ws.rs.core.MediaType;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import org.wso2.pc.integration.test.utils.base.RegistryProviderUtil;
 
-public class AssociateURLTestCase extends PCIntegrationBaseTest{
+public class AssociatePDFTestCase extends PCIntegrationBaseTest{
+
     private String cookieHeader;
     private GenericRestClient genericRestClient;
     private HashMap<String, String> queryMap;
     private HashMap<String, String> headerMap;
     private String resourcePath;
-    private static final String GDOC_URL = "https://docs.google.com/a/wso2.com/document/d/" +
-            "19UbwEpV36EbD2OY6MomrldkFIYjOnmR8drRrx7zp3pA/edit?usp=sharing";
-    private static final String ASSOCIATED_GDOC_NAME = "TestGDocOfTheProcess";
-    private static final String ASSOCIATES_GDOC_SUMMARY = "This is the summary ofGDoc";
+    private static final String ASSOCIATED_PDF_NAME = "TestPDFDocument";
+    private static final String ASSOCIATED_PDF_SUMMARY = "TestPDFSummary";
     private static final String PROCESS_NAME = "TestProcess1";
     private static final String PROCESS_VERSION = "1.0";
 
@@ -62,7 +53,7 @@ public class AssociateURLTestCase extends PCIntegrationBaseTest{
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
         resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                + "json" + File.separator + "create-process.json";
+                + "json" + File.separator + "process" + File.separator+ "create-process.json";
         JSONObject objSessionPublisher =
                 new JSONObject(TestUtils.authenticate(publisherUrl, genericRestClient,
                         automationContext.getSuperTenant().getTenantAdmin().getUserName(),
@@ -91,41 +82,52 @@ public class AssociateURLTestCase extends PCIntegrationBaseTest{
 
     @Test(groups = {"org.wso2.pc"}, description = "Associating PDF to the process",
             dependsOnMethods = "addProcess")
-    public void associateGDoc() throws IOException {
+    public void uploadPDF() throws IOException {
         queryMap.put("type", "process");
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
-                File.separator + "other" + File.separator + "EmptyFile";
+                File.separator + "PDF" + File.separator + "TestFile.pdf";
         String url = publisherAPIBaseUrl + "upload_documents";
-        PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_GDOC_NAME,
-                ASSOCIATES_GDOC_SUMMARY,"",GDOC_URL,"file", PROCESS_NAME,PROCESS_VERSION,
-                cookieHeader,url,PCIntegrationConstants.APPLICATION_OCTET_STREAM);
+        PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_PDF_NAME,
+                ASSOCIATED_PDF_SUMMARY,PCIntegrationConstants.PDF_EXTENSION,"NA","file",
+                "TestProcess1","1.0",cookieHeader,url,PCIntegrationConstants.APPLICATION_PDF_TYPE);
         Assert.assertTrue(httpMethod.getStatusCode() == 200,
                 "Wrong status code ,Expected 200 ,Received " + httpMethod.getStatusCode());
     }
 
-    @Test(groups = {"org.wso2.pc"}, description = "Check associated GDOC document existence",
-            dependsOnMethods = "associateGDoc")
-    public void checkGDoc() throws Exception {
-        RegistryProviderUtil registryProviderUtil = new RegistryProviderUtil();
-        WSRegistryServiceClient wsRegistryServiceClient = registryProviderUtil.
-                getWSRegistry(automationContext);
-        String xml = new String(wsRegistryServiceClient.
-                getContent("/_system/governance/processes/TestProcess1/1.0"));
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
-        Document document = builder.parse(new InputSource(new StringReader(xml)));
-        Element root = document.getDocumentElement();
-        Assert.assertNotNull(root.getElementsByTagName("document").item(0),"No document found");
-        String expectedGDocURL = ((Element)root.getElementsByTagName("document").item(0)).
-                getElementsByTagName("url").item(0).getTextContent();
-        Assert.assertTrue(expectedGDocURL.equals(GDOC_URL),"Expected GDoc URL not found");
+    @Test(groups = {"org.wso2.pc"}, description = "Associating copy PDF to the process",
+            dependsOnMethods = "uploadPDF")
+    public void uploadDuplicatePDF() throws IOException, JSONException {
+        queryMap.put("type", "process");
+        String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
+                File.separator + "PDF" + File.separator + "TestFile.pdf";
+        String url = publisherAPIBaseUrl + "upload_documents";
+        PostMethod httpMethod = ArtifactUploadUtil.uploadDocument(resourcePath1, ASSOCIATED_PDF_NAME,
+                ASSOCIATED_PDF_SUMMARY,PCIntegrationConstants.PDF_EXTENSION,"NA","file",
+                "TestProcess1","1.0",cookieHeader,url,PCIntegrationConstants.APPLICATION_PDF_TYPE);
+        Assert.assertTrue(new JSONObject(httpMethod.getResponseBodyAsString()).get("error").toString().equals("true"),
+                "Expected error didn't receive while uploading duplicate document");
     }
 
-    @Test(groups = {"org.wso2.pc"}, description = "GDoc deleting test case",
-            dependsOnMethods = "checkGDoc")
-    public void deleteGDOC() throws JSONException, IOException {
+    @Test(groups = {"org.wso2.pc"}, description = "Download associated PDF document",
+            dependsOnMethods = "uploadPDF")
+    public void checkPDF() throws JSONException {
+
+        queryMap.put("process_doc_path",String.format("%s/%s/%s/%s.%s",
+                PCIntegrationConstants.DOC_CONTENT,
+                PROCESS_NAME,PROCESS_VERSION,
+                ASSOCIATED_PDF_NAME,
+                PCIntegrationConstants.PDF_EXTENSION));
+        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherAPIBaseUrl +
+                        "download_document",queryMap,headerMap,cookieHeader);
+        Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().
+                equals("false"),"Associated PDF doesn't exit");
+    }
+
+    @Test(groups = {"org.wso2.pc"}, description = "PDF deleting test case",
+            dependsOnMethods = "checkPDF")
+    public void deletePDF() throws JSONException, IOException {
         String PDFDeleteRequest = readFile(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "json" + File.separator + "delete-gdoc-document.json");
+                "artifacts" + File.separator + "json" + File.separator + "process" + File.separator+ "delete-pdf-document.json");
         queryMap.put("removeDocumentDetails", URLEncoder.
                 encode(PDFDeleteRequest,PCIntegrationConstants.UTF_8));
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
@@ -135,6 +137,6 @@ public class AssociateURLTestCase extends PCIntegrationBaseTest{
                 "Expected 200 OK, Received " + response.getStatusCode());
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
         Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
-                equals("false"),"Couldn't delete associated MSDoc");
+                equals("false"),"Couldn't delete associated PDF");
     }
 }

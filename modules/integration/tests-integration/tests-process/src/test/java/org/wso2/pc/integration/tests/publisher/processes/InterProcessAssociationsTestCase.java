@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package org.wso2.pc.integration.tests.publisher;
+package org.wso2.pc.integration.tests.publisher.processes;
 
 import com.google.gson.Gson;
 import org.apache.wink.client.ClientResponse;
@@ -77,14 +77,14 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
         cookieHeader = "JSESSIONID=" + jSessionId;
 
         processResourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
-                File.separator + "json" + File.separator + "create-process.json";
+                File.separator + "json" + File.separator + "process" + File.separator+ "create-process.json";
         String subProcessResourcePath = FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "json" + File.separator + "SubProcess.json";
+                "artifacts" + File.separator + "json" + File.separator + "process" + File.separator+ "SubProcess.json";
         String predecessorProcessResourcePath = FrameworkPathUtil.getSystemResourceLocation() +
                 "artifacts" + File.separator
-                + "json" + File.separator + "PredecessorProcess.json";
+                + "json" + File.separator + "process" + File.separator+ "PredecessorProcess.json";
         String successorProcessResourcePath = FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "json" + File.separator + "SuccessorProcess.json";
+                "artifacts" + File.separator + "json" + File.separator + "process" + File.separator+ "SuccessorProcess.json";
 
         //Adding sub process
         subProcessID = TestUtils.addProcess(readFile(subProcessResourcePath), cookieHeader,

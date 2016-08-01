@@ -13,9 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-
-package org.wso2.pc.integration.tests.publisher;
-
+package org.wso2.pc.integration.tests.publisher.processes;
 
 import org.apache.wink.client.ClientResponse;
 import org.json.JSONException;
@@ -32,20 +30,17 @@ import org.wso2.pc.integration.test.utils.base.TestUtils;
 import javax.ws.rs.core.MediaType;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
-public class ProcessTextTestCase extends PCIntegrationBaseTest {
+public class AddProcessTestCase extends PCIntegrationBaseTest {
 
     private String cookieHeader;
     private GenericRestClient genericRestClient;
     private HashMap<String, String> queryMap;
     private HashMap<String, String> headerMap;
-    private String requestBody;
-
-    private String processName = "TestProcess1";
-    private String processVersion = "1.0";
-    private String processText = "This is a test text of the process";
+    private String resourcePath;
 
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
@@ -55,9 +50,8 @@ public class ProcessTextTestCase extends PCIntegrationBaseTest {
         genericRestClient = new GenericRestClient();
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
-        String resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
-                File.separator + "json" + File.separator + "create-process.json";
-        requestBody = readFile(resourcePath);
+        resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
+                + "json" + File.separator + "process"  + File.separator + "create-process.json";
         JSONObject objSessionPublisher =
                 new JSONObject(TestUtils.authenticate(publisherUrl, genericRestClient,
                         automationContext.getSuperTenant().getTenantAdmin().getUserName(),
@@ -65,36 +59,23 @@ public class ProcessTextTestCase extends PCIntegrationBaseTest {
                         headerMap).getEntity(String.class));
         String jSessionId = objSessionPublisher.getJSONObject("data").getString("sessionId");
         cookieHeader = "JSESSIONID=" + jSessionId;
+    }
+
+    @Test(groups = {"org.wso2.pc"}, description = "Test case for adding process")
+    public void addProcess() throws IOException, XPathExpressionException, JSONException {
+
+        String requestBody = readFile(resourcePath);
         queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
-        genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl + "create_process",
-                MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, requestBody, queryMap,
-                headerMap, cookieHeader);
-    }
-
-    @Test(groups = {"org.wso2.pc"}, description = "Test case for adding process text")
-    public void addProcessText() throws XPathExpressionException, JSONException {
-        queryMap.put(PCIntegrationConstants.PROCESS_NAME, processName);
-        queryMap.put(PCIntegrationConstants.PROCESS_VERSION, processVersion);
-        queryMap.put(PCIntegrationConstants.PROCESS_TEXT, processText);
-
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherAPIBaseUrl +
-                        "save_process_text", MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
+                "create_process" , MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
                 requestBody, queryMap, headerMap, cookieHeader);
+
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
+
+        Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
+                "Expected 200 OK, Received " + response.getStatusCode());
         Assert.assertTrue(responseObject.get("error").toString().equals("false"),
-                "Process text is not added");
-    }
-
-    @Test(groups = {"org.wso2.pc"}, description = "Test case for retrieving the process text",
-            dependsOnMethods = {"addProcessText"})
-    public void getProcessText() throws XPathExpressionException, JSONException {
-        queryMap.put("process_text_path", "/processText/" + processName + "/" + processVersion);
-
-        ClientResponse response = genericRestClient.geneticRestRequestGet(publisherAPIBaseUrl +
-                "get_process_text", queryMap, headerMap, cookieHeader);
-        JSONObject responseObject = new JSONObject(response.getEntity(String.class));
-        Assert.assertTrue(responseObject.get("content").toString().
-                equals(processText), "Error while retrieving text");
+                "Error while creating the process");
     }
 }

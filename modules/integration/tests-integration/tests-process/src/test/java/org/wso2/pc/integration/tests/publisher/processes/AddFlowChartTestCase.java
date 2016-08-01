@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package org.wso2.pc.integration.tests.publisher;
+package org.wso2.pc.integration.tests.publisher.processes;
 
 import org.apache.wink.client.ClientResponse;
 import org.json.JSONException;
@@ -62,7 +62,7 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
         resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                + "json" + File.separator + "create-process.json";
+                + "json" + File.separator + "process" + File.separator+ "create-process.json";
         JSONObject objSessionPublisher =
                 new JSONObject(TestUtils.authenticate(publisherUrl, genericRestClient,
                         automationContext.getSuperTenant().getTenantAdmin().getUserName(),
@@ -94,7 +94,7 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
             dependsOnMethods = "addProcess")
     public void addFlowChart() throws IOException, JSONException {
         String flowchartBody = readFile(FrameworkPathUtil.getSystemResourceLocation() + "artifacts"
-                + File.separator + "json" + File.separator + "TestFlowChart.json");
+                + File.separator + "json" + File.separator + "process" + File.separator+ "TestFlowChart.json");
         queryMap.put(PCIntegrationConstants.PROCESS_NAME,PROCESS_NAME);
         queryMap.put(PCIntegrationConstants.PROCESS_VERSION,PROCESS_VERSION);
         queryMap.put("flowchartJson",URLEncoder.encode(flowchartBody,PCIntegrationConstants.UTF_8));
