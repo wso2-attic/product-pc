@@ -131,7 +131,7 @@ public class Process {
                 if (processAssociations != null && processAssociations.length > 0) {
                     //We can have only one association with given process
                     Resource bpmnRegistryResource = userRegistry.get(processAssociations[0].getSourcePath());
-                    return bpmnRegistryResource.getProperty(ProcessCenterConstants.PROCESS_ID);
+                    return bpmnRegistryResource.getProperty(ProcessCenterConstants.PROCESS_DEPLOYMENT_ID);
                 }
             }
         } catch (RegistryException e) {
