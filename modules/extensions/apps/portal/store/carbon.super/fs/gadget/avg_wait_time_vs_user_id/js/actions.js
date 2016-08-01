@@ -12,6 +12,18 @@ var config = {
 
 var jsonObj = [];
 
+gadgets.HubSettings.onConnect = function() {
+    gadgets.Hub.subscribe('channel2', function(topic, data, subscriberData) {
+        if(data.type === 'clear') {
+            return;
+        }
+        wso2.gadgets.controls.showGadget();
+        $('#userIdAvgExecTimeTaskList').val(data.task_id);
+        $('#userIdAvgExecTimeTaskList').change();
+        drawAvgExecuteTimeVsUserIdResult();
+    });
+};
+
 var callbackmethod = function(event, item) {
 }
 

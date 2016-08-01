@@ -311,7 +311,8 @@
                 "locale_titles": {}
               }
             }
-          ]
+          ],
+          "5d67060c9bffb274de6ce5cacd9944b9": []
         },
         "anon": {}
       }
@@ -326,7 +327,7 @@
               {
                 "id": "5be13a68cdf6b3560dfadb35b3108d51",
                 "x": 6,
-                "y": 0,
+                "y": 3,
                 "width": 6,
                 "height": 5,
                 "banner": false
@@ -334,7 +335,7 @@
               {
                 "id": "eb20465afaebe329a514e832f1aa12be",
                 "x": 0,
-                "y": 5,
+                "y": 8,
                 "width": 6,
                 "height": 5,
                 "banner": false
@@ -342,7 +343,7 @@
               {
                 "id": "2462c5492359eedb8fe197079e5908b4",
                 "x": 6,
-                "y": 5,
+                "y": 8,
                 "width": 6,
                 "height": 5,
                 "banner": false
@@ -350,9 +351,17 @@
               {
                 "id": "2cfee9db56a6ca2b502664ad7730ac49",
                 "x": 0,
-                "y": 0,
+                "y": 3,
                 "width": 6,
                 "height": 5,
+                "banner": false
+              },
+              {
+                "id": "c74001cb26bc3ee8d3c94708cc39f7bb",
+                "x": 0,
+                "y": 0,
+                "width": 12,
+                "height": 3,
                 "banner": false
               }
             ]
@@ -372,18 +381,35 @@
                 "type": "gadget",
                 "thumbnail": "fs://gadget/task_instance_count_vs_user_id/index.png",
                 "settings": {
-                  "personalize": true
+                  "personalize": true,
+                  "priority": "5"
                 },
                 "data": {
                   "url": "fs://gadget/task_instance_count_vs_user_id/index.xml"
                 },
                 "description": "PC analytics graphs",
+                "listen": {
+                  "channel2": {
+                    "type": "taskID",
+                    "description": "Listening to task id",
+                    "on": [
+                      {
+                        "from": "task_id_publisher-0",
+                        "event": "task_id"
+                      }
+                    ]
+                  }
+                },
                 "styles": {
-                  "title": "Task Instance Count vs User ID",
-                  "borders": true
+                  "no_heading": false,
+                  "hide_gadget": false,
+                  "titlePosition": "left",
+                  "title": "Task Instance Count vs User ID"
                 },
                 "options": {},
-                "locale_titles": {}
+                "locale_titles": {
+                  "en-US": "Task Instance Count vs User ID"
+                }
               }
             }
           ],
@@ -397,18 +423,35 @@
                 "category": "gadget",
                 "thumbnail": "fs://gadget/avg_wait_time_vs_user_id/index.png",
                 "settings": {
-                  "personalize": true
+                  "personalize": true,
+                  "priority": "5"
                 },
                 "data": {
                   "url": "fs://gadget/avg_wait_time_vs_user_id/index.xml"
                 },
                 "description": "This shows pc analytics charts",
+                "listen": {
+                  "channel2": {
+                    "type": "taskID",
+                    "description": "Listening to task id",
+                    "on": [
+                      {
+                        "from": "task_id_publisher-0",
+                        "event": "task_id"
+                      }
+                    ]
+                  }
+                },
                 "styles": {
-                  "title": "Average Wait Time vs User ID",
-                  "borders": true
+                  "no_heading": false,
+                  "hide_gadget": false,
+                  "titlePosition": "left",
+                  "title": "Average Wait Time vs User ID"
                 },
                 "options": {},
-                "locale_titles": {}
+                "locale_titles": {
+                  "en-US": "Average Wait Time vs User ID"
+                }
               }
             }
           ],
@@ -422,7 +465,8 @@
                 "category": "Subscribers",
                 "thumbnail": "fs://gadget/task_instance_count_vs_date/index.png",
                 "settings": {
-                  "personalize": true
+                  "personalize": true,
+                  "priority": "5"
                 },
                 "data": {
                   "url": "fs://gadget/task_instance_count_vs_date/index.xml"
@@ -432,14 +476,28 @@
                   "channel1": {
                     "type": "dateRange",
                     "description": "Listening to date range"
+                  },
+                  "channel2": {
+                    "type": "taskID",
+                    "description": "Listening to task id",
+                    "on": [
+                      {
+                        "from": "task_id_publisher-0",
+                        "event": "task_id"
+                      }
+                    ]
                   }
                 },
                 "styles": {
-                  "title": "Task Instance Count vs Completion Date",
-                  "borders": true
+                  "no_heading": false,
+                  "hide_gadget": false,
+                  "titlePosition": "left",
+                  "title": "Task Instance Count vs Completion Date"
                 },
                 "options": {},
-                "locale_titles": {}
+                "locale_titles": {
+                  "en-US": "Task Instance Count vs Completion Date"
+                }
               }
             }
           ],
@@ -453,7 +511,8 @@
                 "category": "Subscribers",
                 "thumbnail": "fs://gadget/exec_time_vs_task_instance_id/index.png",
                 "settings": {
-                  "personalize": true
+                  "personalize": true,
+                  "priority": "5"
                 },
                 "data": {
                   "url": "fs://gadget/exec_time_vs_task_instance_id/index.xml"
@@ -463,10 +522,55 @@
                   "Daterange": {
                     "type": "dateRange",
                     "description": "Listening to date range"
+                  },
+                  "channel2": {
+                    "type": "taskID",
+                    "description": "Listening to task id",
+                    "on": [
+                      {
+                        "from": "task_id_publisher-0",
+                        "event": "task_id"
+                      }
+                    ]
                   }
                 },
                 "styles": {
-                  "title": "Execution Time vs Task Instance ID",
+                  "no_heading": false,
+                  "hide_gadget": false,
+                  "titlePosition": "left",
+                  "title": "Execution Time vs Task Instance ID"
+                },
+                "options": {},
+                "locale_titles": {
+                  "en-US": "Execution Time vs Task Instance ID"
+                }
+              }
+            }
+          ],
+          "c74001cb26bc3ee8d3c94708cc39f7bb": [
+            {
+              "id": "task_id_publisher-0",
+              "content": {
+                "id": "task_id_publisher",
+                "title": "Task ID picker",
+                "type": "gadget",
+                "category": "Publishers",
+                "thumbnail": "fs://gadget/task_id_publisher/index.png",
+                "settings": {
+                  "personalize": true
+                },
+                "data": {
+                  "url": "fs://gadget/task_id_publisher/index.xml"
+                },
+                "description": "This shows pc analytics charts",
+                "notify": {
+                  "task_id": {
+                    "type": "taskID",
+                    "description": "This notifies selected task id"
+                  }
+                },
+                "styles": {
+                  "title": "Task ID picker",
                   "borders": true
                 },
                 "options": {},
@@ -503,13 +607,13 @@
   "theme": "Default Theme",
   "shareDashboard": false,
   "isUserCustom": false,
-  "isEditorEnable": true,
+  "isEditorEnable": false,
   "banner": {
     "globalBannerExists": false,
     "customBannerExists": false
   },
   "landing": "landing",
   "isanon": false,
-  "defaultPriority": "5",
-  "enableOauth": true
+  "enableOauth": true,
+  "defaultPriority": "5"
 }
