@@ -18,6 +18,7 @@
 	padding: 0;
 	position: absolute;
 	width: 1px;
+    display:none;
 }
 .ui-helper-reset {
 	margin: 0;
@@ -118,6 +119,7 @@
 	left: 0;
 	cursor: default;
 }
+.ui-autocomplete.ui-menu{width:400px}
 .ui-button {
 	display: inline-block;
 	position: relative;
