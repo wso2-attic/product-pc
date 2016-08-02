@@ -12,14 +12,13 @@ var config = {
 var jsonObj = [];
 
 var callbackmethod = function(event, item) {
-    alert('chart clicked');
 }
 
 window.onload = function() {
     $.getJSON("/portal/store/carbon.super/fs/gadget/avg_time_vs_process_version/js/meta-data.json.js", function(result){
         $.each(result, function(i, field){
             jsonObj.push(field);
-            loadProcessKeyList(processVersionAvgExecTimeProcessList);
+            loadProcessKeyList('processVersionAvgExecTimeProcessList');
         });
     });
 }

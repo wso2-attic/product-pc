@@ -30,6 +30,11 @@ function drawGraph() {
             taskIdArray[i] = $(selected).val();
         });
     }
+    
+    if(startDateTemp == 0|| endDateTemp == 0 ) {
+        endDateTemp = new Date();
+        startDateTemp = new Date(today.getFullYear(),(today.getMonth()+1-3),today.getDate());
+    }
 
     var body = {
         'startTime': startDateTemp,
