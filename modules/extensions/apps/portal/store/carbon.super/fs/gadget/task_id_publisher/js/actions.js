@@ -1,3 +1,40 @@
+var from,to;
+
+$(document).ready(function () {
+    $(function () {
+        $("#taskStartDate").datepicker({}).on('focusin', function () {
+            wso2.gadgets.controls.resizeGadget({
+                height: '400px'
+            });
+        });
+        $("#taskEndDate").datepicker({}).on('focusin', function () {
+            wso2.gadgets.controls.resizeGadget({
+                height: '400px'
+            });
+        });
+
+        wso2.gadgets.controls.addLostFocusListener(function () {
+            $("#startDate").datepicker('hide');
+            $("#endDate").datepicker('hide');
+            wso2.gadgets.controls.restoreGadget();
+        });
+    });
+
+    $("#taskStartDate").datepicker({}).on('changeDate', function (e) {
+        var fromdate = e.date;
+        from = fromdate.getTime();
+        $("#taskStartDate").datepicker('hide');
+        wso2.gadgets.controls.restoreGadget();
+    });
+
+    $("#taskEndDate").datepicker({}).on('changeDate', function (e) {
+        var todate = e.date;
+        to = todate.getTime();
+        $("#taskEndDate").datepicker('hide');
+        wso2.gadgets.controls.restoreGadget();
+    });
+});
+
 function loadTaskList(dropdownId) {
     var dropdownElementID = '#' + dropdownId;
 
@@ -30,7 +67,21 @@ function loadTaskList(dropdownId) {
 
 function publish() {
     var task_id = $('#taskIdList').val();
+    if(!from) {
+        from = 0;
+    }
+    if(!to) {
+        to = 0;
+    }
+    console.log(from+" "+to);
     gadgets.Hub.publish('task_id', {
-        task_id: task_id
+        task_id: task_id,
+        from: from,
+        to: to
     });
+}
+
+function reset() {
+    $("#taskStartDate").val("");
+    $("#taskEndDate").val("");
 }

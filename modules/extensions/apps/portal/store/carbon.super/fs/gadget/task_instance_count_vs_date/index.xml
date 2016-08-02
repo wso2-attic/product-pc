@@ -87,6 +87,10 @@
                 wso2.gadgets.controls.showGadget();
                 $("#taskInstanceCountDateTaskList option[value='" + data.task_id + "']").prop("selected", true);
                 $("#taskInstanceCountDateTaskList").change();
+                console.log(data.from);
+                console.log(data.to);
+                $("#from").val(data.from);
+                $("#to").val(data.to);
                 drawGraph();
             });
         };

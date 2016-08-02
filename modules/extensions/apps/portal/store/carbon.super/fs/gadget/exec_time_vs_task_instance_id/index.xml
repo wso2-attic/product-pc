@@ -67,6 +67,8 @@
                         wso2.gadgets.controls.showGadget();
                         $("#taskInstanceIdExecTimeTaskList").val(data.task_id);
                         $("#taskInstanceCountDateTaskList").change();
+                        $("#from").val(data.from);
+                        $("#to").val(data.to);
                         drawExecutionTimeVsTaskInstanceIdResult();
                     });
                 };
