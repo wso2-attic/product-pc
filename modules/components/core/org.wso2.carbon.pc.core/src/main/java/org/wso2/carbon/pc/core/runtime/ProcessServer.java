@@ -15,6 +15,7 @@
 */
 package org.wso2.carbon.pc.core.runtime;
 
+import org.wso2.carbon.bpmn.core.mgt.model.xsd.BPMNDeployment;
 import org.wso2.carbon.bpmn.core.mgt.model.xsd.BPMNProcess;
 import org.wso2.carbon.pc.core.ProcessCenterException;
 
@@ -62,10 +63,18 @@ public interface ProcessServer {
 
     /**
      * Get deploymentId for deployment Name
+     *
      * @param deploymentName
      * @return
      * @throws ProcessCenterException
      */
-    public String getDeploymentID(String deploymentName) throws ProcessCenterException;
+    public String getLatestDeploymentID(String deploymentName) throws ProcessCenterException;
 
+    /**
+     * Get list of deployments for deployment Name
+     *
+     * @param packageName
+     * @return
+     */
+    public BPMNDeployment[] getDeploymentsByName(String packageName) throws ProcessCenterException;
 }

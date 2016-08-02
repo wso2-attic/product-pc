@@ -63,7 +63,7 @@ require('/modules/publisher.js').exec(function (ctx) {
         break;
         case 'DELETE':// POST endpoints
             if (uriMatcher.match(DEPLOYMENT_URL)) {
-            //to associate package
+            //to undeploy package
                 try {
                     var deployInstance = Deployment();
                     var responseObj = deployInstance.undeploy(requestProcessData.packageName, requestProcessData.packageVersion, userName);

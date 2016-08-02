@@ -53,7 +53,7 @@
                   <th>BPMN Process Name</th>
                   <th>Process Asset Name</th>
                   <th>Process Asset Version</th>
-                  <th></th>
+                  <th>Process Deployment ID</th>
                </tr>
             </thead>
             <tbody>
@@ -63,15 +63,16 @@
                     <td data-title="ProcessName">{{this.processName}}</td>
                     <td data-title="ProcessName">{{this.processAssetName}}</td>
                     <td data-title="ProcessVersion">{{this.processAssetVersion}}</td>
+                    <td data-title="ProcessDeploymentID">{{this.processDeploymentID}}</td>
                     <td class="text-right content-fill text-left-on-grid-view no-wrap">
-                       <a class="btn padding-reduce-on-grid-view" data-toggle="modal" data-target="#bpmnDiagramView" >
+                       <a class="padding-reduce-on-grid-view" data-toggle="modal" data-target="#bpmnDiagramView" >
                        <span class="fw-stack">
                        <i class="fw fw-ring fw-stack-2x"></i>
                        <i class="fw fw-view fw-stack-1x"></i>
                        </span>
                        <span class="hidden-xs hidden-on-grid-view">View BPMN</span>
                        </a>
-                       <a class="btn padding-reduce-on-grid-view" data-toggle="modal" data-target="#searchModal">
+                       <a class="padding-reduce-on-grid-view" data-toggle="modal" data-target="#searchModal">
                        <span class="fw-stack">
                        <i class="fw fw-ring fw-stack-2x"></i>
                        <i class="fw fw-edit fw-stack-1x"></i>

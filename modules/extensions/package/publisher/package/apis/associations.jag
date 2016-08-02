@@ -67,8 +67,14 @@ require('/modules/publisher.js').exec(function (ctx) {
             }  else if (uriMatcher.match(ASSOCIATE_DEPLOYMENT_URL)) {
                 //to associate deployment
                 try {
+                    var responseObj;
                     var deployInstance = Deployment();
-                    var responseObj = deployInstance.associateDeploymentID(requestProcessData.packageName, requestProcessData.packageVersion, userName);
+                    var deploymentID = requestProcessData.deploymentID;
+                    if(requestProcessData.deploymentID != null){
+                        responseObj = deployInstance.associateDeploymentID(requestProcessData.packageName, requestProcessData.packageVersion, deploymentID, userName);      
+                    }else{
+                        responseObj = deployInstance.associateDeploymentID(requestProcessData.packageName, requestProcessData.packageVersion, null, userName);
+                    }
                     response = responseProcessor.buildSuccessResponseDefault(constants.STATUS_CODES.OK, res, responseObj);
                 } catch (e) {
                     if (e.hasOwnProperty('message') && e.hasOwnProperty('code')) {
@@ -82,6 +88,30 @@ require('/modules/publisher.js').exec(function (ctx) {
                     response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on associate deployment', res, 'Failed to associate deployment to package of type: ' + options.type, 'more information on associate deployment error', []);
                     if (log.isDebugEnabled()) {
                         log.debug("Error while associating deployment for the request : " + e);
+                    }
+                }
+            } 
+        break;
+        case 'DELETE':
+            // DELETE endpoints
+            if (uriMatcher.match(ASSOCIATE_DEPLOYMENT_URL)) {
+                //to remove associated deployment
+                try {
+                    var deployInstance = Deployment();
+                    var responseObj = deployInstance.removeAssociation(requestProcessData.packageName, requestProcessData.packageVersion, userName);
+                    response = responseProcessor.buildSuccessResponseDefault(constants.STATUS_CODES.OK, res, responseObj);
+                } catch (e) {
+                    if (e.hasOwnProperty('message') && e.hasOwnProperty('code')) {
+                        log.error("Error while undeploying for the request due to " + e.message);
+
+                        response = responseProcessor.buildErrorResponseDefault(e.code, 'error on undeploy package', res,
+                                        'Failed to undeploying of type: ' + options.type, e.message, []);
+                        return;
+                    }
+                    log.error(e);
+                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on undeploy package', res, 'Failed to undeploy package of type: ' + options.type, 'more information on undeploy package error', []);
+                    if (log.isDebugEnabled()) {
+                        log.debug("Error while undeploying for the request : " + e);
                     }
                 }
             } 

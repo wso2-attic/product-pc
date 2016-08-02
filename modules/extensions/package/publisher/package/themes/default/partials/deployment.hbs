@@ -89,7 +89,7 @@
                      <tr>
                         <th>BPMN Resource</th>
                         <th>Process Name</th>
-                        <th>Process DEPLOYMENT ID</th>
+                        <th>Process Deployment ID</th>
                      </tr>
                   </thead>
                   <tbody>
@@ -106,40 +106,100 @@
           </div>
       </div>
   </div>
-    <div class="undeploy" id="undeployModal">
+    <div class="deleteAssociation" id="deleteAssociationModal">
       <h2 class="field-title">
-        <a data-toggle="collapse" href="#collapseUnDeployment" aria-expanded="false" class="collapsing-h2 collapsed">
-        <i class="cu-btn-exp-col btn-collapsed">UnDeploy</i>
+        <a data-toggle="collapse" href="#collapseDeleteAssociation" aria-expanded="false" class="collapsing-h2 collapsed">
+        <i class="cu-btn-exp-col btn-collapsed">Delete Association</i>
         </a>
       </h2>
-      <div class="collapse" id="collapseUnDeployment" aria-expanded="true">
+      <div class="collapse" id="collapseDeleteAssociation" aria-expanded="true">
           <div class="form-inline">
             <div class="message message-info">
-                <h5><i class="icon fw fw-info"></i>  Package UnDeployment</h5>
+                <h5><i class="icon fw fw-info"></i>  Delete Association</h5>
                 <p id="deploy-msg">
-                {{t "Do you want to undeploy "}}
+                {{t "Do you want to delete association for"}}
               <b>{{t deploymentInfo.deploymentName}}</b>{{t " "}}{{t rxt.singularLabel}} file?</p>
             </div>
-            <button type="button" id="btn-undeploy-con" class="btn btn-primary">
-              {{t "UnDeploy"}}
+            <button type="button" id="btn-delete-association" class="btn btn-primary">
+              {{t "Delete"}}
             </button>
             <button type="button" id="btn-cancel-con" class="btn btn-default">{{t "Cancel"}}</button>
           </div>
       </div>
   </div>
 {{else}}
-  <div class="deploy" id="deployModal">
-    <div class="form-inline">
-      <div class="message message-info">
-          <h5><i class="icon fw fw-info"></i>  Package Deployment</h5>
-          <p id="deploy-msg">
-          {{t "Do you want to deploy "}}
-        <b>{{t deploymentInfo.deploymentName}}</b>{{t " "}}{{t rxt.singularLabel}} file?</p>
-      </div>
-      <button type="button" id="btn-deploy-con" class="btn btn-primary">
-        {{t "Deploy"}}
-      </button>
-      <button type="button" id="btn-cancel-con" class="btn btn-default">{{t "Cancel"}}</button>
+  <div class="associateDeployment" id="associateDeploymentModal">
+      <h2 class="field-title">
+        <a data-toggle="collapse" href="#collapseAssociateDeployment" aria-expanded="true" class="collapsing-h2">
+        <i class="cu-btn-exp-col btn-collapsed">Associate Existing Deployment</i>
+        </a>
+      </h2>
+      <div class="collapse in" id="collapseAssociateDeployment" aria-expanded="true">
+        {{#if deploymentInfo.deployments}}
+          <div class="form-inline">
+              <p id="deploy-msg">
+              {{t "Following deployments have been found for the package file : "}}
+              <b>{{t deploymentInfo.packageFileName}}</b></p>
+          </div>
+          <div class="container-fluid">
+               <table class="table table-striped table-hover table-responsive list-table display responsive nowrap data-table dataTable no-footer" id="deploy_info_table" role="grid" aria-describedby="deploy_info">
+                  <thead>
+                     <tr>
+                        <th>Deployment ID</th>
+                        <th>Deployment Name</th>
+                        <th>Created Time</th>
+                        <th></th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     {{#each deploymentInfo.deployments}}
+                       <tr role="row">
+                          <td data-title="DeploymentID">{{this.deploymentID}}</td>
+                          <td data-title="DeploymentName">{{this.name}}</td>
+                          <td>
+                            <a class="associate-deployment-grid-view">
+                               <span class="fw-stack">
+                               <i class="fw fw-ring fw-stack-2x"></i>
+                               <i class="fw fw-edit fw-stack-1x"></i>
+                               </span>
+                              <span class="hidden-xs hidden-on-grid-view">Associate Deployment</span>
+                              {{#if this.latest}} 
+                                 <span class="label label-danger"> Latest</span>
+                              {{/if}}
+                            </a>
+                          </td>
+                       </tr>
+                     {{/each}}
+                  </tbody>
+               </table>
+        </div>
+        {{else}}
+         <div class="form-inline">
+              <p id="deploy-msg">
+              {{t "No deployments have been found for the package file : "}}
+              <b>{{t deploymentInfo.packageFileName}}</b></p>
+          </div>
+        {{/if}}
     </div>
+  </div>
+  <div class="deploy" id="deployModal">
+      <h2 class="field-title">
+        <a data-toggle="collapse" href="#collapseDeployment" aria-expanded="false" class="collapsing-h2 collapsed">
+        <i class="cu-btn-exp-col btn-collapsed">New Deployment</i>
+        </a>
+      </h2>
+      <div class="collapse" id="collapseDeployment" aria-expanded="true">
+          <div class="form-inline">
+            <div class="message message-info">
+              <h5><i class="icon fw fw-info"></i>  Package Deployment</h5>
+              <p id="deploy-msg">
+              {{t "Do you want to deploy the "}}
+              <b>{{t deploymentInfo.packageFileName}}</b>{{t " "}}{{t rxt.singularLabel}} file to process server ?</p>
+            </div>
+            <button type="button" id="btn-deploy-con" class="btn btn-primary">
+            {{t "Deploy"}}</button>
+            <button type="button" id="btn-cancel-con" class="btn btn-default">{{t "Cancel"}}</button>
+          </div>
+      </div>
   </div>
 {{/if}}

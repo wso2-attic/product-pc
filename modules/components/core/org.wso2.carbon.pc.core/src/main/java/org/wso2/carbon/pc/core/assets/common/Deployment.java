@@ -15,6 +15,7 @@
 */
 package org.wso2.carbon.pc.core.assets.common;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -23,13 +24,13 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.wso2.carbon.bpmn.core.mgt.model.xsd.BPMNDeployment;
 import org.wso2.carbon.bpmn.core.mgt.model.xsd.BPMNProcess;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
 import org.wso2.carbon.pc.core.assets.Package;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.pc.core.runtime.ProcessServer;
-import org.wso2.carbon.pc.core.util.Utils;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -45,7 +46,6 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -96,7 +96,7 @@ public class Deployment extends AssetResource {
 
                         }
                         Resource packageArchive = userRegistry.get(packageBPMNRegistryPath + packageFileName);
-                        String deploymentName = getDeploymentName(packageName, packageVersion);
+                        String deploymentName = FilenameUtils.getBaseName(packageFileName);
                         /**
                          * archiveChecksum- We need to store checksum of the package to check wheter the deployed
                          * package is same as
@@ -107,7 +107,7 @@ public class Deployment extends AssetResource {
                          * deployments of same package
                          *
                          */
-                        String archiveChecksum = Utils.getMD5Checksum(packageArchive.getContentStream());
+                        String archiveChecksum = packageAsset.getProperty(ProcessCenterConstants.CHECKSUM);
                         String latestChecksum = processServer.getLatestDeploymentChecksum(deploymentName);
                         String deploymentID = processServer.deploy(deploymentName.concat(ProcessCenterConstants
                                         .BAR_EXTENSION),
@@ -128,36 +128,37 @@ public class Deployment extends AssetResource {
                         }
 
                         Element runtimeElement = append(packageDocument, rootElement, ProcessCenterConstants
-                                .RUNTIME_ENVIRONMENT,
+                                        .RUNTIME_ENVIRONMENT,
                                 ProcessCenterConstants.METADATA_NAMESPACE);
                         if (deploymentID != null) {
                             appendText(packageDocument, runtimeElement, ProcessCenterConstants.DEPLOYMENT_ID,
                                     ProcessCenterConstants
-                                    .METADATA_NAMESPACE, deploymentID);
+                                            .METADATA_NAMESPACE, deploymentID);
                             appendText(packageDocument, runtimeElement, ProcessCenterConstants.STATUS,
                                     ProcessCenterConstants
-                                            .METADATA_NAMESPACE, ProcessCenterConstants.PACKAGE_STATUS.DEPLOYED
+                                            .METADATA_NAMESPACE, ProcessCenterConstants.PACKAGE_STATUS.ASSOCIATED
                                             .toString());
+                            associateRuntimeProcesses(userRegistry, processServer, packageAsset, packageName,
+                                    packageVersion, deploymentID);
                             response.put(ProcessCenterConstants.DEPLOYMENT_ID, deploymentID);
                             response.put(ProcessCenterConstants.MESSAGE, "Package has been deployed successfully");
                         } else {
+                            appendText(packageDocument, runtimeElement, ProcessCenterConstants.STATUS,
+                                    ProcessCenterConstants
+                                            .METADATA_NAMESPACE, ProcessCenterConstants.PACKAGE_STATUS.UPLOADED
+                                            .toString());
                             response.put(ProcessCenterConstants.MESSAGE, "Package has been uploaded successfully");
                         }
-                        appendText(packageDocument, runtimeElement, ProcessCenterConstants.CHECKSUM,
-                                ProcessCenterConstants
-                                .METADATA_NAMESPACE, archiveChecksum);
-                        appendText(packageDocument, runtimeElement, ProcessCenterConstants.STATUS,
-                                ProcessCenterConstants
-                                .METADATA_NAMESPACE, ProcessCenterConstants.PACKAGE_STATUS.UPLOADED.toString());
+
                         appendText(packageDocument, runtimeElement, ProcessCenterConstants.LATEST_CHECKSUM,
                                 ProcessCenterConstants
-                                .METADATA_NAMESPACE, latestChecksum);
+                                        .METADATA_NAMESPACE, latestChecksum);
                         appendText(packageDocument, runtimeElement, ProcessCenterConstants.USERNAME,
                                 ProcessCenterConstants
-                                .METADATA_NAMESPACE, username);
+                                        .METADATA_NAMESPACE, username);
                         appendText(packageDocument, runtimeElement, ProcessCenterConstants.LAST_UPDATED_TIME,
                                 ProcessCenterConstants
-                                .METADATA_NAMESPACE, String.valueOf(System.currentTimeMillis()));
+                                        .METADATA_NAMESPACE, String.valueOf(System.currentTimeMillis()));
                         String newProcessContent = xmlToString(packageDocument);
                         packageAsset.setContent(newProcessContent);
                         userRegistry.put(packageRegistryPath, packageAsset);
@@ -177,8 +178,8 @@ public class Deployment extends AssetResource {
                     " version " + packageVersion + " in the server ";
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
-        } catch (XPathExpressionException | JSONException | TransformerException | NoSuchAlgorithmException |
-                SAXException | ParserConfigurationException e) {
+        } catch (XPathExpressionException | JSONException | TransformerException | SAXException |
+                ParserConfigurationException e) {
             String errMsg = "Error occurred while deploying the package " + packageName +
                     " file " + packageVersion;
             log.error(errMsg, e);
@@ -250,13 +251,19 @@ public class Deployment extends AssetResource {
                             }
                             if (deploymentID != null) {
                                 // Get BPMN resources list
-                                runtimeDeployment.put(ProcessCenterConstants.BPMN_RESOURCE, getBpmnResources
+                                runtimeDeployment.put(ProcessCenterConstants.BPMN_RESOURCES, getBpmnResources
                                         (packageName, packageVersion,
-                                        username));
+                                                username));
                             }
                         }
                     }
                     if (packageFileName != null) {
+                        // When getting deployment list we use package file name
+                        JSONArray deploymentList = getDeploymentList(packageName, packageVersion, FilenameUtils
+                                .getBaseName(packageFileName));
+                        if (deploymentList != null) {
+                            runtimeDeployment.put(ProcessCenterConstants.DEPLOYMENTS, deploymentList);
+                        }
                         runtimeDeployment.put("packageFileName", packageFileName);
                     }
                 }
@@ -283,15 +290,14 @@ public class Deployment extends AssetResource {
      *
      * @param packageName    Name of the Package
      * @param packageVersion - Version of the Package
+     * @param deploymentID   - Deployment Id needs to be associated with package
      * @param username       - Provider of the Package
      * @return associated deployment id
      * @throws ProcessCenterException
      */
-    public String associateDeploymentID(String packageName, String packageVersion, String username) throws
-            ProcessCenterException {
-
+    public String associateDeploymentID(String packageName, String packageVersion, String deploymentID, String
+            username) throws ProcessCenterException {
         JSONObject response = new JSONObject();
-        String deploymentID = null;
         try {
             ProcessServer processServer = ProcessCenterServerHolder.getInstance().getProcessCenter().getProcessServer();
             if (processServer == null) {
@@ -307,7 +313,9 @@ public class Deployment extends AssetResource {
                 Resource packageAsset = userRegistry.get(packageRegistryPath);
                 String processContent = new String((byte[]) packageAsset.getContent(),
                         StandardCharsets.UTF_8);
-                String deploymentName = getDeploymentName(packageName, packageVersion);
+                String packageFileName = packageAsset.getProperty(ProcessCenterConstants
+                        .PACKAGE_BPMN_ARCHIVE_FILE_NAME);
+                String deploymentName = FilenameUtils.getBaseName(packageFileName);
                 Document packageDocument = stringToXML(processContent);
                 if (packageDocument != null) {
                     // Evaluate XPath against Document to get runtime environment
@@ -321,27 +329,50 @@ public class Deployment extends AssetResource {
                                 .DEPLOYMENT_ID);
                         NodeList latestChecksum = runtimeElement.getElementsByTagName(ProcessCenterConstants
                                 .LATEST_CHECKSUM);
-                        NodeList checkSum = runtimeElement.getElementsByTagName(ProcessCenterConstants.CHECKSUM);
+                        String checkSum = packageAsset.getProperty(ProcessCenterConstants.CHECKSUM);
                         NodeList status = runtimeElement.getElementsByTagName(ProcessCenterConstants.STATUS);
+                        if (deploymentID != null) {
 
-                        if (deploymentIDNode != null && deploymentIDNode.getLength() > 0) {
-                            deploymentID = deploymentIDNode.item(0).getTextContent();
-                        } else if (status != null && status.getLength() > 0 && status.item(0).getTextContent().equals
-                                (ProcessCenterConstants.PACKAGE_STATUS.UPLOADED.toString())) {
+                            // If deployment id provided we will associate that deployment id
+                            if (deploymentIDNode != null && deploymentIDNode.getLength() > 0) {
+                                deploymentIDNode.item(0).setTextContent(deploymentID);
+                            } else {
+                                appendText(packageDocument, runtimeElement, ProcessCenterConstants
+                                                .DEPLOYMENT_ID,
+                                        ProcessCenterConstants.METADATA_NAMESPACE, deploymentID);
+                            }
+                            if (status != null && status.getLength() > 0) {
+                                status.item(0).setTextContent(ProcessCenterConstants.PACKAGE_STATUS.ASSOCIATED
+                                        .toString());
+                            } else {
+                                appendText(packageDocument, runtimeElement, ProcessCenterConstants.STATUS,
+                                        ProcessCenterConstants.METADATA_NAMESPACE, ProcessCenterConstants
+                                                .PACKAGE_STATUS.ASSOCIATED.toString());
+                            }
+                            String newProcessContent = xmlToString(packageDocument);
+                            packageAsset.setContent(newProcessContent);
+                            associateRuntimeProcesses(userRegistry, processServer, packageAsset, packageName,
+                                    packageVersion, deploymentID);
+                            userRegistry.put(packageRegistryPath, packageAsset);
+                            response.put(ProcessCenterConstants.DEPLOYMENT_ID, deploymentID);
+                            response.put(ProcessCenterConstants.MESSAGE, "Package has been successfully " +
+                                    "associated with deployment");
+                        } else if (status != null && status.getLength() > 0 && status.item(0).getTextContent()
+                                .equals
+                                        (ProcessCenterConstants.PACKAGE_STATUS.UPLOADED.toString())) {
                             // If status == UPLOADED we will check for deployment ID
-                            String tempDeploymentID = processServer.getDeploymentID(deploymentName);
+                            String tempDeploymentID = processServer.getLatestDeploymentID(deploymentName);
                             if (tempDeploymentID != null) {
                                 // We will check for latest checksum to check whether the same package has been
                                 // deployed to process server.
                                 String deployedChecksum = processServer.getLatestDeploymentChecksum(deploymentName);
                                 if (deployedChecksum != null) {
-                                    if (checkSum != null && checkSum.getLength() > 0 && checkSum.item(0)
-                                            .getTextContent().equals(deployedChecksum)) {
+                                    if (checkSum != null && checkSum.equals(deployedChecksum)) {
                                         //update deployment id
                                         appendText(packageDocument, runtimeElement, ProcessCenterConstants
-                                                .DEPLOYMENT_ID,
+                                                        .DEPLOYMENT_ID,
                                                 ProcessCenterConstants.METADATA_NAMESPACE, tempDeploymentID);
-                                        status.item(0).setTextContent(ProcessCenterConstants.PACKAGE_STATUS.DEPLOYED
+                                        status.item(0).setTextContent(ProcessCenterConstants.PACKAGE_STATUS.ASSOCIATED
                                                 .toString());
                                         String newProcessContent = xmlToString(packageDocument);
                                         packageAsset.setContent(newProcessContent);
@@ -349,7 +380,7 @@ public class Deployment extends AssetResource {
                                                 packageName,
                                                 packageVersion, tempDeploymentID);
                                         userRegistry.put(packageRegistryPath, packageAsset);
-                                        deploymentID = tempDeploymentID;
+                                        response.put(ProcessCenterConstants.DEPLOYMENT_ID, tempDeploymentID);
                                         response.put(ProcessCenterConstants.MESSAGE, "Package has been successfully " +
                                                 "associated with deployment");
                                     } else if (latestChecksum != null && latestChecksum.getLength() > 0 &&
@@ -370,11 +401,37 @@ public class Deployment extends AssetResource {
                                 }
                             }
                         }
+                    } else if (deploymentID != null) {
+                        Element rootElement = packageDocument.getDocumentElement();
+                        Element runtimeElement = append(packageDocument, rootElement, ProcessCenterConstants
+                                        .RUNTIME_ENVIRONMENT,
+                                ProcessCenterConstants.METADATA_NAMESPACE);
+                        appendText(packageDocument, runtimeElement, ProcessCenterConstants.DEPLOYMENT_ID,
+                                ProcessCenterConstants
+                                        .METADATA_NAMESPACE, deploymentID);
+                        appendText(packageDocument, runtimeElement, ProcessCenterConstants.STATUS,
+                                ProcessCenterConstants
+                                        .METADATA_NAMESPACE, ProcessCenterConstants.PACKAGE_STATUS.ASSOCIATED
+                                        .toString());
+                        appendText(packageDocument, runtimeElement, ProcessCenterConstants.USERNAME,
+                                ProcessCenterConstants
+                                        .METADATA_NAMESPACE, username);
+                        appendText(packageDocument, runtimeElement, ProcessCenterConstants.LAST_UPDATED_TIME,
+                                ProcessCenterConstants
+                                        .METADATA_NAMESPACE, String.valueOf(System.currentTimeMillis()));
+                        String newProcessContent = xmlToString(packageDocument);
+                        packageAsset.setContent(newProcessContent);
+                        associateRuntimeProcesses(userRegistry, processServer, packageAsset, packageName,
+                                packageVersion, deploymentID);
+                        userRegistry.put(packageRegistryPath, packageAsset);
+                        response.put(ProcessCenterConstants.DEPLOYMENT_ID, deploymentID);
+                        response.put(ProcessCenterConstants.MESSAGE, "Package has been successfully " +
+                                "associated with deployment");
                     }
                 }
             }
             response.put(ProcessCenterConstants.ERROR, false);
-            response.put(ProcessCenterConstants.DEPLOYMENT_ID, deploymentID);
+
         } catch (RegistryException e) {
             String errMsg = "Error occurred while accessing registry for associating deployment ID for package: " +
                     packageName + " version " + packageVersion;
@@ -522,6 +579,45 @@ public class Deployment extends AssetResource {
         return bpmnResources;
     }
 
+
+    /**
+     * Get list of  Deployments related to the Package
+     *
+     * @param packageName    Name of the Package
+     * @param packageVersion - Version of the Package
+     * @param deploymentName Name of the Deployment
+     * @return
+     * @throws ProcessCenterException
+     */
+    public JSONArray getDeploymentList(String packageName, String packageVersion, String deploymentName) throws
+            ProcessCenterException {
+        ProcessServer processServer = ProcessCenterServerHolder.getInstance().getProcessCenter().getProcessServer();
+        try {
+            if (processServer != null) {
+                BPMNDeployment[] deploymentsByName = processServer.getDeploymentsByName(deploymentName);
+                if (deploymentsByName != null) {
+                    JSONArray deployments = new JSONArray();
+                    for (int i = 0; i < deploymentsByName.length; i++) {
+                        JSONObject deployment = new JSONObject();
+                        deployment.put(ProcessCenterConstants.DEPLOYMENT_ID, deploymentsByName[i].getDeploymentId());
+                        deployment.put(ProcessCenterConstants.NAME, deploymentsByName[i].getDeploymentName());
+                        if (i == 0) {
+                            deployment.put(ProcessCenterConstants.LATEST, true);
+                        }
+                        deployments.put(deployment);
+                    }
+                    return deployments;
+                }
+            }
+        } catch (JSONException e) {
+            String errMsg = "Error occurred while getting deployments package " + packageName +
+                    "version " + packageVersion + " deploymentName " + deploymentName;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        }
+        return null;
+    }
+
     /**
      * Undeploy package
      *
@@ -557,8 +653,12 @@ public class Deployment extends AssetResource {
 
                             String packageContent = new String((byte[]) packageAsset.getContent(), StandardCharsets
                                     .UTF_8);
-                            String deploymentName = getDeploymentName(packageName, packageVersion);
-                            processServer.unDeploy(deploymentName);
+                            String packageFileName = packageAsset.getProperty(ProcessCenterConstants
+                                    .PACKAGE_BPMN_ARCHIVE_FILE_NAME);
+                            if (packageFileName != null) {
+                                processServer.unDeploy(FilenameUtils.getBaseName(packageFileName));
+                            }
+
                             Document packageDocument = stringToXML(packageContent);
                             //Evaluate XPath against RXT document to get runtime environments
                             XPath xPath = XPathFactory.newInstance().newXPath();
@@ -594,7 +694,7 @@ public class Deployment extends AssetResource {
                         response.put(ProcessCenterConstants.ERROR, false);
                     } else {
                         response.put(ProcessCenterConstants.ERROR, true);
-                        response.put(ProcessCenterConstants.MESSAGE, "Package Assetresource cannot be found.");
+                        response.put(ProcessCenterConstants.MESSAGE, "Package Asset resource cannot be found.");
                         return response.toString();
                     }
                 }
@@ -621,11 +721,92 @@ public class Deployment extends AssetResource {
     }
 
     /**
+     * Remove deployment Association from package
+     *
      * @param packageName    Name of the Package
      * @param packageVersion - Version of the Package
-     * @return Deployment name for package to be deployed in process server
+     * @param username       - Provider of the Package
+     * @return JSON string contains the status of the undeployment
+     * @throws ProcessCenterException
      */
-    private String getDeploymentName(String packageName, String packageVersion) {
-        return packageName + "-" + packageVersion;
+    public String removeAssociation(String packageName, String packageVersion, String username) throws
+            ProcessCenterException {
+        JSONObject response = new JSONObject();
+        try {
+
+            String packageRegistryPath = Package.getPackageRegistryPath(packageName, packageVersion);
+            String packageBPMNContentRegistryPath = Package.getPackageBPMNContentRegistryPath
+                    (Package.getPackageBPMNRegistryPath(Package.getPackageAssetRegistryPath(packageName,
+                            packageVersion)));
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry userRegistry = registryService.getGovernanceUserRegistry(username);
+                if (userRegistry != null) {
+
+                    if (userRegistry.resourceExists(packageRegistryPath)) {
+                        Resource packageAsset = userRegistry.get(packageRegistryPath);
+                        if (packageAsset != null) {
+
+                            String packageContent = new String((byte[]) packageAsset.getContent(), StandardCharsets
+                                    .UTF_8);
+                            Document packageDocument = stringToXML(packageContent);
+                            //Evaluate XPath against RXT document to get runtime environments
+                            XPath xPath = XPathFactory.newInstance().newXPath();
+                            NodeList evaluate = ((NodeList) xPath.evaluate("/metadata/runtimeEnvironment",
+                                    packageDocument.getDocumentElement(), XPathConstants.NODESET));
+                            if (evaluate != null) {
+                                for (int i = 0; i < evaluate.getLength(); i++) {
+                                    evaluate.item(i).getParentNode().removeChild(evaluate.item(i));
+                                }
+                            }
+                            String newProcessContent = xmlToString(packageDocument);
+                            packageAsset.setContent(newProcessContent);
+                            userRegistry.put(packageRegistryPath, packageAsset);
+                            String bpmnResourceCount = packageAsset.getProperty(ProcessCenterConstants
+                                    .BPMN_RESOURCES_COUNT);
+                            if (bpmnResourceCount != null) {
+                                // Get bpmn file registry registry collection
+                                Collection bpmnResourceCollection = userRegistry.get(packageBPMNContentRegistryPath, 0,
+                                        Integer.parseInt(bpmnResourceCount));
+                                if (bpmnResourceCollection != null) {
+                                    String[] bpmnResourcePaths = (String[]) bpmnResourceCollection.getContent();
+                                    // Read each bpmn file
+                                    for (String bpmnResourcePath : bpmnResourcePaths) {
+                                        Resource bpmnRegistryResource = userRegistry.get(bpmnResourcePath);
+                                        bpmnRegistryResource.removeProperty(ProcessCenterConstants
+                                                .PROCESS_DEPLOYMENT_ID);
+                                        userRegistry.put(bpmnResourcePath, bpmnRegistryResource);
+
+                                    }
+                                }
+                            }
+                        }
+                        response.put(ProcessCenterConstants.ERROR, false);
+                    } else {
+                        response.put(ProcessCenterConstants.ERROR, true);
+                        response.put(ProcessCenterConstants.MESSAGE, "Package Asset resource cannot be found.");
+                        return response.toString();
+                    }
+                }
+            }
+        } catch (RegistryException e) {
+            String errMsg = "Registry error while deploying the package " + packageName +
+                    " version " + packageVersion + " in the server";
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        } catch (IOException e) {
+            String errMsg = "Error occurred while deploying the package " + packageName +
+                    " version " + packageVersion + " in the server ";
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        } catch (XPathExpressionException | JSONException | TransformerException | SAXException |
+                ParserConfigurationException e) {
+            String errMsg = "Error occurred while deploying the package " + packageName +
+                    " file " + packageVersion;
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        }
+
+        return response.toString();
     }
 }

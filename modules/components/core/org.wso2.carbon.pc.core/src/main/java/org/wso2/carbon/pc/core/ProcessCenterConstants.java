@@ -49,7 +49,8 @@ public class ProcessCenterConstants {
     public static final String MESSAGE = "message";
     public static final String STATUS = "status";
     public static final String NO_FILE_SPECIFIED = "no-file-specified";
-    public static final String BPMN_RESOURCE = "bpmnResources";
+    public static final String BPMN_RESOURCES = "bpmnResources";
+    public static final String DEPLOYMENTS = "deployments";
     /**
      * Package asset
      */
@@ -58,6 +59,7 @@ public class ProcessCenterConstants {
     public static final String PACKAGE_PROCESS_ASSOCIATION = "package_process";
     public static final String RUNTIME_ENVIRONMENT = "runtimeEnvironment";
     public static final String CHECKSUM = "checksum";
+    public static final String LATEST = "latest";
     public static final String LATEST_CHECKSUM = "latestChecksum";
     public static final String LAST_UPDATED_TIME = "lastUpdatedTime";
 
@@ -149,12 +151,13 @@ public class ProcessCenterConstants {
     public static final String TYPE = "type";
     public static final String ACTIVITI_FORM_PROPERTY = "activiti:formProperty";
     public static final String VARIABLE = "variable";
+
     // Make the constructor private, since it is a utility class
     private ProcessCenterConstants() {
     }
 
     public enum PACKAGE_STATUS {
-        UPLOADED, DEPLOYED, UNDEPLOYED
+        UPLOADED, ASSOCIATED
     }
 
     public static class AUDIT {
