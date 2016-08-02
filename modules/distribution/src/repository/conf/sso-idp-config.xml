@@ -28,15 +28,6 @@
             <CustomLoginPage>/store/login.jag</CustomLoginPage>
         </ServiceProvider>
         <ServiceProvider>
-            <Issuer>social</Issuer>
-            <AssertionConsumerServiceURLs>
-                <AssertionConsumerServiceURL>https://localhost:9443/social/acs</AssertionConsumerServiceURL>
-            </AssertionConsumerServiceURLs>
-            <DefaultAssertionConsumerServiceURL>https://localhost:9443/social/acs</DefaultAssertionConsumerServiceURL>
-            <SignResponse>true</SignResponse>
-            <CustomLoginPage>/social/login</CustomLoginPage>
-        </ServiceProvider>
-        <ServiceProvider>
             <Issuer>publisher</Issuer>
             <AssertionConsumerServiceURLs>
                 <AssertionConsumerServiceURL>https://localhost:9443/publisher/acs</AssertionConsumerServiceURL>
@@ -44,15 +35,6 @@
             <DefaultAssertionConsumerServiceURL>https://localhost:9443/publisher/acs</DefaultAssertionConsumerServiceURL>
             <SignResponse>true</SignResponse>
             <CustomLoginPage>/publisher/controllers/login.jag</CustomLoginPage>
-        </ServiceProvider>
-        <ServiceProvider>
-            <Issuer>process-center</Issuer>
-            <AssertionConsumerServiceURLs>
-                <AssertionConsumerServiceURL>https://localhost:9443/process-center/acs</AssertionConsumerServiceURL>
-            </AssertionConsumerServiceURLs>
-            <DefaultAssertionConsumerServiceURL>https://localhost:9443/process-center/acs</DefaultAssertionConsumerServiceURL>
-            <SignResponse>true</SignResponse>
-            <CustomLoginPage>/process-center/login.jag</CustomLoginPage>
         </ServiceProvider>
         <ServiceProvider>
             <Issuer>portal</Issuer>
