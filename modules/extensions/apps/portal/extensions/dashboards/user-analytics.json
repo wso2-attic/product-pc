@@ -101,7 +101,7 @@
               "id": "total_involved_instance_count_vs_process_id-0",
               "content": {
                 "id": "total_involved_instance_count_vs_process_id",
-                "title": "Total Involved Instance Count vs Process ID",
+                "title": "User's Involvement in Processes (Instances)",
                 "type": "gadget",
                 "category": "Subscribers",
                 "thumbnail": "fs://gadget/total_involved_instance_count_vs_process_id/index.png",
@@ -129,11 +129,11 @@
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "left",
-                  "title": "Total Involved Instance Count vs Process ID"
+                  "title": "User's Involvement in Processes (Instances)"
                 },
                 "options": {},
                 "locale_titles": {
-                  "en-US": "Total Involved Instance Count vs Process ID"
+                  "en-US": "User's Involvement in Processes (Instances)"
                 }
               }
             }
@@ -143,7 +143,7 @@
               "id": "user_level_task_instance_count_vs_task_id-0",
               "content": {
                 "id": "user_level_task_instance_count_vs_task_id",
-                "title": "User Level Task Instance Count vs Task ID",
+                "title": "Tasks Completed by User",
                 "type": "gadget",
                 "thumbnail": "fs://gadget/user_level_task_instance_count_vs_task_id/index.png",
                 "settings": {
@@ -154,7 +154,7 @@
                 },
                 "description": "PC analytics graphs",
                 "styles": {
-                  "title": "User Level Task Instance Count vs Task ID",
+                  "title": "Tasks Completed by User",
                   "borders": true
                 },
                 "options": {},
@@ -167,7 +167,7 @@
               "id": "avg_execution_time_vs_task_id-0",
               "content": {
                 "id": "avg_execution_time_vs_task_id",
-                "title": "Average Execution Time vs Task ID",
+                "title": "Average Task Completion Times By User",
                 "type": "gadget",
                 "thumbnail": "fs://gadget/avg_execution_time_vs_task_id/index.png",
                 "settings": {
@@ -178,7 +178,7 @@
                 },
                 "description": "PC analytics graphs",
                 "styles": {
-                  "title": "Average Execution Time vs Task ID",
+                  "title": "Average Task Completion Times By User",
                   "borders": true
                 },
                 "options": {},
@@ -191,7 +191,7 @@
               "id": "total_involved_time_vs_process_id-0",
               "content": {
                 "id": "total_involved_time_vs_process_id",
-                "title": "Total Involved Time vs Process ID",
+                "title": "User's Involvement in Processes (Time)",
                 "type": "gadget",
                 "category": "Subscribers",
                 "thumbnail": "fs://gadget/total_involved_time_vs_process_id/index.png",
@@ -219,11 +219,11 @@
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "left",
-                  "title": "Total Involved Time vs Process ID"
+                  "title": "User's Involvement in Processes (Time)"
                 },
                 "options": {},
                 "locale_titles": {
-                  "en-US": "Total Involved Time vs Process ID"
+                  "en-US": "User's Involvement in Processes (Time)"
                 }
               },
               "viewOption": "default",

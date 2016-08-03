@@ -1,6 +1,6 @@
 {
   "id": "avg_time_vs_process_id",
-  "title": "Average Execution Time vs Process ID",
+  "title": "Average Execution Times Of Processes",
   "type": "gadget",
   "category": "Subscribers",
   "thumbnail": "gadget/avg_time_vs_process_id/index.png",

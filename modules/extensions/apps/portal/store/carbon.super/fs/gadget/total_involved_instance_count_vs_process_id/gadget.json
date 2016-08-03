@@ -1,6 +1,6 @@
 {
   "id": "total_involved_instance_count_vs_process_id",
-  "title": "Total Involved Instance Count vs Process ID",
+  "title": "User's Involvement in Processes (Instances)",
   "type": "gadget",
   "category": "Subscribers",
   "thumbnail": "gadget/total_involved_instance_count_vs_process_id/index.png",

@@ -1,6 +1,6 @@
 {
   "id": "exec_time_vs_process_instance_id",
-  "title": "Execution Time vs Process Instance",
+  "title": "Process Instance Execution Times",
   "type": "gadget",
   "category": "Subscribers",
   "thumbnail": "gadget/exec_time_vs_process_instance_id/index.png",

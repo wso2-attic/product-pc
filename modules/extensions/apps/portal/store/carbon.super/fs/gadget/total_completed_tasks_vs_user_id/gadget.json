@@ -1,6 +1,6 @@
 {
   "id": "total_completed_tasks_vs_user_id",
-  "title": "Total Completed Tasks vs User ID",
+  "title": "Total Tasks Completed by Users",
   "type": "gadget",
   "category": "Subscribers",
   "thumbnail": "gadget/total_completed_tasks_vs_user_id/index.png",
