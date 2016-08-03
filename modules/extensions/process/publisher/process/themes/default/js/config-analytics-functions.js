@@ -68,10 +68,13 @@ function addProcessVariableRow(tableID) {
 
         });
        $(me).autocomplete(
-           { source: processVariables },
+           { source: processVariables,
+           messages: {
+        noResults: '',
+        results: function() {} }},
            {select: function(e, ui) {
                    $(me).parent().parent().children().eq(2).children().eq(0).val(processVariablesObj[ui.item.value]);
-                   $(me).parent().parent().children().eq(3).children().eq(0).prop('disabled', true);
+                   $(me).parent().parent().children().eq(2).children().eq(0).prop('disabled', true);
 
                 }
            }

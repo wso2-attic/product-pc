@@ -12,7 +12,6 @@ var config = {
 var jsonObj = [];
 
 var callbackmethod = function(event, item) {
-    alert('chart clicked');
 }
 
 window.onload = function() {
