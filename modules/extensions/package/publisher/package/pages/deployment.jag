@@ -18,11 +18,16 @@ require('/modules/publisher.js').exec(function (ctx) {
     var output = am.render(assets, page).details();
     page.path = assets.path;
    
-    // Get deployment information
-    var deployInstance = Deployment();
-    var deploymentInfoResponse = deployInstance.getDeploymentInformation(output.assets.name,output.assets.version,output.cuser.username);
-    if (deploymentInfoResponse != null) {
-        output.deploymentInfo = parse(String(deploymentInfoResponse)).runtimeDeployment;
+    
+    try {
+        // Get deployment information
+        var deployInstance = Deployment();
+        var deploymentInfoResponse = deployInstance.getDeploymentInformation(output.assets.name,output.assets.version,output.cuser.username);
+        if (deploymentInfoResponse != null) {
+            output.deploymentInfo = parse(String(deploymentInfoResponse)).runtimeDeployment;
+        }
+    } catch (e) {
+        output.errorMessage = "Error while getting deployment information from process server.";
     }
     caramel.render(output);  
 }, request, response, session);
