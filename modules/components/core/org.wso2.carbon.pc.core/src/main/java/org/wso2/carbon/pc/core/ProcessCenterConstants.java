@@ -83,7 +83,7 @@ public class ProcessCenterConstants {
     public static final String IMAGE_PATH = "store/asset_resources/process/";
     public static final String IMAGE_PATH_PACKAGE = "store/asset_resources/package/";
     public static final String GREG_PATH_PROCESS = "/_system/governance/processes/";
-    public static final String SAMPLE_LIFECYCLE2_NAME = "SampleLifeCycle2";
+    public static final String PROCESS_LIFECYCLE_NAME = "DefaultProcessLifeCycle";
     //association type for processes in pdf, documents and process text assets
     public static final String ASSOCIATION_TYPE = "process_association";
     public static final String SUBPROCESS_ASSOCIATION = "subprocess";
