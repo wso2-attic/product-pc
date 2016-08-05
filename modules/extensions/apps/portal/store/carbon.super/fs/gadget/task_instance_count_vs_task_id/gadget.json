@@ -1,6 +1,6 @@
 {
   "id": "task_instance_count_vs_task_id",
-  "title": "Task Instance Count vs Task ID",
+  "title": "Task Instance Counts",
   "type": "gadget",
   "thumbnail": "gadget/task_instance_count_vs_task_id/index.png",
   "settings": {

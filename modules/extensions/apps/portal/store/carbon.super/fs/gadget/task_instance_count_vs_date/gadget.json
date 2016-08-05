@@ -1,6 +1,6 @@
 {
   "id": "task_instance_count_vs_date",
-  "title": "Task Instance Count vs Completion Date",
+  "title": "Task Completions Over Time",
   "type": "gadget",
   "category": "Subscribers",
   "thumbnail": "gadget/task_instance_count_vs_date/index.png",

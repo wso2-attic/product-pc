@@ -1,6 +1,6 @@
 {
   "id": "process_instance_count_vs_process_id",
-  "title": "Process Instance Count vs Process ID",
+  "title": "Instance Counts of Processes",
   "type": "gadget",
   "category": "Subscribers",
   "thumbnail": "gadget/process_instance_count_vs_process_id/index.png",

@@ -1,6 +1,6 @@
 {
   "id": "avg_time_vs_process_version",
-  "title": "Average time vs Process Version",
+  "title": "Average Execution Times of Process Versions",
   "type": "gadget",
   "category": "Subscribers",
   "thumbnail": "gadget/avg_time_vs_process_version/index.png",

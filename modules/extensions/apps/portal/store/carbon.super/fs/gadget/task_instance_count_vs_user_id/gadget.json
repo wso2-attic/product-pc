@@ -1,6 +1,6 @@
 {
   "id": "task_instance_count_vs_user_id",
-  "title": "Task Instance Count vs User ID",
+  "title": "Task Instances Completed by Users",
   "type": "gadget",
   "thumbnail": "gadget/task_instance_count_vs_user_id/index.png",
   "settings": {
