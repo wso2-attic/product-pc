@@ -538,15 +538,6 @@
 
         <!-- END CEP -->
 
-        <!-- File Sets of PC starts from here -->
-        <!--<fileSet>-->
-            <!--<directory>../components/core/org.wso2.carbon.pc.extensions.executors/target</directory>-->
-            <!--<outputDirectory>${project.artifactId}-${pc.version}/repository/components/lib</outputDirectory>-->
-            <!--<includes>-->
-                <!--<include>**/org.wso2.carbon.pc.extensions.executors-1.0.0.jar</include>-->
-            <!--</includes>-->
-        <!--</fileSet>-->
-
     </fileSets>
     <dependencySets>
         <dependencySet>
