@@ -139,8 +139,10 @@
                 <exclude>portal/store/carbon.super/fs/gadget/**</exclude>
                 <exclude>portal/css/dashboard.css</exclude>
                 <exclude>portal/extensions/locales/locale_default.json</exclude>
-                <exclude>publisher/config/publisher.json</exclude>
-                <exclude>store/config/store.json</exclude>
+                <!-- Following files are excluded to fix portoffset/sso issue. Will hold the fix until ES support port
+                offset/sso -->
+                <!--<exclude>publisher/config/publisher.json</exclude>-->
+                <!--<exclude>store/config/store.json</exclude>-->
             </excludes>
         </fileSet>
         <fileSet>
@@ -775,19 +777,21 @@
             <fileMode>644</fileMode>
         </file>
 
+        <!-- Following files are included to fix port offset/sso issue. Will hold the fix until ES support port
+               offset/sso -->
         <!-- Configuring SSO for publisher-->
-        <file>
-            <source>../../modules/extensions/process/publisher/process/publisher.json</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/config</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
+        <!--<file>-->
+            <!--<source>../../modules/extensions/process/publisher/process/publisher.json</source>-->
+            <!--<outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/config</outputDirectory>-->
+            <!--<fileMode>644</fileMode>-->
+        <!--</file>-->
 
         <!-- Configuring SSO for store-->
-        <file>
-            <source>../../modules/extensions/process/store/process/store.json</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/config</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
+        <!--<file>-->
+            <!--<source>../../modules/extensions/process/store/process/store.json</source>-->
+            <!--<outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/config</outputDirectory>-->
+            <!--<fileMode>644</fileMode>-->
+        <!--</file>-->
 
         <file>
             <source>../../modules/extensions/process/portal/process/locale_default.json</source>
