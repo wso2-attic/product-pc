@@ -40,6 +40,13 @@ var callbackmethod = function(event, item) {
 
 }
 
+function getDummyData() {
+    //var data1 = "[{\"processInstanceCount\":1,\"finishTime\":1470249000000},{\"processInstanceCount\":2,\"finishTime\":1470194400000}]";
+    var data1 = "[{\"processInstanceCount\":2,\"finishTime\":1470108000000}]";
+    //var data1 = "test1";
+    return data1;
+}
+
 function drawDateVsProcessInstanceCountResult() {
 
     var processIds = $('#processInstanceCountDateProcessList').val();
@@ -71,9 +78,11 @@ function drawDateVsProcessInstanceCountResult() {
             if(!$.isEmptyObject(data))
                 responseJsonArr = JSON.parse(data);
 
-            if ($('#processInstanceCountDateDateRangeCheckBox').is(":checked")) {
+            if ($('#processInstanceCountDateDateRangeCheckBox').is(":checked") && responseJsonArr.length > 1) {
                 responseJsonArr = fillEmptyDates(responseJsonArr);
                 config.charts[0].type = "line";
+                // responseJsonArr = "[{'finishTime':'2016-8-3','processInstanceCount':2}, {'finishTime':'2016-8-4','processInstanceCount':1}]"
+
             } else {
                 responseJsonArr = formatDates(responseJsonArr);
                 config.charts[0].type = "bar";

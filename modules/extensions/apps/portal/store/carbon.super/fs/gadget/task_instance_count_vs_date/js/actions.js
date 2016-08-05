@@ -30,7 +30,7 @@ function drawGraph() {
             taskIdArray[i] = $(selected).val();
         });
     }
-    
+
     if(startDateTemp == 0|| endDateTemp == 0 ) {
         endDateTemp = new Date();
         startDateTemp = new Date(today.getFullYear(),(today.getMonth()+1-3),today.getDate());
@@ -48,9 +48,23 @@ function drawGraph() {
         data: {'filters': JSON.stringify(body)},
         success: function (data) {
 
+            data = getDummyData();
+
             var responseJsonArr = [];
             if (!$.isEmptyObject(data)) {
                 responseJsonArr = JSON.parse(data);
+                alert(JSON.stringify(responseJsonArr));
+
+                if ($('#taskInstanceCountDateRangeCheckBox').is(":checked") && responseJsonArr.length > 1) {
+                    responseJsonArr = fillEmptyDates(responseJsonArr);
+                    config.charts[0].type = "line";
+                    // responseJsonArr = "[{'finishTime':'2016-8-3','processInstanceCount':2}, {'finishTime':'2016-8-4','processInstanceCount':1}]"
+
+                } else {
+                    responseJsonArr = formatDates(responseJsonArr);
+                    config.charts[0].type = "bar";
+                }
+                alert(JSON.stringify(responseJsonArr));
 
                 var responseStr = '';
                 for (var i = 0; i < responseJsonArr.length; i++) {
@@ -81,6 +95,74 @@ function drawGraph() {
         }
     });
 }
+
+function formatDates(valueDates) {
+    var filledDates = [];
+
+    for (var i = 0; i < valueDates.length; i++) {
+        var fTime = valueDates[i].finishTime;
+        var processInstanceCount = valueDates[i].taskInstanceCount;
+        var fDate = new Date(fTime);
+        var formatedDate = getFormatedDate(fDate);
+        filledDates.push({finishTime:formatedDate, taskInstanceCount:processInstanceCount});
+    }
+    return filledDates;
+}
+
+/**
+ Given a map M1 : (date -> value), creates a new map M2 : (date -> value), where each missing date in M1
+ between its lowest and highest dates are filled with dates with 0 values.
+ */
+function fillEmptyDates(valueDates) {
+    var valuesMap = {};
+    var minDate = Number.MAX_VALUE;
+    var maxDate = 0;
+
+    for (var i = 0; i < valueDates.length; i++) {
+        var fTime = valueDates[i].finishTime;
+        if (fTime < minDate) {
+            minDate = fTime;
+        }
+        if (fTime > maxDate) {
+            maxDate = fTime;
+        }
+
+        var taskInstanceCount = valueDates[i].taskInstanceCount;
+        var fDate = new Date(fTime);
+        var formatedDate = getFormatedDate(fDate);
+        valuesMap[formatedDate] = taskInstanceCount;
+    }
+    var minD = new Date(minDate);
+    var maxD = new Date(maxDate);
+    var dayInMillis = 1000 * 60 * 60 * 24;
+
+    var numDays = Math.ceil((maxDate - minDate) / dayInMillis);
+
+    var filledDates = [];
+    for (var k = 0; k < numDays + 1; k++) {
+        var fillDate = new Date(minDate);
+        fillDate.setDate(fillDate.getDate() + k);
+        var formatedDate = getFormatedDate(fillDate);
+        var tiCount = valuesMap[formatedDate];
+        if (tiCount == null) tiCount = 0;
+
+        filledDates.push({finishTime:formatedDate, taskInstanceCount:tiCount});
+    }
+    return filledDates;
+}
+
+function getFormatedDate(fDate) {
+    var formatedDate = fDate.getFullYear() + "-" + (fDate.getMonth() + 1) + "-" + fDate.getDate();
+    return formatedDate;
+}
+
+function getDummyData() {
+    var data1 = "[{\"taskInstanceCount\":1,\"finishTime\":1470249000000},{\"taskInstanceCount\":2,\"finishTime\":1470194400000}]";
+    //var data1 = "[{\"processInstanceCount\":2,\"finishTime\":1470108000000}]";
+    //var data1 = "test1";
+    return data1;
+}
+
 function loadTaskList(dropdownId) {
 
     var dropdownElementID = document.getElementById(dropdownId);
