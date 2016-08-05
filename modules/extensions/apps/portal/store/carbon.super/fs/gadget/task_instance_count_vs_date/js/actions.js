@@ -48,12 +48,9 @@ function drawGraph() {
         data: {'filters': JSON.stringify(body)},
         success: function (data) {
 
-            data = getDummyData();
-
             var responseJsonArr = [];
             if (!$.isEmptyObject(data)) {
                 responseJsonArr = JSON.parse(data);
-                alert(JSON.stringify(responseJsonArr));
 
                 if ($('#taskInstanceCountDateRangeCheckBox').is(":checked") && responseJsonArr.length > 1) {
                     responseJsonArr = fillEmptyDates(responseJsonArr);
@@ -64,7 +61,6 @@ function drawGraph() {
                     responseJsonArr = formatDates(responseJsonArr);
                     config.charts[0].type = "bar";
                 }
-                alert(JSON.stringify(responseJsonArr));
 
                 var responseStr = '';
                 for (var i = 0; i < responseJsonArr.length; i++) {
