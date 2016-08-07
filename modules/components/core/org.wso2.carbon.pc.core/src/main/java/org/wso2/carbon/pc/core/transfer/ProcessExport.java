@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.pc.core.import_export;
+package org.wso2.carbon.pc.core.transfer;
 
-public class ImportExportConstants {
-    public static final String IMPORTS_DIR = "Imports";
+import java.util.List;
+
+public class ProcessExport {
+    private List<String> exportedProcessList;
+
 }

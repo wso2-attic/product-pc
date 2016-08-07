@@ -50,6 +50,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import sun.misc.BASE64Decoder;
 
+import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -89,7 +90,7 @@ public class ProcessStore {
         return childElement;
     }
 
-    public String xmlToString(Document doc) throws TransformerException {
+    public static String xmlToString(Document doc) throws TransformerException {
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer transformer = tf.newTransformer();
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
@@ -458,7 +459,7 @@ public class ProcessStore {
                 byte[] bpmnContent = IOUtils.toByteArray(bpmnStream);
                 String bpmnText = new String(bpmnContent);
                 bpmnContentResource.setContent(bpmnText);
-                bpmnContentResource.setMediaType("application/xml");
+                bpmnContentResource.setMediaType(MediaType.APPLICATION_XML);
                 String bpmnContentPath = "bpmncontent/" + bpmnName + "/" + bpmnVersion;
                 reg.put(bpmnContentPath, bpmnContentResource);
 
@@ -530,7 +531,7 @@ public class ProcessStore {
                 if (reg.resourceExists(bpmnContentPath)) {
                     reg.delete(bpmnContentPath);
                 }
-                String bpmnAssetPath = ProcessCenterConstants.BPMN_PATH + processName + "/" + processVersion;
+                String bpmnAssetPath = ProcessCenterConstants.BPMN_META_DATA_FILE_PATH + processName + "/" + processVersion;
                 if (reg.resourceExists(bpmnAssetPath)) {
                     reg.delete(bpmnAssetPath);
                 }
@@ -1684,7 +1685,7 @@ public class ProcessStore {
             String processPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
             Tag[] tags = reg.getTags(processPath);
             for (Tag tag : tags) {
-                tagsSb.append("###" + tag.getTagName());
+                tagsSb.append(ProcessCenterConstants.TAGS_FILE_TAG_SEPARATOR + tag.getTagName());
             }
         }
         return tagsSb.toString();
@@ -2132,7 +2133,7 @@ public class ProcessStore {
                         ProcessCenterConstants.EXPORTED_PROCESS_RXT_FILE, processName, processVersion, "xml",
                         exportProcessPath);
                 //save bpmn registry entry >> xml
-                downloadResource(reg, ProcessCenterConstants.BPMN_PATH, ProcessCenterConstants.EXPORTED_BPMN_FILE,
+                downloadResource(reg, ProcessCenterConstants.BPMN_META_DATA_FILE_PATH, ProcessCenterConstants.EXPORTED_BPMN_META_FILE,
                         processName, processVersion, "xml", exportProcessPath);
                 //save bpmncontent registry entry >> xml
                 downloadResource(reg, ProcessCenterConstants.BPMN_CONTENT_PATH,
@@ -2315,11 +2316,13 @@ public class ProcessStore {
         Resource storedProcess = reg.get(processAssetPath);
         String processId = storedProcess.getUUID();
         String imageResourcePath =
-                ProcessCenterConstants.PROCESS_ASSET_RESOURCE_REG_PATH + processId + "/images_thumbnail";
+                ProcessCenterConstants.PROCESS_ASSET_RESOURCE_REG_PATH + processId + "/"+ProcessCenterConstants
+                        .IMAGE_THUMBNAIL;
 
         if (reg.resourceExists(imageResourcePath)) {
             Resource resource = reg.get(imageResourcePath);
-            FileOutputStream fileOutputStream = new FileOutputStream(exportProcessPath + "process_image_thumbnail");
+            FileOutputStream fileOutputStream = new FileOutputStream(exportProcessPath +
+                    ProcessCenterConstants.IMAGE_THUMBNAIL);
             IOUtils.copy(resource.getContentStream(), fileOutputStream);
             fileOutputStream.close();
         }

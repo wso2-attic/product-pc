@@ -44,7 +44,7 @@ public class ProcessCenterConstants {
     public static final String METADATA = "metadata";
     public static final String METADATA_NAMESPACE = "http://www.wso2.org/governance/metadata";
     public static final String NOT_APPLICABLE = "NA";
-    public static final String IMAGE_THUMBNAIL_VALUE = "images_thumbnail";
+    public static final String IMAGE_THUMBNAIL = "images_thumbnail";
     public static final String ERROR = "error";
     public static final String MESSAGE = "message";
     public static final String STATUS = "status";
@@ -79,7 +79,7 @@ public class ProcessCenterConstants {
     public static final String PACKAGE_ASSET_ROOT = "package/";
     public static final String PACKAGES_ASSET_ROOT = "packages/";
     public static final String BPMN_CONTENT_PATH = "bpmncontent/";
-    public static final String BPMN_PATH = "bpmn/";
+    public static final String BPMN_META_DATA_FILE_PATH = "bpmn/";
     public static final String IMAGE_PATH = "store/asset_resources/process/";
     public static final String IMAGE_PATH_PACKAGE = "store/asset_resources/package/";
     public static final String GREG_PATH_PROCESS = "/_system/governance/processes/";
@@ -118,7 +118,7 @@ public class ProcessCenterConstants {
     public static final String ALLOW = "1";
     // Media types
     public static final String PDF_MEDIA_TYPE = "application/pdf";
-    public static final String DOCUMENT_MEDIA_TYPE = "application/msword";
+    public static final String MS_WORD_DOC_MEDIA_TYPE = "application/msword";
     public static final String PROCESS_TEXT_MEDIA_TYPE = "text/html";
     public static final String PROCESS_MEDIA_TYPE = "application/vnd.wso2-process+xml";
     public static final String PACKAGE_MEDIA_TYPE = "application/vnd.wso2-package+xml";
@@ -131,7 +131,7 @@ public class ProcessCenterConstants {
     public static final String PROCESS_TYPE = "Process";
     public static final String PROCESS_EXPORT_DIR = "Exports/";
     public static final String EXPORTED_PROCESS_RXT_FILE = "process_rxt.xml";
-    public static final String EXPORTED_BPMN_FILE = "bpmn.xml";
+    public static final String EXPORTED_BPMN_META_FILE = "bpmn.xml";
     public static final String EXPORTED_BPMN_CONTENT_FILE = "bpmn_content.xml";
     public static final String EXPORTED_FLOW_CHART_FILE = "flowChart.json";
     public static final String EXPORTED_PROCESS_TEXT_FILE = "process_text.xml";
@@ -151,6 +151,14 @@ public class ProcessCenterConstants {
     public static final String TYPE = "type";
     public static final String ACTIVITI_FORM_PROPERTY = "activiti:formProperty";
     public static final String VARIABLE = "variable";
+    public static final String WSO2_BPMN_ASSET_MEDIA_TYPE = "application/vnd.wso2-bpmn+xml";
+    public static final String PROCESS_ZIP_DOCUMENTS_DIR = "documents";
+    public static final String TAGS_FILE_TAG_SEPARATOR = "###";
+    public static final String FLOW_CHART = "flowchart";
+    public static final String SUCCESSORS = "successors";
+    public static final String SUBPROCESSES = "subprocesses";
+    public static final String PREDECESSORS = "predecessors";
+    public static final String IMPORTS_DIR = "Imports";
 
     // Make the constructor private, since it is a utility class
     private ProcessCenterConstants() {

@@ -94,9 +94,11 @@
         <div class="col-md-4" style="float: left">
             <div class="btn-group">
                 <button id="btn-process-analytics" class="btn btn-default" style="border-radius: 4px;" onclick="loadAnalytics()">Process Analytics</button>
-                <button id="btnExportProcess" class="btn btn-default" style="border-radius: 4px; margin-left: 5px" onclick="exportProcess('{{processName}}','{{
-                processVersion}}')">Export Process</button>
-                <input id="exportWithAssociationsChkBox" type="checkbox" style=" margin-left: 5px" >
+                <button id="btnExportProcess" class="btn btn-default" style="border-radius: 4px; margin-left: 60px"
+                        onclick="exportProcess('{{processName}}','{{processVersion}}')">Export Process</button>
+            </div>
+            <div style="padding-left: 25%;">
+                <input id="exportWithAssociationsChkBox" type="checkbox" style=" margin-left: 25px" >
                 <label for="exportWithAssociationsChkBox" style="cursor: unset">Export With Associations</label>
             </div>
 

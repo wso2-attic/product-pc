@@ -52,7 +52,7 @@ public class ProcessContentSearchService {
     static {
         Map<String, String> aMap = new HashMap<>();
         aMap.put(ProcessCenterConstants.PDF, ProcessCenterConstants.PDF_MEDIA_TYPE);
-        aMap.put(ProcessCenterConstants.DOCUMENT, ProcessCenterConstants.DOCUMENT_MEDIA_TYPE);
+        aMap.put(ProcessCenterConstants.DOCUMENT, ProcessCenterConstants.MS_WORD_DOC_MEDIA_TYPE);
         aMap.put(ProcessCenterConstants.PROCESS_TEXT, ProcessCenterConstants.PROCESS_TEXT_MEDIA_TYPE);
         aMap.put(ProcessCenterConstants.PROCESS_TYPE, ProcessCenterConstants.PROCESS_MEDIA_TYPE);
         mediatypes = Collections.unmodifiableMap(aMap);

@@ -98,7 +98,7 @@ public class Package extends AssetResource {
      * @return
      */
     public static String getPackageBPMNRegistryPath(String packageAssetPath) {
-        return packageAssetPath + "/" + ProcessCenterConstants.BPMN_PATH;
+        return packageAssetPath + "/" + ProcessCenterConstants.BPMN_META_DATA_FILE_PATH;
     }
 
     /**
@@ -211,7 +211,7 @@ public class Package extends AssetResource {
                     if (imageFileStream != null) {
                         appendText(doc, imageElement, ProcessCenterConstants.THUMBNAIL, ProcessCenterConstants
                                 .METADATA_NAMESPACE, ProcessCenterConstants
-                                .IMAGE_THUMBNAIL_VALUE);
+                                .IMAGE_THUMBNAIL);
                     } else {
                         appendText(doc, imageElement, ProcessCenterConstants.THUMBNAIL, ProcessCenterConstants
                                 .METADATA_NAMESPACE, ProcessCenterConstants
@@ -244,7 +244,7 @@ public class Package extends AssetResource {
                     }
                     String packageId = storedPackage.getUUID();
                     String imageRegPath = ProcessCenterConstants.IMAGE_PATH_PACKAGE + packageId + "/" +
-                            ProcessCenterConstants.IMAGE_THUMBNAIL_VALUE;
+                            ProcessCenterConstants.IMAGE_THUMBNAIL;
 
                     // Add image thumbnail file
                     if (imageFileStream != null) {
@@ -450,14 +450,14 @@ public class Package extends AssetResource {
                                 // Update the description
                                 if (imageNode != null && imageNode.getLength() > 0) {
                                     imageNode.item(0).setTextContent(ProcessCenterConstants
-                                            .IMAGE_THUMBNAIL_VALUE);
+                                            .IMAGE_THUMBNAIL);
                                 } else {
                                     Element imageElement = append(packageDocument, imageRootElement,
                                             ProcessCenterConstants.IMAGES,
                                             ProcessCenterConstants.METADATA_NAMESPACE);
                                     appendText(packageDocument, imageElement, ProcessCenterConstants.THUMBNAIL,
                                             ProcessCenterConstants.METADATA_NAMESPACE, ProcessCenterConstants
-                                                    .IMAGE_THUMBNAIL_VALUE);
+                                                    .IMAGE_THUMBNAIL);
                                 }
                             }
                         }
@@ -475,7 +475,7 @@ public class Package extends AssetResource {
                     }
                     String packageId = storedPackage.getUUID();
                     String imageRegPath = ProcessCenterConstants.IMAGE_PATH_PACKAGE + packageId + "/" +
-                            ProcessCenterConstants.IMAGE_THUMBNAIL_VALUE;
+                            ProcessCenterConstants.IMAGE_THUMBNAIL;
 
                     // Update image thumbnail file
                     if (imageFileStream != null) {
