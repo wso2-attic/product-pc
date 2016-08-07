@@ -17,14 +17,14 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.transfer);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("EXPORT_PROCESS jag called...");
 }
 
-var ps = new ProcessStore();
+var pe = new ProcessExport();
 var processName = String(request.getParameter("processName"));
 var processVersion = String(request.getParameter("processVersion"));
 var exportWithAssociations = String(request.getParameter("exportWithAssociations"));
@@ -34,7 +34,7 @@ var user = server.current(session);
 var responseObj = {};
 
 try {
-    var exportedPath = ps.initiateExportProcess(processName,processVersion,exportWithAssociations,user);
+    var exportedPath = pe.initiateExportProcess(processName,processVersion,exportWithAssociations,user);
     responseObj.error = false;
     responseObj.content = exportedPath;
     print(stringify(responseObj));

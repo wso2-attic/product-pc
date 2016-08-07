@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core.import_export);
+importPackage(org.wso2.carbon.pc.core.transfer);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
