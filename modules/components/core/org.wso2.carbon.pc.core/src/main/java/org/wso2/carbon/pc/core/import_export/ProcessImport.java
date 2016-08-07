@@ -20,12 +20,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
-import org.wso2.carbon.pc.core.ProcessStore;
 import org.wso2.carbon.pc.core.audit.util.RegPermissionUtil;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.core.Resource;
@@ -35,7 +33,10 @@ import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.user.api.UserStoreException;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -92,9 +93,9 @@ public class ProcessImport {
             }
 
             //check if the importing processes are already available
-            boolean isProcessAvailableAlready = isProcessesAlreadyAvailble();
-            if (isProcessAvailableAlready) {
-                return;
+            boolean isProcessesAvailableAlready = isProcessesAlreadyAvailble();
+            if (isProcessesAvailableAlready) {
+                throw new ProcessCenterException("ALREADY_AVAILABLE") ;
             }
 
             //else do the process importing for each process
@@ -109,9 +110,67 @@ public class ProcessImport {
                     putProcessRxt(processName, processVersion, processRxtPath);
                     setImageThumbnail(processName, processVersion, processDirPath);
                     setProcessDocuments(processName, processVersion, processDirPath);
-                    //set process documents
-                    //set process tags
+                    setProcessTags(processName, processVersion, processDirPath);
+                    setProcessText(processName,processVersion,processDirPath);
+                    //set bpmn
+                    //set flow chart
                     //Finally remove the Imports folder
+                }
+            }
+        }
+    }
+
+    private void setProcessText(String processName, String processVersion, String processDirPath)
+            throws IOException, RegistryException {
+        Path processTextFilePath = Paths.get(processDirPath + "/" + "process_text.xml");
+        if(Files.exists(processTextFilePath)) {
+            String processTextFileContent = "";
+            Charset charset = Charset.forName("US-ASCII");
+            String processAssetPath = "processes/" + processName + "/" + processVersion;
+            try (BufferedReader reader = Files.newBufferedReader(processTextFilePath, charset)) {
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    processTextFileContent += line;
+                }
+            } catch (IOException e) {
+                String errMsg = "Error in reading process tags file";
+                throw new IOException(errMsg, e);
+            }
+
+            // store process text as a separate resource
+            String processTextResourcePath = "processText/" + processName + "/" + processVersion;
+            if (processTextFileContent != null && processTextFileContent.length() > 0) {
+                Resource processTextResource = reg.newResource();
+                processTextResource.setContent(processTextFileContent);
+                processTextResource.setMediaType("text/html");
+                reg.put(processTextResourcePath, processTextResource);
+                reg.addAssociation(processTextResourcePath, processAssetPath, ProcessCenterConstants.ASSOCIATION_TYPE);
+            }
+        }
+    }
+
+    private void setProcessTags(String processName, String processVersion, String processDirPath)
+            throws IOException, RegistryException {
+        Path processTagsFilePath = Paths.get(processDirPath + "/" + "process_tags.txt");
+        if(Files.exists(processTagsFilePath)) {
+            String tagsFileContent = "";
+            Charset charset = Charset.forName("US-ASCII");
+            String processAssetPath = "processes/" + processName + "/" + processVersion;
+            try (BufferedReader reader = Files.newBufferedReader(processTagsFilePath, charset)) {
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    tagsFileContent += line;
+                }
+            } catch (IOException e) {
+                String errMsg = "Error in reading process tags file";
+                throw new IOException(errMsg, e);
+            }
+
+            String[] tags = tagsFileContent.split("###");
+            for (String tag : tags) {
+                //tag = tag.trim();
+                if (tag.length() > 0) {
+                    reg.applyTag(processAssetPath, tag);
                 }
             }
         }
@@ -148,7 +207,6 @@ public class ProcessImport {
                 }
             }
         }
-
     }
 
     /**
@@ -189,14 +247,16 @@ public class ProcessImport {
         if (listOfFiles != null) {
             if (listOfFiles[0].isDirectory() && listOfFiles.length == 1) {
                 String zipHomeDirectoryName = listOfFiles[0].getPath();
-                File packageFolder = new File(zipHomeDirectoryName);
-                listOfProcessDirs = packageFolder.listFiles();
+                File zipFolder = new File(zipHomeDirectoryName);
+                listOfProcessDirs = zipFolder.listFiles();
                 ArrayList<String> processListinPC = getProcessList();
 
                 for (File processDir : listOfProcessDirs) {
                     if (processDir.isDirectory()) {
                         String fileName = processDir.getName();
                         if (processListinPC.contains(fileName)) {
+                            log.error("Cannot proceed the importing..! Process :" + fileName + "already available in "
+                                    + "Process Center" );
                             return true;
                         }
                     }
