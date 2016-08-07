@@ -19,7 +19,7 @@
 
 var resources = function () {
     return {
-        js: ['flowchart/jsPlumb-2.0.7.js', 'libs/jquery.form.min.js', 'publisher-utils.js', 'create_asset.js', 'jquery-ui.js',
+        js: ['flowchart/jsPlumb-2.0.7.js', 'libs/jquery.form.min.js', 'publisher-utils.js', 'view-asset.js', 'jquery-ui.js',
             'jquery-file-upload/alertify.js', 'jquery-file-upload/bootstrap-filestyle.js', 'jquery.cookie.js', 'common/option_text.js',
             "tinymce/tinymce.min.js", 'tags/tags-init-create-asset.js', 'notify.min.js', 'messages.js', 'pdf.js', 'pdf.worker.js',
             'jquery-file-upload/jquery.iframe-transport.js', 'jquery-file-upload/jquery.fileupload.js',

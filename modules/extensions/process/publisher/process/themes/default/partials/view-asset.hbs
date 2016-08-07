@@ -1,20 +1,30 @@
 <div id="overviewDiv" class="wiz-content" style="box-shadow: 0px 2px 2px 2px rgba(0, 0, 0, 0.1);">
     <div class="title">{{assets.tables.[0].fields.name.value}}&nbsp;:&nbsp;{{assets.tables.[0].fields.version.value}}</div>
-    <div class="row-fluid">
+    <div class="row" style="padding-left: 2%; padding-right: 1%;">
 
-        <div id="thumbnailTd" class="col-sm-2" style="display: inline; float: left; padding: 20px">
-            {{#if customThumbnailAvailable}}
-                <div class="row-fluid">
+        <div id="thumbnail-img" class="col-sm-2" style="display: inline; float: left; padding: 20px">
+
+                <div class="row">
                     <div class="col-md-12 well well-sm">
+                    {{#if customThumbnailAvailable}}
                         <img id="tuumbnailImg" alt="thumbnail" class="img-thumbnail img-rounded center-block"
                              src="/publisher/storage/process/{{assets.id}}/images_thumbnail">
+                    {{else}}
+                        <!--{{> asset-default-thumbnail ..}}-->
+                        <div id="default-img-div" class="ast-img setbgcolor" style="background: {{assets.uniqueColor}};width: 100%;" title="{{name}}">
+                            <span class="ast-type-icon" title="{{assets.singularLabel}}">
+                              <i class="{{assets.icon}} fw-lg"></i>
+                            </span>
+                            <div class="ast-name-icon" style="max-width: 100%;max-height: 100%">{{assets.nameToChar}}</div>
+                        </div>
+                    {{/if}}
                         <ul class="nav nav-list">
                             <li><span class="glyphicon glyphicon-th" aria-hidden="true"></span>&nbsp;{{assets.tables.[0].fields.version.value}}</li>
                             <li><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;{{assets.lifecycleState}}</li>
                         </ul>
                     </div>
                 </div>
-            {{/if}}
+
         </div>
 
         <div class="col-sm-10" style="display: inline; float: left;padding: 20px">
@@ -63,47 +73,50 @@
                 </tr>
                 <tr>
                     <td class="col-sm-3">
-                        Business User
+                        Process User
                     </td>
-                    <td></td>
+                    <td>{{{assets.tables.[0].fields.businessuser.value}}}</td>
                 </tr>
                 <tr>
                     <td class="col-sm-3">
-                        Business User Email
+                        Process User Email
                     </td>
-                    <td></td>
+                    <td>{{{assets.tables.[0].fields.businessuseremail.value}}}</td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <div class="row-fluid">
-        <div class="col-md-4" style="float: left; width: 10%;">
-            <button id="btn-process-analytics" class="btn btn-default" onclick="javascript:$('#analytics-input-div').toggle();$('#btn-process-analytics').toggle()">Analitics</button>
-            <div class="well col-md-7" id="analytics-input-div" style="margin-bottom: 10px;display: none">
+    <hr/>
 
-                <label>Process Name</label>
-                <input type="text" class="span4 required" id="process-name" style="margin-left: 20px;">
-                <div class="copy-buttons" style="padding-top: 20px;">
-                    <button type="submit" class="btn btn-primary copy-button" onclick="loadAnalytics()">Done</button>
-                    <button type="button" class="btn cancel-button"
-                            onclick="javascript:$('#analytics-input-div').toggle();$('#btn-process-analytics').toggle()">
-                        Cancel
-                    </button>
-                </div>
+    <div class="row" style="padding-left: 2%; padding-right: 1%;">
+        <div class="col-md-4" style="float: left">
+            <div class="btn-group">
+                <button id="btn-process-analytics" class="btn btn-default" style="border-radius: 4px;" onclick="loadAnalytics()">Process Analytics</button>
+                <button id="btnExportProcess" class="btn btn-default" style="border-radius: 4px; margin-left: 5px" onclick="exportProcess('{{processName}}','{{
+                processVersion}}')">Export Process</button>
+                <input id="exportWithAssociationsChkBox" type="checkbox" style=" margin-left: 5px" >
+                <label for="exportWithAssociationsChkBox" style="cursor: unset">Export With Associations</label>
             </div>
+
+            <!--<div class="well col-md-7" id="analytics-input-div" style="margin-bottom: 10px;display: none">-->
+
+                <!--<label>Process Name</label>-->
+                <!--<input type="text" class="span4 required" id="process-name" style="margin-left: 20px;">-->
+                <!--<div class="copy-buttons" style="padding-top: 20px;">-->
+                    <!--<button type="submit" class="btn btn-primary copy-button" onclick="loadAnalytics()">Done</button>-->
+                    <!--<button type="button" class="btn cancel-button"-->
+                            <!--onclick="javascript:$('#analytics-input-div').toggle();$('#btn-process-analytics').toggle()">-->
+                        <!--Cancel-->
+                    <!--</button>-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
-        <div class="col-md-4" style="float: left;">
-            <button id="btnExportProcess" class="btn btn-default" onclick="exportProcess('{{processName}}','{{
-            processVersion}}')">Export Process</button>
-            <div class = "checkbox" style="margin-top: 2%; margin-left: -6%;">
-                <input id="exportWithAssociationsChkBox" type="checkbox" >
-                <label style="cursor: unset">Export With Associations</label>
-            </div>
-        </div>
+
     </div>
-
+    <input type="hidden" id="pname" value="{{processName}}">
+    <input type="hidden" id="pversion" value="{{processVersion}}">
 
 </div>
 

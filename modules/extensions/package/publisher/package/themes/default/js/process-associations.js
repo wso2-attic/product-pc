@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -26,9 +26,10 @@ $('#bpmnDiagramView').on('shown.bs.modal', function (e) {
     if( bpmnResourcePath == undefined){
         messages.alertError('BPMN resource path is missing');
         return;
-    }    
+    } 
+    var path = caramel.url('/assets/package/apis/packages/resources/bpmn/');
     $.ajax({
-            url: '/publisher/assets/package/apis/packages/bpmn/',
+            url: path,
             type: 'GET',
             data: {
                 'packageName': $('#packageName').val(),
@@ -59,8 +60,9 @@ $('#searchModal').on('shown.bs.modal', function (e) {
 
 $("#search-result-table").delegate('button', 'click', function(e) {
     $('#searchModal').modal('toggle'); 
+    var path = caramel.url('/assets/package/apis/associations/package');
     $.ajax({
-        url: '/publisher/assets/package/apis/packages/associate',
+        url: path,
         type: 'POST',
         data: {
             'packageName': $('#packageName').val(),

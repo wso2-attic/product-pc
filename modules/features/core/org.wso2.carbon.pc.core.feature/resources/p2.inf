@@ -1,0 +1,2 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.pc.core_${feature.version}/conf/process-center.xml,target:${installFolder}/../../conf/process-center.xml,overwrite:true);\

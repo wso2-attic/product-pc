@@ -39,11 +39,13 @@ public class ProcessCenterConfiguration {
     private ProcessCenterDocument processCenterDocument;
 
     /* Configurations related to process analytics */
+    private boolean analyticsEnabled;
     private String analyticsServerURL;
     private String analyticsServerUsername;
     private String analyticsServerPassword;
 
     /* Configurations Related to Process Servers */
+    private boolean runtimeEnvironmentEnabled;
     private String runtimeEnvironmentURL;
     private String runtimeEnvironmentUsername;
     private String runtimeEnvironmentPassword;
@@ -52,7 +54,7 @@ public class ProcessCenterConfiguration {
      * Create Process Center Configuration from a configuration file. If error occurred while parsing configuration
      * file, default configuration will be created.
      *
-     * @param processCenterConfig XMLBeans object of human task server configuration file
+     * @param processCenterConfig XMLBeans object of process center configuration file
      */
     public ProcessCenterConfiguration(File processCenterConfig) {
         processCenterDocument = readConfigurationFromFile(processCenterConfig);
@@ -86,7 +88,7 @@ public class ProcessCenterConfiguration {
     }
 
     /**
-     * Initialize the configuration object from the properties in the human task server config xml file.
+     * Initialize the configuration object from the properties in the process center config xml file.
      */
     private void initConfigurationFromFile(File processCenterConfigurationFile) {
 
@@ -117,8 +119,16 @@ public class ProcessCenterConfiguration {
      */
     private void initAnalytics(SecretResolver secretResolver, TAnalytics tAnalytics) {
 
+        // Get Enabled
+        this.analyticsEnabled = tAnalytics.getEnabled();
+        if (this.analyticsEnabled) {
             // Get URL
-            this.analyticsServerURL = tAnalytics.getDASServerUrl();
+            if (tAnalytics.getDASServerUrl().endsWith("/")) {
+                this.analyticsServerURL = tAnalytics.getDASServerUrl().substring(0, tAnalytics.getDASServerUrl()
+                        .length() - 1);
+            } else {
+                this.analyticsServerURL = tAnalytics.getDASServerUrl();
+            }
             // Get Username
             this.analyticsServerUsername = tAnalytics.getDASUsername();
             // Get Password
@@ -131,10 +141,13 @@ public class ProcessCenterConfiguration {
                 }
             } else {
                 if (tAnalytics.getDASPassword() != null) {
-                    this.analyticsServerUsername = tAnalytics.getDASPassword();
+                    this.analyticsServerPassword = tAnalytics.getDASPassword();
                 }
             }
+
         }
+
+    }
 
 
     /**
@@ -145,13 +158,22 @@ public class ProcessCenterConfiguration {
      */
     private void initEnvironments(SecretResolver secretResolver, TRuntimeEnvironment tRuntimeEnvironment) {
 
+        // Get runtime Environment Enabled
+        this.runtimeEnvironmentEnabled = tRuntimeEnvironment.getEnabled();
+        if (this.runtimeEnvironmentEnabled) {
             // Get runtime Server URL
-            this.runtimeEnvironmentURL = tRuntimeEnvironment.getServerUrl();
+            if (tRuntimeEnvironment.getServerUrl().endsWith("/")) {
+                this.runtimeEnvironmentURL = tRuntimeEnvironment.getServerUrl().substring(0, tRuntimeEnvironment
+                        .getServerUrl().length() - 1);
+            } else {
+                this.runtimeEnvironmentURL = tRuntimeEnvironment.getServerUrl();
+            }
             // Get Username
             this.runtimeEnvironmentUsername = tRuntimeEnvironment.getUsername();
             // Get Password
             if (secretResolver != null && secretResolver.isInitialized()
-                    && secretResolver.isTokenProtected(ProcessCenterConstants.RUNTIME_ENVIRONMENT_PASSWORD_SECRET_ALIAS)) {
+                    && secretResolver.isTokenProtected(ProcessCenterConstants
+                    .RUNTIME_ENVIRONMENT_PASSWORD_SECRET_ALIAS)) {
                 this.runtimeEnvironmentPassword = secretResolver.resolve(ProcessCenterConstants
                         .RUNTIME_ENVIRONMENT_PASSWORD_SECRET_ALIAS);
                 if (log.isDebugEnabled()) {
@@ -162,9 +184,19 @@ public class ProcessCenterConfiguration {
                     this.runtimeEnvironmentPassword = tRuntimeEnvironment.getPassword();
                 }
             }
+        }
     }
 
     // Getters  retrieve process center configuration elements
+
+    public boolean isAnalyticsEnabled() {
+        return analyticsEnabled;
+    }
+
+    public boolean isRuntimeEnvironmentEnabled() {
+        return runtimeEnvironmentEnabled;
+    }
+
     public String getAnalyticsServerURL() {
         return analyticsServerURL;
     }

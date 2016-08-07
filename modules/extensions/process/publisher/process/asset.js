@@ -134,8 +134,14 @@ asset.server = function(ctx) {
                         url: 'save_process_variables',
                         path: 'save_process_variables.jag'
                    }, {
+                        url: 'get_process_variables',
+                        path: 'get_process_variables.jag'
+                   }, {
                         url: 'get_process_variables_list',
                         path: 'get_process_variables_list.jag'
+                   },{
+                        url: 'get_process_deployed_id',
+                        path: 'get_process_deployed_id.jag'
                    }
             ],
             pages: [{
@@ -246,14 +252,16 @@ asset.renderer = function(ctx) {
         if (permissionAPI.hasActionPermissionforPath(path, 'write', ctx.session) && permissionAPI.hasAssetPagePermission(type,'update',user.tenantId,username)) {
             navList.push('Edit', 'btn-edit', util.buildUrl('update') + '/' + id);
         }
-        if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
-            navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + id);
-        }
+
         //Only render the view if the asset has a
         if ((isLCViewEnabled) && (isAssetWithLifecycle(page.assets))) {
             if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_LIFECYCLE, ctx.assetType, ctx.session)) {
                 navList.push('Lifecycle', 'btn-lifecycle', util.buildUrl('lifecycle') + '/' + id);
             }
+        }
+
+        if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
+            navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + id);
         }
         navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log') + '/' + id);
         navList.push('Config Analytics', 'btn-configAnalytics', util.buildUrl('config_analytics') + '/' + id);
@@ -270,7 +278,7 @@ asset.renderer = function(ctx) {
         if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) {
             //    log.info(page.assets);
             if(page.assets.id != null) {
-                navList.push('Overview', 'btn-overview', util.buildUrl('details') + '/' + page.assets.id);
+                navList.push('Edit', 'btn-edit', util.buildUrl('update') + '/' + page.assets.id);
                 if ((isLCViewEnabled) && (isAssetWithLifecycle(page.assets))) {
                     if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_LIFECYCLE, ctx.assetType, ctx.session)) {
                         navList.push('Life Cycle', 'btn-lifecycle', util.buildUrl('lifecycle') + '/' + page.assets.id);
@@ -282,7 +290,9 @@ asset.renderer = function(ctx) {
                 navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log') + '/' +page.assets.id);
 
             } else {
+                navList.push('Add ', 'btn-add-new', util.buildUrl('create'));
                 navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log'));
+                navList.push('Import Process', 'btn-overview', util.buildUrl('import_process'));
             }
         }
         return navList.list();
@@ -396,9 +406,10 @@ asset.renderer = function(ctx) {
             }
 
             var processName = page.assets.tables[0].fields.name.value; //tables[0].fields["Name"].value;
-            page.processName = page.assets.tables[0].fields.name.value;
-            page.processVersion = page.assets.tables[0].fields.version.value;
             var processVersion = page.assets.tables[0].fields.version.value;
+            page.processName = processName;
+            page.processVersion = processVersion;
+
             try {
 
                 var processTags = ps.getProcessTags(processName, processVersion);

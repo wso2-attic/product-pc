@@ -1,0 +1,10 @@
+{
+  "name" : "description",
+  "value" : "hello",
+  "pk" : 1,
+  "processName" : "yasima",
+  "processVersion" : "1.0",
+  "processUser":"malintha",
+  "processUserEmail":"malintha@wso2.com"
+}
+

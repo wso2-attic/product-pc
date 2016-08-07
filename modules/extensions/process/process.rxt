@@ -26,6 +26,12 @@
             <field type="text" required="true">
                 <name>Version</name>
             </field>
+            <field type="text" required="false">
+                <name>businessuser</name>
+            </field>
+            <field type="text" required="false">
+                <name>businessuseremail</name>
+            </field>
             <field type="text-area">
                 <name>Description</name>
             </field>

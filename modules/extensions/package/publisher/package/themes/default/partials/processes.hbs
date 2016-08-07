@@ -38,81 +38,89 @@
         </div>
     </div>
 {{/with}}
-<div id = "process_associations" class="container-fluid">
-    <h2 class="field-title">
-      <a data-toggle="collapse" href="#collapseProcesses" aria-expanded="true" class="collapsing-h2">
-      <i class="cu-btn-exp-col btn-collapsed">Process Information</i>
-      </a>
-    </h2>
-      <div class="collapse in" id="collapseProcesses" aria-expanded="true">
-      {{#if bpmnResources}}
-        <table class="table table-striped table-hover table-responsive list-table display responsive nowrap data-table dataTable no-footer" id="bpmn" role="grid" aria-describedby="bpmn_info">
-            <thead>
-               <tr>
-                  <th>BPMN Resource</th>
-                  <th>BPMN Process Name</th>
-                  <th>Process Asset Name</th>
-                  <th>Process Asset Version</th>
-                  <th></th>
-               </tr>
-            </thead>
-            <tbody>
-               {{#each bpmnResources}}
-                 <tr role="row" class="{{this.style}}">
-                    <td data-title="BPMNResourceName">{{this.packageBpmnFileName}}</td>
-                    <td data-title="ProcessName">{{this.processName}}</td>
-                    <td data-title="ProcessName">{{this.processAssetName}}</td>
-                    <td data-title="ProcessVersion">{{this.processAssetVersion}}</td>
-                    <td class="text-right content-fill text-left-on-grid-view no-wrap">
-                       <a class="btn padding-reduce-on-grid-view" data-toggle="modal" data-target="#bpmnDiagramView" >
-                       <span class="fw-stack">
-                       <i class="fw fw-ring fw-stack-2x"></i>
-                       <i class="fw fw-view fw-stack-1x"></i>
-                       </span>
-                       <span class="hidden-xs hidden-on-grid-view">View BPMN</span>
-                       </a>
-                       <a class="btn padding-reduce-on-grid-view" data-toggle="modal" data-target="#searchModal">
-                       <span class="fw-stack">
-                       <i class="fw fw-ring fw-stack-2x"></i>
-                       <i class="fw fw-edit fw-stack-1x"></i>
-                       </span>
-                       <span class="hidden-xs hidden-on-grid-view">Associate Prcoess</span>
-                       </a>
-                    </td>
+{{#if errorMessage}}
+<div class="message message-danger" style="display: block;">
+  <h4><i class="icon fw fw-error"></i>Error</h4>
+  <p id="error-msg">{{errorMessage}}</p>
+</div>
+{{else}}
+  <div id = "process_associations" class="container-fluid">
+      <h2 class="field-title">
+        <a data-toggle="collapse" href="#collapseProcesses" aria-expanded="true" class="collapsing-h2">
+        <i class="cu-btn-exp-col btn-collapsed">Process Information</i>
+        </a>
+      </h2>
+        <div class="collapse in" id="collapseProcesses" aria-expanded="true">
+        {{#if bpmnResources}}
+          <table class="table table-striped table-hover table-responsive list-table display responsive nowrap data-table dataTable no-footer" id="bpmn" role="grid" aria-describedby="bpmn_info">
+              <thead>
+                 <tr>
+                    <th>BPMN Resource</th>
+                    <th>BPMN Process Name</th>
+                    <th>Process Asset Name</th>
+                    <th>Process Asset Version</th>
+                    <th>Process Deployment ID</th>
                  </tr>
-               {{/each}}
-            </tbody>
-         </table>
-      {{else}}
-         <h4>Package file can not be found or Package does not contain any bpmn files.</h4>
-      {{/if}}
-    </div>
-</div>
-<div class="modal fade"  id="bpmnDiagramView" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
-   <div class="modal-dialog model-center">
-      <div class="modal-content">
-         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">BPMN Diagram</h4>
-         </div>
-         <div class="modal-body" >
-            <div id="diagramScroll">
-               <img id="processDiagram" src=""/>
-            </div>
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-         </div>
+              </thead>
+              <tbody>
+                 {{#each bpmnResources}}
+                   <tr role="row" class="{{this.style}}">
+                      <td data-title="BPMNResourceName">{{this.packageBpmnFileName}}</td>
+                      <td data-title="ProcessName">{{this.processName}}</td>
+                      <td data-title="ProcessName">{{this.processAssetName}}</td>
+                      <td data-title="ProcessVersion">{{this.processAssetVersion}}</td>
+                      <td data-title="ProcessDeploymentID">{{this.processDeploymentID}}</td>
+                      <td class="text-right content-fill text-left-on-grid-view no-wrap">
+                         <a class="padding-reduce-on-grid-view" data-toggle="modal" data-target="#bpmnDiagramView" >
+                         <span class="fw-stack">
+                         <i class="fw fw-ring fw-stack-2x"></i>
+                         <i class="fw fw-view fw-stack-1x"></i>
+                         </span>
+                         <span class="hidden-xs hidden-on-grid-view">View BPMN</span>
+                         </a>
+                         <a class="padding-reduce-on-grid-view" data-toggle="modal" data-target="#searchModal">
+                         <span class="fw-stack">
+                         <i class="fw fw-ring fw-stack-2x"></i>
+                         <i class="fw fw-edit fw-stack-1x"></i>
+                         </span>
+                         <span class="hidden-xs hidden-on-grid-view">Associate Prcoess</span>
+                         </a>
+                      </td>
+                   </tr>
+                 {{/each}}
+              </tbody>
+           </table>
+        {{else}}
+           <h4>Package file can not be found or Package does not contain any bpmn files.</h4>
+        {{/if}}
       </div>
-      <!-- /.modal-content -->
-   </div>
-   <!-- /.modal-dialog -->
-</div>
-<div>
-<input type="hidden" id ="searchAssetType" value="process">
-<input type="hidden" id ="selectedBPMNFile" value="">
-{{>process-center-search .}}
-</div>
+  </div>
+  <div class="modal fade"  id="bpmnDiagramView" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+     <div class="modal-dialog model-center">
+        <div class="modal-content">
+           <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">BPMN Diagram</h4>
+           </div>
+           <div class="modal-body" >
+              <div id="diagramScroll">
+                 <img id="processDiagram" src=""/>
+              </div>
+           </div>
+           <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           </div>
+        </div>
+        <!-- /.modal-content -->
+     </div>
+     <!-- /.modal-dialog -->
+  </div>
+  <div>
+  <input type="hidden" id ="searchAssetType" value="process">
+  <input type="hidden" id ="selectedBPMNFile" value="">
+  {{>process-center-search .}}
+  </div>
+{{/if}}
 
 <!-- /.modal -->
 

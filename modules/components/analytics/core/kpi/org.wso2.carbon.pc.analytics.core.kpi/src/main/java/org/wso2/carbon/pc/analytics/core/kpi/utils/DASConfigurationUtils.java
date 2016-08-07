@@ -16,9 +16,6 @@
 
 package org.wso2.carbon.pc.analytics.core.kpi.utils;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
@@ -27,27 +24,26 @@ import org.wso2.carbon.pc.analytics.core.kpi.AnalyticsConfigConstants;
 import org.wso2.carbon.pc.analytics.core.kpi.internal.PCAnalyticsServerHolder;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
+import org.wso2.carbon.pc.core.ProcessStore;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.securevault.SecretResolver;
-import org.wso2.securevault.SecretResolverFactory;
 
 import javax.xml.bind.DatatypeConverter;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
-import java.io.File;
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
-import org.wso2.carbon.pc.core.ProcessStore;
+import static org.wso2.carbon.pc.analytics.core.kpi.internal.PCAnalyticsServerHolder.getInstance;
 
 /**
  * Utils file for Analytics configuration related properties
  */
 public class DASConfigurationUtils {
     private static final Log log = LogFactory.getLog(DASConfigurationUtils.class);
+
+    // Make the constructor private, since it is a utility class
+    private DASConfigurationUtils() {
+    }
 
     /**
      * Check whether analytics configurations (with DAS) is made for the respective process
@@ -83,13 +79,11 @@ public class DASConfigurationUtils {
                 }
             }
         } catch (RegistryException e) {
-            String errMsg = "Governance Registry access error, while checking whether "
-                    + "analytics configurations are done for process: " + processName + ":" + processVersion;
+            String errMsg = "Governance Registry access error, wile checking isDasConfigedForAnalytics";
             throw new ProcessCenterException(errMsg, e);
         } catch (Exception e) {
-            String errMsg =
-                    "Error, while checking whether analytics configurations are done for process: " + processName + ":"
-                            + processVersion;
+            String errMsg = "Registry process.rxt String to XML conversion error, wile checking " +
+                    "isDasConfigedForAnalytics ";
             throw new ProcessCenterException(errMsg, e);
         }
         return false;
@@ -131,112 +125,56 @@ public class DASConfigurationUtils {
                     reg.put(processAssetPath, resource);
 
                     if (log.isDebugEnabled()) {
-                        log.debug("isDasConfigedForAnalytics property in process.rxt is set as true");
+                        log.debug("isDasConfigedForAnalytics property in process.rxt set as true");
                     }
                 }
             }
         } catch (TransformerException | RegistryException e) {
-            String errMsg = "Error in setting property isDASAnalyticsConfigured in process.rxt for the process: "
+            String errMsg = "Exception in setting property isDASAnalyticsConfigured in process.rxt for the process:"
                     + processName + ":" + processVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         } catch (Exception e) {
             String errMsg =
-                    "Error in setting property isDASAnalyticsConfigured in process.rxt for the process: " + processName
-                            + ":" + processVersion;
+                    "Exception in setting property isDASAnalyticsConfigured in process.rxt while converting xml to " +
+                            "string for the process:"
+                            + processName + ":" + processVersion;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
     }
 
     /**
-     * Get content of pc.xml file as a string
+     * Get Analytics Server URL
      *
-     * @return the content of pc.xml file as a String
-     * @throws IOException
-     * @throws XMLStreamException
-     */
-    public static OMElement getConfigElement() throws IOException, XMLStreamException {
-        String carbonConfigDirPath = CarbonUtils.getCarbonConfigDirPath();
-        String pcConfigPath = carbonConfigDirPath + File.separator +
-                AnalyticsConfigConstants.PC_CONFIGURATION_FILE_NAME;
-        File configFile = new File(pcConfigPath);
-        String configContent = FileUtils.readFileToString(configFile);
-        return AXIOMUtil.stringToOM(configContent);
-    }
-
-    /**
      * @return DASUrl
-     * @throws IOException
-     * @throws XMLStreamException
      */
-    public static String getDASURL() throws IOException, XMLStreamException {
-        OMElement configElement = getConfigElement();
-        OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.ANALYTICS));
-        if (analyticsElement != null) {
-            String baseUrl = analyticsElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.CONFIG_BASE_URL))
-                    .getText();
-            if (baseUrl != null && !baseUrl.isEmpty()) {
-                if (baseUrl.endsWith(File.separator)) {
-                    return baseUrl.substring(0, baseUrl.length() - 1);
-                }
-                return baseUrl;
-            }
-        }
-        return null;
-    }
-
-    public static String getBPSURL() throws IOException, XMLStreamException {
-        OMElement configElement = getConfigElement();
-        OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.ANALYTICS));
-        if (analyticsElement != null) {
-            String baseUrl = analyticsElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.BPS_BASE_URL))
-                    .getText();
-            if (baseUrl != null && !baseUrl.isEmpty()) {
-                if (baseUrl.endsWith(File.separator)) {
-                    //baseUrl += File.separator;
-                    return baseUrl.substring(0, baseUrl.length() - 1);
-                }
-                return baseUrl;
-            }
-        }
-        return null;
+    public static String getDASURL() {
+        return getInstance().getProcessCenter().getProcessCenterConfiguration().getAnalyticsServerURL();
     }
 
     /**
-     * @return AuthorizationHeader
-     * @throws IOException
-     * @throws XMLStreamException
+     * Get Runtime Server URL
+     *
+     * @return BPS runtime url
      */
-    public static String getAuthorizationHeader() throws IOException, XMLStreamException {
-        OMElement configElement = getConfigElement();
-        SecretResolver secretResolver = SecretResolverFactory.create(configElement, false);
-        OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.ANALYTICS));
+    public static String getBPSURL() {
+        return getInstance().getProcessCenter().getProcessCenterConfiguration().getRuntimeEnvironmentURL();
+    }
 
-        String userName = null;
-        char[] password = null;
-        if (analyticsElement != null) {
-            userName = analyticsElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.CONFIG_USER_NAME))
-                    .getText();
-            if (secretResolver != null && secretResolver.isInitialized()) {
-                if (secretResolver.isTokenProtected(AnalyticsConfigConstants.SECRET_ALIAS_BPS_PASSWORD)) {
-                    password = secretResolver.resolve(AnalyticsConfigConstants.SECRET_ALIAS_BPS_PASSWORD).toCharArray();
-                } else {
-                    password = analyticsElement
-                            .getFirstChildWithName(new QName(AnalyticsConfigConstants.CONFIG_PASSWORD)).getText()
-                            .toCharArray();
-                }
-            } else {
-                password = analyticsElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.CONFIG_PASSWORD))
-                        .getText().toCharArray();
-            }
-        }
+    /**
+     * Get authorization header for access bps admin service
+     *
+     * @return AuthorizationHeader
+     */
+    public static String getAuthorizationHeader() {
+        String userName = getInstance().getProcessCenter().getProcessCenterConfiguration()
+                .getRuntimeEnvironmentUsername();
+        String password = getInstance().getProcessCenter().getProcessCenterConfiguration()
+                .getRuntimeEnvironmentPassword();
         if (userName != null && password != null) {
-            String headerPortion = userName + ":" + String.valueOf(password);
-            byte[] encodedBytes = headerPortion.getBytes("UTF-8");
-            String encodedString = DatatypeConverter.printBase64Binary(encodedBytes);
-            //requestHeader += encodedString;
-            return AnalyticsConfigConstants.REQUEST_HEADER_BASIC + " " + encodedString;
+            return AnalyticsConfigConstants.REQUEST_HEADER_BASIC + " " + DatatypeConverter.printBase64Binary(
+                    (userName + ":" + password).getBytes(StandardCharsets.UTF_8));
         }
         return null;
     }
@@ -245,45 +183,17 @@ public class DASConfigurationUtils {
      * Get DAS user name
      *
      * @return dasUserName
-     * @throws IOException
-     * @throws XMLStreamException
      */
-    public static String getDASUserName() throws IOException, XMLStreamException {
-        OMElement configElement = getConfigElement();
-        OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.ANALYTICS));
-        if (analyticsElement != null) {
-            String dasUserName = analyticsElement
-                    .getFirstChildWithName(new QName(AnalyticsConfigConstants.DAS_USER_NAME)).getText();
-            if (dasUserName != null && !dasUserName.isEmpty()) {
-                if (dasUserName.endsWith(File.separator)) {
-                    return dasUserName.substring(0, dasUserName.length() - 1);
-                }
-                return dasUserName;
-            }
-        }
-        return null;
+    public static String getDASUserName() {
+        return getInstance().getProcessCenter().getProcessCenterConfiguration().getAnalyticsServerUsername();
     }
 
     /**
      * Get DAS Password
      *
      * @return dasPassword
-     * @throws IOException
-     * @throws XMLStreamException
      */
-    public static String getDASPassword() throws IOException, XMLStreamException {
-        OMElement configElement = getConfigElement();
-        OMElement analyticsElement = configElement.getFirstChildWithName(new QName(AnalyticsConfigConstants.ANALYTICS));
-        if (analyticsElement != null) {
-            String dasPassword = analyticsElement
-                    .getFirstChildWithName(new QName(AnalyticsConfigConstants.DAS_PASSWORD)).getText();
-            if (dasPassword != null && !dasPassword.isEmpty()) {
-                if (dasPassword.endsWith(File.separator)) {
-                    return dasPassword.substring(0, dasPassword.length() - 1);
-                }
-                return dasPassword;
-            }
-        }
-        return null;
+    public static String getDASPassword() {
+        return getInstance().getProcessCenter().getProcessCenterConfiguration().getAnalyticsServerPassword();
     }
 }

@@ -44,6 +44,7 @@ window.onload = function () {
         });
     });
     loadOverview();
+    $('#process-thumbnail-div').hide();
 };
 
 function showTextEditor(element) {
@@ -68,8 +69,6 @@ function showTextEditor(element) {
             $("#processTextEditDiv").addClass("active");
         }
         else {
-            $("#processTextEditDiv").hide();
-            $("#processTextView").show();
             $(".active").removeClass("active");
         }
     } else {
@@ -354,6 +353,8 @@ function getProcessInfo() {
         'processName': pname,
         'processVersion': pversion,
         'processOwner': $("#pOwner").val(),
+        'processUser' : $("#pUser").val(),
+        'processUserEmail' : $("#pUserEmail").val(),
         'processDescription': $("#overview_description").val(),
         'processTags': tagList.toString(),
         'subprocess': list,//readSubprocessTable(),
@@ -385,11 +386,8 @@ function saveProcessText(currentElement) {
                 if (response.error === false) {
                     if ($(currentElement).attr('id') == 'updateBtn') {
                         alertify.success("Successfully saved the process content.");
-                        $("#processTextEditDiv").hide();
                         $("#textadded").addClass("fw fw-check");
                         getProcessText();
-                        $("#processTextEditDiv").hide();
-                        $("#processTextView").show();
                         $(".active").removeClass("active");
                     }
                 } else {
@@ -566,6 +564,7 @@ function readImage(element) {
         var datauri = e.target.result;
         $("#image").attr('src', 'data:image/*;base64,' + btoa(datauri));
         $("#image").show();
+        $('#process-thumbnail-div').show();
     };
     if (file) {
         reader.readAsBinaryString(file);
@@ -795,7 +794,7 @@ $("#addNewDoc").on("submit", function (e) {
                     alertify.success("Document added successfully.");
                     $("#docadded").addClass("fw fw-check");
                     showDocument();
-                    $("#docEditDiv").hide();
+                    // $("#docEditDiv").hide();
                     $("#docViewDiv").show();
                     $(".active").removeClass("active");
                 }
@@ -862,6 +861,8 @@ function getMainProcess() {
 
 
 function readUpdatedSubprocess(currentObj, count) {
+    pname = $("#pName").val();
+    pversion = $("#pVersion").val();
     var subprocessInput = $(currentObj).parent().closest("tr").find("input").val();
     if (subprocessInput == '') {
         alertify.error('Subprocess field is empty.');
@@ -930,6 +931,8 @@ function readUpdatedSubprocess(currentObj, count) {
 }
 
 function readUpdatedSuccessor(currentObj, count) {
+    pname = $("#pName").val();
+    pversion = $("#pVersion").val();
     var successorInput = $(currentObj).parent().closest("tr").find("input").val();
 
     if (successorInput == '') {
@@ -996,6 +999,8 @@ function readUpdatedSuccessor(currentObj, count) {
 }
 
 function readUpdatedPredecessor(currentObj, count) {
+    pname = $("#pName").val();
+    pversion = $("#pVersion").val();
     var predecessorInput = $(currentObj).parent().closest("tr").find("input").val();
 
     if (predecessorInput == '') {

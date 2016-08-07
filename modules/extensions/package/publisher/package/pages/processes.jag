@@ -19,13 +19,20 @@ require('/modules/publisher.js').exec(function (ctx) {
     page.path = assets.path;
    
     var bpmnResources = [];
+    var bpmnResourcesResponse;
     // Get bpmn files related to the package
-    var packageInstance = Package();
-    var bpmnResourcesResponse = packageInstance.getBpmnResources(output.assets.name,output.assets.version,output.cuser.username);
-    if (bpmnResourcesResponse != null) {
-        var bpmnResources = parse(String(bpmnResourcesResponse));
+    
+    try {
+        var packageInstance = Package();
+        bpmnResourcesResponse = packageInstance.getBpmnResources(output.assets.name,output.assets.version,output.cuser.username);
+        if (bpmnResourcesResponse != null) {
+            var bpmnResources = parse(String(bpmnResourcesResponse));
+        }
+        output.bpmnResources = bpmnResources;
+    } catch (e) {
+
+        output.errorMessage = "Error while getting bpmn information."
     }
-    output.bpmnResources = bpmnResources;
     caramel.render(output);  
 }, request, response, session);
 %>

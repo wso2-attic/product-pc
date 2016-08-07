@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * The Implementation of Process server interface
@@ -130,11 +132,17 @@ public class ProcessServerImpl implements ProcessServer {
     }
 
     @Override
-    public String getDeploymentID(String packageName) throws ProcessCenterException {
+    public String getLatestDeploymentID(String packageName) throws ProcessCenterException {
         try {
             WorkflowServiceClient workflowServiceClient = new WorkflowServiceClient(loginServiceClient.authenticate
                     (this.username, this.password.toCharArray()), this.url, null);
             BPMNDeployment[] deploymentsByName = workflowServiceClient.getDeploymentsByName(packageName);
+            Arrays.sort(deploymentsByName, new Comparator<BPMNDeployment>() {
+                public int compare(BPMNDeployment bpmnDeployment1, BPMNDeployment bpmnDeployment2) {
+                    return Integer.parseInt(bpmnDeployment2.getDeploymentId()) - Integer.parseInt(bpmnDeployment1
+                            .getDeploymentId());
+                }
+            });
             if (deploymentsByName != null && deploymentsByName.length > 0) {
                 return deploymentsByName[0].getDeploymentId();
             }
@@ -147,5 +155,30 @@ public class ProcessServerImpl implements ProcessServer {
                     packageName, e);
         }
         return null;
+    }
+
+    @Override
+    public BPMNDeployment[] getDeploymentsByName(String packageName) throws ProcessCenterException {
+        try {
+            WorkflowServiceClient workflowServiceClient = new WorkflowServiceClient(loginServiceClient.authenticate
+                    (this.username, this.password.toCharArray()), this.url, null);
+            BPMNDeployment[] deploymentsByName = workflowServiceClient.getDeploymentsByName(packageName);
+            if (deploymentsByName != null) {
+                Arrays.sort(deploymentsByName, new Comparator<BPMNDeployment>() {
+                    public int compare(BPMNDeployment bpmnDeployment1, BPMNDeployment bpmnDeployment2) {
+                        return Integer.parseInt(bpmnDeployment2.getDeploymentId()) - Integer.parseInt(bpmnDeployment1
+                                .getDeploymentId());
+                    }
+                });
+            }
+            return deploymentsByName;
+        } catch (LoginAuthenticationExceptionException e) {
+            throw new ProcessCenterException("Authentication error while undeploying bpmn package to BPS server ", e);
+        } catch (MalformedURLException e) {
+            throw new ProcessCenterException("Error occurred while passing server Url ", e);
+        } catch (Exception e) {
+            throw new ProcessCenterException("Error occurred while getting latest deployment id of the package " +
+                    packageName, e);
+        }
     }
 }

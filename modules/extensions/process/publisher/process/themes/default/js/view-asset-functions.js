@@ -61,16 +61,33 @@ window.onload = function () {
             return JSON.stringify(params);
         }
     });
-
 };
 
 function loadAnalytics() {
-    var url = "../../../../portal/dashboards/process-charts?pname="+$('#process-name').val();
-    if($('#process-name').val()){
-        window.open(url, '_blank');
-    } else {
-        alertify.error("process name cannot be empty");
-    }
+        $.ajax({
+            url: '/publisher/assets/process/apis/get_process_deployed_id',
+            type: 'POST',
+            data: {
+                'processName': $("#pname").val(),
+                'processVersion': $("#pversion").val()
+            },
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    if(response.content) {
+                        var url = "../../../../portal/dashboards/process-monitoring/landing?pname="+response.content;
+                        window.open(url, '_blank');
+                    } else {
+                        alertify.error('Process has\'nt configured for analytics');
+                    }
+                } else {
+                    alertify.error(response.content);
+                }
+            },
+            error: function () {
+                alertify.error('Process deployment id retriving error');
+            }
+        });
 }
 
 function getMainProcess() {

@@ -1,0 +1,21 @@
+{
+  "predecessor":[
+
+  ],
+  "subprocess":[
+
+  ],
+  "successor":[
+
+  ],
+  "processTags":"",
+  "processDescription":"",
+  "processVersion":"1.0",
+  "processName":"PredecessorProcess",
+  "processUser":"malintha",
+  "processUserEmail":"malintha@wso2.com",
+  "image":{
+
+  },
+  "processOwner":"TestOwner1"
+}

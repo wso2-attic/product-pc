@@ -91,8 +91,7 @@
         INSERT OVERWRITE TABLE USER_INVOLVE_SUMMARY
         SELECT c.processDefinitionId, c.processDefinitionId, c.taskDefinitionKey, c.taskDefinitionKey, c.taskInstanceId,
         c.processInstanceId, getTime(c.startTime) AS startedTime, getTime(c.startTime) AS startTime, getTime(c.endTime) AS finishedTime, getTime(c.endTime) AS finishTime,
-        c.duration, c.assignee, c.assignee FROM (SELECT DISTINCT a.processDefinitionId,
-        b.* FROM BPMNProcessInstances AS a, BPMNTaskInstances AS b WHERE a.processInstanceId = b.processInstanceId) AS c;
+        c.duration, c.assignee, c.assignee FROM BPMNTaskInstances c;
 
     </Script>
     <CronExpression>0 0/5 * 1/1 * ? *</CronExpression>

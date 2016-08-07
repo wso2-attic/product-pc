@@ -20,8 +20,6 @@ package org.wso2.carbon.pc.analytics.core.kpi;
  * (initiator class in the module)
  */
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -33,8 +31,6 @@ import org.wso2.carbon.pc.analytics.core.kpi.clients.LoginAdminServiceClient;
 import org.wso2.carbon.pc.analytics.core.kpi.internal.PCAnalyticsServerHolder;
 import org.wso2.carbon.pc.analytics.core.kpi.utils.DASConfigurationUtils;
 import org.wso2.carbon.pc.core.ProcessCenterException;
-import org.wso2.securevault.SecretResolver;
-import org.wso2.securevault.SecretResolverFactory;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
@@ -43,6 +39,7 @@ import java.util.Arrays;
 
 public class DASConfigClient {
 
+    private static final Log log = LogFactory.getLog(DASConfigClient.class);
     String streamName;
     String stremaVersion;
     String streamId;
@@ -51,22 +48,26 @@ public class DASConfigClient {
     String receiverName;
     JSONArray processVariables;
     String dasUrl = null;
-    private static final Log log = LogFactory.getLog(DASConfigClient.class);
 
     /**
      * Configure WSO2 DAS for analytics, by creating an Event Stream, Event Receiver for each process.
      * In the event stream a field for processInstanceId too would be set.
      *
      * @param dasConfigDetails Data given by the user for the configurations. Ex:
-     *    {"processDefinitionId":"myProcess:1:27504","eventStreamName":"j_77_process_stream",
-     *    "eventStreamVersion":"1.0.0","eventStreamDescription":"This is the event stream generated to configure process
-     *    analytics with DAS, for the processj_77","eventStreamNickName":"j_77_process_stream","eventStreamId":
-     *    "j_77_process_stream:1.0.0","eventReceiverName":"j_77_process_receiver","pcProcessId":"j:77",
-     *    "processVariables":[{"name":"processInstanceId","type":"string","isAnalyzeData":"false","isDrillDownData":"false"},
-     *    {"name":"valuesAvailability","type":"string","isAnalyzeData":"false","isDrillDownData":"false"},
-     *    {"name":"custid","type":"string","isAnalyzeData":false,"isDrillDownData":false},
-     *    {"name":"amount","type":"long","isAnalyzeData":false,"isDrillDownData":false},
-     *    {"name":"confirm","type":"bool","isAnalyzeData":false,"isDrillDownData":false}]}
+     *                         {"processDefinitionId":"myProcess:1:27504","eventStreamName":"j_77_process_stream",
+     *                         "eventStreamVersion":"1.0.0","eventStreamDescription":"This is the event stream
+     *                         generated to configure process
+     *                         analytics with DAS, for the processj_77","eventStreamNickName":"j_77_process_stream",
+     *                         "eventStreamId":
+     *                         "j_77_process_stream:1.0.0","eventReceiverName":"j_77_process_receiver",
+     *                         "pcProcessId":"j:77",
+     *                         "processVariables":[{"name":"processInstanceId","type":"string",
+     *                         "isAnalyzeData":"false","isDrillDownData":"false"},
+     *                         {"name":"valuesAvailability","type":"string","isAnalyzeData":"false",
+     *                         "isDrillDownData":"false"},
+     *                         {"name":"custid","type":"string","isAnalyzeData":false,"isDrillDownData":false},
+     *                         {"name":"amount","type":"long","isAnalyzeData":false,"isDrillDownData":false},
+     *                         {"name":"confirm","type":"bool","isAnalyzeData":false,"isDrillDownData":false}]}
      * @throws ProcessCenterException
      * @throws RemoteException
      * @throws LogoutAuthenticationExceptionException
@@ -80,24 +81,8 @@ public class DASConfigClient {
         char[] dasPassword = null;
 
         try {
-            //String requestHeader = "Basic ";
-            OMElement configElement = DASConfigurationUtils.getConfigElement();
-            SecretResolver secretResolver = SecretResolverFactory.create(configElement, false);
-            /*OMElement analyticsElement = configElement
-                    .getFirstChildWithName(new QName(AnalyticsConfigConstants.ANALYTICS));*/
             dasUsername = DASConfigurationUtils.getDASUserName();
-            ///
-            if (secretResolver != null && secretResolver.isInitialized()) {
-                if (secretResolver.isTokenProtected(AnalyticsConfigConstants.SECRET_ALIAS_DAS_PASSWORD)) {
-                    dasPassword = secretResolver.resolve(AnalyticsConfigConstants.SECRET_ALIAS_DAS_PASSWORD)
-                            .toCharArray();
-                } else {
-                    dasPassword = DASConfigurationUtils.getDASPassword().toCharArray();
-                }
-            } else {
-                dasPassword = DASConfigurationUtils.getDASPassword().toCharArray();
-            }
-
+            dasPassword = DASConfigurationUtils.getDASPassword().toCharArray();
             dasUrl = DASConfigurationUtils.getDASURL();
             dasConfigDetailsJOb = new JSONObject(dasConfigDetails);
             streamName = dasConfigDetailsJOb.getString(AnalyticsConfigConstants.EVENT_STREAM_NAME);
@@ -141,27 +126,15 @@ public class DASConfigClient {
                     + " and the given password";
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
-        } catch (AxisFault | JSONException | XMLStreamException e) {
-            String errMsg = "Error in DAS configuration, using :" + dasConfigDetails;
+        } catch (JSONException | XMLStreamException | IOException | ProcessCenterException | RuntimeException e) {
+            String errMsg = "Error in DAS configuration, using : " + dasConfigDetails;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
-        } catch (RemoteException e) {
-            String errMsg = "Error in DAS configuration, using :" + dasConfigDetails;
-            log.error(errMsg, e);
-            throw new ProcessCenterException(errMsg, e);
-        } catch (IOException e) {
-            String errMsg = "Error in DAS configuration, using :" + dasConfigDetails;
-            log.error(errMsg, e);
-            throw new ProcessCenterException(errMsg, e);
-        } catch (ProcessCenterException e) {
-            log.error(e.getMessage(), e);
-            throw new ProcessCenterException(e.getMessage(), e);
-        } catch (RuntimeException e) {
-            log.error(e.getMessage(), e);
-            throw new ProcessCenterException(e.getMessage(), e);
         } finally {
             //logging out from DAS Admin Services
-            loginServiceClient.logOut();
+            if (loginServiceClient != null) {
+                loginServiceClient.logOut();
+            }
         }
     }
 }

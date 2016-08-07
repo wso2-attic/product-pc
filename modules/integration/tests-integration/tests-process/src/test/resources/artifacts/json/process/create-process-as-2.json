@@ -1,0 +1,17 @@
+{
+  "predecessor": [
+  ],
+  "subprocess": [
+  ],
+  "successor": [
+  ],
+  "processTags": "vegetable, tag1",
+  "processDescription": "This is a sample process for a restaurant",
+  "processVersion": "2.3",
+  "processName": "TestProcessAS2",
+  "processUser":"malintha",
+  "processUserEmail":"malintha@wso2.com",
+  "image": {
+  },
+  "processOwner": "TestOwnerAS2"
+}

@@ -671,7 +671,7 @@
             <dependency>
                 <groupId>org.wso2.pc</groupId>
                 <artifactId>org.wso2.carbon.pc.core</artifactId>
-                <version>${org.wso2.carbon.pc.core.version}</version>
+                <version>${pc.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -814,6 +814,7 @@
         <identity.auth.saml2.version>5.1.1</identity.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.1.1</identity.inbound.auth.saml.version>
         <carbon.multitenancy.version>4.5.2</carbon.multitenancy.version>
+        <carbon.data.version>4.3.5</carbon.data.version>
 
         <operadriver.version>0.8.1</operadriver.version>
 
@@ -853,6 +854,7 @@
         <sso.feature.version>1.5.3</sso.feature.version>
         <jaggery-test.feature.version>1.5.3</jaggery-test.feature.version>
         <slf4j.wso2.version>1.5.10.wso2v1</slf4j.wso2.version>
+        <cipher.tool.version>1.0.0-wso2v3</cipher.tool.version>
         <axis2-transports.wso2.version>1.1.0-wso2v12</axis2-transports.wso2.version>
         <sso.hostobjects.version>1.0.1</sso.hostobjects.version>
         <httpcomponents-httpclient.wso2.version>4.1.1-wso2v1</httpcomponents-httpclient.wso2.version>
@@ -867,7 +869,7 @@
         <commons-httpclient.version>3.1</commons-httpclient.version>
 
         <!-- Carbon business process version -->
-        <carbon.business.process.version>4.4.10-SNAPSHOT</carbon.business.process.version>
+        <carbon.business.process.version>4.4.10-beta</carbon.business.process.version>
 
         <!-- Activiti Version -->
         <org.activiti.version>5.19.0</org.activiti.version>
@@ -876,7 +878,9 @@
         <orbit.version.json>1.0.0.wso2v1</orbit.version.json>
 
         <!--Analytics-->
-        <carbon.analytics.common.version>5.0.8</carbon.analytics.common.version>
+        <carbon.analytics.version>1.2.0</carbon.analytics.version>
+        <carbon.analytics.common.version>5.1.1</carbon.analytics.common.version>
+        <carbon.event-processing.version>2.1.1</carbon.event-processing.version>
         <version.commons.logging>1.2</version.commons.logging>
         <orbit.version.commons.io>2.4.0.wso2v1</orbit.version.commons.io>
         <carbon.kernel.registry.imp.pkg.version>[1.0.1, 2.0.0)</carbon.kernel.registry.imp.pkg.version>
@@ -896,7 +900,6 @@
         <org.wso2.carbon.event.receiver.stub.version>5.0.8</org.wso2.carbon.event.receiver.stub.version>
         <org.wso2.carbon.event.stream.stub.version>5.0.8</org.wso2.carbon.event.stream.stub.version>
         <maven-scm.version>1.7.0.wso2v1</maven-scm.version>
-        <org.wso2.carbon.pc.core.version>1.0.0-SNAPSHOT</org.wso2.carbon.pc.core.version>
 
     </properties>
 </project>
