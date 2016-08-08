@@ -34,6 +34,7 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.xml.sax.SAXException;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.*;
@@ -46,7 +47,6 @@ public class ProcessExport {
     private static final Log log = LogFactory.getLog(ProcessExport.class);
 
     /**
-     *
      * @param processName
      * @param processVersion
      * @param exportWithAssociations
@@ -58,26 +58,27 @@ public class ProcessExport {
             String user) throws Exception {
         exportedProcessList = new ArrayList<String>();
         File exportsDir = new File(ProcessCenterConstants.PROCESS_EXPORT_DIR);
-        if(exportsDir!= null) {
+        if (exportsDir != null) {
             exportsDir.mkdirs();
             Boolean exportWithAssociationsBool = Boolean.valueOf(exportWithAssociations);
             try {
                 // save details about the exported zip and the core process
                 String exportRootPath =
                         ProcessCenterConstants.PROCESS_EXPORT_DIR + "/" + processName + "-" + processVersion +
-                                "-PC-Package/";
+                                ProcessCenterConstants.EXPORTS_DIR_SUFFIX + "/";
                 new File(exportRootPath).mkdirs();
                 exportProcess(exportRootPath, processName, processVersion, exportWithAssociationsBool, user);
 
                 //zip the folder
                 FolderZiper folderZiper = new FolderZiper();
-                String zipFileName = processName + "-" + processVersion + "-PC-Package.zip";
-                folderZiper.zipFolder(exportRootPath, zipFileName);
-
+                String zipFilePath = ProcessCenterConstants.PROCESS_EXPORT_DIR + "/" + processName + "-" +
+                        processVersion + ProcessCenterConstants.EXPORTS_ZIP_SUFFIX;
+                folderZiper.zipFolder(exportRootPath, zipFilePath);
                 //encode zip file
-                String encodedZip = encodeFileToBase64Binary(zipFileName);
-                //Finally remove the Imports folder
+                String encodedZip = encodeFileToBase64Binary(zipFilePath);
+                //Finally remove the Imports folder and the zip file
                 FileUtils.deleteDirectory(exportsDir);
+                FileUtils.deleteDirectory(new File(zipFilePath));
                 return encodedZip;
 
             } catch (Exception e) {
@@ -85,13 +86,23 @@ public class ProcessExport {
                 log.error(errMsg, e);
                 throw new ProcessCenterException(errMsg, e);
             }
-        }else {
+        } else {
             String errMsg = "Exports Directory Creation failed..!!! So failed to export process:" + processName + "-" +
                     processVersion;
             throw new ProcessCenterException(errMsg);
         }
     }
 
+    /**
+     * Save all the process related artifacts in exportRootPath directory
+     *
+     * @param exportRootPath
+     * @param processName
+     * @param processVersion
+     * @param exportWithAssociations
+     * @param user
+     * @throws ProcessCenterException
+     */
     public void exportProcess(String exportRootPath, String processName, String processVersion,
             boolean exportWithAssociations, String user) throws ProcessCenterException {
 
@@ -107,15 +118,16 @@ public class ProcessExport {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(user);
                 ProcessStore ps = new ProcessStore();
                 String exportProcessPath = exportRootPath + processName + "-" + processVersion + "/";
-                new File(exportProcessPath + "documents/").mkdirs();
+                new File(exportProcessPath + ProcessCenterConstants.PROCESS_ZIP_DOCUMENTS_DIR + "/").mkdirs();
 
                 //save the process rxt registry entry >> xml
                 downloadResource(reg, ProcessCenterConstants.PROCESS_ASSET_ROOT,
                         ProcessCenterConstants.EXPORTED_PROCESS_RXT_FILE, processName, processVersion, "xml",
                         exportProcessPath);
                 //save bpmn registry entry >> xml
-                downloadResource(reg, ProcessCenterConstants.BPMN_META_DATA_FILE_PATH, ProcessCenterConstants.EXPORTED_BPMN_META_FILE,
-                        processName, processVersion, "xml", exportProcessPath);
+                downloadResource(reg, ProcessCenterConstants.BPMN_META_DATA_FILE_PATH,
+                        ProcessCenterConstants.EXPORTED_BPMN_META_FILE, processName, processVersion, "xml",
+                        exportProcessPath);
                 //save bpmncontent registry entry >> xml
                 downloadResource(reg, ProcessCenterConstants.BPMN_CONTENT_PATH,
                         ProcessCenterConstants.EXPORTED_BPMN_CONTENT_FILE, processName, processVersion, "xml",
@@ -140,7 +152,9 @@ public class ProcessExport {
                         String docResourcePath = jsonObj.getString("path");
                         Resource docResource = reg.get(docResourcePath);
                         String[] tempStrArr = docResourcePath.split("/");
-                        String docFileName = exportProcessPath + "documents/" + tempStrArr[tempStrArr.length - 1];
+                        String docFileName =
+                                exportProcessPath + ProcessCenterConstants.PROCESS_ZIP_DOCUMENTS_DIR + "/" +
+                                        tempStrArr[tempStrArr.length - 1];
                         FileOutputStream docFileOutPutStream = new FileOutputStream(docFileName);
                         IOUtils.copy(docResource.getContentStream(), docFileOutPutStream);
                         docFileOutPutStream.close();
@@ -169,11 +183,11 @@ public class ProcessExport {
                     out.close();
 
                     exportAssociatedProcesses(successorPredecessorSubprocessListJSON, exportRootPath,
-                            exportWithAssociations, "subprocesses", user);
+                            exportWithAssociations, ProcessCenterConstants.SUBPROCESSES, user);
                     exportAssociatedProcesses(successorPredecessorSubprocessListJSON, exportRootPath,
-                            exportWithAssociations, "predecessors", user);
+                            exportWithAssociations, ProcessCenterConstants.PREDECESSORS, user);
                     exportAssociatedProcesses(successorPredecessorSubprocessListJSON, exportRootPath,
-                            exportWithAssociations, "successors", user);
+                            exportWithAssociations, ProcessCenterConstants.SUCCESSORS, user);
                 }
             }
         } catch (Exception e) {
@@ -184,7 +198,7 @@ public class ProcessExport {
     }
 
     /**
-     * Export accociated process (sub process/predecessor/successor) - The related files are saved in the respective
+     * Export associated process (sub process/predecessor/successor) - The related files are saved in the respective
      * directory
      *
      * @param successorPredecessorSubprocessListJSON
@@ -249,7 +263,6 @@ public class ProcessExport {
     }
 
     public String encodeFileToBase64Binary(String fileName) throws IOException {
-
         File file = new File(fileName);
         byte[] bytes = loadFile(file);
         byte[] encoded = Base64.encodeBase64(bytes);
@@ -283,6 +296,7 @@ public class ProcessExport {
 
     /**
      * Download process thumbnail image, for process exporting
+     *
      * @param reg
      * @param processName
      * @param processVersion
@@ -296,14 +310,13 @@ public class ProcessExport {
                 processVersion;
         Resource storedProcess = reg.get(processAssetPath);
         String processId = storedProcess.getUUID();
-        String imageResourcePath =
-                ProcessCenterConstants.PROCESS_ASSET_RESOURCE_REG_PATH + processId + "/"+ProcessCenterConstants
-                        .IMAGE_THUMBNAIL;
+        String imageResourcePath = ProcessCenterConstants.PROCESS_ASSET_RESOURCE_REG_PATH + processId + "/"
+                + ProcessCenterConstants.IMAGE_THUMBNAIL;
 
         if (reg.resourceExists(imageResourcePath)) {
             Resource resource = reg.get(imageResourcePath);
-            FileOutputStream fileOutputStream = new FileOutputStream(exportProcessPath +
-                    ProcessCenterConstants.IMAGE_THUMBNAIL);
+            FileOutputStream fileOutputStream = new FileOutputStream(
+                    exportProcessPath + ProcessCenterConstants.IMAGE_THUMBNAIL);
             IOUtils.copy(resource.getContentStream(), fileOutputStream);
             fileOutputStream.close();
         }

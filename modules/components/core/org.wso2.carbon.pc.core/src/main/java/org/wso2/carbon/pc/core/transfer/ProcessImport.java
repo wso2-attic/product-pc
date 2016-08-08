@@ -36,6 +36,7 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.xml.sax.SAXException;
+
 import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -107,7 +108,8 @@ public class ProcessImport {
                 //check if the importing processes are already available
                 boolean isProcessesAvailableAlready = isProcessesAlreadyAvailble();
                 if (isProcessesAvailableAlready) {
-                    log.error("One or more process in the importing archive is already cavailable in the Process Center");
+                    log.error(
+                            "One or more process in the importing archive is already cavailable in the Process Center");
                     throw new ProcessCenterException("ALREADY_AVAILABLE");
                 }
 
@@ -138,19 +140,28 @@ public class ProcessImport {
 
                 //Finally remove the Imports folder
                 FileUtils.deleteDirectory(importsDir);
-            }else{
+            } else {
                 String errMsg = "Process Importing failed due to failure in creating Imports directory";
                 throw new ProcessCenterException(errMsg);
 
             }
-        }else {
+        } else {
             String errMsg = "Process Importing failed due to unavailability of Registry Service";
             throw new ProcessCenterException(errMsg);
         }
     }
 
-    private void setProcessAssociations(String processName, String processVersion, String processDirPath, String
-            processAssetPath) throws ProcessCenterException {
+    /**
+     * Add the process associations (sub processes, successors, predecessors) to the registry
+     *
+     * @param processName
+     * @param processVersion
+     * @param processDirPath
+     * @param processAssetPath
+     * @throws ProcessCenterException
+     */
+    private void setProcessAssociations(String processName, String processVersion, String processDirPath,
+            String processAssetPath) throws ProcessCenterException {
         try {
             Path procAssociationsJSONFilePath = Paths
                     .get(processDirPath + "/" + ProcessCenterConstants.PROCESS_ASSOCIATIONS_FILE);
@@ -193,17 +204,20 @@ public class ProcessImport {
 
             }
         } catch (IOException e) {
-            String errMsg = "Error in setting process associations for the process :"+processName+"-"+processVersion;
+            String errMsg =
+                    "Error in setting process associations for the process :" + processName + "-" + processVersion;
             log.error(errMsg, e);
-            throw new ProcessCenterException(errMsg,e);
+            throw new ProcessCenterException(errMsg, e);
         } catch (JSONException e) {
-            String errMsg = "Error in setting process associations for the process :"+processName+"-"+processVersion;
+            String errMsg =
+                    "Error in setting process associations for the process :" + processName + "-" + processVersion;
             log.error(errMsg, e);
-            throw new ProcessCenterException(errMsg,e);
+            throw new ProcessCenterException(errMsg, e);
         } catch (RegistryException e) {
-            String errMsg = "Error in setting process associations for the process :"+processName+"-"+processVersion;
+            String errMsg =
+                    "Error in setting process associations for the process :" + processName + "-" + processVersion;
             log.error(errMsg, e);
-            throw new ProcessCenterException(errMsg,e);
+            throw new ProcessCenterException(errMsg, e);
         }
 
     }
@@ -223,6 +237,17 @@ public class ProcessImport {
         reg.addAssociation(successorPath, processAssetPath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
     }
 
+    /**
+     * Add the flow chart of imported process into the registry
+     *
+     * @param processName
+     * @param processVersion
+     * @param processDirPath
+     * @param processAssetPath
+     * @throws UserStoreException
+     * @throws RegistryException
+     * @throws IOException
+     */
     private void setFlowChart(String processName, String processVersion, String processDirPath, String processAssetPath)
             throws UserStoreException, RegistryException, IOException {
         UserRegistry reg = registryService.getGovernanceUserRegistry(user);
@@ -254,6 +279,19 @@ public class ProcessImport {
         }
     }
 
+    /**
+     * Add the BPMN file of the imported process into the registry
+     *
+     * @param processName
+     * @param processVersion
+     * @param processDirPath
+     * @param processAssetPath
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     * @throws TransformerException
+     * @throws RegistryException
+     */
     private void setBPMN(String processName, String processVersion, String processDirPath, String processAssetPath)
             throws IOException, SAXException, ParserConfigurationException, TransformerException, RegistryException {
 
@@ -292,6 +330,16 @@ public class ProcessImport {
         }
     }
 
+    /**
+     * Add the process text of the imported process into the registry
+     *
+     * @param processName
+     * @param processVersion
+     * @param processDirPath
+     * @param processAssetPath
+     * @throws IOException
+     * @throws RegistryException
+     */
     private void setProcessText(String processName, String processVersion, String processDirPath,
             String processAssetPath) throws IOException, RegistryException {
         Path processTextFilePath = Paths.get(processDirPath + "/" + ProcessCenterConstants.EXPORTED_PROCESS_TEXT_FILE);
@@ -321,6 +369,14 @@ public class ProcessImport {
         }
     }
 
+    /**
+     * Add the process tags of the imported process to registry
+     *
+     * @param processDirPath
+     * @param processAssetPath
+     * @throws IOException
+     * @throws RegistryException
+     */
     private void setProcessTags(String processDirPath, String processAssetPath) throws IOException, RegistryException {
         Path processTagsFilePath = Paths.get(processDirPath + "/" + ProcessCenterConstants.PROCESS_TAGS_FILE);
         if (Files.exists(processTagsFilePath)) {
@@ -346,6 +402,19 @@ public class ProcessImport {
         }
     }
 
+    /**
+     * Add the documents (pdf, ms-word) of the imported process to registry
+     *
+     * @param processName
+     * @param processVersion
+     * @param processDirPath
+     * @param processAssetPath
+     * @throws ProcessCenterException
+     * @throws JSONException
+     * @throws RegistryException
+     * @throws IOException
+     * @throws SecurityException
+     */
     private void setProcessDocuments(String processName, String processVersion, String processDirPath,
             String processAssetPath)
             throws ProcessCenterException, JSONException, RegistryException, IOException, SecurityException {
@@ -379,6 +448,8 @@ public class ProcessImport {
     }
 
     /**
+     * Add the process thumbnail image of the imported process into the registry
+     *
      * @param processDirPath
      * @param processAssetPath
      * @throws RegistryException
@@ -402,6 +473,8 @@ public class ProcessImport {
     }
 
     /**
+     * Return true if the importing process is already available in the process center, else false
+     *
      * @return
      * @throws IOException
      * @throws ProcessCenterException
@@ -433,7 +506,7 @@ public class ProcessImport {
     }
 
     /**
-     * @return
+     * @return processList
      * @throws ProcessCenterException
      * @throws RegistryException
      */
@@ -459,6 +532,8 @@ public class ProcessImport {
     }
 
     /**
+     * Add the rxt file of imported process into the registry
+     *
      * @param processRxtPath
      * @param processAssetPath
      * @throws RegistryException

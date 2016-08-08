@@ -24,7 +24,6 @@ import java.util.List;
  */
 public class ProcessCenterConstants {
 
-
     /**
      * Asset Registry Properties
      **/
@@ -107,8 +106,8 @@ public class ProcessCenterConstants {
     /**
      * BPMN Deployment
      **/
-    public static final List<String> BPMN_RESOURCE_SUFFIXES = Collections.unmodifiableList(Arrays.asList("bpmn20.xml",
-            "bpmn"));
+    public static final List<String> BPMN_RESOURCE_SUFFIXES = Collections
+            .unmodifiableList(Arrays.asList("bpmn20.xml", "bpmn"));
     /**
      * Process Center Asset Permission
      **/
@@ -159,6 +158,8 @@ public class ProcessCenterConstants {
     public static final String SUBPROCESSES = "subprocesses";
     public static final String PREDECESSORS = "predecessors";
     public static final String IMPORTS_DIR = "Imports";
+    public static final String EXPORTS_DIR_SUFFIX = "-PC-Package";
+    public static final String EXPORTS_ZIP_SUFFIX = "-PC-Package.zip";
 
     // Make the constructor private, since it is a utility class
     private ProcessCenterConstants() {
@@ -185,8 +186,8 @@ public class ProcessCenterConstants {
         public static final String PROCESS_FLOW_CHART_PATH = "/flowchart/";
         public static final String PROCESS_DOC_PATH = "/doccontent/";
         public static final String PROCESS_BPMN = "/bpmn/";
-        public static final String PROCESS_LIFECYCLE_HISTORY = "/_system/governance/repository/components/org.wso2" +
-                ".carbon.governance/lifecycles/history/__system_governance_processes_";
+        public static final String PROCESS_LIFECYCLE_HISTORY = "/_system/governance/repository/components/org.wso2"
+                + ".carbon.governance/lifecycles/history/__system_governance_processes_";
         public static final String AC_PROCESS_PATH = "/_system/governance/processes/";
 
         public static final String ADMIN_ROLE = "admin";
