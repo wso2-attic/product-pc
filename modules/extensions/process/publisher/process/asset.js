@@ -288,6 +288,7 @@ asset.renderer = function(ctx) {
                     navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + page.assets.id);
                 }
                 navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log') + '/' +page.assets.id);
+                navList.push('Config Analytics', 'btn-configAnalytics', util.buildUrl('config_analytics') + '/' + page.assets.id);
 
             } else {
                 navList.push('Add ', 'btn-add-new', util.buildUrl('create'));
@@ -503,9 +504,8 @@ asset.renderer = function(ctx) {
                         page.isBpmnAvailable = true;
                     }
                 }
-
-                if((table.name == 'document') && (table.fields.hasOwnProperty(documentPathNameAttribute))) {
-                    var documetName = table.fields[documentPathNameAttribute].value;
+                if((table.name == 'document') && (table.fields["path"].hasOwnProperty("value"))) {
+                    var documetName = table.fields["path"].value;
                     if(documetName == null) {
                         page.isDocumentAvailable = false;
                     } else {

@@ -107,8 +107,7 @@ function loadProcessList(dropdownId) {
     });
 }
 
-function getUrlVars()
-{
+function getUrlVars() {
     var vars = [], hash;
     var hashes = top.location.href.slice(top.location.href.indexOf('?') + 1).split('&');
     for(var i = 0; i < hashes.length; i++)

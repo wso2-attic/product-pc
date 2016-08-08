@@ -20,7 +20,7 @@
 
 
 .btn-auditlog {
-    background:url('../images/icons/ico-overview.png') 0.8em 1em no-repeat;
+    background:url('../img/icons/ico-overview.png') 0.8em 1em no-repeat;
 }
 
 .wiz-box-shadow {
@@ -28,5 +28,5 @@
 }
 
 .btn-configAnalytics {
-    background:url('../images/icons/ico-analytics-config.png') 0.8em 1em no-repeat;
+    background:url('../img/icons/ico-analytics-config.png') 0.8em 1em no-repeat;
 }
