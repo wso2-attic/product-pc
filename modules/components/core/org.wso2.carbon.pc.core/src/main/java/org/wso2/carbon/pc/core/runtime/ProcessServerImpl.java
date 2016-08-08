@@ -162,7 +162,6 @@ public class ProcessServerImpl implements ProcessServer {
         try {
             WorkflowServiceClient workflowServiceClient = new WorkflowServiceClient(loginServiceClient.authenticate
                     (this.username, this.password.toCharArray()), this.url, null);
-
             BPMNDeployment[] deploymentsByName = workflowServiceClient.getDeploymentsByName(packageName);
             if (deploymentsByName != null) {
                 Arrays.sort(deploymentsByName, new Comparator<BPMNDeployment>() {
