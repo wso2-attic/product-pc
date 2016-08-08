@@ -19,7 +19,7 @@
 
 var resources = function (page, meta) {
     return {
-        js: ['import-process-functions.js', 'libs/jquery.form.min.js', 'jquery-ui.js', 'jquery-file-upload/alertify.js',
+        js: ['libs/jquery.form.min.js', 'jquery-ui.js', 'jquery-file-upload/alertify.js',
             'jquery-file-upload/bootstrap-filestyle.js', 'notify.min.js', 'jquery-file-upload/jquery.iframe-transport.js',
             'jquery-file-upload/jquery.fileupload.js', 'jquery-file-upload/vendor/jquery.ui.widget.js',
             'bootstrap-editable.js', 'FileSaver.min.js', 'jquery.form.js',],

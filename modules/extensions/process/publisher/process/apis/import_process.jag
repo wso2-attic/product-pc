@@ -38,7 +38,7 @@ try {
     responseObj.content = "SUCCESS";
     print(stringify(responseObj));
 }catch(errorE){
-    log.error("\N\N\NRAAAAAAAAAAAAAAAAAA ERROR"+errorE);
+    log.error(errorE);
     responseObj.error = true;
     if(errorE.message == "org.wso2.carbon.pc.core.ProcessCenterException: ALREADY_AVAILABLE"){
         responseObj.content = "ERROR: Tried to Add Already Available Process";

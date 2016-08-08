@@ -127,7 +127,7 @@ public class ProcessImport {
 
                         putProcessRxt(processRxtPath, processAssetPath);
                         GovernanceUtils
-                                .associateAspect(processAssetPath, ProcessCenterConstants.SAMPLE_LIFECYCLE2_NAME, reg);
+                                .associateAspect(processAssetPath, ProcessCenterConstants.DEFAULT_LIFECYCLE_NAME, reg);
                         setImageThumbnail(processDirPath, processAssetPath);
                         setProcessDocuments(processName, processVersion, processDirPath, processAssetPath);
                         setProcessTags(processDirPath, processAssetPath);

@@ -160,7 +160,7 @@ public class ProcessCenterConstants {
     public static final String IMPORTS_DIR = "Imports";
     public static final String EXPORTS_DIR_SUFFIX = "-PC-Package";
     public static final String EXPORTS_ZIP_SUFFIX = "-PC-Package.zip";
-
+    public static final String DEFAULT_LIFECYCLE_NAME = "DefaultProcessLifeCycle";
     // Make the constructor private, since it is a utility class
     private ProcessCenterConstants() {
     }
