@@ -290,7 +290,7 @@
               "id": "date-range-0",
               "content": {
                 "id": "date-range",
-                "title": "Date Range Picker",
+                "title": "Date Range Filter",
                 "type": "gadget",
                 "category": "Publishers",
                 "thumbnail": "fs://gadget/date-range/dateRange.png",
@@ -299,7 +299,7 @@
                 },
                 "styles": {
                   "borders": true,
-                  "title": "Date Range Picker"
+                  "title": "Date Range Filter"
                 },
                 "notify": {
                   "date_range": {
@@ -552,7 +552,7 @@
               "id": "task_id_publisher-0",
               "content": {
                 "id": "task_id_publisher",
-                "title": "Task ID picker",
+                "title": "Task Filter",
                 "type": "gadget",
                 "category": "Publishers",
                 "thumbnail": "fs://gadget/task_id_publisher/index.png",
@@ -570,7 +570,7 @@
                   }
                 },
                 "styles": {
-                  "title": "Task ID picker",
+                  "title": "Task Filter",
                   "borders": true
                 },
                 "options": {},
