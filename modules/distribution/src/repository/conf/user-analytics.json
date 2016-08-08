@@ -22,39 +22,39 @@
           "loggedIn": {
             "blocks": [
               {
-                "id": "a",
+                "id": "7f51bf87c1eebca1a90cb76a4b681f79",
+                "x": 6,
+                "y": 9,
+                "width": 6,
+                "height": 6,
+                "banner": false
+              },
+              {
+                "id": "d4b69076ac034eb50cbe5e696d779bec",
+                "x": 0,
+                "y": 9,
+                "width": 6,
+                "height": 6,
+                "banner": false
+              },
+              {
+                "id": "36896281ebf25a16067b0e893b5454ee",
                 "x": 6,
                 "y": 3,
                 "width": 6,
-                "height": 7,
+                "height": 6,
                 "banner": false
               },
               {
-                "id": "b",
-                "x": 0,
-                "y": 10,
-                "width": 6,
-                "height": 7,
-                "banner": false
-              },
-              {
-                "id": "c",
-                "x": 6,
-                "y": 10,
-                "width": 6,
-                "height": 7,
-                "banner": false
-              },
-              {
-                "id": "110c431445e6fa4afe236bf6a014e6b3",
+                "id": "a3a1fdf47bf4272989f15347c03ef667",
                 "x": 0,
                 "y": 3,
                 "width": 6,
-                "height": 7,
+                "height": 6,
                 "banner": false
               },
               {
-                "id": "d58803e99ee6493cc8f3b804fb31038e",
+                "id": "802a21b92bb253b96a733972a85f9e21",
                 "x": 0,
                 "y": 0,
                 "width": 12,
@@ -69,26 +69,26 @@
       "isanon": false,
       "content": {
         "default": {
-          "d58803e99ee6493cc8f3b804fb31038e": [
+          "802a21b92bb253b96a733972a85f9e21": [
             {
-              "id": "date-range-0",
+              "id": "user_id_publisher-0",
               "content": {
-                "id": "date-range",
-                "title": "Date Range Picker",
+                "id": "user_id_publisher",
+                "title": "Date Range and User ID Picker",
                 "type": "gadget",
                 "category": "Publishers",
-                "thumbnail": "fs://gadget/date-range/dateRange.png",
+                "thumbnail": "fs://gadget/user_id_publisher/dateRange.png",
                 "data": {
-                  "url": "fs://gadget/date-range/index.xml"
+                  "url": "fs://gadget/user_id_publisher/index.xml"
                 },
                 "styles": {
                   "borders": true,
-                  "title": "Date Range Picker"
+                  "title": "Date Range and User ID Picker"
                 },
                 "notify": {
-                  "date_range": {
-                    "type": "dateRange",
-                    "description": "This notifies selected date range"
+                  "user_id": {
+                    "type": "user_id",
+                    "description": "This notifies selected user id"
                   }
                 },
                 "options": {},
@@ -96,7 +96,7 @@
               }
             }
           ],
-          "110c431445e6fa4afe236bf6a014e6b3": [
+          "a3a1fdf47bf4272989f15347c03ef667": [
             {
               "id": "total_involved_instance_count_vs_process_id-0",
               "content": {
@@ -115,12 +115,12 @@
                 "description": "PC analytics graphs",
                 "listen": {
                   "channel3": {
-                    "type": "dateRange",
-                    "description": "Listening to date range",
+                    "type": "user_id",
+                    "description": "Listening to user id",
                     "on": [
                       {
-                        "from": "date-range-0",
-                        "event": "date_range"
+                        "from": "user_id_publisher-0",
+                        "event": "user_id"
                       }
                     ]
                   }
@@ -138,55 +138,91 @@
               }
             }
           ],
-          "a": [
+          "36896281ebf25a16067b0e893b5454ee": [
             {
               "id": "user_level_task_instance_count_vs_task_id-0",
               "content": {
                 "id": "user_level_task_instance_count_vs_task_id",
                 "title": "User Level Task Instance Count vs Task ID",
                 "type": "gadget",
+                "category": "Subscribers",
                 "thumbnail": "fs://gadget/user_level_task_instance_count_vs_task_id/index.png",
                 "settings": {
-                  "personalize": true
+                  "personalize": true,
+                  "priority": "5"
                 },
                 "data": {
                   "url": "fs://gadget/user_level_task_instance_count_vs_task_id/index.xml"
                 },
                 "description": "PC analytics graphs",
+                "listen": {
+                  "channel2": {
+                    "type": "user_id",
+                    "description": "Listening to user id",
+                    "on": [
+                      {
+                        "from": "user_id_publisher-0",
+                        "event": "user_id"
+                      }
+                    ]
+                  }
+                },
                 "styles": {
-                  "title": "User Level Task Instance Count vs Task ID",
-                  "borders": true
+                  "no_heading": false,
+                  "hide_gadget": false,
+                  "titlePosition": "left",
+                  "title": "User Level Task Instance Count vs Task ID"
                 },
                 "options": {},
-                "locale_titles": {}
+                "locale_titles": {
+                  "en-US": "User Level Task Instance Count vs Task ID"
+                }
               }
             }
           ],
-          "b": [
+          "d4b69076ac034eb50cbe5e696d779bec": [
             {
               "id": "avg_execution_time_vs_task_id-0",
               "content": {
                 "id": "avg_execution_time_vs_task_id",
                 "title": "Average Execution Time vs Task ID",
                 "type": "gadget",
+                "category": "Subscribers",
                 "thumbnail": "fs://gadget/avg_execution_time_vs_task_id/index.png",
                 "settings": {
-                  "personalize": true
+                  "personalize": true,
+                  "priority": "5"
                 },
                 "data": {
                   "url": "fs://gadget/avg_execution_time_vs_task_id/index.xml"
                 },
                 "description": "PC analytics graphs",
+                "listen": {
+                  "channel5": {
+                    "type": "user_id",
+                    "description": "Listening to user id",
+                    "on": [
+                      {
+                        "from": "user_id_publisher-0",
+                        "event": "user_id"
+                      }
+                    ]
+                  }
+                },
                 "styles": {
-                  "title": "Average Execution Time vs Task ID",
-                  "borders": true
+                  "no_heading": false,
+                  "hide_gadget": false,
+                  "titlePosition": "left",
+                  "title": "Average Execution Time vs Task ID"
                 },
                 "options": {},
-                "locale_titles": {}
+                "locale_titles": {
+                  "en-US": "Average Execution Time vs Task ID"
+                }
               }
             }
           ],
-          "c": [
+          "7f51bf87c1eebca1a90cb76a4b681f79": [
             {
               "id": "total_involved_time_vs_process_id-0",
               "content": {
@@ -205,12 +241,12 @@
                 "description": "PC analytics graphs",
                 "listen": {
                   "channel4": {
-                    "type": "dateRange",
+                    "type": "user_id",
                     "description": "Listening to date range",
                     "on": [
                       {
-                        "from": "date-range-0",
-                        "event": "date_range"
+                        "from": "user_id_publisher-0",
+                        "event": "user_id"
                       }
                     ]
                   }
@@ -225,9 +261,7 @@
                 "locale_titles": {
                   "en-US": "Total Involved Time vs Process ID"
                 }
-              },
-              "viewOption": "default",
-              "fullViewPoped": false
+              }
             }
           ]
         },
@@ -252,7 +286,7 @@
   "theme": "Default Theme",
   "shareDashboard": false,
   "isUserCustom": false,
-  "isEditorEnable": false,
+  "isEditorEnable": true,
   "banner": {
     "globalBannerExists": false,
     "customBannerExists": false

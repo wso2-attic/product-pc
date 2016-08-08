@@ -2,6 +2,7 @@
   "id": "user_level_task_instance_count_vs_task_id",
   "title": "User Level Task Instance Count vs Task ID",
   "type": "gadget",
+  "category": "Subscribers",
   "thumbnail": "gadget/user_level_task_instance_count_vs_task_id/index.png",
   "settings": {
     "personalize": true
@@ -9,5 +10,11 @@
   "data": {
     "url": "gadget/user_level_task_instance_count_vs_task_id/index.xml"
   },
-  "description": "PC analytics graphs"
+  "description": "PC analytics graphs",
+  "listen": {
+    "channel2": {
+      "type": "user_id",
+      "description": "Listening to user id"
+    }
+  }
 }

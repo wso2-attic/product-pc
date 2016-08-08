@@ -77,6 +77,7 @@
                 wso2.gadgets.controls.showGadget();
                 $("#from").val(data.from);
                 $("#to").val(data.to);
+                $("#UserList").val(data.user);
                 drawGraph();
             });
         };
