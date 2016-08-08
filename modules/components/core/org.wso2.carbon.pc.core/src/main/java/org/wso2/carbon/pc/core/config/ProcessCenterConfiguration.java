@@ -54,7 +54,7 @@ public class ProcessCenterConfiguration {
      * Create Process Center Configuration from a configuration file. If error occurred while parsing configuration
      * file, default configuration will be created.
      *
-     * @param processCenterConfig XMLBeans object of human task server configuration file
+     * @param processCenterConfig XMLBeans object of process center configuration file
      */
     public ProcessCenterConfiguration(File processCenterConfig) {
         processCenterDocument = readConfigurationFromFile(processCenterConfig);
@@ -88,7 +88,7 @@ public class ProcessCenterConfiguration {
     }
 
     /**
-     * Initialize the configuration object from the properties in the human task server config xml file.
+     * Initialize the configuration object from the properties in the process center config xml file.
      */
     private void initConfigurationFromFile(File processCenterConfigurationFile) {
 

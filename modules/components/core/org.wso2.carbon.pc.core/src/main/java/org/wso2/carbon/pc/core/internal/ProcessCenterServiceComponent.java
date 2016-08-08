@@ -104,7 +104,6 @@ public class ProcessCenterServiceComponent {
     private void initProcessCenter(ProcessCenterServerHolder processCenterServerHolder)
             throws ProcessCenterException {
         processCenterServerHolder.setProcessCenter(new ProcessCenter());
-        log.info("Initialising Process Center");
         processCenterServerHolder.getProcessCenter().init();
     }
 
