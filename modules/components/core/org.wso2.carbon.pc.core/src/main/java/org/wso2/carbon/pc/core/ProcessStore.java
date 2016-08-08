@@ -206,7 +206,7 @@ public class ProcessStore {
                 reg.put(processAssetPath, processAsset);
 
                 // associate lifecycle with the process asset, so that it can be promoted to published state
-                GovernanceUtils.associateAspect(processAssetPath, "SampleLifeCycle2", reg);
+                GovernanceUtils.associateAspect(processAssetPath, "DefaultProcessLifeCycle", reg);
 
                 // apply tags to the resource
                 String[] tags = processTags.split(",");

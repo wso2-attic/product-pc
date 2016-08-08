@@ -28,13 +28,15 @@ window.onload = function() {
 function drawExecutionTimeVsTaskInstanceIdResult() {
 
     var taskId = $('#taskInstanceIdExecTimeTaskList').val();
-
+    var processId = $('#processIdList').val();
+    
     if (taskId != '') {
 
         var body = {
             'startTime': $("#from").val()||0,
             'endTime': $("#to").val()||0,
             'taskId': taskId,
+            'processId': processId,
             'order': $('#taskInstanceIdExecTimeOrder').val(),
             'limit': parseInt($('#taskInstanceIdExecTimeLimit').val())
         };
@@ -90,7 +92,7 @@ function loadTaskList(dropdownId) {
                     el.value = opt;
                     $(dropdownElementID).append(el);
                 }
-                drawExecutionTimeVsTaskInstanceIdResult();
+                loadProcessList('processIdList');
             }
         },
         error: function (xhr, status, error) {
@@ -98,4 +100,52 @@ function loadTaskList(dropdownId) {
             alert(errorJson.message);
         }
     });
+}
+
+function loadProcessList(dropdownId) {
+    var dropdownElementID = '#' + dropdownId;
+    var pname = getUrlVars()["pname"];
+
+    if(pname) {
+        var el = document.createElement("option");
+        el.textContent = pname;
+        el.value = pname;
+        $(dropdownElementID).append(el);
+        $(dropdownElementID).prop( "disabled", true );
+        drawExecutionTimeVsTaskInstanceIdResult();
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: "../../bpmn-analytics-explorer/process_definition_key_list",
+            success: function (data) {
+                var dataStr = JSON.parse(data);
+                if (!$.isEmptyObject(dataStr)) {
+                    for (var i = 0; i < dataStr.length; i++) {
+                        var opt = dataStr[i].processDefKey;
+                        var el = document.createElement("option");
+                        el.textContent = opt;
+                        el.value = opt;
+                        $(dropdownElementID).append(el);
+                    }
+                    drawExecutionTimeVsTaskInstanceIdResult();
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorJson = eval("(" + xhr.responseText + ")");
+                alert(errorJson.message);
+            }
+        });
+    }
+}
+
+function getUrlVars() {
+    var vars = [], hash;
+    var hashes = top.location.href.slice(top.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
 }

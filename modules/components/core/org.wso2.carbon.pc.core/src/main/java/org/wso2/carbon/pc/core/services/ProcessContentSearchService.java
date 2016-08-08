@@ -113,7 +113,7 @@ public class ProcessContentSearchService {
                             String destinationPath = association.getDestinationPath();
                             Resource processResource = reg.get(destinationPath);
                             String lifecycleState = processResource
-                                    .getProperty("registry.lifecycle.SampleLifeCycle2.state");
+                                    .getProperty("registry.lifecycle.DefaultProcessLifeCycle.state");
 
                             String processContent = new String((byte[]) processResource.getContent());
                             Document processXML = stringToXML(processContent);
@@ -124,7 +124,7 @@ public class ProcessContentSearchService {
                             processJSON.put("id", processResource.getUUID());
                             processJSON.put("type", "process");
                             processJSON.put("path", destinationPath);
-                            processJSON.put("lifecycle", "SampleLifeCycle2");
+                            processJSON.put("lifecycle", "DefaultProcessLifeCycle");
                             processJSON.put("mediaType", ProcessCenterConstants.PROCESS_MEDIA_TYPE);
                             processJSON.put("name", processName);
                             processJSON.put("version", processVersion);

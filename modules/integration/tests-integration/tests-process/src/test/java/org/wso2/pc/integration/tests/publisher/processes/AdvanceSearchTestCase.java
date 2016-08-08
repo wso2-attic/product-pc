@@ -173,19 +173,19 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
 
         Object[][] data = new Object[][] {
                 //data to test for single field values at once seperately : result(# of matching processes)=1
-                //(when the single field is the lcStatus = "initial" result would be 3)
+                //(when the single field is the lcStatus = "Development" result would be 3)
                 { new AdvancedGenericSearchData(TEST_PROCESS_AS1_NAME, "", "", "", "", "") },
                 { new AdvancedGenericSearchData("", TEST_PROCESS_1_VERSION, "", "", "", "") },
-                { new AdvancedGenericSearchData("", "", "initial", "", "", "") },
+                { new AdvancedGenericSearchData("", "", "Development", "", "", "") },
                 { new AdvancedGenericSearchData("", "", "", "generic", "", "") },
                 { new AdvancedGenericSearchData("", "", "", "", TEST_PROCESS_1_OWNER, "") },
                 { new AdvancedGenericSearchData("", "", "", "", "", "This is the initial sample test process") },
                 //testing for all fields matching at once : result =1
-                { new AdvancedGenericSearchData(TEST_PROCESS_AS1_NAME, TEST_PROCESS_1_VERSION, "initial", "generic",
+                { new AdvancedGenericSearchData(TEST_PROCESS_AS1_NAME, TEST_PROCESS_1_VERSION, "Development", "generic",
                         TEST_PROCESS_1_OWNER, "This is the initial sample test process") },
                 //testing for 2 fields matching at once: result =1
                 { new AdvancedGenericSearchData("Test", TEST_PROCESS_1_VERSION, "", "", "", "") },
-                { new AdvancedGenericSearchData("", "", "ini", "", "", "loan") },
+                { new AdvancedGenericSearchData("", "", "Development", "", "", "loan") },
                 //test for a case where the result is 2
                 { new AdvancedGenericSearchData("", "", "", "tag1", "", "") },
                 //test for a case where the result is 0
@@ -220,7 +220,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
                     .geneticRestRequestGet(searchReqUrl, searchQueryMap, headerMap, cookieHeader);
             JSONObject responseObject = new JSONObject(response.getEntity(String.class));
 
-            if (data.getLifeCycleStatus().equals("initial") && data.getDescription().equals("")) {//result should be "3.0"
+            if (data.getLifeCycleStatus().equals("Development") && data.getDescription().equals("")) {//result should be "3.0"
                 //isSearchSuccess = responseObject.get("count").toString().equals("3.0");
                 isSearchSuccess = true;//comment this after creating life cycle status tests and changed them accordingly
             } else if (data.getTags().equals("tag1")) { //result should be "2.0"
