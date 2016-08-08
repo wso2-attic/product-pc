@@ -534,11 +534,13 @@
                 <include>outputui.war</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>../../modules/extensions/lifecycles</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/lifecycles</outputDirectory>
+        </fileSet>
 
 
         <!-- END CEP -->
-
-        <!-- File Sets of PC starts from here -->
 
     </fileSets>
     <dependencySets>

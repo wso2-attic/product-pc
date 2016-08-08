@@ -42,7 +42,7 @@ curl --insecure --request  POST "https://localhost:9443/publisher/apis/assets/86
 This will return the asset that is updated
 
 
-Promoting an asset using SampleLifecycle2
+Promoting an asset using DefaultProcessLifeCycle
 -----------------------------------------
 curl --insecure --request  POST "https://localhost:9443/publisher/apis/assets/86d9d352-a293-41bc-9a92-df3c6414ffaf/state?type=gadget" --form 'nextState=In-Review' --form 'comment=ok' \ -v --cookie 'JSESSIONID=626DD32A927328E651F4C5BA623E6A85'
 

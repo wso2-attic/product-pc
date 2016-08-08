@@ -42,8 +42,17 @@ asset.renderer = function(ctx) {
                 var ptr = page.leftNav || [];
                 var am = assetManager(ctx.session,ctx.assetType);
                 var entry;
-                var allowedPages = ['details','lifecycle','update','associations','permissions'];
+                var allowedPages = ['details','lifecycle','update','associations','permissions','delete','log','config_analytics'];
                 log.debug('Permission populator ' + page.meta.pageName);
+
+                if(page.meta.pageName == 'log') {
+                    if(page.assets.id == null) {
+                        var index = allowedPages.indexOf(page.meta.pageName);
+                        allowedPages.splice(index, 1);
+                    } else if(!(allowedPages.indexOf(page.meta.pageName)>-1)){
+                        allowedPages.push('log');
+                    }
+                }
                 if(allowedPages.indexOf(page.meta.pageName)>-1){
                     var permissionList = gregPermissionUtil.permissions.list(am, page.assets.id);
                     if(permissionList){

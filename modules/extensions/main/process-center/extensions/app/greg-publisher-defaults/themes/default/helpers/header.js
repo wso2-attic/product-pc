@@ -19,7 +19,7 @@
 
 var resources = function(){
     return {
-        css:['select2.min.css','common.css','sidepanel.css'],
+        css:['select2.min.css','common.css','sidepanel.css','process-center-custom.css'],
         js:['select2.full.min.js','sidepanel.js','greg-subscriptions-api.js']
     }
 };

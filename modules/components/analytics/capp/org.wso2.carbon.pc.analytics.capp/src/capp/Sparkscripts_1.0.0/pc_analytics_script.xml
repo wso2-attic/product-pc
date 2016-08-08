@@ -34,6 +34,7 @@
         schema "taskDefinitionKey string -i,
         taskDefId facet -i,
         taskInstanceId string -i,
+        processDefinitionId string -i,
         processInstanceId string -i,
         startedTime long -i,
         startTime facet -i,
@@ -46,7 +47,7 @@
         );
 
         INSERT OVERWRITE TABLE TASK_USAGE_SUMMARY
-        SELECT DISTINCT taskDefinitionKey, taskDefinitionKey, taskInstanceId, processInstanceId, getTime(startTime) AS startedTime,
+        SELECT DISTINCT taskDefinitionKey, taskDefinitionKey, taskInstanceId, processDefinitionId, processInstanceId, getTime(startTime) AS startedTime,
         getTime(startTime) AS startTime, getTime(endTime) AS finishedTime, getTime(endTime) AS finishTime, duration, assignee, assignee
         FROM BPMNTaskInstances;
 

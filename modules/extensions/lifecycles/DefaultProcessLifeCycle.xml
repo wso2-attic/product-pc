@@ -1,0 +1,52 @@
+<aspect name="DefaultProcessLifeCycle" class="org.wso2.jaggery.scxml.aspects.JaggeryTravellingPermissionLifeCycle">
+    <configuration type="literal">
+        <lifecycle>
+            <scxml xmlns="http://www.w3.org/2005/07/scxml"
+                   version="1.0"
+                   initialstate="Development">
+                <state id="Development">
+                    <datamodel>
+                        <data name="transitionExecution">
+                            <execution forEvent="Submit" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
+                            </execution>
+                        </data>
+                    </datamodel>
+                    <transition event="Submit" target="In-Review"/>
+                </state>
+                <state id="In-Review">
+                    <datamodel>
+                        <data name="transitionExecution">
+                            <execution forEvent="Publish" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
+                            </execution>
+                            <execution forEvent="Reject" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
+                            </execution>
+                        </data>
+                        <data name="transitionPermission">
+                            <permission forEvent="Publish" roles="Internal/publisher,admin"/>
+                            <permission forEvent="Reject" roles="Internal/publisher,admin"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Publish" target="Published"/>
+                    <transition event="Reject" target="Development"/>
+                </state>
+                <state id="Published">
+                    <datamodel>
+                        <data name="transitionExecution">
+                            <execution forEvent="Retire" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
+                            </execution>
+                            <execution forEvent="Unpublish" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
+                            </execution>
+                        </data>
+                        <data name="transitionPermission">
+                            <permission forEvent="Retire" roles="Internal/publisher,admin"/>
+                            <permission forEvent="Unpublish" roles="Internal/publisher,admin"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Retire" target="Retired"/>
+                    <transition event="Unpublish" target="Development"/>
+                </state>
+                <state id="Retired"/>
+            </scxml>
+        </lifecycle>
+    </configuration>
+</aspect>
