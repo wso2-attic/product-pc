@@ -1,6 +1,6 @@
 {
   "id": "exec_time_vs_task_instance_id",
-  "title": "Execution Time vs Task Instance ID",
+  "title": "Task Instance Execution Times",
   "type": "gadget",
   "category": "Subscribers",
   "thumbnail": "gadget/exec_time_vs_task_instance_id/index.png",

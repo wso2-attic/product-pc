@@ -1,6 +1,6 @@
 {
   "id": "avg_execution_time_vs_task_id",
-  "title": "Average Execution Time vs Task ID",
+  "title": "Average Task Completion Times By User",
   "type": "gadget",
   "category": "Subscribers",
   "thumbnail": "gadget/avg_execution_time_vs_task_id/index.png",

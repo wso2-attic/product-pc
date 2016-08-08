@@ -86,7 +86,11 @@
                         <div id="inline-form" class="form-inline collapse" role="form">
                                <div class="form-group">
                                  <select id="taskInstanceIdExecTimeTaskList" class="selectpicker form-control"></select>
-                               </div>
+                              </div>
+                              <div class="form-group">
+                                 <select id="processIdList" class="selectpicker form-control">
+                                 </select>
+                              </div>
                               <div class="form-group">
                                  <select id="taskInstanceIdExecTimeOrder" class="selectpicker form-control">
                                     <option value="top">Top</option>

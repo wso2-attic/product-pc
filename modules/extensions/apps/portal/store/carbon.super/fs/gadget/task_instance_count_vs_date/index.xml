@@ -107,8 +107,13 @@
                         </a>
                         <div id="inline-form" class="form-inline collapse" role="form">
                              <div class="form-group" style="padding-right:0">
+                                <label><input id="taskInstanceCountDateRangeCheckBox" type="checkbox" value="">Show complete date range</label>
                         <select id="taskInstanceCountDateTaskList" class="selectpicker form-group" multiple>
                         </select>
+                    </div>
+                    <div class="form-group">
+                            <select id="processIdList" class="selectpicker form-control">
+                            </select>
                     </div>
                     <input id="from" type="hidden"/>
                     <input id="to" type="hidden"/>

@@ -1,5 +1,13 @@
 var from,to;
 
+window.onload = function() {
+    var pname = getUrlVars()["pname"];
+
+    if(pname) {pname;
+        $('#process_name').val(pname);
+    }
+};
+
 $(document).ready(function () {
     $(function () {
         $("#taskStartDate").datepicker({}).on('focusin', function () {
@@ -84,4 +92,16 @@ function publish() {
 function reset() {
     $("#taskStartDate").val("");
     $("#taskEndDate").val("");
+}
+
+function getUrlVars() {
+    var vars = [], hash;
+    var hashes = top.location.href.slice(top.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
 }

@@ -1,6 +1,6 @@
 {
   "id": "avg_time_vs_task_id",
-  "title": "Average Time vs Task ID",
+  "title": "Average Execution Times of Tasks",
   "type": "gadget",
   "category": "gadget",
   "thumbnail": "gadget/avg_time_vs_task_id/index.png",

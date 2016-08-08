@@ -1,6 +1,6 @@
 {
   "id": "avg_wait_time_vs_user_id",
-  "title": "Average Wait Time vs User ID",
+  "title": "Average Task Execution Time for Each User",
   "type": "gadget",
   "category": "gadget",
   "thumbnail": "gadget/avg_wait_time_vs_user_id/index.png",

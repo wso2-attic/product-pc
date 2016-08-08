@@ -1,6 +1,6 @@
 {
   "id": "total_involved_time_vs_process_id",
-  "title": "Total Involved Time vs Process ID",
+  "title": "User's Involvement in Processes (Time)",
   "type": "gadget",
   "category": "Subscribers",
   "thumbnail": "gadget/total_involved_time_vs_process_id/index.png",

@@ -90,7 +90,7 @@
               "id": "exec_time_vs_process_instance_id-0",
               "content": {
                 "id": "exec_time_vs_process_instance_id",
-                "title": "Execution Time vs Process Instance",
+                "title": "Process Instance Execution Times",
                 "type": "gadget",
                 "category": "Subscribers",
                 "thumbnail": "fs://gadget/exec_time_vs_process_instance_id/index.png",
@@ -118,11 +118,11 @@
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "left",
-                  "title": "Execution Time vs Process Instance"
+                  "title": "Process Instance Execution Times"
                 },
                 "options": {},
                 "locale_titles": {
-                  "en-US": "Execution Time vs Process Instance"
+                  "en-US": "Process Instance Execution Times"
                 }
               }
             }
@@ -132,7 +132,7 @@
               "id": "task_instance_count_vs_task_id-0",
               "content": {
                 "id": "task_instance_count_vs_task_id",
-                "title": "Task Instance Count vs Task ID",
+                "title": "Task Instance Counts",
                 "type": "gadget",
                 "thumbnail": "fs://gadget/task_instance_count_vs_task_id/index.png",
                 "settings": {
@@ -143,7 +143,7 @@
                 },
                 "description": "PC analytics graphs",
                 "styles": {
-                  "title": "Task Instance Count vs Task ID",
+                  "title": "Task Instance Counts",
                   "borders": true
                 },
                 "options": {},
@@ -156,7 +156,7 @@
               "id": "avg_time_vs_task_id-0",
               "content": {
                 "id": "avg_time_vs_task_id",
-                "title": "Average Time vs Task ID",
+                "title": "Average Execution Times of Tasks",
                 "type": "gadget",
                 "category": "gadget",
                 "thumbnail": "fs://gadget/avg_time_vs_task_id/index.png",
@@ -168,7 +168,7 @@
                 },
                 "description": "This shows pc analytics charts",
                 "styles": {
-                  "title": "Average Time vs Task ID",
+                  "title": "Average Execution Times of Tasks",
                   "borders": true
                 },
                 "options": {},
@@ -181,7 +181,7 @@
               "id": "total_involved_time_vs_user_id-0",
               "content": {
                 "id": "total_involved_time_vs_user_id",
-                "title": "Total Involved Time vs User ID",
+                "title": "User Involvement in the Process",
                 "type": "gadget",
                 "category": "Subscribers",
                 "thumbnail": "fs://gadget/total_involved_time_vs_user_id/index.png",
@@ -209,11 +209,11 @@
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "left",
-                  "title": "Total Involved Time vs User ID"
+                  "title": "User Involvement in the Process"
                 },
                 "options": {},
                 "locale_titles": {
-                  "en-US": "Total Involved Time vs User ID"
+                  "en-US": "User Involvement in the Process"
                 }
               }
             }
@@ -223,7 +223,7 @@
               "id": "avg_time_vs_process_version-0",
               "content": {
                 "id": "avg_time_vs_process_version",
-                "title": "Average time vs Process Version",
+                "title": "Average Execution Times of Process Versions",
                 "type": "gadget",
                 "category": "Subscribers",
                 "thumbnail": "fs://gadget/avg_time_vs_process_version/index.png",
@@ -251,11 +251,11 @@
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "left",
-                  "title": "Average time vs Process Version"
+                  "title": "Average Execution Times of Process Versions"
                 },
                 "options": {},
                 "locale_titles": {
-                  "en-US": "Average time vs Process Version"
+                  "en-US": "Average Execution Times of Process Versions"
                 }
               }
             }
@@ -265,7 +265,7 @@
               "id": "process_instance_count_vs_process_version-0",
               "content": {
                 "id": "process_instance_count_vs_process_version",
-                "title": "Process Instance Count vs Process Version",
+                "title": "Instance Counts of Process Versions",
                 "type": "gadget",
                 "category": "gadget",
                 "thumbnail": "fs://gadget/process_instance_count_vs_process_version/index.png",
@@ -277,7 +277,7 @@
                 },
                 "description": "This shows pc analytics charts",
                 "styles": {
-                  "title": "Process Instance Count vs Process Version",
+                  "title": "Instance Counts of Process Versions",
                   "borders": true
                 },
                 "options": {},
@@ -377,7 +377,7 @@
               "id": "task_instance_count_vs_user_id-0",
               "content": {
                 "id": "task_instance_count_vs_user_id",
-                "title": "Task Instance Count vs User ID",
+                "title": "Task Instances Completed by Users",
                 "type": "gadget",
                 "thumbnail": "fs://gadget/task_instance_count_vs_user_id/index.png",
                 "settings": {
@@ -404,11 +404,11 @@
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "left",
-                  "title": "Task Instance Count vs User ID"
+                  "title": "Task Instances Completed by Users"
                 },
                 "options": {},
                 "locale_titles": {
-                  "en-US": "Task Instance Count vs User ID"
+                  "en-US": "Task Instances Completed by Users"
                 }
               }
             }
@@ -418,7 +418,7 @@
               "id": "avg_wait_time_vs_user_id-0",
               "content": {
                 "id": "avg_wait_time_vs_user_id",
-                "title": "Average Wait Time vs User ID",
+                "title": "Average Task Execution Time for Each User",
                 "type": "gadget",
                 "category": "gadget",
                 "thumbnail": "fs://gadget/avg_wait_time_vs_user_id/index.png",
@@ -446,11 +446,11 @@
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "left",
-                  "title": "Average Wait Time vs User ID"
+                  "title": "Average Task Execution Time for Each User"
                 },
                 "options": {},
                 "locale_titles": {
-                  "en-US": "Average Wait Time vs User ID"
+                  "en-US": "Average Task Execution Time for Each User"
                 }
               }
             }
@@ -460,7 +460,7 @@
               "id": "task_instance_count_vs_date-0",
               "content": {
                 "id": "task_instance_count_vs_date",
-                "title": "Task Instance Count vs Completion Date",
+                "title": "Task Completions Over Time",
                 "type": "gadget",
                 "category": "Subscribers",
                 "thumbnail": "fs://gadget/task_instance_count_vs_date/index.png",
@@ -492,11 +492,11 @@
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "left",
-                  "title": "Task Instance Count vs Completion Date"
+                  "title": "Task Completions Over Time"
                 },
                 "options": {},
                 "locale_titles": {
-                  "en-US": "Task Instance Count vs Completion Date"
+                  "en-US": "Task Completions Over Time"
                 }
               }
             }
@@ -506,7 +506,7 @@
               "id": "exec_time_vs_task_instance_id-0",
               "content": {
                 "id": "exec_time_vs_task_instance_id",
-                "title": "Execution Time vs Task Instance ID",
+                "title": "Task Instance Execution Times",
                 "type": "gadget",
                 "category": "Subscribers",
                 "thumbnail": "fs://gadget/exec_time_vs_task_instance_id/index.png",
@@ -538,11 +538,11 @@
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "left",
-                  "title": "Execution Time vs Task Instance ID"
+                  "title": "Task Instance Execution Times"
                 },
                 "options": {},
                 "locale_titles": {
-                  "en-US": "Execution Time vs Task Instance ID"
+                  "en-US": "Task Instance Execution Times"
                 }
               }
             }

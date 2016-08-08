@@ -45,6 +45,11 @@
     <div class="panel-body">
         <div style="padding-top: 10px;padding-left: 10px;padding-right: 10px;">
             <div class="form-inline well well-sm" role="form">
+
+               <div class="input-group form-group">
+                    <label class="input-group-addon" for="process_name">Process</label>
+                    <input id="process_name" class="form-control" type="text" disabled/>
+               </div>
                <div class="input-group form-group">
                     <label class="input-group-addon" id="start_date" for="taskStartDate">Start Date</label>
                     <input id="taskStartDate" class="form-control" type="text"/>

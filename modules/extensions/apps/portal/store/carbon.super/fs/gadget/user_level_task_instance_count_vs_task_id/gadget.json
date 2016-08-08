@@ -1,6 +1,6 @@
 {
   "id": "user_level_task_instance_count_vs_task_id",
-  "title": "User Level Task Instance Count vs Task ID",
+  "title": "Tasks Completed by User",
   "type": "gadget",
   "category": "Subscribers",
   "thumbnail": "gadget/user_level_task_instance_count_vs_task_id/index.png",
