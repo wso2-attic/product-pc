@@ -466,10 +466,12 @@ public class ProcessImport {
         Resource imageContentResource = reg.newResource();
 
         File imageThumbnailFile = new File(processDirPath + "/" + ProcessCenterConstants.IMAGE_THUMBNAIL);
-        byte[] imageContent = Files.readAllBytes(imageThumbnailFile.toPath());
-        imageContentResource.setContent(imageContent);
-        reg.put(imageResourcePath, imageContentResource);
-
+        //Avoid trying to read non-existing thumbnail file
+        if(imageThumbnailFile.exists() && !imageThumbnailFile.isDirectory()) {
+            byte[] imageContent = Files.readAllBytes(imageThumbnailFile.toPath());
+            imageContentResource.setContent(imageContent);
+            reg.put(imageResourcePath, imageContentResource);
+        }
     }
 
     /**
