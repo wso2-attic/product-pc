@@ -191,7 +191,7 @@ function associateDocument() {
 
     if ($("#docadded").hasClass("fw-check")) {
         $("#docEditDiv").hide();
-        showDocument();
+        showDocument($('#permissionCheck').val());
         $("#docViewDiv").show();
         $(".active").removeClass("active");
     }
@@ -295,6 +295,18 @@ function loadAssociations() {
     $("#detailDiv").hide();
     $("#associationDiv").show();
     showSubprocess();
+
+    if($('#successorCountHolder').val()>0) {
+        $("#successoradded").addClass("fw fw-check");
+    }
+
+    if($('#subProcessCountHolder').val()>0) {
+        $("#subprocessadded").addClass("fw fw-check");
+    }
+
+    if($('#predecessorCountHolder').val()>0) {
+        $("#prodecessoradded").addClass("fw fw-check");
+    }
 }
 
 function showSubprocess() {
@@ -384,7 +396,7 @@ function saveProcessText(currentElement) {
             success: function (data) {
                 var response = JSON.parse(data);
                 if (response.error === false) {
-                    if ($(currentElement).attr('id') == 'updateBtn') {
+                    if ($(currentElement).attr('id') == 'updateBtn' || $(currentElement).attr('id') == 'saveProcessTextBtn') {
                         alertify.success("Successfully saved the process content.");
                         $("#textadded").addClass("fw fw-check");
                         getProcessText();
@@ -793,10 +805,11 @@ $("#addNewDoc").on("submit", function (e) {
                 else {
                     alertify.success("Document added successfully.");
                     $("#docadded").addClass("fw fw-check");
-                    showDocument();
+                    showDocument($('#permissionCheck').val());
                     // $("#docEditDiv").hide();
                     $("#docViewDiv").show();
                     $(".active").removeClass("active");
+                    newDocFormToggle();
                 }
             }
         });
