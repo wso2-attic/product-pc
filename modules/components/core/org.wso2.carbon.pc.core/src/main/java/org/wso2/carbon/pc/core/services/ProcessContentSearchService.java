@@ -52,7 +52,7 @@ public class ProcessContentSearchService {
     static {
         Map<String, String> aMap = new HashMap<>();
         aMap.put(ProcessCenterConstants.PDF, ProcessCenterConstants.PDF_MEDIA_TYPE);
-        aMap.put(ProcessCenterConstants.DOCUMENT, ProcessCenterConstants.DOCUMENT_MEDIA_TYPE);
+        aMap.put(ProcessCenterConstants.DOCUMENT, ProcessCenterConstants.MS_WORD_DOC_MEDIA_TYPE);
         aMap.put(ProcessCenterConstants.PROCESS_TEXT, ProcessCenterConstants.PROCESS_TEXT_MEDIA_TYPE);
         aMap.put(ProcessCenterConstants.PROCESS_TYPE, ProcessCenterConstants.PROCESS_MEDIA_TYPE);
         mediatypes = Collections.unmodifiableMap(aMap);
@@ -113,7 +113,7 @@ public class ProcessContentSearchService {
                             String destinationPath = association.getDestinationPath();
                             Resource processResource = reg.get(destinationPath);
                             String lifecycleState = processResource
-                                    .getProperty("registry.lifecycle.SampleLifeCycle2.state");
+                                    .getProperty("registry.lifecycle.DefaultProcessLifeCycle.state");
 
                             String processContent = new String((byte[]) processResource.getContent());
                             Document processXML = stringToXML(processContent);
@@ -124,7 +124,7 @@ public class ProcessContentSearchService {
                             processJSON.put("id", processResource.getUUID());
                             processJSON.put("type", "process");
                             processJSON.put("path", destinationPath);
-                            processJSON.put("lifecycle", "SampleLifeCycle2");
+                            processJSON.put("lifecycle", "DefaultProcessLifeCycle");
                             processJSON.put("mediaType", ProcessCenterConstants.PROCESS_MEDIA_TYPE);
                             processJSON.put("name", processName);
                             processJSON.put("version", processVersion);

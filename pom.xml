@@ -344,7 +344,7 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.governace</groupId>
+                <groupId>org.wso2.carbon.governance</groupId>
                 <artifactId>org.wso2.carbon.governance.registry.extensions</artifactId>
                 <version>${carbon.governance.version}</version>
             </dependency>

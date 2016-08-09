@@ -142,7 +142,7 @@ asset.configure = function() {
         },
         meta: {
             lifecycle: {
-                name: 'SampleLifeCycle2',
+                name: 'DefaultProcessLifeCycle',
                 commentRequired: false,
                 defaultAction: 'Promote',
                 deletableStates: [],
