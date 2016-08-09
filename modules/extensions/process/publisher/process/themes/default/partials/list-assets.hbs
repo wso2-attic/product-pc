@@ -304,12 +304,14 @@
                         {{>list_assets_table_body assets}}
                     </div>
                 {{else}}
-                    <div class="emptyAssets-MsgDiv">
+                    <!--<div class="emptyAssets-MsgDiv">-->
+                        <p class="emptyAssets"><div class="alert alert-info">
+                        <div style="padding-bottom:10px">No processes created yet. Click one of the buttons below to get started.</div>
+                        <div style="display: inline"><a class="btn btn-primary" id="btnAddNewProcess" href="../process/create" onclick="">Create New Process</a></div>
+                        <div style="display: inline"><a class="btn btn-primary" href="../process/import_process" id="deploy_sample_process" onclick="">Import Process</a></div>
+                    </div></p>
 
-                        <p class="emptyAssets">We are sorry! we couldn't find anything for you
-                            ...</p>
-
-                    </div>
+                    <!--</div>-->
                 {{/if}}
                 <div id="list_tagged_processes" style="display: none"></div>
             </div>

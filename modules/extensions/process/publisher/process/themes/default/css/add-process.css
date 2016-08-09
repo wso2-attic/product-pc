@@ -517,3 +517,8 @@ hr {
     margin-top: 0;
     text-transform: none;
 }
+
+.artifact-check {
+    color: #009900;
+    float: right!important;
+}
