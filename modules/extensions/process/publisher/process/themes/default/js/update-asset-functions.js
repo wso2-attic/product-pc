@@ -135,10 +135,7 @@ function loadOverviewDescription() {
     $('#stp3').addClass('other');
 }
 
-function updateProcess(flag) {
-    $('#stp1').addClass('other')
-    $('#stp2').removeClass('other');
-    $('#stp3').addClass('other');
+function updateProcess(currentElement) {
     if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
         alertify.error('please fill the required fields.');
     } else {
@@ -151,15 +148,18 @@ function updateProcess(flag) {
                 success: function (data) {
                     var response = JSON.parse(data);
                     if (response.error === false) {
-                        // if ($(currentElement).attr('id') == 'detailsProcessBtn') {
+                        if ($(currentElement).attr('id') == 'saveProcessBtn') {
+                            window.location = "../../process/details/" + response.content;
+                        }
+                        else if ($(currentElement).attr('id') == 'detailsProcessBtn') {
                             $('#stp1').removeClass("current");
                             $('#stp1').addClass("other");
+                            $('#stp2').removeClass("other");
                             $('#stp2').addClass("current");
-                        // }
-                        loadDetails();
-                        $("#processName").html(pname);
-                        $("#processVersion").html(pversion);
-                        PID = response.content;
+                            loadDetails();
+                            $("#processName").html(pname);
+                            $("#processVersion").html(pversion);
+                        }
                     } else {
                         alertify.error(response.content);
                     }

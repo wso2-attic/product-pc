@@ -1590,12 +1590,12 @@ function deletePredecessor(element) {
     confirmModal.modal('show');
 }
 
-function loadSummary(update_view) {
-    window.location = "../../assets/process/details/" + PID;
+function loadSummary(update_view,process_id) {
+    window.location = "../../assets/process/details/" + process_id;
     if(update_view) {
-    window.location = "../../../assets/process/details/" + PID;
+    window.location = "../../../assets/process/details/" + process_id;
     } else {
-    window.location = "../../assets/process/details/" + PID;
+    window.location = "../../assets/process/details/" + process_id;
     }
 
 }
