@@ -28,13 +28,12 @@ public class PublisherAuditLogTestCase extends PCIntegrationBaseTest{
     HashMap<String, String> queryMap;
     HashMap<String, String> headerMap;
     String resourcePath;
-    String testProcessName = "TestProcess1/1.0";
 
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
         super.init();
         publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
-                "publisher/apis");
+                PCIntegrationConstants.DESIGNER_APIS);
         genericRestClient = new GenericRestClient();
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
@@ -71,7 +70,7 @@ public class PublisherAuditLogTestCase extends PCIntegrationBaseTest{
             dataProvider = "logPaths")
     public void getLogs(String path) throws Exception {
         publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
-                "publisher/assets/process/apis/audit_log");
+                PCIntegrationConstants.DESIGNER_ASSETS + "/process/apis/audit_log");
         queryMap.put("path", URLEncoder.encode(path, PCIntegrationConstants.UTF_8));
 
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherUrl,

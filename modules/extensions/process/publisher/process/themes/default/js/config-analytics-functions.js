@@ -50,7 +50,7 @@ function addProcessVariableRow(tableID) {
       var processVariables = []
       var processVariablesObj
       $.ajax({
-            url: '/publisher/assets/process/apis/get_process_variables?processName='+$('#processNameHiddenElement').
+            url: '/designer/assets/process/apis/get_process_variables?processName='+$('#processNameHiddenElement').
             val()+'&processVersion='+$('#processVersionHiddenElement').val(),
             type: 'GET',
             async: false,
@@ -195,7 +195,7 @@ function saveProcessVariables(tableID, callback) {
     processVariablesInfo["processVariables"] = processVariables;
 
     $.ajax({
-        url: '/publisher/assets/process/apis/save_process_variables',
+        url: '/designer/assets/process/apis/save_process_variables',
         type: 'POST',
         data: {'processVariablesInfo': JSON.stringify(processVariablesInfo)},
         async: false,
@@ -265,7 +265,7 @@ function configAnalytics() {
     dasConfigData["processVariables"] = eventStreamPayloadFields;
 
     $.ajax({
-        url: '/publisher/assets/process/apis/config_das_analytics',
+        url: '/designer/assets/process/apis/config_das_analytics',
         type: 'POST',
         data: {
             'dasConfigData': JSON.stringify(dasConfigData),

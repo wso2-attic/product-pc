@@ -26,7 +26,6 @@ var status = true;
 var um = server.userManager(user.tenantId);
 var permissions = stringify(um.getRoleListOfUser(user.username));
 
-// checks of the permissions has admin or publisher roles
 if((permissions.indexOf("Internal/publisher") == -1) && (permissions.indexOf("admin") == -1)) {
     status = false;
 }

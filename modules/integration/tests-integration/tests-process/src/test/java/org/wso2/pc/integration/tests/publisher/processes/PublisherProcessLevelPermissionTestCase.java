@@ -32,6 +32,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.pc.integration.test.utils.base.GenericRestClient;
 import org.wso2.pc.integration.test.utils.base.PCIntegrationBaseTest;
+import org.wso2.pc.integration.test.utils.base.PCIntegrationConstants;
 import org.wso2.pc.integration.test.utils.base.TestUtils;
 
 import javax.ws.rs.core.MediaType;
@@ -57,9 +58,9 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
     public void createProcess() throws Exception {
         super.init();
 
-        automationContextUser1=new AutomationContext("PC","publisher","superTenant","user1");
+        automationContextUser1=new AutomationContext("PC","designer","superTenant","user1");
         publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
-                "publisher/apis");
+                PCIntegrationConstants.DESIGNER_APIS);
         cookieHeader1 = login(automationContextUser1);
 
         resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
@@ -67,7 +68,7 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
         requestBody = readFile(resourcePath);
         queryMap.put("processInfo", URLEncoder.encode(requestBody, "UTF-8"));
         APIUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
-                "publisher/assets/process/apis/create_process");
+                PCIntegrationConstants.DESIGNER_ASSETS + "/process/apis/create_process");
         ClientResponse response=genericRestClient.geneticRestRequestPost(APIUrl,
                 MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, requestBody, queryMap,
                 headerMap, cookieHeader1);
@@ -180,10 +181,10 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
 
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
-        AutomationContext automationContextUser2 = new AutomationContext("PC", "publisher", "superTenant", "user2");
+        AutomationContext automationContextUser2 = new AutomationContext("PC", "designer", "superTenant", "user2");
         String cookieHeader2 = login(automationContextUser2);
         APIUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
-                "publisher/assets/process/apis/update_description");
+                PCIntegrationConstants.DESIGNER_ASSETS + "/process/apis/update_description");
 
         requestBody = String.
                 format(readFile(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator

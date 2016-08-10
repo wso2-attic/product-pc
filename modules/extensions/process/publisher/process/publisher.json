@@ -2,7 +2,7 @@
   "server": {
     "https": "%https.host%",
     "http": "%http.host%",
-    "context" : "/publisher",
+    "context" : "/designer",
     "proxyServer" : ""
   },
   "user": {
@@ -53,10 +53,10 @@
     "methods": {
       "sso": {
         "attributes": {
-          "issuer": "publisher",
+          "issuer": "designer",
           "identityProviderURL": "%https.host%/samlsso",
           "responseSigningEnabled": true,
-          "acs": "%https.host%/publisher/acs",
+          "acs": "https://localhost:9443/designer/acs",
           "identityAlias": "wso2carbon",
           "defaultNameIDPolicy": "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
           "useTenantKey": false,
@@ -80,6 +80,6 @@
   "constants": {
     "assetCreatedDateLength": 20
   },
-  "storeUrl": "%https.host%/store",
+  "storeUrl": "%https.host%/explorer",
   "version": ""
 }

@@ -37,7 +37,7 @@ window.onload = function () {
 
     $('#description').editable({
         type: 'text',
-        url: '/publisher/assets/process/apis/update_description',
+        url: '/designer/assets/process/apis/update_description',
         pk: 1,
         display: function (value, response) {
             $('#description').html(value);
@@ -50,7 +50,7 @@ window.onload = function () {
     });
 
     $('#owner').editable({
-        url: '/publisher/assets/process/apis/update_owner',
+        url: '/designer/assets/process/apis/update_owner',
         pk: 2,
         display: function (value, response) {
             $('#owner').html(value);
@@ -65,7 +65,7 @@ window.onload = function () {
 
 function loadAnalytics() {
         $.ajax({
-            url: '/publisher/assets/process/apis/get_process_deployed_id',
+            url: '/designer/assets/process/apis/get_process_deployed_id',
             type: 'POST',
             data: {
                 'processName': $("#pname").val(),
@@ -107,7 +107,7 @@ function showBPMN() {
     $("#docViewDiv").hide();
 
     $.ajax({
-        url: '/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/' + fieldsName + "/" + fieldsVersion,
+        url: '/designer/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/' + fieldsName + "/" + fieldsVersion,
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
@@ -145,7 +145,7 @@ function editText() {
 
 function loadProcessText() {
     $.ajax({
-        url: '/publisher/assets/process/apis/get_process_text?process_text_path=/processText/' + fieldsName + "/" + fieldsVersion,
+        url: '/designer/assets/process/apis/get_process_text?process_text_path=/processText/' + fieldsName + "/" + fieldsVersion,
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
@@ -170,7 +170,7 @@ function saveProcessText(e) {
     } else {
         // save the process
         $.ajax({
-            url: '/publisher/assets/process/apis/save_process_text',
+            url: '/designer/assets/process/apis/save_process_text',
             type: 'POST',
             data: {
                 'processName': $("#textProcessName").val(),
@@ -238,7 +238,7 @@ function showOverview(e) {
 
 function downloadDocument(relativePath) {
     $.ajax({
-        url: '/publisher/assets/process/apis/download_document?process_doc_path=' + relativePath,
+        url: '/designer/assets/process/apis/download_document?process_doc_path=' + relativePath,
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
@@ -290,7 +290,7 @@ function removeDocument(processName, processVersion, documentName, documentSumma
     };
 
     $.ajax({
-        url: '/publisher/assets/process/apis/delete_document',
+        url: '/designer/assets/process/apis/delete_document',
         type: 'POST',
         data: {'removeDocumentDetails': JSON.stringify(removeDocObj)},
         success: function (data) {
@@ -310,7 +310,7 @@ function removeDocument(processName, processVersion, documentName, documentSumma
 
 function viewPDFDocument(relativePath, heading, iteration) {
     $.ajax({
-        url: '/publisher/assets/process/apis/download_document?process_doc_path=' + relativePath,
+        url: '/designer/assets/process/apis/download_document?process_doc_path=' + relativePath,
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
@@ -429,7 +429,7 @@ function showDocument(writePermission) {
     $("#addNewDoc").toggle();
 
     $.ajax({
-        url: '/publisher/assets/process/apis/get_process_doc?process_path=/_system/governance/processes/' + fieldsName + "/" + fieldsVersion,
+        url: '/designer/assets/process/apis/get_process_doc?process_path=/_system/governance/processes/' + fieldsName + "/" + fieldsVersion,
         type: 'GET',
         success: function (data) {
             var responseObj = JSON.parse(data);
@@ -609,7 +609,7 @@ function predecessorNameAutoComplete() {
 
 function getProcessList() {
     $.ajax({
-        url: '/publisher/assets/process/apis/get_process_list',
+        url: '/designer/assets/process/apis/get_process_list',
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
@@ -672,7 +672,7 @@ function readUpdatedSubprocess(currentObj, count) {
 
         $.ajax({
             async: false,
-            url: '/publisher/assets/process/apis/update_subprocess',
+            url: '/designer/assets/process/apis/update_subprocess',
             type: 'POST',
             data: {'subprocessDetails': JSON.stringify(subProcessDetails)},
             success: function (data) {
@@ -728,7 +728,7 @@ function readUpdatedSuccessor(currentObj, count) {
 
         $.ajax({
             async: false,
-            url: '/publisher/assets/process/apis/update_successor',
+            url: '/designer/assets/process/apis/update_successor',
             type: 'POST',
             data: {'successorDetails': JSON.stringify(successorDetails)},
             success: function (data) {
@@ -784,7 +784,7 @@ function readUpdatedPredecessor(currentObj, count) {
 
         $.ajax({
             async: false,
-            url: '/publisher/assets/process/apis/update_predecessor',
+            url: '/designer/assets/process/apis/update_predecessor',
             type: 'POST',
             data: {'predecessorDetails': JSON.stringify(predecessorDetails)},
             success: function (data) {
@@ -833,7 +833,7 @@ function deleteSubprocess(element) {
             };
 
             $.ajax({
-                url: '/publisher/assets/process/apis/delete_subprocess',
+                url: '/designer/assets/process/apis/delete_subprocess',
                 type: 'POST',
                 data: {'deleteSubprocessDetails': JSON.stringify(deleteSubObj)},
                 success: function (data) {
@@ -884,7 +884,7 @@ function deleteSuccessor(element) {
             };
 
             $.ajax({
-                url: '/publisher/assets/process/apis/delete_successor',
+                url: '/designer/assets/process/apis/delete_successor',
                 type: 'POST',
                 data: {'deleteSuccessorDetails': JSON.stringify(deleteSuccessorObj)},
                 success: function (data) {
@@ -935,7 +935,7 @@ function deletePredecessor(element) {
             };
 
             $.ajax({
-                url: '/publisher/assets/process/apis/delete_Predecessor',
+                url: '/designer/assets/process/apis/delete_Predecessor',
                 type: 'POST',
                 data: {'deletePredecessorDetails': JSON.stringify(deletePredecessorObj)},
                 success: function (data) {
@@ -1002,7 +1002,7 @@ function showFlowchartEditor(name, flowchartPath) {
 
     flowchartPath = "/_system/governance/" + flowchartPath;
     $.ajax({
-        url: '/publisher/assets/process/apis/get_process_flowchart',
+        url: '/designer/assets/process/apis/get_process_flowchart',
         type: 'GET',
         dataType: 'text',
         data: {'flowchartPath': flowchartPath},
@@ -1040,7 +1040,7 @@ function validateDocument() {
     var attachedDocuments = [];
     var isDocumentExists = false;
     $.ajax({
-        url: '/publisher/assets/process/apis/get_process_doc?process_path=/_system/governance/processes/' +
+        url: '/designer/assets/process/apis/get_process_doc?process_path=/_system/governance/processes/' +
         fieldsName + "/" + fieldsVersion,
         type: 'GET',
         async: false,
@@ -1175,7 +1175,7 @@ $("#saveAsPNGBtn").click(function () {
 
 function deleteBPMNDiagram(processName, processVersion) {
     $.ajax({
-        url: '/publisher/assets/process/apis/delete_bpmn',
+        url: '/designer/assets/process/apis/delete_bpmn',
         type: 'POST',
         data: {
             'processName': processName,
@@ -1210,7 +1210,7 @@ function removeBPMNDiagramListener() {
 function exportProcess(processName,processVersion){
     var exportWithAssociations = document.getElementById("exportWithAssociationsChkBox").checked;
     $.ajax({
-        url: '/publisher/assets/process/apis/export_process',
+        url: '/designer/assets/process/apis/export_process',
         type: 'POST',
         data: {
             'processName': processName,

@@ -72,7 +72,7 @@
           if (bpmnPath) {
               $.ajax({
                   type: "GET",
-                  url: "/store/assets/process/apis/get_bpmn_content",
+                  url: "/explorer/assets/process/apis/get_bpmn_content",
                   data: {
                       bpmn_content_path: bpmnPath
                   },
@@ -91,7 +91,7 @@
 
 
       // get associations content if available
-      $.get("/store/apis/assets?type=process", function(response) {
+      $.get("/explorer/apis/assets?type=process", function(response) {
           for (var i in response.data) {
               var item = response.data[i];
               if (processName == item.attributes.overview_name) {
@@ -138,12 +138,12 @@
               var id = preAssets.data[i].id;
               id = id.trim();
               // check if predecessor is published     
-              predecessors += '<li><a href = /store/assets/process/details/' + id + '>' + preAssets.data[i].name + '</a></li>';
+              predecessors += '<li><a href = /explorer/assets/process/details/' + id + '>' + preAssets.data[i].name + '</a></li>';
           }
           for (var i = 0; i < sucAssets.data.length; i++) {
               var id = sucAssets.data[i].id;
               id = id.trim();
-              successors += '<li><a href = /store/assets/process/details/' + id + '>' + sucAssets.data[i].name + '</a></li>';
+              successors += '<li><a href = /explorer/assets/process/details/' + id + '>' + sucAssets.data[i].name + '</a></li>';
           }
           $("#preContent").html(predecessors);
           $("#sucContent").html(successors);
@@ -156,7 +156,7 @@
 
           $.ajax({
               type: "GET",
-              url: "/store/assets/process/apis/TextContentRetriever",
+              url: "/explorer/assets/process/apis/TextContentRetriever",
               data: {
                   type: "GET",
                   processPath: processPath

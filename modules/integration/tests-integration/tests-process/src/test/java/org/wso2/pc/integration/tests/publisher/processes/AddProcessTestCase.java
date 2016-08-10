@@ -46,7 +46,7 @@ public class AddProcessTestCase extends PCIntegrationBaseTest {
     public void init() throws Exception {
         super.init();
         String publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
-                replace("services", "publisher/apis");
+                replace("services", PCIntegrationConstants.DESIGNER_APIS);
         genericRestClient = new GenericRestClient();
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();

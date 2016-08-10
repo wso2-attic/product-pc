@@ -498,7 +498,7 @@ jsPlumb.ready(function () {
                 flowchart.lastElementId = elementCount;
 
                 $.ajax({
-                    url: '/publisher/assets/process/apis/upload_flowchart',
+                    url: '/designer/assets/process/apis/upload_flowchart',
                     type: 'POST',
                     data: {
                         'processName': $("#pName").val(),

@@ -50,7 +50,7 @@ try {
     for (var name in files) {
         processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, files[name].getStream(), docExtension, user.username);
     }
-    //response.sendRedirect('/publisher/assets/process/details/' + processid);
+    
     responseObj.error = false;
     print(stringify(responseObj));
 } catch (error) {

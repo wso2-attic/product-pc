@@ -57,8 +57,8 @@ public class PCIntegrationBaseTest {
 
     protected void init(TestUserMode testUserMode) throws Exception {
 
-        storeContext = new AutomationContext("PC", "store", testUserMode);
-        publisherContext = new AutomationContext("PC", "publisher", testUserMode);
+        storeContext = new AutomationContext("PC", "explorer", testUserMode);
+        publisherContext = new AutomationContext("PC", "designer", testUserMode);
         automationContext = new AutomationContext("PC",testUserMode);
         loginLogoutClient = new LoginLogoutClient(automationContext);
         sessionCookie = loginLogoutClient.login();
@@ -66,9 +66,9 @@ public class PCIntegrationBaseTest {
         webAppURL = automationContext.getContextUrls().getWebAppURL();
         userInfo = automationContext.getContextTenant().getContextUser();
         publisherProcessAPIBaseUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
-                "publisher/assets/process/apis/");
+                "designer/assets/process/apis/");
         publisherPackageAPIBaseUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
-                "publisher/assets/package/apis/");
+                "designer/assets/package/apis/");
     }
 
     protected void initPublisher(String productGroupName, String instanceName,

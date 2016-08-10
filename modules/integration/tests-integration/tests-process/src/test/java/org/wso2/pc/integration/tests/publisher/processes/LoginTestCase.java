@@ -26,6 +26,7 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.pc.integration.test.utils.base.PCIntegrationBaseTest;
+import org.wso2.pc.integration.test.utils.base.PCIntegrationConstants;
 import org.wso2.pc.integration.test.utils.base.TestUtils;
 import org.wso2.pc.integration.test.utils.base.GenericRestClient;
 
@@ -59,9 +60,9 @@ public class LoginTestCase extends PCIntegrationBaseTest {
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
         publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
-                "publisher/apis");
+                PCIntegrationConstants.DESIGNER_APIS);
         publisherUrlForVersion = automationContext.getContextUrls().getSecureServiceUrl().
-                replace("services", "publisher/assets");
+                replace("services", PCIntegrationConstants.DESIGNER_ASSETS);
     }
 
     @Test(groups = {"wso2.pc"}, description = "Login to publisher")

@@ -30,7 +30,7 @@ $(document).ready(function () {
     }
 
     //get main process path
-    $.get("/store/apis/assets?type=process", function (response) {
+    $.get("/explorer/apis/assets?type=process", function (response) {
         for (var i in response.data) {
             var item = response.data[i];
             if (processName == item.attributes.overview_name) {
@@ -70,7 +70,7 @@ $(document).ready(function () {
         if (mainProcessPath !== "NA") {
             $.ajax({
                 type: "GET",
-                url: "/store/assets/process/apis/getAssociations",
+                url: "/explorer/assets/process/apis/getAssociations",
                 data: {
                     processPath: mainProcessPath
                 },
@@ -130,7 +130,7 @@ $(document).ready(function () {
                         var processNameStyle = '<span class="glyphicon glyphicon-chevron-right"></span>' + preAssets.data[i].name;
 
                         if(preAssets.data[i].LCState == 'Published'){
-                            processNameStyle = '<a href = /store/assets/process/details/' + id + '>' + processNameStyle + '</a>';
+                            processNameStyle = '<a href = /explorer/assets/process/details/' + id + '>' + processNameStyle + '</a>';
                         }
                         document.getElementById("predecessor-list-group").innerHTML +='<li class="list-group-item">'+ processNameStyle + '</li>';
                     }
@@ -141,7 +141,7 @@ $(document).ready(function () {
                         // check if predecessor is published
                         var processNameStyle = '<span class="glyphicon glyphicon-chevron-right"></span>' + subAssets.data[i].name;
                         if(subAssets.data[i].LCState == 'Published'){
-                            processNameStyle = '<a href = /store/assets/process/details/' + id + '>' + processNameStyle + '</a>';
+                            processNameStyle = '<a href = /explorer/assets/process/details/' + id + '>' + processNameStyle + '</a>';
                         }
 
                         document.getElementById("subprocess-list-group").innerHTML +='<li class="list-group-item">'+ processNameStyle + '</li>';
@@ -152,7 +152,7 @@ $(document).ready(function () {
                         var processNameStyle = '<span class="glyphicon glyphicon-chevron-right"></span>' + sucAssets.data[i].name;
 
                         if(sucAssets.data[i].LCState == 'Published'){
-                            processNameStyle = '<a href = /store/assets/process/details/' + id + '>' + processNameStyle + '</a>';
+                            processNameStyle = '<a href = /explorer/assets/process/details/' + id + '>' + processNameStyle + '</a>';
                         }
                         document.getElementById("successor-list-group").innerHTML +='<li class="list-group-item">'+ processNameStyle + '</li>';
                     }
@@ -174,7 +174,7 @@ $(document).ready(function () {
         if (bpmnPath !== "NA") {
             $.ajax({
                 type: "GET",
-                url: "/store/assets/process/apis/get_bpmn_content",
+                url: "/explorer/assets/process/apis/get_bpmn_content",
                 data: {
                     bpmn_content_path: bpmnPath
                 },
@@ -196,7 +196,7 @@ $(document).ready(function () {
     $("#tab-doc-list").on("click", function () {
         if (mainProcessPath !== "NA") {
             $.ajax({
-                url: '/store/assets/process/apis/get_process_doc?process_path=' + mainProcessPath,
+                url: '/explorer/assets/process/apis/get_process_doc?process_path=' + mainProcessPath,
                 type: 'GET',
                 success: function (data) {
                     var responseObj = JSON.parse(data);
@@ -283,7 +283,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "GET",
-            url: "/store/assets/process/apis/TextContentRetriever",
+            url: "/explorer/assets/process/apis/TextContentRetriever",
             data: {
                 type: "GET",
                 processPath: processPath

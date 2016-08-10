@@ -51,7 +51,7 @@ $(document).ready(function() {
 	var tempGen = ids_gen.split(",");
 	var tempSpe = ids_spe.split(",");
 
-		$.get("/store/apis/assets?type=eprocess", function(response) {
+		$.get("/explorer/apis/assets?type=eprocess", function(response) {
 		for (var i in response.data) {
 			var item = response.data[i];
 			assets.data.push({

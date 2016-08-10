@@ -17,7 +17,7 @@ var logoutUrl = caramel.configs().context + '/logout';
 
 %>
 <head>
-<link rel="stylesheet" href="/publisher/themes/default/css/font-awesome.min.css">
+<link rel="stylesheet" href="/designer/themes/default/css/font-awesome.min.css">
 <style>
 .app-logo {
     height: 30px;

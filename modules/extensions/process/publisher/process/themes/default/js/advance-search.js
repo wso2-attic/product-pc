@@ -62,7 +62,7 @@ var buildQuery = function () {
 //Search process using the given filters
 function searchProcesses() {
     var query = buildQuery();
-    var url = "/publisher/apis/assets?q=" + query;
+    var url = "/designer/apis/assets?q=" + query;
     $.ajax({
         url: url,
         type: 'GET',
