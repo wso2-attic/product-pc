@@ -1207,8 +1207,8 @@ function removeBPMNDiagramListener() {
     confirmModal.modal('show');
 }
 
-function exportProcess(processName,processVersion){
-    var exportWithAssociations = document.getElementById("exportWithAssociationsChkBox").checked;
+function exportProcess(processName,processVersion,exportWithAssociations){
+    $('#exportModal').modal('toggle');
     $.ajax({
         url: '/publisher/assets/process/apis/export_process',
         type: 'POST',
