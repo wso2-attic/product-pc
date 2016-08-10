@@ -14,10 +14,9 @@
   ~ limitations under the License.
   -->
 <div id="bpmnEditDiv" style="padding: 25px;" >
-    <form method='post' action='apis/import_process' onsubmit='return completeBPMNDetails()'
+    <form id="import_process_form"
           enctype="multipart/form-data" target="_blank"
-          class="form-horizontal" id="form-bar-create"
-          data-redirect-url='{{url ""}}/assets/{{rxt.shortName}}/list'>
+          class="form-horizontal">
         <br/>
 
         <div style="float:left;width:15cm">
@@ -31,9 +30,7 @@
         <input type="hidden" id="bpmnProcessVersion" name="bpmnProcessVersion"/>
 
         <div id="saveButtons" class="form-actions">
-            <input type='submit' id="btn-create-asset-bar" class="btn btn-primary"
-                   name="addNewAssetButton" value='{{t "Upload file"}}' href="JavaScript:window.close()">
-
+            <button class="btn btn-primary" type="submit">Upload file</button>
             <button class="btn" type="reset">{{t "Reset"}}</button>
             <input type="hidden" value="{{rxt.shortName}}" name="{{rxt.shortName}}"
                    id="meta-asset-type">
