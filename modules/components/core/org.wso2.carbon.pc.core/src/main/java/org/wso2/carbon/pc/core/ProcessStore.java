@@ -1569,8 +1569,8 @@ public class ProcessStore {
                 JSONObject processInfo = new JSONObject(documentDetails);
                 String processName = processInfo.getString("processName");
                 String processVersion = processInfo.getString("processVersion");
-                String documentName = processInfo.getString("value");
-                String docIndex = processInfo.getString("name").replace("docName", "");
+                String docSummary = processInfo.getString("summary");
+                String docIndex = processInfo.getString("name").replace("doc", "");
 
                 String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
@@ -1582,7 +1582,7 @@ public class ProcessStore {
                 NodeList documentElements = ((Element) doc.getFirstChild()).getElementsByTagName("document");
                 if (documentElements.getLength() != 0) {
                     Element documentElement = (Element) documentElements.item(Integer.valueOf(docIndex));
-                    documentElement.getElementsByTagName("name").item(0).setTextContent(documentName);
+                    documentElement.getElementsByTagName("summary").item(0).setTextContent(docSummary);
                 }
                 String newProcessContent = xmlToString(doc);
                 resource.setContent(newProcessContent);

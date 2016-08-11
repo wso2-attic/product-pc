@@ -114,13 +114,15 @@ function renderCheckboxes(results) {
     $("#process-search-results").html("");
     if (results != null) {
         for (var i = 0; i < results.length; i++) {
-            var id = "checkbox" + (i + 1);
-            var checkbox = "";
-            checkbox += "<div class=\"checkbox checkbox-primary\">";
-            checkbox += "    <input id=\"" + id + "\" class=\"styled\" type=\"checkbox\">";
-            checkbox += "    <label for=\"" + id + "\">" + results[i].name + "-" + results[i].version + "<\/label>";
-            checkbox += "<\/div>";
-            $("#process-search-results").append(checkbox);
+            if(results[i].type === 'process') {
+                var id = "checkbox" + (i + 1);
+                var checkbox = "";
+                checkbox += "<div class=\"checkbox checkbox-primary\">";
+                checkbox += "    <input id=\"" + id + "\" class=\"styled\" type=\"checkbox\">";
+                checkbox += "    <label for=\"" + id + "\">" + results[i].name + "-" + results[i].version + "<\/label>";
+                checkbox += "<\/div>";
+                $("#process-search-results").append(checkbox);
+            }
         }
     }
 }

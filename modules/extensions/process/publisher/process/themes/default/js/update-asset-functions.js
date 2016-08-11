@@ -28,6 +28,7 @@ window.onload = function () {
     loadOverviewDiv();
     getProcessList();
     getProcessTags();
+    setProcessDetails();
 
     $('#tag-box').tokenfield({
         autocomplete: {
@@ -59,49 +60,6 @@ window.onload = function () {
 
 };
 
-function loadOverviewStep() {
-    loadOverviewDiv();
-    curWindow = 'stp1';
-    $('#stp1').addClass('current');
-    $('#stp1').removeClass('other');
-    $('#stp2').addClass('other');
-    $('#stp2').removeClass('current');
-    $('#stp3').addClass('other');
-    $('#stp3').removeClass('current');
-}
-
-function loadDetailsStep() {
-    if(curWindow == 'stp3') {
-        $('#stp1').addClass('other');
-        $('#stp1').removeClass('current');
-        $('#stp2').addClass('current');
-        $('#stp2').removeClass('other');
-        $('#stp3').addClass('other');
-        $('#stp3').removeClass('current');
-        loadDetails();
-    } else {
-        updateProcess();
-    }
-    curWindow = 'stp2';
-}
-
-function loadAssociationsStep() {
-    $('#stp1').addClass('other');
-    $('#stp1').removeClass('current');
-    $('#stp2').addClass('other');
-    $('#stp2').removeClass('current');
-    $('#stp3').addClass('current');
-    $('#stp3').removeClass('other');
-    processAssociations();
-    curWindow = 'stp3';
-}
-
-function loadOverviewDiv() {
-    loadOverview();
-    loadOverviewDescription();
-}
-
-
 function loadDetails() {
     $("#overviewDiv").hide();
     $("#detailDiv").show();
@@ -125,52 +83,6 @@ function loadDetails() {
     }
     // loadProcessText();
 }
-
-function loadOverviewDescription() {
-    var overview = $('#overview_description').val();
-    if(overview === "NA") {
-        $('#overview_description').val("");
-    }
-    $('#stp2').addClass('other')
-    $('#stp3').addClass('other');
-}
-
-function updateProcess(currentElement) {
-    if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
-        alertify.error('please fill the required fields.');
-    } else {
-        pname=$("#pName").val();
-        pversion=$("#pVersion").val();
-            $.ajax({
-                url: '/publisher/assets/process/apis/update_process',
-                type: 'POST',
-                data: {'processInfo': getProcessInfo()},
-                success: function (data) {
-                    var response = JSON.parse(data);
-                    if (response.error === false) {
-                        if ($(currentElement).attr('id') == 'saveProcessBtn') {
-                            window.location = "../../process/details/" + response.content;
-                        }
-                        else if ($(currentElement).attr('id') == 'detailsProcessBtn') {
-                            $('#stp1').removeClass("current");
-                            $('#stp1').addClass("other");
-                            $('#stp2').removeClass("other");
-                            $('#stp2').addClass("current");
-                            loadDetails();
-                            $("#processName").html(pname);
-                            $("#processVersion").html(pversion);
-                        }
-                    } else {
-                        alertify.error(response.content);
-                    }
-                },
-                error: function () {
-                    alertify.error('Process update error');
-                }
-            });
-    }
-}
-
 
 // function getProcessInfo() {
 //     tagList = $('#tagbox').val().split(",");
@@ -288,36 +200,6 @@ function showTextEditr(element) {
 
 }
 
-function textEditorInit() {
-    isEditorActive = true;
-
-    if($('#processTextHolder').val()) {
-
-        $.ajax({
-            url: '/publisher/assets/process/apis/get_process_text?process_text_path=/processText/' + pname + "/" + pversion,
-            type: 'GET',
-            success: function (data) {
-                var response = JSON.parse(data);
-                if (response.error === false) {
-                    $("#processText").html(response.content);
-                    // $("#processContent").val(response.content);
-                    tinyMCE.activeEditor.setContent(response.content);
-                } else {
-                    alertify.error(response.content);
-                }
-            },
-            error: function () {
-                alertify.error('Text editor error');
-            }
-        });
-
-        // if (!($(element).attr('id') == 'editText')) {
-        //     console.log($("#processText").html());
-        //     $("#processTextView").show();
-        //     $("#processTextDiv").hide();
-        // }
-    }
-}
 
 function loadTextEditor(element) {
     completeTextDetails();
@@ -357,8 +239,6 @@ function loadTextEditor(element) {
             init_instance_callback : "textEditorInit"
         });
     }
-
-
 }
 
 function editProcessTxt(element) {
@@ -368,43 +248,6 @@ function editProcessTxt(element) {
     showTextEditr(element);
 }
 
-function editAssociatedDocument(element, permission) {
-    // if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
-    //     alertify.error('please fill the required fields.');
-    // } else {
-    // $('#document-view-header').text($('#pName').val());
-    //saveProcess(element);
-    // $("#overviewDiv").hide();
-    $("#processTextEditDiv").hide();
-    $("#bpmnEditDiv").hide();
-    $("#addNewDoc").show();
-    $("#docViewDiv").hide();
-    $("#flowChartView").hide();
-    $("#processTextView").hide();
-    $("#bpmnViewDiv").hide();
-    document.forms["addNewDoc"].reset();
-    $("#docEditDiv").show();
-    $(".active").removeClass("active");
-    $("#docEditDiv").addClass("active");
-    $('#textEditor').removeClass("clicked");
-    $('#bpmn').removeClass("clicked");
-    $('#flowChart').removeClass("clicked");
-    $('#doc').addClass("clicked");
-
-    if($("#docadded").hasClass("fw-check")) {
-        // $("#docEditDiv").hide();
-        $("#addNewDoc").hide();
-        showDocument(permission);
-        $("#docViewDiv").show();
-        // $(".active").removeClass("active");
-    } else if ($("#documentAvailableCheck").val() === "true") {
-        $("#addNewDoc").hide();
-        showDocument(permission);
-        $("#docViewDiv").show();
-        // $(".active").removeClass("active");
-    }
-    // }
-}
 
 function editAssociatedFlowChart(element, flowchartPath) {
     // if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
