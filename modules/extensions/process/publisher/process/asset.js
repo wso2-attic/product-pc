@@ -469,6 +469,15 @@ asset.renderer = function(ctx) {
                         page.isBpmnAvailable = true;
                     }
                 }
+
+                var resourcePath = page.assets.path;
+                var permissionAPI = require('rxt').permissions;
+                if (permissionAPI.hasActionPermissionforPath(resourcePath , 'write', ctx.session)){
+                    page.permission=true;
+                }
+                else{
+                    page.permission=false;
+                }
             }
         },
         update: function(page) {

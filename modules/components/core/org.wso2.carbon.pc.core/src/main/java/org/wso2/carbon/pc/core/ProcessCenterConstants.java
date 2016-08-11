@@ -113,8 +113,10 @@ public class ProcessCenterConstants {
      **/
     public static final String READ = "2";
     public static final String WRITE = "3";
+    public static final String DELETE = "4";
     public static final String AUTHORIZE = "5";
     public static final String ALLOW = "1";
+    public static final String DENY = "-1";
     // Media types
     public static final String PDF_MEDIA_TYPE = "application/pdf";
     public static final String MS_WORD_DOC_MEDIA_TYPE = "application/msword";
