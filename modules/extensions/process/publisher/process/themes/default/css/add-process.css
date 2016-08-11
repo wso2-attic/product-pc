@@ -522,3 +522,13 @@ hr {
     color: #009900;
     float: right!important;
 }
+
+.custom-span {
+    cursor:pointer;
+    color:#337ab7;
+}
+
+.custom-span:hover {
+    text-decoration:none;
+    color:#23527c;
+}
