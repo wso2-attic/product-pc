@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core.import_export);
+importPackage(org.wso2.carbon.pc.core.transfer);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
@@ -31,6 +31,21 @@ var user = server.current(session);
 var files = request.getAllFiles();
 var zipFile = files["processZip"];
 var zipInputStream = zipFile.getStream().getStream();
-ip.importProcesses(zipInputStream, user.username);
-
+var responseObj = {};
+try {
+    ip.importProcesses(zipInputStream, user.username);
+    responseObj.error = false;
+    responseObj.content = "SUCCESS";
+    print(stringify(responseObj));
+}catch(errorE){
+    log.error(errorE);
+    responseObj.error = true;
+    if(errorE.message == "org.wso2.carbon.pc.core.ProcessCenterException: ALREADY_AVAILABLE"){
+        responseObj.content = "ERROR: Tried to Add Already Available Process";
+        print("ERROR: Tried to Add Already Available Process");
+    }else {
+        responseObj.content = "FAIL";
+        print("FAIL");
+    }
+}
 %>

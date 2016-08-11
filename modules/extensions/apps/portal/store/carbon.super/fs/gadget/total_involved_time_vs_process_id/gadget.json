@@ -13,7 +13,7 @@
   "description": "PC analytics graphs",
   "listen": {
     "channel4": {
-      "type": "dateRange",
+      "type": "user_id",
       "description": "Listening to date range"
     }
   }
