@@ -22,16 +22,6 @@
     "MODEL_MANAGER": "model_manager"
   },
   "lifeCycleBehaviour": {
-    "SampleLifeCycle2": {
-      "onAttach": {
-        "action": "Promote"
-      }
-    },
-    "MobileAppLifeCycle": {
-      "onAttach": {
-        "action": "Create"
-      }
-    }
   },
   "paths": {
     "ASSET_EXT_PATH": "/assets",

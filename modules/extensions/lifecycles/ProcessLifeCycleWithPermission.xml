@@ -15,16 +15,16 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
-<aspect name="DefaultProcessLifeCycle" class="org.wso2.jaggery.scxml.aspects.JaggeryTravellingPermissionLifeCycle">
+<aspect name="ProcessLifeCycleWithPermission" class="org.wso2.carbon.pc.core.extensions.aspects.ProcessLifeCycle">
     <configuration type="literal">
         <lifecycle>
             <scxml xmlns="http://www.w3.org/2005/07/scxml"
                    version="1.0"
                    initialstate="Development">
-                <state id="Development">
+                <state id='Development'>
                     <datamodel>
                         <data name="transitionExecution">
-                            <execution forEvent="Submit" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
+                            <execution forEvent="Submit" class="org.wso2.carbon.pc.core.executors.LCExecutor">
                             </execution>
                         </data>
                     </datamodel>
@@ -33,9 +33,9 @@
                 <state id="In-Review">
                     <datamodel>
                         <data name="transitionExecution">
-                            <execution forEvent="Publish" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
+                            <execution forEvent="Publish" class="org.wso2.carbon.pc.core.executors.LCExecutor">
                             </execution>
-                            <execution forEvent="Reject" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
+                            <execution forEvent="Reject" class="org.wso2.carbon.pc.core.executors.LCExecutor">
                             </execution>
                         </data>
                         <data name="transitionPermission">
@@ -49,9 +49,9 @@
                 <state id="Published">
                     <datamodel>
                         <data name="transitionExecution">
-                            <execution forEvent="Retire" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
+                            <execution forEvent="Retire" class="org.wso2.carbon.pc.core.executors.LCExecutor">
                             </execution>
-                            <execution forEvent="Unpublish" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
+                            <execution forEvent="Unpublish" class="org.wso2.carbon.pc.core.executors.LCExecutor">
                             </execution>
                         </data>
                         <data name="transitionPermission">
