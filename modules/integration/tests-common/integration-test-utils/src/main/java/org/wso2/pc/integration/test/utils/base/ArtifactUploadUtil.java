@@ -124,4 +124,32 @@ public class ArtifactUploadUtil {
                 httpClient.executeMethod(httpMethod);
                 return httpMethod;
         }
+
+
+        /**
+         * This method uploads a process ZIP file
+         *
+         * @param filePath       The absolute path of the file
+         * @param cookieHeader   Session cookie
+         * @throws IOException
+         */
+        public static PostMethod uploadProcess(String filePath,
+                String cookieHeader,
+                String apiUrl)
+                throws IOException {
+
+                File file = new File(filePath);
+                FilePart fp = new FilePart("processZip", file);
+
+                //Set file parts and string parts together
+                final Part[] part = {fp};
+                HttpClient httpClient = new HttpClient();
+                PostMethod httpMethod = new PostMethod(apiUrl);
+                httpMethod.addRequestHeader("Cookie", cookieHeader);
+                httpMethod.addRequestHeader("Accept", MediaType.APPLICATION_JSON);
+                httpMethod.setRequestEntity(
+                        new MultipartRequestEntity(part, httpMethod.getParams()));
+                httpClient.executeMethod(httpMethod);
+                return httpMethod;
+        }
 }

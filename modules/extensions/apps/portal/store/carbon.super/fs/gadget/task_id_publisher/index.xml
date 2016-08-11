@@ -51,16 +51,17 @@
                     <input id="process_name" class="form-control" type="text" disabled/>
                </div>
                <div class="input-group form-group">
+                    <label class="input-group-addon" id="taskListLabel" for="taskIdList">Task</label>
+                    <select id="taskIdList" name="taskIdList" class="selectpicker form-control">
+                    </select>
+               </div>
+               <div class="input-group form-group">
                     <label class="input-group-addon" id="start_date" for="taskStartDate">Start Date</label>
                     <input id="taskStartDate" class="form-control" type="text"/>
                </div>
                <div class="input-group form-group">
                     <label class="input-group-addon" id="end_date" for="taskEndDate">End Date</label>
                     <input id="taskEndDate" class="form-control" type="text"/>
-               </div>
-               <div class="form-group">
-                    <select id="taskIdList" name="taskIdList" class="selectpicker form-control">
-                    </select>
                </div>
                <Button class="btn btn-primary" id="applyBtn" onclick="publish()">Apply</Button>
                <Button class="btn btn-primary" id="resetBtn" onclick="reset()">Reset</Button>
