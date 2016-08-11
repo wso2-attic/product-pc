@@ -34,6 +34,154 @@ import java.util.Hashtable;
 public class ProcessLevelMonitor {
 	private static final Log log = LogFactory.getLog(ProcessLevelMonitor.class);
 
+	// TEST //
+
+	/**
+	 * perform query: SELECT assignUser, COUNT(*) AS completedTotalTasks FROM
+	 *                TASK_USAGE_SUMMARY_DATA WHERE <process id> AND <date range> GROUP BY assignUser;
+	 *
+	 * @param filters is used to filter the result
+	 * @return the result as a JSON string
+	 */
+	public String getTotalCompletedTasksVsUserIdForProcess(String filters) {
+		String sortedResult = "";
+		try {
+			if (AnalyticsUtils.isDASAnalyticsActivated()) {
+				JSONObject filterObj = new JSONObject(filters);
+				long from = filterObj.getLong(AnalyticsConstants.START_TIME);
+				long to = filterObj.getLong(AnalyticsConstants.END_TIME);
+				String processId = filterObj.getString(AnalyticsConstants.PROCESS_DEFINITION_KEY);
+				String order = filterObj.getString(AnalyticsConstants.ORDER);
+				int userCount = filterObj.getInt(AnalyticsConstants.NUM_COUNT);
+
+				AggregateField countField = new AggregateField();
+				countField.setFieldName(AnalyticsConstants.ALL);
+				countField.setAggregate(AnalyticsConstants.COUNT);
+				countField.setAlias(AnalyticsConstants.COMPLETED_TOTAL_TASKS);
+
+				ArrayList<AggregateField> aggregateFields = new ArrayList<>();
+				aggregateFields.add(countField);
+
+				AggregateQuery query = new AggregateQuery();
+				query.setTableName(AnalyticsConstants.TASK_USAGE_TABLE);
+				query.setGroupByField(AnalyticsConstants.ASSIGN_USER);
+
+				String queryStr = "processDefinitionId:" + "\"'" + processId + "'\"";
+				if (from != 0 && to != 0) {
+					queryStr += " AND " + AnalyticsUtils
+							.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
+				}
+				query.setQuery(queryStr);
+				query.setAggregateFields(aggregateFields);
+
+				if (log.isDebugEnabled()) {
+					log.debug("Query to get the Total Completed Tasks Vs User Id for process: " + processId + " | Result:" +
+							AnalyticsUtils.getJSONString(query));
+				}
+
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+								AnalyticsUtils.getJSONString(query));
+
+				JSONArray unsortedResultArray = new JSONArray(result);
+				Hashtable<String, Integer> table = new Hashtable<>();
+
+				if (unsortedResultArray.length() != 0) {
+					for (int i = 0; i < unsortedResultArray.length(); i++) {
+						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String assignee =
+								values.getJSONArray(AnalyticsConstants.ASSIGN_USER).getString(0);
+						int totalInvolvedTasks =
+								values.getInt(AnalyticsConstants.COMPLETED_TOTAL_TASKS);
+						table.put(assignee, totalInvolvedTasks);
+					}
+					sortedResult = AnalyticsUtils
+							.getIntegerValueSortedList(table, AnalyticsConstants.ASSIGN_USER,
+									AnalyticsConstants.COMPLETED_TOTAL_TASKS,
+									order, userCount);
+				}
+			}
+		} catch (Exception e) {
+			log.error("PC Analytics core UserLevelMonitoring error.", e);
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("Total Completed Tasks Vs User Id Result:" + sortedResult);
+		}
+		return sortedResult;
+	}
+
+	/**
+	 * perform query: SELECT assignee, SUM(duration) AS totalExecutionTime FROM
+	 *                TASK_USAGE_SUMMARY where <processId> GROUP BY assignee;
+	 *
+	 * @param filters is used to filter the result
+	 * @return the result as a JSON string
+	 */
+	public String getTotalTimeVsUserIdForProcess(String filters) {
+		String sortedResult = "";
+		try {
+			if (AnalyticsUtils.isDASAnalyticsActivated()) {
+				JSONObject filterObj = new JSONObject(filters);
+				String processId = filterObj.getString(AnalyticsConstants.PROCESS_ID);
+				String order = filterObj.getString(AnalyticsConstants.ORDER);
+				int taskCount = filterObj.getInt(AnalyticsConstants.NUM_COUNT);
+
+				AggregateField avgField = new AggregateField();
+				avgField.setFieldName(AnalyticsConstants.DURATION);
+				avgField.setAggregate(AnalyticsConstants.SUM);
+				avgField.setAlias(AnalyticsConstants.TOTAL_INVOLVED_TIME);
+
+				ArrayList<AggregateField> aggregateFields = new ArrayList<>();
+				aggregateFields.add(avgField);
+
+				String queryStr = "processDefinitionId:" + "\"'" + processId+ "'\"";
+
+				AggregateQuery query = new AggregateQuery();
+				query.setTableName(AnalyticsConstants.TASK_USAGE_TABLE);
+				query.setGroupByField(AnalyticsConstants.ASSIGN_USER);
+				query.setQuery(queryStr);
+				query.setAggregateFields(aggregateFields);
+
+				if (log.isDebugEnabled()) {
+					log.debug("Query to get the total execution time Vs User Id for process. | Result:" +
+							AnalyticsUtils.getJSONString(query));
+				}
+
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+								AnalyticsUtils.getJSONString(query));
+
+				JSONArray unsortedResultArray = new JSONArray(result);
+				Hashtable<String, Double> table = new Hashtable<>();
+
+				if (unsortedResultArray.length() != 0) {
+					for (int i = 0; i < unsortedResultArray.length(); i++) {
+						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String userId =
+								values.getJSONArray(AnalyticsConstants.ASSIGN_USER).getString(0);
+						double totalExecTime = values.getInt(AnalyticsConstants.TOTAL_INVOLVED_TIME);
+						table.put(userId, totalExecTime);
+					}
+					sortedResult = AnalyticsUtils
+							.getDoubleValueSortedList(table, AnalyticsConstants.ASSIGN_USER,
+									AnalyticsConstants.TOTAL_INVOLVED_TIME, order,
+									taskCount);
+				}
+			}
+		} catch (Exception e) {
+			log.error("PC Analytics core TaskLevelMonitoring error.", e);
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("Total Waiting Time Vs User Id for process. Result:" + sortedResult);
+		}
+		return sortedResult;
+	}
+
+	// TEST //
+
+
 	/**
 	 * perform query: SELECT processDefinitionId, AVG(duration) AS avgExecutionTime FROM
 	 *                PROCESS_USAGE_SUMMARY WHERE <date range> GROUP BY processDefinitionId;
