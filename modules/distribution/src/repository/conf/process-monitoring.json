@@ -22,7 +22,7 @@
           "loggedIn": {
             "blocks": [
               {
-                "id": "e9c3f7c156e45c77608d3b1685142d70",
+                "id": "f0a4e03aeb2068fb41ea3a122b99bd56",
                 "x": 6,
                 "y": 13,
                 "width": 6,
@@ -30,7 +30,7 @@
                 "banner": false
               },
               {
-                "id": "f0a4e03aeb2068fb41ea3a122b99bd56",
+                "id": "a2074d01747013cc5d6b3dc61b896da6",
                 "x": 0,
                 "y": 13,
                 "width": 6,
@@ -38,7 +38,7 @@
                 "banner": false
               },
               {
-                "id": "a2074d01747013cc5d6b3dc61b896da6",
+                "id": "c3b618debfe7d6c625d6621b08aa75b8",
                 "x": 6,
                 "y": 8,
                 "width": 6,
@@ -54,7 +54,7 @@
                 "banner": false
               },
               {
-                "id": "c3b618debfe7d6c625d6621b08aa75b8",
+                "id": "e9c3f7c156e45c77608d3b1685142d70",
                 "x": 6,
                 "y": 3,
                 "width": 6,
@@ -178,19 +178,19 @@
           ],
           "a2074d01747013cc5d6b3dc61b896da6": [
             {
-              "id": "total_involved_time_vs_user_id-0",
+              "id": "total_involved_time_vs_user_id_for_process-0",
               "content": {
-                "id": "total_involved_time_vs_user_id",
-                "title": "User Involvement in the Process",
+                "id": "total_involved_time_vs_user_id_for_process",
+                "title": "User Involvement in the Process (Time)",
                 "type": "gadget",
                 "category": "Subscribers",
-                "thumbnail": "fs://gadget/total_involved_time_vs_user_id/index.png",
+                "thumbnail": "fs://gadget/total_involved_time_vs_user_id_for_process/index.png",
                 "settings": {
                   "personalize": true,
                   "priority": "5"
                 },
                 "data": {
-                  "url": "fs://gadget/total_involved_time_vs_user_id/index.xml"
+                  "url": "fs://gadget/total_involved_time_vs_user_id_for_process/index.xml"
                 },
                 "description": "PC analytics graphs",
                 "listen": {
@@ -209,30 +209,30 @@
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "left",
-                  "title": "User Involvement in the Process"
+                  "title": "User Involvement in the Process (Time)"
                 },
                 "options": {},
                 "locale_titles": {
-                  "en-US": "User Involvement in the Process"
+                  "en-US": "User Involvement in the Process (Time)"
                 }
               }
             }
           ],
           "f0a4e03aeb2068fb41ea3a122b99bd56": [
             {
-              "id": "avg_time_vs_process_version-0",
+              "id": "total_completed_tasks_vs_user_id_for_process-0",
               "content": {
-                "id": "avg_time_vs_process_version",
-                "title": "Average Execution Times of Process Versions",
+                "id": "total_completed_tasks_vs_user_id_for_process",
+                "title": "Task Completions of the Process by Users",
                 "type": "gadget",
                 "category": "Subscribers",
-                "thumbnail": "fs://gadget/avg_time_vs_process_version/index.png",
+                "thumbnail": "fs://gadget/total_completed_tasks_vs_user_id_for_process/index.png",
                 "settings": {
                   "personalize": true,
                   "priority": "5"
                 },
                 "data": {
-                  "url": "fs://gadget/avg_time_vs_process_version/index.xml"
+                  "url": "fs://gadget/total_completed_tasks_vs_user_id_for_process/index.xml"
                 },
                 "description": "This shows pc analytics charts",
                 "listen": {
@@ -251,33 +251,33 @@
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "left",
-                  "title": "Average Execution Times of Process Versions"
+                  "title": "Task Completions of the Process by Users"
                 },
                 "options": {},
                 "locale_titles": {
-                  "en-US": "Average Execution Times of Process Versions"
+                  "en-US": "Task Completions of the Process by Users"
                 }
               }
             }
           ],
           "e9c3f7c156e45c77608d3b1685142d70": [
             {
-              "id": "process_instance_count_vs_process_version-0",
+              "id": "process_instance_count_vs_date-0",
               "content": {
-                "id": "process_instance_count_vs_process_version",
-                "title": "Instance Counts of Process Versions",
+                "id": "process_instance_count_vs_date",
+                "title": "Process Completions Over Time",
                 "type": "gadget",
                 "category": "gadget",
-                "thumbnail": "fs://gadget/process_instance_count_vs_process_version/index.png",
+                "thumbnail": "fs://gadget/process_instance_count_vs_date/index.png",
                 "settings": {
                   "personalize": true
                 },
                 "data": {
-                  "url": "fs://gadget/process_instance_count_vs_process_version/index.xml"
+                  "url": "fs://gadget/process_instance_count_vs_date/index.xml"
                 },
                 "description": "This shows pc analytics charts",
                 "styles": {
-                  "title": "Instance Counts of Process Versions",
+                  "title": "Process Completions Over Time",
                   "borders": true
                 },
                 "options": {},
