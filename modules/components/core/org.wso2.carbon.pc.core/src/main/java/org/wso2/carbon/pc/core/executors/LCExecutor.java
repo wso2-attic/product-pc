@@ -18,6 +18,7 @@ package org.wso2.carbon.pc.core.executors;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.governance.registry.extensions.interfaces.Execution;
+import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
 import org.wso2.carbon.registry.core.session.CurrentSession;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -25,6 +26,9 @@ import org.wso2.carbon.registry.resource.services.utils.AddRolePermissionUtil;
 
 import java.util.Map;
 
+/**
+ * This executor can be used to change role permissions of a process when changing the states of the lifecycle.
+ */
 public class LCExecutor implements Execution {
 
     private static final Log log = LogFactory.getLog(LCExecutor.class);
@@ -35,6 +39,13 @@ public class LCExecutor implements Execution {
     public void init(Map map) {
     }
 
+    /**
+     * Implementing the execute method
+     *
+     * @param currentState
+     * @param targetState
+     * @return
+     */
     public boolean execute(RequestContext context, String currentState, String targetState) {
 
         boolean updated;
@@ -60,13 +71,21 @@ public class LCExecutor implements Execution {
 
         } catch (Exception e) {
             String errMsg = "Failed to update Permission";
-            log.error(errMsg,e);
-            throw new Error(errMsg , e);
+            log.error(errMsg, e);
+            throw new Error(errMsg, e);
         }
 
         return updated;
     }
 
+    /**
+     * This method is used to identify the permissions to be assigned and denied from the permission string and add or
+     * remove the permission.
+     *
+     * @param role
+     * @param permissionString
+     * @throws Exception
+     */
     private void assignPermission(String role, String permissionString) throws Exception {
 
         String[] permissionList = permissionString.split(",");
@@ -76,29 +95,36 @@ public class LCExecutor implements Execution {
 
         for (String permission : permissionList) {
             if (permission.charAt(0) == '+') {
-                permissionType = ExecutorConstants.ALLOW;
+                permissionType = ProcessCenterConstants.ALLOW;
             } else {
-                permissionType = ExecutorConstants.DENY;
+                permissionType = ProcessCenterConstants.DENY;
             }
             action = permission.substring(1, permission.length());
             switch (action) {
             case "get":
-                actionToAuthorize = ExecutorConstants.READ;
+                actionToAuthorize = ProcessCenterConstants.READ;
                 break;
             case "add":
-                actionToAuthorize = ExecutorConstants.WRITE;
+                actionToAuthorize = ProcessCenterConstants.WRITE;
                 break;
             case "delete":
-                actionToAuthorize = ExecutorConstants.DELETE;
+                actionToAuthorize = ProcessCenterConstants.DELETE;
                 break;
             case "authorize":
-                actionToAuthorize = ExecutorConstants.AUTHORIZE;
+                actionToAuthorize = ProcessCenterConstants.AUTHORIZE;
                 break;
             }
             AddRolePermissionUtil.addRolePermission(userRegistry, path, role, actionToAuthorize, permissionType);
         }
     }
 
+    /**
+     * Assign permission for the publisher role according to the lifecycle state.
+     *
+     * @param currentState
+     * @param targetState
+     * @throws Exception
+     */
     private void setPublisherPermission(String currentState, String targetState) throws Exception {
 
         if (currentState.equals("Development")) {
@@ -110,7 +136,7 @@ public class LCExecutor implements Execution {
         } else if (currentState.equals("In-Review") && targetState.equals("Published")) {
             assignPermission("Internal/publisher", "+get,+add,-delete,+authorize");
 
-        }   else if (currentState.equals("Published") && targetState.equals("Development")) {
+        } else if (currentState.equals("Published") && targetState.equals("Development")) {
             assignPermission("Internal/publisher", "+get,+add,+delete,+authorize");
 
         } else if (currentState.equals("Published") && targetState.equals("Retired")) {
@@ -118,9 +144,17 @@ public class LCExecutor implements Execution {
         }
     }
 
+    /**
+     * Assign permission for the process owner.
+     *
+     * @param user
+     * @param currentState
+     * @param targetState
+     * @throws Exception
+     */
     private void setPrivateRolePermission(String user, String currentState, String targetState) throws Exception {
 
-        if(!user.equals("admin")) {
+        if (!user.equals("admin")) {
 
             if (currentState.equals("Development")) {
                 assignPermission("Internal/private_" + user, "+get,-add,-delete,-authorize");
@@ -140,16 +174,24 @@ public class LCExecutor implements Execution {
         }
     }
 
+    /**
+     * Assign permission for the other roles.
+     *
+     * @param role
+     * @param currentState
+     * @param targetState
+     * @throws Exception
+     */
     private void setOtherRolePermission(String role, String currentState, String targetState) throws Exception {
 
         if (currentState.equals("Development")) {
             assignPermission(role, "+get,-add,-delete,-authorize");
 
-        } else if (currentState.equals("In-Review")&& targetState.equals("Development")) {
+        } else if (currentState.equals("In-Review") && targetState.equals("Development")) {
             assignPermission(role, "+get,+add,-delete,-authorize");
 
-        }  else if (currentState.equals("In-Review")&& targetState.equals("Published")) {
-        assignPermission(role, "+get,-add,-delete,-authorize");
+        } else if (currentState.equals("In-Review") && targetState.equals("Published")) {
+            assignPermission(role, "+get,-add,-delete,-authorize");
 
         } else if (currentState.equals("Published") && targetState.equals("Development")) {
             assignPermission(role, "+get,+add,-delete,-authorize");
