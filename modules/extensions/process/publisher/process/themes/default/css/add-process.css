@@ -328,7 +328,7 @@
 }
 
 .wiz-content {
-    min-height: 600px;
+    min-height: 70vh;
     border-left: 1px solid #E5E5E5;
     border-right: 1px solid #E5E5E5;
     margin-top: -1px;
