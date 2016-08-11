@@ -1683,10 +1683,11 @@ function loadSummary(update_view) {
         PID = $('#processId').val();
     }
     window.location = "../../assets/process/details/" + PID;
+
     if(update_view) {
-    window.location = "../../../assets/process/details/" + PID;
+    window.location = "../../../assets/process/details/" + process_id;
     } else {
-    window.location = "../../assets/process/details/" + PID;
+    window.location = "../../assets/process/details/" + process_id;
     }
 
 }
