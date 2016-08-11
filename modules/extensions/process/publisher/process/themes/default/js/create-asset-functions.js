@@ -205,6 +205,11 @@ function showMain() {
     $("#mainView").show();
 }
 
+function setProcessDetails() {
+    pname = $("#pName").val();
+    pversion = $("#pVersion").val();
+}
+
 function saveProcess(currentElement) {
     if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
         alertify.error('please fill the required fields.');
@@ -1366,6 +1371,61 @@ function showDocument(permission) {
                         var cellDocAction = row.insertCell(2);
                         cellDocName.innerHTML = response[i].name;
                         cellDocSummary.innerHTML = response[i].summary;
+                        cellDocSummary.contentEditable = true;
+                        cellDocSummary.style.overflow = "visible";
+                        cellDocSummary.maxLength = "10";
+                        cellDocSummary.style.width = "60%";
+                        cellDocSummary.style.wordWrap = "break-word";
+                        cellDocSummary.docIndex = "doc" + i;
+                        cellDocSummary.docName = response[i].name;
+                        cellDocSummary.check = true;
+                        cellDocSummary.addEventListener("focusout", function() {
+                            if(this.innerText === '') {
+                                this.innerText = 'NA';
+                            }
+
+                            if(this.innerText != 'NA') {
+                                this.innerHTML = this.innerText;
+                                // saveDocSummary(this);
+                            }
+                        });
+                        cellDocSummary.addEventListener("focus", function() {
+                            if(this.innerText === 'NA') {
+                                this.innerHTML = '';
+                            } else if(this.innerText != ''){
+                                this.innerHTML = this.innerText+ "<span class='fw fw-save custom-span' style='float: right;' onclick='saveDocSummary(this.parentElement)'></span>";
+                            }
+                        });
+                        cellDocSummary.addEventListener("keydown", function () {
+                            if(this.innerHTML===''){
+                                if(this.check) {
+                                    this.innerHTML = this.innerText + "<span class='fw fw-save custom-span' style='float: right;' onclick='saveDocSummary(this.parentElement)'></span>";
+                                    this.check = false;
+                                } else {
+                                    this.innerHTML = '';
+                                }
+                            }
+                        })
+                        cellDocAction.style.width = "5%";
+                        var docPath = response[i].path;
+                        var lastDotIndex = docPath.lastIndexOf(".");
+                        var docExt = docPath.substr(lastDotIndex + 1);
+
+                        var iconElement = document.createElement('i');
+                        if (docExt === "pdf") {
+                            iconElement.className = "fw fw-pdf";
+                            iconElement.style.color = "red";
+                        } else if (docExt == "doc" || docExt == "docx") {
+                            iconElement.className = "fw fw-ms-document";
+                            iconElement.style.color = "#00458a";
+                        } else { // google doc
+                            iconElement.className = "fw fw-document";
+                            iconElement.style.color = "#0099ff";
+                        }
+                        iconElement.style.fontSize = "21px";
+                        iconElement.style.cssFloat = "left";
+                        iconElement.style.paddingRight = "5px";
+                        cellDocName.appendChild(iconElement);
 
                         if (response[i].url != "NA") {
                             var anchorUrlElement = document.createElement("a");
@@ -1434,6 +1494,33 @@ function showDocument(permission) {
             alertify.error('document retrieving error');
         }
     });
+}
+
+function saveDocSummary(element) {
+    var docSummary = {
+        "processName" : pname,
+        "processVersion" : pversion,
+        "summary" : element.innerText,
+        "name" : element.docIndex
+    }
+
+    $.ajax({
+        url: '/publisher/assets/process/apis/update_document_details',
+        type: 'POST',
+        data: {'docInfo':JSON.stringify(docSummary) },
+        success: function (data) {
+            var response = JSON.parse(data);
+            if (response.error === false) {
+                alertify.success("document summary updated")
+            } else {
+                alertify.error(response.content);
+            }
+        },
+        error: function () {
+            alertify.error('Document details saving error');
+        }
+    });
+
 }
 
 function deleteSubprocess(element) {
@@ -1591,6 +1678,10 @@ function deletePredecessor(element) {
 }
 
 function loadSummary(update_view) {
+
+    if(typeof PID == 'undefined') {
+        PID = $('#processId').val();
+    }
     window.location = "../../assets/process/details/" + PID;
     if(update_view) {
     window.location = "../../../assets/process/details/" + PID;

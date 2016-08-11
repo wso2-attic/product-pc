@@ -28,6 +28,7 @@ window.onload = function () {
     loadOverviewDiv();
     getProcessList();
     getProcessTags();
+    setProcessDetails();
 
     $('#tag-box').tokenfield({
         autocomplete: {
