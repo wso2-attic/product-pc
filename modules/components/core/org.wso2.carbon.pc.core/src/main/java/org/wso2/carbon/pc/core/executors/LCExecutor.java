@@ -123,7 +123,7 @@ public class LCExecutor implements Execution {
         if(!user.equals("admin")) {
 
             if (currentState.equals("Development")) {
-                assignPermission("Internal/private_" + user, "+get,-add,+delete,-authorize");
+                assignPermission("Internal/private_" + user, "+get,-add,-delete,-authorize");
 
             } else if (currentState.equals("In-Review") && targetState.equals("Development")) {
                 assignPermission("Internal/private_" + user, "+get,+add,+delete,+authorize");
@@ -135,7 +135,7 @@ public class LCExecutor implements Execution {
                 assignPermission("Internal/private_" + user, "+get,+add,+delete,+authorize");
 
             } else if (currentState.equals("Published") && targetState.equals("Retired")) {
-                assignPermission("Internal/private_" + user, "+get,-add,+delete,-authorize");
+                assignPermission("Internal/private_" + user, "+get,-add,-delete,-authorize");
             }
         }
     }
