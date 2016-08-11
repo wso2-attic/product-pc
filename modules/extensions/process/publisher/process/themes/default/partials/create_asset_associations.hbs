@@ -25,19 +25,30 @@
     <div class="sidebar-wrapper sidebar-nav hidden-xs cont" id="left-sidebar"
          style="width: 260px; left: 0px; height: 399.883px; padding-top: 20px;" data-side="left" data-width="100"
          data-fixed-offset-top="0" data-offset-top="80">
-        <ul class="nav nav-stacked">
-            <li id="subprocess"><a href="#" onclick="showSubprocess()"
-                                   rel="tooltip" title="List of subprocesses for a given process">
-                Subprocess<i id="subprocessadded" class="" style="color: red;padding-left: 25px;"></i></a></li>
-            <li id="successor"><a href="#" onclick="showSuccessor()"
-                                  title="List of successor processes for a given process">
-                Successor<i id="successoradded" class="" style="color: red;padding-left: 35px;"></i></a></li>
-            <li id="predecessor"><a href="#" onclick="showPredecessor()"
-                                    rel="tooltip" title="List of predecessor processes for a given process">
-                Predecessor<i id="prodecessoradded" class="" style="color: red;padding-left: 20px;"></i></a></li>
-        </ul>
+        <div id="content">
+            <ul class="nav nav-stacked">
+                <li id="subprocess"><a href="#" onclick="showSubprocess()"
+                                       rel="tooltip" title="List of subprocesses for a given process">
+                    Subprocess<i id="subprocessadded" class="artifact-check"></i></a></li>
+                <li id="successor"><a href="#" onclick="showSuccessor()"
+                                      title="List of successor processes for a given process">
+                    Successor<i id="successoradded" class="artifact-check"></i></a></li>
+                <li id="predecessor"><a href="#" onclick="showPredecessor()"
+                                        rel="tooltip" title="List of predecessor processes for a given process">
+                    Predecessor<i id="prodecessoradded" class="artifact-check"></i></a></li>
+            </ul>
+        </div>
+        <div class="row" style="padding-top: 10%">
+            <button class="btn btn-primary" id="backToDetailsBtn"
+                    onclick="loadDetailsStep()" style="margin-left:30px; position: relative;">
+                <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp; Details
+            </button>
+            <button class="btn btn-primary" id="finishBtn" onclick="loadSummary({{isUpdateView}},'{{assets.id}}')"
+                    style="margin-left: 5px; position: relative;">
+                &nbsp;&nbsp;Save&nbsp;&nbsp;
+            </button>
+        </div>
     </div>
-
     <div class="container">
         <div class="row" style="margin-right: 10px">
             <div>{{> add_subprocess .}}</div>
@@ -55,10 +66,6 @@
         <!--onclick="updateAssociations()" style="margin-left:40px; position: absolute; bottom: 100px;">-->
         <!--Update-->
         <!--</button>-->
-        <button class="btn btn-primary" id="finishBtn" value="Finish" onclick="loadSummary({{isUpdateView}})"
-                style="margin-left: 100px; position: absolute; bottom: 100px;">
-            Finish
-        </button>
     </div>
 </div>
 

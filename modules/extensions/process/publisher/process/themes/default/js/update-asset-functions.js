@@ -46,43 +46,55 @@ window.onload = function () {
     });
 
     $('#stp1').click(function () {
-        loadOverviewDiv();
-        curWindow = 'stp1';
-        $('#stp1').addClass('current');
-        $('#stp1').removeClass('other');
-        $('#stp2').addClass('other');
-        $('#stp2').removeClass('current');
-        $('#stp3').addClass('other');
-        $('#stp3').removeClass('current');
+       loadOverviewStep();
     });
 
     $('#stp2').click(function () {
-        if(curWindow == 'stp3') {
-            $('#stp1').addClass('other');
-            $('#stp1').removeClass('current');
-            $('#stp2').addClass('current');
-            $('#stp2').removeClass('other');
-            $('#stp3').addClass('other');
-            $('#stp3').removeClass('current');
-            loadDetails();
-        } else {
-            updateProcess();
-        }
-        curWindow = 'stp2';
+       loadDetailsStep();
     });
 
     $('#stp3').click(function () {
-        $('#stp1').addClass('other');
-        $('#stp1').removeClass('current');
-        $('#stp2').addClass('other');
-        $('#stp2').removeClass('current');
-        $('#stp3').addClass('current');
-        $('#stp3').removeClass('other');
-        processAssociations();
-        curWindow = 'stp3';
+        loadAssociationsStep();
     });
 
 };
+
+function loadOverviewStep() {
+    loadOverviewDiv();
+    curWindow = 'stp1';
+    $('#stp1').addClass('current');
+    $('#stp1').removeClass('other');
+    $('#stp2').addClass('other');
+    $('#stp2').removeClass('current');
+    $('#stp3').addClass('other');
+    $('#stp3').removeClass('current');
+}
+
+function loadDetailsStep() {
+    if(curWindow == 'stp3') {
+        $('#stp1').addClass('other');
+        $('#stp1').removeClass('current');
+        $('#stp2').addClass('current');
+        $('#stp2').removeClass('other');
+        $('#stp3').addClass('other');
+        $('#stp3').removeClass('current');
+        loadDetails();
+    } else {
+        updateProcess();
+    }
+    curWindow = 'stp2';
+}
+
+function loadAssociationsStep() {
+    $('#stp1').addClass('other');
+    $('#stp1').removeClass('current');
+    $('#stp2').addClass('other');
+    $('#stp2').removeClass('current');
+    $('#stp3').addClass('current');
+    $('#stp3').removeClass('other');
+    processAssociations();
+    curWindow = 'stp3';
+}
 
 function loadOverviewDiv() {
     loadOverview();
@@ -95,6 +107,22 @@ function loadDetails() {
     $("#detailDiv").show();
     $("#associationDiv").hide();
     $("#textEditorLink").trigger("click");
+
+    if($('#processTextHolder').val()==='true') {
+        $('#textadded').addClass('fw fw-check');
+    }
+
+    if($('#bpmnAvailableCheck').val()==='true') {
+        $('#bpmnadded').addClass('fw fw-check');
+    }
+
+    if($('#documentAvailableCheck').val()==='true') {
+        $('#docadded').addClass('fw fw-check');
+    }
+
+    if($('#flowchartAvailableCheck').val()==='true') {
+        $('#flowchartadded').addClass('fw fw-check');
+    }
     // loadProcessText();
 }
 
@@ -107,10 +135,7 @@ function loadOverviewDescription() {
     $('#stp3').addClass('other');
 }
 
-function updateProcess(flag) {
-    $('#stp1').addClass('other')
-    $('#stp2').removeClass('other');
-    $('#stp3').addClass('other');
+function updateProcess(currentElement) {
     if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
         alertify.error('please fill the required fields.');
     } else {
@@ -123,15 +148,18 @@ function updateProcess(flag) {
                 success: function (data) {
                     var response = JSON.parse(data);
                     if (response.error === false) {
-                        // if ($(currentElement).attr('id') == 'detailsProcessBtn') {
+                        if ($(currentElement).attr('id') == 'saveProcessBtn') {
+                            window.location = "../../process/details/" + response.content;
+                        }
+                        else if ($(currentElement).attr('id') == 'detailsProcessBtn') {
                             $('#stp1').removeClass("current");
                             $('#stp1').addClass("other");
+                            $('#stp2').removeClass("other");
                             $('#stp2').addClass("current");
-                        // }
-                        loadDetails();
-                        $("#processName").html(pname);
-                        $("#processVersion").html(pversion);
-                        PID = response.content;
+                            loadDetails();
+                            $("#processName").html(pname);
+                            $("#processVersion").html(pversion);
+                        }
                     } else {
                         alertify.error(response.content);
                     }
@@ -291,7 +319,7 @@ function textEditorInit() {
     }
 }
 
-function loadTextEditor() {
+function loadTextEditor(element) {
     completeTextDetails();
     $("#processTextEditDiv").show();
     $("#processTextView").hide();

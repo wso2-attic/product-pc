@@ -32,13 +32,13 @@
                                        onclick="{{#if isUpdateView}}loadTextEditor(this){{else}}showTextEditor(this){{/if}}">{{#if isUpdateView}}
                     Process
                     Text{{else}}Describe process in
-                    text{{/if}}<i id="textadded" class="" style="color: red;padding-left: 20px;"></i></a></li>
+                    text{{/if}}<i id="textadded" class="artifact-check"></i></a></li>
                 <li id="bpmn"><a href="#" onclick="associateBPMN(this)">BPMN
-                    Model<i id="bpmnadded" class="" style="color: red;padding-left: 20px;"></i></a></li>
+                    Model<i id="bpmnadded" class="artifact-check"></i></a></li>
                 <li id="flowChart"><a href="#" onclick="{{#if isUpdateView}}editAssociatedFlowChart(this,'{{flowchartPath}}') {{else}}associateFlowChart(this){{/if}}">Flow
-                    Charts<i id="flowchartadded" class="" style="color: red;padding-left: 35px;"></i></a></li>
-                <li id="doc"><a href="#" onclick="{{#if isUpdateView}}editAssociatedDocument(this,{{permission}}){{else}}associateDocument(this){{/if}}">Documents<i id="docadded" class=""
-                                                                                       style="color: red;padding-left: 30px;"></i></a></li>
+                    Charts<i id="flowchartadded" class="artifact-check"></i></a></li>
+                <li id="doc"><a href="#" onclick="{{#if isUpdateView}}editAssociatedDocument(this,{{permission}}){{else}}associateDocument(this){{/if}}">Documents<i id="docadded" class="artifact-check"
+                                                                                       ></i></a></li>
             </ul>
             <input type="hidden" id="updateViewCheck" value="{{isUpdateView}}">
             <input type="hidden" id="processTextHolder" name="processTextHolder" value="{{isProcessTextAvailable}}"/>
@@ -49,13 +49,13 @@
         </div>
 
         <div class="row" style="padding-top: 10%">
-            <button class="btn btn-primary" id="updateBtn" value="Update"
-                    onclick="updateDetails(this)" style="margin-left:40px; position: absolute;">
-                Update
+            <button class="btn btn-primary" id="backToOverviewBtn"
+                    onclick="loadOverviewStep()" style="margin-left:30px; position: relative;">
+                <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp; Overview
             </button>
 
             <button class="btn btn-primary" id="associationBtn" value="Associations"
-                    onclick="processAssociations(this)" style="margin-left: 130px; position: absolute;">
+                    onclick="processAssociations(this)" style="margin-left: 5px; position: relative;">
                 Associations&nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span>
             </button>
         </div>

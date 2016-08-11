@@ -23,6 +23,16 @@
                  tags="analytics">
         <Require feature="dynamic-height"/>
         <Require feature="wso2-gadgets-controls"/>
+        <Require feature="pubsub-2">
+            <Param name="topics">
+                <![CDATA[
+                <Topic title="PC Analytics"
+                    name="org.wso2.ues.samples.ch"
+                    type="object"
+                    subscribe="true"/>
+               ]]>
+            </Param>
+        </Require>
     </ModulePrefs>
 
     <Content type="html">
@@ -58,6 +68,18 @@
     <script src="js/actions.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+    <script>
+        gadgets.HubSettings.onConnect = function() {
+            gadgets.Hub.subscribe('channel5', function(topic, data, subscriberData) {
+                if(data.type === 'clear') {
+                    return;
+                }
+                wso2.gadgets.controls.showGadget();
+                $("#UserList").val(data.user);
+                drawGraph();
+            });
+        };
+    </script>
 
 </head>
 
