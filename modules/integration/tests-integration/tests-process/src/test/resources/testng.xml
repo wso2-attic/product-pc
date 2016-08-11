@@ -39,6 +39,8 @@
             <class name="org.wso2.pc.integration.tests.publisher.processes.AddFlowChartTestCase"/>
             <class name="org.wso2.pc.integration.tests.publisher.processes.AdvanceSearchTestCase"/>
             <class name="org.wso2.pc.integration.tests.publisher.processes.PublisherProcessLevelPermissionTestCase"/>
+            <class name="org.wso2.pc.integration.tests.publisher.processes.ExportProcessTestCase"/>
+            <class name="org.wso2.pc.integration.tests.publisher.processes.ImportProcessTestCase"/>
             <class name="org.wso2.pc.integration.tests.publisher.packages.AddPackageTestCase"/>
         </classes>
     </test>
