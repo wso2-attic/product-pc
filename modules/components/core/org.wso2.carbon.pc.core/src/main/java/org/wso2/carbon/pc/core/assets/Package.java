@@ -70,20 +70,21 @@ public class Package extends AssetResource {
      * Get Package Registry Path .
      * ex. /_system/governance/packages/PackageName/
      *
-     * @param packageName
-     * @return
+     * @param packageName    Name of the Package
+     * @param packageVersion Version of the Package
+     * @return Registry Path to package asset
      */
     public static String getPackageRegistryPath(String packageName, String packageVersion) {
         return ProcessCenterConstants.PACKAGES_ASSET_ROOT + packageName + "/" + packageVersion;
     }
 
     /**
-     * Get Package Registry Path gor BPMN .
+     * Get Package Registry Path for BPMN .
      * ex. /_system/governance/packages/PackageName/bpmn/PackageVersion/test.bar
      *
-     * @param packageName
-     * @param packageVersion
-     * @return
+     * @param packageName    Name of the Package
+     * @param packageVersion Version of the Package
+     * @return Registry Path to package asset resources
      */
     public static String getPackageAssetRegistryPath(String packageName, String packageVersion) {
         return ProcessCenterConstants.PROCESS_CENTER_RESOURCES_PATH + ProcessCenterConstants.PACKAGE_ASSET_ROOT +
@@ -91,22 +92,22 @@ public class Package extends AssetResource {
     }
 
     /**
-     * Get Package Registry Path gor BPMN .
+     * Get Package Registry Path for BPMN .
      * ex. /_system/governance/packages/PackageName/bpmn/PackageVersion/test.bar
      *
-     * @param packageAssetPath
-     * @return
+     * @param packageAssetPath Registry Path to package asset
+     * @return Registry Path to BPMN collection
      */
     public static String getPackageBPMNRegistryPath(String packageAssetPath) {
         return packageAssetPath + "/" + ProcessCenterConstants.BPMN_META_DATA_FILE_PATH;
     }
 
     /**
-     * Get Package Registry Path gor BPMN Content
+     * Get Package Registry Path for BPMN Content
      * ex. /_system/governance/packages/PackageName/bpmn/PackageVersion/bpmncontent/test.bpmn
      *
-     * @param packageBPMNRegistryPath
-     * @return
+     * @param packageBPMNRegistryPath Registry Path to BPMN collection
+     * @return Registry Path to BPMN Content collection
      */
     public static String getPackageBPMNContentRegistryPath(String packageBPMNRegistryPath) {
         return packageBPMNRegistryPath + ProcessCenterConstants.BPMN_CONTENT_PATH;
@@ -116,13 +117,13 @@ public class Package extends AssetResource {
      * Create new Package
      *
      * @param packageName       Name of the Package
-     * @param packageVersion    - Version of the Package
-     * @param username          - Provider of the Package
-     * @param description       - Package description
-     * @param createdTime       - Create time of the Package
+     * @param packageVersion    Version of the Package
+     * @param username          Provider of the Package
+     * @param description       Package description
+     * @param createdTime       Create time of the Package
      * @param tags              -Tags associated with Package
-     * @param imageFileStream   - Image file stream
-     * @param packageFileStream - Deploy-able archive file stream
+     * @param imageFileStream   Image file stream
+     * @param packageFileStream Deploy-able archive file stream
      * @return
      * @throws ProcessCenterException
      */
@@ -164,7 +165,7 @@ public class Package extends AssetResource {
                             packageZipContentResource);
                     InputStream inputStream = packageZipContentResource.getContentStream();
                     List<String> newBpmnResources = extractPackageAndStoreBPMNFiles(userRegistry,
-                            packageBPMNContentRegistryPath,inputStream,packageName,packageVersion);
+                            packageBPMNContentRegistryPath, inputStream, packageName, packageVersion);
 
                     // If bar does not contain any bpmn files we will send invalidate message
                     if (newBpmnResources.size() == 0) {
@@ -218,17 +219,15 @@ public class Package extends AssetResource {
                                 .NO_FILE_SPECIFIED);
                     }
 
-
                     String packageAssetContent = xmlToString(doc);
                     String packageFileChecksum = Utils.getMD5Checksum(packageZipContentResource.getContentStream());
-
                     Resource packageAsset = userRegistry.newResource();
                     packageAsset.setContent(packageAssetContent);
                     packageAsset.setMediaType(ProcessCenterConstants.PACKAGE_MEDIA_TYPE);
                     packageAsset.setProperty(ProcessCenterConstants.PACKAGE_BPMN_ARCHIVE_FILE_NAME, packageFileName);
                     packageAsset.setProperty(ProcessCenterConstants.BPMN_RESOURCES_COUNT, String.valueOf
                             (newBpmnResources.size()));
-                    packageAsset.setProperty(ProcessCenterConstants.CHECKSUM,packageFileChecksum);
+                    packageAsset.setProperty(ProcessCenterConstants.CHECKSUM, packageFileChecksum);
                     userRegistry.put(packageRegistryPath, packageAsset);
 
                     // apply tags to the resource
@@ -294,17 +293,16 @@ public class Package extends AssetResource {
         return response.toString();
     }
 
-
     /**
      * Create new Package
      *
      * @param packageName        Name of the Package
-     * @param packageVersion     - Version of the Package
-     * @param username           - Provider of the Package
-     * @param description        - Package description
-     * @param newPackageFileName - Package File name
-     * @param imageFileStream    - Image file stream
-     * @param packageFileStream  - Deploy-able archive file stream
+     * @param packageVersion     Version of the Package
+     * @param username           Provider of the Package
+     * @param description        Package description
+     * @param newPackageFileName Package File name
+     * @param imageFileStream    Image file stream
+     * @param packageFileStream  Deploy-able archive file stream
      * @return
      * @throws ProcessCenterException
      */
@@ -369,7 +367,7 @@ public class Package extends AssetResource {
                         }
 
                         List<String> bpmnResources = extractPackageAndStoreBPMNFiles(userRegistry,
-                                packageBPMNContentRegistryPath, packageInputStream,packageName, packageVersion);
+                                packageBPMNContentRegistryPath, packageInputStream, packageName, packageVersion);
 
                         // If bar does not contain any bpmn files we will send invalidate message
                         if (bpmnResources.size() == 0) {
@@ -520,8 +518,8 @@ public class Package extends AssetResource {
      * Delete Package
      *
      * @param packageName    Name of the Package
-     * @param packageVersion - Version of the Package
-     * @param username       - Provider of the Package
+     * @param packageVersion Version of the Package
+     * @param username       Provider of the Package
      * @return
      * @throws ProcessCenterException
      */
@@ -558,8 +556,8 @@ public class Package extends AssetResource {
      * Get list of  BPMN resources related to the Package
      *
      * @param packageName    Name of the Package
-     * @param packageVersion - Version of the Package
-     * @param username       - provider
+     * @param packageVersion Version of the Package
+     * @param username       provider
      * @return bpmn resources as json string
      * @throws ProcessCenterException
      */
@@ -662,11 +660,11 @@ public class Package extends AssetResource {
      * Add process association to given process
      *
      * @param processName      Name of the Process
-     * @param processVersion   - Version of the Process
+     * @param processVersion   Version of the Process
      * @param packageName      Name of the Package
-     * @param packageVersion   - Version of the Package
-     * @param bpmnResourcePath - bpmn file path
-     * @param username         - Provider of the Package
+     * @param packageVersion   Version of the Package
+     * @param bpmnResourcePath bpmn file path
+     * @param username         Provider of the Package
      * @throws ProcessCenterException
      */
     public void associateProcess(String processName, String processVersion, String packageName, String
@@ -717,7 +715,7 @@ public class Package extends AssetResource {
      * Get BPMN Image
      *
      * @param packageName      Name of the Package
-     * @param packageVersion   - Version of the Package
+     * @param packageVersion   Version of the Package
      * @param bpmnResourcePath BPMN resource path
      * @throws ProcessCenterException
      */
@@ -742,8 +740,8 @@ public class Package extends AssetResource {
      * Get deployment file name
      *
      * @param packageName    Name of the Package
-     * @param packageVersion - Version of the Package
-     * @param username       - Provider of the Package
+     * @param packageVersion Version of the Package
+     * @param username       Provider of the Package
      * @throws ProcessCenterException
      */
     public String getDeploymentFileName(String packageName, String packageVersion, String username) throws
@@ -773,8 +771,8 @@ public class Package extends AssetResource {
      * Download the bpmn bar file
      *
      * @param packageName    Name of the Package
-     * @param packageVersion - Version of the Package
-     * @param username       - Provider of the Package
+     * @param packageVersion Version of the Package
+     * @param username       Provider of the Package
      * @return bpmn bar file content as  a String
      */
     public String downloadPackageFile(String packageName, String packageVersion, String username) throws
@@ -812,7 +810,7 @@ public class Package extends AssetResource {
     /**
      * Check whether the given xml is BPMN resource
      *
-     * @param resourceName - bpmn resource name
+     * @param resourceName bpmn resource name
      * @return
      */
     private boolean isBpmnResource(String resourceName) {
@@ -836,8 +834,10 @@ public class Package extends AssetResource {
      * @throws ParserConfigurationException
      * @throws ProcessCenterException
      */
-    private List<String> extractPackageAndStoreBPMNFiles(UserRegistry userRegistry,String packageBPMNContentRegistryPath, InputStream
-            packageFileInputStream,  String packageName, String packageVersion) throws
+    private List<String> extractPackageAndStoreBPMNFiles(UserRegistry userRegistry, String
+            packageBPMNContentRegistryPath, InputStream
+                                                                 packageFileInputStream, String packageName, String
+            packageVersion) throws
             RegistryException,
             IOException, ParserConfigurationException, ProcessCenterException {
         List<String> bpmnResources = new LinkedList<String>();

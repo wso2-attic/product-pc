@@ -109,7 +109,8 @@ public class ProcessStore {
     public String createProcess(String processDetails, String userName, String processCreatedTime)
             throws ProcessCenterException {
 
-        String processId = "FAILED TO ADD PROCESS";
+        JSONObject response = new JSONObject();
+        String processId = null;
         try {
             JSONObject processInfo = new JSONObject(processDetails);
             String processName = processInfo.getString("processName");
@@ -127,6 +128,14 @@ public class ProcessStore {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(userName);
+                String processAssetPath = "processes/" + processName + "/" + processVersion;
+                // Check whether process already exists with same name and version
+                if (reg.resourceExists(processAssetPath)) {
+                    response.put(ProcessCenterConstants.ERROR, true);
+                    response.put(ProcessCenterConstants.MESSAGE, "Process already exists with name " + processName +
+                            " version:" + processVersion);
+                    return response.toString();
+                }
                 RegPermissionUtil
                         .setPutPermission(registryService, userName, ProcessCenterConstants.AUDIT.PROCESS_PATH);
 
@@ -202,7 +211,6 @@ public class ProcessStore {
                 Resource processAsset = reg.newResource();
                 processAsset.setContent(processAssetContent);
                 processAsset.setMediaType("application/vnd.wso2-process+xml");
-                String processAssetPath = "processes/" + processName + "/" + processVersion;
                 reg.put(processAssetPath, processAsset);
 
                 // associate lifecycle with the process asset, so that it can be promoted to published state
@@ -230,12 +238,15 @@ public class ProcessStore {
                 setPermission(userName, processName, processVersion);
 
             }
+            response.put(ProcessCenterConstants.ERROR, false);
+            response.put(ProcessCenterConstants.PROCESS_ID, processId);
+            response.put(ProcessCenterConstants.MESSAGE, "Process has been created successfully");
         } catch (Exception e) {
             String errMsg = "Create process error:" + processDetails;
             log.error("Create process error:" + processDetails, e);
             throw new ProcessCenterException(errMsg, e);
         }
-        return processId;
+        return response.toString();
     }
 
     public String updateProcess(String processDetails, String userName) throws ProcessCenterException {

@@ -34,10 +34,8 @@ var ref = require('utils').time;
 var user = server.current(session);
 
 try {
-    var status = ps.createProcess(processDetails, userName, ref.getCurrentTime());
-    responseObj.error = false;
-    responseObj.content = status;
-    print(stringify(responseObj));
+    var assetCreationResponse = ps.createProcess(processDetails, userName, ref.getCurrentTime());
+    print(String(assetCreationResponse));
 } catch (error) {
     responseObj.error = true;
     responseObj.content = "Process creating error.";

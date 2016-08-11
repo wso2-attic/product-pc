@@ -206,20 +206,18 @@ function showMain() {
 }
 
 function saveProcess(currentElement) {
-    if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
+    if ($("#pName").val() === "" || $("#pVersion").val() === "" || $("#pOwner").val() === "") {
         alertify.error('please fill the required fields.');
     } else {
         // save the process
         pname = $("#pName").val();
         pversion = $("#pVersion").val();
-        if ($(currentElement).attr('id') == 'saveProcessBtn' || $(currentElement).attr('id') == 'detailsProcessBtn') {
-            var imageElement = $("#images_thumbnail");
-            if (imageElement.val().length != 0) {
-                var ext = imageElement.val().split('.').pop().toLowerCase();
-                if ($.inArray(ext, ['png', 'jpeg', 'jpg', 'gif', 'ico']) == -1) {
-                    alertify.error('invalid image extension!');
-                    return;
-                }
+        var imageElement = $("#images_thumbnail");
+        if (imageElement.val().length !== 0) {
+            var ext = imageElement.val().split('.').pop().toLowerCase();
+            if ($.inArray(ext, ['png', 'jpeg', 'jpg', 'gif', 'ico']) ===-1) {
+                alertify.error('invalid image extension!');
+                return;
             }
         }
         $.ajax({
@@ -229,16 +227,16 @@ function saveProcess(currentElement) {
             success: function (data) {
                 var response = JSON.parse(data);
                 if (response.error === false) {
-                    $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + response.content);
-                    $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + response.content);
-                    $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + response.content);
-                    $("#docOverviewLink").attr("href", "../../assets/process/details/" + response.content);
-                    PID = response.content;
-
-                    if ($(currentElement).attr('id') == 'saveProcessBtn') {
-                        window.location = "../../assets/process/details/" + response.content;
+                    PID = response.processID;
+                    $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + PID);
+                    $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + PID);
+                    $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + PID);
+                    $("#docOverviewLink").attr("href", "../../assets/process/details/" + PID);
+                    $.cookie("new-asset-process", PID + ":process:" + pname);
+                    if ($(currentElement).attr('id') === 'saveProcessBtn') {
+                        window.location = "../../assets/process/list";
                     }
-                    else if ($(currentElement).attr('id') == 'detailsProcessBtn') {
+                    else if ($(currentElement).attr('id') === 'detailsProcessBtn') {
                         $('#stp1').removeClass("current");
                         $('#stp1').addClass("other");
                         $('#stp2').removeClass("other");
@@ -246,11 +244,11 @@ function saveProcess(currentElement) {
                         loadDetails();
                     }
                 } else {
-                    alertify.error(response.content);
+                    messages.alertError(response.message);
                 }
             },
             error: function () {
-                alertify.error('Process saving error');
+                messages.alertError('Process saving error');
             }
         });
 

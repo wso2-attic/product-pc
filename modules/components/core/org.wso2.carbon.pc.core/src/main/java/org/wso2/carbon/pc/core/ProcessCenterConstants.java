@@ -95,6 +95,7 @@ public class ProcessCenterConstants {
     public static final String PROCESS_UPDATE_PERMISSION =
             "/permission/admin/enterprisestore/apps/publisher/features/assets/process/update";
     public static final String PROCESS_NAME = "processName";
+    public static final String PROCESS_ID = "processID";
     public static final String PROCESS_ASSET_NAME = "processAssetName";
     public static final String PROCESS_ASSET_VERSION = "processAssetVersion";
     /**
