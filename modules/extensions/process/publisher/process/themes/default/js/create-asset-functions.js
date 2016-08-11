@@ -21,7 +21,7 @@ var processNames = [];
 var processListObj;
 var tagList = [];
 var allProcessTags = [];
-var pname, pversion, PID, textContent;
+var pname, pversion, PID, textContent, curWindow;
 
 
 window.onload = function () {
@@ -45,7 +45,152 @@ window.onload = function () {
     });
     loadOverview();
     $('#process-thumbnail-div').hide();
+
+
+    $('#stp1').click(function () {
+        loadOverviewStep();
+    });
+
+    $('#stp2').click(function () {
+        loadDetailsStep();
+    });
+
+    $('#stp3').click(function () {
+        loadAssociationsStep();
+    });
 };
+
+
+var proceed = function () {
+    if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
+        alertify.error('please fill the required fields.');
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function loadOverviewStep() {
+    loadOverviewDiv();
+    curWindow = 'stp1';
+    $('#stp1').addClass('current');
+    $('#stp1').removeClass('other');
+    $('#stp2').addClass('other');
+    $('#stp2').removeClass('current');
+    $('#stp3').addClass('other');
+    $('#stp3').removeClass('current');
+}
+
+function loadDetailsStep() {
+    if(curWindow == 'stp3') {
+        $('#stp1').addClass('other');
+        $('#stp1').removeClass('current');
+        $('#stp2').addClass('current');
+        $('#stp2').removeClass('other');
+        $('#stp3').addClass('other');
+        $('#stp3').removeClass('current');
+        loadDetails();
+    } else if(proceed()) {
+            $('#stp1').addClass('other');
+            $('#stp1').removeClass('current');
+            $('#stp2').addClass('current');
+            $('#stp2').removeClass('other');
+            $('#stp3').addClass('other');
+            $('#stp3').removeClass('current');
+            updateProcess();
+            loadDetails();
+    }
+
+    curWindow = 'stp2';
+}
+
+function loadAssociationsStep() {
+    if(proceed()){
+        $('#stp1').addClass('other');
+        $('#stp1').removeClass('current');
+        $('#stp2').addClass('other');
+        $('#stp2').removeClass('current');
+        $('#stp3').addClass('current');
+        $('#stp3').removeClass('other');
+        processAssociations();
+        curWindow = 'stp3';
+    }
+}
+
+function loadOverviewDescription() {
+    var overview = $('#overview_description').val();
+    if(overview === "NA") {
+        $('#overview_description').val("");
+    }
+    $('#stp2').addClass('other')
+    $('#stp3').addClass('other');
+}
+
+function loadOverviewDiv() {
+    loadOverview();
+    loadOverviewDescription();
+}
+
+function updateProcess(currentElement) {
+    if ($("#pName").val() == "" || $("#pVersion").val() == "" || $("#pOwner").val() == "") {
+        alertify.error('please fill the required fields.');
+    } else {
+        pname=$("#pName").val();
+        pversion=$("#pVersion").val();
+        $.ajax({
+            url: '/publisher/assets/process/apis/update_process',
+            type: 'POST',
+            data: {'processInfo': getProcessInfo()},
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    if ($(currentElement).attr('id') == 'saveProcessBtn') {
+                        window.location = "../../process/details/" + response.content;
+                    }
+                    else if ($(currentElement).attr('id') == 'detailsProcessBtn') {
+                        $('#stp1').removeClass("current");
+                        $('#stp1').addClass("other");
+                        $('#stp2').removeClass("other");
+                        $('#stp2').addClass("current");
+                        loadDetails();
+                        $("#processName").html(pname);
+                        $("#processVersion").html(pversion);
+                    }
+                } else {
+                    alertify.error(response.content);
+                }
+            },
+            error: function () {
+                alertify.error('Process update error');
+            }
+        });
+    }
+}
+
+function textEditorInit() {
+    isEditorActive = true;
+
+    if($('#processTextHolder').val()) {
+
+        $.ajax({
+            url: '/publisher/assets/process/apis/get_process_text?process_text_path=/processText/' + pname + "/" + pversion,
+            type: 'GET',
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.error === false) {
+                    $("#processText").html(response.content);
+                    // $("#processContent").val(response.content);
+                    tinyMCE.activeEditor.setContent(response.content);
+                } else {
+                    alertify.error(response.content);
+                }
+            },
+            error: function () {
+                alertify.error('Text editor error');
+            }
+        });
+    }
+}
 
 function showTextEditor(element) {
 
@@ -69,7 +214,10 @@ function showTextEditor(element) {
             $("#processTextEditDiv").addClass("active");
         }
         else {
+            $("#processTextView").hide();
+            $("#processTextEditDiv").show();
             $(".active").removeClass("active");
+            $("#processTextEditDiv").addClass("active");
         }
     } else {
 
@@ -79,7 +227,8 @@ function showTextEditor(element) {
         $("#processTextEditDiv").addClass("active");
 
         tinymce.init({
-            selector: "#processContent"
+            selector: "#processContent",
+            init_instance_callback : "textEditorInit"
         });
     }
 }
@@ -172,10 +321,11 @@ function associateFlowChart() {
     $('#doc').removeClass("clicked");
 }
 
-function associateDocument() {
+function associateDocument(element, permission) {
 
     $("#processTextEditDiv").hide();
     $("#bpmnEditDiv").hide();
+    $("#addNewDoc").show();
     $("#docViewDiv").hide();
     $("#flowChartView").hide();
     $("#processTextView").hide();
@@ -189,11 +339,17 @@ function associateDocument() {
     $('#flowChart').removeClass("clicked");
     $('#doc').addClass("clicked");
 
-    if ($("#docadded").hasClass("fw-check")) {
-        $("#docEditDiv").hide();
+    if($("#docadded").hasClass("fw-check")) {
+        // $("#docEditDiv").hide();
+        $("#addNewDoc").hide();
         showDocument($('#permissionCheck').val());
         $("#docViewDiv").show();
-        $(".active").removeClass("active");
+        // $(".active").removeClass("active");
+    } else if ($("#documentAvailableCheck").val() === "true") {
+        $("#addNewDoc").hide();
+        showDocument($('#permissionCheck').val());
+        $("#docViewDiv").show();
+        // $(".active").removeClass("active");
     }
 }
 
@@ -405,7 +561,6 @@ function saveProcessText(currentElement) {
                         alertify.success("Successfully saved the process content.");
                         $("#textadded").addClass("fw fw-check");
                         getProcessText();
-                        $(".active").removeClass("active");
                     }
                 } else {
                     alertify.error(response.content);
@@ -1682,13 +1837,10 @@ function loadSummary(update_view) {
     if(typeof PID == 'undefined') {
         PID = $('#processId').val();
     }
-    window.location = "../../assets/process/details/" + PID;
-
-    if(update_view) {
-    window.location = "../../../assets/process/details/" + process_id;
-    } else {
-    window.location = "../../assets/process/details/" + process_id;
-    }
+    if(update_view)
+        window.location = "../../process/details/" + PID;
+    else
+        window.location = "../../assets/process/details/" + PID;
 
 }
 
