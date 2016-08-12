@@ -42,10 +42,10 @@ try {
     responseObj.error = true;
     if(errorE.message == "org.wso2.carbon.pc.core.ProcessCenterException: ALREADY_AVAILABLE"){
         responseObj.content = "ERROR: Tried to Add Already Available Process";
-        print("ERROR: Tried to Add Already Available Process");
+        print(stringify(responseObj));
     }else {
         responseObj.content = "FAIL";
-        print("FAIL");
+        print(stringify(responseObj));
     }
 }
 %>

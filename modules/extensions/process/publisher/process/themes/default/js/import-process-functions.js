@@ -12,6 +12,7 @@ $("#import_process_form").on("submit", function (e) {
                 var response = JSON.parse(data);
                 if (response.error === true) {
                     alertify.error(response.content);
+                    document.forms["import_process_form"].reset();
                 }
                 else {
                     alertify.success("Successfully imported process");
