@@ -239,7 +239,7 @@ public class ProcessStore {
 
             }
             response.put(ProcessCenterConstants.ERROR, false);
-            response.put(ProcessCenterConstants.PROCESS_ID, processId);
+            response.put(ProcessCenterConstants.ID, processId);
             response.put(ProcessCenterConstants.MESSAGE, "Process has been created successfully");
         } catch (Exception e) {
             String errMsg = "Create process error:" + processDetails;

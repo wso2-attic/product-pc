@@ -21,9 +21,12 @@ import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
+import org.apache.wink.client.ClientResponse;
+import org.apache.wink.common.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
@@ -40,6 +43,7 @@ import java.util.HashMap;
 
 public class AddPackageTestCase extends PCIntegrationBaseTest {
 
+    String publisherUrl, packageID;
     private String cookieHeader;
     private GenericRestClient genericRestClient;
     private HashMap<String, String> queryMap;
@@ -47,12 +51,13 @@ public class AddPackageTestCase extends PCIntegrationBaseTest {
 
     /**
      * Get required headers for adding package api
+     *
      * @throws Exception
      */
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        String publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
+        publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
                 replace("services", "publisher/apis");
         genericRestClient = new GenericRestClient();
         headerMap = new HashMap<>();
@@ -69,6 +74,7 @@ public class AddPackageTestCase extends PCIntegrationBaseTest {
 
     /**
      * Test case for adding package
+     *
      * @throws IOException
      * @throws XPathExpressionException
      * @throws JSONException
@@ -76,7 +82,7 @@ public class AddPackageTestCase extends PCIntegrationBaseTest {
     @Test(groups = {"org.wso2.pc"}, description = "Test case for adding package")
     public void addPackage() throws IOException, XPathExpressionException, JSONException {
         String filePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
-                File.separator + "BAR"+ File.separator + "HelloWorld.bar";
+                File.separator + "BAR" + File.separator + "HelloWorld.bar";
 
         File file = new File(filePath);
         FilePart fp = new FilePart("package_file", file);
@@ -90,9 +96,9 @@ public class AddPackageTestCase extends PCIntegrationBaseTest {
         StringPart sp4 = new StringPart("overview_description", "This test package");
         sp2.setContentType(MediaType.TEXT_PLAIN);
         //Set file parts and string parts together
-        final Part[] part = {fp, sp1, sp2,sp3,sp4};
+        final Part[] part = {fp, sp1, sp2, sp3, sp4};
         HttpClient httpClient = new HttpClient();
-        PostMethod httpMethod = new PostMethod(publisherPackageAPIBaseUrl+"packages?type=package");
+        PostMethod httpMethod = new PostMethod(publisherPackageAPIBaseUrl + "packages?type=package");
 
         httpMethod.addRequestHeader("Cookie", cookieHeader);
         httpMethod.addRequestHeader("Accept", MediaType.APPLICATION_JSON);
@@ -103,8 +109,21 @@ public class AddPackageTestCase extends PCIntegrationBaseTest {
         Assert.assertTrue(httpMethod.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_CREATED,
                 "Expected 201 CREATED, Received " + httpMethod.getStatusCode());
         JSONObject responseObject = new JSONObject(httpMethod.getResponseBodyAsString());
+        packageID = responseObject.get(PCIntegrationConstants.ID).toString();
         Assert.assertTrue(responseObject.get("error").toString().equals("false"),
                 "Error while creating the package");
 
     }
+
+    @AfterClass(alwaysRun = true, description = "Delete package")
+    public void cleanUp() throws Exception {
+        queryMap.clear();
+        queryMap.put("type", "package");
+        ClientResponse response = genericRestClient.
+                geneticRestRequestDelete(publisherUrl + "/assets/" + packageID, MediaType.APPLICATION_JSON,
+                        MediaType.APPLICATION_JSON, queryMap, headerMap, cookieHeader);
+        Assert.assertTrue(((response.getStatusCode() == HttpStatus.OK.getCode())), "Wrong status code ,Expected 200 " +
+                "OK,Received " + response.getStatusCode());
+    }
+
 }

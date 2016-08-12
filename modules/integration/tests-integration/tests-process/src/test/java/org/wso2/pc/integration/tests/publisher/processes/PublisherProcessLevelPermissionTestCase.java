@@ -32,6 +32,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.pc.integration.test.utils.base.GenericRestClient;
 import org.wso2.pc.integration.test.utils.base.PCIntegrationBaseTest;
+import org.wso2.pc.integration.test.utils.base.PCIntegrationConstants;
 import org.wso2.pc.integration.test.utils.base.TestUtils;
 
 import javax.ws.rs.core.MediaType;
@@ -43,43 +44,52 @@ import java.util.HashMap;
 
 public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTest {
 
-    private AutomationContext automationContextUser1;
-    private String cookieHeader1;
-    private String publisherUrl ,APIUrl;
     GenericRestClient genericRestClient;
     String jSessionId;
     HashMap<String, String> queryMap;
     HashMap<String, String> headerMap;
     String resourcePath;
-    private String requestBody,processId,Path;
+    private AutomationContext automationContextUser1;
+    private String cookieHeader1;
+    private String publisherUrl, APIUrl;
+    private String requestBody, processId, Path;
+
+    @DataProvider
+    private static Object[][] userModeProvider() {
+        return new TestUserMode[][]{
+                new TestUserMode[]{TestUserMode.SUPER_TENANT_ADMIN}
+        };
+    }
 
     @BeforeClass(alwaysRun = true)
     public void createProcess() throws Exception {
         super.init();
 
-        automationContextUser1=new AutomationContext("PC","publisher","superTenant","user1");
+        automationContextUser1 = new AutomationContext("PC", "publisher", "superTenant", "user1");
         publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
                 "publisher/apis");
         cookieHeader1 = login(automationContextUser1);
 
         resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                + "json" + File.separator + "process" + File.separator+ "process.json";
+                + "json" + File.separator + "process" + File.separator + "process.json";
         requestBody = readFile(resourcePath);
         queryMap.put("processInfo", URLEncoder.encode(requestBody, "UTF-8"));
         APIUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
                 "publisher/assets/process/apis/create_process");
-        ClientResponse response=genericRestClient.geneticRestRequestPost(APIUrl,
+        ClientResponse response = genericRestClient.geneticRestRequestPost(APIUrl,
                 MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, requestBody, queryMap,
                 headerMap, cookieHeader1);
-        log.info(response.getStatusCode()+" Process created successfully");
+        log.info(response.getStatusCode() + " Process created successfully");
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
-        processId = responseObject.get("content").toString();
+        processId = responseObject.get(PCIntegrationConstants.ID).toString();
         Path = "/_system/governance/processes/yasima/1.0";
 
     }
 
     /**
-     * This test is to check whether the process creater has permission to assign different permission for different users.
+     * This test is to check whether the process creater has permission to assign different permission for different
+     * users.
+     *
      * @throws Exception
      */
     @Test(groups = {"org.wso2.pc"}, description = "Test authorize permission of the process creater")
@@ -100,32 +110,34 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
         JSONObject data = (JSONObject) responseObject.get("data");
         JSONArray authorizedRoles = data.getJSONArray("authorizedRoles");
         Boolean status = false;
-        for(int i=0; i<authorizedRoles.length(); i++){
-            if(authorizedRoles.get(i).equals("role1")){
+        for (int i = 0; i < authorizedRoles.length(); i++) {
+            if (authorizedRoles.get(i).equals("role1")) {
                 status = true;
                 break;
             }
         }
         Boolean isAuthorizeAllowed = (Boolean) data.get("isAuthorizeAllowed");
 
-        Assert.assertTrue( status && isAuthorizeAllowed ,"Permission setting error");
+        Assert.assertTrue(status && isAuthorizeAllowed, "Permission setting error");
     }
 
     /**
      * When a process is created only the process creater can edit and give permission for the process. This test case
      * is to test allowing write permission for another role.
+     *
      * @throws IOException
      * @throws JSONException
      * @throws XPathExpressionException
      */
-    @Test(groups = {"org.wso2.pc"}, description = "Adding write permission" , dependsOnMethods = { "checkAuthorizePermission" })
+    @Test(groups = {"org.wso2.pc"}, description = "Adding write permission", dependsOnMethods =
+            {"checkAuthorizePermission"})
     public void addPermission() throws IOException, JSONException, XPathExpressionException {
 
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
         requestBody = String.
                 format(readFile(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                                + "json" + File.separator + "process" + File.separator+ "publisherPermissionAdd.json"),
+                                + "json" + File.separator + "process" + File.separator + "publisherPermissionAdd.json"),
                         processId, Path);
         ClientResponse response = genericRestClient.
                 geneticRestRequestPost(publisherUrl + "/permissions", MediaType.APPLICATION_JSON,
@@ -140,7 +152,7 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
                 "Could not add write permission");
     }
 
-    @Test(groups = {"org.wso2.pc"}, description = "Removing write permission" , dependsOnMethods = { "addPermission" })
+    @Test(groups = {"org.wso2.pc"}, description = "Removing write permission", dependsOnMethods = {"addPermission"})
     public void removePermission() throws IOException, JSONException, XPathExpressionException {
 
         headerMap = new HashMap<>();
@@ -159,23 +171,25 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
                         (response.getStatusCode() == HttpStatus.CREATED.getCode())),
                 "Wrong status code ,Expected 200 OK or 201 OK ,Received " + response.getStatusCode());
         Assert.assertTrue(responseStatus.equals("true"), "Could not remove permission to resource");
-        Assert.assertTrue(isPermittedResource("role2", "writeDeny" , cookieHeader1),
+        Assert.assertTrue(isPermittedResource("role2", "writeDeny", cookieHeader1),
                 "Could not remove permission of resource");
 
     }
 
     /**
      * The requirement is any user can view the any process. For that internal/everyone should have read permission.
+     *
      * @throws Exception
      */
 
     @Test(groups = {"org.wso2.pc"}, description = "Test Read permission")
     public void viewProcess() throws Exception {
 
-        Assert.assertTrue(isPermittedResource("INTERNAL/everyone","readAllow",cookieHeader1),"Read Permission error");
+        Assert.assertTrue(isPermittedResource("INTERNAL/everyone", "readAllow", cookieHeader1), "Read Permission " +
+                "error");
     }
 
-    @Test(groups = {"org.wso2.pc"}, description = "Test edit process", dependsOnMethods = { "addPermission" })
+    @Test(groups = {"org.wso2.pc"}, description = "Test edit process", dependsOnMethods = {"addPermission"})
     public void EditProcess() throws Exception {
 
         headerMap = new HashMap<>();
@@ -187,7 +201,7 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
 
         requestBody = String.
                 format(readFile(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                                + "json" + File.separator + "process" + File.separator+ "edit-process.json"),
+                                + "json" + File.separator + "process" + File.separator + "edit-process.json"),
                         processId, Path);
         queryMap.put("descriptionDetails", URLEncoder.encode(requestBody, "UTF-8"));
         ClientResponse response = genericRestClient.geneticRestRequestPost(APIUrl,
@@ -203,11 +217,11 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
     }
 
     @Test(groups = {"org.wso2.pc"}, description = "Test edit process without write permission",
-            dependsOnMethods = { "removePermission" })
+            dependsOnMethods = {"removePermission"})
     public void checkEditProcessWithoutReadPermission() throws Exception {
 
-        boolean status = isPermittedResource("role2","writeDeny",cookieHeader1);
-        Assert.assertTrue(status,"Write permission error");
+        boolean status = isPermittedResource("role2", "writeDeny", cookieHeader1);
+        Assert.assertTrue(status, "Write permission error");
 
     }
 
@@ -230,7 +244,7 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
                         headerMap).getEntity(String.class));
         jSessionId = objSessionPublisher.getJSONObject("data").getString("sessionId");
 
-       return  "JSESSIONID=" + jSessionId;
+        return "JSESSIONID=" + jSessionId;
     }
 
     private Boolean isPermittedResource(String role, String permissionType, String cookieHeader)
@@ -249,21 +263,14 @@ public class PublisherProcessLevelPermissionTestCase extends PCIntegrationBaseTe
         JSONObject data = (JSONObject) responseObject.get("data");
         JSONArray permissionArray = data.getJSONArray("list");
         Boolean status = false;
-        for(int i=0; i<permissionArray.length(); i++){
+        for (int i = 0; i < permissionArray.length(); i++) {
             JSONObject roleObject = permissionArray.getJSONObject(i);
-            if(roleObject.get("userName").equals(role) && roleObject.getBoolean(permissionType)){
+            if (roleObject.get("userName").equals(role) && roleObject.getBoolean(permissionType)) {
                 status = true;
                 break;
             }
         }
 
         return status;
-    }
-
-    @DataProvider
-    private static Object[][] userModeProvider() {
-        return new TestUserMode[][]{
-                new TestUserMode[]{TestUserMode.SUPER_TENANT_ADMIN}
-        };
     }
 }

@@ -67,6 +67,6 @@ public class TestUtils {
                         "create_process" , MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, null,
                 queryMap, headerMap, cookieHeader);
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
-        return responseObject.get("content").toString();
+        return responseObject.get(PCIntegrationConstants.ID).toString();
     }
 }

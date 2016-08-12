@@ -18,9 +18,11 @@ package org.wso2.pc.integration.tests.publisher.processes;
 
 import com.google.gson.Gson;
 import org.apache.wink.client.ClientResponse;
+import org.apache.wink.common.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
@@ -59,11 +61,12 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
     private ProcessBean predecessorProcess;
     private ProcessBean subProcess;
     private ProcessBean successorProcess;
+    String processId,publisherUrl;
 
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        String publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
+        publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
                 replace("services", "publisher/apis");
         GenericRestClient genericRestClient = new GenericRestClient();
 
@@ -119,9 +122,9 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
         jsonObject.getJSONArray("subprocess").put(new JSONObject(gson.toJson(subProcess)));
         jsonObject.getJSONArray("successor").put(new JSONObject(gson.toJson(successorProcess)));
 
-        String processID = TestUtils.addProcess(jsonObject.toString()
+        processId = TestUtils.addProcess(jsonObject.toString()
                 , cookieHeader, publisherProcessAPIBaseUrl);
-        Assert.assertFalse(processID.contains("error"),
+        Assert.assertFalse(processId.contains("error"),
                 "Error while creating process with associate processes");
     }
 
@@ -187,6 +190,19 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
                 MediaType.APPLICATION_JSON,null, queryMap,headerMap,cookieHeader);
         Assert.assertTrue(new JSONObject(response.getEntity(String.class)).get("error").toString().
                 equals("false"));
+    }
+
+
+    @AfterClass(alwaysRun = true, description = "Delete process")
+    public void cleanUp() throws Exception {
+        queryMap.clear();
+        queryMap.put("type", "process");
+        ClientResponse response = genericRestClient.
+                geneticRestRequestDelete(publisherUrl + "/assets/" + processId, MediaType.APPLICATION_JSON,
+                        MediaType.APPLICATION_JSON, queryMap, headerMap, cookieHeader);
+        Assert.assertTrue(((response.getStatusCode() == HttpStatus.OK.getCode())), "Wrong status code ,Expected 200 " +
+                "OK,Received " + response.getStatusCode());
+
     }
 
     private Element getAssociateProcess(String processType) throws Exception {

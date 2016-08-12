@@ -59,7 +59,7 @@ public class PCIntegrationBaseTest {
 
         storeContext = new AutomationContext("PC", "store", testUserMode);
         publisherContext = new AutomationContext("PC", "publisher", testUserMode);
-        automationContext = new AutomationContext("PC",testUserMode);
+        automationContext = new AutomationContext("PC", testUserMode);
         loginLogoutClient = new LoginLogoutClient(automationContext);
         sessionCookie = loginLogoutClient.login();
         backendURL = automationContext.getContextUrls().getBackEndUrl();
@@ -97,12 +97,13 @@ public class PCIntegrationBaseTest {
 
     /**
      * Return file content with a String
+     *
      * @param filePath
      * @return
      * @throws IOException
      */
-    protected String readFile( String filePath ) throws IOException {
-        String fileData=new String(Files.readAllBytes(Paths.get(filePath)));
+    protected String readFile(String filePath) throws IOException {
+        String fileData = new String(Files.readAllBytes(Paths.get(filePath)));
         return fileData;
     }
 }

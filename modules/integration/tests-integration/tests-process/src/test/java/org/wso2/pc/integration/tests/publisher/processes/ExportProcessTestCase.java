@@ -18,9 +18,11 @@ package org.wso2.pc.integration.tests.publisher.processes;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.wink.client.ClientResponse;
+import org.apache.wink.common.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
@@ -38,7 +40,7 @@ public class ExportProcessTestCase extends PCIntegrationBaseTest {
     private GenericRestClient genericRestClient;
     private HashMap<String, String> queryMap;
     private HashMap<String, String> headerMap;
-    private String resourcePath;
+    private  String publisherUrl, resourcePath ,processId;
     private static final String ASSOCIATED_PDF_NAME = "TestPDFDocument";
     private static final String ASSOCIATED_PDF_SUMMARY = "TestPDFSummary";
     private static final String PROCESS_NAME = "TestProcess1";
@@ -51,7 +53,7 @@ public class ExportProcessTestCase extends PCIntegrationBaseTest {
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        String publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
+        publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
                 replace("services", "publisher/apis");
         genericRestClient = new GenericRestClient();
         headerMap = new HashMap<>();
@@ -77,7 +79,7 @@ public class ExportProcessTestCase extends PCIntegrationBaseTest {
                 requestBody, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
-
+        processId = responseObject.get(PCIntegrationConstants.ID).toString();
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
                 "Expected 200 OK, Received " + response.getStatusCode());
         Assert.assertTrue(responseObject.get("error").toString().equals("false"),
@@ -147,5 +149,18 @@ public class ExportProcessTestCase extends PCIntegrationBaseTest {
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
                 "Expected 200 OK, Received " + response.getStatusCode());
         Assert.assertNotNull(zipData, "Error while exporting the process");
+    }
+
+
+    @AfterClass(alwaysRun = true, description = "Delete process")
+    public void cleanUp() throws Exception {
+        queryMap.clear();
+        queryMap.put("type", "process");
+        ClientResponse response = genericRestClient.
+                geneticRestRequestDelete(publisherUrl + "/assets/" + processId, MediaType.APPLICATION_JSON,
+                        MediaType.APPLICATION_JSON, queryMap, headerMap, cookieHeader);
+        Assert.assertTrue(((response.getStatusCode() == HttpStatus.OK.getCode())), "Wrong status code ,Expected 200 " +
+                "OK,Received " + response.getStatusCode());
+
     }
 }
