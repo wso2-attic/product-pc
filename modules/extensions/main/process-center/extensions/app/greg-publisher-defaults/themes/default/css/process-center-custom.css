@@ -30,3 +30,7 @@
 .btn-configAnalytics {
     background:url('../img/icons/ico-analytics-config.png') 0.8em 1em no-repeat;
 }
+
+.btn-permission {
+    background:url('../img/icons/ico-permission.png') 0.8em 1em no-repeat;
+}

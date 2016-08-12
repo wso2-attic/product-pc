@@ -20,6 +20,7 @@ public class ProcessBean {
     private String name;
     private String path;
     private String id;
+    private String version;
 
     public ProcessBean(){}
 
@@ -45,5 +46,13 @@ public class ProcessBean {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

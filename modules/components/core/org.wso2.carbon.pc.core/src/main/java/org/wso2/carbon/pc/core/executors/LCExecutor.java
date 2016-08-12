@@ -65,6 +65,9 @@ public class LCExecutor implements Execution {
                     setOtherRolePermission(role, currentState, targetState);
                 }
             }
+            if (currentState.equals("In-Review") && targetState.equals("Published")) {
+                setAnonymousRolePermission();
+            }
             setPrivateRolePermission(user, currentState, targetState);
 
             updated = true;
@@ -199,5 +202,10 @@ public class LCExecutor implements Execution {
         } else if (currentState.equals("Published") && targetState.equals("Retired")) {
             assignPermission(role, "-get,-add,-delete,-authorize");
         }
+    }
+
+    private void setAnonymousRolePermission() throws Exception {
+
+        assignPermission("system/wso2.anonymous.role", "+get,-add,-delete,-authorize");
     }
 }

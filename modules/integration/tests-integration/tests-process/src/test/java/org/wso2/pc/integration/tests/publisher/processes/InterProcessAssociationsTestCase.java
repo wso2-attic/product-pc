@@ -28,6 +28,7 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
+import org.wso2.carbon.registry.api.Association;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.pc.integration.test.utils.base.*;
 import org.wso2.pc.integration.test.utils.base.beans.ProcessBean;
@@ -50,8 +51,11 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
     private String predecessorProcessID;
     private String successorProcessID;
     private static final String PREDECESSOR_PROCESS_NAME = "PredecessorProcess";
+    private static final String PREDECESSOR_PROCESS_VERSION = "1.0";
     private static final String SUBPROCESS_NAME = "SubProcess";
+    private static final String SUBPROCESS_VERSION = "1.0";
     private static final String SUCESSOR_PROCESS_NAME = "SuccessorProcess";
+    private static final String SUCESSOR_PROCESS_VERSION = "1.0";
     private RegistryProviderUtil registryProviderUtil = new RegistryProviderUtil();
     private GenericRestClient genericRestClient = new GenericRestClient();
     private HashMap<String, String> headerMap = new HashMap<>();
@@ -62,6 +66,8 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
     private ProcessBean subProcess;
     private ProcessBean successorProcess;
     String processId,publisherUrl;
+    private static final String TEST_PROCESS_PATH = "/_system/governance/processes/TestProcess1/1.0";
+
 
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
@@ -107,11 +113,11 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
             "process and successorprocess")
     public void addProcess() throws Exception {
 
-        predecessorProcess = createProcessBean(PREDECESSOR_PROCESS_NAME,
+        predecessorProcess = createProcessBean(PREDECESSOR_PROCESS_NAME,PREDECESSOR_PROCESS_VERSION,
                 "/processes/PredecessorProcess/1.0", predecessorProcessID);
-        subProcess = createProcessBean(SUBPROCESS_NAME,
+        subProcess = createProcessBean(SUBPROCESS_NAME,SUBPROCESS_VERSION,
                 "/processes/SubProcess/1.0", subProcessID);
-        successorProcess = createProcessBean(SUCESSOR_PROCESS_NAME,
+        successorProcess = createProcessBean(SUCESSOR_PROCESS_NAME,SUCESSOR_PROCESS_VERSION,
                 "/processes/SuccessorProcess/1.0", successorProcessID);
 
         Gson gson = new Gson();
@@ -131,26 +137,20 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
     @Test(groups = {"org.wso2.pc"}, description = "Subprocess test case",
             dependsOnMethods = "addProcess")
     public void subProcessTest() throws Exception {
-        Element subProcessElement = getAssociateProcess("subprocess");
-        Assert.assertNotNull(subProcessElement, "Subprocess doesn't exist");
-        Assert.assertEquals(subProcessElement.getElementsByTagName("id").item(0).
-                getTextContent(), subProcessID, "Subprocess error");
+        Assert.assertNotNull(getAssociateProcess("subprocess"));
+        Assert.assertEquals(getAssociateProcess("subprocess"), subProcessID, "Subprocess error");
     }
 
-    @Test(groups = {"org.wso2.pc"}, description = "Successor Process test case" )
+    @Test(groups = {"org.wso2.pc"}, description = "Successor Process test case" , dependsOnMethods = "addProcess")
     public void successorProcessTest() throws Exception {
-        Element successorProcessElement = getAssociateProcess("successor");
-        Assert.assertNotNull(successorProcessElement,"Successor Process doesn't exist");
-        Assert.assertEquals(successorProcessElement.getElementsByTagName("id").item(0).
-                getTextContent(), successorProcessID, "SuccessorProcess error");
+        Assert.assertNotNull(getAssociateProcess("successor"));
+        Assert.assertEquals(getAssociateProcess("successor"), successorProcessID, "Successor error");
     }
 
-    @Test(groups = {"org.wso2.pc"}, description = "Predecessor Process test case")
+    @Test(groups = {"org.wso2.pc"}, description = "Predecessor Process test case" , dependsOnMethods = "addProcess")
     public void predecessorTest() throws Exception {
-        Element predecessorProcessElement = getAssociateProcess("predecessor");
-        Assert.assertNotNull(predecessorProcessElement,"PredecessorProcess doesn't exist");
-        Assert.assertEquals(predecessorProcessElement.getElementsByTagName("id").item(0).
-                getTextContent(), predecessorProcessID, "predecessor error");
+        Assert.assertNotNull(getAssociateProcess("predecessor"));
+        Assert.assertEquals(getAssociateProcess("predecessor"), predecessorProcessID, "Predecessor error");
     }
 
     @Test(groups = {"org.wso2.pc"}, description = "Delete subprocess test",
@@ -205,24 +205,23 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
 
     }
 
-    private Element getAssociateProcess(String processType) throws Exception {
-        Element associateProcessElement = null;
+   private String getAssociateProcess(String processType) throws Exception {
+
         WSRegistryServiceClient wsRegistryServiceClient = registryProviderUtil.
                 getWSRegistry(automationContext);
-        String xml = new String(wsRegistryServiceClient.
-                getContent("/_system/governance/processes/TestProcess1/1.0"));
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
-        Document document = builder.parse(new InputSource(new StringReader(xml)));
-        Element root = document.getDocumentElement();
-        if (root.getElementsByTagName(processType) != null)
-            associateProcessElement = (Element) root.getElementsByTagName(processType).item(0);
-        return associateProcessElement;
+        Association associations[] = wsRegistryServiceClient.getAssociations(TEST_PROCESS_PATH, processType);
+        for(Association association: associations){
+            if(!association.getDestinationPath().equals(TEST_PROCESS_PATH)){
+                return  wsRegistryServiceClient.get(association.getDestinationPath()).getUUID();
+            }
+        }
+        return null;
     }
 
-    private ProcessBean createProcessBean(String name, String path, String ID) {
+    private ProcessBean createProcessBean(String name, String version, String path, String ID) {
         ProcessBean process = new ProcessBean();
         process.setName(name);
+        process.setVersion(version);
         process.setId(ID);
         process.setPath(path);
         return process;
