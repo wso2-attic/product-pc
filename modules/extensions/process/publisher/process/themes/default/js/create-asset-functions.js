@@ -1713,8 +1713,11 @@ function deleteSubprocess(element) {
                 success: function (data) {
                     var response = JSON.parse(data);
                     if (response.error === false) {
-                        console.log($(element).parent().closest("tr").index());
                         document.getElementById("subProcessTable").deleteRow($(element).parent().closest("tr").index()+1);
+                        if (document.getElementById("subProcessTable").rows.length == 1) {
+                            $('#subProcessTable').append('<tr><td colspan="6">No subprocesses associated with this process</td></tr>');
+                            $("#subprocessadded").removeClass("fw-check");
+                        }
                         alertify.success('Successfully deleted ' + deleteSubInput + ' from the subprocess list.');
                     } else {
                         alertify.error(response.content);
@@ -1766,6 +1769,10 @@ function deleteSuccessor(element) {
                     var response = JSON.parse(data);
                     if (response.error === false) {
                         document.getElementById("successorTable").deleteRow($(element).parent().closest("tr").index() + 1);
+                        if (document.getElementById("successorTable").rows.length == 1) {
+                            $('#successorTable').append('<tr><td colspan="6">No successors associated with this process</td></tr>');
+                            $("#successoradded").removeClass("fw-check");
+                        }
                         alertify.success('Successfully deleted ' + deleteSuccessorInput + ' from the successor list.');
                     } else {
                         alertify.error(response.content);
@@ -1817,6 +1824,10 @@ function deletePredecessor(element) {
                     var response = JSON.parse(data);
                     if (response.error === false) {
                         document.getElementById("predecessorTable").deleteRow($(element).parent().closest("tr").index() + 1);
+                        if (document.getElementById("predecessorTable").rows.length == 1) {
+                            $('#predecessorTable').append('<tr><td colspan="6">No predecessor processes associated with this process</td></tr>');
+                            $("#prodecessoradded").removeClass("fw-check");
+                        }
                         alertify.success('Successfully deleted ' + deletePredecessorInput + ' from the predecessor list.');
                     } else {
                         alertify.error(response.content);
