@@ -388,7 +388,7 @@ function saveProcess(currentElement) {
             success: function (data) {
                 var response = JSON.parse(data);
                 if (response.error === false) {
-                    PID = response.processID;
+                    PID = response.id;
                     $("#processTextOverviewLink").attr("href", "../../assets/process/details/" + PID);
                     $("#bpmnOverviewLink").attr("href", "../../assets/process/details/" + PID);
                     $("#pdfOverviewLink").attr("href", "../../assets/process/details/" + PID);
