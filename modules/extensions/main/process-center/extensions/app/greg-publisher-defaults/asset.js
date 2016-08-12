@@ -60,7 +60,7 @@ asset.renderer = function(ctx) {
                             log.debug('adding link');
                             entry = {};
                             entry.name = 'Permissions';
-                            entry.iconClass = 'btn-lifecycle';
+                            entry.iconClass = 'btn-permission';
                             entry.url = this.buildAppPageUrl('permissions') + '/' + page.assets.type + '/'
                                         + page.assets.id;
                             ptr.push(entry);
