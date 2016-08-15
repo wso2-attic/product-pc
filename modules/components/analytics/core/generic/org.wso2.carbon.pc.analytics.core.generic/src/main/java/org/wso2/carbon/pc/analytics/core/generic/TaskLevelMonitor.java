@@ -17,6 +17,7 @@ package org.wso2.carbon.pc.analytics.core.generic;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.core.runtime.SafeRunner;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.pc.analytics.core.generic.clients.AnalyticsRestClient;
@@ -497,6 +498,69 @@ public class TaskLevelMonitor {
 						String taskDefKey =
 								values.getJSONArray(AnalyticsConstants.TASK_DEFINITION_KEY)
 								      .getString(0);
+						JSONObject o = new JSONObject();
+						o.put(AnalyticsConstants.TASK_DEFINITION_KEY, taskDefKey);
+						resultArray.put(o);
+					}
+					taskIdList = resultArray.toString();
+				}
+
+				if (log.isDebugEnabled()) {
+					log.debug("Task List Result:" + taskIdList);
+				}
+			}
+		} catch (Exception e) {
+			log.error("PC Analytics core - task id list error.", e);
+		}
+		return taskIdList;
+	}
+
+	/**
+	 * Get task definition key list for a selected process id
+	 *
+	 * @param filters is used to get process id as a filter
+	 * @return task definition key list as a JSON array string
+     */
+	public String getProcessRelatedTaskList(String filters) {
+		String taskIdList = "";
+		try {
+			if (AnalyticsUtils.isDASAnalyticsActivated()) {
+				JSONObject filterObj = new JSONObject(filters);
+				String processId = filterObj.getString(AnalyticsConstants.PROCESS_ID);
+				AggregateField countField = new AggregateField();
+				countField.setFieldName(AnalyticsConstants.ALL);
+				countField.setAggregate(AnalyticsConstants.COUNT);
+				countField.setAlias(AnalyticsConstants.TASK_INSTANCE_COUNT);
+
+				ArrayList<AggregateField> aggregateFields = new ArrayList<>();
+				aggregateFields.add(countField);
+
+				String queryStr = "processDefinitionId:" + "\"'" + processId+ "'\"";
+				AggregateQuery query = new AggregateQuery();
+				query.setTableName(AnalyticsConstants.USER_INVOLVE_TABLE);
+				query.setGroupByField(AnalyticsConstants.TASK_DEFINITION_KEY);
+				query.setAggregateFields(aggregateFields);
+				query.setQuery(queryStr);
+
+				if (log.isDebugEnabled()) {
+					log.debug("Query to get the Task List Result:" +
+							AnalyticsUtils.getJSONString(query));
+				}
+
+				String result = AnalyticsRestClient
+						.post(AnalyticsUtils.getURL(AnalyticsConstants.ANALYTICS_AGGREGATE),
+								AnalyticsUtils.getJSONString(query));
+
+				JSONArray array = new JSONArray(result);
+				JSONArray resultArray = new JSONArray();
+
+				if (array.length() != 0) {
+					for (int i = 0; i < array.length(); i++) {
+						JSONObject jsonObj = array.getJSONObject(i);
+						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
+						String taskDefKey =
+								values.getJSONArray(AnalyticsConstants.TASK_DEFINITION_KEY)
+										.getString(0);
 						JSONObject o = new JSONObject();
 						o.put(AnalyticsConstants.TASK_DEFINITION_KEY, taskDefKey);
 						resultArray.put(o);
