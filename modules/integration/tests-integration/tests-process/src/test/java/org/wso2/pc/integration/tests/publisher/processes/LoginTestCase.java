@@ -46,7 +46,7 @@ public class LoginTestCase extends PCIntegrationBaseTest {
     Map<String, String> headerMap;
     Map<String, String> queryMap;
     String publisherUrl;
-    String publisherUrlForVersion;
+    private String publisherUrlForVersion;
 
     @Factory(dataProvider = "userModeProvider")
     public LoginTestCase(TestUserMode userMode) {

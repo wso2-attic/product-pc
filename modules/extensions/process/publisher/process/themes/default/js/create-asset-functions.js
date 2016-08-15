@@ -138,7 +138,7 @@ function updateProcess(currentElement) {
         pname=$("#pName").val();
         pversion=$("#pVersion").val();
         $.ajax({
-            url: '/publisher/assets/process/apis/update_process',
+            url: '/designer/assets/process/apis/update_process',
             type: 'POST',
             data: {'processInfo': getProcessInfo()},
             success: function (data) {
@@ -173,7 +173,7 @@ function textEditorInit() {
     if($('#processTextHolder').val()) {
 
         $.ajax({
-            url: '/publisher/assets/process/apis/get_process_text?process_text_path=/processText/' + pname + "/" + pversion,
+            url: '/designer/assets/process/apis/get_process_text?process_text_path=/processText/' + pname + "/" + pversion,
             type: 'GET',
             success: function (data) {
                 var response = JSON.parse(data);
@@ -1658,7 +1658,7 @@ function saveDocSummary(element) {
     }
 
     $.ajax({
-        url: '/publisher/assets/process/apis/update_document_details',
+        url: '/designer/assets/process/apis/update_document_details',
         type: 'POST',
         data: {'docInfo':JSON.stringify(docSummary) },
         success: function (data) {

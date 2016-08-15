@@ -905,7 +905,7 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-        git git
+
         <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/output-event-adapters.xml

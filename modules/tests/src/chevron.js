@@ -1139,7 +1139,7 @@
         //ajax call to save value in api
         $.ajax({
             type: "POST",
-            url: "/publisher/asts/chevron/apis/chevronxml",
+            url: "/designer/asts/chevron/apis/chevronxml",
             data: {
                 content: strAsXml,
                 name: mainProcessName,

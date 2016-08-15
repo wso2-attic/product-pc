@@ -64,7 +64,7 @@ $(document).ready(function() {
 			for (var j in assets.data) {
 				if (tempPre[i] === assets.data[j].id) {
 					$("#R6").each(function() {
-						$(this).find("#td_pre").append('<li><a href = /publisher/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+						$(this).find("#td_pre").append('<li><a href = /designer/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 					});
 				}
 			}
@@ -74,7 +74,7 @@ $(document).ready(function() {
 			for (var j in assets.data) {
 				if (tempSuc[i] === assets.data[j].id) {
 					$("#R7").each(function() {
-						$(this).find("#td_suc").append('<li><a href = /publisher/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+						$(this).find("#td_suc").append('<li><a href = /designer/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 					});
 				}
 			}
@@ -84,7 +84,7 @@ $(document).ready(function() {
 			for (var j in assets.data) {
 				if (tempGen[i] === assets.data[j].id) {
 					$("#R8").each(function() {
-						$(this).find("#td_gen").append('<li><a href = /publisher/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+						$(this).find("#td_gen").append('<li><a href = /designer/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 					});
 				}
 			}
@@ -94,7 +94,7 @@ $(document).ready(function() {
 			for (var j in assets.data) {
 				if (tempSpe[i] === assets.data[j].id) {
 					$("#R9").each(function() {
-						$(this).find("#td_spec").append('<li><a href = /publisher/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
+						$(this).find("#td_spec").append('<li><a href = /designer/asts/process/details/' + assets.data[j].id + '>' + assets.data[j].name + '</a></li>');
 					});
 				}
 			}

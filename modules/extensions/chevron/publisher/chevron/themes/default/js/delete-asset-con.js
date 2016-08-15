@@ -48,7 +48,7 @@ $(document).ready(function() {
         //remove deleted asset record from registry
         $.ajax({
             type: "POST",
-            url: "/publisher/assets/chevron/apis/chevronxml",
+            url: "/designer/assets/chevron/apis/chevronxml",
             data: {
                 name: assetName,
                 type:"POST",

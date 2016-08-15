@@ -58,7 +58,7 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
         super.init(userMode);
-        String publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
+        publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
                 replace("services", PCIntegrationConstants.DESIGNER_APIS);
         genericRestClient = new GenericRestClient();
         headerMap = new HashMap<>();

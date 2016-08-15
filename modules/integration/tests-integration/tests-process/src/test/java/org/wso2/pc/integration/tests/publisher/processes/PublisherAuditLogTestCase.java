@@ -88,7 +88,7 @@ public class PublisherAuditLogTestCase extends PCIntegrationBaseTest {
     @Test(groups = {"org.wso2.pc"}, description = "Getting audit logs for process", dependsOnMethods = "addProcess",
             dataProvider = "logPaths")
     public void getLogs(String path) throws Exception {
-        publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
+        String auditLogUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
                 PCIntegrationConstants.DESIGNER_ASSETS + "/process/apis/audit_log");
         queryMap.put("path", URLEncoder.encode(path, PCIntegrationConstants.UTF_8));
 

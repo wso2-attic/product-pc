@@ -72,7 +72,7 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        String publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
+        publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
                 replace("services", PCIntegrationConstants.DESIGNER_APIS);
         GenericRestClient genericRestClient = new GenericRestClient();
 
