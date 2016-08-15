@@ -17,7 +17,6 @@ package org.wso2.carbon.pc.analytics.core.generic;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.core.runtime.SafeRunner;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.pc.analytics.core.generic.clients.AnalyticsRestClient;
