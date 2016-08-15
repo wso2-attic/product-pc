@@ -6,6 +6,7 @@ window.onload = function() {
     if(pname) {pname;
         $('#process_name').val(pname);
     }
+    loadTaskList('taskIdList');
 };
 
 $(document).ready(function () {
@@ -45,10 +46,17 @@ $(document).ready(function () {
 
 function loadTaskList(dropdownId) {
     var dropdownElementID = '#' + dropdownId;
+    
+    var body = {
+        'processId': $('#process_name').val()
+    }
+
+    console.log($('#process_name').val());
 
     $.ajax({
         type: 'POST',
-        url: '../../bpmn-analytics-explorer/task_definition_key_list',
+        url: '../../bpmn-analytics-explorer/task_definition_key_list_vs_process_id',
+        data: {'filters':JSON.stringify(body)},
         success: function (data) {
             if (!$.isEmptyObject(data)) {
                 var dataStr = JSON.parse(data);

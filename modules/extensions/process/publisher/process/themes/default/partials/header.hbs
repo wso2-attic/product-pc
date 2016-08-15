@@ -39,13 +39,13 @@
                 <div class="dropdown-menu" style="right: 240px;">
                     <div class="cu-arrow"></div>
                     <div class="dropdown-menu-content" style="border-bottom: 2px solid #5c5c5c;">
-                        <a class="filter-item" href="/portal" target="_blank">
+                        <a class="filter-item" onclick="javascript:window.open('/portal')" target="_blank">
                             <i class="fa fa-line-chart"></i>
                             <span class="es-user-name">Custom Analytics</span>
                         </a>
                     </div>
                     <div class="dropdown-menu-content">
-                        <a class="filter-item" href="/portal/dashboards/user-analytics?user={{cuser.username}}" target="_blank">
+                        <a class="filter-item" onclick="javascript:window.open('/portal/dashboards/user-analytics?user={{cuser.username}}')" target="_blank">
                             <i class="fa fa-line-chart"></i>
                             <span>User Analytics</span>
                         </a>
