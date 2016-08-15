@@ -134,7 +134,7 @@
             <excludes>
                 <exclude>publisher/extensions/app/publisher-apis/app.js</exclude>
                 <exclude>publisher/themes/default/partials/product-title.hbs</exclude>
-                <exclude>store/themes/default/partials/product-title.hbs</exclude>
+                <exclude>store/themes/store/partials/product-title.hbs</exclude>
                 <exclude>sso/jaggery.conf</exclude>
                 <exclude>portal/configs/designer.json</exclude>
                 <exclude>portal/store/carbon.super/fs/gadget/**</exclude>
@@ -443,7 +443,7 @@
         <fileSet>
             <directory>../extensions/themes/store/default</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/default
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store
             </outputDirectory>
         </fileSet>
         <fileSet>
