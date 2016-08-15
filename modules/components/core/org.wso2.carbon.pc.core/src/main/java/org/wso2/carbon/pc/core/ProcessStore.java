@@ -1233,6 +1233,8 @@ public class ProcessStore {
             throws ProcessCenterException, JSONException {
 
         String processId = "FAILED TO UPLOAD DOCUMENT";
+        InputStream docStream = null;
+        byte[] docContent = new byte[0];
         //Getting associated document list of the process and creating json format of it
         String processDocList = this.getUploadedDocumentDetails(
                 ProcessCenterConstants.GREG_PATH_PROCESS + processName + "/" + processVersion);
@@ -1248,8 +1250,11 @@ public class ProcessStore {
             }
         }
         try {
-            StreamHostObject s = (StreamHostObject) docObject;
-            InputStream docStream = s.getStream();
+            if(docUrl.equals("NA")) {
+                StreamHostObject s = (StreamHostObject) docObject;
+                docStream = s.getStream();
+                docContent = IOUtils.toByteArray(docStream);
+            }
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 //                UserRegistry reg = registryService.getGovernanceSystemRegistry();
@@ -1259,7 +1264,6 @@ public class ProcessStore {
 
                 // store doc content as a registry resource
                 Resource docContentResource = reg.newResource();
-                byte[] docContent = IOUtils.toByteArray(docStream);
                 String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
                 String docContentPath = null;
