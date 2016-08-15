@@ -18,7 +18,7 @@
 <product xmlns="http://products.wso2.org/carbon">
     <properties>
        <property name="userforum">http://stackoverflow.com/questions/tagged/wso2</property>
-       <property name="userguide">https://docs.wso2.com/</property>
+       <property name="userguide">https://docs.wso2.com/display/PC100/WSO2+Process+Center+Documentation</property>
        <property name="mailinglist">http://wso2.org/mail</property>
        <property name="issuetracker">https://wso2.org/jira/browse/PC</property>
        <property name="collapsedmenus">region1_configure_menu,region1_manage_menu,region4_monitor_menu,region5_my_identity_menu</property>
