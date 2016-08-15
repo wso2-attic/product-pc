@@ -1,0 +1,3 @@
+08-12 12:05:06 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SOCIAL_COMMENTS" not found; SQL statement:
+select 1 from SOCIAL_COMMENTS [42102-140]
