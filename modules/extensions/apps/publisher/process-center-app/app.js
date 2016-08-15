@@ -13,6 +13,7 @@ app.server = function(ctx) {
             }]
         },
         configs:{
+            title : "WSO2 Process Center - Designer",
             landingPage:'/assets/process/list',
             disabledAssets:['gadget','site','ebook', 'api', 'wsdl', 'service','policy','proxy','schema','sequence','servicex','uri','wadl','endpoint','swagger','restservice','comments','soapservice']
         }

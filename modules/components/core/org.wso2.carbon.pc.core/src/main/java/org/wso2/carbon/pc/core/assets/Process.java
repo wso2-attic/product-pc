@@ -72,9 +72,9 @@ public class Process {
      * Get Process Registry Path .
      * ex. /_system/governance/processes/ProcessName/
 
-     * @return
+     * @return process registry path
      */
-    public String getPackageRegistryPath() {
+    public String getProcessRegistryPath() {
         return ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
     }
 
@@ -111,6 +111,10 @@ public class Process {
         return BPMNDocument;
     }
 
+    /**
+     * Get BPMN Process
+     * @return bpmn process
+     */
     public BPMN getBpmn() {
         return bpmn;
     }

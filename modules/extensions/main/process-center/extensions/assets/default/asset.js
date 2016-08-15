@@ -121,7 +121,7 @@ asset.configure = function() {
             lifecycle: {
                 name: 'DefaultProcessLifeCycle',
                 commentRequired: false,
-                defaultAction: 'Promote',
+                defaultAction: 'Submit',
                 deletableStates: [],
                 publishedStates: ['Published'],
                 lifecycleEnabled:true

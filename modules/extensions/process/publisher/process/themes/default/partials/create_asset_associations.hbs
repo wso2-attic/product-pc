@@ -29,13 +29,13 @@
             <ul class="nav nav-stacked">
                 <li id="subprocess"><a href="#" onclick="showSubprocess()"
                                        rel="tooltip" title="List of subprocesses for a given process">
-                    Subprocess<i id="subprocessadded" class="artifact-check"></i></a></li>
+                    Subprocess<i id="subprocessadded" class="artifact-check" style="margin-left: 85px"></i></a></li>
                 <li id="successor"><a href="#" onclick="showSuccessor()"
                                       title="List of successor processes for a given process">
-                    Successor<i id="successoradded" class="artifact-check"></i></a></li>
+                    Successor<i id="successoradded" class="artifact-check" style="margin-left: 95px"></i></a></li>
                 <li id="predecessor"><a href="#" onclick="showPredecessor()"
                                         rel="tooltip" title="List of predecessor processes for a given process">
-                    Predecessor<i id="prodecessoradded" class="artifact-check"></i></a></li>
+                    Predecessor<i id="prodecessoradded" class="artifact-check" style="margin-left: 80px"></i></a></li>
             </ul>
         </div>
         <div class="row" style="padding-top: 10%">
@@ -43,7 +43,7 @@
                     onclick="loadDetailsStep()" style="margin-left:30px; position: relative;">
                 <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp; Details
             </button>
-            <button class="btn btn-primary" id="finishBtn" onclick="loadSummary({{isUpdateView}},'{{assets.id}}')"
+            <button class="btn btn-primary" id="finishBtn" onclick="loadSummary({{#if isUpdateView}}true{{else}}false{{/if}},'{{assets.id}}')"
                     style="margin-left: 5px; position: relative;">
                 &nbsp;&nbsp;Save&nbsp;&nbsp;
             </button>
@@ -59,6 +59,7 @@
     </div>
     <input type="hidden" id="view-header-field" value="{{assets.tables.[0].fields.name.value}}">
     <input type="hidden" id="process-version-field" value="{{assets.tables.[0].fields.version.value}}">
+    <input type="hidden" id="processId" value="{{assets.id}}">
 
     <div class="vertical_line" style="bottom: 80px;"></div>
     <div id="processButtonsGroup">

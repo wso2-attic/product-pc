@@ -40,7 +40,7 @@
               {
                 "id": "36896281ebf25a16067b0e893b5454ee",
                 "x": 6,
-                "y": 3,
+                "y": 15,
                 "width": 6,
                 "height": 6,
                 "banner": false
@@ -48,7 +48,7 @@
               {
                 "id": "a3a1fdf47bf4272989f15347c03ef667",
                 "x": 0,
-                "y": 3,
+                "y": 9,
                 "width": 6,
                 "height": 6,
                 "banner": false
@@ -59,6 +59,22 @@
                 "y": 0,
                 "width": 12,
                 "height": 3,
+                "banner": false
+              },
+              {
+                "id": "d4b69076ac034eb50cbe5e696d779be1",
+                "x": 0,
+                "y": 3,
+                "width": 6,
+                "height": 6,
+                "banner": false
+              },
+              {
+                "id": "d4b69076ac034eb50cbe5e696d779be2",
+                "x": 6,
+                "y": 3,
+                "width": 6,
+                "height": 6,
                 "banner": false
               }
             ]
@@ -74,7 +90,7 @@
               "id": "user_id_publisher-0",
               "content": {
                 "id": "user_id_publisher",
-                "title": "Date Range and User ID Picker",
+                "title": "Date Range and User Filter",
                 "type": "gadget",
                 "category": "Publishers",
                 "thumbnail": "fs://gadget/user_id_publisher/dateRange.png",
@@ -101,7 +117,7 @@
               "id": "total_involved_instance_count_vs_process_id-0",
               "content": {
                 "id": "total_involved_instance_count_vs_process_id",
-                "title": "Total Involved Instance Count vs Process ID",
+                "title": "User's Involvement in Processes (Instances)",
                 "type": "gadget",
                 "category": "Subscribers",
                 "thumbnail": "fs://gadget/total_involved_instance_count_vs_process_id/index.png",
@@ -129,11 +145,11 @@
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "left",
-                  "title": "Total Involved Instance Count vs Process ID"
+                  "title": "User's Involvement in Processes (Instances)"
                 },
                 "options": {},
                 "locale_titles": {
-                  "en-US": "Total Involved Instance Count vs Process ID"
+                  "en-US": "User's Involvement in Processes (Instances)"
                 }
               }
             }
@@ -143,7 +159,7 @@
               "id": "user_level_task_instance_count_vs_task_id-0",
               "content": {
                 "id": "user_level_task_instance_count_vs_task_id",
-                "title": "User Level Task Instance Count vs Task ID",
+                "title": "Completed Tasks for User",
                 "type": "gadget",
                 "category": "Subscribers",
                 "thumbnail": "fs://gadget/user_level_task_instance_count_vs_task_id/index.png",
@@ -171,11 +187,11 @@
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "left",
-                  "title": "User Level Task Instance Count vs Task ID"
+                  "title": "Completed Tasks for User"
                 },
                 "options": {},
                 "locale_titles": {
-                  "en-US": "User Level Task Instance Count vs Task ID"
+                  "en-US": "Completed Tasks for User"
                 }
               }
             }
@@ -185,7 +201,7 @@
               "id": "avg_execution_time_vs_task_id-0",
               "content": {
                 "id": "avg_execution_time_vs_task_id",
-                "title": "Average Execution Time vs Task ID",
+                "title": "Average Task Completion Times for User",
                 "type": "gadget",
                 "category": "Subscribers",
                 "thumbnail": "fs://gadget/avg_execution_time_vs_task_id/index.png",
@@ -213,11 +229,95 @@
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "left",
-                  "title": "Average Execution Time vs Task ID"
+                  "title": "Average Task Completion Times for User"
                 },
                 "options": {},
                 "locale_titles": {
-                  "en-US": "Average Execution Time vs Task ID"
+                  "en-US": "Average Task Completion Times for User"
+                }
+              }
+            }
+          ],
+          "d4b69076ac034eb50cbe5e696d779be1": [
+            {
+              "id": "total_completed_tasks_vs_user_id-0",
+              "content": {
+                "id": "total_completed_tasks_vs_user_id",
+                "title": "Tasks Completed by Users",
+                "type": "gadget",
+                "category": "Subscribers",
+                "thumbnail": "fs://gadget/total_completed_tasks_vs_user_id/index.png",
+                "settings": {
+                  "personalize": true,
+                  "priority": "5"
+                },
+                "data": {
+                  "url": "fs://gadget/total_completed_tasks_vs_user_id/index.xml"
+                },
+                "description": "PC analytics graphs",
+                "listen": {
+                  "channel5": {
+                    "type": "user_id",
+                    "description": "Listening to user id",
+                    "on": [
+                      {
+                        "from": "user_id_publisher-0",
+                        "event": "user_id"
+                      }
+                    ]
+                  }
+                },
+                "styles": {
+                  "no_heading": false,
+                  "hide_gadget": false,
+                  "titlePosition": "left",
+                  "title": "Tasks Completed by Users"
+                },
+                "options": {},
+                "locale_titles": {
+                  "en-US": "Tasks Completed by Users"
+                }
+              }
+            }
+          ],
+          "d4b69076ac034eb50cbe5e696d779be2": [
+            {
+              "id": "total_involved_time_vs_user_id-0",
+              "content": {
+                "id": "total_involved_time_vs_user_id",
+                "title": "Time Worked by Users",
+                "type": "gadget",
+                "category": "Subscribers",
+                "thumbnail": "fs://gadget/total_involved_time_vs_user_id/index.png",
+                "settings": {
+                  "personalize": true,
+                  "priority": "5"
+                },
+                "data": {
+                  "url": "fs://gadget/total_involved_time_vs_user_id/index.xml"
+                },
+                "description": "PC analytics graphs",
+                "listen": {
+                  "channel5": {
+                    "type": "user_id",
+                    "description": "Listening to user id",
+                    "on": [
+                      {
+                        "from": "user_id_publisher-0",
+                        "event": "user_id"
+                      }
+                    ]
+                  }
+                },
+                "styles": {
+                  "no_heading": false,
+                  "hide_gadget": false,
+                  "titlePosition": "left",
+                  "title": "Time Worked by Users"
+                },
+                "options": {},
+                "locale_titles": {
+                  "en-US": "Time Worked by Users"
                 }
               }
             }
@@ -227,7 +327,7 @@
               "id": "total_involved_time_vs_process_id-0",
               "content": {
                 "id": "total_involved_time_vs_process_id",
-                "title": "Total Involved Time vs Process ID",
+                "title": "User's Involvement in Processes (Time)",
                 "type": "gadget",
                 "category": "Subscribers",
                 "thumbnail": "fs://gadget/total_involved_time_vs_process_id/index.png",
@@ -255,11 +355,11 @@
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "left",
-                  "title": "Total Involved Time vs Process ID"
+                  "title": "User's Involvement in Processes (Time)"
                 },
                 "options": {},
                 "locale_titles": {
-                  "en-US": "Total Involved Time vs Process ID"
+                  "en-US": "User's Involvement in Processes (Time)"
                 }
               }
             }

@@ -78,72 +78,76 @@ public class ProcessImport {
             byte[] buffer = new byte[2048];
             ZipInputStream zipInputStream = new ZipInputStream(processZipInputStream);
             File importsDir = new File(ProcessCenterConstants.IMPORTS_DIR);
-            if (importsDir != null) {
-                importsDir.mkdirs();
+            try {
+                if (importsDir != null) {
+                    importsDir.mkdirs();
 
-                try {
-                    ZipEntry entry;
-                    while ((entry = zipInputStream.getNextEntry()) != null) {
-                        //counter++;
-                        String outpath = ProcessCenterConstants.IMPORTS_DIR + "/" + entry.getName();
-                        String dirPath = outpath.substring(0, outpath.lastIndexOf("/"));
-                        new File(dirPath).mkdirs();
-                        FileOutputStream fileOutputStream = null;
-                        try {
-                            fileOutputStream = new FileOutputStream(outpath);
-                            int len = 0;
-                            while ((len = zipInputStream.read(buffer)) > 0) {
-                                fileOutputStream.write(buffer, 0, len);
-                            }
-                        } finally {
-                            if (fileOutputStream != null) {
-                                fileOutputStream.close();
+                    try {
+                        ZipEntry entry;
+                        while ((entry = zipInputStream.getNextEntry()) != null) {
+                            //counter++;
+                            String outpath = ProcessCenterConstants.IMPORTS_DIR + "/" + entry.getName();
+                            String dirPath = outpath.substring(0, outpath.lastIndexOf("/"));
+                            new File(dirPath).mkdirs();
+                            FileOutputStream fileOutputStream = null;
+                            try {
+                                fileOutputStream = new FileOutputStream(outpath);
+                                int len = 0;
+                                while ((len = zipInputStream.read(buffer)) > 0) {
+                                    fileOutputStream.write(buffer, 0, len);
+                                }
+                            } finally {
+                                if (fileOutputStream != null) {
+                                    fileOutputStream.close();
+                                }
                             }
                         }
+                    } finally {
+                        zipInputStream.close();
                     }
-                } finally {
-                    zipInputStream.close();
-                }
 
-                //check if the importing processes are already available
-                boolean isProcessesAvailableAlready = isProcessesAlreadyAvailble();
-                if (isProcessesAvailableAlready) {
-                    log.error(
-                            "One or more process in the importing archive is already cavailable in the Process Center");
-                    throw new ProcessCenterException("ALREADY_AVAILABLE");
-                }
-
-                //else do the process importing for each process
-                for (File processDir : listOfProcessDirs) {
-                    if (processDir.isDirectory()) {
-                        String processDirName = processDir.getName();
-                        String processDirPath = processDir.getPath();
-                        String processRxtPath = processDirPath + "/" + ProcessCenterConstants.EXPORTED_PROCESS_RXT_FILE;
-                        String processName = processDirName.substring(0, processDirName.lastIndexOf("-"));
-                        String processVersion = processDirName
-                                .substring(processDirName.lastIndexOf("-") + 1, processDirName.length());
-                        String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
-                                processVersion;
-
-                        putProcessRxt(processRxtPath, processAssetPath);
-                        GovernanceUtils
-                                .associateAspect(processAssetPath, ProcessCenterConstants.DEFAULT_LIFECYCLE_NAME, reg);
-                        setImageThumbnail(processDirPath, processAssetPath);
-                        setProcessDocuments(processName, processVersion, processDirPath, processAssetPath);
-                        setProcessTags(processDirPath, processAssetPath);
-                        setProcessText(processName, processVersion, processDirPath, processAssetPath);
-                        setBPMN(processName, processVersion, processDirPath, processAssetPath);
-                        setFlowChart(processName, processVersion, processDirPath, processAssetPath);
-                        setProcessAssociations(processName, processVersion, processDirPath, processAssetPath);
+                    //check if the importing processes are already available
+                    boolean isProcessesAvailableAlready = isProcessesAlreadyAvailble();
+                    if (isProcessesAvailableAlready) {
+                        log.error(
+                                "One or more process in the importing archive is already cavailable in the Process Center");
+                        throw new ProcessCenterException("ALREADY_AVAILABLE");
                     }
-                }
 
+                    //else do the process importing for each process
+                    for (File processDir : listOfProcessDirs) {
+                        if (processDir.isDirectory()) {
+                            String processDirName = processDir.getName();
+                            String processDirPath = processDir.getPath();
+                            String processRxtPath = processDirPath + "/" + ProcessCenterConstants.EXPORTED_PROCESS_RXT_FILE;
+                            String processName = processDirName.substring(0, processDirName.lastIndexOf("-"));
+                            String processVersion = processDirName
+                                    .substring(processDirName.lastIndexOf("-") + 1, processDirName.length());
+                            String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                                    processVersion;
+
+                            putProcessRxt(processRxtPath, processAssetPath);
+                            GovernanceUtils.associateAspect(processAssetPath, ProcessCenterConstants.DEFAULT_LIFECYCLE_NAME,
+                                    reg);
+                            setImageThumbnail(processDirPath, processAssetPath);
+                            setProcessDocuments(processName, processVersion, processDirPath, processAssetPath);
+                            setProcessTags(processDirPath, processAssetPath);
+                            setProcessText(processName, processVersion, processDirPath, processAssetPath);
+                            setBPMN(processName, processVersion, processDirPath, processAssetPath);
+                            setFlowChart(processName, processVersion, processDirPath, processAssetPath);
+                            setProcessAssociations(processName, processVersion, processDirPath, processAssetPath);
+                        }
+                    }
+                } else {
+                    String errMsg = "Process Importing failed due to failure in creating Imports directory";
+                    throw new ProcessCenterException(errMsg);
+
+                }
+            }finally {
                 //Finally remove the Imports folder
-                FileUtils.deleteDirectory(importsDir);
-            } else {
-                String errMsg = "Process Importing failed due to failure in creating Imports directory";
-                throw new ProcessCenterException(errMsg);
-
+                if(importsDir.exists()) {
+                    FileUtils.deleteDirectory(importsDir);
+                }
             }
         } else {
             String errMsg = "Process Importing failed due to unavailability of Registry Service";

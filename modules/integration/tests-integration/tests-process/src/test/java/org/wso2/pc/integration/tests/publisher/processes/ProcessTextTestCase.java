@@ -18,9 +18,11 @@ package org.wso2.pc.integration.tests.publisher.processes;
 
 
 import org.apache.wink.client.ClientResponse;
+import org.apache.wink.common.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
@@ -32,6 +34,7 @@ import org.wso2.pc.integration.test.utils.base.TestUtils;
 import javax.ws.rs.core.MediaType;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
@@ -41,7 +44,7 @@ public class ProcessTextTestCase extends PCIntegrationBaseTest {
     private GenericRestClient genericRestClient;
     private HashMap<String, String> queryMap;
     private HashMap<String, String> headerMap;
-    private String requestBody;
+    private String jSessionId,requestBody,resourcePath, publisherUrl, processId;
 
     private String processName = "TestProcess1";
     private String processVersion = "1.0";
@@ -55,21 +58,32 @@ public class ProcessTextTestCase extends PCIntegrationBaseTest {
         genericRestClient = new GenericRestClient();
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
-        String resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
-                File.separator + "json" + File.separator + "process" + File.separator+ "create-process.json";
-        requestBody = readFile(resourcePath);
+        resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
+                + "json" + File.separator + "process" + File.separator + "create-process.json";
         JSONObject objSessionPublisher =
                 new JSONObject(TestUtils.authenticate(publisherUrl, genericRestClient,
                         automationContext.getSuperTenant().getTenantAdmin().getUserName(),
                         automationContext.getSuperTenant().getTenantAdmin().getPassword(), queryMap,
                         headerMap).getEntity(String.class));
-        String jSessionId = objSessionPublisher.getJSONObject("data").getString("sessionId");
+        jSessionId = objSessionPublisher.getJSONObject("data").getString("sessionId");
         cookieHeader = "JSESSIONID=" + jSessionId;
+    }
+
+    @Test(groups = {"org.wso2.pc"}, description = "Test case for adding process")
+    public void addProcess() throws IOException, XPathExpressionException, JSONException {
+
+        requestBody = readFile(resourcePath);
         queryMap.put("processInfo", URLEncoder.encode(requestBody, PCIntegrationConstants.UTF_8));
 
-        genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl + "create_process",
-                MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, requestBody, queryMap,
-                headerMap, cookieHeader);
+        ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
+                        "create_process", MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,
+                requestBody, queryMap, headerMap, cookieHeader);
+        JSONObject responseObject = new JSONObject(response.getEntity(String.class));
+        processId = responseObject.get(PCIntegrationConstants.ID).toString();
+        Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
+                "Expected 200 OK, Received " + response.getStatusCode());
+        Assert.assertTrue(responseObject.get("error").toString().equals("false"),
+                "Error while creating the process");
     }
 
     @Test(groups = {"org.wso2.pc"}, description = "Test case for adding process text")
@@ -96,5 +110,17 @@ public class ProcessTextTestCase extends PCIntegrationBaseTest {
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
         Assert.assertTrue(responseObject.get("content").toString().
                 equals(processText), "Error while retrieving text");
+    }
+
+    @AfterClass(alwaysRun = true, description = "Delete process")
+    public void cleanUp() throws Exception {
+        queryMap.clear();
+        queryMap.put("type", "process");
+        ClientResponse response = genericRestClient.
+                geneticRestRequestDelete(publisherUrl + "/assets/" + processId, MediaType.APPLICATION_JSON,
+                        MediaType.APPLICATION_JSON, queryMap, headerMap, cookieHeader);
+        JSONObject responseObject = new JSONObject(response.getEntity(String.class));
+        Assert.assertTrue(((response.getStatusCode() == HttpStatus.OK.getCode())), "Wrong status code ,Expected 200 " +
+                "OK,Received " + response.getStatusCode());
     }
 }

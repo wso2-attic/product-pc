@@ -24,6 +24,6 @@ var resources = function (page, meta) {
             'jquery-file-upload/jquery.fileupload.js', 'jquery-file-upload/vendor/jquery.ui.widget.js',
             'bootstrap-editable.js', 'FileSaver.min.js', 'jquery.form.js','import-process-functions.js'],
         css: ['bootstrap-select.min.css', 'alertify.css', 'default.css', 'jquery-ui.css', 'font-awesome.css',
-            'search.css', 'build.css']
+            'search.css', 'build.css','process-center-custom.css']
     };
 };

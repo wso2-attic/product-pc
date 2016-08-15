@@ -17,9 +17,11 @@
 package org.wso2.pc.integration.tests.publisher.processes;
 
 import org.apache.wink.client.ClientResponse;
+import org.apache.wink.common.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -49,7 +51,7 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
     private GenericRestClient genericRestClient;
     private HashMap<String, String> queryMap;
     private HashMap<String, String> headerMap;
-    private String resourcePath;
+    private String resourcePath,publisherUrl,processId;
     private static final String PROCESS_NAME = "TestProcess1";
     private static final String PROCESS_VERSION = "1.0";
 
@@ -83,7 +85,7 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
                 requestBody, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
-
+        processId = responseObject.get(PCIntegrationConstants.ID).toString();
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
                 "Expected 200 OK, Received " + response.getStatusCode());
         Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
@@ -135,6 +137,18 @@ public class AddFlowChartTestCase extends PCIntegrationBaseTest{
                 equals("false"),"Error while deleting flowchart");
         Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_CONTENT).toString().
                 contains("Successfully deleted the flowchart"),"Couldn't delete flowchart");
+    }
+
+    @AfterClass(alwaysRun = true, description = "Delete process")
+    public void cleanUp() throws Exception {
+        queryMap.clear();
+        queryMap.put("type", "process");
+        ClientResponse response = genericRestClient.
+                geneticRestRequestDelete(publisherUrl + "/assets/" + processId, MediaType.APPLICATION_JSON,
+                        MediaType.APPLICATION_JSON, queryMap, headerMap, cookieHeader);
+        Assert.assertTrue(((response.getStatusCode() == HttpStatus.OK.getCode())), "Wrong status code ,Expected 200 " +
+                "OK,Received " + response.getStatusCode());
+
     }
 
     @DataProvider

@@ -226,8 +226,8 @@ asset.renderer = function(ctx) {
         var navList = util.navList();
         if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) {
             navList.push('Add ', 'btn-add-new', util.buildUrl('create'));
+            navList.push('Import Process', 'btn-import', util.buildUrl('import_process'));
             navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log'));
-            navList.push('Import Process', 'btn-overview', util.buildUrl('import_process'));
         }
         //navList.push('Configuration', 'icon-dashboard', util.buildUrl('configuration'));
         return navList.list();
@@ -236,8 +236,8 @@ asset.renderer = function(ctx) {
         var navList = util.navList();
         if (permissionAPI.hasAssetPermission(permissionAPI.ASSET_CREATE, ctx.assetType, ctx.session)) {
             navList.push('Add ', 'btn-add-new', util.buildUrl('create'));
+            navList.push('Import Process', 'btn-import', util.buildUrl('import_process'));
             navList.push('Audit Log', 'btn-overview', util.buildUrl('log'));
-            navList.push('Import Process', 'btn-overview', util.buildUrl('import_process'));
         }
         return navList.list();
     };
@@ -263,8 +263,8 @@ asset.renderer = function(ctx) {
         if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
             navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + id);
         }
-        navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log') + '/' + id);
         navList.push('Config Analytics', 'btn-configAnalytics', util.buildUrl('config_analytics') + '/' + id);
+        navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log') + '/' + id);
         //if (permissionAPI.hasActionPermissionforPath(path, 'write', ctx.session) && permissionAPI.hasAssetPagePermission(type,'update',user.tenantId,username)) {
         //navList.push('Version', 'btn-copy', util.buildUrl('copy') + '/' + id);
         //}
@@ -287,13 +287,13 @@ asset.renderer = function(ctx) {
                 if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
                     navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + page.assets.id);
                 }
-                navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log') + '/' +page.assets.id);
                 navList.push('Config Analytics', 'btn-configAnalytics', util.buildUrl('config_analytics') + '/' + page.assets.id);
+                navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log') + '/' +page.assets.id);
 
             } else {
                 navList.push('Add ', 'btn-add-new', util.buildUrl('create'));
+                navList.push('Import Process', 'btn-import', util.buildUrl('import_process'));
                 navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log'));
-                navList.push('Import Process', 'btn-overview', util.buildUrl('import_process'));
             }
         }
         return navList.list();
@@ -468,6 +468,15 @@ asset.renderer = function(ctx) {
                     } else if(processTextField != null) {
                         page.isBpmnAvailable = true;
                     }
+                }
+
+                var resourcePath = page.assets.path;
+                var permissionAPI = require('rxt').permissions;
+                if (permissionAPI.hasActionPermissionforPath(resourcePath , 'write', ctx.session)){
+                    page.permission=true;
+                }
+                else{
+                    page.permission=false;
                 }
             }
         },

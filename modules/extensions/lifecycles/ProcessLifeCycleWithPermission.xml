@@ -1,0 +1,69 @@
+<!--
+ ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<aspect name="ProcessLifeCycleWithPermission" class="org.wso2.carbon.pc.core.extensions.aspects.ProcessLifeCycle">
+    <configuration type="literal">
+        <lifecycle>
+            <scxml xmlns="http://www.w3.org/2005/07/scxml"
+                   version="1.0"
+                   initialstate="Development">
+                <state id='Development'>
+                    <datamodel>
+                        <data name="transitionExecution">
+                            <execution forEvent="Submit" class="org.wso2.carbon.pc.core.executors.LCExecutor">
+                            </execution>
+                        </data>
+                    </datamodel>
+                    <transition event="Submit" target="In-Review"/>
+                </state>
+                <state id="In-Review">
+                    <datamodel>
+                        <data name="transitionExecution">
+                            <execution forEvent="Publish" class="org.wso2.carbon.pc.core.executors.LCExecutor">
+                            </execution>
+                            <execution forEvent="Reject" class="org.wso2.carbon.pc.core.executors.LCExecutor">
+                            </execution>
+                        </data>
+                        <data name="transitionPermission">
+                            <permission forEvent="Publish" roles="Internal/publisher,admin"/>
+                            <permission forEvent="Reject" roles="Internal/publisher,admin"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Publish" target="Published"/>
+                    <transition event="Reject" target="Development"/>
+                </state>
+                <state id="Published">
+                    <datamodel>
+                        <data name="transitionExecution">
+                            <execution forEvent="Retire" class="org.wso2.carbon.pc.core.executors.LCExecutor">
+                            </execution>
+                            <execution forEvent="Unpublish" class="org.wso2.carbon.pc.core.executors.LCExecutor">
+                            </execution>
+                        </data>
+                        <data name="transitionPermission">
+                            <permission forEvent="Retire" roles="Internal/publisher,admin"/>
+                            <permission forEvent="Unpublish" roles="Internal/publisher,admin"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Retire" target="Retired"/>
+                    <transition event="Unpublish" target="Development"/>
+                </state>
+                <state id="Retired"/>
+            </scxml>
+        </lifecycle>
+    </configuration>
+</aspect>

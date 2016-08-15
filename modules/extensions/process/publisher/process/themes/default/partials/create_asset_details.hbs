@@ -29,16 +29,17 @@
             <ul class="nav nav-list">
                 <!--<li class="nav-header">Process Artifacts</li>-->
                 <li id="textEditor"><a href="#" id="textEditorLink"
-                                       onclick="{{#if isUpdateView}}loadTextEditor(this){{else}}showTextEditor(this){{/if}}">{{#if isUpdateView}}
-                    Process
-                    Text{{else}}Describe process in
-                    text{{/if}}<i id="textadded" class="artifact-check"></i></a></li>
+                                       onclick="showTextEditor(this)">Process Text<i id="textadded"
+                                                                                     class="artifact-check" style="margin-left: 90px"></i></a>
+                </li>
                 <li id="bpmn"><a href="#" onclick="associateBPMN(this)">BPMN
-                    Model<i id="bpmnadded" class="artifact-check"></i></a></li>
-                <li id="flowChart"><a href="#" onclick="{{#if isUpdateView}}editAssociatedFlowChart(this,'{{flowchartPath}}') {{else}}associateFlowChart(this){{/if}}">Flow
-                    Charts<i id="flowchartadded" class="artifact-check"></i></a></li>
-                <li id="doc"><a href="#" onclick="{{#if isUpdateView}}editAssociatedDocument(this,{{permission}}){{else}}associateDocument(this){{/if}}">Documents<i id="docadded" class="artifact-check"
-                                                                                       ></i></a></li>
+                    Model<i id="bpmnadded" class="artifact-check" style="margin-left: 85px"></i></a></li>
+                <li id="flowChart"><a href="#"
+                                      onclick="{{#if isUpdateView}}editAssociatedFlowChart(this,'{{flowchartPath}}') {{else}}associateFlowChart(this){{/if}}">Flow
+                    Charts<i id="flowchartadded" class="artifact-check" style="margin-left: 95px"></i></a></li>
+                <li id="doc"><a href="#" onclick="associateDocument(this,{{permission}})">Documents<i id="docadded"
+                                                                                                      class="artifact-check" style="margin-left: 95px"></i></a>
+                </li>
             </ul>
             <input type="hidden" id="updateViewCheck" value="{{isUpdateView}}">
             <input type="hidden" id="processTextHolder" name="processTextHolder" value="{{isProcessTextAvailable}}"/>

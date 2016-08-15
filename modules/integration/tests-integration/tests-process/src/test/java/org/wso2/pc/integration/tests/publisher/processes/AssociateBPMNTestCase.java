@@ -18,16 +18,23 @@ package org.wso2.pc.integration.tests.publisher.processes;
 
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.wink.client.ClientResponse;
+import org.apache.wink.common.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
-import org.wso2.pc.integration.test.utils.base.*;
+import org.wso2.pc.integration.test.utils.base.ArtifactUploadUtil;
+import org.wso2.pc.integration.test.utils.base.GenericRestClient;
+import org.wso2.pc.integration.test.utils.base.PCIntegrationBaseTest;
+import org.wso2.pc.integration.test.utils.base.PCIntegrationConstants;
+import org.wso2.pc.integration.test.utils.base.RegistryProviderUtil;
+import org.wso2.pc.integration.test.utils.base.TestUtils;
 import org.xml.sax.InputSource;
 
 import javax.ws.rs.core.MediaType;
@@ -41,14 +48,14 @@ import java.util.HashMap;
 
 public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
 
+    private static final String PROCESS_NAME = "TestProcess1";
+    private static final String PROCESS_VERSION = "1.0";
     private GenericRestClient genericRestClient;
     private HashMap<String, String> headerMap;
     private HashMap<String, String> queryMap;
-    private String resourcePath;
+    private String resourcePath, publisherUrl, processId;
     private String cookieHeader;
     private RegistryProviderUtil registryProviderUtil = new RegistryProviderUtil();
-    private static final String PROCESS_NAME="TestProcess1";
-    private static final String PROCESS_VERSION="1.0";
 
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
@@ -59,7 +66,7 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
         resourcePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                + "json" + File.separator + "process" + File.separator+ "create-process.json";
+                + "json" + File.separator + "process" + File.separator + "create-process.json";
         JSONObject objSessionPublisher =
                 new JSONObject(TestUtils.authenticate(publisherUrl, genericRestClient,
                         automationContext.getSuperTenant().getTenantAdmin().getUserName(),
@@ -79,11 +86,23 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
                 requestBody, queryMap, headerMap, cookieHeader);
         response.getStatusCode();
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
-
+        processId = responseObject.get(PCIntegrationConstants.ID).toString();
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
                 "Expected 200 OK, Received " + response.getStatusCode());
         Assert.assertTrue(responseObject.get("error").toString().equals("false"),
                 "Error while creating the process");
+    }
+
+    @AfterClass(alwaysRun = true, description = "Delete process")
+    public void cleanUp() throws Exception {
+        queryMap.clear();
+        queryMap.put("type", "process");
+        ClientResponse response = genericRestClient.
+                geneticRestRequestDelete(publisherUrl + "/assets/" + processId, MediaType.APPLICATION_JSON,
+                        MediaType.APPLICATION_JSON, queryMap, headerMap, cookieHeader);
+        Assert.assertTrue(((response.getStatusCode() == HttpStatus.OK.getCode())), "Wrong status code ,Expected 200 " +
+                "OK,Received " + response.getStatusCode());
+
     }
 
     @Test(groups = {"org.wso2.pc"}, description = "Associating BPMN to the process",
@@ -104,7 +123,7 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
             dependsOnMethods = "uploadBPMN")
     public void checkBPMN() throws Exception {
         Element bpmnElement = getAssociateProcess("name");
-        Assert.assertNotNull(bpmnElement,"Associated BPMN doesn't exist");
+        Assert.assertNotNull(bpmnElement, "Associated BPMN doesn't exist");
         Assert.assertTrue(bpmnElement.getTextContent().equals(PROCESS_NAME),
                 "TestProcess1 doesn't have associated BPMN");
     }
@@ -113,15 +132,15 @@ public class AssociateBPMNTestCase extends PCIntegrationBaseTest {
             dependsOnMethods = "checkBPMN")
     public void deleteBPMN() throws JSONException {
         queryMap.put(PCIntegrationConstants.PROCESS_NAME, PROCESS_NAME);
-        queryMap.put(PCIntegrationConstants.PROCESS_VERSION,PROCESS_VERSION);
+        queryMap.put(PCIntegrationConstants.PROCESS_VERSION, PROCESS_VERSION);
         ClientResponse response = genericRestClient.geneticRestRequestPost(publisherProcessAPIBaseUrl +
-                "delete_bpmn",MediaType.APPLICATION_FORM_URLENCODED,MediaType.APPLICATION_JSON,null,
-                queryMap,headerMap,cookieHeader);
+                        "delete_bpmn", MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON, null,
+                queryMap, headerMap, cookieHeader);
         Assert.assertTrue(response.getStatusCode() == PCIntegrationConstants.RESPONSE_CODE_OK,
                 "Expected 200 OK, Received " + response.getStatusCode());
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
         Assert.assertTrue(responseObject.get(PCIntegrationConstants.RESPONSE_ERROR).toString().
-                equals("false"),"Couldn't delete BPMN");
+                equals("false"), "Couldn't delete BPMN");
     }
 
     private Element getAssociateProcess(String processType) throws Exception {
