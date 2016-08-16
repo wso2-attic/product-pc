@@ -46,9 +46,15 @@ if (docUrl == '') {
 
 try {
     var processid = "NA";
-    var files = request.getAllFiles();
-    for (var name in files) {
-        processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, files[name].getStream(), docExtension, user.username);
+    var temp = {};
+    if(docUrl == "NA") {
+        var files = request.getAllFiles();
+        for (var name in files) {
+            processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, files[name].getStream(), docExtension, user.username);
+        }
+    }
+    else{
+        processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, temp, docExtension, user.username);
     }
     
     responseObj.error = false;

@@ -480,7 +480,7 @@
         <fileSet>
             <directory>../extensions/themes/store/default</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/explorer/themes/default
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/explorer/themes/store
             </outputDirectory>
         </fileSet>
         <fileSet>

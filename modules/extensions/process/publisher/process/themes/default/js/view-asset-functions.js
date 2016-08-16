@@ -337,7 +337,7 @@ function viewPDFDocument(relativePath, heading, iteration) {
 
 function viewGoogleDocument(googleDocUrl, heading, iteration) {
     var googleDocDivElement = document.getElementById("googleDocViewer");
-    var customGoogleDocUrl = googleDocUrl + "&embedded=true";
+    var customGoogleDocUrl = googleDocUrl + "?embedded=true";
     var customHeading = "Document Name : " + heading;
     var modal = '<div id="docViewModal' + iteration + '" class="modal fade" role="dialog">';
     modal += '<div class="modal-dialog" style="width:840px;height:600px">';
