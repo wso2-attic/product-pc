@@ -156,7 +156,7 @@
             <excludes>
                 <exclude>**/config/store.json</exclude>
                 <exclude>**/config/storage.json</exclude>
-                <exclude>**/partials/product-title.hbs</exclude>
+                <!--<exclude>**/partials/product-title.hbs</exclude>-->
             </excludes>
         </fileSet>
         <fileSet>
@@ -173,6 +173,12 @@
                 <exclude>**/config/storage.json</exclude>
                 <exclude>**/controllers/acs.jag</exclude>
             </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../extensions/themes/store/default</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/explorer/themes/default
+            </outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts</directory>
