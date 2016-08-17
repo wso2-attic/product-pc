@@ -460,7 +460,7 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../components/analytics/capp/org.wso2.carbon.pc.analytics.capp/target</directory>
+            <directory>../components/analytics/core/generic/org.wso2.carbon.pc.analytics.core.generic/target</directory>
             <outputDirectory> ${pom.artifactId}-${pom.version}/repository/deployment/server/carbonapps</outputDirectory>
             <includes>
                 <include>**/*.car</include>
