@@ -6,7 +6,7 @@
     <property name="cApp_out" value="PC_Analytics"/>
 
     <target name="clean">
-        <delete dir="${target-dir}" />
+        <delete dir="${target-dir}/${cApp_out}.car" />
     </target>
 
     <target name="zip" depends="clean">
