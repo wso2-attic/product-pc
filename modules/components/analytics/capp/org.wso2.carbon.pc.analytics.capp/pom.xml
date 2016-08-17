@@ -18,18 +18,6 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>auto-clean</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.7</version>
                 <executions>
@@ -39,21 +27,6 @@
                             <target>
                                 <ant antfile="src/build/build.xml" target="zip" />
                             </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>clean_target</id>
-                        <phase>install</phase>
-                        <configuration>
-                            <tasks>
-                                <delete file="target/${project.artifactId}-${pc.version}.jar" />
-                                <delete dir="target/archive-tmp" />
-                                <delete dir="target/maven-archiver" />
-                                <delete dir="target/surefire" />
-                            </tasks>
                         </configuration>
                         <goals>
                             <goal>run</goal>
