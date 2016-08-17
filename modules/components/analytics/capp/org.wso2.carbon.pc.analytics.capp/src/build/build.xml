@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="create-capp" default="zip" basedir="../..//">
+<project name="create-capp" default="zip" basedir="../">
     <property name="project-name" value="${ant.project.name}" />
     <property name="target-dir" value="target" />
-    <property name="cApp_dir" value="../src/capp" />
+    <property name="cApp_dir" value="src/capp" />
     <property name="cApp_out" value="PC_Analytics"/>
 
     <target name="clean">

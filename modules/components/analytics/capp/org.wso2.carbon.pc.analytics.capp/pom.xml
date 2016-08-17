@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wso2.pc</groupId>
+        <artifactId>wso2pc-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../../../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>org.wso2.carbon.pc.analytics.capp</artifactId>
+    <name>WSO2 Carbon - Process Center Analytics cApp</name>
+    <url>http://wso2.org</url>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>auto-clean</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <target>
+                                <ant antfile="src/build/build.xml" target="zip" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>clean_target</id>
+                        <phase>install</phase>
+                        <configuration>
+                            <tasks>
+                                <delete file="target/${project.artifactId}-${pc.version}.jar" />
+                                <delete dir="target/archive-tmp" />
+                                <delete dir="target/maven-archiver" />
+                                <delete dir="target/surefire" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
