@@ -137,13 +137,13 @@ public class ProcessServerImpl implements ProcessServer {
             WorkflowServiceClient workflowServiceClient = new WorkflowServiceClient(loginServiceClient.authenticate
                     (this.username, this.password.toCharArray()), this.url, null);
             BPMNDeployment[] deploymentsByName = workflowServiceClient.getDeploymentsByName(packageName);
-            Arrays.sort(deploymentsByName, new Comparator<BPMNDeployment>() {
-                public int compare(BPMNDeployment bpmnDeployment1, BPMNDeployment bpmnDeployment2) {
-                    return Integer.parseInt(bpmnDeployment2.getDeploymentId()) - Integer.parseInt(bpmnDeployment1
-                            .getDeploymentId());
-                }
-            });
             if (deploymentsByName != null && deploymentsByName.length > 0) {
+                Arrays.sort(deploymentsByName, new Comparator<BPMNDeployment>() {
+                    public int compare(BPMNDeployment bpmnDeployment1, BPMNDeployment bpmnDeployment2) {
+                        return Integer.parseInt(bpmnDeployment2.getDeploymentId()) - Integer.parseInt(bpmnDeployment1
+                                .getDeploymentId());
+                    }
+                });
                 return deploymentsByName[0].getDeploymentId();
             }
         } catch (LoginAuthenticationExceptionException e) {
