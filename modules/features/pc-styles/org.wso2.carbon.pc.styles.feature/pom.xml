@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.pc</groupId>
         <artifactId>wso2pc-parent</artifactId>
-        <version>1.0.0-alpha</version>
+        <version>1.0.0-SNAPSHOT</version>
         <relativePath>../../../..</relativePath>
     </parent>
 
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.wso2.pc</groupId>
             <artifactId>org.wso2.carbon.pc.styles</artifactId>
-            <version>1.0.0-alpha</version>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

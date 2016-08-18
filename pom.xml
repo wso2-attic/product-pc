@@ -26,7 +26,7 @@
     <groupId>org.wso2.pc</groupId>
     <artifactId>wso2pc-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-alpha</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>WSO2 Process Center</name>
     <url>http://wso2.com/products/process-center</url>
     <description>WSO2 Process Center</description>
@@ -678,7 +678,7 @@
         <url>https://github.com/wso2/product-pc.git</url>
         <connection>scm:git:https://github.com/wso2/product-pc.git</connection>
         <developerConnection>scm:git:https://github.com/wso2/product-pc.git</developerConnection>
-        <tag>v1.0.0-alpha</tag>
+        <tag>HEAD</tag>
     </scm>
     <repositories>
         <repository>
@@ -786,7 +786,7 @@
     </issueManagement>
     <properties>
 
-        <pc.version>1.0.0-alpha</pc.version>
+        <pc.version>1.0.0-SNAPSHOT</pc.version>
 
         <!-- Properties taken from ES -->
 

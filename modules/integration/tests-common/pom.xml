@@ -19,7 +19,7 @@
 
     <parent>
         <groupId>org.wso2.pc</groupId>
-        <version>1.0.0-alpha</version>
+        <version>1.0.0-SNAPSHOT</version>
         <artifactId>integration</artifactId>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -28,7 +28,7 @@
     <groupId>org.wso2.pc</groupId>
     <artifactId>tests-common</artifactId>
     <name>Tests-Common</name>
-    <version>1.0.0-alpha</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>integration-test-utils</module>

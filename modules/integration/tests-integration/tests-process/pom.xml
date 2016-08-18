@@ -21,12 +21,12 @@
     <groupId>org.wso2.pc</groupId>
     <artifactId>tests-process</artifactId>
     <name>Tests-Process</name>
-    <version>1.0.0-alpha</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <parent>
         <groupId>org.wso2.pc</groupId>
         <artifactId>tests-integration</artifactId>
-        <version>1.0.0-alpha</version>
+        <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <build>
@@ -76,7 +76,7 @@
         <dependency>
             <groupId>org.wso2.pc</groupId>
             <artifactId>integration-test-utils</artifactId>
-            <version>1.0.0-alpha</version>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

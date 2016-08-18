@@ -22,11 +22,11 @@
     <parent>
         <groupId>org.wso2.pc</groupId>
         <artifactId>wso2pc-parent</artifactId>
-        <version>1.0.0-alpha</version>
+        <version>1.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <version>1.0.0-alpha</version>
+    <version>1.0.0-SNAPSHOT</version>
     <artifactId>styles</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 PC - Integration Parent</name>

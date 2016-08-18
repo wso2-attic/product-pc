@@ -21,11 +21,11 @@
     <groupId>org.wso2.pc</groupId>
     <artifactId>tests-integration</artifactId>
     <name>Tests-Integration</name>
-    <version>1.0.0-alpha</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <parent>
         <groupId>org.wso2.pc</groupId>
-        <version>1.0.0-alpha</version>
+        <version>1.0.0-SNAPSHOT</version>
         <artifactId>integration</artifactId>
     </parent>
    <modules>
