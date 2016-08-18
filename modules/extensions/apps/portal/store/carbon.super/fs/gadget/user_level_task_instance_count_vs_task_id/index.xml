@@ -89,8 +89,11 @@
             <a data-toggle="collapse" data-target="#inline-form" href="#">
                             <i class="fw fw-filter" aria-hidden="true"></i>&nbsp;Add Filter
                         </a>
-                        <div id="inline-form" class="form-inline collapse" role="form">
-                             <div class="form-group" style="padding-right:0">
+                <div id="inline-form" class="form-inline collapse" role="form">
+                    <div class="form-group" style="padding-right:0">
+                        <select id="ProcessList" class="selectpicker form-control"></select>
+                    </div>
+                    <div class="form-group">
                         <select id="UserList" class="selectpicker form-control"></select>
                     </div>
                     <div class="form-group">
@@ -136,7 +139,7 @@
                 style: 'btn',
                 size: 4
             });
-            loadUserList("UserList");
+            loadProcessList("ProcessList");
         }
     </script>
 </body>

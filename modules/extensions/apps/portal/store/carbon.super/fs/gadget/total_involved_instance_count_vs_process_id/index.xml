@@ -143,7 +143,8 @@
 
             var today = new Date();
             $("#to").val(today.getTime());
-            var startDate = new Date(today.getFullYear(),(today.getMonth()+1-3),today.getDate());
+            var startDate = new Date(today);
+            startDate.setDate(startDate.getDate() - 90);
             $("#from").val(startDate.getTime());
 
             loadUserList("UserList");

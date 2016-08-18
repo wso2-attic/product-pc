@@ -22,6 +22,7 @@ function drawGraph() {
 
     if (userId != '') {
         var body = {
+            'processId' : $('#ProcessList').val(),
             'userId': userId,
             'order': $('#TaskDefOrder').val(),
             'count': parseInt($('#TaskDefCount').val())
@@ -138,6 +139,32 @@ function loadList(dropdownElementID) {
             else {
                 console.log('Empty User ID list.');
             }
+        },
+        error: function (xhr, status, error) {
+            var errorJson = eval("(" + xhr.responseText + ")");
+            alert(errorJson.message);
+        }
+    });
+}
+
+function loadProcessList(dropdownId) {
+    var dropdownElementID = '#' + dropdownId;
+    $.ajax({
+        type: 'POST',
+        url: "../../bpmn-analytics-explorer/process_definition_key_list",
+        success: function (data) {
+            if (!$.isEmptyObject(data)) {
+                var dataStr = JSON.parse(data);
+                for (var i = 0; i < dataStr.length; i++) {
+                    var opt = dataStr[i].processDefKey;
+                    var el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    $(dropdownElementID).append(el);
+                }
+                $(dropdownElementID).selectpicker("refresh");
+            }
+            loadUserList("UserList");
         },
         error: function (xhr, status, error) {
             var errorJson = eval("(" + xhr.responseText + ")");
