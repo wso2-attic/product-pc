@@ -243,7 +243,8 @@
                                value="{{processDefinitionId}}" readonly>
                     {{else}}
                         <input onblur="blurIt()" type="text" placeholder="Enter Process Definition ID"
-                               name="process_definition_id" id="processDefinitionId" class="form-control" required="">
+                               name="process_definition_id" id="processDefinitionId" class="form-control" required=""
+                               value="{{processDeploymentID}}" readonly>
                     {{/if}}
                 </div>
             </div>
