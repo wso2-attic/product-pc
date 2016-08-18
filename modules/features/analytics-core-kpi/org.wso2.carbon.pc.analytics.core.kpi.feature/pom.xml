@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.wso2.pc</groupId>
         <artifactId>wso2pc-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0-alpha</version>
         <relativePath>../../../..</relativePath>
     </parent>
 

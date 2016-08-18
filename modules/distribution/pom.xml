@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.pc</groupId>
         <artifactId>wso2pc-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0-alpha</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -112,21 +112,14 @@
                                     </fileset>
                                 </copy>
                                 <mkdir dir="${tempdir2}" />
-                                <unzip
-                                        src="${tempdir}/${project.artifactId}-${pc.version}/repository/components/plugins/org.wso2.carbon.ui.menu.governance_${carbon.kernel.version}.jar"
-                                        dest="${tempdir2}" />
-                                <copy file="src/repository/resources/component.xml" toDir="${tempdir2}/META-INF/"
-                                      overwrite="true"/>
-                                <zip destfile="org.wso2.carbon.ui.menu.governance_${carbon.kernel.version}.jar"
-                                     basedir="${tempdir2}" />
-                                <copy
-                                    file="org.wso2.carbon.ui.menu.governance_${carbon.kernel.version}.jar"
-                                        toDir="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/"
-                                    overwrite="true" />
+                                <unzip src="${tempdir}/${project.artifactId}-${pc.version}/repository/components/plugins/org.wso2.carbon.ui.menu.governance_${carbon.kernel.version}.jar" dest="${tempdir2}" />
+                                <copy file="src/repository/resources/component.xml" toDir="${tempdir2}/META-INF/" overwrite="true" />
+                                <zip destfile="org.wso2.carbon.ui.menu.governance_${carbon.kernel.version}.jar" basedir="${tempdir2}" />
+                                <copy file="org.wso2.carbon.ui.menu.governance_${carbon.kernel.version}.jar" toDir="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/" overwrite="true" />
                                 <delete file="target/${project.artifactId}-${pc.version}.zip" />
                                 <delete dir="${tempdir}" />
                                 <delete dir="${tempdir2}" />
-                                <delete file="org.wso2.carbon.ui.menu.governance_${carbon.kernel.version}.jar"/>
+                                <delete file="org.wso2.carbon.ui.menu.governance_${carbon.kernel.version}.jar" />
                             </tasks>
                         </configuration>
                     </execution>

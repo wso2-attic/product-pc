@@ -15,20 +15,18 @@
   ~ limitations under the License.
   ~
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.wso2.pc</groupId>
     <artifactId>tests-process</artifactId>
     <name>Tests-Process</name>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0-alpha</version>
     <packaging>jar</packaging>
     <parent>
         <groupId>org.wso2.pc</groupId>
         <artifactId>tests-integration</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0-alpha</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <build>
@@ -78,7 +76,7 @@
         <dependency>
             <groupId>org.wso2.pc</groupId>
             <artifactId>integration-test-utils</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.0.0-alpha</version>
         </dependency>
     </dependencies>
 </project>
