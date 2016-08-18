@@ -289,12 +289,12 @@ $(document).ready(function () {
                 processPath: processPath
             },
             success: function (result) {
-                $("#tab-properties").html("<br>" + result);
+                $("#tab-text").html("<br>" + result);
                 $("#btnView").show();
                 $("#btnCollapse").hide();
             }
         });
     } else {
-        $("#tab-properties").html("No text content available");
+        $("#tab-text").html("No text content available");
     }
 });
