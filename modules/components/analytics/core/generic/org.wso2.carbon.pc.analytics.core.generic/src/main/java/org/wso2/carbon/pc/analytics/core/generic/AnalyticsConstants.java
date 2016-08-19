@@ -41,6 +41,8 @@ public class AnalyticsConstants {
     public static final String AVG_WAITING_TIME = "avgWaitingTime";
     public static final String TOTAL_INVOLVED_TIME = "totalInvolvedTime";
     public static final String FINISHED_TIME = "finishTime";
+    public static final String AGGREGATE_BY_MONTH = "aggregateByMonth";
+    public static final String MONTH = "month";
     public static final String COMPLETED_TOTAL_TASKS = "completedTotalTasks";
     public static final String TOTAL_INSTANCE_COUNT = "totalInstanceCount";
     public static final String ALL = "*";

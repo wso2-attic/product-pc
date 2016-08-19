@@ -9,9 +9,17 @@ var config = {
     transform:[60,70]
 }
 
-var jsonObj = [];
+var jsonObj = [], monthAggregateChecked = false;
 
 window.onload = function() {
+
+    $('#AggregateByMonthCheckBox').change( function () {
+        if(this.checked) {
+            monthAggregateChecked = true;
+        } else {
+            monthAggregateChecked = false;
+        }
+    })
 
     $.getJSON("/portal/store/carbon.super/fs/gadget/process_instance_count_vs_date/js/meta-data.json.js", function(result){
         $.each(result, function(i, field){
@@ -65,7 +73,8 @@ function drawDateVsProcessInstanceCountResult() {
     var body = {
         'startTime': ($("#from").val()==0)?sDate.getTime():$("#from").val(),
         'endTime': ($("#to").val()==0)?new Date().getTime():$("#to").val(),
-        'processIdList': processIdArray
+        'processIdList': processIdArray,
+        'aggregateByMonth': monthAggregateChecked
     };
 
     $.ajax({

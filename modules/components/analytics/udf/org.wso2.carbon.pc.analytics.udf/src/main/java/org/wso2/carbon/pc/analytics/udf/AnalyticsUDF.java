@@ -72,6 +72,24 @@ public class AnalyticsUDF {
 	}
 
 	/**
+	 * Get month from date string
+	 * @param date in the format of eg:Thu Sep 24 09:35:56 IST 2015
+	 * @return long value of the initial date of the month
+     */
+	private static long getMonthFromDate (String date) {
+		String[] dateArray = date.split(AnalyticsUDFConstants.SPACE_SEPARATOR);
+		try {
+			Date d = new SimpleDateFormat("MMM yyyy").parse(dateArray[1] +
+					AnalyticsUDFConstants.SPACE_SEPARATOR + dateArray[dateArray.length-1]);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(d);
+			return calendar.getTimeInMillis();
+		} catch (ParseException e) {
+			return -1;
+		}
+	}
+
+	/**
 	 * Get date as a string
 	 *
 	 * @param date in the format of eg:Thu Sep 24 09:35:56 IST 2015
@@ -119,5 +137,15 @@ public class AnalyticsUDF {
 	 */
 	public long getHours(long duration) {
 		return TimeUnit.MILLISECONDS.toMinutes(duration);
+	}
+
+	/**
+	 * Get month from date as a long value
+	 *
+	 * @param date in the format of eg:Thu Sep 24 09:35:56 IST 2015
+	 * @return long value of the initial date of the month
+     */
+	public long getMonth(String date) {
+		return AnalyticsUDF.getMonthFromDate(date);
 	}
 }

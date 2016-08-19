@@ -49,9 +49,7 @@ function loadTaskList(dropdownId) {
     
     var body = {
         'processId': $('#process_name').val()
-    }
-
-    console.log($('#process_name').val());
+    };
 
     $.ajax({
         type: 'POST',
