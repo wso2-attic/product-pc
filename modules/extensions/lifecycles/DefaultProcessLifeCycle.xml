@@ -72,7 +72,18 @@
                     <transition event="Retire" target="Retired"/>
                     <transition event="Unpublish" target="Development"/>
                 </state>
-                <state id="Retired"/>
+                <state id="Retired">
+                    <datamodel>
+                        <data name="transitionExecution">
+                            <execution forEvent="Restore" class="org.wso2.jaggery.scxml.generic.GenericExecutor">
+                            </execution>
+                        </data>
+                        <data name="transitionPermission">
+                            <permission forEvent="Restore" roles="Internal/publisher,admin"/>
+                        </data>
+                    </datamodel>
+                    <transition event="Restore" target="Development"/>
+                </state>
             </scxml>
         </lifecycle>
     </configuration>
