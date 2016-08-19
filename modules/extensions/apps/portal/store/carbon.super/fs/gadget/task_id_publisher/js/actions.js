@@ -6,6 +6,13 @@ window.onload = function() {
     if(pname) {pname;
         $('#process_name').val(pname);
     }
+    var today = new Date();
+    var todayString = (today.getMonth()+1)+"/"+today.getDate()+"/"+today.getFullYear();
+    $('#taskEndDate').attr('placeholder',todayString);
+    var startDate = new Date(today);
+    startDate.setDate(startDate.getDate() - 90);
+    var startDateString = (startDate.getMonth()+1)+"/"+startDate.getDate()+"/"+startDate.getFullYear();
+    $('#taskStartDate').attr('placeholder',startDateString);
     loadTaskList('taskIdList');
 };
 

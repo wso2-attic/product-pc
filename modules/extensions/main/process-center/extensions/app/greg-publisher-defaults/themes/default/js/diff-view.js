@@ -1,5 +1,5 @@
 $("#diff-view-version").on('change',function(){
-    var diff_view_url = "/publisher/pages/diff?type=wsdl&path=" + $("#diff-view-version").val() + ',' +
+    var diff_view_url = "/designer/pages/diff?type=wsdl&path=" + $("#diff-view-version").val() + ',' +
         $("#diff-view-version").find(':selected').data('base_path');
     $("#diff-view-button").attr("href", diff_view_url);
 });

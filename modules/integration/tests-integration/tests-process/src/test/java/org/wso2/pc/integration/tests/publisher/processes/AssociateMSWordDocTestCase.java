@@ -54,7 +54,7 @@ public class AssociateMSWordDocTestCase extends PCIntegrationBaseTest {
     public void init() throws Exception {
         super.init();
         publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
-                replace("services", "publisher/apis");
+                replace("services", PCIntegrationConstants.DESIGNER_APIS);
         genericRestClient = new GenericRestClient();
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();

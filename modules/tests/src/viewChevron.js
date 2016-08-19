@@ -28,7 +28,7 @@
         function getRelatedDiagram(getXmlForProcess){
         $.ajax({
             type: "GET",
-            url: "/store/asts/chevron/apis/nameStore",
+            url: "/explorer/asts/chevron/apis/nameStore",
             data: {
                 type: "GET"
             },
@@ -46,7 +46,7 @@
         function getXmlForProcess(drawDiagramOnCanvas,process) {
             $.ajax({
                 type: "GET",
-                url: "/store/asts/chevron/apis/chevronxml",
+                url: "/explorer/asts/chevron/apis/chevronxml",
                 data: {
                     type: "GET",
                     name: process

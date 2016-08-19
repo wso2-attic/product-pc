@@ -1,0 +1,62 @@
+{
+  "server": {
+    "https": "%https.host%",
+    "http": "%http.host%",
+    "proxyServer" : ""
+  },
+  "roles": {
+  },
+  "user": {
+    "username": "admin",
+    "password": "admin"
+  },
+  "userRoles": [],
+
+  "permissions": {
+  },
+  "tenantConfigs": "/_system/config/sso/configs/sso.json",
+  "userSpace": {
+    "space": "portal",
+    "options": {
+      "type": "registry",
+      "serverUrl": "%https.host%",
+      "path": "/_system/governance/users",
+      "username": "admin",
+      "password": "admin"
+    },
+    "accessible":[
+      {
+        "context":"/_system/governance",
+        "collections":["gadgets","sites","ebooks"],
+        "actions":["http://www.wso2.org/projects/registry/actions/get",
+          "http://www.wso2.org/projects/registry/actions/add",
+          "http://www.wso2.org/projects/registry/actions/delete",
+          "authorize"]
+      }
+    ]
+  },
+  "registerPermissions":{
+    "authorizedRolePublisher":[],
+    "authorizedRoleStore":["Internal/store"]
+  },
+  "storeSpace": {
+    "space": "store",
+    "options": {
+      "type": "registry",
+      "serverUrl": "%https.host%",
+      "path": "/_system/governance/users",
+      "username": "admin",
+      "password": "admin"
+    }
+  },
+  "ssoConfiguration" : {
+    "enabled" : true,
+    "issuer" : "portal",
+    "identityProviderURL" : "%https.host%/sso/samlsso.jag",
+    "responseSigningEnabled" : "true",
+  },
+  "urls" : {
+    "designer" : "%https.host%/%context%/designer",
+    "store" : "%https.host%/%context%/store"
+  }
+}

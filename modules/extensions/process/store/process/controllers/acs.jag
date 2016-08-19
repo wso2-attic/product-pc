@@ -1,0 +1,137 @@
+<%
+/*
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+(function () {
+    var log = new Log('Exploere - acs.jag'),
+            configs = require('/config/store.js').config(),
+            samlResponse = request.getParameter('SAMLResponse'),
+            sessionId = session.getId(),
+            samlRequest = request.getParameter('SAMLRequest'),
+    //see https://wso2.org/jira/browse/IDENTITY-3454
+            relayState = decodeURIComponent(request.getParameter('RelayState')),
+    //relayState = session.get('initUrl'),
+            attr = configs.authentication.methods.sso.attributes,
+            sso = require('sso'),
+            rxtAPI = require('rxt'),
+            samlRespObj;
+    var context = rxtAPI.app.getContext();
+    var maliciousRelayState = (!!/^(ftp|http|https):\/\/[^ "]+$/.test(relayState)) ;
+    if(maliciousRelayState){
+        if (log.isDebugEnabled()) {
+            log.debug("Malicious URL redirection detected. Redirecting to home page.");
+        }
+        relayState = context;
+    }
+    var CarbonUtils = Packages.org.wso2.carbon.utils.CarbonUtils;
+    var keyStorePassword = CarbonUtils.getServerConfiguration().getFirstProperty("Security.KeyStore.Password");
+    var keyStoreName = CarbonUtils.getServerConfiguration().getFirstProperty("Security.KeyStore.Location");
+    var identityAlias = attr.identityAlias;
+    var     keyStoreProps = {
+        KEY_STORE_NAME: keyStoreName,
+        KEY_STORE_PASSWORD: keyStorePassword,
+        IDP_ALIAS: identityAlias,
+        USE_ST_KEY: !attr.useTenantKey
+    };
+    var sso_sessions = application.get('sso_sessions');
+    var server = require('rxt').server;
+
+    var loadTenant = function(username) {
+        var carbon = require('carbon');
+        var MultitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
+        var MultitenantConstants = Packages.org.wso2.carbon.base.MultitenantConstants;
+        var TenantAxisUtils = Packages.org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
+
+        var service;
+        var ctx;
+        var domain = MultitenantUtils.getTenantDomain(username);
+        if (domain != null && !MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(domain)) {
+            service = carbon.server.osgiService('org.wso2.carbon.utils.ConfigurationContextService');
+            ctx = service.getServerConfigContext();
+            TenantAxisUtils.setTenantAccessed(domain, ctx);
+        }
+    };
+
+    if (!sso_sessions) {
+        application.put('sso_sessions', {});
+        sso_sessions = application.get('sso_sessions');
+    }
+
+    if (samlResponse) {
+        samlRespObj = sso.client.getSamlObject(samlResponse);
+        //If response signing is enabled we  to validate it before performing
+        //login or logout operations
+        if (attr.responseSigningEnabled && !sso.client.validateSignature(samlRespObj, keyStoreProps)) {
+            log.error('SAML response object validation failure.');
+            response.sendError(401, 'You do not have permission to login to this application.Please contact your administrator and request permission.');
+            return;
+        }
+        if (!sso.client.isLogoutResponse(samlRespObj)) {
+
+            var sessionObj = sso.client.decodeSAMLLoginResponse(samlRespObj, samlResponse, sessionId);
+
+            if ((!sessionObj) && (!sessionObj.sessionIndex)) {
+                log.error('Unable to locate sessionIndex in SAML session object');
+                response.sendError(401, 'You do not have permission to login to this application.Please contact your administrator and request permission.');
+                return;
+            }
+            loadTenant(sessionObj.loggedInUser);
+            session.put("LOGGED_IN_USER", sessionObj.loggedInUser);
+            session.put("Loged", "true");
+
+            sso_sessions[sessionObj.sessionId] = sessionObj.sessionIndex;
+            var user = require('store').user;
+            var username = sessionObj.loggedInUser;
+            user.loadTenant(username);
+
+            var permissionAPI = require('rxt').permissions;
+            var carbon = require('carbon');
+            var usr = carbon.server.tenantUser(username);
+            var modifiedUsername = user.removeTenantDomainFromUsername(username);
+            var hasStoreLoginPermission = permissionAPI.hasAppPermission('APP_LOGIN', usr.tenantId,
+                modifiedUsername);
+            sso.client.login(sessionObj.sessionIndex, 'explorer', session);
+
+            if (hasStoreLoginPermission) {
+                user.emitLogin(username);
+                if (log.isDebugEnabled()) {
+                    log.debug('user is set :::' + username);
+                }
+                if(relayState && relayState.indexOf(server.getProxyContextPath()) < 0) {
+                    relayState = server.getProxyContextPath() + relayState;
+                }
+                response.sendRedirect(server.buildAppURL(relayState));
+            } else {
+                log.warn('User ' + sessionObj.loggedInUser + ' does not have permission to access the store application.Make sure the user has the store role.');
+                response.sendError(401, 'You do not have permission to login to this application.Please contact your administrator and request permission.');
+            }
+        } else {
+            sso.client.logout(session, 'explorer');
+            response.sendRedirect(server.buildAppURL(relayState));
+        }
+    }
+
+    //Handle SLO  requests
+    if (samlRequest) {
+        var index = sso.client.decodeSAMLLogoutRequest(sso.client.getSamlObject(samlRequest));
+        var jSessionId = application.get('sso_sessions')[index];
+        delete application.get('sso_sessions')[index];
+        sso.client.logout(index, new java.lang.String('explorer'));
+    }
+}());
+%>

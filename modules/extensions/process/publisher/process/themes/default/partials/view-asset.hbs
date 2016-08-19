@@ -1,3 +1,4 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
 <div id="overviewDiv" class="wiz-content" style="box-shadow: 0px 2px 2px 2px rgba(0, 0, 0, 0.1);">
     <div class="title">{{assets.tables.[0].fields.name.value}}&nbsp;:&nbsp;{{assets.tables.[0].fields.version.value}}</div>
     <div class="row" style="padding-left: 2%; padding-right: 1%;">
@@ -8,7 +9,7 @@
                     <div class="col-md-12 well well-sm">
                     {{#if customThumbnailAvailable}}
                         <img id="tuumbnailImg" alt="thumbnail" class="img-thumbnail img-rounded center-block"
-                             src="/publisher/storage/process/{{assets.id}}/images_thumbnail">
+                             src="/designer/storage/process/{{assets.id}}/images_thumbnail">
                     {{else}}
                         <!--{{> asset-default-thumbnail ..}}-->
                         <div id="default-img-div" class="ast-img setbgcolor" style="background: {{assets.uniqueColor}};width: 100%;" title="{{name}}">

@@ -1170,7 +1170,7 @@ jsPlumb.ready(function(e) {
         //ajax call to save value in api
         $.ajax({
             type: "POST",
-            url: "/publisher/assets/chevron/apis/chevronxml",
+            url: "/designer/assets/chevron/apis/chevronxml",
             data: {
                 content: strAsXml,
                 name: mainProcessName,

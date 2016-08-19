@@ -73,7 +73,7 @@ public class    InterProcessAssociationsTestCase extends PCIntegrationBaseTest {
     public void init() throws Exception {
         super.init();
         publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
-                replace("services", "publisher/apis");
+                replace("services", PCIntegrationConstants.DESIGNER_APIS);
         GenericRestClient genericRestClient = new GenericRestClient();
 
         //logging in to publisher and obtain session cookie

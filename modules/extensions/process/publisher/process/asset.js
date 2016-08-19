@@ -263,7 +263,15 @@ asset.renderer = function(ctx) {
         if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
             navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + id);
         }
-        navList.push('Config Analytics', 'btn-configAnalytics', util.buildUrl('config_analytics') + '/' + id);
+
+        importPackage(org.wso2.carbon.pc.core.assets);
+        var process = new Process(page.processName, page.processVersion, user.username);
+        var deploymentID = process.getProcessDeployedID();
+
+        if(deploymentID != null) {
+                 page.processDeploymentID = deploymentID;
+       		 navList.push('Config Analytics', 'btn-configAnalytics', util.buildUrl('config_analytics') + '/' + id);
+        }
         navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log') + '/' + id);
         //if (permissionAPI.hasActionPermissionforPath(path, 'write', ctx.session) && permissionAPI.hasAssetPagePermission(type,'update',user.tenantId,username)) {
         //navList.push('Version', 'btn-copy', util.buildUrl('copy') + '/' + id);
@@ -287,7 +295,15 @@ asset.renderer = function(ctx) {
                 if (permissionAPI.hasActionPermissionforPath(path, 'delete', ctx.session)) {
                     navList.push('Delete', 'btn-delete', util.buildUrl('delete') + '/' + page.assets.id);
                 }
-                navList.push('Config Analytics', 'btn-configAnalytics', util.buildUrl('config_analytics') + '/' + page.assets.id);
+
+                importPackage(org.wso2.carbon.pc.core.assets);
+                var process = new Process(page.processName, page.processVersion, user.username);
+                var deploymentID = process.getProcessDeployedID();
+
+                if(deploymentID != null) {
+                   page.processDeploymentID = deploymentID;
+             	   navList.push('Config Analytics', 'btn-configAnalytics', util.buildUrl('config_analytics') + '/' + page.assets.id);
+                }
                 navList.push('Audit Log', 'btn-auditlog', util.buildUrl('log') + '/' +page.assets.id);
 
             } else {

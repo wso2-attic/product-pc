@@ -19,22 +19,22 @@
     <TenantRegistrationPage>https://stratos-local.wso2.com/carbon/tenant-register/select_domain.jsp</TenantRegistrationPage>
     <ServiceProviders>
         <ServiceProvider>
-            <Issuer>store</Issuer>
+            <Issuer>explorer</Issuer>
             <AssertionConsumerServiceURLs>
-                <AssertionConsumerServiceURL>https://localhost:9443/store/acs</AssertionConsumerServiceURL>
+                <AssertionConsumerServiceURL>https://localhost:9443/explorer/acs</AssertionConsumerServiceURL>
             </AssertionConsumerServiceURLs>
-            <DefaultAssertionConsumerServiceURL>https://localhost:9443/store/acs</DefaultAssertionConsumerServiceURL>
+            <DefaultAssertionConsumerServiceURL>https://localhost:9443/explorer/acs</DefaultAssertionConsumerServiceURL>
             <SignResponse>true</SignResponse>
-            <CustomLoginPage>/store/login.jag</CustomLoginPage>
+            <CustomLoginPage>/explorer/login.jag</CustomLoginPage>
         </ServiceProvider>
         <ServiceProvider>
-            <Issuer>publisher</Issuer>
+            <Issuer>designer</Issuer>
             <AssertionConsumerServiceURLs>
-                <AssertionConsumerServiceURL>https://localhost:9443/publisher/acs</AssertionConsumerServiceURL>
+                <AssertionConsumerServiceURL>https://localhost:9443/designer/acs</AssertionConsumerServiceURL>
             </AssertionConsumerServiceURLs>
-            <DefaultAssertionConsumerServiceURL>https://localhost:9443/publisher/acs</DefaultAssertionConsumerServiceURL>
+            <DefaultAssertionConsumerServiceURL>https://localhost:9443/designer/acs</DefaultAssertionConsumerServiceURL>
             <SignResponse>true</SignResponse>
-            <CustomLoginPage>/publisher/controllers/login.jag</CustomLoginPage>
+            <CustomLoginPage>/designer/controllers/login.jag</CustomLoginPage>
         </ServiceProvider>
         <ServiceProvider>
             <Issuer>portal</Issuer>

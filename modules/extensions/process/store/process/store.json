@@ -14,7 +14,7 @@
   "server": {
     "https": "%https.host%",
     "http": "%http.host%",
-    "context" : "/store",
+    "context" : "/explorer",
     "proxyServer" : ""
   },
   "lifeCycleBehaviour": {
@@ -30,10 +30,10 @@
     "methods": {
       "sso": {
         "attributes": {
-          "issuer": "store",
+          "issuer": "explorer",
           "identityProviderURL": "%https.host%/samlsso",
           "responseSigningEnabled": true,
-          "acs": "%https.host%/store/acs",
+          "acs": "https://localhost:9443/explorer/acs",
           "identityAlias": "wso2carbon",
           "defaultNameIDPolicy": "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
           "useTenantKey": false,

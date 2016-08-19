@@ -60,7 +60,7 @@
                             <a href="#tab-properties" data-toggle="tab" data-type="basic">{{t "Description"}}</a>
                         </li>-->
                     <li class="active">
-                        <a href="#tab-properties" id="tab-text" data-toggle="tab"
+                        <a href="#tab-text" id="tab-processtext" data-toggle="tab"
                            data-type="basic">{{t "Text"}}</a>
                     </li>
                     <li>
@@ -80,7 +80,7 @@
                            data-type="basic">{{t "Flowchart"}}</a>
                     </li>
                     {{#hasAssetPermission . key="ASSET_REVIEWS" type=../../rxt.shortName username=../../cuser.username tenantId=../../cuser.tenantId}}
-                        <li class="active">
+                        <li>
                             <a href="#tab-reviews" data-toggle="tab" data-type="comments">{{t "User Reviews"}}</a>
                         </li>
                     {{/hasAssetPermission}}
@@ -94,21 +94,19 @@
                                 {{>overview .}}
                             </div>
                         </div>-->
-
-                    <div class="tab-pane active" id="tab-properties">
-
-                        <div id="divTextProcessPath" style="display: none;">
-                            {{properties_processtextpath}}
-                        </div>
-
-                        <div class="content">
-
-                        </div>
-                    </div>
-
-
-                    <!--Associations-->
                     {{#if ../../cuser.username}}
+                    <!--Process Text-->
+                        <div class="tab-pane active" id="tab-text">
+
+                            <div id="divTextProcessPath" style="display: none;">
+                                {{properties_processtextpath}}
+                            </div>
+
+                            <div class="content">
+
+                            </div>
+                        </div>
+                    <!--Associations-->
                         <div class="tab-pane" id="tab-associations">
                             <div id="divProcessName" style="display: none;">
                                 {{overview_name}}
@@ -205,7 +203,7 @@
 
                     {{else}}
                     <!--<div id="loginError"><b>Please Sign in to continue</b></div> -->
-                        <div class="tab-pane" id="tab-associations"><div class="content"><b>Please Sign in to continue</b></div></div>
+                        <div class="tab-pane active" id="tab-associations"><div class="content"><b>Please Sign in to continue</b></div></div>
                         <div class="tab-pane" id="tab-bpmn"><div class="content"><b>Please Sign in to continue</b></div></div>
                         <div class="tab-pane" id="tab-flowchart"><div class="content"><b>Please Sign in to continue</b></div></div>
                         <div class="tab-pane" id="tab-documents"><div class="content"><b>Please Sign in to continue</b></div></div>

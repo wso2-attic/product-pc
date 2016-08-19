@@ -56,7 +56,7 @@ try {
     else{
         processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, temp, docExtension, user.username);
     }
-    //response.sendRedirect('/publisher/assets/process/details/' + processid);
+    
     responseObj.error = false;
     print(stringify(responseObj));
 } catch (error) {

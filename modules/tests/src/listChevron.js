@@ -22,7 +22,7 @@ function getRelatedChevronDiagram(callback,element) {
     var checkName = $.trim(linkName);
     $.ajax({
         type: "POST",
-        url: "/publisher/asts/chevron/apis/nameStore",
+        url: "/designer/asts/chevron/apis/nameStore",
         data: {
             linkName: checkName,
             type: "POST"

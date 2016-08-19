@@ -37,7 +37,7 @@ try {
     for (var name in files) {
         processid = ps.createBPMN(bpmnName, bpmnVersion, files[name].getStream(), user.username);
     }
-    //response.sendRedirect('/publisher/assets/process/details/' + processid);
+
     responseObj.error = false;
     print(stringify(responseObj));
 } catch (error) {

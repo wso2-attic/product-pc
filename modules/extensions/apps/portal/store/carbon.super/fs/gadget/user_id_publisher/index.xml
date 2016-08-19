@@ -102,6 +102,14 @@
                 style: 'btn',
                 size: 4
             });
+            
+            var today = new Date();
+            var todayString = (today.getMonth()+1)+"/"+today.getDate()+"/"+today.getFullYear();
+            $('#endDate').attr('placeholder',todayString);
+            var startDate = new Date(today);
+            startDate.setDate(startDate.getDate() - 90);
+            var startDateString = (startDate.getMonth()+1)+"/"+startDate.getDate()+"/"+startDate.getFullYear();
+            $('#startDate').attr('placeholder',startDateString);
             loadUserList("UserList");
         }
 

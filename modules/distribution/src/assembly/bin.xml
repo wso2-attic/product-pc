@@ -132,10 +132,10 @@
             <outputDirectory>${pom.artifactId}-${pc.version}/repository/deployment/server/jaggeryapps/
             </outputDirectory>
             <excludes>
-                <exclude>publisher/extensions/app/publisher-apis/app.js</exclude>
-                <exclude>publisher/themes/default/partials/product-title.hbs</exclude>
-                <exclude>store/themes/store/partials/product-title.hbs</exclude>
+                <exclude>publisher/**</exclude>
+                <exclude>store/**</exclude>
                 <exclude>sso/jaggery.conf</exclude>
+                <exclude>sso/config/sso.json</exclude>
                 <exclude>portal/configs/designer.json</exclude>
                 <exclude>portal/store/carbon.super/fs/gadget/**</exclude>
                 <exclude>portal/css/dashboard.css</exclude>
@@ -145,6 +145,40 @@
                 <!--<exclude>publisher/config/publisher.json</exclude>-->
                 <!--<exclude>store/config/store.json</exclude>-->
             </excludes>
+        </fileSet>
+
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps/store
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pc.version}/repository/deployment/server/jaggeryapps/explorer
+            </outputDirectory>
+            <excludes>
+                <exclude>**/config/store.json</exclude>
+                <exclude>**/config/storage.json</exclude>
+                <!--<exclude>**/partials/product-title.hbs</exclude>-->
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps/publisher
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pc.version}/repository/deployment/server/jaggeryapps/designer
+            </outputDirectory>
+            <excludes>
+                <exclude>**/publisher-api/app.js</exclude>
+                <exclude>**/product-title.hbs</exclude>
+                <exclude>**/config/publisher.json</exclude>
+                <exclude>**/sso-auth-login-controller.jag</exclude>
+                <exclude>**/config/storage.json</exclude>
+                <exclude>**/controllers/acs.jag</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../extensions/themes/store/default</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/explorer/themes/default
+            </outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts</directory>
@@ -332,19 +366,20 @@
         <fileSet>
             <directory>../extensions/process/publisher</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/extensions/assets
             </outputDirectory>
         </fileSet>
         <fileSet>
-          <directory>../extensions/package/publisher</directory>
+            <directory>../extensions/package/publisher</directory>
             <outputDirectory>
-             ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/assets
-          </outputDirectory>
-         </fileSet>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/extensions/assets
+            </outputDirectory>
+        </fileSet>
+
         <fileSet>
             <directory>../extensions/process/store</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/assets
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/explorer/extensions/assets
             </outputDirectory>
             <excludes>
                 <!--exclude>**/partials/navigation.hbs</exclude>
@@ -357,41 +392,41 @@
         <fileSet>
             <directory>../extensions/apps/publisher</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/extensions/app
             </outputDirectory>
         </fileSet>
 
         <fileSet>
             <directory>../extensions/main/process-center/extensions/app/publisher-search</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app/publisher-search
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/extensions/app/publisher-search
             </outputDirectory>
         </fileSet>
 
         <fileSet>
             <directory>../extensions/main/process-center/extensions/app/publisher-search-apis</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app/publisher-search-apis
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/extensions/app/publisher-search-apis
             </outputDirectory>
         </fileSet>
 
         <fileSet>
             <directory>../extensions/apps/store</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/app
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/explorer/extensions/app
             </outputDirectory>
         </fileSet>
 
         <fileSet>
             <directory>../extensions/main/process-center/extensions/app/store-search</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/app/store-search
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/explorer/extensions/app/store-search
             </outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../extensions/main/process-center/extensions/app/store-search-apis</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/extensions/app/store-search-apis
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/explorer/extensions/app/store-search-apis
             </outputDirectory>
         </fileSet>
 
@@ -415,16 +450,17 @@
             </outputDirectory>
         </fileSet>
         <!-- permission related-->
+
         <fileSet>
             <directory>../extensions/main/process-center/extensions/app/greg-permissions</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app/greg-permissions
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/extensions/app/greg-permissions
             </outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../extensions/main/process-center/extensions/app/greg-publisher-defaults</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app/greg-publisher-defaults
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/extensions/app/greg-publisher-defaults
             </outputDirectory>
         </fileSet>
         <!-- global config to update product name in publisher -->
@@ -434,16 +470,17 @@
                 ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/views/themes/process-center-theme
             </outputDirectory>
         </fileSet>
+
         <fileSet>
             <directory>../extensions/themes/publisher/default</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/themes/default
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/themes/default
             </outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../extensions/themes/store/default</directory>
             <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/themes/store
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/explorer/themes/store
             </outputDirectory>
         </fileSet>
         <fileSet>
@@ -541,9 +578,10 @@
                 <include>outputui.war</include>
             </includes>
         </fileSet>
+
         <fileSet>
             <directory>../../modules/extensions/lifecycles</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/lifecycles</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/extensions/lifecycles</outputDirectory>
         </fileSet>
 
 
@@ -751,20 +789,21 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/rxts</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-        <!--permission related -->
+
+        <!-- designer -->
         <file>
             <source>../extensions/main/process-center/modules/greg-permission-util.js</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/modules</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/modules</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>../extensions/main/process-center/modules/app.js</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app/publisher-apis</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/extensions/app/publisher-apis</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>../extensions/main/process-center/modules/permission.jag</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/extensions/app/publisher-apis/apis</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/extensions/app/publisher-apis/apis</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
@@ -786,22 +825,6 @@
             <fileMode>644</fileMode>
         </file>
 
-        <!-- Following files are included to fix port offset/sso issue. Will hold the fix until ES support port
-               offset/sso -->
-        <!-- Configuring SSO for publisher-->
-        <!--<file>-->
-            <!--<source>../../modules/extensions/process/publisher/process/publisher.json</source>-->
-            <!--<outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/publisher/config</outputDirectory>-->
-            <!--<fileMode>644</fileMode>-->
-        <!--</file>-->
-
-        <!-- Configuring SSO for store-->
-        <!--<file>-->
-            <!--<source>../../modules/extensions/process/store/process/store.json</source>-->
-            <!--<outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/store/config</outputDirectory>-->
-            <!--<fileMode>644</fileMode>-->
-        <!--</file>-->
-
         <file>
             <source>../../modules/extensions/process/portal/process/locale_default.json</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal/extensions/locales</outputDirectory>
@@ -809,27 +832,6 @@
         </file>
 
         <!-- Files of PC ends from here -->
-
-
-        <!-- Event broker configuration for deployment sync -->
-        <!--<file>-->
-        <!--<source>-->
-        <!--../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/event-broker.xml-->
-        <!--</source>-->
-        <!--<outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>-->
-        <!--<filtered>true</filtered>-->
-        <!--<fileMode>644</fileMode>-->
-        <!--</file>-->
-
-        <!--<file>-->
-        <!--<source>-->
-        <!--../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/output-event-adapters.xml-->
-        <!--</source>-->
-        <!--<outputDirectory>${pom.artifactId}-${pom.version}/repository/conf-->
-        <!--</outputDirectory>-->
-        <!--<filtered>true</filtered>-->
-        <!--<fileMode>644</fileMode>-->
-        <!--</file>-->
 
         <file>
             <source>
@@ -916,29 +918,6 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-
-
-        <!-- default input/output adaptor configurations -->
-        <!--file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/cep-ha-management.xml
-            </source>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/conf/
-            </outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/cep/storm/storm-deployment-config.xml
-            </source>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/conf/cep/storm/
-            </outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file-->
 
         <file>
             <source>
@@ -1177,6 +1156,48 @@
         <file>
             <source>../extensions/package/package.rxt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/rxts</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>../extensions/sso/sso.json</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso/config</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>../extensions/main/process-center/extensions/app/publisher-common/sso-auth-login-controller.jag</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/extensions/app/publisher-common/pages</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>../../modules/extensions/process/publisher/process/publisher.json</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/config</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>../../modules/extensions/process/publisher/process/storage.json</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/config</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>../../modules/extensions/process/publisher/process/controllers/acs.jag</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/designer/controllers</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>../../modules/extensions/process/store/process/store.json</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/explorer/config</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>../../modules/extensions/process/store/process/storage.json</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/explorer/config</outputDirectory>
             <fileMode>644</fileMode>
         </file>
 

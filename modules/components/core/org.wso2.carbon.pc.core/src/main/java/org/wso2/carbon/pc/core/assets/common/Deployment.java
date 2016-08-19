@@ -399,6 +399,9 @@ public class Deployment extends AssetResource {
                                     response.put(ProcessCenterConstants.MESSAGE, "Package has not been deployed " +
                                             "in server. Try again later");
                                 }
+                            } else {
+                                response.put(ProcessCenterConstants.MESSAGE, "Package has not been deployed " +
+                                        "in server. Try again later");
                             }
                         }
                     } else if (deploymentID != null) {

@@ -224,7 +224,7 @@
         -->
         <productGroup name="PC" clusteringEnabled="false" default="true">
 
-            <instance name="store" type="standalone" nonBlockingTransportEnabled="false">
+            <instance name="explorer" type="standalone" nonBlockingTransportEnabled="false">
 
                 <hosts>
                     <host type="default">localhost</host>
@@ -236,7 +236,7 @@
                 <properties>
                 </properties>
             </instance>
-            <instance name="publisher" type="standalone" nonBlockingTransportEnabled="false">
+            <instance name="designer" type="standalone" nonBlockingTransportEnabled="false">
                 <hosts>
                     <host type="default">localhost</host>
                 </hosts>

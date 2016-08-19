@@ -65,9 +65,9 @@ function searchAssets() {
     var url;
     var query = buildQuery();
     if ($('#searchAssetType').val() === undefined) {
-        url = "/publisher/apis/assets?q=" + query;
+        url = "/designer/apis/assets?q=" + query;
     } else {
-        url = "/publisher/apis/assets?type=" + $('#searchAssetType').val()+ "&q=" + query ;
+        url = "/designer/apis/assets?type=" + $('#searchAssetType').val()+ "&q=" + query ;
     }
     $.ajax({
         url: url,

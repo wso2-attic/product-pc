@@ -226,7 +226,7 @@ jsPlumb.ready(function () {
         flowchartPath = "/_system/governance/flowchart/" + flowchartPath;
         var canvasId = "#editor_canvas";
         $.ajax({
-            url: '/publisher/assets/process/apis/get_process_flowchart',
+            url: '/designer/assets/process/apis/get_process_flowchart',
             type: 'GET',
             dataType: 'text',
             data: {'flowchartPath': flowchartPath},

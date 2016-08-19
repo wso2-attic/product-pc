@@ -15,7 +15,7 @@
  */
 function downloadDocument(relativePath) {
     $.ajax({
-        url: '/store/assets/process/apis/download_document?process_doc_path=' + relativePath,
+        url: '/explorer/assets/process/apis/download_document?process_doc_path=' + relativePath,
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
@@ -47,7 +47,7 @@ function downloadDocument(relativePath) {
 
 function viewPDFDocument(relativePath, heading, iteration) {
     $.ajax({
-        url: '/store/assets/process/apis/download_document?process_doc_path=' + relativePath,
+        url: '/explorer/assets/process/apis/download_document?process_doc_path=' + relativePath,
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
