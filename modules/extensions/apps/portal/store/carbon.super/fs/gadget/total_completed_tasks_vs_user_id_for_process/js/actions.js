@@ -25,7 +25,8 @@ window.onload = function() {
 
     var today = new Date();
     $("#to").val(today.getTime());
-    var startDate = new Date(today.getFullYear(),(today.getMonth()+1-3),today.getDate());
+    var startDate = new Date(today);
+    startDate.setDate(startDate.getDate() - 90);
     $("#from").val(startDate.getTime());
 
     $.getJSON("/portal/store/carbon.super/fs/gadget/total_completed_tasks_vs_user_id_for_process/js/meta-data-totalCompletedTasksVsUserIDFP.json.js", function(result){

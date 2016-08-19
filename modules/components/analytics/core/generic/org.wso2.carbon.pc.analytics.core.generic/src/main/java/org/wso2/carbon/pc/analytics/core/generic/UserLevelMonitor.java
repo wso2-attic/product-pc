@@ -342,6 +342,7 @@ public class UserLevelMonitor {
 		try {
 			if (AnalyticsUtils.isDASAnalyticsActivated()) {
 				JSONObject filterObj = new JSONObject(filters);
+				String processId = filterObj.getString(AnalyticsConstants.PROCESS_ID);
 				String userId = filterObj.getString(AnalyticsConstants.USER_ID);
 				String order = filterObj.getString(AnalyticsConstants.ORDER);
 				int taskCount = filterObj.getInt(AnalyticsConstants.NUM_COUNT);
@@ -350,14 +351,15 @@ public class UserLevelMonitor {
 				countField.setFieldName(AnalyticsConstants.ALL);
 				countField.setAggregate(AnalyticsConstants.COUNT);
 				countField.setAlias(AnalyticsConstants.TASK_INSTANCE_COUNT);
-
 				ArrayList<AggregateField> aggregateFields = new ArrayList<>();
 				aggregateFields.add(countField);
 
 				AggregateQuery query = new AggregateQuery();
 				query.setTableName(AnalyticsConstants.USER_INVOLVE_TABLE);
 				query.setGroupByField(AnalyticsConstants.TASK_DEFINITION_KEY);
-				query.setQuery("assignee:" + "\"'" + userId + "'\"");
+				String queryStr="assignee:" + "\"'" + userId + "'\"";
+				queryStr += " AND " + "processDefKey:" + "\"'" + processId + "'\"";
+				query.setQuery(queryStr);
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {
@@ -410,6 +412,7 @@ public class UserLevelMonitor {
 		try {
 			if (AnalyticsUtils.isDASAnalyticsActivated()) {
 				JSONObject filterObj = new JSONObject(filters);
+				String processId = filterObj.getString(AnalyticsConstants.PROCESS_ID);
 				String userId = filterObj.getString(AnalyticsConstants.USER_ID);
 				String order = filterObj.getString(AnalyticsConstants.ORDER);
 				int taskCount = filterObj.getInt(AnalyticsConstants.NUM_COUNT);
@@ -425,7 +428,9 @@ public class UserLevelMonitor {
 				AggregateQuery query = new AggregateQuery();
 				query.setTableName(AnalyticsConstants.USER_INVOLVE_TABLE);
 				query.setGroupByField(AnalyticsConstants.TASK_DEFINITION_KEY);
-				query.setQuery("assignee:" + "\"'" + userId + "'\"");
+				String queryStr="assignee:" + "\"'" + userId + "'\"";
+				queryStr += " AND " + "processDefKey:" + "\"'" + processId + "'\"";
+				query.setQuery(queryStr);
 				query.setAggregateFields(aggregateFields);
 
 				if (log.isDebugEnabled()) {

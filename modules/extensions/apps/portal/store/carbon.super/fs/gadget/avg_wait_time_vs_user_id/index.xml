@@ -74,8 +74,8 @@
                               <div class="form-group">
                                  <select id="userIdAvgExecTimeCount" class="selectpicker form-control" onchange="selectPickerValChange(this)">
                                     <option value="other">Set a new value</option>
-                                    <option selected="selected" value="3">3</option>
-                                    <option value="5">5</option>
+                                    <option value="3">3</option>
+                                    <option selected="selected" value="5">5</option>
                                     <option value="10">10</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
