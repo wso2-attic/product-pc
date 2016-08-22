@@ -812,4 +812,15 @@ public class Deployment extends AssetResource {
 
         return response.toString();
     }
+
+    public boolean isBPSRuntimeEnvironmentEnabled() {
+        return ProcessCenterServerHolder.getInstance().getProcessCenter()
+                                        .getProcessCenterConfiguration()
+                                        .isRuntimeEnvironmentEnabled();
+    }
+
+    public String getBPSRuntimeEnvironmentURL() {
+        return ProcessCenterServerHolder.getInstance().getProcessCenter()
+                                        .getProcessCenterConfiguration().getRuntimeEnvironmentURL();
+    }
 }

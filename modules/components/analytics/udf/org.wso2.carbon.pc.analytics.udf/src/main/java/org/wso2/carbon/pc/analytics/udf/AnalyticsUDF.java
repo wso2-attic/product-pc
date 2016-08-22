@@ -79,7 +79,7 @@ public class AnalyticsUDF {
 	private static long getMonthFromDate (String date) {
 		String[] dateArray = date.split(AnalyticsUDFConstants.SPACE_SEPARATOR);
 		try {
-			Date d = new SimpleDateFormat("MMM yyyy").parse(dateArray[1] +
+			Date d = new SimpleDateFormat(AnalyticsUDFConstants.DATE_FORMAT_MONTH).parse(dateArray[1] +
 					AnalyticsUDFConstants.SPACE_SEPARATOR + dateArray[dateArray.length-1]);
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(d);
