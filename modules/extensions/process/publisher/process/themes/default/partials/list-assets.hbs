@@ -25,7 +25,7 @@
 
     function getProcessTags() {
         $.ajax({
-            url: '/publisher/assets/process/apis/get_process_tags',
+            url: '/designer/assets/process/apis/get_process_tags',
             type: 'GET',
             success: function (data) {
                 var response = JSON.parse(data);
@@ -48,7 +48,7 @@
         });
         /*
         $.ajax({
-            url: '/publisher/assets/process/apis/get_role_permission',
+            url: '/designer/assets/process/apis/get_role_permission',
             type: 'POST',
             data: {
                 'processName': 'test'
@@ -81,7 +81,7 @@
 
         var processArray = processTagsObj[tagName];
         for (var process in processArray) {
-            var href = "/publisher/assets/process/details/" + processArray[process].processid;
+            var href = "/designer/assets/process/details/" + processArray[process].processid;
             for(var i=0; i < wr_assets.length; i++) {
                 var html = '<div class="ctrl-wr-asset">'+ $(wr_assets[i]).html()+'</div>';
                 if(href===$(wr_assets[i]).find('.ast-img').attr('href')) {

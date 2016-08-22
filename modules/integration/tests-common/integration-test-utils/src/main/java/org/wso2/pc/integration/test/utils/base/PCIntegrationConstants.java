@@ -29,8 +29,8 @@ public class PCIntegrationConstants {
     public static final String DOC_CONTENT = "doccontent";
     public static final String APPLICATION_PDF_TYPE = "application/pdf";
     public static final String APPLICATION_MSWORD_TYPE = "application/msword";
-    public static final String ADVENCED_GENERIC_SEARCH_API_PATH = "publisher/apis/assets";
-    public static final String ADVENCED_CONTENT_SEARCH_API_PATH = "publisher/apis/search";
+    public static final String ADVENCED_GENERIC_SEARCH_API_PATH = "designer/apis/assets";
+    public static final String ADVENCED_CONTENT_SEARCH_API_PATH = "designer/apis/search";
     public static final String TEST_PDF_NAME = "TestFile.pdf";
     public static final String CONTENT_SEARCH_CATEGORY_PDF = "PDF";
     public static final String CONTENT_SEARCH_CATEGORY_DOCUMENT = "Document";
@@ -43,6 +43,8 @@ public class PCIntegrationConstants {
     //Registry path locations
     public static final String REG_FLOWCHART_PATH = "/_system/governance/flowchart/";
     public static final String REG_PROCESS_PATH = "/_system/governance/processes/";
+    public static final String DESIGNER_APIS = "designer/apis";
+    public static final String DESIGNER_ASSETS = "designer/assets";
     public static final String ID = "id";
 
 }

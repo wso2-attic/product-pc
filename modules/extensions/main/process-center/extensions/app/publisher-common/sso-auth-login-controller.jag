@@ -1,0 +1,72 @@
+<%
+/*
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+(function(){
+    var config = require('/config/publisher.js').config();
+    var sso = require("sso");
+    var sessionId = session.getId();
+    var requestedPage = request.getParameter("requestedPage");
+    var referer=require('utils').request.getReferer(request);//request.getHeader('referer');
+    var ignoreReferer = request.getParameter("ignoreReferer");
+    var attr = config.authentication.methods.sso.attributes;
+    var log = new Log('Publisher - sso-auth-login-controller.jag');
+    var carbon = require('carbon');
+    var rxt = require('rxt');
+    var superTenant = carbon.server.superTenant;
+    var encodedSAMLAuthRequest;
+    if (attr.responseSigningEnabled) {
+        encodedSAMLAuthRequest = sso.client.getEncodedSignedSAMLAuthRequest(attr.issuer,
+            attr.identityProviderURL, attr.acs, attr.isPassive,
+            superTenant.tenantId, superTenant.domain, attr.defaultNameIDPolicy);
+    } else {
+        encodedSAMLAuthRequest = sso.client.getEncodedSAMLAuthRequest(attr.issuer);
+    }
+
+    var postUrl = attr.identityProviderURL;
+    if(log.isDebugEnabled()) {
+        log.debug('Login URL: '+postUrl);
+    }
+    if(ignoreReferer){
+        referer = null;
+    }
+    if(referer && referer.indexOf(rxt.server.getProxyContextPath()) < 0){
+        referer = rxt.server.getProxyContextPath() + referer;
+    }
+    var relayState = (referer? referer:'/designer');
+    if (!session.get("Loged")) {
+    %>
+        <div>
+                <p>You are now being redirected to Identity Server. If the
+                redirection fails, please click on the button below.</p>
+                <form method="post" action="<%=postUrl%>">
+                    <p>
+                       <input type="hidden" name="SAMLRequest" value="<%= encodedSAMLAuthRequest %>"/>
+                       <input type="hidden" name="RelayState" value="<%= escape(relayState) %>"/>
+                       <input type="hidden" name="SSOAuthSessionID" value="<%= sessionId %>"/>
+                       <button type="submit">Redirect manually</button>
+                   </p>
+               </form>
+           </div>
+           <script type = "text/javascript" >
+                  document.forms[0].submit();
+           </script>
+    <%
+     }
+}());
+%>

@@ -36,68 +36,70 @@
             <br>
         {{/unless}}
 
-        <table id="dataTable" class="tablex cu-data-tableX js-unbounded-table" width="40%">
-            <thead>
-            <tr style="background-color:#66c2ff">
-                <th class="proc-var-th"></th>
-                <th class="proc-var-th">Variable Name</th>
-                <th class="proc-var-th">Type</th>
-                <th class="proc-var-th">Analyzing Data</th>
-                <th class="proc-var-th">Drill Down Variable</th>
-            </tr>
-            </thead>
-            {{#if DASAnalyticsConfigured}}
-                {{#each processVariableList.processVariables}}
+        <div style="width: 55%;">
+            <table id="dataTable" class="table table-striped table-bordered">
+                <thead>
+                <tr style="background-color:#66c2ff">
+                    <th class="col-sm-1"></th>
+                    <th class="col-sm-2">Variable Name</th>
+                    <th class="col-sm-1">Type</th>
+                    <th class="col-sm-1">Analyzing Data</th>
+                    <th class="col-sm-1">Drill Down Variable</th>
+                </tr>
+                </thead>
+                {{#if DASAnalyticsConfigured}}
+                    {{#each processVariableList.processVariables}}
+                        <tr>
+                            <td><input type="checkbox" name="chk" disabled="true"  style="width: 30px; height: 30px;"/></td>
+                            <td><input style="display:table-cell; width:100%; padding-left: 8px;" type="text" name="txt"
+                                       value="{{this.name}}" disabled="true" onkeydown="processVariableAutoComplete(this)"/></td>
+                            <td>
+                                <select name="varType" style="display:table-cell; width:100%" disabled="true">
+                                    <option value="int">{{this.type}}</option>
+                                </select>
+                            </td>
+
+
+                            {{#if_equal this.isAnalyzeData "true"}}
+                                <td align="center">
+                                    <input type="checkbox" name="chkAnalyzedData" disabled="true" checked/></td>
+                            {{else}}
+                                <td align="center">
+                                    <input type="checkbox" name="chkAnalyzedData" disabled="true"/></td>
+                            {{/if_equal}}
+
+                            {{#if_equal this.isDrillDownVariable "true"}}
+                                <td align="center">
+                                    <input type="checkbox" name="chkDrillData" disabled="true" checked/></td>
+                            {{else}}
+                                <td align="center">
+                                    <input type="checkbox" name="chkDrillData" disabled="true"/></td>
+                            {{/if_equal}}
+                        </tr>
+                    {{/each}}
+                {{else}}
                     <tr>
-                        <td><input type="checkbox" name="chk" disabled="true"/></td>
-                        <td><input style="display:table-cell; width:100%; padding-left: 8px;" type="text" name="txt"
-                                   value="{{this.name}}" disabled="true" onkeydown="processVariableAutoComplete(this)"/></td>
+                        <td><input type="checkbox" name="chk"/></td>
+                        <td><input style="display:table-cell; width:100%; padding-left: 8px;" type="text" name="txt" onkeydown="processVariableAutoComplete(this)"/></td>
                         <td>
-                            <select name="varType" style="display:table-cell; width:100%" disabled="true">
-                                <option value="int">{{this.type}}</option>
+                            <select id="selVarType_0" style="display:table-cell; width:100%" name="varType"
+                                    onchange="disableCheckBox(0,this)">
+                                <option value="int">int</option>
+                                <option value="long">long</option>
+                                <option value="double">double</option>
+                                <option value="float">float</option>
+                                <option value="string">string</option>
+                                <option value="bool">bool</option>
                             </select>
                         </td>
-
-
-                        {{#if_equal this.isAnalyzeData "true"}}
-                            <td align="center" style="outline: thin solid #6b94f1">
-                                <input type="checkbox" name="chkAnalyzedData" disabled="true" checked/></td>
-                        {{else}}
-                            <td align="center" style="outline: thin solid #6b94f1">
-                                <input type="checkbox" name="chkAnalyzedData" disabled="true"/></td>
-                        {{/if_equal}}
-
-                        {{#if_equal this.isDrillDownVariable "true"}}
-                            <td align="center" style="outline: thin solid #6b94f1">
-                                <input type="checkbox" name="chkDrillData" disabled="true" checked/></td>
-                        {{else}}
-                            <td align="center" style="outline: thin solid #6b94f1">
-                                <input type="checkbox" name="chkDrillData" disabled="true"/></td>
-                        {{/if_equal}}
+                        <td align="center"><input type="checkbox" id="chkAnalyzedData_0"
+                                                  name="chkAnalyzedData"/></td>
+                        <td align="center"><input type="checkbox" id="chkDrillData_0"
+                                                  name="chkDrillData" disabled/></td>
                     </tr>
-                {{/each}}
-            {{else}}
-                <tr>
-                    <td><input type="checkbox" name="chk"/></td>
-                    <td><input style="display:table-cell; width:100%; padding-left: 8px;" type="text" name="txt" onkeydown="processVariableAutoComplete(this)"/></td>
-                    <td>
-                        <select id="selVarType_0" style="display:table-cell; width:100%" name="varType"
-                                onchange="disableCheckBox(0,this)">
-                            <option value="int">int</option>
-                            <option value="long">long</option>
-                            <option value="double">double</option>
-                            <option value="float">float</option>
-                            <option value="string">string</option>
-                            <option value="bool">bool</option>
-                        </select>
-                    </td>
-                    <td align="center" style="outline: thin solid #66c2ff"><input type="checkbox" id="chkAnalyzedData_0"
-                                                                                  name="chkAnalyzedData"/></td>
-                    <td align="center" style="outline: thin solid #66c2ff"><input type="checkbox" id="chkDrillData_0"
-                                                                                  name="chkDrillData" disabled/></td>
-                </tr>
-            {{/if}}
-        </table>
+                {{/if}}
+            </table>
+        </div>
     </div>
 
     <h2 class="field-title">
@@ -241,7 +243,8 @@
                                value="{{processDefinitionId}}" readonly>
                     {{else}}
                         <input onblur="blurIt()" type="text" placeholder="Enter Process Definition ID"
-                               name="process_definition_id" id="processDefinitionId" class="form-control" required="">
+                               name="process_definition_id" id="processDefinitionId" class="form-control" required=""
+                               value="{{processDeploymentID}}" readonly>
                     {{/if}}
                 </div>
             </div>

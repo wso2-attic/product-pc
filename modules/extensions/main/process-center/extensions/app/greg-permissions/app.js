@@ -8,7 +8,13 @@ app.server = function (ctx) {
                     path: 'permissions.jag',
                     secured: true
                 }
-            ]
+            ],
+            apis: [
+                {
+                    url: 'permissions',
+                    path: 'permission.jag'
+                }
+               ]
         }
     };
 };

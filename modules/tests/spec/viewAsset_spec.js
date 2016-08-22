@@ -29,7 +29,7 @@ describe('view chevron diagram - store', function() {
         spyOn($, "ajax");
         var diagramName = 'product delivery';
         getXmlForProcess(diagramName);
-        expect($.ajax.calls.mostRecent().args[0]["url"]).toEqual("/store/asts/chevron/apis/chevronxml");
+        expect($.ajax.calls.mostRecent().args[0]["url"]).toEqual("/explorer/asts/chevron/apis/chevronxml");
     });
     it('Confirm ajax call success of retrieving diagram data', function() {
         spyOn($, "ajax").and.callFake(function(options) {

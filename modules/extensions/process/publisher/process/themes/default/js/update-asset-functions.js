@@ -99,7 +99,7 @@ function loadDetails() {
 
 function loadProcessText() {
     $.ajax({
-        url: '/publisher/assets/process/apis/get_process_text?process_text_path=/processText/' + pname + "/" + pversion,
+        url: '/designer/assets/process/apis/get_process_text?process_text_path=/processText/' + pname + "/" + pversion,
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
@@ -118,7 +118,7 @@ function loadProcessText() {
 
 function getProcessTags() {
     $.ajax({
-        url: '/publisher/assets/process/apis/get_process_tags',
+        url: '/designer/assets/process/apis/get_process_tags',
         type: 'GET',
         async: false,
         success: function (data) {
@@ -157,7 +157,7 @@ function updateProcessText(currentElement) {
     } else {
         // save the process
         $.ajax({
-            url: '/publisher/assets/process/apis/save_process_text',
+            url: '/designer/assets/process/apis/save_process_text',
             type: 'POST',
             data: {
                 'processName': pname,
@@ -273,7 +273,7 @@ function editAssociatedFlowChart(element, flowchartPath) {
     if(($("#flowchartAvailableCheck").val() === "true") && !$('#flowChart').hasClass("fw-check")) {
         flowchartPath = "/_system/governance/" + flowchartPath;
         $.ajax({
-            url: '/publisher/assets/process/apis/get_process_flowchart',
+            url: '/designer/assets/process/apis/get_process_flowchart',
             type: 'GET',
             dataType: 'text',
             data: {'flowchartPath': flowchartPath},

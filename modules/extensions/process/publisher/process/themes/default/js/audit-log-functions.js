@@ -46,7 +46,7 @@ var compare = function compare(a,b) {
 var logview = function (path) {
         console.log(path);
         $.ajax({
-            url: '/publisher/assets/process/apis/audit_log',
+            url: '/designer/assets/process/apis/audit_log',
             type: 'POST',
             data: {'path': path },
             success: function (data) {

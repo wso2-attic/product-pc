@@ -113,7 +113,7 @@ describe('update chevron diagram - publisher', function() {
     it('Confirm registry location of saved diagram', function() {
         spyOn($, "ajax");
         saveDiagram();
-        expect($.ajax.calls.mostRecent().args[0]["url"]).toEqual("/publisher/asts/chevron/apis/chevronxml");
+        expect($.ajax.calls.mostRecent().args[0]["url"]).toEqual("/designer/asts/chevron/apis/chevronxml");
     });
     it('Confirm reaching save ajax call success', function() {
         spyOn($, "ajax").and.callFake(function(options) {

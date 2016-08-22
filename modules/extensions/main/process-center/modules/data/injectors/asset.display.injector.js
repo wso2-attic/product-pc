@@ -1,8 +1,8 @@
 /*
  Description: The data injector is used to convert a uuid to a link specific to an app using the injector
  E.g. uuid: 78-2383933/apple.png
- In the publisher it will made available as publisher/storage/uuid/app.png
- In the store it will be made available as store/storage/uuid/app.png
+ In the designer it will made available as designer/storage/uuid/app.png
+ In the explorer it will be made available as explorer/storage/uuid/app.png
  Filename:asset.display.injector.js
  Created Date: 27/9/2013
  */

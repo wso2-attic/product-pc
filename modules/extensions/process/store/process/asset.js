@@ -102,17 +102,17 @@ asset.server = function(ctx) {
                 path: 'download_document.jag'
             }],
             pages: [{
-                title: 'Store |  ' + typeSingularLabel,
+                title: 'Explorer |  ' + typeSingularLabel,
                 url: 'details',
                 path: 'details.jag',
                 permission:'ASSET_DETAILS'
             }, {
-                title: 'Store | ' + typeSingularLabel,
+                title: 'Explorer | ' + typeSingularLabel,
                 url: 'list',
                 path: 'list.jag',
                 permission:'ASSET_LIST'
             }, {
-                title: 'Store | ' + typeSingularLabel,
+                title: 'Explorer | ' + typeSingularLabel,
                 url: 'subscriptions',
                 path: 'subscriptions.jag'
             }]

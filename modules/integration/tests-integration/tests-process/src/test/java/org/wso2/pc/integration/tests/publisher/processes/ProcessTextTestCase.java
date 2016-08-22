@@ -53,8 +53,8 @@ public class ProcessTextTestCase extends PCIntegrationBaseTest {
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
-                "publisher/apis");
+        publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
+                replace("services", PCIntegrationConstants.DESIGNER_APIS);
         genericRestClient = new GenericRestClient();
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();

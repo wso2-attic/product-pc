@@ -30,7 +30,7 @@ $(function () {
 
     window.onload = function () {
         $.ajax({
-            url: '/publisher/assets/process/apis/get_process_tags',
+            url: '/designer/assets/process/apis/get_process_tags',
             type: 'GET',
             success: function (data) {
                 var response = JSON.parse(data);
@@ -245,7 +245,7 @@ $(function () {
         else if (isEmptyQuery(query) && $("#content").val()) {
 
             $.ajax({
-                url: '/publisher/apis/assets',
+                url: '/designer/apis/assets',
                 method: 'GET',
                 success: function (data) {
                     var results = [];

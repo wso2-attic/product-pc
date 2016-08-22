@@ -20,15 +20,15 @@
     <contexts>
         <context>
             <context-id>default-context</context-id>
-            <context-name>store</context-name>
+            <context-name>explorer</context-name>
             <protocol>http</protocol>
-            <description>Process Center Store Default Context</description>
+            <description>Process Center Explorer Default Context</description>
         </context>
         <context>
             <context-id>default-additional-context</context-id>
-            <context-name>publisher</context-name>
+            <context-name>designer</context-name>
             <protocol>https</protocol>
-            <description>Process Center Publisher Default Context</description>
+            <description>Process Center Designer Default Context</description>
         </context>
     </contexts>
 

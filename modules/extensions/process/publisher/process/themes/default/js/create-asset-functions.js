@@ -138,7 +138,7 @@ function updateProcess(currentElement) {
         pname=$("#pName").val();
         pversion=$("#pVersion").val();
         $.ajax({
-            url: '/publisher/assets/process/apis/update_process',
+            url: '/designer/assets/process/apis/update_process',
             type: 'POST',
             data: {'processInfo': getProcessInfo()},
             success: function (data) {
@@ -173,7 +173,7 @@ function textEditorInit() {
     if($('#processTextHolder').val()) {
 
         $.ajax({
-            url: '/publisher/assets/process/apis/get_process_text?process_text_path=/processText/' + pname + "/" + pversion,
+            url: '/designer/assets/process/apis/get_process_text?process_text_path=/processText/' + pname + "/" + pversion,
             type: 'GET',
             success: function (data) {
                 var response = JSON.parse(data);
@@ -236,7 +236,7 @@ function showTextEditor(element) {
 function getProcessText() {
 
     $.ajax({
-        url: '/publisher/assets/process/apis/get_process_text?process_text_path=/processText/' + pname + "/" + pversion,
+        url: '/designer/assets/process/apis/get_process_text?process_text_path=/processText/' + pname + "/" + pversion,
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
@@ -287,7 +287,7 @@ function associateBPMN() {
 function getBPMN() {
 
     $.ajax({
-        url: '/publisher/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/' + pname + "/" + pversion,
+        url: '/designer/assets/process/apis/get_bpmn_content?bpmn_content_path=/_system/governance/bpmn/' + pname + "/" + pversion,
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
@@ -545,7 +545,7 @@ function saveProcessText(currentElement) {
     } else {
         // save the process
         $.ajax({
-            url: '/publisher/assets/process/apis/save_process_text',
+            url: '/designer/assets/process/apis/save_process_text',
             type: 'POST',
             data: {
                 'processName': pname,
@@ -751,7 +751,7 @@ function getImageData() {
 
 function getProcessList() {
     $.ajax({
-        url: '/publisher/assets/process/apis/get_process_list',
+        url: '/designer/assets/process/apis/get_process_list',
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
@@ -772,7 +772,7 @@ function getProcessList() {
 
 function getAllProcessTags() {
     $.ajax({
-        url: '/publisher/assets/process/apis/get_process_tags',
+        url: '/designer/assets/process/apis/get_process_tags',
         type: 'GET',
         async: false,
         success: function (data) {
@@ -921,7 +921,7 @@ $("#bpmn_form").on("submit", function (e) {
     if (isComplete) {
         $('#bpmn_form').ajaxSubmit({
             type: "POST",
-            url: "/publisher/assets/process/apis/upload_bpmn",
+            url: "/designer/assets/process/apis/upload_bpmn",
             data: $('#bpmn_form').serialize(),
             cache: false,
             success: function (data) {
@@ -952,7 +952,7 @@ $("#addNewDoc").on("submit", function (e) {
     if (is_validate) {
         $('#addNewDoc').ajaxSubmit({
             type: "POST",
-            url: "/publisher/assets/process/apis/upload_documents",
+            url: "/designer/assets/process/apis/upload_documents",
             data: $('#addNewDoc').serialize(),
             cache: false,
             success: function (data) {
@@ -1072,7 +1072,7 @@ function readUpdatedSubprocess(currentObj, count) {
 
         $.ajax({
             async: false,
-            url: '/publisher/assets/process/apis/update_subprocess',
+            url: '/designer/assets/process/apis/update_subprocess',
             type: 'POST',
             data: {'subprocessDetails': JSON.stringify(subProcessDetails)},
             success: function (data) {
@@ -1143,7 +1143,7 @@ function readUpdatedSuccessor(currentObj, count) {
 
         $.ajax({
             async: false,
-            url: '/publisher/assets/process/apis/update_successor',
+            url: '/designer/assets/process/apis/update_successor',
             type: 'POST',
             data: {'successorDetails': JSON.stringify(successorDetails)},
             success: function (data) {
@@ -1211,7 +1211,7 @@ function readUpdatedPredecessor(currentObj, count) {
 
         $.ajax({
             async: false,
-            url: '/publisher/assets/process/apis/update_predecessor',
+            url: '/designer/assets/process/apis/update_predecessor',
             type: 'POST',
             data: {'predecessorDetails': JSON.stringify(predecessorDetails)},
             success: function (data) {
@@ -1278,7 +1278,7 @@ function deleteBPMNDiagram() {
     $('#bpmnAvailableCheck').val("false");
 
     $.ajax({
-        url: '/publisher/assets/process/apis/delete_bpmn',
+        url: '/designer/assets/process/apis/delete_bpmn',
         type: 'POST',
         data: {
             'processName': pname,
@@ -1338,7 +1338,7 @@ function confirmDialog(question) {
 
 function downloadDocument(relativePath) {
     $.ajax({
-        url: '/publisher/assets/process/apis/download_document?process_doc_path=' + relativePath,
+        url: '/designer/assets/process/apis/download_document?process_doc_path=' + relativePath,
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
@@ -1391,7 +1391,7 @@ function removeDocument(processName, processVersion, documentName, documentSumma
     };
 
     $.ajax({
-        url: '/publisher/assets/process/apis/delete_document',
+        url: '/designer/assets/process/apis/delete_document',
         type: 'POST',
         data: {'removeDocumentDetails': JSON.stringify(removeDocObj)},
         success: function (data) {
@@ -1411,7 +1411,7 @@ function removeDocument(processName, processVersion, documentName, documentSumma
 
 function viewPDFDocument(relativePath, heading, iteration) {
     $.ajax({
-        url: '/publisher/assets/process/apis/download_document?process_doc_path=' + relativePath,
+        url: '/designer/assets/process/apis/download_document?process_doc_path=' + relativePath,
         type: 'GET',
         success: function (data) {
             var response = JSON.parse(data);
@@ -1508,7 +1508,7 @@ function showDocument(permission) {
     $("#listDocs").empty();
 
     $.ajax({
-        url: '/publisher/assets/process/apis/get_process_doc?process_path=/_system/governance/processes/' + pname + "/" + pversion,
+        url: '/designer/assets/process/apis/get_process_doc?process_path=/_system/governance/processes/' + pname + "/" + pversion,
         type: 'GET',
         success: function (data) {
             var responseObj = JSON.parse(data);
@@ -1658,7 +1658,7 @@ function saveDocSummary(element) {
     }
 
     $.ajax({
-        url: '/publisher/assets/process/apis/update_document_details',
+        url: '/designer/assets/process/apis/update_document_details',
         type: 'POST',
         data: {'docInfo':JSON.stringify(docSummary) },
         success: function (data) {
@@ -1705,7 +1705,7 @@ function deleteSubprocess(element) {
             };
 
             $.ajax({
-                url: '/publisher/assets/process/apis/delete_subprocess',
+                url: '/designer/assets/process/apis/delete_subprocess',
                 type: 'POST',
                 data: {'deleteSubprocessDetails': JSON.stringify(deleteSubObj)},
                 success: function (data) {
@@ -1760,7 +1760,7 @@ function deleteSuccessor(element) {
             };
 
             $.ajax({
-                url: '/publisher/assets/process/apis/delete_successor',
+                url: '/designer/assets/process/apis/delete_successor',
                 type: 'POST',
                 data: {'deleteSuccessorDetails': JSON.stringify(deleteSuccessorObj)},
                 success: function (data) {
@@ -1815,7 +1815,7 @@ function deletePredecessor(element) {
             };
 
             $.ajax({
-                url: '/publisher/assets/process/apis/delete_Predecessor',
+                url: '/designer/assets/process/apis/delete_Predecessor',
                 type: 'POST',
                 data: {'deletePredecessorDetails': JSON.stringify(deletePredecessorObj)},
                 success: function (data) {

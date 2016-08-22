@@ -15,7 +15,7 @@
  */
 
 $(document).ready(function() {
- var url = "/publisher/asts/eprocess/apis/processes?type=eprocess";
+ var url = "/designer/asts/eprocess/apis/processes?type=eprocess";
   //Converting the input field to token input
   //input fetches data and populates the field
      $("#properties_predecessors").tokenInput(url, {
@@ -37,7 +37,7 @@ $(document).ready(function() {
          return assets.data;
        },
        tokenFormatter: function(item) {
-         return "<li><a href = /publisher/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
+         return "<li><a href = /designer/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
        }
      });
      //Converting the input field to token input
@@ -62,7 +62,7 @@ $(document).ready(function() {
          return assets.data;
        },
        tokenFormatter: function(item) {
-         return "<li><a href = /publisher/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
+         return "<li><a href = /designer/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
        }
      });
      //Converting the input field to token input
@@ -86,7 +86,7 @@ $(document).ready(function() {
          return assets.data;
        },
        tokenFormatter: function(item) {
-         return "<li><a href = /publisher/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
+         return "<li><a href = /designer/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
        }
      });
      //Converting the input field to token input
@@ -110,7 +110,7 @@ $(document).ready(function() {
          return assets.data;
        },
        tokenFormatter: function(item) {
-         return "<li><a href = /publisher/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
+         return "<li><a href = /designer/asts/eprocess/details/" + item.id + ">" + item.name + " </a></li>"
        }
      });
 });

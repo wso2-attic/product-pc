@@ -25,7 +25,7 @@
                     "keyStorePassword": "wso2carbon",
                     "identityAlias": "wso2carbon",
                     "responseSigningEnabled": "true",
-                    "acs": "%https.host%/publisher/acs",
+                    "acs": "%https.host%/designer/acs",
                     "keyStoreName": "/repository/resources/security/wso2carbon.jks"
                 }
             },

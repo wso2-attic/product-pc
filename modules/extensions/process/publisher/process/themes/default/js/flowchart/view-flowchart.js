@@ -508,7 +508,7 @@ jsPlumb.ready(function () {
                 flowchart.lastElementId = elementCount;
 
                 $.ajax({
-                    url: '/publisher/assets/process/apis/upload_flowchart',
+                    url: '/designer/assets/process/apis/upload_flowchart',
                     type: 'POST',
                     data: {
                         'processName': $("#fcProcessName").val(),
@@ -578,7 +578,7 @@ jsPlumb.ready(function () {
     _deleteFlowchart = function (name, version) {
         if (editableElmCount > 0) {
             $.ajax({
-                url: '/publisher/assets/process/apis/delete_flowchart',
+                url: '/designer/assets/process/apis/delete_flowchart',
                 type: 'POST',
                 data: {
                     'processName': name,

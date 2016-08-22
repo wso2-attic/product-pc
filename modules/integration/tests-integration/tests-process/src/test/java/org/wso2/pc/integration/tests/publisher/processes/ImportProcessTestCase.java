@@ -41,8 +41,7 @@ public class ImportProcessTestCase extends PCIntegrationBaseTest {
     private GenericRestClient genericRestClient;
     private HashMap<String, String> headerMap;
     private HashMap<String, String> queryMap;
-    private String resourcePath;
-    private String cookieHeader;
+    private String resourcePath,publisherUrl,cookieHeader;
     private RegistryProviderUtil registryProviderUtil = new RegistryProviderUtil();
     private static final String PROCESS_NAME = "Process1";
     private static final String PROCESS_VERSION = "1.0";
@@ -50,8 +49,8 @@ public class ImportProcessTestCase extends PCIntegrationBaseTest {
     @BeforeTest(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        String publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
-                replace("services", "publisher/apis");
+        publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
+                replace("services", PCIntegrationConstants.DESIGNER_APIS);
         genericRestClient = new GenericRestClient();
         headerMap = new HashMap<>();
         queryMap = new HashMap<>();
