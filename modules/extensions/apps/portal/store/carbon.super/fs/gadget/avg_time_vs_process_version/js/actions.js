@@ -1,3 +1,18 @@
+/*
+ ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+ */
 var config = {
     type: "bar",
     x : "Process Version",
@@ -42,10 +57,14 @@ function drawAvgExecuteTimeVsProcessVersionResult() {
                     responseJsonArr = JSON.parse(data);
 
                 var responseStr = '';
+                var scale = getTimeScale(responseJsonArr[0].avgExecutionTime);
                 for (var i = 0; i < responseJsonArr.length; i++) {
+                    responseJsonArr[i].avgExecutionTime = convertTime(scale, responseJsonArr[i].avgExecutionTime);
                     var temp = '["' + responseJsonArr[i].processVer + '",' + responseJsonArr[i].avgExecutionTime + '],';
                     responseStr += temp;
                 }
+                jsonObj[0].metadata.names[1] = "Time(" + scale + ")";
+                config.charts[0].y = "Time(" + scale + ")";
                 responseStr = responseStr.slice(0, -1);
                 var jsonArrObj = JSON.parse('[' + responseStr + ']');
                 jsonObj[0].data = jsonArrObj;

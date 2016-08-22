@@ -1,3 +1,18 @@
+/*
+ ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+ */
 var config = {
     type: "bar",
     x : "Process Instance Id",
@@ -58,14 +73,17 @@ function drawExecutionTimeVsProcessInstanceIdResult() {
                     responseJsonArr = JSON.parse(data);
 
                 var responseStr = '';
+                var scale = getTimeScale(responseJsonArr[0].duration);
                 for (var i = 0; i < responseJsonArr.length; i++) {
+                    responseJsonArr[i].duration = convertTime(scale, responseJsonArr[i].duration);
                     var temp = '["' + responseJsonArr[i].processInstanceId + '",' + responseJsonArr[i].duration + '],';
                     responseStr += temp;
                 }
+                jsonObj[0].metadata.names[1] = "Time(" + scale + ")";
+                config.charts[0].y = "Time(" + scale + ")";
                 responseStr = responseStr.slice(0, -1);
                 var jsonArrObj = JSON.parse('[' + responseStr + ']');
                 jsonObj[0].data = jsonArrObj;
-                // console.log(jsonObj);
 
                 config.width = $('#chartA').width();
                 config.height = $('#chartA').height();
@@ -107,14 +125,3 @@ function loadProcessList(dropdownId) {
     });
 }
 
-function getUrlVars() {
-    var vars = [], hash;
-    var hashes = top.location.href.slice(top.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}

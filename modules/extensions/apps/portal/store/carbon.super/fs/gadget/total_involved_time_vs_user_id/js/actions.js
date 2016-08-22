@@ -41,11 +41,14 @@ function drawGraph() {
                 responseJsonArr = JSON.parse(data);
 
                 var responseStr = '';
+                var scale = getTimeScale(responseJsonArr[0].totalInvolvedTime);
                 for (var i = 0; i < responseJsonArr.length; i++) {
+                    responseJsonArr[i].totalInvolvedTime = convertTime(scale, responseJsonArr[i].totalInvolvedTime);
                     var temp = '["' + responseJsonArr[i].assignUser + '",' + responseJsonArr[i].totalInvolvedTime + '],';
                     responseStr += temp;
                 }
-
+                jsonObj[0].metadata.names[1] = "Time(" + scale + ")";
+                config.charts[0].y = "Time(" + scale + ")";
                 responseStr = responseStr.slice(0, -1);
                 var jsonArrObj = JSON.parse('[' + responseStr + ']');
                 jsonObj[0].data = jsonArrObj;

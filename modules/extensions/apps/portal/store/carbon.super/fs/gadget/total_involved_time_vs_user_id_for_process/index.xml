@@ -66,6 +66,7 @@
     <script src="/portal/libs/analytics-wso2_5.0.12/vega.js"></script>
     <script src="/portal/libs/analytics-wso2_5.0.12/VizGrammar.min.js"></script>
     <script src="/portal/libs/pc-analytics-libs/js/VizGrammarSettings.js"></script>
+    <script src="/portal/libs/pc-analytics-libs/js/common-utils.js"></script>
     <script src="js/actions.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
