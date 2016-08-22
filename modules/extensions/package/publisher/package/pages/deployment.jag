@@ -17,17 +17,27 @@ require('/modules/publisher.js').exec(function (ctx) {
     var assets = assets = am.get(options.id);
     var output = am.render(assets, page).details();
     page.path = assets.path;
-   
-    
+
+    var deployInstance = Deployment();
+
     try {
         // Get deployment information
-        var deployInstance = Deployment();
         var deploymentInfoResponse = deployInstance.getDeploymentInformation(output.assets.name,output.assets.version,output.cuser.username);
         if (deploymentInfoResponse != null) {
             output.deploymentInfo = parse(String(deploymentInfoResponse)).runtimeDeployment;
         }
     } catch (e) {
         output.errorMessage = "Error while getting deployment information from process server.";
+
+        var isRuntimeEnvironmentEnabled = deployInstance.isBPSRuntimeEnvironmentEnabled();
+        var runtimeEnvironmentUrl = deployInstance.getBPSRuntimeEnvironmentURL();
+
+        if (isRuntimeEnvironmentEnabled && runtimeEnvironmentUrl != null) {
+            if(runtimeEnvironmentUrl != '') {
+                output.errorConfigMessage = "The registered runtime environment is not available. Please check with the server url which is configured as ";
+                output.faultRuntimeUrl = runtimeEnvironmentUrl;
+            }
+        }
     }
     caramel.render(output);  
 }, request, response, session);
