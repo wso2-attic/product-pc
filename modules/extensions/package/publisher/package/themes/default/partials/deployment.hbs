@@ -44,7 +44,7 @@
 {{#if errorMessage}}
 <div class="message message-danger" style="display: block;">
   <h4><i class="icon fw fw-error"></i>Error</h4>
-  <p id="error-msg">{{errorMessage}}</p>
+  <p id="error-msg">{{errorMessage}}{{#if faultRuntimeUrl}}<br>{{errorConfigMessage}}<a>{{faultRuntimeUrl}}</a>.{{/if}}</p>
 </div>
 {{else}}
   {{#if deploymentInfo.status}}

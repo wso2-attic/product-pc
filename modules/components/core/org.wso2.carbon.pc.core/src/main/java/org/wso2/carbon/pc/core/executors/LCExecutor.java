@@ -145,6 +145,9 @@ public class LCExecutor implements Execution {
         } else if (currentState.equals("Published") && targetState.equals("Retired")) {
             assignPermission("Internal/publisher", "+get,+add,+delete,-authorize");
         }
+        else if (currentState.equals("Retired")) {
+            assignPermission("Internal/publisher", "+get,+add,+delete,+authorize");
+        }
     }
 
     /**
@@ -173,6 +176,10 @@ public class LCExecutor implements Execution {
 
             } else if (currentState.equals("Published") && targetState.equals("Retired")) {
                 assignPermission("Internal/private_" + user, "+get,-add,-delete,-authorize");
+
+            } else if (currentState.equals("Retired")) {
+                assignPermission("Internal/private_" + user, "+get,+add,+delete,+authorize");
+
             }
         }
     }
@@ -201,7 +208,11 @@ public class LCExecutor implements Execution {
 
         } else if (currentState.equals("Published") && targetState.equals("Retired")) {
             assignPermission(role, "-get,-add,-delete,-authorize");
+
+        } else if (currentState.equals("Retired")) {
+            assignPermission(role, "+get,+add,-delete,-authorize");
         }
+
     }
 
     private void setAnonymousRolePermission() throws Exception {
