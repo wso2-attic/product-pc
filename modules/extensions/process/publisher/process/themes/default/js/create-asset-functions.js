@@ -1055,49 +1055,55 @@ function readUpdatedSubprocess(currentObj, count) {
             }
         }
 
-        var subprocessInfo = {
-            name: subprocessInput.split("-")[0],
-            path: subprocessPath,
-            id: subprocessId
-        };
+        if (checkAssociationAvailability(tableId, subprocessInput)) {
+            alertify.warning(subprocessInput + ' is already exists in subprocess list.');
+            $("#table_subprocess").hide();
+            $("#table_subprocess").empty();
+        } else {
+            var subprocessInfo = {
+                name: subprocessInput.split("-")[0],
+                path: subprocessPath,
+                id: subprocessId
+            };
 
-        var subProcessDetails = {
-            'processName': pname,
-            'processVersion': pversion,
-            'subprocess': subprocessInfo
-        };
+            var subProcessDetails = {
+                'processName': pname,
+                'processVersion': pversion,
+                'subprocess': subprocessInfo
+            };
 
-        var subprocessTableData = '<td valign="top" style="width: 30%;"><span id="subprocess_Name" class="subprocess_Name">'+subprocessInput+'</span></td>';
-        var actionInput = '<td style="width: 10%;"><label class="view-process"><a target="_blank" href="../details/'+subprocessId+'" class="fa fa-eye" aria-hidden="true"></a></label><label class="remove-process" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></label></td>';
+            var subprocessTableData = '<td valign="top" style="width: 30%;"><span id="subprocess_Name" class="subprocess_Name">' + subprocessInput + '</span></td>';
+            var actionInput = '<td style="width: 10%;"><label class="view-process"><a target="_blank" href="../details/' + subprocessId + '" class="fa fa-eye" aria-hidden="true"></a></label><label class="remove-process" onclick="deleteSubprocess(this)"><i class="fa fa-trash"></i></label></td>';
 
-        $.ajax({
-            async: false,
-            url: '/designer/assets/process/apis/update_subprocess',
-            type: 'POST',
-            data: {'subprocessDetails': JSON.stringify(subProcessDetails)},
-            success: function (data) {
-                var response = JSON.parse(data);
-                if (response.error === false) {
-                    if (count == 1) {
-                        alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
+            $.ajax({
+                async: false,
+                url: '/designer/assets/process/apis/update_subprocess',
+                type: 'POST',
+                data: {'subprocessDetails': JSON.stringify(subProcessDetails)},
+                success: function (data) {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        if (count == 1) {
+                            alertify.success('Process ' + subprocessInput + ' successfully added to the subprocess list.');
 
-                        $("#table_subprocess").hide();
-                        $("#table_subprocess").empty();
-                        $("#subProcessTable").show("default" , function () {
+                            $("#table_subprocess").hide();
+                            $("#table_subprocess").empty();
+                            $("#subProcessTable").show("default", function () {
 
-                        });
-                        $("#subProcessCountHolder").val(count);
-                        updateAssociationTable(tableId, subprocessTableData, actionInput);
-                        $("#subprocessadded").addClass("fw fw-check");
+                            });
+                            $("#subProcessCountHolder").val(count);
+                            updateAssociationTable(tableId, subprocessTableData, actionInput);
+                            $("#subprocessadded").addClass("fw fw-check");
+                        }
+                    } else {
+                        alertify.error(response.content);
                     }
-                } else {
-                    alertify.error(response.content);
+                },
+                error: function () {
+                    alertify.error('Subprocess updating error');
                 }
-            },
-            error: function () {
-                alertify.error('Subprocess updating error');
-            }
-        });
+            });
+        }
     }
 }
 
@@ -1126,46 +1132,52 @@ function readUpdatedSuccessor(currentObj, count) {
             }
         }
 
-        var successorInfo = {
-            name: successorInput.split("-")[0],
-            path: successorPath,
-            id: successorId
-        };
+        if (checkAssociationAvailability(tableId, successorInput)) {
+            alertify.warning(successorInput + ' is already exists in successor list.');
+            $("#table_successor").hide();
+            $("#table_successor").empty();
+        } else {
+            var successorInfo = {
+                name: successorInput.split("-")[0],
+                path: successorPath,
+                id: successorId
+            };
 
-        var successorDetails = {
-            'processName': pname,
-            'processVersion': pversion,
-            'successor': successorInfo
-        };
+            var successorDetails = {
+                'processName': pname,
+                'processVersion': pversion,
+                'successor': successorInfo
+            };
 
-        var successorTableData = '<td valign="top" style="width: 30%;"><span id="successor_Name" class="successor_Name">'+ successorInput +'</span></td>'
-        var actionInput = '<td style="width: 10%;"><label class="view-process"><a target="_blank" href="../details/'+successorId+'" class="fa fa-eye" aria-hidden="true"></a></label><label class="remove-process" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></label></td>';
+            var successorTableData = '<td valign="top" style="width: 30%;"><span id="successor_Name" class="successor_Name">' + successorInput + '</span></td>'
+            var actionInput = '<td style="width: 10%;"><label class="view-process"><a target="_blank" href="../details/' + successorId + '" class="fa fa-eye" aria-hidden="true"></a></label><label class="remove-process" onclick="deleteSuccessor(this)"><i class="fa fa-trash"></i></label></td>';
 
-        $.ajax({
-            async: false,
-            url: '/designer/assets/process/apis/update_successor',
-            type: 'POST',
-            data: {'successorDetails': JSON.stringify(successorDetails)},
-            success: function (data) {
-                var response = JSON.parse(data);
-                if (response.error === false) {
-                    if (count == 1) {
-                        alertify.success('Process ' + successorInput + ' successfully added to the successor list.');
-                        $("#table_successor").hide();
-                        $("#table_successor").empty();
-                        $("#successorTable").show();
-                        $("#successorCountHolder").val(count);
-                        updateAssociationTable(tableId, successorTableData, actionInput);
-                        $("#successoradded").addClass("fw fw-check");
+            $.ajax({
+                async: false,
+                url: '/designer/assets/process/apis/update_successor',
+                type: 'POST',
+                data: {'successorDetails': JSON.stringify(successorDetails)},
+                success: function (data) {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        if (count == 1) {
+                            alertify.success('Process ' + successorInput + ' successfully added to the successor list.');
+                            $("#table_successor").hide();
+                            $("#table_successor").empty();
+                            $("#successorTable").show();
+                            $("#successorCountHolder").val(count);
+                            updateAssociationTable(tableId, successorTableData, actionInput);
+                            $("#successoradded").addClass("fw fw-check");
+                        }
+                    } else {
+                        alertify.error(response.content);
                     }
-                } else {
-                    alertify.error(response.content);
+                },
+                error: function () {
+                    alertify.error('Successor updating error');
                 }
-            },
-            error: function () {
-                alertify.error('Successor updating error');
-            }
-        });
+            });
+        }
     }
 }
 
@@ -1194,46 +1206,52 @@ function readUpdatedPredecessor(currentObj, count) {
             }
         }
 
-        var predecessorInfo = {
-            name: predecessorInput.split("-")[0],
-            path: predecessorPath,
-            id: predecessorId
-        };
+        if (checkAssociationAvailability(tableId, predecessorInput)) {
+            alertify.warning(predecessorInput + ' is already exists in predecessor list.');
+            $("#table_predecessor").hide();
+            $("#table_predecessor").empty();
+        } else {
+            var predecessorInfo = {
+                name: predecessorInput.split("-")[0],
+                path: predecessorPath,
+                id: predecessorId
+            };
 
-        var predecessorDetails = {
-            'processName': pname,
-            'processVersion': pversion,
-            'predecessor': predecessorInfo
-        };
+            var predecessorDetails = {
+                'processName': pname,
+                'processVersion': pversion,
+                'predecessor': predecessorInfo
+            };
 
-        var predecessorTableData = '<td valign="top" style="width: 30%;"><span id="predecessor_Name" class="predecessor_Name">'+ predecessorInput+'</span></td>';
-        var actionInput = '<td style="width: 10%;"><label class="view-process"><a target="_blank" href="../details/'+predecessorId+'" class="fa fa-eye" aria-hidden="true"></a></label><label class="remove-process" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></label></td>';
+            var predecessorTableData = '<td valign="top" style="width: 30%;"><span id="predecessor_Name" class="predecessor_Name">' + predecessorInput + '</span></td>';
+            var actionInput = '<td style="width: 10%;"><label class="view-process"><a target="_blank" href="../details/' + predecessorId + '" class="fa fa-eye" aria-hidden="true"></a></label><label class="remove-process" onclick="deletePredecessor(this)"><i class="fa fa-trash"></i></label></td>';
 
-        $.ajax({
-            async: false,
-            url: '/designer/assets/process/apis/update_predecessor',
-            type: 'POST',
-            data: {'predecessorDetails': JSON.stringify(predecessorDetails)},
-            success: function (data) {
-                var response = JSON.parse(data);
-                if (response.error === false) {
-                    if (count == 1) {
-                        alertify.success('Process ' + predecessorInput + ' successfully added to the predecessor list.');
-                        $("#table_predecessor").hide();
-                        $("#table_predecessor").empty();
-                        $("#predecessorTable").show();
-                        $("#predecessorCountHolder").val(count);
-                        updateAssociationTable(tableId, predecessorTableData, actionInput);
-                        $("#prodecessoradded").addClass("fw fw-check");
+            $.ajax({
+                async: false,
+                url: '/designer/assets/process/apis/update_predecessor',
+                type: 'POST',
+                data: {'predecessorDetails': JSON.stringify(predecessorDetails)},
+                success: function (data) {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        if (count == 1) {
+                            alertify.success('Process ' + predecessorInput + ' successfully added to the predecessor list.');
+                            $("#table_predecessor").hide();
+                            $("#table_predecessor").empty();
+                            $("#predecessorTable").show();
+                            $("#predecessorCountHolder").val(count);
+                            updateAssociationTable(tableId, predecessorTableData, actionInput);
+                            $("#prodecessoradded").addClass("fw fw-check");
+                        }
+                    } else {
+                        alertify.error(response.content);
                     }
-                } else {
-                    alertify.error(response.content);
+                },
+                error: function () {
+                    alertify.error('Predecessor updating error');
                 }
-            },
-            error: function () {
-                alertify.error('Predecessor updating error');
-            }
-        });
+            });
+        }
     }
 }
 
