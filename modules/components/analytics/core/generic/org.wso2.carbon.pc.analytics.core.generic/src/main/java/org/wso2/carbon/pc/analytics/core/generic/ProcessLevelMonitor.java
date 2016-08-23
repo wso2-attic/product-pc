@@ -542,6 +542,7 @@ public class ProcessLevelMonitor {
 				JSONObject filterObj = new JSONObject(filters);
 				long from = filterObj.getLong(AnalyticsConstants.START_TIME);
 				long to = filterObj.getLong(AnalyticsConstants.END_TIME);
+				boolean aggregateByMonth = filterObj.getBoolean(AnalyticsConstants.AGGREGATE_BY_MONTH);
 				JSONArray processIdList =
 						filterObj.getJSONArray(AnalyticsConstants.PROCESS_ID_LIST);
 
@@ -555,7 +556,11 @@ public class ProcessLevelMonitor {
 
 				AggregateQuery query = new AggregateQuery();
 				query.setTableName(AnalyticsConstants.PROCESS_USAGE_TABLE);
-				query.setGroupByField(AnalyticsConstants.FINISHED_TIME);
+				if(aggregateByMonth) {
+					query.setGroupByField(AnalyticsConstants.MONTH);
+				} else {
+					query.setGroupByField(AnalyticsConstants.FINISHED_TIME);
+				}
 				String queryStr = AnalyticsUtils
 						.getDateRangeQuery(AnalyticsConstants.COLUMN_FINISHED_TIME, from, to);
 
@@ -589,15 +594,28 @@ public class ProcessLevelMonitor {
 					for (int i = 0; i < unsortedResultArray.length(); i++) {
 						JSONObject jsonObj = unsortedResultArray.getJSONObject(i);
 						JSONObject values = jsonObj.getJSONObject(AnalyticsConstants.VALUES);
-						long completedTime = Long.parseLong(
-								values.getJSONArray(AnalyticsConstants.FINISHED_TIME).getString(0));
+						long completedTime;
+						if(aggregateByMonth) {
+							completedTime = Long.parseLong(
+									values.getJSONArray(AnalyticsConstants.MONTH).getString(0));
+						} else {
+							completedTime = Long.parseLong(
+									values.getJSONArray(AnalyticsConstants.FINISHED_TIME).getString(0));
+						}
 						int processInstanceCount =
 								values.getInt(AnalyticsConstants.PROCESS_INSTANCE_COUNT);
 						table.put(completedTime, processInstanceCount);
 					}
-					sortedResult = AnalyticsUtils
-							.getLongKeySortedList(table, AnalyticsConstants.FINISHED_TIME,
-							                      AnalyticsConstants.PROCESS_INSTANCE_COUNT);
+					if(aggregateByMonth) {
+						sortedResult = AnalyticsUtils
+								.getLongKeySortedList(table, AnalyticsConstants.MONTH,
+										AnalyticsConstants.PROCESS_INSTANCE_COUNT);
+					} else {
+						sortedResult = AnalyticsUtils
+								.getLongKeySortedList(table, AnalyticsConstants.FINISHED_TIME,
+										AnalyticsConstants.PROCESS_INSTANCE_COUNT);
+					}
+
 				}
 			}
 		} catch (Exception e) {

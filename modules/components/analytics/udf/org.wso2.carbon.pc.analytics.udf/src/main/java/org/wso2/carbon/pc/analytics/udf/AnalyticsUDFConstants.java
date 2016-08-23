@@ -21,6 +21,7 @@ package org.wso2.carbon.pc.analytics.udf;
 public class AnalyticsUDFConstants {
 	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	public static final String DATE_FORMAT_WITHOUT_TIME = "yyyy-MM-dd";
+	public static final String DATE_FORMAT_MONTH = "MMM yyyy";
 	public static final String MONTH_FORMAT = "MMM";
 	public static final String DATE_SEPARATOR = "-";
 	public static final String SPACE_SEPARATOR = " ";
