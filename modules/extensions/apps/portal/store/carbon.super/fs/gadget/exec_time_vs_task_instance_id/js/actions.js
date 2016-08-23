@@ -57,7 +57,7 @@ function drawExecutionTimeVsTaskInstanceIdResult() {
         };
         
             $.ajax({
-                url: '../../bpmn-analytics-explorer/exec_time_vs_task_instance_id',
+                url: '../../designer/assets/process/apis/exec_time_vs_task_instance_id',
                 type: 'POST',
                 data: {'filters': JSON.stringify(body)},
                 success: function (data) {
@@ -97,7 +97,7 @@ function drawExecutionTimeVsTaskInstanceIdResult() {
 
 function loadTaskList(dropdownId) {
     var dropdownElementID = '#' + dropdownId;
-    var url = "../../bpmn-analytics-explorer/task_definition_key_list";
+    var url = "../../designer/assets/process/apis/task_definition_key_list";
     $.ajax({
         type: 'POST',
         url: url,
@@ -135,7 +135,7 @@ function loadProcessList(dropdownId) {
     } else {
         $.ajax({
             type: 'POST',
-            url: "../../bpmn-analytics-explorer/process_definition_key_list",
+            url: "../../designer/assets/process/apis/process_definition_key_list",
             success: function (data) {
                 var dataStr = JSON.parse(data);
                 if (!$.isEmptyObject(dataStr)) {

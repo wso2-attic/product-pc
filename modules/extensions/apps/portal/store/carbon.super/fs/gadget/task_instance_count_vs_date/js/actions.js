@@ -46,7 +46,7 @@ function drawGraph() {
 
     $.ajax({
         type: 'POST',
-        url: '../../bpmn-analytics-explorer/task_instance_count_vs_date',
+        url: '../../designer/assets/process/apis/task_instance_count_vs_date',
         data: {'filters': JSON.stringify(body)},
         success: function (data) {
 
@@ -167,7 +167,7 @@ function loadTaskList(dropdownId) {
 
     $.ajax({
         type: 'POST',
-        url: '../../bpmn-analytics-explorer/task_definition_key_list',
+        url: '../../designer/assets/process/apis/task_definition_key_list',
         success: function (data) {
             if (!$.isEmptyObject(data)) {
                 var dataStr = JSON.parse(data);
@@ -215,7 +215,7 @@ function loadProcessList(dropdownId) {
     } else {
         $.ajax({
             type: 'POST',
-            url: "../../bpmn-analytics-explorer/process_definition_key_list",
+            url: "../../designer/assets/process/apis/process_definition_key_list",
             success: function (data) {
                 var dataStr = JSON.parse(data);
                 if (!$.isEmptyObject(dataStr)) {

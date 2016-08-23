@@ -49,7 +49,7 @@ function drawProcessInstanceCountVsProcessIdResult() {
     };
 
     $.ajax({
-        url: '../../bpmn-analytics-explorer/process_instance_count_vs_process_id',
+        url: '../../designer/assets/process/apis/process_instance_count_vs_process_id',
         type: 'POST',
         data: {'filters': JSON.stringify(body)},
         success: function (data) {

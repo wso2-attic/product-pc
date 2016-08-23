@@ -48,7 +48,7 @@ function drawAvgExecuteTimeVsProcessVersionResult() {
 
     if (processKey != null) {
         $.ajax({
-            url: '../../bpmn-analytics-explorer/avg_time_vs_process_version',
+            url: '../../designer/assets/process/apis/avg_time_vs_process_version',
             type: 'POST',
             data: {'filters': JSON.stringify(body)},
             success: function (data) {
@@ -87,7 +87,7 @@ function drawAvgExecuteTimeVsProcessVersionResult() {
 
 function loadProcessKeyList(dropdownId) {
     var dropdownElementID = '#' + dropdownId;
-    var url = "../../bpmn-analytics-explorer/process_key_list";
+    var url = "../../designer/assets/process/apis/process_key_list";
     $.ajax({
         type: 'POST',
         url: url,

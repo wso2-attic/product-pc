@@ -49,7 +49,7 @@ function drawAvgExecuteTimeVsProcessIdResult() {
     };
 
     $.ajax({
-        url: '../../bpmn-analytics-explorer/avg_time_vs_process_id',
+        url: '../../designer/assets/process/apis/avg_time_vs_process_id',
         type: 'POST',
         data: {'filters': JSON.stringify(body)},
         success: function (data) {

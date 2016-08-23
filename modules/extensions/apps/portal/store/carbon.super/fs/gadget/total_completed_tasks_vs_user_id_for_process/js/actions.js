@@ -79,7 +79,7 @@ function drawCompletedTasksVsUserIdForProcessGraph() {
 
     $.ajax({
         type: 'POST',
-        url: '../../bpmn-analytics-explorer/total_completed_tasks_vs_user_id_for_process',
+        url: '../../designer/assets/process/apis/total_completed_tasks_vs_user_id_for_process',
         data: {'filters': JSON.stringify(body)},
         success: function (data) {
 
@@ -143,7 +143,7 @@ function isInteger(param) {
 function loadProcessList(dropdownId) {
 
     var dropdownElementID = '#' + dropdownId;
-    var url = "../../bpmn-analytics-explorer/process_definition_key_list";
+    var url = "../../designer/assets/process/apis/process_definition_key_list";
 
     $.ajax({
         type: 'POST',

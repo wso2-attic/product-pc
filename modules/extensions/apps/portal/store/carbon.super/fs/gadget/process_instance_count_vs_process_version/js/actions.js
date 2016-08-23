@@ -50,7 +50,7 @@ function drawProcessInstanceCountVsProcessVersionResult() {
         };
 
         $.ajax({
-            url: '../../bpmn-analytics-explorer/process_instance_count_vs_process_version',
+            url: '../../designer/assets/process/apis/process_instance_count_vs_process_version',
             type: 'POST',
             data: {'filters': JSON.stringify(body)},
             success: function (data) {
@@ -83,7 +83,7 @@ function drawProcessInstanceCountVsProcessVersionResult() {
 
 function loadProcessKeyList(dropdownId) {
     var dropdownElementID = '#' + dropdownId;
-    var url = "../../bpmn-analytics-explorer/process_key_list";
+    var url = "../../designer/assets/process/apis/process_key_list";
     $.ajax({
         type: 'POST',
         url: url,

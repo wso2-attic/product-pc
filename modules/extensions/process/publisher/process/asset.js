@@ -139,9 +139,84 @@ asset.server = function(ctx) {
                    }, {
                         url: 'get_process_variables_list',
                         path: 'get_process_variables_list.jag'
-                   },{
+                   }, {
                         url: 'get_process_deployed_id',
                         path: 'get_process_deployed_id.jag'
+                   }, {
+                        url: 'avg_time_vs_process_id',
+                        path: 'analytics/avg_time_vs_process_id.jag'
+                   }, {
+                        url: 'process_instance_count_vs_process_id',
+                        path: 'analytics/process_instance_count_vs_process_id.jag'
+                   }, {
+                        url: 'process_definition_key_list',
+                        path: 'analytics/process_definition_key_list.jag'
+                   }, {
+                        url: 'avg_time_vs_process_version',
+                        path: 'analytics/avg_time_vs_process_version.jag'
+                   }, {
+                        url: 'process_instance_count_vs_process_version',
+                        path: 'analytics/process_instance_count_vs_process_version.jag'
+                   }, {
+                        url: 'exec_time_vs_process_instance_id',
+                        path: 'analytics/exec_time_vs_process_instance_id.jag'
+                   }, {
+                        url: 'avg_time_vs_task_id',
+                        path: 'analytics/avg_time_vs_task_id.jag'
+                   }, {
+                        url: 'task_instance_count_vs_task_id',
+                        path: 'analytics/task_instance_count_vs_task_id.jag'
+                   }, {
+                        url: 'task_definition_key_list',
+                        path: 'analytics/task_definition_key_list.jag'
+                   }, {
+                        url: 'task_instance_count_vs_user_id',
+                        path: 'analytics/task_instance_count_vs_user_id.jag'
+                   }, {
+                        url: 'avg_wait_time_vs_user_id',
+                        path: 'analytics/avg_wait_time_vs_user_id.jag'
+                   }, {
+                        url: 'exec_time_vs_task_instance_id',
+                        path: 'analytics/exec_time_vs_task_instance_id.jag'
+                   }, {
+                        url: 'total_involved_time_vs_user_id',
+                        path: 'analytics/total_involved_time_vs_user_id.jag'
+                   }, {
+                        url: 'total_involved_time_vs_user_id_for_process',
+                        path: 'analytics/total_involved_time_vs_user_id_for_process.jag'
+                   }, {
+                        url: 'total_completed_tasks_vs_user_id',
+                        path: 'analytics/total_completed_tasks_vs_user_id.jag'
+                   }, {
+                        url: 'total_completed_tasks_vs_user_id_for_process',
+                        path: 'analytics/total_completed_tasks_vs_user_id_for_process.jag'
+                   }, {
+                        url: 'user_id_list',
+                        path: 'analytics/user_id_list.jag'
+                   }, {
+                        url: 'total_involved_time_vs_process_id',
+                        path: 'analytics/total_involved_time_vs_process_id.jag'
+                   }, {
+                        url: 'total_involved_instance_count_vs_process_id',
+                        path: 'analytics/total_involved_instance_count_vs_process_id.jag'
+                   }, {
+                        url: 'user_level_task_instance_count_vs_task_id',
+                        path: 'analytics/user_level_task_instance_count_vs_task_id.jag'
+                   }, {
+                        url: 'user_level_avg_time_vs_task_id',
+                        path: 'analytics/user_level_avg_time_vs_task_id.jag'
+                   }, {
+                        url: 'process_instance_count_vs_date',
+                        path: 'analytics/process_instance_count_vs_date.jag'
+                   }, {
+                        url: 'task_instance_count_vs_date',
+                        path: 'analytics/task_instance_count_vs_date.jag'
+                   }, {
+                        url: 'process_key_list',
+                        path: 'analytics/process_key_list.jag'
+                   }, {
+                        url: 'task_definition_key_list_vs_process_id',
+                        path: 'analytics/task_definition_key_list_vs_process_id.jag'
                    }
             ],
             pages: [{
