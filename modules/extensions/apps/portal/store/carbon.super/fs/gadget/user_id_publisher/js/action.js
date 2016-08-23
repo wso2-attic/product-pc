@@ -22,7 +22,7 @@ function loadUserList(dropdownId) {
 
     $.ajax({
         type: 'POST',
-        url: '../../bpmn-analytics-explorer/user_id_list',
+        url: '../../designer/assets/process/apis/user_id_list',
         success: function (data) {
             if (!$.isEmptyObject(data)) {
                 var dataStr = JSON.parse(data);

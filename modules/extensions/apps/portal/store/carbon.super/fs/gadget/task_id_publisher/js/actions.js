@@ -75,7 +75,7 @@ function loadTaskList(dropdownId) {
 
     $.ajax({
         type: 'POST',
-        url: '../../bpmn-analytics-explorer/task_definition_key_list_vs_process_id',
+        url: '../../designer/assets/process/apis/task_definition_key_list_vs_process_id',
         data: {'filters':JSON.stringify(body)},
         success: function (data) {
             if (!$.isEmptyObject(data)) {
