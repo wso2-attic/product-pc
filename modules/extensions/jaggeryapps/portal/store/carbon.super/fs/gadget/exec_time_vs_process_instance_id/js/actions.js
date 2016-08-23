@@ -63,7 +63,7 @@ function drawExecutionTimeVsProcessInstanceIdResult() {
     
     if (processId != '') {
         $.ajax({
-            url: '../../bpmn-analytics-explorer/exec_time_vs_process_instance_id',
+            url: '../../designer/assets/process/apis/exec_time_vs_process_instance_id',
             type: 'POST',
             data: {'filters': JSON.stringify(body)},
             success: function (data) {
@@ -104,7 +104,7 @@ function loadProcessList(dropdownId) {
     var dropdownElementID = '#' + dropdownId;
     $.ajax({
         type: 'POST',
-        url: "../../bpmn-analytics-explorer/process_definition_key_list",
+        url: "../../designer/assets/process/apis/process_definition_key_list",
         success: function (data) {
             var dataStr = JSON.parse(data);
             if (!$.isEmptyObject(dataStr)) {

@@ -36,7 +36,7 @@ function drawGraph() {
 
         $.ajax({
             type: 'POST',
-            url: '../../bpmn-analytics-explorer/total_involved_instance_count_vs_process_id',
+            url: '../../designer/assets/process/apis/total_involved_instance_count_vs_process_id',
             data: {'filters': JSON.stringify(body)},
             success: function (data) {
 
@@ -126,7 +126,7 @@ function loadList(dropdownElementID) {
 
     $.ajax({
         type: 'POST',
-        url: '../../bpmn-analytics-explorer/user_id_list',
+        url: '../../designer/assets/process/apis/user_id_list',
         success: function (data) {
             if (!$.isEmptyObject(data)) {
                 var dataStr = JSON.parse(data);
