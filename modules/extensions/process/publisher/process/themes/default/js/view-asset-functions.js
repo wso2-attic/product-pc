@@ -25,6 +25,7 @@ var pageNum;
 var ctx;
 var fieldsName = $("#textProcessName").val();
 var fieldsVersion = $("#textProcessVersion").val();
+var tagSelected;
 
 window.onload = function () {
 
@@ -88,6 +89,11 @@ function loadAnalytics() {
                 alertify.error('Process deployment id retriving error');
             }
         });
+}
+
+function listProcessesByTag(tag) {
+    tagSelected = tag;
+    window.open('../list?tag='+tag, '_self');
 }
 
 function getMainProcess() {

@@ -23,7 +23,6 @@ if(log.isDebugEnabled()){
 }
 
 var filters = String(request.getParameter("filters"));
-log.info(filters);
 var taskLevelMonitor = new TaskLevelMonitor();
 var taskIdList = taskLevelMonitor.getProcessRelatedTaskList(filters);
 print(taskIdList);
