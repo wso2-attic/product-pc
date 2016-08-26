@@ -291,7 +291,8 @@ function configAnalytics() {
                         $(this).find("select").attr("disabled", "true");
                     });
                 });
-                showOverview(this);
+                window.location = "../../process/details/"+ window.location.href.
+                substring(window.location.href.lastIndexOf("/") + 1, window.location.href.length);
 
             } else {
                 alertify.error("Error in creating Event Stream/Reciever in DAS")
