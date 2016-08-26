@@ -33,15 +33,15 @@ var zipFile = files["processZip"];
 var zipInputStream = zipFile.getStream().getStream();
 var responseObj = {};
 try {
-    ip.importProcesses(zipInputStream, user.username);
+    var processImportResponse= ip.importProcesses(zipInputStream, user.username);
     responseObj.error = false;
-    responseObj.content = "SUCCESS";
+    responseObj.content = processImportResponse;
     print(stringify(responseObj));
 }catch(errorE){
     log.error(errorE);
     responseObj.error = true;
     if(errorE.message == "org.wso2.carbon.pc.core.ProcessCenterException: ALREADY_AVAILABLE"){
-        responseObj.content = "ERROR: Tried to Add Already Available Process";
+        responseObj.content = "ERROR: Error while importing processes";
         print(stringify(responseObj));
     }else {
         responseObj.content = "FAIL";
