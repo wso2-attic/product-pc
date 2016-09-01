@@ -146,6 +146,7 @@ public class AnalyticsUtils {
                 return o1.getValue().compareTo(o2.getValue());
             }
         });
+        Collections.reverse(l);
         JSONArray array = new JSONArray();
         for (int i = 0; i < l.size(); i++) {
             JSONObject o = new JSONObject();
@@ -192,6 +193,7 @@ public class AnalyticsUtils {
                 return o1.getValue().compareTo(o2.getValue());
             }
         });
+        Collections.reverse(l);
         JSONArray array = new JSONArray();
         for (int i = 0; i < l.size(); i++) {
             JSONObject o = new JSONObject();
@@ -235,6 +237,7 @@ public class AnalyticsUtils {
                 return o1.getKey().compareTo(o2.getKey());
             }
         });
+        Collections.reverse(l);
         JSONArray array = new JSONArray();
         for (int i = 0; i < l.size(); i++) {
             JSONObject o = new JSONObject();
