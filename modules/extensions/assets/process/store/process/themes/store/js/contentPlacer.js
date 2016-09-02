@@ -236,7 +236,7 @@ $(document).ready(function () {
                                     } else if (response[i].path != "NA") {
                                         var anchorElement = document.createElement("a");
                                         anchorElement.setAttribute("id", "document" + i);
-                                        anchorElement.setAttribute("href", "#");
+                                        anchorElement.setAttribute("href","");
                                         anchorElement.onclick = (function (currentPath) {
                                             return function () {
                                                 downloadDocument(currentPath);
