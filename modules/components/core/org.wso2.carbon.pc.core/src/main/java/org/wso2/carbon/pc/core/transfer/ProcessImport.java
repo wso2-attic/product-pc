@@ -275,10 +275,7 @@ public class ProcessImport {
 
             flowchartContentResource.setContent(flowChartFileContent);
             flowchartContentResource.setMediaType(MediaType.APPLICATION_JSON);
-            String flowchartContentPath = ProcessCenterConstants.PROCESS_CENTER_RESOURCES_PATH +
-                    ProcessCenterConstants.PROCESS + "/" +
-                    ProcessCenterConstants.FLOW_CHART + "/" +
-                    processName + "/" +
+            String flowchartContentPath = ProcessCenterConstants.FLOW_CHART + "/" + processName + "/" +
                     processVersion;
             reg.put(flowchartContentPath, flowchartContentResource);
             //add reg association
