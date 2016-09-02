@@ -50,6 +50,7 @@ import org.xml.sax.InputSource;
 import sun.misc.BASE64Decoder;
 
 import javax.ws.rs.core.MediaType;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.*;
@@ -95,6 +96,7 @@ public class ProcessStore {
 
     public Document stringToXML(String xmlString) throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         DocumentBuilder builder;
         builder = factory.newDocumentBuilder();
         return builder.parse(new InputSource(new StringReader(xmlString)));
@@ -708,6 +710,7 @@ public class ProcessStore {
 
                 JSONObject bar = new JSONObject();
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
                 DocumentBuilder builder;
                 builder = factory.newDocumentBuilder();
                 Document document = builder.parse(new InputSource(new StringReader(barContent)));
@@ -780,6 +783,7 @@ public class ProcessStore {
                 String bpmnContent = new String((byte[]) bpmnAsset.getContent());
                 JSONObject bpmn = new JSONObject();
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document document = builder.parse(new InputSource(new StringReader(bpmnContent)));
                 Element overviewElement = (Element) document.getElementsByTagName("overview").item(0);
@@ -1208,6 +1212,7 @@ public class ProcessStore {
                 String resourceContent = new String((byte[]) resourceAsset.getContent());
 
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document document = builder.parse(new InputSource(new StringReader(resourceContent)));
 

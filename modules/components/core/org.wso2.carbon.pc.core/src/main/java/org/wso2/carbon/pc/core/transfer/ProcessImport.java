@@ -38,6 +38,7 @@ import org.wso2.carbon.user.api.UserStoreException;
 import org.xml.sax.SAXException;
 
 import javax.ws.rs.core.MediaType;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -67,6 +68,7 @@ public class ProcessImport {
      * @throws ProcessCenterException
      * @throws UserStoreException
      */
+
     public String importProcesses(InputStream processZipInputStream, String user)
             throws IOException, RegistryException, ProcessCenterException, UserStoreException, JSONException,
             TransformerException, SAXException, ParserConfigurationException {
@@ -273,7 +275,10 @@ public class ProcessImport {
 
             flowchartContentResource.setContent(flowChartFileContent);
             flowchartContentResource.setMediaType(MediaType.APPLICATION_JSON);
-            String flowchartContentPath = ProcessCenterConstants.FLOW_CHART + "/" + processName + "/" +
+            String flowchartContentPath = ProcessCenterConstants.PROCESS_CENTER_RESOURCES_PATH +
+                    ProcessCenterConstants.PROCESS + "/" +
+                    ProcessCenterConstants.FLOW_CHART + "/" +
+                    processName + "/" +
                     processVersion;
             reg.put(flowchartContentPath, flowchartContentResource);
             //add reg association
@@ -305,8 +310,9 @@ public class ProcessImport {
         if (Files.exists(bpmnFilePath) && Files.exists(bpmnMetaDataFilePath)) {
             //set bpmn content file
             File bpmnXMLFile = new File(bpmnFilePathStr);
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            DocumentBuilder dBuilder = factory.newDocumentBuilder();
             Document doc = dBuilder.parse(bpmnXMLFile);
             String bpmnFileContent = ProcessStore.xmlToString(doc);
             String bpmnContentResourcePath = ProcessCenterConstants.BPMN_CONTENT_PATH + processName +

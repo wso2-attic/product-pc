@@ -24,6 +24,7 @@ public class Utils {
 
     private static final String HEXES = "0123456789ABCDEF";
 
+    // MD5 only used as a file comparison method and not as a security option
     public static byte[] createChecksum(InputStream FileInputStream)
             throws IOException, NoSuchAlgorithmException {
         try {

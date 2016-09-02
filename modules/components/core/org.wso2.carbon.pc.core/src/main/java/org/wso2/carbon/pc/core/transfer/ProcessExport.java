@@ -24,7 +24,6 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wso2.carbon.pc.core.FolderZiper;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
 import org.wso2.carbon.pc.core.ProcessStore;
@@ -41,6 +40,8 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class ProcessExport {
     private List<String> exportedProcessList;
@@ -70,10 +71,9 @@ public class ProcessExport {
                 exportProcess(exportRootPath, processName, processVersion, exportWithAssociationsBool, user);
 
                 //zip the folder
-                FolderZiper folderZiper = new FolderZiper();
                 String zipFilePath = ProcessCenterConstants.PROCESS_EXPORT_DIR + "/" + processName + "-" +
                         processVersion + ProcessCenterConstants.EXPORTS_ZIP_SUFFIX;
-                folderZiper.zipFolder(exportRootPath, zipFilePath);
+                zipFolder(exportRootPath, zipFilePath);
                 //encode zip file
                 String encodedZip = encodeFileToBase64Binary(zipFilePath);
                 //Finally remove the Imports folder and the zip file
@@ -272,25 +272,25 @@ public class ProcessExport {
     }
 
     public static byte[] loadFile(File file) throws IOException {
-        InputStream is = new FileInputStream(file);
+        byte[] bytes;
+        try (InputStream is = new FileInputStream(file)) {
 
-        long length = file.length();
-        if (length > Integer.MAX_VALUE) {
-            // File is too large
+            long length = file.length();
+            if (length > Integer.MAX_VALUE) {
+                // File is too large
+            }
+            bytes = new byte[(int) length];
+
+            int offset = 0;
+            int numRead = 0;
+            while (offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
+                offset += numRead;
+            }
+
+            if (offset < bytes.length) {
+                throw new IOException("Could not completely read file " + file.getName());
+            }
         }
-        byte[] bytes = new byte[(int) length];
-
-        int offset = 0;
-        int numRead = 0;
-        while (offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
-            offset += numRead;
-        }
-
-        if (offset < bytes.length) {
-            throw new IOException("Could not completely read file " + file.getName());
-        }
-
-        is.close();
         return bytes;
     }
 
@@ -319,6 +319,63 @@ public class ProcessExport {
                     exportProcessPath + ProcessCenterConstants.IMAGE_THUMBNAIL);
             IOUtils.copy(resource.getContentStream(), fileOutputStream);
             fileOutputStream.close();
+        }
+    }
+
+    /**
+     * @param srcFolder
+     * @param destZipFile
+     * @throws Exception
+     */
+    private void zipFolder(String srcFolder, String destZipFile) throws Exception {
+        ZipOutputStream zip = null;
+        FileOutputStream fileWriter = null;
+
+        fileWriter = new FileOutputStream(destZipFile);
+        zip = new ZipOutputStream(fileWriter);
+
+        addFolderToZip("", srcFolder, zip);
+        zip.flush();
+        zip.close();
+    }
+    /**
+     * @param path
+     * @param srcFile
+     * @param zip
+     * @throws Exception
+     */
+    private void addFileToZip(String path, String srcFile, ZipOutputStream zip) throws Exception {
+
+        File folder = new File(srcFile);
+        if (folder.isDirectory()) {
+            addFolderToZip(path, srcFile, zip);
+        } else {
+            byte[] buf = new byte[1024];
+            int len;
+            try (FileInputStream in = new FileInputStream(srcFile)) {
+                zip.putNextEntry(new ZipEntry(path + "/" + folder.getName()));
+                while ((len = in.read(buf)) > 0) {
+                    zip.write(buf, 0, len);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param path
+     * @param srcFolder
+     * @param zip
+     * @throws Exception
+     */
+    private void addFolderToZip(String path, String srcFolder, ZipOutputStream zip) throws Exception {
+        File folder = new File(srcFolder);
+
+        for (String fileName : folder.list()) {
+            if (path.equals("")) {
+                addFileToZip(folder.getName(), srcFolder + "/" + fileName, zip);
+            } else {
+                addFileToZip(path + "/" + folder.getName(), srcFolder + "/" + fileName, zip);
+            }
         }
     }
 }
