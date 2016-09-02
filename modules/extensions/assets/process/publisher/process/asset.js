@@ -143,6 +143,9 @@ asset.server = function(ctx) {
                         url: 'get_process_deployed_id',
                         path: 'get_process_deployed_id.jag'
                    }, {
+                        url: 'delete_variable',
+                        path: 'delete_variable.jag'
+                   }, {
                         url: 'avg_time_vs_process_id',
                         path: 'analytics/avg_time_vs_process_id.jag'
                    }, {

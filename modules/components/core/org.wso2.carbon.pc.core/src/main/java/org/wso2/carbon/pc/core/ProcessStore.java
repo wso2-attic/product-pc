@@ -960,7 +960,8 @@ public class ProcessStore {
 
                 JSONArray predecessorArray = new JSONArray();
                 Association[] aPredecessors = reg
-                        .getAssociations(resourcePath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                        .getAssociations(resourcePath,
+                                         ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
                 populateAssociations(aPredecessors, predecessorArray, reg, resourcePath);
                 conObj.put("predecessors", predecessorArray);
 
@@ -1085,9 +1086,9 @@ public class ProcessStore {
 
                 if (predecessor != null) {
                     reg.addAssociation(processAssetPath, predecessor.getString("path"),
-                            ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
+                                       ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
                     reg.addAssociation(predecessor.getString("path"), processAssetPath,
-                            ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
+                                       ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
                 }
             }
 
@@ -1338,7 +1339,8 @@ public class ProcessStore {
                 String resourceContent = new String((byte[]) resourceAsset.getContent());
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
-                Document document = builder.parse(new InputSource(new StringReader(resourceContent)));
+                Document document = builder.parse(
+                        new InputSource(new StringReader(resourceContent)));
 
                 JSONArray documentArray = new JSONArray();
                 NodeList documentElements = ((Element) document.getFirstChild()).getElementsByTagName("document");
@@ -1821,8 +1823,8 @@ public class ProcessStore {
                 resource.setContent(newProcessContent);
                 reg.put(processAssetPath, resource);
                 reg.getRegistryContext().getLogWriter()
-                        .addLog(ProcessCenterConstants.GREG_PATH + processAssetPath, reg.getUserName(), LogEntry.UPDATE,
-                                "DESCRIPTION");
+                        .addLog(ProcessCenterConstants.GREG_PATH + processAssetPath,
+                                reg.getUserName(), LogEntry.UPDATE, "DESCRIPTION");
                 Resource storedProcess = reg.get(processAssetPath);
                 processId = storedProcess.getUUID();
             }
@@ -2014,7 +2016,8 @@ public class ProcessStore {
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder;
                 builder = factory.newDocumentBuilder();
-                Document document = builder.parse(new InputSource(new StringReader(resourceContent)));
+                Document document = builder.parse(
+                        new InputSource(new StringReader(resourceContent)));
 
                 JSONArray variableArray = new JSONArray();
 
@@ -2068,7 +2071,8 @@ public class ProcessStore {
 
                 JSONObject processInfo = new JSONObject(processVariableDetails);
                 String processName = processInfo.getString(ProcessCenterConstants.PROCESS_NAME);
-                String processVersion = processInfo.getString(ProcessCenterConstants.PROCESS_VERSION);
+                String processVersion = processInfo.getString(
+                        ProcessCenterConstants.PROCESS_VERSION);
                 String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
                 Resource resource = reg.get(processAssetPath);
@@ -2198,20 +2202,36 @@ public class ProcessStore {
                 Document doc = stringToXML(processContent);
 
                 Element rootElement = doc.getDocumentElement();
-                Element dasConfigInfoElement = append(doc, rootElement, "analytics_config_info",
-                        ProcessCenterConstants.MNS);
-                appendText(doc, dasConfigInfoElement, ProcessCenterConstants.PROCESS_DEFINITION_ID,
-                        ProcessCenterConstants.MNS, processDefinitionId);
-                appendText(doc, dasConfigInfoElement, ProcessCenterConstants.EVENT_STREAM_NAME,
-                        ProcessCenterConstants.MNS, eventStreamName);
-                appendText(doc, dasConfigInfoElement, ProcessCenterConstants.EVENT_STREAM_VERSION,
-                        ProcessCenterConstants.MNS, eventStreamVersion);
-                appendText(doc, dasConfigInfoElement, ProcessCenterConstants.EVENT_STREAM_DESCRIPTION,
-                        ProcessCenterConstants.MNS, eventStreamDescription);
-                appendText(doc, dasConfigInfoElement, ProcessCenterConstants.EVENT_STREAM_NICK_NAME,
-                        ProcessCenterConstants.MNS, eventStreamNickName);
-                appendText(doc, dasConfigInfoElement, ProcessCenterConstants.EVENT_RECEIVER_NAME,
-                        ProcessCenterConstants.MNS, eventReceiverName);
+
+                if(doc.getElementsByTagName("analytics_config_info").getLength() == 0) {
+                    Element dasConfigInfoElement = append(doc, rootElement, "analytics_config_info",
+                                                          ProcessCenterConstants.MNS);
+                    appendText(doc, dasConfigInfoElement, ProcessCenterConstants.PROCESS_DEFINITION_ID,
+                               ProcessCenterConstants.MNS, processDefinitionId);
+                    appendText(doc, dasConfigInfoElement, ProcessCenterConstants.EVENT_STREAM_NAME,
+                               ProcessCenterConstants.MNS, eventStreamName);
+                    appendText(doc, dasConfigInfoElement, ProcessCenterConstants.EVENT_STREAM_VERSION,
+                               ProcessCenterConstants.MNS, eventStreamVersion);
+                    appendText(doc, dasConfigInfoElement, ProcessCenterConstants.EVENT_STREAM_DESCRIPTION,
+                               ProcessCenterConstants.MNS, eventStreamDescription);
+                    appendText(doc, dasConfigInfoElement, ProcessCenterConstants.EVENT_STREAM_NICK_NAME,
+                               ProcessCenterConstants.MNS, eventStreamNickName);
+                    appendText(doc, dasConfigInfoElement, ProcessCenterConstants.EVENT_RECEIVER_NAME,
+                               ProcessCenterConstants.MNS, eventReceiverName);
+                } else {
+                    doc.getElementsByTagName(ProcessCenterConstants.PROCESS_DEFINITION_ID).item(0)
+                       .setTextContent(processDefinitionId);
+                    doc.getElementsByTagName(ProcessCenterConstants.EVENT_STREAM_NAME).item(0)
+                       .setTextContent(eventStreamName);
+                    doc.getElementsByTagName(ProcessCenterConstants.EVENT_STREAM_VERSION).item(0)
+                       .setTextContent(eventStreamVersion);
+                    doc.getElementsByTagName(ProcessCenterConstants.EVENT_STREAM_DESCRIPTION).item(0)
+                       .setTextContent(eventStreamDescription);
+                    doc.getElementsByTagName(ProcessCenterConstants.EVENT_STREAM_NICK_NAME).item(0)
+                       .setTextContent(eventStreamNickName);
+                    doc.getElementsByTagName(ProcessCenterConstants.EVENT_RECEIVER_NAME).item(0)
+                       .setTextContent(eventReceiverName);
+                }
 
                 String newProcessContent = xmlToString(doc);
                 resource.setContent(newProcessContent);
@@ -2228,6 +2248,70 @@ public class ProcessStore {
         } catch (Exception e) {
             String errMsg =
                     "Failed to save das configuration details with info,\n" + dasConfigData + "\n,to the process.rxt";
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        }
+    }
+
+    public void deleteProcessVariable(String deleteVariableDetails, String user) throws ProcessCenterException {
+        try {
+            RegistryService registryService =
+                    ProcessCenterServerHolder.getInstance().getRegistryService();
+
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
+
+                JSONObject variableInfo = new JSONObject(deleteVariableDetails);
+                String processName = variableInfo.getString("processName");
+                String processVersion = variableInfo.getString("processVersion");
+                JSONArray variableObjArray = variableInfo.getJSONArray("processVariableList");
+
+                String processAssetPath =
+                        ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                        processVersion;
+                Resource resource = reg.get(processAssetPath);
+                String processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
+
+                NodeList variableElements =
+                        ((Element) doc.getFirstChild()).getElementsByTagName("process_variable");
+                for (int i = 0; i < variableObjArray.length(); i++) {
+                    String variableName =
+                            variableObjArray.getJSONObject(i).getString("variableName");
+                    String variableType =
+                            variableObjArray.getJSONObject(i).getString("variableType");
+                    String isAnalyzedData =
+                            variableObjArray.getJSONObject(i).getString("isAnalyzedData");
+                    String isDrillDownData =
+                            variableObjArray.getJSONObject(i).getString("isDrillDownData");
+
+                    for (int j = 0; j < variableElements.getLength(); j++) {
+                        Element variableElement = (Element) variableElements.item(j);
+                        String varName = variableElement.getElementsByTagName("name").item(0)
+                                                        .getTextContent();
+                        String varType = variableElement.getElementsByTagName("type").item(0)
+                                                        .getTextContent();
+                        String varAnalyzedData =
+                                variableElement.getElementsByTagName("isAnalyzeData").item(0)
+                                               .getTextContent();
+                        String varDrillDownData =
+                                variableElement.getElementsByTagName("isDrillDownVariable").item(0)
+                                               .getTextContent();
+
+                        if (varName.equals(variableName) && varType.equals(variableType) &&
+                            varAnalyzedData.equals(isAnalyzedData) &&
+                            varDrillDownData.equals(isDrillDownData)) {
+                            variableElement.getParentNode().removeChild(variableElement);
+                            break;
+                        }
+                    }
+                }
+                String newProcessContent = xmlToString(doc);
+                resource.setContent(newProcessContent);
+                reg.put(processAssetPath, resource);
+            }
+        } catch(Exception e) {
+            String errMsg = "Failed to delete process variable list: " + deleteVariableDetails;
             log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }

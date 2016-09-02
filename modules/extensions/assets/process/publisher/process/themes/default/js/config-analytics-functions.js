@@ -21,6 +21,30 @@
  Add a new row for a new process variable to the process Variables table in the Config Analytics view
  */
 var beginRowNo = 0;
+
+$(window).bind("load", function () {
+    if($('#processAnalyticsStreamVersion').val() == '') {
+        $('#btn_editProcessVariables').hide();
+        $('#btn_addProcessVariablesRow').show();
+        $('#btn_deleteProcessVariablesRow').show();
+        $('#btn_save_analytics_configurations').prop('disabled', false);
+    } else {
+        $('#btn_editProcessVariables').show();
+        $('#btn_addProcessVariablesRow').hide();
+        $('#btn_deleteProcessVariablesRow').hide();
+        $('#btn_save_analytics_configurations').prop('disabled', true);
+    }
+
+    $("#dataTable tbody tr").each(function () {
+        if($(this).find('td:eq(1) input[type="text"]').prop('disabled')) {
+            $(this).find('td:eq(0) input[type="checkbox"]').prop('disabled', true);
+            $(this).find('td:eq(3) input[type="checkbox"]').prop('disabled', true);
+            $(this).find('td:eq(4) input[type="checkbox"]').prop('disabled', true);
+        }
+    });
+});
+
+
 function addProcessVariableRow(tableID) {
 
     var table = document.getElementById(tableID);
@@ -44,6 +68,19 @@ function addProcessVariableRow(tableID) {
             'type="checkbox" name="chkAnalyzedData" /></td>' +
             '<td align="center" style="outline: thin solid #66c2ff"><input id="chkDrillData_' + beginRowNo + '" ' +
             'type="checkbox" name="chkDrillData" disabled/></td>';
+}
+
+function checkProcessVariableAvailability(tableIdVal, name, type) {
+    var isAlreadyExistsInTable = false;
+    var tableId = "#" + tableIdVal;
+    $(tableId + " tbody tr").each(function () {
+        if($(this).find('td:eq(1) input[type="text"]').prop('disabled')) {
+            if ($(this).find('td:eq(1) input').val() == name && $(this).find('td:eq(2) select').find('option:selected').text() == type) {
+                isAlreadyExistsInTable = true;
+            }
+        }
+    });
+    return isAlreadyExistsInTable;
 }
 
     function processVariableAutoComplete(me){
@@ -106,6 +143,11 @@ function deleteProcessVariableRow(tableID) {
     try {
         var table = document.getElementById(tableID);
         var rowCount = table.rows.length;
+        var variableArray = [];
+        var removeVariableList = {
+            'processName': $('#processNameHiddenElement').val(),
+            'processVersion': $('#processVersionHiddenElement').val()
+        };
 
         for (var i = 0; i < rowCount; i++) {
             var row = table.rows[i];
@@ -115,22 +157,52 @@ function deleteProcessVariableRow(tableID) {
                     alert("No rows to delete.");
                     break;
                 }
+                if ($("#processAnalyticsConfigured").val() == 'true' && row.cells[1].children[0].disabled == true) {
+                    var removeVariableObj = {
+                        'variableName': row.cells[1].children[0].value,
+                        'variableType': row.cells[2].children[0].value,
+                        'isAnalyzedData': row.cells[3].children[0].checked,
+                        'isDrillDownData': row.cells[4].children[0].checked
+                    };
+                    variableArray.push(removeVariableObj);
+                }
                 table.deleteRow(i);
                 rowCount--;
                 i--;
             }
         }
 
+        if (variableArray.length != 0) {
+            removeVariableList.processVariableList = variableArray;
+            $.ajax({
+                url: '/designer/assets/process/apis/delete_variable',
+                async: false,
+                type: 'POST',
+                data: {'removeVariableDetails': JSON.stringify(removeVariableList)},
+                success: function (data) {
+                    var response = JSON.parse(data);
+                    if (response.error === false) {
+                        alertify.success('Successfully deleted the selected process variable/s.');
+                    } else {
+                        alertify.error(response.content);
+                    }
+                },
+                error: function () {
+                    alertify.error('Document deleting error');
+                }
+            });
+        }
     } catch (e) {
         alert(e);
     }
 }
 
 //Information on event stream payload data fields (this includes processVariables)
-var eventStreamPayloadFields = [];
+var eventStreamPayloadFields;
 
 var processName;
 var processVersion;
+var isVariableExists;
 
 /*
  Save the process variables which need to be configured for analytics, in process rxt in Governance Registry
@@ -142,9 +214,10 @@ function saveProcessVariables(tableID, callback) {
     // in process rxt
     var processVariablesInfo = {};
     var processVariables = {};
+    eventStreamPayloadFields = [];
+    isVariableExists = false;
 
     if (rowCount <= 1) {
-        alertify.success("No Process Variable To Config..!")
         return "ERROR";
     }
 
@@ -175,7 +248,6 @@ function saveProcessVariables(tableID, callback) {
         var item = {};
         var row = table.rows[i];
         if (!(row.cells[1].children[0].value)) {
-            alertify.error("Process Variable Names Cannot Be Empty");
             return "ERROR";
         }
         var variableName = row.cells[1].children[0].value;
@@ -184,37 +256,47 @@ function saveProcessVariables(tableID, callback) {
         var isDrillDownData = row.cells[4].children[0].checked;
 
         if (null != variableName && null != variableType) {
-            processVariables[variableName] = variableType + "##" + isAnalyzdData + "##" + isDrillDownData;
-            item["name"] = variableName;
-            item["type"] = variableType;
-            item["isAnalyzeData"] = isAnalyzdData;
-            item["isDrillDownData"] = isDrillDownData;
-            eventStreamPayloadFields.push(item);
+            if (!row.cells[1].children[0].disabled) {
+                if(checkProcessVariableAvailability(tableID, variableName, variableType)) {
+                    alertify.error(variableName + " is already exists.");
+                    isVariableExists = true;
+                    return;
+                } else {
+                    processVariables[variableName] = variableType + "##" + isAnalyzdData + "##" + isDrillDownData;
+                    item["name"] = variableName;
+                    item["type"] = variableType;
+                    item["isAnalyzeData"] = isAnalyzdData;
+                    item["isDrillDownData"] = isDrillDownData;
+                    eventStreamPayloadFields.push(item);
+                }
+            }
         }
     }
-    processVariablesInfo["processVariables"] = processVariables;
+    if (!$.isEmptyObject(processVariables)) {
+        processVariablesInfo["processVariables"] = processVariables;
 
-    $.ajax({
-        url: '/designer/assets/process/apis/save_process_variables',
-        type: 'POST',
-        data: {'processVariablesInfo': JSON.stringify(processVariablesInfo)},
-        async: false,
-        success: function (response) {
-            if (response == "FAIL") {
+        $.ajax({
+            url: '/designer/assets/process/apis/save_process_variables',
+            type: 'POST',
+            data: {'processVariablesInfo': JSON.stringify(processVariablesInfo)},
+            async: false,
+            success: function (response) {
+                if (response == "FAIL") {
+                    alertify.error('Process variables saving error');
+                    returnValue = "ERROR";
+                    callback(returnValue);
+                } else {
+                    returnValue = "SUCCESS";
+                    callback(returnValue);
+                }
+            },
+            error: function (response) {
                 alertify.error('Process variables saving error');
                 returnValue = "ERROR";
-                callback(returnValue);
-            } else {
-                returnValue = "SUCCESS";
-                callback(returnValue);
+                callback1(returnValue);
             }
-        },
-        error: function (response) {
-            alertify.error('Process variables saving error');
-            returnValue = "ERROR";
-            callback1(returnValue);
-        }
-    });
+        });
+    }
 }
 
 /*
@@ -251,6 +333,7 @@ function configAnalytics() {
     var eventStreamNickName = $('#eventStreamNickName').val();
     var eventReceiverName = $('#eventReceiverName').val();
     var processDefinitionId = $('#processDefinitionId').val();
+    var tableId = "#dataTable";
 
     var eventStreamId = eventStreamName + ":" + eventStreamVersion;
     var dasConfigData = {};
@@ -264,41 +347,92 @@ function configAnalytics() {
     dasConfigData["pcProcessId"] = pcProcessId;
     dasConfigData["processVariables"] = eventStreamPayloadFields;
 
-    $.ajax({
-        url: '/designer/assets/process/apis/config_das_analytics',
-        type: 'POST',
-        data: {
-            'dasConfigData': JSON.stringify(dasConfigData),
-            'processName': processName,
-            'processVersion': processVersion
-        },
-        success: function (response) {
-            if (response == "SUCCESS") {
-                alertify.success("Analytics Configuration Success");
-                $("#btn_save_analytics_configurations").attr("disabled", true);
-                $("#btn_addProcessVariablesRow").prop("onclick", null);
-                $("#btn_deleteProcessVariablesRow").prop("onclick", null);
-                $('#eventStreamName').attr('readonly', "true");
-                $('#eventStreamVersion').attr("readonly", "true");
-                $('#eventStreamDescription').attr("readonly", "true");
-                $('#eventStreamNickName').attr("readonly", "true");
-                $('#eventReceiverName').attr("readonly", "true");
-                $('#processDefinitionId').attr("readonly", "true");
+    if(eventStreamPayloadFields.length > 2 && !isVariableExists) {
+        $.ajax({
+            url: '/designer/assets/process/apis/config_das_analytics',
+            type: 'POST',
+            data: {
+                'dasConfigData': JSON.stringify(dasConfigData),
+                'processName': processName,
+                'processVersion': processVersion
+            },
+            success: function (response) {
+                if (response == "SUCCESS") {
+                    alertify.success("Analytics Configuration Success");
+                    $('#eventStreamName').attr('readonly', "true");
+                    $('#eventStreamDescription').attr("readonly", "true");
+                    $('#eventStreamNickName').attr("readonly", "true");
+                    $('#processDefinitionId').attr("readonly", "true");
 
-                $("#dataTuuable tr").each(function () {
-                    $(this).children().each(function () {
-                        $(this).find("input").attr("readonly", "true");
-                        $(this).find("select").attr("disabled", "true");
+                    $('#btn_editProcessVariables').show();
+                    $('#btn_addProcessVariablesRow').hide();
+                    $('#btn_deleteProcessVariablesRow').hide();
+                    $('#btn_save_analytics_configurations').prop('disabled', true);
+
+                    $("#dataTuuable tr").each(function () {
+                        $(this).children().each(function () {
+                            $(this).find("input").attr("readonly", "true");
+                            $(this).find("select").attr("disabled", "true");
+                        });
                     });
-                });
-                showOverview(this);
 
-            } else {
-                alertify.error("Error in creating Event Stream/Reciever in DAS")
+                    $(tableId + " tbody tr").each(function () {
+                        if(!$(this).find('td:eq(1) input[type="text"]').prop('disabled')) {
+                            $(this).find('td:eq(1) input[type="text"]').attr('disabled', 'true');
+                        }
+                    });
+                    showOverview(this);
+                } else {
+                    alertify.error("Error in creating Event Stream/Reciever in DAS")
+                }
+            },
+            error: function () {
+                alertify.error('Error in config_das_analytics.jag while creating Event Stream/Reciever in DAS');
             }
-        },
-        error: function () {
-            alertify.error('Error in config_das_analytics.jag while creating Event Stream/Reciever in DAS');
+        });
+    } else {
+        var isEmptyFieldExistsInTable = false;
+        var disabledRowCount = 0;
+        $(tableId + " tbody tr").each(function () {
+            if(!$(this).find('td:eq(1) input[type="text"]').prop('disabled')) {
+                if ($(this).find('td:eq(1) input').val() == '') {
+                    isEmptyFieldExistsInTable = true;
+                }
+            } else {
+                disabledRowCount++;
+            }
+        });
+
+        if(disabledRowCount == $(tableId + " tbody tr").length) {
+            alertify.warning("There isn't any new process variable/s to add");
+        }
+
+        //refresh page
+        if(isEmptyFieldExistsInTable) {
+            window.location.href = window.location.href;
+        }
+    }
+}
+
+function editProcessVariables() {
+    $('#btn_editProcessVariables').hide();
+    $('#btn_addProcessVariablesRow').show();
+    $('#btn_deleteProcessVariablesRow').show();
+    $('#btn_save_analytics_configurations').prop('disabled', false);
+
+    $("#dataTable tbody tr").each(function () {
+        if($(this).find('td:eq(1) input[type="text"]').prop('disabled')) {
+            $(this).find('td:eq(0) input[type="checkbox"]').prop('disabled', false);
+            $(this).find('td:eq(3) input[type="checkbox"]').prop('disabled', false);
+            $(this).find('td:eq(4) input[type="checkbox"]').prop('disabled', false);
         }
     });
+
+    var version = parseInt($('#eventStreamVersion').val().split(".")[0]) + 1;
+    var versionStr = version + ".0.0";
+    $('#eventStreamVersion').val(versionStr);
+
+    var receiverTokens = $('#eventReceiverName').val().split('_').slice(0, 2),
+        receiverSplitStr = receiverTokens.join('_');
+    $('#eventReceiverName').val(receiverSplitStr + "_process_receiver" + versionStr);
 }
