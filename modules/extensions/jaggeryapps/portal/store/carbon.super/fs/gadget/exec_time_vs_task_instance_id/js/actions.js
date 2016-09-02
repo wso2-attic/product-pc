@@ -70,7 +70,7 @@ function drawExecutionTimeVsTaskInstanceIdResult() {
                     var scale = getTimeScale(responseJsonArr[0].duration);
                     for (var i = 0; i < responseJsonArr.length; i++) {
                         responseJsonArr[i].duration = convertTime(scale, responseJsonArr[i].duration);
-                        var temp = '["' + responseJsonArr[i].taskInstanceId + '",' + responseJsonArr[i].duration + '],';
+                        var temp = '["' + responseJsonArr[i].taskInstanceId + ' ",' + responseJsonArr[i].duration + '],';
                         responseStr += temp;
                     }
                     jsonObj[0].metadata.names[1] = "Time(" + scale + ")";
