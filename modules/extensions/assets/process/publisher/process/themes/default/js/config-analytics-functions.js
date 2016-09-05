@@ -67,7 +67,7 @@ function addProcessVariableRow(tableID) {
             '<td align="center" style="outline: thin solid #66c2ff"><input id="chkAnalyzedData_' + beginRowNo + '" ' +
             'type="checkbox" name="chkAnalyzedData" /></td>' +
             '<td align="center" style="outline: thin solid #66c2ff"><input id="chkDrillData_' + beginRowNo + '" ' +
-            'type="checkbox" name="chkDrillData" disabled/></td>';
+            'type="checkbox" name="chkDrillData"/></td>';
 }
 
 function checkProcessVariableAvailability(tableIdVal, name, type) {
@@ -157,7 +157,7 @@ function deleteProcessVariableRow(tableID) {
                     alert("No rows to delete.");
                     break;
                 }
-                if ($("#processAnalyticsConfigured").val() == 'true' && row.cells[1].children[0].disabled == true) {
+                if ($("#processAnalyticsConfigured").val() == 'true') {
                     var removeVariableObj = {
                         'variableName': row.cells[1].children[0].value,
                         'variableType': row.cells[2].children[0].value,
@@ -256,20 +256,12 @@ function saveProcessVariables(tableID, callback) {
         var isDrillDownData = row.cells[4].children[0].checked;
 
         if (null != variableName && null != variableType) {
-            if (!row.cells[1].children[0].disabled) {
-                if(checkProcessVariableAvailability(tableID, variableName, variableType)) {
-                    alertify.error(variableName + " is already exists.");
-                    isVariableExists = true;
-                    return;
-                } else {
-                    processVariables[variableName] = variableType + "##" + isAnalyzdData + "##" + isDrillDownData;
-                    item["name"] = variableName;
-                    item["type"] = variableType;
-                    item["isAnalyzeData"] = isAnalyzdData;
-                    item["isDrillDownData"] = isDrillDownData;
-                    eventStreamPayloadFields.push(item);
-                }
-            }
+            processVariables[variableName] = variableType + "##" + isAnalyzdData + "##" + isDrillDownData;
+            item["name"] = variableName;
+            item["type"] = variableType;
+            item["isAnalyzeData"] = isAnalyzdData;
+            item["isDrillDownData"] = isDrillDownData;
+            eventStreamPayloadFields.push(item);
         }
     }
     if (!$.isEmptyObject(processVariables)) {
@@ -347,7 +339,7 @@ function configAnalytics() {
     dasConfigData["pcProcessId"] = pcProcessId;
     dasConfigData["processVariables"] = eventStreamPayloadFields;
 
-    if(eventStreamPayloadFields.length > 2 && !isVariableExists) {
+    if(eventStreamPayloadFields.length > 2) {
         $.ajax({
             url: '/designer/assets/process/apis/config_das_analytics',
             type: 'POST',
@@ -376,11 +368,6 @@ function configAnalytics() {
                         });
                     });
 
-                    $(tableId + " tbody tr").each(function () {
-                        if(!$(this).find('td:eq(1) input[type="text"]').prop('disabled')) {
-                            $(this).find('td:eq(1) input[type="text"]').attr('disabled', 'true');
-                        }
-                    });
                     showOverview(this);
                 } else {
                     alertify.error("Error in creating Event Stream/Reciever in DAS")
@@ -392,20 +379,11 @@ function configAnalytics() {
         });
     } else {
         var isEmptyFieldExistsInTable = false;
-        var disabledRowCount = 0;
         $(tableId + " tbody tr").each(function () {
-            if(!$(this).find('td:eq(1) input[type="text"]').prop('disabled')) {
-                if ($(this).find('td:eq(1) input').val() == '') {
-                    isEmptyFieldExistsInTable = true;
-                }
-            } else {
-                disabledRowCount++;
+            if ($(this).find('td:eq(1) input[type="text"]').val() == '') {
+                isEmptyFieldExistsInTable = true;
             }
         });
-
-        if(disabledRowCount == $(tableId + " tbody tr").length) {
-            alertify.warning("There isn't any new process variable/s to add");
-        }
 
         //refresh page
         if(isEmptyFieldExistsInTable) {
@@ -423,6 +401,7 @@ function editProcessVariables() {
     $("#dataTable tbody tr").each(function () {
         if($(this).find('td:eq(1) input[type="text"]').prop('disabled')) {
             $(this).find('td:eq(0) input[type="checkbox"]').prop('disabled', false);
+            $(this).find('td:eq(1) input[type="text"]').prop('disabled', false);
             $(this).find('td:eq(3) input[type="checkbox"]').prop('disabled', false);
             $(this).find('td:eq(4) input[type="checkbox"]').prop('disabled', false);
         }

@@ -31,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
@@ -60,6 +61,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -2055,6 +2057,51 @@ public class ProcessStore {
         return resourceString;
     }
 
+    public void removeAllProcessVariables(String resourcePath) throws ProcessCenterException {
+        try {
+            RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
+            if (registryService != null) {
+                UserRegistry reg = registryService.getGovernanceSystemRegistry();
+
+                Resource resource = reg.get(resourcePath);
+                String processContent = new String((byte[]) resource.getContent());
+                Document doc = stringToXML(processContent);
+
+                if(doc.getElementsByTagName("process_variable").getLength() != 0) {
+                    NodeList variableElements = ((Element) doc.getFirstChild()).getElementsByTagName("process_variable");
+                    ArrayList<Node> delete = new ArrayList<Node>();
+
+                    for (int i = 0; i < variableElements.getLength(); i++) {
+                        Node node = variableElements.item(i);
+                        NodeList childList = node.getChildNodes();
+
+                        for (int x = 0; x < childList.getLength(); x++) {
+                            Node child = childList.item(x);
+                            // To search only "process_variable" children
+                            if (child.getNodeType() == Node.ELEMENT_NODE &&
+                                child.getNodeName().equalsIgnoreCase("name")) {
+                                // add to "to be deleted" list
+                                delete.add(node);
+                                break;
+                            }
+                        }
+                    }
+                    for(int i = 0; i < delete.size(); i++) {
+                        Node node = delete.get(i);
+                        node.getParentNode().removeChild(node);
+                    }
+                    String newDeleteVarProcessContent = xmlToString(doc);
+                    resource.setContent(newDeleteVarProcessContent);
+                    reg.put(resourcePath, resource);
+                }
+            }
+        } catch (Exception e) {
+            String errMsg = "Failed to delete all process variables";
+            log.error(errMsg, e);
+            throw new ProcessCenterException(errMsg, e);
+        }
+    }
+
     /**
      * Save the process variables in process rxt which need to be configured for analytics
      *
@@ -2075,6 +2122,7 @@ public class ProcessStore {
                         ProcessCenterConstants.PROCESS_VERSION);
                 String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
+                removeAllProcessVariables(processAssetPath);
                 Resource resource = reg.get(processAssetPath);
                 processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
