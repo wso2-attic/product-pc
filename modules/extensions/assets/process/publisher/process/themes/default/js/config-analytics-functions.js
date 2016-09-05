@@ -70,19 +70,6 @@ function addProcessVariableRow(tableID) {
             'type="checkbox" name="chkDrillData"/></td>';
 }
 
-function checkProcessVariableAvailability(tableIdVal, name, type) {
-    var isAlreadyExistsInTable = false;
-    var tableId = "#" + tableIdVal;
-    $(tableId + " tbody tr").each(function () {
-        if($(this).find('td:eq(1) input[type="text"]').prop('disabled')) {
-            if ($(this).find('td:eq(1) input').val() == name && $(this).find('td:eq(2) select').find('option:selected').text() == type) {
-                isAlreadyExistsInTable = true;
-            }
-        }
-    });
-    return isAlreadyExistsInTable;
-}
-
     function processVariableAutoComplete(me){
       var processVariables = []
       var processVariablesObj
@@ -202,7 +189,6 @@ var eventStreamPayloadFields;
 
 var processName;
 var processVersion;
-var isVariableExists;
 
 /*
  Save the process variables which need to be configured for analytics, in process rxt in Governance Registry
@@ -215,7 +201,6 @@ function saveProcessVariables(tableID, callback) {
     var processVariablesInfo = {};
     var processVariables = {};
     eventStreamPayloadFields = [];
-    isVariableExists = false;
 
     if (rowCount <= 1) {
         return "ERROR";
