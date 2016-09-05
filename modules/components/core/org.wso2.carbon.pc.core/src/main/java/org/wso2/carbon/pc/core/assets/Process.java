@@ -36,6 +36,7 @@ import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -97,6 +98,7 @@ public class Process {
                     byte[] bpmnContent = (byte[]) bpmnRegistryResource.getContent();
                     InputStreamProvider inputStreamProvider = new PCInputStreamProvider(bpmnContent);
                     factory = DocumentBuilderFactory.newInstance();
+                    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
                     builder = factory.newDocumentBuilder();
                     BPMNDocument = builder.parse(new InputSource(inputStreamProvider.getInputStream()));
                 }

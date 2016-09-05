@@ -29,6 +29,8 @@ import org.wso2.pc.integration.test.utils.base.*;
 import org.xml.sax.InputSource;
 
 import org.w3c.dom.Element;
+
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
@@ -91,6 +93,7 @@ public class ImportProcessTestCase extends PCIntegrationBaseTest {
         String xml = new String(wsRegistryServiceClient.
                 getContent("/_system/governance/bpmn/Process1/1.0"));
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
         Document document = builder.parse(new InputSource(new StringReader(xml)));
         Element root = document.getDocumentElement();

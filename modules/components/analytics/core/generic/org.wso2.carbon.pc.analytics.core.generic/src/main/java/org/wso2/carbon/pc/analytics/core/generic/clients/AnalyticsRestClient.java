@@ -75,11 +75,6 @@ public class AnalyticsRestClient {
 			while ((output = br.readLine()) != null) {
 				totalOutput.append(output);
 			}
-
-			if (log.isDebugEnabled()) {
-				log.debug("Output = " + totalOutput.toString());
-			}
-
 			return totalOutput.toString();
 
 		} catch (UnsupportedEncodingException e) {

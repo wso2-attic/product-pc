@@ -146,18 +146,19 @@ public class ProcessCenterServerHolder {
 
         try {
             File dashBoardJson = new File(path);
-            InputStream stream = new FileInputStream(dashBoardJson);
-            if (this.registryService != null) {
+            try (InputStream stream = new FileInputStream(dashBoardJson)) {
+                if (this.registryService != null) {
 
-                UserRegistry registry = this.registryService.getConfigSystemRegistry();
-                Resource dashboardResource = registry.newResource();
-                byte[] content = IOUtils.toByteArray(stream);
-                String jsonText = new String(content);
-                dashboardResource.setContent(jsonText);
-                dashboardResource.setMediaType("application/json");
-                String dashboardPath = "ues/dashboards/" + file_name;
-                if (!registry.resourceExists(dashboardPath)) {
-                    registry.put(dashboardPath, dashboardResource);
+                    UserRegistry registry = this.registryService.getConfigSystemRegistry();
+                    Resource dashboardResource = registry.newResource();
+                    byte[] content = IOUtils.toByteArray(stream);
+                    String jsonText = new String(content);
+                    dashboardResource.setContent(jsonText);
+                    dashboardResource.setMediaType("application/json");
+                    String dashboardPath = "ues/dashboards/" + file_name;
+                    if (!registry.resourceExists(dashboardPath)) {
+                        registry.put(dashboardPath, dashboardResource);
+                    }
                 }
             }
 
