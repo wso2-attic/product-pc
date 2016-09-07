@@ -34,7 +34,7 @@ function downloadDocument(relativePath) {
                 }
                 var byteArray = new Uint8Array(byteNumbers);
                 var blob = new Blob([byteArray], {type: contentType});
-                saveAs(blob, docNameWithExt);
+                saveDoc(blob, docNameWithExt);
             } else {
                 alertify.error(response.content);
             }
@@ -44,6 +44,22 @@ function downloadDocument(relativePath) {
         }
     });
 }
+
+var saveDoc = (function () {
+    var a = document.createElement("a");
+    a.style = "display: none";
+    return function (blob, fileName) {
+        var reader  = new FileReader();
+        reader.addEventListener("load", function () {
+            a.href = this.result;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click( function () {
+            });
+        }, false);
+        reader.readAsDataURL(blob);
+    };
+}());
 
 function viewPDFDocument(relativePath, heading, iteration) {
     $.ajax({
@@ -60,8 +76,12 @@ function viewPDFDocument(relativePath, heading, iteration) {
                 var contentType = 'application/pdf';
                 var byteArray = new Uint8Array(byteNumbers);
                 var file = new Blob([byteArray], {type: contentType});
-                var fileURL = URL.createObjectURL(file);
-                viewPDF(fileURL, heading, iteration);
+                var reader  = new FileReader();
+
+                reader.addEventListener("load", function () {
+                    viewPDF(this.result, heading, iteration);
+                }, false);
+                reader.readAsDataURL(file);
             } else {
                 alertify.error(response.content);
             }
