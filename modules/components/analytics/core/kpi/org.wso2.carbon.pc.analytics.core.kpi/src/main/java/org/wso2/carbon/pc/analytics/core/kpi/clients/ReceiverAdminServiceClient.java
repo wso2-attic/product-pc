@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.pc.analytics.core.kpi.clients;
 
+import java.io.File;
 import java.rmi.RemoteException;
 
 import org.apache.axis2.AxisFault;
@@ -43,12 +44,13 @@ public class ReceiverAdminServiceClient {
      * @throws AxisFault
      */
     public ReceiverAdminServiceClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + "/" + AnalyticsConfigConstants.SERVICES + "/" + SERVICE_NAME;
+        this.endPoint = backEndUrl + File.separator + AnalyticsConfigConstants.SERVICES + File.separator + SERVICE_NAME;
         eventReceiverAdminServiceStub = new EventReceiverAdminServiceStub(endPoint);
     }
 
     /**
      * Deploy Event Receiver for the particular process, configuring the previously created Event Stream
+     *
      * @param sessionCookie
      * @param receiverName
      * @param streamId

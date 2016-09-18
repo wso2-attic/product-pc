@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.pc.core;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -61,7 +62,6 @@ public class ProcessCenterConstants {
     public static final String LATEST = "latest";
     public static final String LATEST_CHECKSUM = "latestChecksum";
     public static final String LAST_UPDATED_TIME = "lastUpdatedTime";
-
     /**
      * Service Clients
      */
@@ -72,16 +72,20 @@ public class ProcessCenterConstants {
     /**
      * Assets Storage
      **/
-    public static final String GREG_PATH = "/_system/governance/";
-    public static final String PROCESS_CENTER_RESOURCES_PATH = "process_center/asset_resources/";
-    public static final String PROCESS_ASSET_ROOT = "processes/";
-    public static final String PACKAGE_ASSET_ROOT = "package/";
-    public static final String PACKAGES_ASSET_ROOT = "packages/";
-    public static final String BPMN_CONTENT_PATH = "bpmncontent/";
-    public static final String BPMN_META_DATA_FILE_PATH = "bpmn/";
-    public static final String IMAGE_PATH = "store/asset_resources/process/";
-    public static final String IMAGE_PATH_PACKAGE = "store/asset_resources/package/";
-    public static final String GREG_PATH_PROCESS = "/_system/governance/processes/";
+    public static final String GREG_PATH = File.separator + "_system" + File.separator + "governance" + File.separator;
+    public static final String PROCESS_CENTER_RESOURCES_PATH =
+            "process_center" + File.separator + "asset_resources" + File.separator;
+    public static final String PROCESS_ASSET_ROOT = "processes" + File.separator;
+    public static final String PACKAGE_ASSET_ROOT = "package" + File.separator;
+    public static final String PACKAGES_ASSET_ROOT = "packages" + File.separator;
+    public static final String BPMN_CONTENT_PATH = "bpmncontent" + File.separator;
+    public static final String BPMN_META_DATA_FILE_PATH = "bpmn" + File.separator;
+    public static final String IMAGE_PATH =
+            "store" + File.separator + "asset_resources" + File.separator + "process" + File.separator;
+    public static final String IMAGE_PATH_PACKAGE =
+            "store" + File.separator + "asset_resources" + File.separator + "package" + File.separator;
+    public static final String GREG_PATH_PROCESS =
+            File.separator + "_system" + File.separator + "governance" + File.separator + "processes" + File.separator;
     public static final String PROCESS_LIFECYCLE_NAME = "DefaultProcessLifeCycle";
     //association type for processes in pdf, documents and process text assets
     public static final String ASSOCIATION_TYPE = "process_association";
@@ -89,11 +93,13 @@ public class ProcessCenterConstants {
     public static final String PARENTPROCESS_ASSOCIATION = "parent";
     public static final String SUCCESSOR_ASSOCIATION = "successor";
     public static final String PREDECESSOR_ASSOCIATION = "predecessor";
-    public static final String PROCESS_TEXT_PATH = "processText/";
-    public static final String DOC_CONTENT_PATH = "doccontent/";
+    public static final String PROCESS_TEXT_PATH = "processText" + File.separator;
+    public static final String DOC_CONTENT_PATH = "doccontent" + File.separator;
     public static final String UI_PERMISSION_ACTION = "ui.execute";
     public static final String PROCESS_UPDATE_PERMISSION =
-            "/permission/admin/enterprisestore/apps/publisher/features/assets/process/update";
+            File.separator + "permission" + File.separator + "admin" + File.separator + "enterprisestore"
+                    + File.separator + "apps" + File.separator + "publisher" + File.separator + "features"
+                    + File.separator + "assets" + File.separator + "process" + File.separator + "update";
     public static final String PROCESS_NAME = "processName";
     public static final String PROCESS_ASSET_NAME = "processAssetName";
     public static final String PROCESS_ASSET_VERSION = "processAssetVersion";
@@ -106,8 +112,10 @@ public class ProcessCenterConstants {
     /**
      * BPMN Deployment
      **/
+    public static final String BPMN20XML = "bpmn20.xml";
+    public static final String BPMN = "bpmn";
     public static final List<String> BPMN_RESOURCE_SUFFIXES = Collections
-            .unmodifiableList(Arrays.asList("bpmn20.xml", "bpmn"));
+            .unmodifiableList(Arrays.asList(BPMN20XML, BPMN));
     /**
      * Process Center Asset Permission
      **/
@@ -130,14 +138,15 @@ public class ProcessCenterConstants {
     public static final String DOCUMENT = "Document";
     public static final String PROCESS_TEXT = "Process-Text";
     public static final String PROCESS_TYPE = "Process";
-    public static final String PROCESS_EXPORT_DIR = "Exports/";
+    public static final String PROCESS_EXPORT_DIR = "Exports" + File.separator;
     public static final String EXPORTED_PROCESS_RXT_FILE = "process_rxt.xml";
     public static final String EXPORTED_BPMN_META_FILE = "bpmn.xml";
     public static final String EXPORTED_BPMN_CONTENT_FILE = "bpmn_content.xml";
     public static final String EXPORTED_FLOW_CHART_FILE = "flowChart.json";
     public static final String EXPORTED_PROCESS_TEXT_FILE = "process_text.xml";
     public static final int JSON_FILE_INDENT_FACTOR = 5;
-    public static final String PROCESS_ASSET_RESOURCE_REG_PATH = "store/asset_resources/process/";
+    public static final String PROCESS_ASSET_RESOURCE_REG_PATH =
+            "store" + File.separator + "asset_resources" + File.separator + "process" + File.separator;
     public static final String PROCESS_TAGS_FILE = "process_tags.txt";
     public static final String PROCESS_ASSOCIATIONS_FILE = "process_associations.json";
     public static final String PROCESS_VERSION = "processVersion";
@@ -154,7 +163,7 @@ public class ProcessCenterConstants {
     public static final String VARIABLE = "variable";
     public static final String WSO2_BPMN_ASSET_MEDIA_TYPE = "application/vnd.wso2-bpmn+xml";
     public static final String PROCESS_ZIP_DOCUMENTS_DIR = "documents";
-    public static final String TAGS_FILE_TAG_SEPARATOR = "###";
+    public static final String TAGS_FILE_TAG_SEPARATOR = ",";
     public static final String FLOW_CHART = "flowchart";
     public static final String SUCCESSORS = "successors";
     public static final String SUBPROCESSES = "subprocesses";
@@ -163,6 +172,20 @@ public class ProcessCenterConstants {
     public static final String EXPORTS_DIR_SUFFIX = "-PC-Package";
     public static final String EXPORTS_ZIP_SUFFIX = "-PC-Package.zip";
     public static final String DEFAULT_LIFECYCLE_NAME = "DefaultProcessLifeCycle";
+    //analytics related constants
+    public static final String PROCESS_VARIABLES = "processVariables";
+    public static final String PROCESS_VARIABLE = "process_variable";
+    public static final String IS_ANALYZE_DATA = "isAnalyzeData";
+    public static final String IS_DRILL_DOWN_VARIABLE = "isDrillDownVariable";
+    public static final String IS_DRILL_DOWN_DATA = "isDrillDownData";
+    public static final String PROCESS_VARIABLE_LIST = "processVariableList";
+    public static final String ANALYTICS_CONFIG_INFO = "analytics_config_info";
+    public static final String VARIABLE_NAME = "variableName";
+    public static final String VARIABLE_TYPE = "variableType";
+    //other
+    public static final String URL = "url";
+    public static final String NA = "NA";
+
     // Make the constructor private, since it is a utility class
     private ProcessCenterConstants() {
     }
@@ -178,19 +201,23 @@ public class ProcessCenterConstants {
         public static final String PDF = "pdf";
         public static final String FLOW_CHART = "flowchart";
         public static final String DOCUMENT = "document";
-        public static final String BPMN = "bpmn";
         public static final String LIFE_CYCLE = "lifecycle";
         public static final String DOC_CONTENT = "doccontent";
 
-        public static final String PROCESS_PATH = "/processes/";
-        public static final String PROCESS_TEXT_PATH = "/processText/";
-        public static final String PROCESS_PDF_PATH = "/pdf/";
-        public static final String PROCESS_FLOW_CHART_PATH = "/flowchart/";
-        public static final String PROCESS_DOC_PATH = "/doccontent/";
-        public static final String PROCESS_BPMN = "/bpmn/";
-        public static final String PROCESS_LIFECYCLE_HISTORY = "/_system/governance/repository/components/org.wso2"
-                + ".carbon.governance/lifecycles/history/__system_governance_processes_";
-        public static final String AC_PROCESS_PATH = "/_system/governance/processes/";
+        public static final String PROCESS_PATH = File.separator + "processes" + File.separator;
+        public static final String PROCESS_TEXT_PATH = File.separator + "processText" + File.separator;
+        public static final String PROCESS_PDF_PATH = File.separator + "pdf" + File.separator;
+        public static final String PROCESS_FLOW_CHART_PATH = File.separator + "flowchart" + File.separator;
+        public static final String PROCESS_DOC_PATH = File.separator + "doccontent" + File.separator;
+        public static final String PROCESS_BPMN = File.separator + "bpmn" + File.separator;
+        public static final String PROCESS_LIFECYCLE_HISTORY =
+                File.separator + "_system" + File.separator + "governance" + File.separator + "repository"
+                        + File.separator + "components" + File.separator + "org.wso2" + ".carbon.governance"
+                        + File.separator + "lifecycles" + File.separator + "history" + File.separator
+                        + "__system_governance_processes_";
+        public static final String AC_PROCESS_PATH =
+                File.separator + "_system" + File.separator + "governance" + File.separator + "processes"
+                        + File.separator;
 
         public static final String ADMIN_ROLE = "admin";
         public static final String PUBLISHER_ROLE = "Internal/publisher";

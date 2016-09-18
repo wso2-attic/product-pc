@@ -69,6 +69,9 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * Perform the process related common operations
+ */
 public class ProcessStore {
 
     private static final Log log = LogFactory.getLog(ProcessStore.class);
@@ -1596,8 +1599,8 @@ public class ProcessStore {
     }
 
     /**
-     * Get process related tags as a String in which the seperate tags are delimitted by 3 hashes(###)
-     * i.e.  tag1###tag2###tag3
+     * Get process related tags as a String in which the seperate tags are delimited by commas(,)
+     * i.e.  tag1,tag2,tag3
      *
      * @param processName
      * @param processVersion
@@ -2028,10 +2031,10 @@ public class ProcessStore {
 
                 JSONArray variableArray = new JSONArray();
 
-                procVariablesJob.put("processVariables", variableArray);
+                procVariablesJob.put(ProcessCenterConstants.PROCESS_VARIABLES, variableArray);
 
                 NodeList processVariableElements = ((Element) document.getFirstChild())
-                        .getElementsByTagName("process_variable");
+                        .getElementsByTagName(ProcessCenterConstants.PROCESS_VARIABLE);
 
                 if (processVariableElements.getLength() != 0) {
                     for (int i = 0; i < processVariableElements.getLength(); i++) {
@@ -2040,16 +2043,17 @@ public class ProcessStore {
                                 .getTextContent();
                         String processVariableType = processVariableElement.getElementsByTagName("type").item(0)
                                 .getTextContent();
-                        String isAnalyzeData = processVariableElement.getElementsByTagName("isAnalyzeData").item(0)
+                        String isAnalyzeData = processVariableElement
+                                .getElementsByTagName(ProcessCenterConstants.IS_ANALYZE_DATA).item(0).getTextContent();
+                        String isDrillDownVariable = processVariableElement
+                                .getElementsByTagName(ProcessCenterConstants.IS_DRILL_DOWN_VARIABLE).item(0)
                                 .getTextContent();
-                        String isDrillDownVariable = processVariableElement.getElementsByTagName("isDrillDownVariable")
-                                .item(0).getTextContent();
 
                         JSONObject processVariable = new JSONObject();
                         processVariable.put("name", processVariableName);
                         processVariable.put("type", processVariableType);
-                        processVariable.put("isAnalyzeData", isAnalyzeData);
-                        processVariable.put("isDrillDownVariable", isDrillDownVariable);
+                        processVariable.put(ProcessCenterConstants.IS_ANALYZE_DATA, isAnalyzeData);
+                        processVariable.put(ProcessCenterConstants.IS_DRILL_DOWN_VARIABLE, isDrillDownVariable);
                         variableArray.put(processVariable);
                     }
                 }
@@ -2072,8 +2076,9 @@ public class ProcessStore {
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                if(doc.getElementsByTagName("process_variable").getLength() != 0) {
-                    NodeList variableElements = ((Element) doc.getFirstChild()).getElementsByTagName("process_variable");
+                if (doc.getElementsByTagName(ProcessCenterConstants.PROCESS_VARIABLE).getLength() != 0) {
+                    NodeList variableElements = ((Element) doc.getFirstChild())
+                            .getElementsByTagName(ProcessCenterConstants.PROCESS_VARIABLE);
                     ArrayList<Node> delete = new ArrayList<Node>();
 
                     for (int i = 0; i < variableElements.getLength(); i++) {
@@ -2123,16 +2128,14 @@ public class ProcessStore {
 
                 JSONObject processInfo = new JSONObject(processVariableDetails);
                 String processName = processInfo.getString(ProcessCenterConstants.PROCESS_NAME);
-                String processVersion = processInfo.getString(
-                        ProcessCenterConstants.PROCESS_VERSION);
+                String processVersion = processInfo.getString(ProcessCenterConstants.PROCESS_VERSION);
                 String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
                         processVersion;
                 removeAllProcessVariables(processAssetPath);
                 Resource resource = reg.get(processAssetPath);
                 processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
-
-                JSONObject processVariablesJOb = processInfo.getJSONObject("processVariables");
+                JSONObject processVariablesJOb = processInfo.getJSONObject(ProcessCenterConstants.PROCESS_VARIABLES);
 
                 Iterator<?> keys = processVariablesJOb.keys();
                 //saving pracess variable name,type as sub elements
@@ -2143,12 +2146,14 @@ public class ProcessStore {
                     String isAnalyzeData = varMetaData[1];
                     String isDrillDownVariable = varMetaData[2];
                     Element rootElement = doc.getDocumentElement();
-                    Element variableElement = append(doc, rootElement, "process_variable", ProcessCenterConstants.MNS);
+                    Element variableElement = append(doc, rootElement, ProcessCenterConstants.PROCESS_VARIABLE,
+                            ProcessCenterConstants.MNS);
                     appendText(doc, variableElement, "name", ProcessCenterConstants.MNS, variableName);
                     appendText(doc, variableElement, "type", ProcessCenterConstants.MNS, variableType);
-                    appendText(doc, variableElement, "isAnalyzeData", ProcessCenterConstants.MNS, isAnalyzeData);
-                    appendText(doc, variableElement, "isDrillDownVariable", ProcessCenterConstants.MNS,
-                            isDrillDownVariable);
+                    appendText(doc, variableElement, ProcessCenterConstants.IS_ANALYZE_DATA, ProcessCenterConstants.MNS,
+                            isAnalyzeData);
+                    appendText(doc, variableElement, ProcessCenterConstants.IS_DRILL_DOWN_VARIABLE,
+                            ProcessCenterConstants.MNS, isDrillDownVariable);
 
                     String newProcessContent = xmlToString(doc);
                     resource.setContent(newProcessContent);
@@ -2193,27 +2198,27 @@ public class ProcessStore {
                 Document document = builder.parse(new InputSource(new StringReader(resourceContent)));
                 JSONArray variableArray = new JSONArray();
                 Element dasConfigInfoElement = (Element) ((Element) document.getFirstChild())
-                        .getElementsByTagName("analytics_config_info").item(0);
-                String processDefinitionId = dasConfigInfoElement.getElementsByTagName("processDefinitionId").item(0)
-                        .getTextContent();
-                String eventStreamName = dasConfigInfoElement.getElementsByTagName("eventStreamName").item(0)
-                        .getTextContent();
-                String eventStreamVersion = dasConfigInfoElement.getElementsByTagName("eventStreamVersion").item(0)
-                        .getTextContent();
-                String eventStreamDescription = dasConfigInfoElement.getElementsByTagName("eventStreamDescription")
-                        .item(0).getTextContent();
-                String eventStreamNickName = dasConfigInfoElement.getElementsByTagName("eventStreamNickName").item(0)
-                        .getTextContent();
-                String eventReceiverName = dasConfigInfoElement.getElementsByTagName("eventReceiverName").item(0)
-                        .getTextContent();
+                        .getElementsByTagName(ProcessCenterConstants.ANALYTICS_CONFIG_INFO).item(0);
+                String processDefinitionId = dasConfigInfoElement
+                        .getElementsByTagName(ProcessCenterConstants.PROCESS_DEFINITION_ID).item(0).getTextContent();
+                String eventStreamName = dasConfigInfoElement
+                        .getElementsByTagName(ProcessCenterConstants.EVENT_STREAM_NAME).item(0).getTextContent();
+                String eventStreamVersion = dasConfigInfoElement
+                        .getElementsByTagName(ProcessCenterConstants.EVENT_STREAM_VERSION).item(0).getTextContent();
+                String eventStreamDescription = dasConfigInfoElement
+                        .getElementsByTagName(ProcessCenterConstants.EVENT_STREAM_DESCRIPTION).item(0).getTextContent();
+                String eventStreamNickName = dasConfigInfoElement
+                        .getElementsByTagName(ProcessCenterConstants.EVENT_STREAM_NICK_NAME).item(0).getTextContent();
+                String eventReceiverName = dasConfigInfoElement
+                        .getElementsByTagName(ProcessCenterConstants.EVENT_RECEIVER_NAME).item(0).getTextContent();
 
                 JSONObject dasConfigInfoJOb = new JSONObject();
-                dasConfigInfoJOb.put("processDefinitionId", processDefinitionId);
-                dasConfigInfoJOb.put("eventStreamName", eventStreamName);
-                dasConfigInfoJOb.put("eventStreamVersion", eventStreamVersion);
-                dasConfigInfoJOb.put("eventStreamDescription", eventStreamDescription);
-                dasConfigInfoJOb.put("eventStreamNickName", eventStreamNickName);
-                dasConfigInfoJOb.put("eventReceiverName", eventReceiverName);
+                dasConfigInfoJOb.put(ProcessCenterConstants.PROCESS_DEFINITION_ID, processDefinitionId);
+                dasConfigInfoJOb.put(ProcessCenterConstants.EVENT_STREAM_NAME, eventStreamName);
+                dasConfigInfoJOb.put(ProcessCenterConstants.EVENT_STREAM_VERSION, eventStreamVersion);
+                dasConfigInfoJOb.put(ProcessCenterConstants.EVENT_STREAM_DESCRIPTION, eventStreamDescription);
+                dasConfigInfoJOb.put(ProcessCenterConstants.EVENT_STREAM_NICK_NAME, eventStreamNickName);
+                dasConfigInfoJOb.put(ProcessCenterConstants.EVENT_RECEIVER_NAME, eventReceiverName);
                 resourceString = dasConfigInfoJOb.toString();
             }
         } catch (Exception e) {
@@ -2255,10 +2260,9 @@ public class ProcessStore {
                 Document doc = stringToXML(processContent);
 
                 Element rootElement = doc.getDocumentElement();
-
-                if(doc.getElementsByTagName("analytics_config_info").getLength() == 0) {
-                    Element dasConfigInfoElement = append(doc, rootElement, "analytics_config_info",
-                                                          ProcessCenterConstants.MNS);
+                if (doc.getElementsByTagName(ProcessCenterConstants.ANALYTICS_CONFIG_INFO).getLength() == 0) {
+                    Element dasConfigInfoElement = append(doc, rootElement,
+                            ProcessCenterConstants.ANALYTICS_CONFIG_INFO, ProcessCenterConstants.MNS);
                     appendText(doc, dasConfigInfoElement, ProcessCenterConstants.PROCESS_DEFINITION_ID,
                                ProcessCenterConstants.MNS, processDefinitionId);
                     appendText(doc, dasConfigInfoElement, ProcessCenterConstants.EVENT_STREAM_NAME,
@@ -2317,7 +2321,7 @@ public class ProcessStore {
                 JSONObject variableInfo = new JSONObject(deleteVariableDetails);
                 String processName = variableInfo.getString("processName");
                 String processVersion = variableInfo.getString("processVersion");
-                JSONArray variableObjArray = variableInfo.getJSONArray("processVariableList");
+                JSONArray variableObjArray = variableInfo.getJSONArray(ProcessCenterConstants.PROCESS_VARIABLE_LIST);
 
                 String processAssetPath =
                         ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
@@ -2326,17 +2330,18 @@ public class ProcessStore {
                 String processContent = new String((byte[]) resource.getContent());
                 Document doc = stringToXML(processContent);
 
-                NodeList variableElements =
-                        ((Element) doc.getFirstChild()).getElementsByTagName("process_variable");
+                NodeList variableElements = ((Element) doc.getFirstChild())
+                        .getElementsByTagName(ProcessCenterConstants.PROCESS_VARIABLE);
                 for (int i = 0; i < variableObjArray.length(); i++) {
                     String variableName =
-                            variableObjArray.getJSONObject(i).getString("variableName");
+                            variableObjArray.getJSONObject(i).getString(ProcessCenterConstants
+                                    .VARIABLE_NAME);
                     String variableType =
-                            variableObjArray.getJSONObject(i).getString("variableType");
-                    String isAnalyzedData =
-                            variableObjArray.getJSONObject(i).getString("isAnalyzedData");
-                    String isDrillDownData =
-                            variableObjArray.getJSONObject(i).getString("isDrillDownData");
+                            variableObjArray.getJSONObject(i).getString(ProcessCenterConstants.VARIABLE_TYPE);
+                    String isAnalyzedData = variableObjArray.getJSONObject(i)
+                            .getString(ProcessCenterConstants.IS_ANALYZE_DATA);
+                    String isDrillDownData = variableObjArray.getJSONObject(i)
+                            .getString(ProcessCenterConstants.IS_DRILL_DOWN_DATA);
 
                     for (int j = 0; j < variableElements.getLength(); j++) {
                         Element variableElement = (Element) variableElements.item(j);
@@ -2344,12 +2349,11 @@ public class ProcessStore {
                                                         .getTextContent();
                         String varType = variableElement.getElementsByTagName("type").item(0)
                                                         .getTextContent();
-                        String varAnalyzedData =
-                                variableElement.getElementsByTagName("isAnalyzeData").item(0)
-                                               .getTextContent();
-                        String varDrillDownData =
-                                variableElement.getElementsByTagName("isDrillDownVariable").item(0)
-                                               .getTextContent();
+                        String varAnalyzedData = variableElement
+                                .getElementsByTagName(ProcessCenterConstants.IS_ANALYZE_DATA).item(0).getTextContent();
+                        String varDrillDownData = variableElement
+                                .getElementsByTagName(ProcessCenterConstants.IS_DRILL_DOWN_VARIABLE).item(0)
+                                .getTextContent();
 
                         if (varName.equals(variableName) && varType.equals(variableType) &&
                             varAnalyzedData.equals(isAnalyzedData) &&

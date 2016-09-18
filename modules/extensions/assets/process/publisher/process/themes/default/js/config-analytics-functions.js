@@ -111,15 +111,17 @@ function addProcessVariableRow(tableID) {
  */
 function disableCheckBox(rowIndex) {
     var e = document.getElementById("selVarType_" + rowIndex);
+    const chkAnalyzedData = "chkAnalyzedData_";
+    const chkDrillData = "chkDrillData_";
     var varType = e.options[e.selectedIndex].value;
     if (varType === "string" || varType == "bool") {
-        document.getElementById("chkAnalyzedData_" + rowIndex).checked = false;
-        document.getElementById("chkAnalyzedData_" + rowIndex).disabled = true;
-        document.getElementById("chkDrillData_" + rowIndex).disabled = false;
+        document.getElementById(chkAnalyzedData + rowIndex).checked = false;
+        document.getElementById(chkAnalyzedData + rowIndex).disabled = true;
+        document.getElementById(chkDrillData + rowIndex).disabled = false;
     } else {
-        document.getElementById("chkDrillData_" + rowIndex).checked = false;
-        document.getElementById("chkDrillData_" + rowIndex).disabled = true;
-        document.getElementById("chkAnalyzedData_" + rowIndex).disabled = false;
+        document.getElementById(chkDrillData + rowIndex).checked = false;
+        document.getElementById(chkDrillData + rowIndex).disabled = true;
+        document.getElementById(chkAnalyzedData + rowIndex).disabled = false;
     }
 }
 
@@ -141,7 +143,7 @@ function deleteProcessVariableRow(tableID) {
             var chkbox = row.cells[0].childNodes[0];
             if (null != chkbox && true == chkbox.checked) {
                 if (rowCount <= 1) {
-                    alert("No rows to delete.");
+                    alertify.error("No rows to delete.");
                     break;
                 }
                 if ($("#processAnalyticsConfigured").val() == 'true') {
@@ -175,12 +177,12 @@ function deleteProcessVariableRow(tableID) {
                     }
                 },
                 error: function () {
-                    alertify.error('Document deleting error');
+                    alertify.error('Process variable deleting error');
                 }
             });
         }
     } catch (e) {
-        alert(e);
+        alertify.error('Process variable deleting error');
     }
 }
 
@@ -356,11 +358,11 @@ function configAnalytics() {
                 substring(window.location.href.lastIndexOf("/") + 1, window.location.href.length);
 
                 } else {
-                    alertify.error("Error in creating Event Stream/Reciever in DAS")
+                    alertify.error("Error in creating Event Stream/Receiver in DAS")
                 }
             },
             error: function () {
-                alertify.error('Error in config_das_analytics.jag while creating Event Stream/Reciever in DAS');
+                alertify.error('Error in config_das_analytics.jag while creating Event Stream/Receiver in DAS');
             }
         });
     } else {

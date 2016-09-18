@@ -38,16 +38,15 @@ import java.rmi.RemoteException;
 import java.util.Arrays;
 
 public class DASConfigClient {
-
     private static final Log log = LogFactory.getLog(DASConfigClient.class);
-    String streamName;
-    String stremaVersion;
-    String streamId;
-    String streamDescription;
-    String streamNickName;
-    String receiverName;
-    JSONArray processVariables;
-    String dasUrl = null;
+    private String streamName;
+    private String stremaVersion;
+    private String streamId;
+    private String streamDescription;
+    private String streamNickName;
+    private String receiverName;
+    private JSONArray processVariables;
+    private String dasUrl = null;
 
     /**
      * Configure WSO2 DAS for analytics, by creating an Event Stream, Event Receiver for each process.
@@ -79,7 +78,6 @@ public class DASConfigClient {
         LoginAdminServiceClient loginServiceClient = null;
         String dasUsername = null;
         char[] dasPassword = null;
-
         try {
             dasUsername = DASConfigurationUtils.getDASUserName();
             dasPassword = DASConfigurationUtils.getDASPassword().toCharArray();
@@ -92,35 +90,30 @@ public class DASConfigClient {
             streamNickName = dasConfigDetailsJOb.getString(AnalyticsConfigConstants.EVENT_STREAM_NICK_NAME);
             receiverName = dasConfigDetailsJOb.getString(AnalyticsConfigConstants.EVENT_RECEIVER_NAME);
             processVariables = dasConfigDetailsJOb.getJSONArray(AnalyticsConfigConstants.PROCESS_VARIABLES);
-
             //login to DAS
             loginServiceClient = PCAnalyticsServerHolder.getInstance().getLoginAdminServiceClient();
             String session = loginServiceClient.authenticate(dasUsername, dasPassword);
-
             //remove the password from memory
             Arrays.fill(dasPassword, ' ');
             dasPassword = null;
 
-            //create event stream // The payload data is as>> "process instance id, valueAvailability, actual process
-            // variables list
+            /*create event stream; The payload data is as>> "process instance id, valueAvailability, actual process
+            variables list*/
             PCAnalyticsServerHolder.getInstance().getStreamAdminServiceClient()
                     .createEventStream(session, streamName, stremaVersion, streamId, streamNickName, streamDescription,
                             processVariables);
             if (log.isDebugEnabled()) {
                 log.debug("Created the Event Stream: " + streamId + " in WSO2 DAS on :" + dasUrl);
             }
-
             //create event receiver
             PCAnalyticsServerHolder.getInstance().getReceiverAdminServiceClient()
                     .deployEventReceiverConfiguration(session, receiverName, streamId);
             if (log.isDebugEnabled()) {
                 log.debug("Created the Event Receiver: " + receiverName + " for the " + streamId + " in WSO2 DAS");
             }
-
             //now send the REST Post call to the WSO2 BPS to communicate the analytics configuration details to the
             // BPS from PC
             BPSConfigRestClient.post(dasConfigDetails, processName, processVersion);
-
         } catch (LoginAuthenticationExceptionException e) {
             String errMsg = "Error in Login to DAS at :" + dasUrl + "trying to login with username : " + dasUsername
                     + " and the given password";

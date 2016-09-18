@@ -271,15 +271,15 @@ asset.server = function(ctx) {
                         title: 'Delete ' + typeSingularLabel,
                         url: 'delete',
                         path: 'delete.jag'
-                    },{
+                    }, {
                         title: 'Log: ',
                         url: 'log',
                         path: 'log.jag'
-                    },{
+                    }, {
                         title: 'Import Process: ',
                         url: 'import_process',
                         path: 'import_process.jag'
-                    },{
+                    }, {
                         title: 'Configure Analytics: ',
                         url: 'config_analytics',
                         path: 'config_analytics.jag'
@@ -509,7 +509,7 @@ asset.renderer = function(ctx) {
 
                 var processTags = ps.getProcessTags(processName, processVersion);
                 var ps = new ProcessStore();
-                page.processTagsArray = processTags.split("###");
+                page.processTagsArray = processTags.split(",");
             } catch (e) {
                 log.error("Error in retrieving process tags. Exception:" + e);
             }
@@ -532,7 +532,6 @@ asset.renderer = function(ctx) {
                 page.eventReceiverName = streamAndReceiverInfo["eventReceiverName"];
                 page.processDefinitionId = streamAndReceiverInfo["processDefinitionId"];
             }
-
         },
         create: function(page) {
             var tables = page.assets.tables;

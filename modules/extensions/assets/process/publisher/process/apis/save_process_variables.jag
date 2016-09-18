@@ -30,7 +30,7 @@ var variableDetails = String(request.getParameter("processVariablesInfo"));
 try {
     ps.saveProcessVariables(variableDetails);
     print("SUCCESS");
-}catch(errorE){
+} catch (errorE) {
     print("FAIL");
 }
 %>

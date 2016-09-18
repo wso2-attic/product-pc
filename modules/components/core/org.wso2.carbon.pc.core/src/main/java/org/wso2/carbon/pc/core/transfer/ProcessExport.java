@@ -65,13 +65,14 @@ public class ProcessExport {
             try {
                 // save details about the exported zip and the core process
                 String exportRootPath =
-                        ProcessCenterConstants.PROCESS_EXPORT_DIR + "/" + processName + "-" + processVersion +
-                                ProcessCenterConstants.EXPORTS_DIR_SUFFIX + "/";
+                        ProcessCenterConstants.PROCESS_EXPORT_DIR + File.separator + processName + "-" + processVersion
+                                +
+                                ProcessCenterConstants.EXPORTS_DIR_SUFFIX + File.separator;
                 new File(exportRootPath).mkdirs();
                 exportProcess(exportRootPath, processName, processVersion, exportWithAssociationsBool, user);
 
                 //zip the folder
-                String zipFilePath = ProcessCenterConstants.PROCESS_EXPORT_DIR + "/" + processName + "-" +
+                String zipFilePath = ProcessCenterConstants.PROCESS_EXPORT_DIR + File.separator + processName + "-" +
                         processVersion + ProcessCenterConstants.EXPORTS_ZIP_SUFFIX;
                 zipFolder(exportRootPath, zipFilePath);
                 //encode zip file
@@ -80,10 +81,8 @@ public class ProcessExport {
                 FileUtils.deleteDirectory(exportsDir);
                 FileUtils.deleteDirectory(new File(zipFilePath));
                 return encodedZip;
-
             } catch (Exception e) {
                 String errMsg = "Failed to export process:" + processName + "-" + processVersion;
-                log.error(errMsg, e);
                 throw new ProcessCenterException(errMsg, e);
             }
         } else {
@@ -112,13 +111,13 @@ public class ProcessExport {
         exportedProcessList.add(processName + "-" + processVersion);
 
         try {
-
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(user);
                 ProcessStore ps = new ProcessStore();
-                String exportProcessPath = exportRootPath + processName + "-" + processVersion + "/";
-                new File(exportProcessPath + ProcessCenterConstants.PROCESS_ZIP_DOCUMENTS_DIR + "/").mkdirs();
+                String exportProcessPath = exportRootPath + processName + "-" + processVersion + File.separator;
+                new File(exportProcessPath + ProcessCenterConstants.PROCESS_ZIP_DOCUMENTS_DIR + File.separator)
+                        .mkdirs();
 
                 //save the process rxt registry entry >> xml
                 downloadResource(reg, ProcessCenterConstants.PROCESS_ASSET_ROOT,
@@ -142,18 +141,18 @@ public class ProcessExport {
                         exportProcessPath);
 
                 //save doccontent registry entries >> doc, docx, pdf
-                String processResourcePath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
+                String processResourcePath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + File.separator +
                         processVersion;
                 JSONArray jsonArray = new JSONArray(
                         ps.getUploadedDocumentDetails(ProcessCenterConstants.GREG_PATH + processResourcePath));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObj = jsonArray.getJSONObject(i);
-                    if (jsonObj.getString("url").equals("NA")) {
+                    if (jsonObj.getString(ProcessCenterConstants.URL).equals(ProcessCenterConstants.NA)) {
                         String docResourcePath = jsonObj.getString("path");
                         Resource docResource = reg.get(docResourcePath);
-                        String[] tempStrArr = docResourcePath.split("/");
+                        String[] tempStrArr = docResourcePath.split(File.separator);
                         String docFileName =
-                                exportProcessPath + ProcessCenterConstants.PROCESS_ZIP_DOCUMENTS_DIR + "/" +
+                                exportProcessPath + ProcessCenterConstants.PROCESS_ZIP_DOCUMENTS_DIR + File.separator +
                                         tempStrArr[tempStrArr.length - 1];
                         FileOutputStream docFileOutPutStream = new FileOutputStream(docFileName);
                         IOUtils.copy(docResource.getContentStream(), docFileOutPutStream);
@@ -192,7 +191,6 @@ public class ProcessExport {
             }
         } catch (Exception e) {
             String errMsg = "Failed to export process:" + processName + "-" + processVersion;
-            log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
     }
@@ -242,7 +240,7 @@ public class ProcessExport {
             String processVersion, String exportedFileType, String exportProcessPath)
             throws RegistryException, IOException, JSONException, ParserConfigurationException, SAXException,
             TransformerException {
-        String resourcePath = resourceRoot + processName + "/" + processVersion;
+        String resourcePath = resourceRoot + processName + File.separator + processVersion;
         if (reg.resourceExists(resourcePath)) {
             Resource resource = reg.get(resourcePath);
             FileOutputStream fileOutputStream = new FileOutputStream(exportProcessPath + savingFileName);
@@ -267,26 +265,19 @@ public class ProcessExport {
         byte[] bytes = loadFile(file);
         byte[] encoded = Base64.encodeBase64(bytes);
         String encodedString = new String(encoded);
-
         return encodedString;
     }
 
     public static byte[] loadFile(File file) throws IOException {
         byte[] bytes;
-        try (InputStream is = new FileInputStream(file)) {
-
+        try (InputStream inputStream = new FileInputStream(file)) {
             long length = file.length();
-            if (length > Integer.MAX_VALUE) {
-                // File is too large
-            }
             bytes = new byte[(int) length];
-
             int offset = 0;
             int numRead = 0;
-            while (offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
+            while (offset < bytes.length && (numRead = inputStream.read(bytes, offset, bytes.length - offset)) >= 0) {
                 offset += numRead;
             }
-
             if (offset < bytes.length) {
                 throw new IOException("Could not completely read file " + file.getName());
             }
@@ -306,11 +297,11 @@ public class ProcessExport {
      */
     public void downloadProcessThumbnailImage(UserRegistry reg, String processName, String processVersion,
             String exportProcessPath) throws RegistryException, IOException {
-        String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
+        String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + File.separator +
                 processVersion;
         Resource storedProcess = reg.get(processAssetPath);
         String processId = storedProcess.getUUID();
-        String imageResourcePath = ProcessCenterConstants.PROCESS_ASSET_RESOURCE_REG_PATH + processId + "/"
+        String imageResourcePath = ProcessCenterConstants.PROCESS_ASSET_RESOURCE_REG_PATH + processId + File.separator
                 + ProcessCenterConstants.IMAGE_THUMBNAIL;
 
         if (reg.resourceExists(imageResourcePath)) {
@@ -330,14 +321,13 @@ public class ProcessExport {
     private void zipFolder(String srcFolder, String destZipFile) throws Exception {
         ZipOutputStream zip = null;
         FileOutputStream fileWriter = null;
-
         fileWriter = new FileOutputStream(destZipFile);
         zip = new ZipOutputStream(fileWriter);
-
         addFolderToZip("", srcFolder, zip);
         zip.flush();
         zip.close();
     }
+
     /**
      * @param path
      * @param srcFile
@@ -345,7 +335,6 @@ public class ProcessExport {
      * @throws Exception
      */
     private void addFileToZip(String path, String srcFile, ZipOutputStream zip) throws Exception {
-
         File folder = new File(srcFile);
         if (folder.isDirectory()) {
             addFolderToZip(path, srcFile, zip);
@@ -353,7 +342,7 @@ public class ProcessExport {
             byte[] buf = new byte[1024];
             int len;
             try (FileInputStream in = new FileInputStream(srcFile)) {
-                zip.putNextEntry(new ZipEntry(path + "/" + folder.getName()));
+                zip.putNextEntry(new ZipEntry(path + File.separator + folder.getName()));
                 while ((len = in.read(buf)) > 0) {
                     zip.write(buf, 0, len);
                 }
@@ -369,12 +358,11 @@ public class ProcessExport {
      */
     private void addFolderToZip(String path, String srcFolder, ZipOutputStream zip) throws Exception {
         File folder = new File(srcFolder);
-
         for (String fileName : folder.list()) {
             if (path.equals("")) {
-                addFileToZip(folder.getName(), srcFolder + "/" + fileName, zip);
+                addFileToZip(folder.getName(), srcFolder + File.separator + fileName, zip);
             } else {
-                addFileToZip(path + "/" + folder.getName(), srcFolder + "/" + fileName, zip);
+                addFileToZip(path + File.separator + folder.getName(), srcFolder + File.separator + fileName, zip);
             }
         }
     }

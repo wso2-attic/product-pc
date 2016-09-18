@@ -30,6 +30,8 @@ import org.json.JSONObject;
 import org.wso2.carbon.pc.analytics.core.kpi.AnalyticsConfigConstants;
 import org.wso2.carbon.event.stream.stub.EventStreamAdminServiceStub;
 import org.wso2.carbon.pc.core.ProcessCenterException;
+
+import java.io.File;
 import java.rmi.RemoteException;
 
 public class StreamAdminServiceClient {
@@ -50,7 +52,7 @@ public class StreamAdminServiceClient {
      * @throws AxisFault
      */
     public StreamAdminServiceClient(String backEndUrl) throws AxisFault {
-        String endPoint = backEndUrl + "/" + AnalyticsConfigConstants.SERVICES + "/"
+        String endPoint = backEndUrl + File.separator + AnalyticsConfigConstants.SERVICES + File.separator
                 + AnalyticsConfigConstants.EVENT_STREAM_ADMIN_SERVICE_NAME;
         serviceAdminStub = new EventStreamAdminServiceStub(endPoint);
     }
@@ -72,7 +74,6 @@ public class StreamAdminServiceClient {
      */
     public void createEventStream(String session, String streamName, String streamVersion, String streamId,
             String streamNickName, String streamDescription, JSONArray processVariables) throws ProcessCenterException {
-
         JSONObject streamDefinitionJsonOb = new JSONObject();
         try {
             // Authenticate stub from sessionCooke
@@ -89,13 +90,10 @@ public class StreamAdminServiceClient {
 
             //setting process variables as payloadData into the eventStream definition
             streamDefinitionJsonOb.put(PAYLOAD_DATA, processVariables);
-
             if (log.isDebugEnabled()) {
                 log.debug("Stream Definition Json Object:" + streamDefinitionJsonOb.toString());
             }
-
             serviceAdminStub.addEventStreamDefinitionAsString(streamDefinitionJsonOb.toString());
-
         } catch (JSONException e) {
             String errMsg = "Error in creating event stream Definition Json object with data: " + "," + session + ","
                     + streamName + "," + streamVersion + "," + streamId + "," + streamNickName + "," + streamDescription
