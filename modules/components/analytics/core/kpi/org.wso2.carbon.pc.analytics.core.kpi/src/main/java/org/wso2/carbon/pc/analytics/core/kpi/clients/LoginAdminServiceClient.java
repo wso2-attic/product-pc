@@ -15,10 +15,6 @@
  */
 package org.wso2.carbon.pc.analytics.core.kpi.clients;
 
-/**
- * Connects with DAS's LoginAdminService
- */
-
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
@@ -33,6 +29,9 @@ import java.io.File;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 
+/**
+ * Connects with DAS's LoginAdminService
+ */
 public class LoginAdminServiceClient {
     private static final String serviceName = AnalyticsConfigConstants.AUTHENTICATION_ADMIN;
     private AuthenticationAdminStub authenticationAdminStub;
@@ -41,7 +40,7 @@ public class LoginAdminServiceClient {
     private String dasURL = null;
 
     /**
-     * @param DASUrl
+     * @param DASUrl Analytics server url
      * @throws AxisFault
      */
     public LoginAdminServiceClient(String DASUrl) throws AxisFault {
@@ -53,9 +52,9 @@ public class LoginAdminServiceClient {
     /**
      * Authenticate DAS login
      *
-     * @param userName
-     * @param password
-     * @return
+     * @param userName  Analytics server login user name
+     * @param password  Analytics server login password
+     * @return sessionCookie
      * @throws RemoteException
      * @throws LoginAuthenticationExceptionException
      */

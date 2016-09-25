@@ -15,11 +15,6 @@
  */
 package org.wso2.carbon.pc.analytics.core.kpi;
 
-/**
- * Configure DAS configurations to publish data to DAS an do the analytics
- * (initiator class in the module)
- */
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -37,6 +32,10 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 
+/**
+ * Configure DAS configurations to publish data to DAS an do the analytics
+ * (initiator class in the module)
+ */
 public class DASConfigClient {
     private static final Log log = LogFactory.getLog(DASConfigClient.class);
     private String streamName;
@@ -122,7 +121,7 @@ public class DASConfigClient {
             String errMsg = "Error in DAS configuration, using : " + dasConfigDetails;
             throw new ProcessCenterException(errMsg, e);
         } finally {
-            //logging out from DAS Admin Services
+            //login out from DAS Admin Services
             if (loginServiceClient != null) {
                 loginServiceClient.logOut();
             }

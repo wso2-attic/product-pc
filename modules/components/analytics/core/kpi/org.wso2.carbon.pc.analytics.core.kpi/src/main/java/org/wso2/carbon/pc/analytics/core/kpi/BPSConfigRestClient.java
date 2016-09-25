@@ -42,8 +42,8 @@ public class BPSConfigRestClient {
      * Send post request to a BPS BPMN rest web service
      *
      * @param dasConfigDetails is the request message that need to be sent to the web service
-     * @param processName
-     * @param processVersion
+     * @param processName      process name
+     * @param processVersion   process version
      * @return the result as a String
      */
     public static void post(String dasConfigDetails, String processName, String processVersion)

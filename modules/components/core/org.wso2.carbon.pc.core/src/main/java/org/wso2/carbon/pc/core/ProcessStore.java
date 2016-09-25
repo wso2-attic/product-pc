@@ -2002,11 +2002,10 @@ public class ProcessStore {
         return status;
     }
 
-
     /**
      * Get a list of configured process variables and their types, for analytics
      *
-     * @param resourcePath
+     * @param resourcePath process resource path
      * @return JSON Object in string representation, which includes the configured process variables for analytics
      * @throws ProcessCenterException
      */
@@ -2112,8 +2111,8 @@ public class ProcessStore {
     /**
      * Save the process variables in process rxt which need to be configured for analytics
      *
-     * @param processVariableDetails
-     * @return
+     * @param processVariableDetails process variable details
+     * @throws ProcessCenterException
      */
     public void saveProcessVariables(String processVariableDetails) throws ProcessCenterException {
         String processContent = null;
@@ -2224,9 +2223,9 @@ public class ProcessStore {
      * Save event stream and receiver information configured for analytics with DAS, for the particular process, in
      * governance registry in the process.rxt
      *
-     * @param dasConfigData
-     * @param processName
-     * @param processVersion
+     * @param dasConfigData  Analytics configuration details
+     * @param processName    process name
+     * @param processVersion process version
      * @throws ProcessCenterException
      */
     public void saveStreamAndReceiverInfo(String dasConfigData, String processName, String processVersion)

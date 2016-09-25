@@ -15,10 +15,6 @@
  */
 package org.wso2.carbon.pc.analytics.core.kpi.clients;
 
-/**
- * Access DAS EventStreamAdminService and creates the event stream.
- */
-
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -34,6 +30,9 @@ import org.wso2.carbon.pc.core.ProcessCenterException;
 import java.io.File;
 import java.rmi.RemoteException;
 
+/**
+ * Access DAS EventStreamAdminService and creates the event stream.
+ */
 public class StreamAdminServiceClient {
 
     private EventStreamAdminServiceStub serviceAdminStub;
@@ -58,18 +57,18 @@ public class StreamAdminServiceClient {
     }
 
     /**
-     * @param session
-     * @param streamName
-     * @param streamVersion
-     * @param streamId
-     * @param streamNickName
-     * @param streamDescription
+     * @param session           session string
+     * @param streamName        event stream name
+     * @param streamVersion     event stream version
+     * @param streamId          event stream ID
+     * @param streamNickName    event stream nick name
+     * @param streamDescription event stream description
      * @param processVariables Event stream payload fields including process variables.<p> Ex:
-     * [{"isAnalyzeData":false,"name":"processInstanceId","isDrillDownData":"false", "type":"string"},
-     * {"isAnalyzeData":false,"name":"valuesAvailability","isDrillDownData":"false","type":"string"},
-     * {"isAnalyzeData":false,"name":"custid","isDrillDownData":false,"type":"string"},
-     * {"isAnalyzeData":false,"name":"amount","isDrillDownData":false,"type":"long"},
-     * {"isAnalyzeData":false,"name":"confirm","isDrillDownData":false,"type":"bool"}]
+     *              [{"isAnalyzeData":false,"name":"processInstanceId","isDrillDownData":"false", "type":"string"},
+     *              {"isAnalyzeData":false,"name":"valuesAvailability","isDrillDownData":"false","type":"string"},
+     *              {"isAnalyzeData":false,"name":"custid","isDrillDownData":false,"type":"string"},
+     *              {"isAnalyzeData":false,"name":"amount","isDrillDownData":false,"type":"long"},
+     *              {"isAnalyzeData":false,"name":"confirm","isDrillDownData":false,"type":"bool"}]
      * @throws ProcessCenterException
      */
     public void createEventStream(String session, String streamName, String streamVersion, String streamId,

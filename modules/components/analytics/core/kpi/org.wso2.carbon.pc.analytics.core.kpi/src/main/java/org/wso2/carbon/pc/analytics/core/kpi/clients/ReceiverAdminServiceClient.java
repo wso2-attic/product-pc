@@ -40,7 +40,7 @@ public class ReceiverAdminServiceClient {
     private static final String INPUT_PROP_CONFIG_KEY = "events.duplicated.in.cluster";
 
     /**
-     * @param backEndUrl
+     * @param backEndUrl Event receiving DAS server url
      * @throws AxisFault
      */
     public ReceiverAdminServiceClient(String backEndUrl) throws AxisFault {
@@ -51,9 +51,9 @@ public class ReceiverAdminServiceClient {
     /**
      * Deploy Event Receiver for the particular process, configuring the previously created Event Stream
      *
-     * @param sessionCookie
-     * @param receiverName
-     * @param streamId
+     * @param sessionCookie session cookie
+     * @param receiverName  event receiver name
+     * @param streamId      event stream ID
      * @throws ProcessCenterException
      */
     public void deployEventReceiverConfiguration(String sessionCookie, String receiverName, String streamId)
