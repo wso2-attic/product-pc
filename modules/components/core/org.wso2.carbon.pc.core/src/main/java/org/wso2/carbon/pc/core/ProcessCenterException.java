@@ -24,4 +24,8 @@ public class ProcessCenterException extends Exception {
     public ProcessCenterException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public ProcessCenterException(Throwable cause) {
+        super(cause);
+    }
 }

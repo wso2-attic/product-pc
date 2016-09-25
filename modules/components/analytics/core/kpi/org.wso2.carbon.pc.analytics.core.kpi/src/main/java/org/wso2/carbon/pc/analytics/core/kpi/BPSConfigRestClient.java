@@ -24,6 +24,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.pc.analytics.core.kpi.utils.DASConfigurationUtils;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.xml.stream.XMLStreamException;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,28 +49,24 @@ public class BPSConfigRestClient {
     public static void post(String dasConfigDetails, String processName, String processVersion)
             throws IOException, XMLStreamException, RuntimeException {
 
-        if (log.isDebugEnabled()) {
-            log.debug("Sending POST request to WSO2 BPS, to communicate the analytics configuration details and "
-                    + "configure BPS for analytics");
-        }
+        log.debug("Sending POST request to WSO2 BPS, to communicate the analytics configuration details and configure "
+                        + "BPS for analytics");
         String bpsUrl = DASConfigurationUtils.getBPSURL();
         RegistryUtils.setTrustStoreSystemProperties();
         HttpClient httpClient = new HttpClient();
         String requestUrl = bpsUrl + AnalyticsConfigConstants.BPS_PROCESS_VAR_PUBLISH_REST_PATH + processName + "_"
                 + processVersion;
-
         PostMethod postRequest = new PostMethod(requestUrl);
-        postRequest.setRequestHeader("Authorization", DASConfigurationUtils.getAuthorizationHeader());
-        StringRequestEntity input = new StringRequestEntity(dasConfigDetails, "application/json", "UTF-8");
+        postRequest.setRequestHeader(HttpHeaders.AUTHORIZATION, DASConfigurationUtils.getAuthorizationHeader());
+        StringRequestEntity input = new StringRequestEntity(dasConfigDetails, MediaType.APPLICATION_JSON,
+                StandardCharsets.UTF_8.name());
         postRequest.setRequestEntity(input);
         int returnCode = httpClient.executeMethod(postRequest);
-
-        InputStreamReader reader = new InputStreamReader((postRequest.getResponseBodyAsStream()), StandardCharsets
-                .UTF_8);
+        InputStreamReader reader = new InputStreamReader((postRequest.getResponseBodyAsStream()),
+                StandardCharsets.UTF_8);
         BufferedReader br = new BufferedReader(reader);
         String output;
         StringBuilder totalOutput = new StringBuilder();
-
         while ((output = br.readLine()) != null) {
             totalOutput.append(output);
         }
@@ -84,16 +82,12 @@ public class BPSConfigRestClient {
         }
         //deal with the response
         if (returnCode == HttpStatus.SC_OK) {
-            if (log.isDebugEnabled()) {
-                log.debug("BPS was configured with analytics configuration details.");
-            }
+            log.debug("BPS was configured with analytics configuration details.");
         } else {
             String errMsg =
                     "Failed : Sending the REST Post call to the WSO2 BPS to communicate the analytics configuration "
-                            + "details to the BPS from PC\n: HTTP Error code : "
-                            + returnCode;
-            log.error(errMsg);
-            throw new RuntimeException(responseMsg);
+                            + "details to the BPS from PC\n: HTTP Error code : " + returnCode;
+            throw new RuntimeException(responseMsg + errMsg);
         }
     }
 }

@@ -117,11 +117,9 @@ public class DASConfigClient {
         } catch (LoginAuthenticationExceptionException e) {
             String errMsg = "Error in Login to DAS at :" + dasUrl + "trying to login with username : " + dasUsername
                     + " and the given password";
-            log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         } catch (JSONException | XMLStreamException | IOException | ProcessCenterException | RuntimeException e) {
             String errMsg = "Error in DAS configuration, using : " + dasConfigDetails;
-            log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         } finally {
             //logging out from DAS Admin Services

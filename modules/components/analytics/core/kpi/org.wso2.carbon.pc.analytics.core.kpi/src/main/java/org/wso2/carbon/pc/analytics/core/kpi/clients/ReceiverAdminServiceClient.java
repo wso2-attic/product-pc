@@ -75,7 +75,6 @@ public class ReceiverAdminServiceClient {
                             props, false, "");
         } catch (RemoteException e) {
             String errMsg = "Error in deploying event receiver";
-            log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
     }

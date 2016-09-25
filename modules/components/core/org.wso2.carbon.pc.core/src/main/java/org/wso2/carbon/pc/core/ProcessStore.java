@@ -1736,8 +1736,7 @@ public class ProcessStore {
             }
         } catch (Exception e) {
             String errorMessage = "Failed to upload the flowchart for process " + name + "-" + version;
-            log.error(errorMessage, e);
-            throw new ProcessCenterException(errorMessage);
+            throw new ProcessCenterException(errorMessage, e);
         }
     }
 
@@ -1801,7 +1800,6 @@ public class ProcessStore {
         } catch (Exception e) {
             String errMsg = "Error has been occurred while removing BPMN diagram in the process:" + processName + "-"
                     + processVersion;
-            log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
         return processId;
@@ -2107,7 +2105,6 @@ public class ProcessStore {
             }
         } catch (Exception e) {
             String errMsg = "Failed to delete all process variables";
-            log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
     }
@@ -2164,15 +2161,10 @@ public class ProcessStore {
                     log.debug("Saved process variables to configure analytics.Saved info:" + processVariableDetails);
                 }
             }
-        } catch (TransformerException | JSONException | RegistryException e) {
+        } catch (Exception e) {
             String errMsg =
                     "Failed to save processVariables with info,\n" + processVariableDetails + "\n,to the process.rxt";
-            log.error(errMsg, e);
-            throw new ProcessCenterException(errMsg, e);
-        } catch (Exception e) {
-            String errMsg = "Failed to convert " + processContent + " registry resource to XML";
-            log.error(errMsg, e);
-            throw new ProcessCenterException(errMsg, e);
+            throw new ProcessCenterException(e);
         }
     }
 
@@ -2300,12 +2292,10 @@ public class ProcessStore {
         } catch (TransformerException | JSONException | RegistryException e) {
             String errMsg =
                     "Failed to save das configuration details with info,\n" + dasConfigData + "\n,to the process.rxt";
-            log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         } catch (Exception e) {
             String errMsg =
                     "Failed to save das configuration details with info,\n" + dasConfigData + "\n,to the process.rxt";
-            log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
     }
@@ -2369,8 +2359,7 @@ public class ProcessStore {
             }
         } catch(Exception e) {
             String errMsg = "Failed to delete process variable list: " + deleteVariableDetails;
-            log.error(errMsg, e);
-            throw new ProcessCenterException(errMsg, e);
+            throw new ProcessCenterException(errMsg,e);
         }
     }
 

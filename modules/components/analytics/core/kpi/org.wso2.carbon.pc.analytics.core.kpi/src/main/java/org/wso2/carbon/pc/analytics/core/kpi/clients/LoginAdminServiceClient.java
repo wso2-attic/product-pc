@@ -85,8 +85,6 @@ public class LoginAdminServiceClient {
      */
     public void logOut() throws RemoteException, LogoutAuthenticationExceptionException {
         authenticationAdminStub.logout();
-        if (log.isDebugEnabled()) {
-            log.debug("Logout from DAS Admin Services");
-        }
+        log.debug("Logout from DAS Admin Services");
     }
 }

@@ -40,6 +40,7 @@ try {
     responseObj.content = 'Successfully deleted the selected process variable/s';
     print(stringify(responseObj));
 } catch (error) {
+    log.error(error);
     responseObj.error = true;
     responseObj.content = "Process variable deleting error.";
     print(stringify(responseObj));

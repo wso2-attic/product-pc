@@ -30,7 +30,6 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 
 import javax.xml.bind.DatatypeConverter;
-import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 
@@ -84,8 +83,8 @@ public class DASConfigurationUtils {
             String errMsg = "Governance Registry access error, wile checking isDasConfigedForAnalytics";
             throw new ProcessCenterException(errMsg, e);
         } catch (Exception e) {
-            String errMsg = "Registry process.rxt String to XML conversion error, wile checking " +
-                    "isDasConfigedForAnalytics ";
+            String errMsg = "Registry process.rxt String to XML conversion error, wile checking "
+                    + "isDasConfigedForAnalytics ";
             throw new ProcessCenterException(errMsg, e);
         }
         return false;
@@ -123,15 +122,12 @@ public class DASConfigurationUtils {
                     String newProcessContent = ps.xmlToString(doc);
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
-                    if (log.isDebugEnabled()) {
-                        log.debug("isDasConfigedForAnalytics property in process.rxt set as true");
-                    }
+                    log.debug("isDasConfigedForAnalytics property in process.rxt set as true");
                 }
             }
         } catch (Exception e) {
             String errMsg = "Exception in setting property isDASAnalyticsConfigured in process.rxt for the process:"
                     + processName + ":" + processVersion;
-            log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
     }
@@ -165,8 +161,8 @@ public class DASConfigurationUtils {
         String password = getInstance().getProcessCenter().getProcessCenterConfiguration()
                 .getRuntimeEnvironmentPassword();
         if (userName != null && password != null) {
-            return AnalyticsConfigConstants.REQUEST_HEADER_BASIC + " " + DatatypeConverter.printBase64Binary(
-                    (userName + ":" + password).getBytes(StandardCharsets.UTF_8));
+            return AnalyticsConfigConstants.REQUEST_HEADER_BASIC + " " + DatatypeConverter
+                    .printBase64Binary((userName + ":" + password).getBytes(StandardCharsets.UTF_8));
         }
         return null;
     }
