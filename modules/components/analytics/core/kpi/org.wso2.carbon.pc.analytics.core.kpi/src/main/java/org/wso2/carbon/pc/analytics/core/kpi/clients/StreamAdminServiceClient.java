@@ -47,8 +47,8 @@ public class StreamAdminServiceClient {
     /**
      * Create EventStreamAdminServiceStub object
      *
-     * @param backEndUrl
-     * @throws AxisFault
+     * @param backEndUrl Analytics server url
+     * @throws AxisFault Throws AxisFault if an error occurred in accessing EventStreamAdminServiceStub
      */
     public StreamAdminServiceClient(String backEndUrl) throws AxisFault {
         String endPoint = backEndUrl + File.separator + AnalyticsConfigConstants.SERVICES + File.separator

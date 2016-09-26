@@ -41,7 +41,7 @@ public class LoginAdminServiceClient {
 
     /**
      * @param DASUrl Analytics server url
-     * @throws AxisFault
+     * @throws AxisFault Throws AxisFault, if an error occurred in accessing AuthenticationAdminStub
      */
     public LoginAdminServiceClient(String DASUrl) throws AxisFault {
         this.dasURL = DASUrl;
@@ -54,8 +54,8 @@ public class LoginAdminServiceClient {
      *
      * @param userName  Analytics server login user name
      * @param password  Analytics server login password
-     * @return sessionCookie
-     * @throws RemoteException
+     * @return sessionCookie This session related cookie
+     * @throws RemoteException Throws RemoteException, if an error occurred in login to DAS admin services
      * @throws LoginAuthenticationExceptionException
      */
     public String authenticate(String userName, char[] password)
@@ -79,8 +79,8 @@ public class LoginAdminServiceClient {
     /**
      * Logout from DAS Admin Services
      *
-     * @throws RemoteException
-     * @throws LogoutAuthenticationExceptionException
+     * @throws RemoteException Throws if an error occurred in login out from DAS Admin Services
+     * @throws LogoutAuthenticationExceptionException Throws if an error occurred in login out from DAS Admin Services
      */
     public void logOut() throws RemoteException, LogoutAuthenticationExceptionException {
         authenticationAdminStub.logout();

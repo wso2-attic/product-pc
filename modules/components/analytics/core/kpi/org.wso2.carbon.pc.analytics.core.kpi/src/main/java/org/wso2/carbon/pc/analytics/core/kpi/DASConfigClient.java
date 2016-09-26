@@ -66,9 +66,12 @@ public class DASConfigClient {
      *                         {"name":"custid","type":"string","isAnalyzeData":false,"isDrillDownData":false},
      *                         {"name":"amount","type":"long","isAnalyzeData":false,"isDrillDownData":false},
      *                         {"name":"confirm","type":"bool","isAnalyzeData":false,"isDrillDownData":false}]}
-     * @throws ProcessCenterException
-     * @throws RemoteException
-     * @throws LogoutAuthenticationExceptionException
+     * @throws ProcessCenterException                 Throws ProcessCenterException, if error occurred in configuring
+     *                                                DAS for analytics
+     * @throws RemoteException                        Throws a RemoteException if an error is occurred in login out
+     *                                                from DAS admin services
+     * @throws LogoutAuthenticationExceptionException Throws a LogoutAuthenticationExceptionException if an error is
+     *                                                occurred in login out from DAS admin services
      */
     public void configDAS(String dasConfigDetails, String processName, String processVersion)
             throws ProcessCenterException, RemoteException, LogoutAuthenticationExceptionException {

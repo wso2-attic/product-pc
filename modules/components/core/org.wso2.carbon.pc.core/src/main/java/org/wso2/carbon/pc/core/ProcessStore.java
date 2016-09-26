@@ -1602,9 +1602,9 @@ public class ProcessStore {
      * Get process related tags as a String in which the seperate tags are delimited by commas(,)
      * i.e.  tag1,tag2,tag3
      *
-     * @param processName
-     * @param processVersion
-     * @return
+     * @param processName    name of the process
+     * @param processVersion version of the process
+     * @return process related tags as a String in which the separate tags are delimited by commas(,)
      * @throws RegistryException
      */
     public String getProcessTags(String processName, String processVersion) throws RegistryException {
@@ -1848,8 +1848,8 @@ public class ProcessStore {
     /**
      * Delete the process related artifacts : Documents, BPMN model, Flow chart , Process text
      *
-     * @param processName
-     * @param processVersion
+     * @param processName    name of the process
+     * @param processVersion version of the process
      */
     public void deleteProcessRelatedArtifacts(String processName, String processVersion, String user)
             throws ProcessCenterException {
@@ -2007,7 +2007,7 @@ public class ProcessStore {
      *
      * @param resourcePath process resource path
      * @return JSON Object in string representation, which includes the configured process variables for analytics
-     * @throws ProcessCenterException
+     * @throws ProcessCenterException Throws ProcessCenterException, if failed to get the process variables list
      */
     public String getProcessVariablesList(String resourcePath) throws ProcessCenterException {
         String resourceString = "";
@@ -2112,7 +2112,7 @@ public class ProcessStore {
      * Save the process variables in process rxt which need to be configured for analytics
      *
      * @param processVariableDetails process variable details
-     * @throws ProcessCenterException
+     * @throws ProcessCenterException Throws ProcessCenterException, if Failed to save processVariables in process rxt
      */
     public void saveProcessVariables(String processVariableDetails) throws ProcessCenterException {
         String processContent = null;
@@ -2172,7 +2172,7 @@ public class ProcessStore {
      *
      * @param resourcePath path for the process resource, in governance registry
      * @return Information of Event Stream and Reciever, configured for the process
-     * @throws ProcessCenterException
+     * @throws ProcessCenterException Throws ProcessCenterException if failed to get the event stream and receiver info
      */
     public String getStreamAndReceiverInfo(String resourcePath) throws ProcessCenterException {
         String resourceString = "";
@@ -2213,7 +2213,7 @@ public class ProcessStore {
                 resourceString = dasConfigInfoJOb.toString();
             }
         } catch (Exception e) {
-            String errMsg = "Failed to get the event stream and receeiver info";
+            String errMsg = "Failed to get the event stream and receiver info";
             throw new ProcessCenterException(errMsg, e);
         }
         return resourceString;
@@ -2226,7 +2226,7 @@ public class ProcessStore {
      * @param dasConfigData  Analytics configuration details
      * @param processName    process name
      * @param processVersion process version
-     * @throws ProcessCenterException
+     * @throws ProcessCenterException Throws ProcessCenterException, if failed to save das configuration details
      */
     public void saveStreamAndReceiverInfo(String dasConfigData, String processName, String processVersion)
             throws ProcessCenterException {

@@ -41,7 +41,7 @@ public class ReceiverAdminServiceClient {
 
     /**
      * @param backEndUrl Event receiving DAS server url
-     * @throws AxisFault
+     * @throws AxisFault throws if an error occurred in accessing EventReceiverAdminServiceStub
      */
     public ReceiverAdminServiceClient(String backEndUrl) throws AxisFault {
         this.endPoint = backEndUrl + File.separator + AnalyticsConfigConstants.SERVICES + File.separator + SERVICE_NAME;
@@ -54,7 +54,7 @@ public class ReceiverAdminServiceClient {
      * @param sessionCookie session cookie
      * @param receiverName  event receiver name
      * @param streamId      event stream ID
-     * @throws ProcessCenterException
+     * @throws ProcessCenterException throws ProcessCenterException, if error occurred in deploying event receiver
      */
     public void deployEventReceiverConfiguration(String sessionCookie, String receiverName, String streamId)
             throws ProcessCenterException {
