@@ -52,11 +52,13 @@ public class LoginAdminServiceClient {
     /**
      * Authenticate DAS login
      *
-     * @param userName  Analytics server login user name
-     * @param password  Analytics server login password
+     * @param userName Analytics server login user name
+     * @param password Analytics server login password
      * @return sessionCookie This session related cookie
-     * @throws RemoteException Throws RemoteException, if an error occurred in login to DAS admin services
-     * @throws LoginAuthenticationExceptionException
+     * @throws RemoteException                       Throws RemoteException, if an error occurred in login to DAS
+     *                                               admin services
+     * @throws LoginAuthenticationExceptionException Throws LoginAuthenticationExceptionException, if an error
+     *                                               occurred in login to DAS admin services
      */
     public String authenticate(String userName, char[] password)
             throws RemoteException, LoginAuthenticationExceptionException {
@@ -79,7 +81,7 @@ public class LoginAdminServiceClient {
     /**
      * Logout from DAS Admin Services
      *
-     * @throws RemoteException Throws if an error occurred in login out from DAS Admin Services
+     * @throws RemoteException                        Throws if an error occurred in login out from DAS Admin Services
      * @throws LogoutAuthenticationExceptionException Throws if an error occurred in login out from DAS Admin Services
      */
     public void logOut() throws RemoteException, LogoutAuthenticationExceptionException {

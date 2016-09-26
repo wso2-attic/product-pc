@@ -50,7 +50,7 @@ public class BPSConfigRestClient {
             throws IOException, XMLStreamException, RuntimeException {
 
         log.debug("Sending POST request to WSO2 BPS, to communicate the analytics configuration details and configure "
-                        + "BPS for analytics");
+                + "BPS for analytics");
         String bpsUrl = DASConfigurationUtils.getBPSURL();
         RegistryUtils.setTrustStoreSystemProperties();
         HttpClient httpClient = new HttpClient();
