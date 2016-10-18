@@ -15,10 +15,6 @@
  */
 package org.wso2.carbon.pc.analytics.core.kpi.clients;
 
-/**
- * Access DAS EventStreamAdminService and creates the event stream.
- */
-
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -30,8 +26,13 @@ import org.json.JSONObject;
 import org.wso2.carbon.pc.analytics.core.kpi.AnalyticsConfigConstants;
 import org.wso2.carbon.event.stream.stub.EventStreamAdminServiceStub;
 import org.wso2.carbon.pc.core.ProcessCenterException;
+
+import java.io.File;
 import java.rmi.RemoteException;
 
+/**
+ * Access DAS EventStreamAdminService and creates the event stream.
+ */
 public class StreamAdminServiceClient {
 
     private EventStreamAdminServiceStub serviceAdminStub;
@@ -46,33 +47,32 @@ public class StreamAdminServiceClient {
     /**
      * Create EventStreamAdminServiceStub object
      *
-     * @param backEndUrl
-     * @throws AxisFault
+     * @param backEndUrl Analytics server url
+     * @throws AxisFault Throws AxisFault if an error occurred in accessing EventStreamAdminServiceStub
      */
     public StreamAdminServiceClient(String backEndUrl) throws AxisFault {
-        String endPoint = backEndUrl + "/" + AnalyticsConfigConstants.SERVICES + "/"
+        String endPoint = backEndUrl + File.separator + AnalyticsConfigConstants.SERVICES + File.separator
                 + AnalyticsConfigConstants.EVENT_STREAM_ADMIN_SERVICE_NAME;
         serviceAdminStub = new EventStreamAdminServiceStub(endPoint);
     }
 
     /**
-     * @param session
-     * @param streamName
-     * @param streamVersion
-     * @param streamId
-     * @param streamNickName
-     * @param streamDescription
+     * @param session           session string
+     * @param streamName        event stream name
+     * @param streamVersion     event stream version
+     * @param streamId          event stream ID
+     * @param streamNickName    event stream nick name
+     * @param streamDescription event stream description
      * @param processVariables Event stream payload fields including process variables.<p> Ex:
-     * [{"isAnalyzeData":false,"name":"processInstanceId","isDrillDownData":"false", "type":"string"},
-     * {"isAnalyzeData":false,"name":"valuesAvailability","isDrillDownData":"false","type":"string"},
-     * {"isAnalyzeData":false,"name":"custid","isDrillDownData":false,"type":"string"},
-     * {"isAnalyzeData":false,"name":"amount","isDrillDownData":false,"type":"long"},
-     * {"isAnalyzeData":false,"name":"confirm","isDrillDownData":false,"type":"bool"}]
+     *              [{"isAnalyzeData":false,"name":"processInstanceId","isDrillDownData":"false", "type":"string"},
+     *              {"isAnalyzeData":false,"name":"valuesAvailability","isDrillDownData":"false","type":"string"},
+     *              {"isAnalyzeData":false,"name":"custid","isDrillDownData":false,"type":"string"},
+     *              {"isAnalyzeData":false,"name":"amount","isDrillDownData":false,"type":"long"},
+     *              {"isAnalyzeData":false,"name":"confirm","isDrillDownData":false,"type":"bool"}]
      * @throws ProcessCenterException
      */
     public void createEventStream(String session, String streamName, String streamVersion, String streamId,
             String streamNickName, String streamDescription, JSONArray processVariables) throws ProcessCenterException {
-
         JSONObject streamDefinitionJsonOb = new JSONObject();
         try {
             // Authenticate stub from sessionCooke
@@ -89,13 +89,10 @@ public class StreamAdminServiceClient {
 
             //setting process variables as payloadData into the eventStream definition
             streamDefinitionJsonOb.put(PAYLOAD_DATA, processVariables);
-
             if (log.isDebugEnabled()) {
                 log.debug("Stream Definition Json Object:" + streamDefinitionJsonOb.toString());
             }
-
             serviceAdminStub.addEventStreamDefinitionAsString(streamDefinitionJsonOb.toString());
-
         } catch (JSONException e) {
             String errMsg = "Error in creating event stream Definition Json object with data: " + "," + session + ","
                     + streamName + "," + streamVersion + "," + streamId + "," + streamNickName + "," + streamDescription

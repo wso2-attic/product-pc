@@ -86,7 +86,7 @@ public class LogEntryProcessUtils {
         processLogEntryResponse(logBean.getFlowchartEntries(), ProcessCenterConstants.AUDIT.FLOW_CHART, path,
                 logResult);
         processLogEntryResponse(logBean.getDocEntries(), ProcessCenterConstants.AUDIT.DOCUMENT, path, logResult);
-        processLogEntryResponse(logBean.getBpmnEntries(), ProcessCenterConstants.AUDIT.BPMN, path, logResult);
+        processLogEntryResponse(logBean.getBpmnEntries(), ProcessCenterConstants.BPMN, path, logResult);
         processLogEntryResponse(logBean.getLifecycleEntries(), ProcessCenterConstants.AUDIT.LIFE_CYCLE, path,
                 logResult);
 

@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.pc.analytics.core.kpi.clients;
 
+import java.io.File;
 import java.rmi.RemoteException;
 
 import org.apache.axis2.AxisFault;
@@ -39,20 +40,21 @@ public class ReceiverAdminServiceClient {
     private static final String INPUT_PROP_CONFIG_KEY = "events.duplicated.in.cluster";
 
     /**
-     * @param backEndUrl
-     * @throws AxisFault
+     * @param backEndUrl Event receiving DAS server url
+     * @throws AxisFault throws if an error occurred in accessing EventReceiverAdminServiceStub
      */
     public ReceiverAdminServiceClient(String backEndUrl) throws AxisFault {
-        this.endPoint = backEndUrl + "/" + AnalyticsConfigConstants.SERVICES + "/" + SERVICE_NAME;
+        this.endPoint = backEndUrl + File.separator + AnalyticsConfigConstants.SERVICES + File.separator + SERVICE_NAME;
         eventReceiverAdminServiceStub = new EventReceiverAdminServiceStub(endPoint);
     }
 
     /**
      * Deploy Event Receiver for the particular process, configuring the previously created Event Stream
-     * @param sessionCookie
-     * @param receiverName
-     * @param streamId
-     * @throws ProcessCenterException
+     *
+     * @param sessionCookie session cookie
+     * @param receiverName  event receiver name
+     * @param streamId      event stream ID
+     * @throws ProcessCenterException throws ProcessCenterException, if error occurred in deploying event receiver
      */
     public void deployEventReceiverConfiguration(String sessionCookie, String receiverName, String streamId)
             throws ProcessCenterException {
@@ -73,7 +75,6 @@ public class ReceiverAdminServiceClient {
                             props, false, "");
         } catch (RemoteException e) {
             String errMsg = "Error in deploying event receiver";
-            log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
     }

@@ -15,11 +15,6 @@
  */
 package org.wso2.carbon.pc.analytics.core.kpi;
 
-/**
- * Configure DAS configurations to publish data to DAS an do the analytics
- * (initiator class in the module)
- */
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -37,17 +32,20 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 
+/**
+ * Configure DAS configurations to publish data to DAS an do the analytics
+ * (initiator class in the module)
+ */
 public class DASConfigClient {
-
     private static final Log log = LogFactory.getLog(DASConfigClient.class);
-    String streamName;
-    String stremaVersion;
-    String streamId;
-    String streamDescription;
-    String streamNickName;
-    String receiverName;
-    JSONArray processVariables;
-    String dasUrl = null;
+    private String streamName;
+    private String stremaVersion;
+    private String streamId;
+    private String streamDescription;
+    private String streamNickName;
+    private String receiverName;
+    private JSONArray processVariables;
+    private String dasUrl = null;
 
     /**
      * Configure WSO2 DAS for analytics, by creating an Event Stream, Event Receiver for each process.
@@ -68,9 +66,12 @@ public class DASConfigClient {
      *                         {"name":"custid","type":"string","isAnalyzeData":false,"isDrillDownData":false},
      *                         {"name":"amount","type":"long","isAnalyzeData":false,"isDrillDownData":false},
      *                         {"name":"confirm","type":"bool","isAnalyzeData":false,"isDrillDownData":false}]}
-     * @throws ProcessCenterException
-     * @throws RemoteException
-     * @throws LogoutAuthenticationExceptionException
+     * @throws ProcessCenterException                 Throws ProcessCenterException, if error occurred in configuring
+     *                                                DAS for analytics
+     * @throws RemoteException                        Throws a RemoteException if an error is occurred in login out
+     *                                                from DAS admin services
+     * @throws LogoutAuthenticationExceptionException Throws a LogoutAuthenticationExceptionException if an error is
+     *                                                occurred in login out from DAS admin services
      */
     public void configDAS(String dasConfigDetails, String processName, String processVersion)
             throws ProcessCenterException, RemoteException, LogoutAuthenticationExceptionException {
@@ -79,7 +80,6 @@ public class DASConfigClient {
         LoginAdminServiceClient loginServiceClient = null;
         String dasUsername = null;
         char[] dasPassword = null;
-
         try {
             dasUsername = DASConfigurationUtils.getDASUserName();
             dasPassword = DASConfigurationUtils.getDASPassword().toCharArray();
@@ -92,46 +92,39 @@ public class DASConfigClient {
             streamNickName = dasConfigDetailsJOb.getString(AnalyticsConfigConstants.EVENT_STREAM_NICK_NAME);
             receiverName = dasConfigDetailsJOb.getString(AnalyticsConfigConstants.EVENT_RECEIVER_NAME);
             processVariables = dasConfigDetailsJOb.getJSONArray(AnalyticsConfigConstants.PROCESS_VARIABLES);
-
             //login to DAS
             loginServiceClient = PCAnalyticsServerHolder.getInstance().getLoginAdminServiceClient();
             String session = loginServiceClient.authenticate(dasUsername, dasPassword);
-
             //remove the password from memory
             Arrays.fill(dasPassword, ' ');
             dasPassword = null;
 
-            //create event stream // The payload data is as>> "process instance id, valueAvailability, actual process
-            // variables list
+            /*create event stream; The payload data is as>> "process instance id, valueAvailability, actual process
+            variables list*/
             PCAnalyticsServerHolder.getInstance().getStreamAdminServiceClient()
                     .createEventStream(session, streamName, stremaVersion, streamId, streamNickName, streamDescription,
                             processVariables);
             if (log.isDebugEnabled()) {
                 log.debug("Created the Event Stream: " + streamId + " in WSO2 DAS on :" + dasUrl);
             }
-
             //create event receiver
             PCAnalyticsServerHolder.getInstance().getReceiverAdminServiceClient()
                     .deployEventReceiverConfiguration(session, receiverName, streamId);
             if (log.isDebugEnabled()) {
                 log.debug("Created the Event Receiver: " + receiverName + " for the " + streamId + " in WSO2 DAS");
             }
-
             //now send the REST Post call to the WSO2 BPS to communicate the analytics configuration details to the
             // BPS from PC
             BPSConfigRestClient.post(dasConfigDetails, processName, processVersion);
-
         } catch (LoginAuthenticationExceptionException e) {
             String errMsg = "Error in Login to DAS at :" + dasUrl + "trying to login with username : " + dasUsername
                     + " and the given password";
-            log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         } catch (JSONException | XMLStreamException | IOException | ProcessCenterException | RuntimeException e) {
             String errMsg = "Error in DAS configuration, using : " + dasConfigDetails;
-            log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         } finally {
-            //logging out from DAS Admin Services
+            //login out from DAS Admin Services
             if (loginServiceClient != null) {
                 loginServiceClient.logOut();
             }

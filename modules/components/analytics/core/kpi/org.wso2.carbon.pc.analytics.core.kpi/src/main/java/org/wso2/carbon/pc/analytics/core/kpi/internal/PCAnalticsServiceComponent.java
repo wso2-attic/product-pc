@@ -46,9 +46,7 @@ public class PCAnalticsServiceComponent {
     }
 
     protected void setProcessCenter(ProcessCenterService processCenterService) {
-        if (log.isDebugEnabled()) {
-            log.debug("ProcessCenter bound to Process Center KPI Analytics Publisher component");
-        }
+        log.debug("ProcessCenter bound to Process Center KPI Analytics Publisher component");
         getInstance().setProcessCenter(processCenterService.getProcessCenter());
         String analyticsUrl = getInstance().getProcessCenter().getProcessCenterConfiguration().getAnalyticsServerURL();
         if (analyticsUrl != null) {
@@ -57,32 +55,24 @@ public class PCAnalticsServiceComponent {
                 getInstance().setStreamAdminServiceClient(new StreamAdminServiceClient(analyticsUrl));
                 getInstance().setReceiverAdminServiceClient(new ReceiverAdminServiceClient(analyticsUrl));
             } catch (Throwable e) {
-                log.error("Failed to set Process Center servcie..", e);
+                log.error("Failed to set Process Center service..", e);
             }
         }
     }
 
-    protected void unsetProcessCenter(
-            ProcessCenterService processCenterService) {
-        if (log.isDebugEnabled()) {
-            log.debug("ProcessCenter unbound from the Process Center KPI Analytics Publisher component");
-        }
+    protected void unsetProcessCenter(ProcessCenterService processCenterService) {
+        log.debug("ProcessCenter unbound from the Process Center KPI Analytics Publisher component");
         getInstance().setProcessCenter(null);
     }
 
     protected void setRegistryService(RegistryService registrySvc) {
-        if (log.isDebugEnabled()) {
-            log.debug("RegistryService bound to the Process Center KPI Analytics component");
-        }
+        log.debug("RegistryService bound to the Process Center KPI Analytics component");
         getInstance().setRegistryService(registrySvc);
     }
 
     public void unsetRegistryService(RegistryService registryService) {
-        if (log.isDebugEnabled()) {
-            log.debug("RegistryService unbound from the Process Center KPI Analytics component");
-        }
+        log.debug("RegistryService unbound from the Process Center KPI Analytics component");
         ProcessCenterServerHolder.getInstance().unsetRegistryService(registryService);
     }
-
 
 }

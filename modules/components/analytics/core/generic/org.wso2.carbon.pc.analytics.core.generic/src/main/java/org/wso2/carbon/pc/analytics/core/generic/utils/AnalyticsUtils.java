@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import org.wso2.carbon.pc.analytics.core.generic.AnalyticsConstants;
 
 import javax.xml.bind.DatatypeConverter;
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
@@ -106,7 +107,8 @@ public class AnalyticsUtils {
      * @return the base url of DAS
      */
     public static String getURL(String path) {
-        return getInstance().getProcessCenter().getProcessCenterConfiguration().getAnalyticsServerURL() + "/" + path;
+        return getInstance().getProcessCenter().getProcessCenterConfiguration().getAnalyticsServerURL() + File.separator
+                + path;
     }
 
 

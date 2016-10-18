@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~ Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -54,27 +54,6 @@
                 alertify.error('Process list returning error');
             }
         });
-        /*
-        $.ajax({
-            url: '/designer/assets/process/apis/get_role_permission',
-            type: 'POST',
-            data: {
-                'processName': 'test'
-            },
-            success: function (data) {
-                if(data === 'false') {
-                    $("#Addprocess").click(function(e) {
-                        e.preventDefault();
-                        alertify.error('You have no publisher permissions to perform this task');
-                    });
-                }
-            },
-            error: function () {
-                alertify.error('Permission retrieving error');
-            }
-
-        });
-        */
     }
 
     function searchProcessesByTag(currentElement) {

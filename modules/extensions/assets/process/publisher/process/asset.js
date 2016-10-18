@@ -271,15 +271,15 @@ asset.server = function(ctx) {
                         title: 'Delete ' + typeSingularLabel,
                         url: 'delete',
                         path: 'delete.jag'
-                    },{
+                    }, {
                         title: 'Log: ',
                         url: 'log',
                         path: 'log.jag'
-                    },{
+                    }, {
                         title: 'Import Process: ',
                         url: 'import_process',
                         path: 'import_process.jag'
-                    },{
+                    }, {
                         title: 'Configure Analytics: ',
                         url: 'config_analytics',
                         path: 'config_analytics.jag'
@@ -509,7 +509,7 @@ asset.renderer = function(ctx) {
 
                 var processTags = ps.getProcessTags(processName, processVersion);
                 var ps = new ProcessStore();
-                page.processTagsArray = processTags.split("###");
+                page.processTagsArray = processTags.split(",");
             } catch (e) {
                 log.error("Error in retrieving process tags. Exception:" + e);
             }
@@ -520,19 +520,22 @@ asset.renderer = function(ctx) {
             page.DASAnalyticsConfigured = DASConfigurationUtils.isDASAnalyticsConfigured(processName, processVersion);
 
             if (page.DASAnalyticsConfigured) {
-                var processVariablesJObArrStr = ps.getProcessVariablesList(resourcePath);
-                var processVariablesJObArr = JSON.parse(processVariablesJObArrStr);
-                page.processVariableList = processVariablesJObArr;
-                var streamAndReceiverInfo = JSON.parse(ps.getStreamAndReceiverInfo(resourcePath));
+                try {
+                    var processVariablesJObArrStr = ps.getProcessVariablesList(resourcePath);
+                    var processVariablesJObArr = JSON.parse(processVariablesJObArrStr);
+                    page.processVariableList = processVariablesJObArr;
+                    var streamAndReceiverInfo = JSON.parse(ps.getStreamAndReceiverInfo(resourcePath));
 
-                page.eventStreamName = streamAndReceiverInfo["eventStreamName"];
-                page.eventStreamVersion = streamAndReceiverInfo["eventStreamVersion"];
-                page.eventStreamDescription = streamAndReceiverInfo["eventStreamDescription"];
-                page.eventStreamNickName = streamAndReceiverInfo["eventStreamNickName"];
-                page.eventReceiverName = streamAndReceiverInfo["eventReceiverName"];
-                page.processDefinitionId = streamAndReceiverInfo["processDefinitionId"];
+                    page.eventStreamName = streamAndReceiverInfo["eventStreamName"];
+                    page.eventStreamVersion = streamAndReceiverInfo["eventStreamVersion"];
+                    page.eventStreamDescription = streamAndReceiverInfo["eventStreamDescription"];
+                    page.eventStreamNickName = streamAndReceiverInfo["eventStreamNickName"];
+                    page.eventReceiverName = streamAndReceiverInfo["eventReceiverName"];
+                    page.processDefinitionId = streamAndReceiverInfo["processDefinitionId"];
+                } catch (e) {
+                    log.error("Error in retrieving DAS analytics configuration details. Exception:" + e);
+                }
             }
-
         },
         create: function(page) {
             var tables = page.assets.tables;
@@ -773,7 +776,7 @@ asset.manager = function(ctx) {
                 ps.deleteProcessRelatedArtifacts(processName, processVersion, username);
                 this._super.remove.call(this, options);
             }catch (e){
-                log.error(e.message);
+                log.error(e);
             }
         }
     };

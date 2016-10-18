@@ -92,7 +92,8 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
      */
     private boolean flagRegReady = false;
 
-    @BeforeTest(alwaysRun = true) public void init() throws Exception {
+    @BeforeTest(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().replace("services",
                 PCIntegrationConstants.DESIGNER_APIS);
@@ -139,7 +140,7 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
                 wsRegistryServiceClient = registryProviderUtil.
                         getWSRegistry(automationContext);
             } while (wsRegistryServiceClient.
-                    getContent(PCIntegrationConstants.REG_PROCESS_PATH + TEST_PROCESS_AS1_NAME + "/"
+                    getContent(PCIntegrationConstants.REG_PROCESS_PATH + TEST_PROCESS_AS1_NAME + File.separator
                             + TEST_PROCESS_1_VERSION) == null);
 
             HashMap<String, String> searchQueryMap = new HashMap<String, String>();
@@ -170,8 +171,8 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
                 + "---------------------------------------------\n\n\n");
     }
 
-    @DataProvider(name = "AdvancedGenericSearchDataProvider") public static Object[][] dataProvider() {
-
+    @DataProvider(name = "AdvancedGenericSearchDataProvider")
+    public static Object[][] dataProvider() {
         Object[][] data = new Object[][] {
                 //data to test for single field values at once seperately : result(# of matching processes)=1
                 //(when the single field is the lcStatus = "Development" result would be 3)
@@ -194,7 +195,8 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         return data;
     }
 
-    @DataProvider(name = "AdvanceContentSearchDataProvider") public static Object[][] contentSearchDataProvider() {
+    @DataProvider(name = "AdvanceContentSearchDataProvider")
+    public static Object[][] contentSearchDataProvider() {
         Object data[][] = new Object[][] {
                 { "Combining process design", PCIntegrationConstants.CONTENT_SEARCH_CATEGORY_TEXT },
                 { "Combining process design", PCIntegrationConstants.CONTENT_SEARCH_CATEGORY_PDF },
@@ -252,15 +254,12 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         HashMap<String, String> searchQueryMap = new HashMap<String, String>();
         searchQueryMap.put("search-query", content);
         searchQueryMap.put("mediatype", "[\"" + contentDocType + "\"]");
-
         String searchReqUrl = automationContext.getContextUrls().getSecureServiceUrl()
                 .replace("services", PCIntegrationConstants.ADVENCED_CONTENT_SEARCH_API_PATH);
-
         ClientResponse response = genericRestClient
                 .geneticRestRequestPost(searchReqUrl, MediaType.TEXT_HTML, MediaType.APPLICATION_JSON, "",
                         searchQueryMap, headerMap, cookieHeader);
         JSONObject responseObject = new JSONObject(response.getEntity(String.class));
-
         JSONObject responseContentJOb = new JSONObject();
         JSONArray responseContentJArr = new JSONArray(responseObject.get("content").toString());
         responseContentJOb.put("content", responseContentJArr);
@@ -318,7 +317,6 @@ public class AdvanceSearchTestCase extends PCIntegrationBaseTest {
         if (!description.equals("")) {
             queryField.put(SEARCH_QUERY_FIELD_DESCRIPTION_KEY, description);
         }
-
         String queryFieldStringValue = queryField.toString().substring(1, queryField.toString().length() - 1);
         searchQueryMap.put("q", queryFieldStringValue);
     }

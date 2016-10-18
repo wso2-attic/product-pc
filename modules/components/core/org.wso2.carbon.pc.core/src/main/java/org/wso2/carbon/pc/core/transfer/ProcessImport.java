@@ -59,10 +59,11 @@ public class ProcessImport {
     private RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
     private UserRegistry reg;
     private String user;
+    private static final int BYTE_ARRAY_BUFFER_LENGTH = 2048;
 
     /**
      * @param processZipInputStream process ZIP input stream
-     * @param user username
+     * @param user                  username
      * @throws IOException
      * @throws RegistryException
      * @throws ProcessCenterException
@@ -78,7 +79,7 @@ public class ProcessImport {
             reg = registryService.getGovernanceUserRegistry(user);
             this.user = user;
             //extract zip file stream to the system disk
-            byte[] buffer = new byte[2048];
+            byte[] buffer = new byte[BYTE_ARRAY_BUFFER_LENGTH];
             ZipInputStream zipInputStream = new ZipInputStream(processZipInputStream);
             File importsDir = new File(ProcessCenterConstants.IMPORTS_DIR);
             try {
@@ -88,9 +89,8 @@ public class ProcessImport {
                     try {
                         ZipEntry entry;
                         while ((entry = zipInputStream.getNextEntry()) != null) {
-                            //counter++;
-                            String outpath = ProcessCenterConstants.IMPORTS_DIR + "/" + entry.getName();
-                            String dirPath = outpath.substring(0, outpath.lastIndexOf("/"));
+                            String outpath = ProcessCenterConstants.IMPORTS_DIR + File.separator + entry.getName();
+                            String dirPath = outpath.substring(0, outpath.lastIndexOf(File.separator));
                             new File(dirPath).mkdirs();
                             FileOutputStream fileOutputStream = null;
                             try {
@@ -124,16 +124,20 @@ public class ProcessImport {
                         if (processDir.isDirectory()) {
                             String processDirName = processDir.getName();
                             String processDirPath = processDir.getPath();
-                            String processRxtPath = processDirPath + "/" + ProcessCenterConstants.EXPORTED_PROCESS_RXT_FILE;
+                            String processRxtPath =
+                                    processDirPath + File.separator + ProcessCenterConstants.EXPORTED_PROCESS_RXT_FILE;
                             String processName = processDirName.substring(0, processDirName.lastIndexOf("-"));
                             String processVersion = processDirName
                                     .substring(processDirName.lastIndexOf("-") + 1, processDirName.length());
-                            String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" +
-                                    processVersion;
+                            String processAssetPath =
+                                    ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + File.separator +
+                                            processVersion;
 
                             if (registryService != null) {
                                 UserRegistry reg = registryService.getGovernanceUserRegistry(user);
-                                String processPath = "processes/" + processName + "/" + processVersion;
+                                String processPath =
+                                        ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + File.separator
+                                                + processVersion;
                                 // Check whether process already exists with same name and version
                                 if (!reg.resourceExists(processPath)) {
                                     putProcessRxt(processRxtPath, processAssetPath);
@@ -145,7 +149,8 @@ public class ProcessImport {
                                     setProcessText(processName, processVersion, processDirPath, processAssetPath);
                                     setBPMN(processName, processVersion, processDirPath, processAssetPath);
                                     setFlowChart(processName, processVersion, processDirPath, processAssetPath);
-                                    setProcessAssociations(processName, processVersion, processDirPath, processAssetPath);
+                                    setProcessAssociations(processName, processVersion, processDirPath,
+                                            processAssetPath);
                                 }
                             }
                         }
@@ -155,9 +160,9 @@ public class ProcessImport {
                     throw new ProcessCenterException(errMsg);
 
                 }
-            }finally {
+            } finally {
                 //Finally remove the Imports folder
-                if(importsDir.exists()) {
+                if (importsDir.exists()) {
                     FileUtils.deleteDirectory(importsDir);
                 }
             }
@@ -171,9 +176,9 @@ public class ProcessImport {
     /**
      * Add the process associations (sub processes, successors, predecessors) to the registry
      *
-     * @param processName name of the process
-     * @param processVersion process version
-     * @param processDirPath process directory path
+     * @param processName      name of the process
+     * @param processVersion   process version
+     * @param processDirPath   process directory path
      * @param processAssetPath process path
      * @throws ProcessCenterException
      */
@@ -181,7 +186,7 @@ public class ProcessImport {
             String processAssetPath) throws ProcessCenterException {
         try {
             Path procAssociationsJSONFilePath = Paths
-                    .get(processDirPath + "/" + ProcessCenterConstants.PROCESS_ASSOCIATIONS_FILE);
+                    .get(processDirPath + File.separator + ProcessCenterConstants.PROCESS_ASSOCIATIONS_FILE);
             if (Files.exists(procAssociationsJSONFilePath)) {
                 String procAssociationsFileContent = "";
                 try (BufferedReader reader = Files.newBufferedReader(procAssociationsJSONFilePath, Charsets.US_ASCII)) {
@@ -245,9 +250,9 @@ public class ProcessImport {
     /**
      * Add the flow chart of imported process into the registry
      *
-     * @param processName process name
-     * @param processVersion process version
-     * @param processDirPath process directory path
+     * @param processName      process name
+     * @param processVersion   process version
+     * @param processDirPath   process directory path
      * @param processAssetPath process path
      * @throws UserStoreException
      * @throws RegistryException
@@ -257,10 +262,9 @@ public class ProcessImport {
             throws UserStoreException, RegistryException, IOException {
         UserRegistry reg = registryService.getGovernanceUserRegistry(user);
         RegPermissionUtil.setPutPermission(registryService, user, ProcessCenterConstants.AUDIT.PROCESS_FLOW_CHART_PATH);
-
         Resource flowchartContentResource = reg.newResource();
-
-        Path flowChartJSONFilePath = Paths.get(processDirPath + "/" + ProcessCenterConstants.EXPORTED_FLOW_CHART_FILE);
+        Path flowChartJSONFilePath = Paths
+                .get(processDirPath + File.separator + ProcessCenterConstants.EXPORTED_FLOW_CHART_FILE);
         if (Files.exists(flowChartJSONFilePath)) {
             String flowChartFileContent = "";
             try (BufferedReader reader = Files.newBufferedReader(flowChartJSONFilePath, Charsets.US_ASCII)) {
@@ -275,8 +279,9 @@ public class ProcessImport {
 
             flowchartContentResource.setContent(flowChartFileContent);
             flowchartContentResource.setMediaType(MediaType.APPLICATION_JSON);
-            String flowchartContentPath = ProcessCenterConstants.FLOW_CHART + "/" + processName + "/" +
-                    processVersion;
+            String flowchartContentPath =
+                    ProcessCenterConstants.FLOW_CHART + File.separator + processName + File.separator +
+                            processVersion;
             reg.put(flowchartContentPath, flowchartContentResource);
             //add reg association
             reg.addAssociation(flowchartContentPath, processAssetPath, ProcessCenterConstants.ASSOCIATION_TYPE);
@@ -286,9 +291,9 @@ public class ProcessImport {
     /**
      * Add the BPMN file of the imported process into the registry
      *
-     * @param processName process name
-     * @param processVersion process version
-     * @param processDirPath process directory path
+     * @param processName      process name
+     * @param processVersion   process version
+     * @param processDirPath   process directory path
      * @param processAssetPath process path
      * @throws IOException
      * @throws SAXException
@@ -299,9 +304,10 @@ public class ProcessImport {
     private void setBPMN(String processName, String processVersion, String processDirPath, String processAssetPath)
             throws IOException, SAXException, ParserConfigurationException, TransformerException, RegistryException {
 
-        String bpmnFilePathStr = processDirPath + "/" + ProcessCenterConstants.EXPORTED_BPMN_CONTENT_FILE;
+        String bpmnFilePathStr = processDirPath + File.separator + ProcessCenterConstants.EXPORTED_BPMN_CONTENT_FILE;
         Path bpmnFilePath = Paths.get(bpmnFilePathStr);
-        String bpmnMetaDataFilePathStr = processDirPath + "/" + ProcessCenterConstants.EXPORTED_BPMN_META_FILE;
+        String bpmnMetaDataFilePathStr =
+                processDirPath + File.separator + ProcessCenterConstants.EXPORTED_BPMN_META_FILE;
         Path bpmnMetaDataFilePath = Paths.get(bpmnMetaDataFilePathStr);
 
         if (Files.exists(bpmnFilePath) && Files.exists(bpmnMetaDataFilePath)) {
@@ -313,7 +319,7 @@ public class ProcessImport {
             Document doc = dBuilder.parse(bpmnXMLFile);
             String bpmnFileContent = ProcessStore.xmlToString(doc);
             String bpmnContentResourcePath = ProcessCenterConstants.BPMN_CONTENT_PATH + processName +
-                    "/" + processVersion;
+                    File.separator + processVersion;
             if (bpmnFileContent != null && bpmnFileContent.length() > 0) {
                 Resource bpmnFileResource = reg.newResource();
                 bpmnFileResource.setContent(bpmnFileContent);
@@ -330,7 +336,7 @@ public class ProcessImport {
             bpmnMetaDataResource.setContent(bpmnMetaDataContent);
             bpmnMetaDataResource.setMediaType(ProcessCenterConstants.WSO2_BPMN_ASSET_MEDIA_TYPE);
             String bpmnMetaDataResPath =
-                    ProcessCenterConstants.BPMN_META_DATA_FILE_PATH + processName + "/" + processVersion;
+                    ProcessCenterConstants.BPMN_META_DATA_FILE_PATH + processName + File.separator + processVersion;
             reg.put(bpmnMetaDataResPath, bpmnMetaDataResource);
         }
     }
@@ -338,16 +344,17 @@ public class ProcessImport {
     /**
      * Add the process text of the imported process into the registry
      *
-     * @param processName process name
-     * @param processVersion process version
-     * @param processDirPath process directory path
+     * @param processName      process name
+     * @param processVersion   process version
+     * @param processDirPath   process directory path
      * @param processAssetPath process path
      * @throws IOException
      * @throws RegistryException
      */
     private void setProcessText(String processName, String processVersion, String processDirPath,
             String processAssetPath) throws IOException, RegistryException {
-        Path processTextFilePath = Paths.get(processDirPath + "/" + ProcessCenterConstants.EXPORTED_PROCESS_TEXT_FILE);
+        Path processTextFilePath = Paths
+                .get(processDirPath + File.separator + ProcessCenterConstants.EXPORTED_PROCESS_TEXT_FILE);
         if (Files.exists(processTextFilePath)) {
             String processTextFileContent = null;
             try (BufferedReader reader = Files.newBufferedReader(processTextFilePath, Charsets.US_ASCII)) {
@@ -362,7 +369,7 @@ public class ProcessImport {
 
             // store process text as a separate resource
             String processTextResourcePath =
-                    ProcessCenterConstants.PROCESS_TEXT_PATH + processName + "/" + processVersion;
+                    ProcessCenterConstants.PROCESS_TEXT_PATH + processName + File.separator + processVersion;
             if (processTextFileContent != null && processTextFileContent.length() > 0) {
                 Resource processTextResource = reg.newResource();
                 processTextResource.setContent(processTextFileContent);
@@ -376,13 +383,14 @@ public class ProcessImport {
     /**
      * Add the process tags of the imported process to registry
      *
-     * @param processDirPath process directory path
+     * @param processDirPath   process directory path
      * @param processAssetPath process path
      * @throws IOException
      * @throws RegistryException
      */
     private void setProcessTags(String processDirPath, String processAssetPath) throws IOException, RegistryException {
-        Path processTagsFilePath = Paths.get(processDirPath + "/" + ProcessCenterConstants.PROCESS_TAGS_FILE);
+        Path processTagsFilePath = Paths
+                .get(processDirPath + File.separator + ProcessCenterConstants.PROCESS_TAGS_FILE);
         if (Files.exists(processTagsFilePath)) {
             String tagsFileContent = "";
             try (BufferedReader reader = Files.newBufferedReader(processTagsFilePath, Charsets.US_ASCII)) {
@@ -407,9 +415,9 @@ public class ProcessImport {
     /**
      * Add the documents (pdf, ms-word) of the imported process to registry
      *
-     * @param processName process name
-     * @param processVersion process version
-     * @param processDirPath process directory path
+     * @param processName      process name
+     * @param processVersion   process version
+     * @param processDirPath   process directory path
      * @param processAssetPath process path
      * @throws ProcessCenterException
      * @throws JSONException
@@ -421,7 +429,7 @@ public class ProcessImport {
             String processAssetPath)
             throws ProcessCenterException, JSONException, RegistryException, IOException, SecurityException {
 
-        File docsFolder = new File(processDirPath + "/" + ProcessCenterConstants.PROCESS_ZIP_DOCUMENTS_DIR);
+        File docsFolder = new File(processDirPath + File.separator + ProcessCenterConstants.PROCESS_ZIP_DOCUMENTS_DIR);
         if (docsFolder.exists()) {
             File[] docFiles = docsFolder.listFiles();
             for (File docFile : docFiles) {
@@ -430,7 +438,8 @@ public class ProcessImport {
 
                     String fileExt = FilenameUtils.getExtension(docFile.getPath());
                     String docResourcePath =
-                            ProcessCenterConstants.DOC_CONTENT_PATH + processName + "/" + processVersion + "/" +
+                            ProcessCenterConstants.DOC_CONTENT_PATH + processName + File.separator + processVersion
+                                    + File.separator +
                                     fileName;
                     Resource docResource = reg.newResource();
                     FileInputStream docFileInputStream = new FileInputStream(docFile);
@@ -452,7 +461,7 @@ public class ProcessImport {
     /**
      * Add the process thumbnail image of the imported process into the registry
      *
-     * @param processDirPath process directory path
+     * @param processDirPath   process directory path
      * @param processAssetPath process oath
      * @throws RegistryException
      * @throws IOException
@@ -462,14 +471,14 @@ public class ProcessImport {
         Resource storedProcess = reg.get(processAssetPath);
         String processId = storedProcess.getUUID();
 
-        String imageResourcePath = ProcessCenterConstants.PROCESS_ASSET_RESOURCE_REG_PATH + processId + "/"
+        String imageResourcePath = ProcessCenterConstants.PROCESS_ASSET_RESOURCE_REG_PATH + processId + File.separator
                 + ProcessCenterConstants.IMAGE_THUMBNAIL;
 
         Resource imageContentResource = reg.newResource();
 
-        File imageThumbnailFile = new File(processDirPath + "/" + ProcessCenterConstants.IMAGE_THUMBNAIL);
+        File imageThumbnailFile = new File(processDirPath + File.separator + ProcessCenterConstants.IMAGE_THUMBNAIL);
         //Avoid trying to read non-existing thumbnail file
-        if(imageThumbnailFile.exists() && !imageThumbnailFile.isDirectory()) {
+        if (imageThumbnailFile.exists() && !imageThumbnailFile.isDirectory()) {
             byte[] imageContent = Files.readAllBytes(imageThumbnailFile.toPath());
             imageContentResource.setContent(imageContent);
             reg.put(imageResourcePath, imageContentResource);
@@ -491,8 +500,8 @@ public class ProcessImport {
             String[] processPaths = GovernanceUtils
                     .findGovernanceArtifacts(ProcessCenterConstants.PROCESS_MEDIA_TYPE, reg);
             for (String processPath : processPaths) {
-                String processName = processPath.split("/")[2];
-                String processVersion = processPath.split("/")[3];
+                String processName = processPath.split(File.separator)[2];
+                String processVersion = processPath.split(File.separator)[3];
                 processList.add(processName + "-" + processVersion);
             }
         } else {
@@ -505,7 +514,7 @@ public class ProcessImport {
     /**
      * Add the rxt file of imported process into the registry
      *
-     * @param processRxtPath process rxt path
+     * @param processRxtPath   process rxt path
      * @param processAssetPath process path
      * @throws RegistryException
      * @throws UserStoreException

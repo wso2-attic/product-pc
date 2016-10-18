@@ -22,16 +22,17 @@ importPackage(org.wso2.carbon.pc.analytics.core.kpi.utils);
 importPackage(org.wso2.carbon.pc.core);
 
 var dasConfigClient = new DASConfigClient();
-var ps=new ProcessStore();
+var ps = new ProcessStore();
 var dasConfigData = String(request.getParameter("dasConfigData"));
 var processName = String(request.getParameter("processName"));
 var processVersion = String(request.getParameter("processVersion"));
-try{
-    dasConfigClient.configDAS(dasConfigData,processName,processVersion);
-    ps.saveStreamAndReceiverInfo(dasConfigData,processName,processVersion);
+try {
+    dasConfigClient.configDAS(dasConfigData, processName, processVersion);
+    ps.saveStreamAndReceiverInfo(dasConfigData, processName, processVersion);
     DASConfigurationUtils.setPropertyDASAnalyticsConfigured(processName, processVersion);
     print("SUCCESS");
-}catch(error){
+} catch (error) {
+    log.error(error);
     print("FAIL");
 }
 %>
