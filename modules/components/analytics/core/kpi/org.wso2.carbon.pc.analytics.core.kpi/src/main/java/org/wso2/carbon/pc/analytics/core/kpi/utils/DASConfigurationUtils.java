@@ -25,6 +25,7 @@ import org.wso2.carbon.pc.analytics.core.kpi.internal.PCAnalyticsServerHolder;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
 import org.wso2.carbon.pc.core.ProcessStore;
+import org.wso2.carbon.pc.core.util.Utils;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -56,7 +57,6 @@ public class DASConfigurationUtils {
     public static boolean isDASAnalyticsConfigured(String processName, String processVersion)
             throws ProcessCenterException {
         String processContent = null;
-        ProcessStore ps = new ProcessStore();
         try {
             RegistryService registryService = PCAnalyticsServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
@@ -65,7 +65,7 @@ public class DASConfigurationUtils {
                         processVersion;
                 org.wso2.carbon.registry.core.Resource resource = reg.get(processAssetPath);
                 processContent = new String((byte[]) resource.getContent());
-                Document doc = ps.stringToXML(processContent);
+                Document doc = Utils.stringToXML(processContent);
 
                 Element rootElement = doc.getDocumentElement();
                 Element propertiesElement = (Element) rootElement.getElementsByTagName(PROPERTIES_ELEMENT).item(0);
@@ -110,16 +110,16 @@ public class DASConfigurationUtils {
                         processVersion;
                 org.wso2.carbon.registry.core.Resource resource = reg.get(processAssetPath);
                 processContent = new String((byte[]) resource.getContent());
-                Document doc = ps.stringToXML(processContent);
+                Document doc = Utils.stringToXML(processContent);
                 Element rootElement = doc.getDocumentElement();
                 Element propertiesElement = (Element) rootElement.getElementsByTagName(PROPERTIES_ELEMENT).item(0);
 
                 //add a new property item element if it is not existing already
                 if (propertiesElement.getElementsByTagName(AnalyticsConfigConstants.IS_DAS_CONFIGED_TAG).getLength()
                         == 0) {
-                    ps.appendText(doc, propertiesElement, AnalyticsConfigConstants.IS_DAS_CONFIGED_TAG,
+                    Utils.appendText(doc, propertiesElement, AnalyticsConfigConstants.IS_DAS_CONFIGED_TAG,
                             ProcessCenterConstants.MNS, "true");
-                    String newProcessContent = ps.xmlToString(doc);
+                    String newProcessContent = Utils.xmlToString(doc);
                     resource.setContent(newProcessContent);
                     reg.put(processAssetPath, resource);
                     log.debug("isDasConfigedForAnalytics property in process.rxt set as true");

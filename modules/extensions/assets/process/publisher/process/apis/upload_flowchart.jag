@@ -17,9 +17,9 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 var log = new Log();
-var ps = new ProcessStore();
+var flowChart = new FlowChart();
 
 var pName = String(request.getParameter("processName"));
 var pVersion = String(request.getParameter("processVersion"));
@@ -31,7 +31,7 @@ var user = server.current(session);
 var processid;
 var responseObj = {};
 try {
-    processid = ps.uploadFlowchart(pName, pVersion, flowchartJson, user.username);
+    processid = flowChart.uploadFlowchart(pName, pVersion, flowchartJson, user.username);
     if (log.isDebugEnabled()) {
         log.debug(processid);
     }

@@ -17,14 +17,14 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("Saving process text");
 }
 
-var ps = new ProcessStore();
+var pt = new ProcessText();
 var processName = String(request.getParameter("processName"));
 var processVersion = String(request.getParameter("processVersion"));
 var processText = String(request.getParameter("processText"));
@@ -37,7 +37,7 @@ if (log.isDebugEnabled()) {
 }
 var responseObj = {};
 try {
-    var result = ps.saveProcessText(processName, processVersion, processText, user.username);
+    var result = pt.saveProcessText(processName, processVersion, processText, user.username);
     responseObj.error = false;
     responseObj.content = stringify(result);
     print(stringify(responseObj));

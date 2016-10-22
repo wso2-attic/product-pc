@@ -17,18 +17,19 @@
  *  under the License.
  */
 
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
+
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("Accessing associations for the process...");
 }
-var ps = new ProcessStore();
+var processAssociation = new ProcessAssociation();
 
 var processPath = String(request.getParameter("processPath"));
 if (log.isDebugEnabled()) {
     log.debug("Retrieving associations for: " + processPath);
 }
-var associateData = ps.getSucessorPredecessorSubprocessList(processPath);
+var associateData = processAssociation.getSucessorPredecessorSubprocessList(processPath);
 if (log.isDebugEnabled()) {
     log.debug(associateData);
 }

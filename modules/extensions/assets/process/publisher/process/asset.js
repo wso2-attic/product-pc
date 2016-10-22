@@ -456,9 +456,9 @@ asset.renderer = function(ctx) {
                 page.bpmnAvaliable = true;
             }
 
-            importPackage(org.wso2.carbon.pc.core);
-            var ps = new ProcessStore();
-            var isDocumentAvailableStr = ps.isDocumentAvailable(resourcePath);
+            importPackage(org.wso2.carbon.pc.core.assets.resources);
+            var processDocument = new ProcessDocument();
+            var isDocumentAvailableStr = processDocument.isDocumentAvailable(resourcePath);
             var isDocumentAvailable = JSON.parse(isDocumentAvailableStr);
 
             if (isDocumentAvailable == true) {
@@ -467,7 +467,8 @@ asset.renderer = function(ctx) {
                 page.documentAvailable = false;
             }
 
-            var conData = ps.getSucessorPredecessorSubprocessList(resourcePath);
+            var processAssociation = new ProcessAssociation();
+            var conData = processAssociation.getSucessorPredecessorSubprocessList(resourcePath);
             var conObject = JSON.parse(conData);
             if (log.isDebugEnabled()) {
                 log.debug(conObject);
@@ -505,10 +506,10 @@ asset.renderer = function(ctx) {
             page.processName = processName;
             page.processVersion = processVersion;
 
+            var tag = new Tag();
             try {
 
-                var processTags = ps.getProcessTags(processName, processVersion);
-                var ps = new ProcessStore();
+                var processTags = tag.getProcessTags(processName, processVersion);
                 page.processTagsArray = processTags.split(",");
             } catch (e) {
                 log.error("Error in retrieving process tags. Exception:" + e);
@@ -518,13 +519,15 @@ asset.renderer = function(ctx) {
             page.DASAnalyticsEnabled = AnalyticsUtils.isDASAnalyticsActivated();
             importPackage(org.wso2.carbon.pc.analytics.core.kpi.utils);
             page.DASAnalyticsConfigured = DASConfigurationUtils.isDASAnalyticsConfigured(processName, processVersion);
+            importPackage(org.wso2.carbon.pc.core.analytics);
 
             if (page.DASAnalyticsConfigured) {
                 try {
-                    var processVariablesJObArrStr = ps.getProcessVariablesList(resourcePath);
+                    var kpiAnalytics = new KPIAnalytics();
+                    var processVariablesJObArrStr = kpiAnalytics.getProcessVariablesList(resourcePath);
                     var processVariablesJObArr = JSON.parse(processVariablesJObArrStr);
                     page.processVariableList = processVariablesJObArr;
-                    var streamAndReceiverInfo = JSON.parse(ps.getStreamAndReceiverInfo(resourcePath));
+                    var streamAndReceiverInfo = JSON.parse(kpiAnalytics.getStreamAndReceiverInfo(resourcePath));
 
                     page.eventStreamName = streamAndReceiverInfo["eventStreamName"];
                     page.eventStreamVersion = streamAndReceiverInfo["eventStreamVersion"];
@@ -638,9 +641,9 @@ asset.renderer = function(ctx) {
             }
 
             importPackage(org.wso2.carbon.pc.core);
-            var ps = new ProcessStore();
+            var processAssociation = new ProcessAssociation();
             var resourcePath = page.assets.path;
-            var conData = ps.getSucessorPredecessorSubprocessList(resourcePath);
+            var conData = processAssociation.getSucessorPredecessorSubprocessList(resourcePath);
             var conObject = JSON.parse(conData);
             if (log.isDebugEnabled()) {
                 log.debug(conObject);

@@ -17,14 +17,14 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("Deleting subprocess X of process Y");
 }
 
-var ps = new ProcessStore();
+var processAssociation = new ProcessAssociation();
 var deleteSubprocessDetails = String(request.getParameter("deleteSubprocessDetails"));
 if (log.isDebugEnabled()) {
     log.debug("deleteSubprocessDetails: " + deleteSubprocessDetails);
@@ -35,7 +35,7 @@ var user = server.current(session);
 
 var responseObj = {};
 try {
-    var deleteSubStatus = ps.deleteSubprocess(deleteSubprocessDetails, user.username);
+    var deleteSubStatus = processAssociation.deleteSubprocess(deleteSubprocessDetails, user.username);
     responseObj.error = false;
     responseObj.content = stringify(deleteSubStatus);
     print(stringify(responseObj));

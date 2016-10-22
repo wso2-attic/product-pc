@@ -48,7 +48,8 @@ public class ImportProcessTestCase extends PCIntegrationBaseTest {
     private static final String PROCESS_NAME = "Process1";
     private static final String PROCESS_VERSION = "1.0";
 
-    @BeforeTest(alwaysRun = true) public void init() throws Exception {
+    @BeforeTest(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         publisherUrl = automationContext.getContextUrls().getSecureServiceUrl().
                 replace("services", PCIntegrationConstants.DESIGNER_APIS);
@@ -66,8 +67,8 @@ public class ImportProcessTestCase extends PCIntegrationBaseTest {
         cookieHeader = "JSESSIONID=" + jSessionId;
     }
 
-    @Test(groups = { "org.wso2.pc" }, description = "Importing process") public void importProcess()
-            throws IOException {
+    @Test(groups = { "org.wso2.pc" }, description = "Importing process")
+    public void importProcess() throws IOException {
         String resourcePath1 = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
                 File.separator + "exportedProcess" + File.separator + "Process1-1.0-PC-Package.zip";
         String url = publisherProcessAPIBaseUrl + "import_process";
@@ -77,8 +78,8 @@ public class ImportProcessTestCase extends PCIntegrationBaseTest {
                         .getStatusCode());
     }
 
-    @Test(groups = { "org.wso2.pc" }, description = "Checking associated BPMN",
-            dependsOnMethods = "importProcess") public void checkBPMN() throws Exception {
+    @Test(groups = { "org.wso2.pc" }, description = "Checking associated BPMN", dependsOnMethods = "importProcess")
+    public void checkBPMN() throws Exception {
         Element bpmnElement = getAssociateProcess("name");
         Assert.assertNotNull(bpmnElement, "Associated BPMN doesn't exist");
         Assert.assertTrue(bpmnElement.getTextContent().equals(PROCESS_NAME), "Process1 doesn't have associated BPMN");
@@ -101,8 +102,8 @@ public class ImportProcessTestCase extends PCIntegrationBaseTest {
         return associateProcessElement;
     }
 
-    @Test(groups = { "org.wso2.pc" }, description = "Deleting flowchart",
-            dependsOnMethods = "importProcess") public void deleteFlowchart() throws JSONException {
+    @Test(groups = { "org.wso2.pc" }, description = "Deleting flowchart", dependsOnMethods = "importProcess")
+    public void deleteFlowchart() throws JSONException {
         queryMap.put(PCIntegrationConstants.PROCESS_NAME, PROCESS_NAME);
         queryMap.put(PCIntegrationConstants.PROCESS_VERSION, PROCESS_VERSION);
         queryMap.put("flowchartPath",

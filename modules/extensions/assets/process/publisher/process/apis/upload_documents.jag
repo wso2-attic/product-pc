@@ -17,13 +17,13 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("INSIDE UPLOAD DOCUMENTS");
 }
-var ps = new ProcessStore();
+var processDocument = new ProcessDocument();
 
 var docName = String(request.getParameter("docName"));
 var docSummary = String(request.getParameter("summaryDoc"));
@@ -50,11 +50,11 @@ try {
     if(docUrl == "NA") {
         var files = request.getAllFiles();
         for (var name in files) {
-            processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, files[name].getStream(), docExtension, user.username);
+            processid = processDocument.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, files[name].getStream(), docExtension, user.username);
         }
     }
     else{
-        processid = ps.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, temp, docExtension, user.username);
+        processid = processDocument.uploadDocument(docProcessName, docProcessVersion, docName, docSummary, docUrl, temp, docExtension, user.username);
     }
     
     responseObj.error = false;

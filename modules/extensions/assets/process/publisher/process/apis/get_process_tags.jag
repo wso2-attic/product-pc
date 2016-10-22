@@ -17,17 +17,17 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("INSIDE get process list...");
 }
-var ps = new ProcessStore();
+var tag = new Tag();
 var responseObj = {};
 
 try {
-    var processTags = ps.getProcessTags();
+    var processTags = tag.getProcessTags();
     responseObj.error = false;
     responseObj.content = processTags;
     print(stringify(responseObj));

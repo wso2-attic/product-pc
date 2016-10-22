@@ -17,19 +17,19 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 var log = new Log();
 if(log.isDebugEnabled()){
     log.debug("INSIDE get process Document...");
 }
-var ps = new ProcessStore();
+var processDocument = new ProcessDocument();
 var processPath = String(request.getParameter("process_path"));
 if(log.isDebugEnabled()){
     log.debug("Retrieving process document for: " + processPath);
 }
 var responseObj = {};
 try{
-    var doc = ps.getUploadedDocumentDetails(processPath);
+    var doc = processDocument.getUploadedDocumentDetails(processPath);
     responseObj.error = false;
     responseObj.content = doc;
     print(stringify(responseObj));

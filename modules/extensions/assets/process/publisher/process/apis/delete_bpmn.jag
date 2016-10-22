@@ -17,13 +17,13 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("INSIDE REMOVE BPMN...");
 }
-var ps = new ProcessStore();
+var bpmn = new BPMN();
 
 var processName = String(request.getParameter("processName"));
 var processVersion = String(request.getParameter("processVersion"));
@@ -36,7 +36,7 @@ var user = server.current(session);
 
 var responseObj = {};
 try {
-    var removeBPMNStatus = ps.removeBPMNDiagram(processName, processVersion, user.username);
+    var removeBPMNStatus = bpmn.removeBPMNDiagram(processName, processVersion, user.username);
     responseObj.error = false;
     responseObj.content = removeBPMNStatus;
     print(stringify(responseObj));

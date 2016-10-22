@@ -15,8 +15,23 @@
 */
 package org.wso2.carbon.pc.core.util;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -59,5 +74,35 @@ public class Utils {
                     .append(HEXES.charAt((b & 0x0F)));
         }
         return hex.toString();
+    }
+
+    public static Element append(Document doc, Element parent, String childName, String childNS) {
+        Element childElement = doc.createElementNS(childNS, childName);
+        parent.appendChild(childElement);
+        return childElement;
+    }
+
+    public static Element appendText(Document doc, Element parent, String childName, String childNS, String text) {
+        Element childElement = doc.createElementNS(childNS, childName);
+        childElement.setTextContent(text);
+        parent.appendChild(childElement);
+        return childElement;
+    }
+
+    public static String xmlToString(Document doc) throws TransformerException {
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        StringWriter writer = new StringWriter();
+        transformer.transform(new DOMSource(doc), new StreamResult(writer));
+        return writer.getBuffer().toString().replaceAll("\n|\r", "");
+    }
+
+    public static Document stringToXML(String xmlString) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        DocumentBuilder builder;
+        builder = factory.newDocumentBuilder();
+        return builder.parse(new InputSource(new StringReader(xmlString)));
     }
 }

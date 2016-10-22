@@ -18,16 +18,17 @@
  *
  */
 
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
+
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("INSIDE get process flowchart...");
 }
-var ps = new ProcessStore();
+var flowChart = new FlowChart();
 var responseObj = {};
 try {
     var processFlowchartPath = String(request.getParameter("flowchartPath"));
-    var flowchart = ps.getFlowchart(processFlowchartPath);
+    var flowchart = flowChart.getFlowchart(processFlowchartPath);
     if (log.isDebugEnabled()) {
         log.debug(flowchart);
     }

@@ -17,20 +17,20 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("INSIDE get process text...");
 }
-var ps = new ProcessStore();
+var pt = new ProcessText();
 var processTextPath = String(request.getParameter("process_text_path"));
 if (log.isDebugEnabled()) {
     log.debug("Retrieving process text for: " + processTextPath);
 }
 var responseObj = {};
 try {
-    var processText = ps.getProcessText(processTextPath);
+    var processText = pt.getProcessText(processTextPath);
     responseObj.error = false;
     responseObj.content = processText;
     print(stringify(responseObj));

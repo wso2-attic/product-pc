@@ -17,18 +17,18 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.analytics);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("Process Variables Adding Logic");
 }
 
-var ps = new ProcessStore();
+var kpiAnalytics = new KPIAnalytics();
 var variableDetails = String(request.getParameter("processVariablesInfo"));
 
 try {
-    ps.saveProcessVariables(variableDetails);
+    kpiAnalytics.saveProcessVariables(variableDetails);
     print("SUCCESS");
 } catch (error) {
     log.error(error);

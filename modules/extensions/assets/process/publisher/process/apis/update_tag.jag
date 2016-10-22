@@ -17,14 +17,14 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("Updating tag for a process asset");
 }
 
-var ps = new ProcessStore();
+var tag = new Tag();
 var processDetails = String(request.getParameter("processDetails"));
 var type = String(request.getParameter("type"));
 
@@ -32,12 +32,12 @@ var server = require('store').server;
 var user = server.current(session);
 
 if (type === "ADD") {
-    var status = ps.addNewTag(processDetails, user.username);
+    var status = tag.addNewTag(processDetails, user.username);
     responseObj.error = false;
     responseObj.content = stringify(status);
     print(stringify(responseObj));
 } else if (type === "DEL") {
-    var status = ps.removeTag(processDetails, user.username);
+    var status = tag.removeTag(processDetails, user.username);
     responseObj.error = false;
     responseObj.content = stringify(status);
     print(stringify(responseObj));
