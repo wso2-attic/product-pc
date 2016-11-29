@@ -17,14 +17,14 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.analytics);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("Deleting a process variable");
 }
 
-var ps = new ProcessStore();
+var kpiAnalytics = new KPIAnalytics();
 var deleteVariableDetails = String(request.getParameter("removeVariableDetails"));
 if (log.isDebugEnabled()) {
     log.debug("deleteVariableDetails: " + deleteVariableDetails);
@@ -35,7 +35,7 @@ var user = server.current(session);
 
 var responseObj = {};
 try {
-    ps.deleteProcessVariable(deleteVariableDetails, user.username);
+    kpiAnalytics.deleteProcessVariable(deleteVariableDetails, user.username);
     responseObj.error = false;
     responseObj.content = 'Successfully deleted the selected process variable/s';
     print(stringify(responseObj));

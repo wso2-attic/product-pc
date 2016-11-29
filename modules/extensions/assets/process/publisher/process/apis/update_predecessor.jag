@@ -17,14 +17,14 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("Updating predecessor X of process Y");
 }
 
-var ps = new ProcessStore();
+var processAssociation = new ProcessAssociation();
 var predecessorDetails = String(request.getParameter("predecessorDetails"));
 if (log.isDebugEnabled()) {
     log.debug("predecessorDetails: " + predecessorDetails);
@@ -35,7 +35,7 @@ var user = server.current(session);
 
 var responseObj = {};
 try {
-    var predecessorStatus = ps.addPredecessor(predecessorDetails, user.username);
+    var predecessorStatus = processAssociation.addPredecessor(predecessorDetails, user.username);
     responseObj.error = false;
     responseObj.content = stringify(predecessorStatus);
     print(stringify(responseObj));

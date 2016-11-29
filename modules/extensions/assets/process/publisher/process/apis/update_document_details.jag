@@ -17,14 +17,14 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("Updating document details of process");
 }
 
-var ps = new ProcessStore();
+var processDocument = new ProcessDocument();
 var documentDetails = String(request.getParameter("docInfo"));
 if (log.isDebugEnabled()) {
     log.debug("documentDetails: " + documentDetails);
@@ -35,7 +35,7 @@ var user = server.current(session);
 
 var responseObj = {};
 try {
-    var processId = ps.updateDocumentDetails(documentDetails, user.username);
+    var processId = processDocument.updateDocumentDetails(documentDetails, user.username);
     responseObj.error = false;
     responseObj.content = processId;
     print(stringify(responseObj));

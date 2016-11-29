@@ -17,14 +17,14 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("Updating subprocess X of process Y");
 }
 
-var ps = new ProcessStore();
+var processAssociation = new ProcessAssociation();
 var subprocessDetails = String(request.getParameter("subprocessDetails"));
 if (log.isDebugEnabled()) {
     log.debug("subProcessDetails: " + subprocessDetails);
@@ -35,7 +35,7 @@ var user = server.current(session);
 
 var responseObj = {};
 try {
-    var subprocessStatus = ps.addSubprocess(subprocessDetails, user.username);
+    var subprocessStatus = processAssociation.addSubprocess(subprocessDetails, user.username);
     responseObj.error = false;
     responseObj.content = stringify(subprocessStatus);
     print(stringify(responseObj));

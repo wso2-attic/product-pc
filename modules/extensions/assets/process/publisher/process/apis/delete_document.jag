@@ -17,14 +17,14 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("Deleting document X of process Y");
 }
 
-var ps = new ProcessStore();
+var processDocument = new ProcessDocument();
 var deleteDocumentDetails = String(request.getParameter("removeDocumentDetails"));
 if (log.isDebugEnabled()) {
     log.debug("deleteDocumentDetails: " + deleteDocumentDetails);
@@ -35,7 +35,7 @@ var user = server.current(session);
 
 var responseObj = {};
 try {
-    var deleteDocStatus = ps.deleteDocument(deleteDocumentDetails, user.username);
+    var deleteDocStatus = processDocument.deleteDocument(deleteDocumentDetails, user.username);
     responseObj.error = false;
     responseObj.content = stringify(deleteDocStatus);
     print(stringify(responseObj));

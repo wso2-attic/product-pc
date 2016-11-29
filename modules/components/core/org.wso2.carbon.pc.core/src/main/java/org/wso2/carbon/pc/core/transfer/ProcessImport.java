@@ -30,6 +30,7 @@ import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
 import org.wso2.carbon.pc.core.audit.util.RegPermissionUtil;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
+import org.wso2.carbon.pc.core.util.Utils;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -50,8 +51,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import org.wso2.carbon.pc.core.ProcessStore;
 
 public class ProcessImport {
     private static final Log log = LogFactory.getLog(ProcessImport.class);
@@ -317,7 +316,7 @@ public class ProcessImport {
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             DocumentBuilder dBuilder = factory.newDocumentBuilder();
             Document doc = dBuilder.parse(bpmnXMLFile);
-            String bpmnFileContent = ProcessStore.xmlToString(doc);
+            String bpmnFileContent = Utils.xmlToString(doc);
             String bpmnContentResourcePath = ProcessCenterConstants.BPMN_CONTENT_PATH + processName +
                     File.separator + processVersion;
             if (bpmnFileContent != null && bpmnFileContent.length() > 0) {
@@ -331,7 +330,7 @@ public class ProcessImport {
             //set bpmn meta data file (contains path of the target bpmn file)
             File bpmnMetaDataXMLFile = new File(bpmnMetaDataFilePathStr);
             Document bpmnMetaDataDoc = dBuilder.parse(bpmnMetaDataXMLFile);
-            String bpmnMetaDataContent = ProcessStore.xmlToString(bpmnMetaDataDoc);
+            String bpmnMetaDataContent = Utils.xmlToString(bpmnMetaDataDoc);
             Resource bpmnMetaDataResource = reg.newResource();
             bpmnMetaDataResource.setContent(bpmnMetaDataContent);
             bpmnMetaDataResource.setMediaType(ProcessCenterConstants.WSO2_BPMN_ASSET_MEDIA_TYPE);

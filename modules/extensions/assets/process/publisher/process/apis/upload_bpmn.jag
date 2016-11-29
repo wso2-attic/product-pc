@@ -17,13 +17,13 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("INSIDE CREATE BPMN...");
 }
-var ps = new ProcessStore();
+var bpmn = new BPMN();
 var bpmnName = String(request.getParameter("bpmnProcessName"));
 var bpmnVersion = String(request.getParameter("bpmnProcessVersion"));
 
@@ -35,7 +35,7 @@ try {
     var processid = "NA";
     var files = request.getAllFiles();
     for (var name in files) {
-        processid = ps.createBPMN(bpmnName, bpmnVersion, files[name].getStream(), user.username);
+        processid = bpmn.createBPMN(bpmnName, bpmnVersion, files[name].getStream(), user.username);
     }
 
     responseObj.error = false;

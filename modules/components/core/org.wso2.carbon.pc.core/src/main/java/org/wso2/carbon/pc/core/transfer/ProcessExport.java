@@ -26,7 +26,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2.carbon.pc.core.ProcessCenterConstants;
 import org.wso2.carbon.pc.core.ProcessCenterException;
-import org.wso2.carbon.pc.core.ProcessStore;
+import org.wso2.carbon.pc.core.assets.resources.ProcessAssociation;
+import org.wso2.carbon.pc.core.assets.resources.ProcessDocument;
+import org.wso2.carbon.pc.core.assets.resources.Tag;
 import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -114,7 +116,9 @@ public class ProcessExport {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceUserRegistry(user);
-                ProcessStore ps = new ProcessStore();
+                ProcessDocument processDocument = new ProcessDocument();
+                Tag tag = new Tag();
+
                 String exportProcessPath = exportRootPath + processName + "-" + processVersion + File.separator;
                 new File(exportProcessPath + ProcessCenterConstants.PROCESS_ZIP_DOCUMENTS_DIR + File.separator)
                         .mkdirs();
@@ -144,7 +148,7 @@ public class ProcessExport {
                 String processResourcePath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + File.separator +
                         processVersion;
                 JSONArray jsonArray = new JSONArray(
-                        ps.getUploadedDocumentDetails(ProcessCenterConstants.GREG_PATH + processResourcePath));
+                        processDocument.getUploadedDocumentDetails(ProcessCenterConstants.GREG_PATH + processResourcePath));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObj = jsonArray.getJSONObject(i);
                     if (jsonObj.getString(ProcessCenterConstants.URL).equals(ProcessCenterConstants.NA)) {
@@ -166,7 +170,7 @@ public class ProcessExport {
                 //write process tags in a file
                 FileOutputStream tagsFileOutputStream = new FileOutputStream(
                         exportProcessPath + ProcessCenterConstants.PROCESS_TAGS_FILE);
-                tagsFileOutputStream.write(ps.getProcessTags(processName, processVersion).getBytes());
+                tagsFileOutputStream.write(tag.getProcessTags(processName, processVersion).getBytes());
                 tagsFileOutputStream.close();
 
                 //export process associations
@@ -174,8 +178,9 @@ public class ProcessExport {
                     //write details on process associations (sub-processes/predecessors/successors) in a json file
                     FileOutputStream out = new FileOutputStream(
                             exportProcessPath + ProcessCenterConstants.PROCESS_ASSOCIATIONS_FILE);
+                    ProcessAssociation processAssociation = new ProcessAssociation();
                     JSONObject successorPredecessorSubprocessListJSON = new JSONObject(
-                            ps.getSucessorPredecessorSubprocessList(
+                            processAssociation.getSucessorPredecessorSubprocessList(
                                     ProcessCenterConstants.GREG_PATH + processResourcePath));
                     out.write(successorPredecessorSubprocessListJSON
                             .toString(ProcessCenterConstants.JSON_FILE_INDENT_FACTOR).getBytes());

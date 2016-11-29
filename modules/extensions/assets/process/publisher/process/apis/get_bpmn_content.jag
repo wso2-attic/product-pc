@@ -17,13 +17,13 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("INSIDE get bpmn content...");
 }
-var ps = new ProcessStore();
+var bpmn = new BPMN();
 
 var bpmnPath = String(request.getParameter("bpmn_content_path"));
 if (log.isDebugEnabled()) {
@@ -32,7 +32,7 @@ if (log.isDebugEnabled()) {
 
 var responseObj = {};
 try {
-    var bpmnData = ps.getBPMN(bpmnPath);
+    var bpmnData = bpmn.getBPMN(bpmnPath);
     if (log.isDebugEnabled()) {
         log.debug(bpmnData);
     }

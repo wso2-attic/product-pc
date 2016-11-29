@@ -17,12 +17,12 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("INSIDE download document...");
 }
-var ps = new ProcessStore();
+var processDocument = new ProcessDocument();
 var processDocPath = String(request.getParameter("process_doc_path"));
 if (log.isDebugEnabled()) {
     log.debug("Download document for: " + processDocPath);
@@ -30,7 +30,7 @@ if (log.isDebugEnabled()) {
 var responseObj = {};
 
 try {
-    var doc = ps.downloadDocument(processDocPath);
+    var doc = processDocument.downloadDocument(processDocPath);
     responseObj.error = false;
     responseObj.content = doc;
     print(stringify(responseObj));

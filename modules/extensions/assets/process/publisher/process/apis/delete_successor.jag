@@ -17,14 +17,14 @@
  *  under the License.
  *
  */
-importPackage(org.wso2.carbon.pc.core);
+importPackage(org.wso2.carbon.pc.core.assets.resources);
 
 var log = new Log();
 if (log.isDebugEnabled()) {
     log.debug("Deleting successor X of process Y");
 }
 
-var ps = new ProcessStore();
+var processAssociation = new ProcessAssociation();
 var deleteSuccessorDetails = String(request.getParameter("deleteSuccessorDetails"));
 if (log.isDebugEnabled()) {
     log.debug("deleteSuccessorDetails: " + deleteSuccessorDetails);
@@ -35,7 +35,7 @@ var user = server.current(session);
 
 var responseObj = {};
 try {
-    var deleteSuccessorStatus = ps.deleteSuccessor(deleteSuccessorDetails, user.username);
+    var deleteSuccessorStatus = processAssociation.deleteSuccessor(deleteSuccessorDetails, user.username);
     responseObj.error = false;
     responseObj.content = stringify(deleteSuccessorStatus);
     print(stringify(responseObj));
