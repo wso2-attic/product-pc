@@ -38,23 +38,30 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * Exporting a process as a zip archive which could be imported into another WSO2 Process Center instance
+ */
 public class ProcessExport {
     private List<String> exportedProcessList;
     private static final Log log = LogFactory.getLog(ProcessExport.class);
 
     /**
-     * @param processName
-     * @param processVersion
-     * @param exportWithAssociations
-     * @param user
-     * @return
+     * @param processName            name of the process
+     * @param processVersion         version of the process
+     * @param exportWithAssociations boolean value expressing whether to export with associations or not
+     * @param user                   current user
+     * @return encoded zip file as a string
      * @throws Exception
      */
     public String initiateExportProcess(String processName, String processVersion, String exportWithAssociations,
@@ -97,11 +104,11 @@ public class ProcessExport {
     /**
      * Save all the process related artifacts in exportRootPath directory
      *
-     * @param exportRootPath
-     * @param processName
-     * @param processVersion
-     * @param exportWithAssociations
-     * @param user
+     * @param exportRootPath         root path of the the destination of exported directory
+     * @param processName            process name
+     * @param processVersion         process version
+     * @param exportWithAssociations boolean value expressing whether to export with associations or not
+     * @param user                   current user
      * @throws ProcessCenterException
      */
     public void exportProcess(String exportRootPath, String processName, String processVersion,
@@ -147,8 +154,8 @@ public class ProcessExport {
                 //save doccontent registry entries >> doc, docx, pdf
                 String processResourcePath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + File.separator +
                         processVersion;
-                JSONArray jsonArray = new JSONArray(
-                        processDocument.getUploadedDocumentDetails(ProcessCenterConstants.GREG_PATH + processResourcePath));
+                JSONArray jsonArray = new JSONArray(processDocument
+                        .getUploadedDocumentDetails(ProcessCenterConstants.GREG_PATH + processResourcePath));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObj = jsonArray.getJSONObject(i);
                     if (jsonObj.getString(ProcessCenterConstants.URL).equals(ProcessCenterConstants.NA)) {
@@ -179,8 +186,8 @@ public class ProcessExport {
                     FileOutputStream out = new FileOutputStream(
                             exportProcessPath + ProcessCenterConstants.PROCESS_ASSOCIATIONS_FILE);
                     ProcessAssociation processAssociation = new ProcessAssociation();
-                    JSONObject successorPredecessorSubprocessListJSON = new JSONObject(
-                            processAssociation.getSucessorPredecessorSubprocessList(
+                    JSONObject successorPredecessorSubprocessListJSON = new JSONObject(processAssociation
+                            .getSucessorPredecessorSubprocessList(
                                     ProcessCenterConstants.GREG_PATH + processResourcePath));
                     out.write(successorPredecessorSubprocessListJSON
                             .toString(ProcessCenterConstants.JSON_FILE_INDENT_FACTOR).getBytes());
@@ -204,11 +211,11 @@ public class ProcessExport {
      * Export associated process (sub process/predecessor/successor) - The related files are saved in the respective
      * directory
      *
-     * @param successorPredecessorSubprocessListJSON
-     * @param exportRootPath
-     * @param exportWithAssociations
-     * @param assocationType
-     * @param user
+     * @param successorPredecessorSubprocessListJSON names of the process's successors, predecessors and subprocesses
+     * @param exportRootPath                         root path of the the destination of exported directory
+     * @param exportWithAssociations                 boolean value expressing whether to export with associations or not
+     * @param assocationType                         process association type
+     * @param user                                   current user
      * @throws JSONException
      * @throws ProcessCenterException
      */
@@ -227,13 +234,13 @@ public class ProcessExport {
     /**
      * Download non-document process related resources (i.e: flow chart, bpmn, process text) for exporting the process
      *
-     * @param reg
-     * @param resourceRoot
-     * @param savingFileName
-     * @param processName
-     * @param processVersion
-     * @param exportedFileType
-     * @param exportProcessPath
+     * @param reg               UserRegistry
+     * @param resourceRoot      process resource root path
+     * @param savingFileName    named of the resource file saved
+     * @param processName       process name
+     * @param processVersion    process version
+     * @param exportedFileType  exported file type
+     * @param exportProcessPath path of the exported directory
      * @throws RegistryException
      * @throws IOException
      * @throws JSONException
@@ -265,6 +272,13 @@ public class ProcessExport {
         }
     }
 
+    /**
+     * encode File To Base64Binary format
+     *
+     * @param fileName name of the file
+     * @return encodedString of the file
+     * @throws IOException
+     */
     public String encodeFileToBase64Binary(String fileName) throws IOException {
         File file = new File(fileName);
         byte[] bytes = loadFile(file);
@@ -273,6 +287,13 @@ public class ProcessExport {
         return encodedString;
     }
 
+    /**
+     * Load file for the encoding purpose
+     *
+     * @param file the file to load
+     * @return loaded file in bytes
+     * @throws IOException
+     */
     public static byte[] loadFile(File file) throws IOException {
         byte[] bytes;
         try (InputStream inputStream = new FileInputStream(file)) {
@@ -293,10 +314,10 @@ public class ProcessExport {
     /**
      * Download process thumbnail image, for process exporting
      *
-     * @param reg
-     * @param processName
-     * @param processVersion
-     * @param exportProcessPath
+     * @param reg               User Registry
+     * @param processName       process name
+     * @param processVersion    process version
+     * @param exportProcessPath path of the exported directory
      * @throws RegistryException
      * @throws IOException
      */
@@ -319,8 +340,10 @@ public class ProcessExport {
     }
 
     /**
-     * @param srcFolder
-     * @param destZipFile
+     * Zip the directory
+     *
+     * @param srcFolder   source directory to zip
+     * @param destZipFile destination zip file path
      * @throws Exception
      */
     private void zipFolder(String srcFolder, String destZipFile) throws Exception {
@@ -334,9 +357,11 @@ public class ProcessExport {
     }
 
     /**
-     * @param path
-     * @param srcFile
-     * @param zip
+     * Add a file to the zip archive
+     *
+     * @param path    path of the zip file
+     * @param srcFile source file to zip
+     * @param zip     ZipOutputStream to zip the file
      * @throws Exception
      */
     private void addFileToZip(String path, String srcFile, ZipOutputStream zip) throws Exception {
@@ -356,9 +381,11 @@ public class ProcessExport {
     }
 
     /**
-     * @param path
-     * @param srcFolder
-     * @param zip
+     * Add particular directory to the zip
+     *
+     * @param path      path of the zip file
+     * @param srcFolder source folder to zip
+     * @param zip       ZipOutputStream to zip the directory
      * @throws Exception
      */
     private void addFolderToZip(String path, String srcFolder, ZipOutputStream zip) throws Exception {

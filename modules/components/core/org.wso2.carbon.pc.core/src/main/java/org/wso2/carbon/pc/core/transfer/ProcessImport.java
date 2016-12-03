@@ -44,7 +44,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -52,6 +57,9 @@ import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * Import a process zip archive to the WSO2 Process Center
+ */
 public class ProcessImport {
     private static final Log log = LogFactory.getLog(ProcessImport.class);
     File[] listOfProcessDirs;
@@ -61,6 +69,8 @@ public class ProcessImport {
     private static final int BYTE_ARRAY_BUFFER_LENGTH = 2048;
 
     /**
+     * Import the process
+     *
      * @param processZipInputStream process ZIP input stream
      * @param user                  username
      * @throws IOException
@@ -68,7 +78,6 @@ public class ProcessImport {
      * @throws ProcessCenterException
      * @throws UserStoreException
      */
-
     public String importProcesses(InputStream processZipInputStream, String user)
             throws IOException, RegistryException, ProcessCenterException, UserStoreException, JSONException,
             TransformerException, SAXException, ParserConfigurationException {
@@ -231,16 +240,37 @@ public class ProcessImport {
         }
     }
 
+    /**
+     * Add Predecessor Association to registry
+     *
+     * @param processAssetPath path of the process asset source path
+     * @param predecessorPath  path of the predecessor asset path
+     * @throws RegistryException
+     */
     private void addPredecessorAssociation(String processAssetPath, String predecessorPath) throws RegistryException {
         reg.addAssociation(processAssetPath, predecessorPath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
         reg.addAssociation(predecessorPath, processAssetPath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
     }
 
+    /**
+     * Add Sub Process Association to registry
+     *
+     * @param processAssetPath path of the process asset source path
+     * @param subProcessPath   path of the sub process asset path
+     * @throws RegistryException
+     */
     private void addSubProcessAssociation(String processAssetPath, String subProcessPath) throws RegistryException {
         reg.addAssociation(processAssetPath, subProcessPath, ProcessCenterConstants.SUBPROCESS_ASSOCIATION);
         reg.addAssociation(subProcessPath, processAssetPath, ProcessCenterConstants.PARENTPROCESS_ASSOCIATION);
     }
 
+    /**
+     * Add Successor Association to registry
+     *
+     * @param processAssetPath path of the process asset source path
+     * @param successorPath    path of the successor asset path
+     * @throws RegistryException
+     */
     private void addSuccessorAssociation(String processAssetPath, String successorPath) throws RegistryException {
         reg.addAssociation(processAssetPath, successorPath, ProcessCenterConstants.SUCCESSOR_ASSOCIATION);
         reg.addAssociation(successorPath, processAssetPath, ProcessCenterConstants.PREDECESSOR_ASSOCIATION);
@@ -485,7 +515,9 @@ public class ProcessImport {
     }
 
     /**
-     * @return processList
+     * Get a list of processes
+     *
+     * @return processList List of processes
      * @throws ProcessCenterException
      * @throws RegistryException
      */
