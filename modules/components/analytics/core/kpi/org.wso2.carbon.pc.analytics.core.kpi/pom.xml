@@ -14,7 +14,8 @@
 ~ See the License for the specific language governing permissions and
 ~ limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -27,7 +28,9 @@
     <artifactId>org.wso2.carbon.pc.analytics.core.kpi</artifactId>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - PC Analytics - DAS Configuration</name>
-    <description>This feature contains the core bundles required for PC to configure the DAS- 1) Create Event Stream 2) Create Event Reciever</description>
+    <description>This feature contains the core bundles required for PC to configure the DAS- 1) Create Event Stream 2)
+        Create Event Reciever
+    </description>
 
     <build>
         <plugins>
@@ -62,7 +65,14 @@
                             org.wso2.carbon.pc.analytics.core.kpi,org.wso2.carbon.pc.analytics.core.kpi.utils;version=${project.version}
                         </Export-Package>
                         <Import-Package>
-                            *;resolution:=optional
+                            org.wso2.carbon.registry.core.*; version="${carbon.kernel.registry.imp.pkg.version}",
+                            org.apache.commons.logging;version="${version.commons.logging}",
+                            javax.xml.bind, javax.xml.stream, org.apache.axis2, org.apache.axis2.client,
+                            org.apache.axis2.context, org.apache.commons.httpclient,
+                            org.apache.commons.httpclient.methods, org.json,
+                            org.osgi.service.component, org.w3c.dom, org.wso2.carbon.authenticator.stub,
+                            org.wso2.carbon.event.receiver.stub, org.wso2.carbon.event.receiver.stub.types,
+                            org.wso2.carbon.event.stream.stub, org.wso2.carbon.pc.core.*
                         </Import-Package>
                     </instructions>
                 </configuration>

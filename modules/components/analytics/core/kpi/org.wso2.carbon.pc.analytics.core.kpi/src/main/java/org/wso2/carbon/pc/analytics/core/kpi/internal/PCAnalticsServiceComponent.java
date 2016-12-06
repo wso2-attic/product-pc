@@ -22,7 +22,6 @@ import org.wso2.carbon.pc.analytics.core.kpi.clients.LoginAdminServiceClient;
 import org.wso2.carbon.pc.analytics.core.kpi.clients.ReceiverAdminServiceClient;
 import org.wso2.carbon.pc.analytics.core.kpi.clients.StreamAdminServiceClient;
 import org.wso2.carbon.pc.core.ProcessCenterService;
-import org.wso2.carbon.pc.core.internal.ProcessCenterServerHolder;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 import static org.wso2.carbon.pc.analytics.core.kpi.internal.PCAnalyticsServerHolder.getInstance;
@@ -72,7 +71,7 @@ public class PCAnalticsServiceComponent {
 
     public void unsetRegistryService(RegistryService registryService) {
         log.debug("RegistryService unbound from the Process Center KPI Analytics component");
-        ProcessCenterServerHolder.getInstance().unsetRegistryService(registryService);
+        PCAnalyticsServerHolder.getInstance().unsetRegistryService(registryService);
     }
 
 }
