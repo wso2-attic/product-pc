@@ -18,10 +18,13 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -86,7 +89,7 @@ public class KPIAnalytics {
                 }
                 resourceString = procVariablesJob.toString();
             }
-        } catch (Exception e) {
+        } catch (IOException | JSONException | SAXException | RegistryException | ParserConfigurationException e) {
             String errMsg = "Failed to get the process variables list";
             throw new ProcessCenterException(errMsg, e);
         }
