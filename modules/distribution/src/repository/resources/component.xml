@@ -46,40 +46,6 @@
             <order>25</order>
             <style-class>home</style-class>
         </menu>
-		<!--<menu>
-			<id>metadata_menu</id>
-			<i18n-key>component.metadata</i18n-key>
-			 <i18n-bundle>org.wso2.carbon.i18n.Resources</i18n-bundle>
-			<parent-menu></parent-menu>
-			<link>#</link>
-			<region>region3</region>
-			<order>30</order>
-			<style-class>home</style-class>
-        </menu>
-        <menu>
-			<id>list_sub_menu</id>
-			<i18n-key>modulemgt.list</i18n-key>
-			<i18n-bundle>org.wso2.carbon.i18n.Resources</i18n-bundle>
-			<parent-menu>metadata_menu</parent-menu>
-			<link>#</link>
-			<region>region3</region>
-			<order>5</order>
-            <icon>../images/list.gif</icon>
-			<style-class>home</style-class>
-            <require-permission>/permission/admin/manage/resources/govern/metadata/list</require-permission>
-        </menu>
-		<menu>
-			<id>add_sub_menu</id>
-			<i18n-key>modulemgt.add</i18n-key>
-			<i18n-bundle>org.wso2.carbon.i18n.Resources</i18n-bundle>
-			<parent-menu>metadata_menu</parent-menu>
-			<link>#</link>
-			<region>region3</region>
-			<order>10</order>
-			<icon>../images/add.gif</icon>
-			<style-class>home</style-class>
-            <require-permission>/permission/admin/manage/resources/govern/metadata/add</require-permission>
-        </menu>-->
 		<menu>
 			<id>dashboard_main_menu</id>
 			<i18n-key>component.main.dashboard</i18n-key>
