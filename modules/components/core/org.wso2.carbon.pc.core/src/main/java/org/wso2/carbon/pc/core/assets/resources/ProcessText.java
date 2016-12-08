@@ -82,9 +82,9 @@ public class ProcessText {
     /**
      * Delete process related text
      *
-     * @param processName
-     * @param processVersion
-     * @return
+     * @param processName    name of process
+     * @param processVersion version of process
+     * @return UUID of the process in which the text content is deleted
      * @throws ProcessCenterException
      */
     public String deleteProcessText(String processName, String processVersion) throws ProcessCenterException {

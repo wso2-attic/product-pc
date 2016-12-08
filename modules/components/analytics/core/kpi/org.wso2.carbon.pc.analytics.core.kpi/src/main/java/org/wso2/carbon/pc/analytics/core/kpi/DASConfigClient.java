@@ -120,7 +120,7 @@ public class DASConfigClient {
             String errMsg = "Error in Login to DAS at :" + dasUrl + "trying to login with username : " + dasUsername
                     + " and the given password";
             throw new ProcessCenterException(errMsg, e);
-        } catch (JSONException | XMLStreamException | IOException | ProcessCenterException | RuntimeException e) {
+        } catch (JSONException | XMLStreamException | IOException | ProcessCenterException  e) {
             String errMsg = "Error in DAS configuration, using : " + dasConfigDetails;
             throw new ProcessCenterException(errMsg, e);
         } finally {

@@ -72,4 +72,8 @@ public class PCAnalyticsServerHolder {
     public void setRegistryService(RegistryService registryService) {
         this.registryService = registryService;
     }
+
+    public void unsetRegistryService(RegistryService registryService) {
+        this.registryService = null;
+    }
 }

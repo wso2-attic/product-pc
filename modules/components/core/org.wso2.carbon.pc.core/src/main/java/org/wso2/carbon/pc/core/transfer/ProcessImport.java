@@ -89,89 +89,82 @@ public class ProcessImport {
             //extract zip file stream to the system disk
             byte[] buffer = new byte[BYTE_ARRAY_BUFFER_LENGTH];
             ZipInputStream zipInputStream = new ZipInputStream(processZipInputStream);
-            File importsDir = new File(ProcessCenterConstants.IMPORTS_DIR);
+            Path importsDirPath = Paths.get(ProcessCenterConstants.IMPORTS_DIR);
             try {
-                if (importsDir != null) {
-                    importsDir.mkdirs();
-
-                    try {
-                        ZipEntry entry;
-                        while ((entry = zipInputStream.getNextEntry()) != null) {
-                            String outpath = ProcessCenterConstants.IMPORTS_DIR + File.separator + entry.getName();
-                            String dirPath = outpath.substring(0, outpath.lastIndexOf(File.separator));
-                            new File(dirPath).mkdirs();
-                            FileOutputStream fileOutputStream = null;
-                            try {
-                                fileOutputStream = new FileOutputStream(outpath);
-                                int len = 0;
-                                while ((len = zipInputStream.read(buffer)) > 0) {
-                                    fileOutputStream.write(buffer, 0, len);
-                                }
-                            } finally {
-                                if (fileOutputStream != null) {
-                                    fileOutputStream.close();
-                                }
+                Files.createDirectories(importsDirPath);
+                try {
+                    ZipEntry entry;
+                    while ((entry = zipInputStream.getNextEntry()) != null) {
+                        String outpath = ProcessCenterConstants.IMPORTS_DIR + File.separator + entry.getName();
+                        String dirPath = outpath.substring(0, outpath.lastIndexOf(File.separator));
+                        Path directoryPath = Paths.get(dirPath);
+                        Files.createDirectories(directoryPath);
+                        FileOutputStream fileOutputStream = null;
+                        try {
+                            fileOutputStream = new FileOutputStream(outpath);
+                            int len = 0;
+                            while ((len = zipInputStream.read(buffer)) > 0) {
+                                fileOutputStream.write(buffer, 0, len);
                             }
-                        }
-                    } finally {
-                        zipInputStream.close();
-                    }
-
-                    File folder = new File(ProcessCenterConstants.IMPORTS_DIR);
-                    File[] listOfFiles = folder.listFiles();
-                    if (listOfFiles != null) {
-                        if (listOfFiles[0].isDirectory() && listOfFiles.length == 1) {
-                            String zipHomeDirectoryName = listOfFiles[0].getPath();
-                            File zipFolder = new File(zipHomeDirectoryName);
-                            listOfProcessDirs = zipFolder.listFiles();
-                        }
-                    }
-
-                    //else do the process importing for each process
-                    for (File processDir : listOfProcessDirs) {
-                        if (processDir.isDirectory()) {
-                            String processDirName = processDir.getName();
-                            String processDirPath = processDir.getPath();
-                            String processRxtPath =
-                                    processDirPath + File.separator + ProcessCenterConstants.EXPORTED_PROCESS_RXT_FILE;
-                            String processName = processDirName.substring(0, processDirName.lastIndexOf("-"));
-                            String processVersion = processDirName
-                                    .substring(processDirName.lastIndexOf("-") + 1, processDirName.length());
-                            String processAssetPath =
-                                    ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + File.separator +
-                                            processVersion;
-
-                            if (registryService != null) {
-                                UserRegistry reg = registryService.getGovernanceUserRegistry(user);
-                                String processPath =
-                                        ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + File.separator
-                                                + processVersion;
-                                // Check whether process already exists with same name and version
-                                if (!reg.resourceExists(processPath)) {
-                                    putProcessRxt(processRxtPath, processAssetPath);
-                                    GovernanceUtils.associateAspect(processAssetPath, ProcessCenterConstants.
-                                            DEFAULT_LIFECYCLE_NAME, reg);
-                                    setImageThumbnail(processDirPath, processAssetPath);
-                                    setProcessDocuments(processName, processVersion, processDirPath, processAssetPath);
-                                    setProcessTags(processDirPath, processAssetPath);
-                                    setProcessText(processName, processVersion, processDirPath, processAssetPath);
-                                    setBPMN(processName, processVersion, processDirPath, processAssetPath);
-                                    setFlowChart(processName, processVersion, processDirPath, processAssetPath);
-                                    setProcessAssociations(processName, processVersion, processDirPath,
-                                            processAssetPath);
-                                }
+                        } finally {
+                            if (fileOutputStream != null) {
+                                fileOutputStream.close();
                             }
                         }
                     }
-                } else {
-                    String errMsg = "Process Importing failed due to failure in creating Imports directory";
-                    throw new ProcessCenterException(errMsg);
+                } finally {
+                    zipInputStream.close();
+                }
 
+                File folder = new File(ProcessCenterConstants.IMPORTS_DIR);
+                File[] listOfFiles = folder.listFiles();
+                if (listOfFiles != null) {
+                    if (listOfFiles[0].isDirectory() && listOfFiles.length == 1) {
+                        String zipHomeDirectoryName = listOfFiles[0].getPath();
+                        File zipFolder = new File(zipHomeDirectoryName);
+                        listOfProcessDirs = zipFolder.listFiles();
+                    }
+                }
+
+                //else do the process importing for each process
+                for (File processDir : listOfProcessDirs) {
+                    if (processDir.isDirectory()) {
+                        String processDirName = processDir.getName();
+                        String processDirPath = processDir.getPath();
+                        String processRxtPath =
+                                processDirPath + File.separator + ProcessCenterConstants.EXPORTED_PROCESS_RXT_FILE;
+                        String processName = processDirName.substring(0, processDirName.lastIndexOf("-"));
+                        String processVersion = processDirName
+                                .substring(processDirName.lastIndexOf("-") + 1, processDirName.length());
+                        String processAssetPath =
+                                ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + File.separator +
+                                        processVersion;
+
+                        if (registryService != null) {
+                            UserRegistry reg = registryService.getGovernanceUserRegistry(user);
+                            String processPath =
+                                    ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + File.separator
+                                            + processVersion;
+                            // Check whether process already exists with same name and version
+                            if (!reg.resourceExists(processPath)) {
+                                putProcessRxt(processRxtPath, processAssetPath);
+                                GovernanceUtils.associateAspect(processAssetPath, ProcessCenterConstants.
+                                        DEFAULT_LIFECYCLE_NAME, reg);
+                                setImageThumbnail(processDirPath, processAssetPath);
+                                setProcessDocuments(processName, processVersion, processDirPath, processAssetPath);
+                                setProcessTags(processDirPath, processAssetPath);
+                                setProcessText(processName, processVersion, processDirPath, processAssetPath);
+                                setBPMN(processName, processVersion, processDirPath, processAssetPath);
+                                setFlowChart(processName, processVersion, processDirPath, processAssetPath);
+                                setProcessAssociations(processName, processVersion, processDirPath, processAssetPath);
+                            }
+                        }
+                    }
                 }
             } finally {
                 //Finally remove the Imports folder
-                if (importsDir.exists()) {
-                    FileUtils.deleteDirectory(importsDir);
+                if (new File(ProcessCenterConstants.IMPORTS_DIR).exists()) {
+                    FileUtils.deleteDirectory(new File(ProcessCenterConstants.IMPORTS_DIR));
                 }
             }
         } else {

@@ -166,8 +166,8 @@ public class ProcessDocument {
      * Delete the resource collection (directory) created in the governance registry for the process to keep its
      * documents
      *
-     * @param processName
-     * @param processVersion
+     * @param processName    name of the process
+     * @param processVersion version of the process
      * @throws ProcessCenterException
      */
     public void deleteDocumentResourceCollection(String processName, String processVersion)
@@ -182,15 +182,16 @@ public class ProcessDocument {
         }
     }
 
-    /*
-    Utility method for extracting file name from the registry path
+    /**
+     * Utility method for extracting file name from the registry path
+     *
+     * @param filepath
+     * @return the name of the associated doc file
      */
     private static String getAssociatedDocFileName(String filepath) {
         return filepath.substring(filepath.lastIndexOf("/") + 1);
     }
 
-
-    //ProcessDocuments>>>>>>
     /**
      * Get details of all the documents (including Google docs) added to a certain process
      *
@@ -332,8 +333,8 @@ public class ProcessDocument {
     /**
      * Updates document details including name and summary
      *
-     * @param documentDetails
-     * @param user
+     * @param documentDetails Details of the document to be updated
+     * @param user current user name
      * @throws ProcessCenterException
      */
     public String updateDocumentDetails(String documentDetails, String user) throws ProcessCenterException {
