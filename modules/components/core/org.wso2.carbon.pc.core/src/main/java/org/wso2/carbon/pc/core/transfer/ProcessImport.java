@@ -89,7 +89,6 @@ public class ProcessImport {
             //extract zip file stream to the system disk
             byte[] buffer = new byte[BYTE_ARRAY_BUFFER_LENGTH];
             ZipInputStream zipInputStream = new ZipInputStream(processZipInputStream);
-            //File importsDir = new File(ProcessCenterConstants.IMPORTS_DIR);
             Path importsDirPath = Paths.get(ProcessCenterConstants.IMPORTS_DIR);
             try {
                 Files.createDirectories(importsDirPath);
