@@ -70,31 +70,37 @@ public class ProcessExport {
     public String initiateExportProcess(String processName, String processVersion, String exportWithAssociations,
             String user) throws Exception {
         exportedProcessList = new ArrayList<String>();
-        Path exportsDirPath = Paths.get(ProcessCenterConstants.PROCESS_EXPORT_DIR);
-        Files.createDirectories(exportsDirPath);
-        Boolean exportWithAssociationsBool = Boolean.valueOf(exportWithAssociations);
-        try {
-            // save details about the exported zip and the core process
-            String exportRootPath =
-                    ProcessCenterConstants.PROCESS_EXPORT_DIR + File.separator + processName + "-" + processVersion +
-                            ProcessCenterConstants.EXPORTS_DIR_SUFFIX + File.separator;
-            Path exportRootDirPath = Paths.get(exportRootPath);
-            Files.createDirectories(exportRootDirPath);
-            exportProcess(exportRootPath, processName, processVersion, exportWithAssociationsBool, user);
+        File exportsDir = new File(ProcessCenterConstants.PROCESS_EXPORT_DIR);
+        if (exportsDir != null) {
+            exportsDir.mkdirs();
+            Boolean exportWithAssociationsBool = Boolean.valueOf(exportWithAssociations);
+            try {
+                // save details about the exported zip and the core process
+                String exportRootPath =
+                        ProcessCenterConstants.PROCESS_EXPORT_DIR + File.separator + processName + "-" + processVersion
+                                +
+                                ProcessCenterConstants.EXPORTS_DIR_SUFFIX + File.separator;
+                new File(exportRootPath).mkdirs();
+                exportProcess(exportRootPath, processName, processVersion, exportWithAssociationsBool, user);
 
-            //zip the folder
-            String zipFilePath = ProcessCenterConstants.PROCESS_EXPORT_DIR + File.separator + processName + "-" +
-                    processVersion + ProcessCenterConstants.EXPORTS_ZIP_SUFFIX;
-            zipFolder(exportRootPath, zipFilePath);
-            //encode zip file
-            String encodedZip = encodeFileToBase64Binary(zipFilePath);
-            //Finally remove the Imports folder and the zip file
-            FileUtils.deleteDirectory(new File(ProcessCenterConstants.PROCESS_EXPORT_DIR));
-            FileUtils.deleteDirectory(new File(zipFilePath));
-            return encodedZip;
-        } catch (Exception e) {
-            String errMsg = "Failed to export process:" + processName + "-" + processVersion;
-            throw new ProcessCenterException(errMsg, e);
+                //zip the folder
+                String zipFilePath = ProcessCenterConstants.PROCESS_EXPORT_DIR + File.separator + processName + "-" +
+                        processVersion + ProcessCenterConstants.EXPORTS_ZIP_SUFFIX;
+                zipFolder(exportRootPath, zipFilePath);
+                //encode zip file
+                String encodedZip = encodeFileToBase64Binary(zipFilePath);
+                //Finally remove the Imports folder and the zip file
+                FileUtils.deleteDirectory(exportsDir);
+                FileUtils.deleteDirectory(new File(zipFilePath));
+                return encodedZip;
+            } catch (Exception e) {
+                String errMsg = "Failed to export process:" + processName + "-" + processVersion;
+                throw new ProcessCenterException(errMsg, e);
+            }
+        } else {
+            String errMsg = "Exports Directory Creation failed..!!! So failed to export process:" + processName + "-" +
+                    processVersion;
+            throw new ProcessCenterException(errMsg);
         }
     }
 
@@ -124,9 +130,8 @@ public class ProcessExport {
                 Tag tag = new Tag();
 
                 String exportProcessPath = exportRootPath + processName + "-" + processVersion + File.separator;
-                Path exportProcessDocPath = Paths.get(exportProcessPath + ProcessCenterConstants
-                        .PROCESS_ZIP_DOCUMENTS_DIR + File.separator);
-                Files.createDirectories(exportProcessDocPath);
+                new File(exportProcessPath + ProcessCenterConstants.PROCESS_ZIP_DOCUMENTS_DIR + File.separator)
+                        .mkdirs();
 
                 //save the process rxt registry entry >> xml
                 downloadResource(reg, ProcessCenterConstants.PROCESS_ASSET_ROOT,
@@ -277,6 +282,7 @@ public class ProcessExport {
      */
     public String encodeFileToBase64Binary(String fileName) throws IOException {
         File file = new File(fileName);
+        File ff= new File(Paths.get("").toString());
         byte[] bytes = loadFile(file);
         byte[] encoded = Base64.encodeBase64(bytes);
         String encodedString = new String(encoded);
