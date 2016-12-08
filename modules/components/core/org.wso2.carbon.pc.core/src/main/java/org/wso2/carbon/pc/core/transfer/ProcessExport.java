@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -71,35 +70,33 @@ public class ProcessExport {
             String user) throws Exception {
         exportedProcessList = new ArrayList<String>();
         File exportsDir = new File(ProcessCenterConstants.PROCESS_EXPORT_DIR);
+        String exportsZipPrefix = processName + "-" + processVersion;
         if (exportsDir != null) {
             exportsDir.mkdirs();
             Boolean exportWithAssociationsBool = Boolean.valueOf(exportWithAssociations);
             try {
                 // save details about the exported zip and the core process
-                String exportRootPath =
-                        ProcessCenterConstants.PROCESS_EXPORT_DIR + File.separator + processName + "-" + processVersion
-                                +
-                                ProcessCenterConstants.EXPORTS_DIR_SUFFIX + File.separator;
-                new File(exportRootPath).mkdirs();
-                exportProcess(exportRootPath, processName, processVersion, exportWithAssociationsBool, user);
+                Path exportRootPath = Paths.get(ProcessCenterConstants.PROCESS_EXPORT_DIR,
+                        exportsZipPrefix + ProcessCenterConstants.EXPORTS_DIR_SUFFIX);
+                new File(exportRootPath.toString()).mkdirs();
+                exportProcess(exportRootPath.toString(), processName, processVersion, exportWithAssociationsBool, user);
 
                 //zip the folder
-                String zipFilePath = ProcessCenterConstants.PROCESS_EXPORT_DIR + File.separator + processName + "-" +
-                        processVersion + ProcessCenterConstants.EXPORTS_ZIP_SUFFIX;
-                zipFolder(exportRootPath, zipFilePath);
+                Path zipFilePath = Paths.get(ProcessCenterConstants.PROCESS_EXPORT_DIR,
+                        exportsZipPrefix + ProcessCenterConstants.EXPORTS_ZIP_SUFFIX);
+                zipFolder(exportRootPath.toString(), zipFilePath.toString());
                 //encode zip file
-                String encodedZip = encodeFileToBase64Binary(zipFilePath);
+                String encodedZip = encodeFileToBase64Binary(zipFilePath.toString());
                 //Finally remove the Imports folder and the zip file
                 FileUtils.deleteDirectory(exportsDir);
-                FileUtils.deleteDirectory(new File(zipFilePath));
+                FileUtils.deleteDirectory(new File(zipFilePath.toString()));
                 return encodedZip;
             } catch (Exception e) {
                 String errMsg = "Failed to export process:" + processName + "-" + processVersion;
                 throw new ProcessCenterException(errMsg, e);
             }
         } else {
-            String errMsg = "Exports Directory Creation failed..!!! So failed to export process:" + processName + "-" +
-                    processVersion;
+            String errMsg = "Exports Directory Creation failed..!!! So failed to export process:" + exportsZipPrefix;
             throw new ProcessCenterException(errMsg);
         }
     }
@@ -116,11 +113,11 @@ public class ProcessExport {
      */
     public void exportProcess(String exportRootPath, String processName, String processVersion,
             boolean exportWithAssociations, String user) throws ProcessCenterException {
-
-        if (exportedProcessList.contains(processName + "-" + processVersion)) {
+        String exportsZipPrefix = processName + "-" + processVersion;
+        if (exportedProcessList.contains(exportsZipPrefix)) {
             return;
         }
-        exportedProcessList.add(processName + "-" + processVersion);
+        exportedProcessList.add(exportsZipPrefix);
 
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
@@ -129,57 +126,58 @@ public class ProcessExport {
                 ProcessDocument processDocument = new ProcessDocument();
                 Tag tag = new Tag();
 
-                String exportProcessPath = exportRootPath + processName + "-" + processVersion + File.separator;
-                new File(exportProcessPath + ProcessCenterConstants.PROCESS_ZIP_DOCUMENTS_DIR + File.separator)
-                        .mkdirs();
+                Path exportProcessPath = Paths.get(exportRootPath, exportsZipPrefix);
+                Path documentDirPath = Paths
+                        .get(exportProcessPath.toString(), ProcessCenterConstants.PROCESS_ZIP_DOCUMENTS_DIR);
+                new File(documentDirPath.toString()).mkdirs();
 
                 //save the process rxt registry entry >> xml
                 downloadResource(reg, ProcessCenterConstants.PROCESS_ASSET_ROOT,
                         ProcessCenterConstants.EXPORTED_PROCESS_RXT_FILE, processName, processVersion, "xml",
-                        exportProcessPath);
+                        exportProcessPath.toString());
                 //save bpmn registry entry >> xml
                 downloadResource(reg, ProcessCenterConstants.BPMN_META_DATA_FILE_PATH,
                         ProcessCenterConstants.EXPORTED_BPMN_META_FILE, processName, processVersion, "xml",
-                        exportProcessPath);
+                        exportProcessPath.toString());
                 //save bpmncontent registry entry >> xml
                 downloadResource(reg, ProcessCenterConstants.BPMN_CONTENT_PATH,
                         ProcessCenterConstants.EXPORTED_BPMN_CONTENT_FILE, processName, processVersion, "xml",
-                        exportProcessPath);
+                        exportProcessPath.toString());
                 //save flowchart registry entry >> json
                 downloadResource(reg, ProcessCenterConstants.AUDIT.PROCESS_FLOW_CHART_PATH,
                         ProcessCenterConstants.EXPORTED_FLOW_CHART_FILE, processName, processVersion, "json",
-                        exportProcessPath);
+                        exportProcessPath.toString());
                 //save processText registry entry
                 downloadResource(reg, ProcessCenterConstants.PROCESS_TEXT_PATH,
                         ProcessCenterConstants.EXPORTED_PROCESS_TEXT_FILE, processName, processVersion, "txt",
-                        exportProcessPath);
+                        exportProcessPath.toString());
 
                 //save doccontent registry entries >> doc, docx, pdf
-                String processResourcePath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + File.separator +
-                        processVersion;
+                Path processResourcePath = Paths
+                        .get(ProcessCenterConstants.PROCESS_ASSET_ROOT, processName, processVersion);
                 JSONArray jsonArray = new JSONArray(processDocument
-                        .getUploadedDocumentDetails(ProcessCenterConstants.GREG_PATH + processResourcePath));
+                        .getUploadedDocumentDetails(ProcessCenterConstants.GREG_PATH + processResourcePath.toString()));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObj = jsonArray.getJSONObject(i);
                     if (jsonObj.getString(ProcessCenterConstants.URL).equals(ProcessCenterConstants.NA)) {
                         String docResourcePath = jsonObj.getString("path");
                         Resource docResource = reg.get(docResourcePath);
                         String[] tempStrArr = docResourcePath.split(File.separator);
-                        String docFileName =
-                                exportProcessPath + ProcessCenterConstants.PROCESS_ZIP_DOCUMENTS_DIR + File.separator +
-                                        tempStrArr[tempStrArr.length - 1];
-                        FileOutputStream docFileOutPutStream = new FileOutputStream(docFileName);
+                        Path docFilePath = Paths
+                                .get(exportProcessPath.toString(), ProcessCenterConstants.PROCESS_ZIP_DOCUMENTS_DIR,
+                                        tempStrArr[tempStrArr.length - 1]);
+                        FileOutputStream docFileOutPutStream = new FileOutputStream(docFilePath.toString());
                         IOUtils.copy(docResource.getContentStream(), docFileOutPutStream);
                         docFileOutPutStream.close();
                     }
                 }
 
                 //download process image thumbnail
-                downloadProcessThumbnailImage(reg, processName, processVersion, exportProcessPath);
+                downloadProcessThumbnailImage(reg, processName, processVersion, exportProcessPath.toString());
 
                 //write process tags in a file
-                FileOutputStream tagsFileOutputStream = new FileOutputStream(
-                        exportProcessPath + ProcessCenterConstants.PROCESS_TAGS_FILE);
+                Path tagsFilePath = Paths.get(exportProcessPath.toString(), ProcessCenterConstants.PROCESS_TAGS_FILE);
+                FileOutputStream tagsFileOutputStream = new FileOutputStream(tagsFilePath.toString());
                 tagsFileOutputStream.write(tag.getProcessTags(processName, processVersion).getBytes());
                 tagsFileOutputStream.close();
 
@@ -187,7 +185,8 @@ public class ProcessExport {
                 if (exportWithAssociations) {
                     //write details on process associations (sub-processes/predecessors/successors) in a json file
                     FileOutputStream out = new FileOutputStream(
-                            exportProcessPath + ProcessCenterConstants.PROCESS_ASSOCIATIONS_FILE);
+                            Paths.get(exportProcessPath.toString(), ProcessCenterConstants.PROCESS_ASSOCIATIONS_FILE)
+                                    .toString());
                     ProcessAssociation processAssociation = new ProcessAssociation();
                     JSONObject successorPredecessorSubprocessListJSON = new JSONObject(processAssociation
                             .getSucessorPredecessorSubprocessList(
@@ -255,10 +254,11 @@ public class ProcessExport {
             String processVersion, String exportedFileType, String exportProcessPath)
             throws RegistryException, IOException, JSONException, ParserConfigurationException, SAXException,
             TransformerException {
-        String resourcePath = resourceRoot + processName + File.separator + processVersion;
-        if (reg.resourceExists(resourcePath)) {
-            Resource resource = reg.get(resourcePath);
-            FileOutputStream fileOutputStream = new FileOutputStream(exportProcessPath + savingFileName);
+        Path resourcePath = Paths.get(resourceRoot, processName, processVersion);
+        if (reg.resourceExists(resourcePath.toString())) {
+            Resource resource = reg.get(resourcePath.toString());
+            Path exportFilePath = Paths.get(exportProcessPath, savingFileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(exportFilePath.toString());
             if (exportedFileType.equals("json")) {
                 String stringContent = IOUtils
                         .toString(resource.getContentStream(), String.valueOf(StandardCharsets.UTF_8));
@@ -282,7 +282,6 @@ public class ProcessExport {
      */
     public String encodeFileToBase64Binary(String fileName) throws IOException {
         File file = new File(fileName);
-        File ff= new File(Paths.get("").toString());
         byte[] bytes = loadFile(file);
         byte[] encoded = Base64.encodeBase64(bytes);
         String encodedString = new String(encoded);
@@ -325,17 +324,15 @@ public class ProcessExport {
      */
     public void downloadProcessThumbnailImage(UserRegistry reg, String processName, String processVersion,
             String exportProcessPath) throws RegistryException, IOException {
-        String processAssetPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + File.separator +
-                processVersion;
-        Resource storedProcess = reg.get(processAssetPath);
+        Path processAssetPath = Paths.get(ProcessCenterConstants.PROCESS_ASSET_ROOT, processName, processVersion);
+        Resource storedProcess = reg.get(processAssetPath.toString());
         String processId = storedProcess.getUUID();
-        String imageResourcePath = ProcessCenterConstants.PROCESS_ASSET_RESOURCE_REG_PATH + processId + File.separator
-                + ProcessCenterConstants.IMAGE_THUMBNAIL;
-
-        if (reg.resourceExists(imageResourcePath)) {
-            Resource resource = reg.get(imageResourcePath);
+        Path imageResourcePath = Paths.get(ProcessCenterConstants.PROCESS_ASSET_RESOURCE_REG_PATH, processId,
+                ProcessCenterConstants.IMAGE_THUMBNAIL);
+        if (reg.resourceExists(imageResourcePath.toString())) {
+            Resource resource = reg.get(imageResourcePath.toString());
             FileOutputStream fileOutputStream = new FileOutputStream(
-                    exportProcessPath + ProcessCenterConstants.IMAGE_THUMBNAIL);
+                    Paths.get(exportProcessPath, ProcessCenterConstants.IMAGE_THUMBNAIL).toString());
             IOUtils.copy(resource.getContentStream(), fileOutputStream);
             fileOutputStream.close();
         }
@@ -374,7 +371,7 @@ public class ProcessExport {
             byte[] buf = new byte[1024];
             int len;
             try (FileInputStream in = new FileInputStream(srcFile)) {
-                zip.putNextEntry(new ZipEntry(path + File.separator + folder.getName()));
+                zip.putNextEntry(new ZipEntry(Paths.get(path, folder.getName()).toString()));
                 while ((len = in.read(buf)) > 0) {
                     zip.write(buf, 0, len);
                 }
@@ -394,9 +391,10 @@ public class ProcessExport {
         File folder = new File(srcFolder);
         for (String fileName : folder.list()) {
             if (path.equals("")) {
-                addFileToZip(folder.getName(), srcFolder + File.separator + fileName, zip);
+                addFileToZip(folder.getName(), Paths.get(srcFolder, fileName).toString(), zip);
             } else {
-                addFileToZip(path + File.separator + folder.getName(), srcFolder + File.separator + fileName, zip);
+                addFileToZip(Paths.get(path, folder.getName()).toString(), Paths.get(srcFolder, fileName).toString(),
+                        zip);
             }
         }
     }
