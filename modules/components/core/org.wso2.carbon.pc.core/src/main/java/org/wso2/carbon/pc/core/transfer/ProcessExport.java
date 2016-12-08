@@ -262,9 +262,7 @@ public class ProcessExport {
                 fileOutputStream
                         .write(contentInJSON.toString(ProcessCenterConstants.JSON_FILE_INDENT_FACTOR).getBytes());
                 fileOutputStream.close();
-            } else if (exportedFileType.equals("xml")) {
-                IOUtils.copy(resource.getContentStream(), fileOutputStream);
-            } else { //.pdf, doc, docx, txt
+            } else { //.xml, .pdf, doc, docx, txt
                 IOUtils.copy(resource.getContentStream(), fileOutputStream);
             }
         }
