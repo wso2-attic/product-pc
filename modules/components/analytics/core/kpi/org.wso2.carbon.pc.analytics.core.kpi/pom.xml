@@ -66,13 +66,18 @@
                         </Export-Package>
                         <Import-Package>
                             org.wso2.carbon.registry.core.*; version="${carbon.kernel.registry.imp.pkg.version}",
-                            org.apache.commons.logging;version="${version.commons.logging}",
-                            javax.xml.bind, javax.xml.stream, org.apache.axis2, org.apache.axis2.client,
-                            org.apache.axis2.context, org.apache.commons.httpclient,
-                            org.apache.commons.httpclient.methods, org.json,
-                            org.osgi.service.component, org.w3c.dom, org.wso2.carbon.authenticator.stub,
-                            org.wso2.carbon.event.receiver.stub, org.wso2.carbon.event.receiver.stub.types,
-                            org.wso2.carbon.event.stream.stub, org.wso2.carbon.pc.core.*
+                            org.wso2.carbon.authenticator.stub;version="${carbon.authenticator.stub.imp.version.range}",
+                            org.wso2.carbon.event.stream.stub;version="${carbon.event.stream.stub.imp.version.range}",
+                            org.wso2.carbon.event.receiver.stub.*;version="${carbon.event.receiver.stub.imp.version.range}",
+                            org.apache.commons.logging;version="${commons.logging.imp.version.range}",
+                            org.wso2.carbon.pc.core.*;version="${project.version}",
+                            javax.xml.bind, javax.xml.stream,
+                            org.apache.axis2;version="${apache.axis2.pkg.imp.version}",
+                            org.apache.axis2.client;version="${apache.axis2.pkg.imp.version}",
+                            org.apache.axis2.context;version="${apache.axis2.pkg.imp.version}",
+                            org.apache.commons.httpclient.*;version="${commons.httpclient.pkg.imp.version.range}",
+                            org.osgi.service.component;version="${osgi.service.component.pkg.imp.version.range}",
+                            org.w3c.dom,org.json;version="${org.json.imp.version}"
                         </Import-Package>
                     </instructions>
                 </configuration>
