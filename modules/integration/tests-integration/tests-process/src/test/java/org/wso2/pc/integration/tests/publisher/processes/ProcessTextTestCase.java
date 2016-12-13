@@ -86,7 +86,8 @@ public class ProcessTextTestCase extends PCIntegrationBaseTest {
                 "Error while creating the process");
     }
 
-    @Test(groups = {"org.wso2.pc"}, description = "Test case for adding process text")
+    @Test(groups = {
+            "org.wso2.pc" }, description = "Test case for adding process text", dependsOnMethods = "addProcess")
     public void addProcessText() throws XPathExpressionException, JSONException {
         queryMap.put(PCIntegrationConstants.PROCESS_NAME, processName);
         queryMap.put(PCIntegrationConstants.PROCESS_VERSION, processVersion);

@@ -363,7 +363,8 @@ public class ProcessImport {
             Resource bpmnMetaDataResource = reg.newResource();
             bpmnMetaDataResource.setContent(bpmnMetaDataContent);
             bpmnMetaDataResource.setMediaType(ProcessCenterConstants.WSO2_BPMN_ASSET_MEDIA_TYPE);
-            Path bpmnMetaDataResPath = Paths.get(ProcessCenterConstants.BPMN_META_DATA_FILE_PATH, processVersion);
+            Path bpmnMetaDataResPath = Paths.get(ProcessCenterConstants.BPMN_META_DATA_FILE_PATH, processName,
+                    processVersion);
             reg.put(bpmnMetaDataResPath.toString(), bpmnMetaDataResource);
         }
     }
