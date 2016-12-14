@@ -42,6 +42,7 @@ import sun.misc.BASE64Decoder;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -421,10 +422,9 @@ public class ProcessStore {
      */
     public void deleteProcessRelatedArtifacts(String processName, String processVersion, String user)
             throws ProcessCenterException {
-
         String processResourcePath =
-                ProcessCenterConstants.GREG_PATH + ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/"
-                        + processVersion;
+                ProcessCenterConstants.GREG_PATH + ProcessCenterConstants.PROCESS_ASSET_ROOT + processName
+                        + File.separator + processVersion;
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {

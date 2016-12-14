@@ -12,6 +12,8 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 
+import java.io.File;
+
 /**
  * Class for process text related operations
  */
@@ -93,14 +95,16 @@ public class ProcessText {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
                 UserRegistry reg = registryService.getGovernanceSystemRegistry();
-                String processTextPath = ProcessCenterConstants.PROCESS_TEXT_PATH + processName + "/" + processVersion;
+                String processTextPath =
+                        ProcessCenterConstants.PROCESS_TEXT_PATH + processName + File.separator + processVersion;
                 if (reg.resourceExists(processTextPath)) {
                     //delete the processText resource
                     reg.delete(processTextPath);
                 }
 
                 //delete the processText resource's path defined in process.rxt
-                String processPath = ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/" + processVersion;
+                String processPath =
+                        ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + File.separator + processVersion;
                 if (reg.resourceExists(processPath)) {
                     Resource processResource = reg.get(processPath);
 
