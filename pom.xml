@@ -907,5 +907,7 @@
         <commons.httpclient.pkg.imp.version.range>[3.1.0, 3.2.0]</commons.httpclient.pkg.imp.version.range>
         <osgi.service.component.pkg.imp.version.range>[1.2.0, 1.3.0]</osgi.service.component.pkg.imp.version.range>
         <org.json.imp.version>2.0.0.wso2v1</org.json.imp.version>
+        <commons.lang3.version>3.3.2</commons.lang3.version>
+        <geronimo-jpa.version>1.1</geronimo-jpa.version>
     </properties>
 </project>
