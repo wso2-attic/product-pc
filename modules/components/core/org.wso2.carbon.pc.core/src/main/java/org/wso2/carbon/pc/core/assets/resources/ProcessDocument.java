@@ -172,7 +172,6 @@ public class ProcessDocument {
      */
     public void deleteDocumentResourceCollection(String processName, String processVersion)
             throws ProcessCenterException, RegistryException {
-
         RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
         String documentsResourceCollectionPath =
                 ProcessCenterConstants.DOC_CONTENT_PATH + processName + "/" + processVersion;
