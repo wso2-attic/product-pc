@@ -537,9 +537,10 @@ function getProcessInfo() {
 }
 
 function saveProcessText(currentElement) {
+    var $currenElement = $(currentElement);
     var textContent = tinyMCE.get('processContent').getContent();
     if (textContent == "") {
-        if ($(currentElement).attr('id') == 'updateBtn') {
+        if ($currenElement.attr('id') == 'updateBtn') {
             alertify.error('Process content is empty.');
         }
     } else {
@@ -555,7 +556,7 @@ function saveProcessText(currentElement) {
             success: function (data) {
                 var response = JSON.parse(data);
                 if (response.error === false) {
-                    if ($(currentElement).attr('id') == 'updateBtn' || $(currentElement).attr('id') == 'saveProcessTextBtn') {
+                    if ($currenElement.attr('id') == 'updateBtn' || $currenElement.attr('id') == 'saveProcessTextBtn') {
                         alertify.success("Successfully saved the process content.");
                         $("#textadded").addClass("fw fw-check");
                         getProcessText();
