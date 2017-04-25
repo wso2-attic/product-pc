@@ -40,6 +40,7 @@ import sun.misc.BASE64Decoder;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,6 +51,14 @@ public class ProcessStore {
 
     private static final Log log = LogFactory.getLog(ProcessStore.class);
 
+    /**
+     * Create a process
+     * @param processDetails
+     * @param userName
+     * @param processCreatedTime
+     * @return
+     * @throws ProcessCenterException
+     */
     public String createProcess(String processDetails, String userName, String processCreatedTime)
             throws ProcessCenterException {
 
@@ -453,6 +462,14 @@ public class ProcessStore {
         }
     }
 
+    /**
+     * setting user permission when creating a process
+     * @param userName
+     * @param processName
+     * @param processVersion
+     * @return
+     * @throws ProcessCenterException
+     */
     public String setPermission(String userName, String processName, String processVersion)
             throws ProcessCenterException {
 
@@ -467,7 +484,7 @@ public class ProcessStore {
                 UserRealm userRealm = userRegistry.getUserRealm();
                 String[] roles = userRealm.getUserStoreManager().getRoleListOfUser(userName);
 
-                String path = "/_system/governance/processes/" + processName + "/" +
+                String path = ProcessCenterConstants.PROCESS_PATH + processName + File.separator +
                         processVersion;
 
                 for (String role : roles) {
@@ -493,7 +510,6 @@ public class ProcessStore {
         } catch (Exception e) {
             String errMsg = "Failed to update Permission for process- " + processName + ":" + processVersion + " ,for "
                     + "user:" + userName;
-            log.error(errMsg, e);
             throw new ProcessCenterException(errMsg, e);
         }
         return status;

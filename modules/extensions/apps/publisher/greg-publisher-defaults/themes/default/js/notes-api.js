@@ -107,9 +107,6 @@ $(function () {
             contentType: "application/json",
             dataType: 'json',
             success: function (response) {
-                /*renderPartial('notes-note',response.list,function(result){
-                    $(noteContainer).closest('div.well').siblings('.wr-panel-sub-note').append(result);
-                });*/
                 $(replyContainerId(id)).val('');
                 messages.alertSuccess("Reply added successfully");
                 setTimeout(function(){location.reload(true);},2000);

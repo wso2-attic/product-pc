@@ -51,6 +51,7 @@ public class ProcessCenterConstants {
     public static final String NO_FILE_SPECIFIED = "no-file-specified";
     public static final String BPMN_RESOURCES = "bpmnResources";
     public static final String DEPLOYMENTS = "deployments";
+    public static final String PROCESS_PATH = "/_system/governance/processes/";
     /**
      * Package asset
      */
