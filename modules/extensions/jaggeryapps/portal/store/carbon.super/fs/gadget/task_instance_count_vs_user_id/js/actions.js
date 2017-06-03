@@ -68,8 +68,7 @@ function drawGraph() {
             }
         });
     } else {
-        console.log('Empty task id list.');
-        salert("Task id list is empty.");
+        alert("Task id list is empty.");
     }
 }
 
@@ -101,7 +100,7 @@ function loadTaskList(dropdownId) {
                 });
             }
             else{
-                console.log('Empty Task ID list.');
+                alert('Empty Task ID list.');
             }
         },
         error: function (xhr, status, error) {

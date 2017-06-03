@@ -42,14 +42,12 @@ public class LCExecutor implements Execution {
     /**
      * Implementing the execute method
      *
-     * @param currentState
-     * @param targetState
-     * @return
+     * @param currentState Current lifecycle status
+     * @param targetState Target lifecycle status
+     * @return Whether permission updated
      */
     public boolean execute(RequestContext context, String currentState, String targetState) {
-
         boolean updated;
-
         try {
             user = context.getResource().getAuthorUserName();
             String[] roles = CurrentSession.getUserRealm().getUserStoreManager().getRoleNames();
@@ -58,26 +56,25 @@ public class LCExecutor implements Execution {
 
             setPublisherPermission(currentState, targetState);
             for (String role : roles) {
-                if (role.equals("admin") || role.equals("Internal/publisher") || role
-                        .equals("Internal/private_" + user)) {
+                if (role.equals(ProcessCenterConstants.AUDIT.ADMIN_ROLE) || role
+                        .equals(ProcessCenterConstants.AUDIT.PUBLISHER_ROLE) || role
+                        .equals(ProcessCenterConstants.AUDIT.PRIVATE_USER_ROLE + user)) {
                     continue;
                 } else {
                     setOtherRolePermission(role, currentState, targetState);
                 }
             }
-            if (currentState.equals("In-Review") && targetState.equals("Published")) {
+            if (currentState.equals(ProcessCenterConstants.IN_REVIEW) && targetState
+                    .equals(ProcessCenterConstants.PUBLISHED)) {
                 setAnonymousRolePermission();
             }
             setPrivateRolePermission(user, currentState, targetState);
-
             updated = true;
-
         } catch (Exception e) {
             String errMsg = "Failed to update Permission";
             log.error(errMsg, e);
             throw new Error(errMsg, e);
         }
-
         return updated;
     }
 
@@ -85,17 +82,15 @@ public class LCExecutor implements Execution {
      * This method is used to identify the permissions to be assigned and denied from the permission string and add or
      * remove the permission.
      *
-     * @param role
-     * @param permissionString
-     * @throws Exception
+     * @param role User role
+     * @param permissionString Permission list
+     * @throws Exception If failed to create permission list of the user role
      */
     private void assignPermission(String role, String permissionString) throws Exception {
-
         String[] permissionList = permissionString.split(",");
         String permissionType;
         String actionToAuthorize = "";
         String action;
-
         for (String permission : permissionList) {
             if (permission.charAt(0) == '+') {
                 permissionType = ProcessCenterConstants.ALLOW;
@@ -124,62 +119,56 @@ public class LCExecutor implements Execution {
     /**
      * Assign permission for the publisher role according to the lifecycle state.
      *
-     * @param currentState
-     * @param targetState
-     * @throws Exception
+     * @param currentState Current lifecycle status
+     * @param targetState Target lifecycle status
+     * @throws Exception If failed to assign permission to publisher role
      */
     private void setPublisherPermission(String currentState, String targetState) throws Exception {
-
-        if (currentState.equals("Development")) {
-            assignPermission("Internal/publisher", "+get,+add,+delete,+authorize");
-
-        } else if (currentState.equals("In-Review") && targetState.equals("Development")) {
-            assignPermission("Internal/publisher", "+get,+add,+delete,+authorize");
-
-        } else if (currentState.equals("In-Review") && targetState.equals("Published")) {
-            assignPermission("Internal/publisher", "+get,+add,-delete,+authorize");
-
-        } else if (currentState.equals("Published") && targetState.equals("Development")) {
-            assignPermission("Internal/publisher", "+get,+add,+delete,+authorize");
-
-        } else if (currentState.equals("Published") && targetState.equals("Retired")) {
-            assignPermission("Internal/publisher", "+get,+add,+delete,-authorize");
-        }
-        else if (currentState.equals("Retired")) {
-            assignPermission("Internal/publisher", "+get,+add,+delete,+authorize");
+        if (currentState.equals(ProcessCenterConstants.DEVELOPMENT)) {
+            assignPermission(ProcessCenterConstants.AUDIT.PUBLISHER_ROLE, "+get,+add,+delete,+authorize");
+        } else if (currentState.equals(ProcessCenterConstants.IN_REVIEW) && targetState
+                .equals(ProcessCenterConstants.DEVELOPMENT)) {
+            assignPermission(ProcessCenterConstants.AUDIT.PUBLISHER_ROLE, "+get,+add,+delete,+authorize");
+        } else if (currentState.equals(ProcessCenterConstants.IN_REVIEW) && targetState
+                .equals(ProcessCenterConstants.PUBLISHED)) {
+            assignPermission(ProcessCenterConstants.AUDIT.PUBLISHER_ROLE, "+get,+add,-delete,+authorize");
+        } else if (currentState.equals(ProcessCenterConstants.PUBLISHED) && targetState
+                .equals(ProcessCenterConstants.DEVELOPMENT)) {
+            assignPermission(ProcessCenterConstants.AUDIT.PUBLISHER_ROLE, "+get,+add,+delete,+authorize");
+        } else if (currentState.equals(ProcessCenterConstants.PUBLISHED) && targetState
+                .equals(ProcessCenterConstants.RETIRED)) {
+            assignPermission(ProcessCenterConstants.AUDIT.PUBLISHER_ROLE, "+get,+add,+delete,-authorize");
+        } else if (currentState.equals(ProcessCenterConstants.RETIRED)) {
+            assignPermission(ProcessCenterConstants.AUDIT.PUBLISHER_ROLE, "+get,+add,+delete,+authorize");
         }
     }
 
     /**
      * Assign permission for the process owner.
      *
-     * @param user
-     * @param currentState
-     * @param targetState
-     * @throws Exception
+     * @param user User name
+     * @param currentState Current lifecycle status
+     * @param targetState Target lifecycle status
+     * @throws Exception If failed to assign permission to user
      */
     private void setPrivateRolePermission(String user, String currentState, String targetState) throws Exception {
-
-        if (!user.equals("admin")) {
-
-            if (currentState.equals("Development")) {
-                assignPermission("Internal/private_" + user, "+get,-add,-delete,-authorize");
-
-            } else if (currentState.equals("In-Review") && targetState.equals("Development")) {
-                assignPermission("Internal/private_" + user, "+get,+add,+delete,+authorize");
-
-            } else if (currentState.equals("In-Review") && targetState.equals("Published")) {
-                assignPermission("Internal/private_" + user, "+get,-add,-delete,-authorize");
-
-            } else if (currentState.equals("Published") && targetState.equals("Development")) {
-                assignPermission("Internal/private_" + user, "+get,+add,+delete,+authorize");
-
-            } else if (currentState.equals("Published") && targetState.equals("Retired")) {
-                assignPermission("Internal/private_" + user, "+get,-add,-delete,-authorize");
-
-            } else if (currentState.equals("Retired")) {
-                assignPermission("Internal/private_" + user, "+get,+add,+delete,+authorize");
-
+        if (!user.equals(ProcessCenterConstants.AUDIT.ADMIN_ROLE)) {
+            if (currentState.equals(ProcessCenterConstants.DEVELOPMENT)) {
+                assignPermission(ProcessCenterConstants.AUDIT.PRIVATE_USER_ROLE + user, "+get,-add,-delete,-authorize");
+            } else if (currentState.equals(ProcessCenterConstants.IN_REVIEW) && targetState
+                    .equals(ProcessCenterConstants.DEVELOPMENT)) {
+                assignPermission(ProcessCenterConstants.AUDIT.PRIVATE_USER_ROLE + user, "+get,+add,+delete,+authorize");
+            } else if (currentState.equals(ProcessCenterConstants.IN_REVIEW) && targetState
+                    .equals(ProcessCenterConstants.PUBLISHED)) {
+                assignPermission(ProcessCenterConstants.AUDIT.PRIVATE_USER_ROLE + user, "+get,-add,-delete,-authorize");
+            } else if (currentState.equals(ProcessCenterConstants.PUBLISHED) && targetState
+                    .equals(ProcessCenterConstants.DEVELOPMENT)) {
+                assignPermission(ProcessCenterConstants.AUDIT.PRIVATE_USER_ROLE + user, "+get,+add,+delete,+authorize");
+            } else if (currentState.equals(ProcessCenterConstants.PUBLISHED) && targetState
+                    .equals(ProcessCenterConstants.RETIRED)) {
+                assignPermission(ProcessCenterConstants.AUDIT.PRIVATE_USER_ROLE + user, "+get,-add,-delete,-authorize");
+            } else if (currentState.equals(ProcessCenterConstants.RETIRED)) {
+                assignPermission(ProcessCenterConstants.AUDIT.PRIVATE_USER_ROLE + user, "+get,+add,+delete,+authorize");
             }
         }
     }
@@ -187,36 +176,37 @@ public class LCExecutor implements Execution {
     /**
      * Assign permission for the other roles.
      *
-     * @param role
-     * @param currentState
-     * @param targetState
-     * @throws Exception
+     * @param role User role
+     * @param currentState Current lifecycle status
+     * @param targetState Target lifecycle status
+     * @throws Exception If failed to assign permission to role
      */
     private void setOtherRolePermission(String role, String currentState, String targetState) throws Exception {
-
-        if (currentState.equals("Development")) {
+        if (currentState.equals(ProcessCenterConstants.DEVELOPMENT)) {
             assignPermission(role, "+get,-add,-delete,-authorize");
-
-        } else if (currentState.equals("In-Review") && targetState.equals("Development")) {
+        } else if (currentState.equals(ProcessCenterConstants.IN_REVIEW) && targetState
+                .equals(ProcessCenterConstants.DEVELOPMENT)) {
             assignPermission(role, "+get,+add,-delete,-authorize");
-
-        } else if (currentState.equals("In-Review") && targetState.equals("Published")) {
+        } else if (currentState.equals(ProcessCenterConstants.IN_REVIEW) && targetState
+                .equals(ProcessCenterConstants.PUBLISHED)) {
             assignPermission(role, "+get,-add,-delete,-authorize");
-
-        } else if (currentState.equals("Published") && targetState.equals("Development")) {
+        } else if (currentState.equals(ProcessCenterConstants.PUBLISHED) && targetState
+                .equals(ProcessCenterConstants.DEVELOPMENT)) {
             assignPermission(role, "+get,+add,-delete,-authorize");
-
-        } else if (currentState.equals("Published") && targetState.equals("Retired")) {
+        } else if (currentState.equals(ProcessCenterConstants.PUBLISHED) && targetState
+                .equals(ProcessCenterConstants.RETIRED)) {
             assignPermission(role, "-get,-add,-delete,-authorize");
-
-        } else if (currentState.equals("Retired")) {
+        } else if (currentState.equals(ProcessCenterConstants.RETIRED)) {
             assignPermission(role, "+get,+add,-delete,-authorize");
         }
-
     }
 
+    /**
+     * Assign permission for anonymous role
+     *
+     * @throws Exception If failed to assign permission to anonymous role
+     */
     private void setAnonymousRolePermission() throws Exception {
-
-        assignPermission("system/wso2.anonymous.role", "+get,-add,-delete,-authorize");
+        assignPermission(ProcessCenterConstants.AUDIT.SYSTEM_ANONYMOUS_ROLE, "+get,-add,-delete,-authorize");
     }
 }

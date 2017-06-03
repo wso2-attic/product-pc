@@ -12,12 +12,38 @@
 }
 
 /*a:hover{*/
-    /*text-decoration: none;*/
+/*text-decoration: none;*/
 /*}*/
 
 @media (min-width: 400px) {
     .form-inline .form-control {
         display: inline-block;
         width: auto;
-        vertical-align: middle;  }
+        vertical-align: middle;
+    }
+}
+
+#gadgetDiv {
+    width:100%;
+    height:95%;
+}
+
+.panel_div {
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.chartA {
+    width:100%;
+    height:100%;
+    padding-top:20px;
+}
+
+.selectpicker-padding {
+    padding-right:0;
+}
+
+.date-range-alert {
+    margin-left: 2%;
 }

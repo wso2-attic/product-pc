@@ -79,8 +79,8 @@
                             <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Description</label>
 
                             <div class="custom-form-right col-lg-10 col-md-8 col-sm-8 col-xs-12">
-                    <textarea placeholder="Process Description" row="3" style="width:100%; height:70px"
-                              name="overview_description" id="overview_description"
+                    <textarea placeholder="Process Description" row="3" name="overview_description"
+                              id="overview_description"
                               class="input-large">{{#if isUpdateView}}{{assets.tables.[0].fields.description.value}}{{/if}}</textarea>
                             </div>
                         </div>
@@ -107,8 +107,7 @@
 
                 <div id="processButtons" class="form-actions">
                     <div class="form-group">
-                        <div class="col-sm-offset-1 col-sm-10" style="margin-left: 40px;
-                        margin-top: 30px;">
+                        <div id="processButtonDiv" class="col-sm-offset-1 col-sm-10">
                             <button class="btn btn-primary" id="saveProcessBtn" value="Save process"
                                     onclick="{{#if isUpdateView}}updateProcess(this){{else}} saveProcess(this){{/if}}">
                                 Save

@@ -97,7 +97,7 @@ public class ProcessDocument {
             }
         }
         try {
-            if(docUrl.equals("NA")) {
+            if(ProcessCenterConstants.NOT_APPLICABLE.equals(docUrl)) {
                 StreamHostObject s = (StreamHostObject) docObject;
                 docStream = s.getStream();
                 docContent = IOUtils.toByteArray(docStream);

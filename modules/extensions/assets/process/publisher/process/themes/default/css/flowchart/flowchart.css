@@ -226,3 +226,64 @@ path, .jsplumb-endpoint {
 .jsplumb-overlay {
     background-color: white;
 }
+
+#flowChartDiv {
+    width: 100%;
+    height: 10%;
+    white-space: nowrap;
+}
+
+#flowChartSpan {
+    display: inline-block;
+    vertical-align: top;
+    padding: 5px;
+    width: 15%;
+}
+
+#myPalette {
+    border: solid 1px gray;
+    height: 602px;
+}
+
+#canvas1 {
+    margin-top: 20px;
+    border: none;
+}
+
+.flowChartEvent {
+    border: 1px solid lightgray;
+    width: 90%;
+    position: absolute;
+    left: 0.5em;
+}
+
+#stepEvDiv {
+    top: 8em;
+}
+
+#stepEvDiv {
+    top: 15.25em;
+}
+
+#inpEvDiv {
+    top: 24.5em;
+}
+
+#endEvDiv {
+    top: 31.5em;
+}
+
+#endEvDiv {
+    display: inline-block;
+    vertical-align: top;
+    padding: 5px;
+    width: 85%;
+}
+
+#myDiagram {
+    border: solid 1px gray;
+}
+
+#canvasDiv {
+    margin-top: 20px;
+}

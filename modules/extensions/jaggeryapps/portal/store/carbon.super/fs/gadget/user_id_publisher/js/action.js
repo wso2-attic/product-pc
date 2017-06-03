@@ -37,7 +37,7 @@ function loadUserList(dropdownId) {
                 $(dropdownElementID).selectpicker("refresh");
             }
             else {
-                console.log('Empty User ID list.');
+                alert('Empty User ID list.');
             }
         },
         error: function (xhr, status, error) {

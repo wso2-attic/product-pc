@@ -190,7 +190,7 @@ function loadTaskList(dropdownId) {
                 });
             }
             else{
-                console.log('Empty Task ID list.');
+                alert('Empty Task ID list.');
             }
         },
         error: function (xhr, status, error) {
