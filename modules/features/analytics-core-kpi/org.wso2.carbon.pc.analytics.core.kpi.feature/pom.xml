@@ -47,13 +47,17 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>org.wso2.pc:org.wso2.carbon.pc.analytics.core.kpi</bundleDef>
-                                <bundleDef>org.wso2.carbon.analytics-common:org.wso2.carbon.event.receiver.stub:5.0.8</bundleDef>
-                                <bundleDef>org.wso2.carbon.analytics-common:org.wso2.carbon.event.stream.stub:5.0.8</bundleDef>
+                                <bundleDef>
+                                    org.wso2.carbon.analytics-common:org.wso2.carbon.event.receiver.stub:${org.wso2.carbon.event.receiver.stub.version}
+                                </bundleDef>
+                                <bundleDef>
+                                    org.wso2.carbon.analytics-common:org.wso2.carbon.event.stream.stub:${org.wso2.carbon.event.stream.stub.version}
+                                </bundleDef>
                             </bundles>
                             <importBundles>
-                                <importBundleDef>org.wso2.orbit.org.activiti:activiti-all:5.16.3.wso2v2</importBundleDef>
-                                <importBundleDef>org.apache.commons:commons-lang3:3.3.2</importBundleDef>
-                                <importBundleDef>org.apache.geronimo.specs:geronimo-jpa_2.0_spec:1.1</importBundleDef>
+                                <importBundleDef>org.wso2.orbit.org.activiti:activiti-all:${org.activiti.wso2.version}</importBundleDef>
+                                <importBundleDef>org.apache.commons:commons-lang3:${commons.lang3.version}</importBundleDef>
+                                <importBundleDef>org.apache.geronimo.specs:geronimo-jpa_2.0_spec:${geronimo-jpa.version}</importBundleDef>
                             </importBundles>
                         </configuration>
                     </execution>

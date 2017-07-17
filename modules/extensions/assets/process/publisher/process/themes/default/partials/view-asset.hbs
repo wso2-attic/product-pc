@@ -33,37 +33,37 @@
                 <tbody>
                 <tr>
                     <td class="col-sm-3">
-                        Version
+                        {{t "Version"}}
                     </td>
                     <td>{{assets.tables.[0].fields.version.value}}</td>
                 </tr>
                 <tr>
                     <td class="col-sm-3">
-                        Description
+                        {{t "Description"}}
                     </td>
                     <td>{{assets.tables.[0].fields.description.value}}</td>
                 </tr>
                 <tr>
                     <td class="col-sm-3">
-                        Created By(owner)
+                        {{t "Created By(owner)"}}
                     </td>
                     <td>{{assets.tables.[0].fields.owner.value}}</td>
                 </tr>
                 <tr>
                     <td class="col-sm-3">
-                        Created Time
+                        {{t "Created Time"}}
                     </td>
                     <td>{{assets.tables.[0].fields.createdtime.value}}</td>
                 </tr>
                 <tr>
                     <td class="col-sm-3">
-                        Life Cycle State
+                        {{t "Life Cycle State"}}
                     </td>
                     <td>{{assets.lifecycleState}}</td>
                 </tr>
                 <tr>
                     <td class="col-sm-3">
-                        Tags
+                        {{t "Tags"}}
                     </td>
                     <td>
                         {{#each processTagsArray}}
@@ -74,13 +74,13 @@
                 </tr>
                 <tr>
                     <td class="col-sm-3">
-                        Process owner
+                        {{t "Process owner"}}
                     </td>
                     <td>{{{assets.tables.[0].fields.businessuser.value}}}</td>
                 </tr>
                 <tr>
                     <td class="col-sm-3">
-                        Process owner email
+                        {{t "Process owner email"}}
                     </td>
                     <td>{{{assets.tables.[0].fields.businessuseremail.value}}}</td>
                 </tr>
@@ -94,8 +94,10 @@
     <div class="row" style="padding-left: 2%; padding-right: 1%;">
         <div class="col-md-4" style="float: left">
             <div class="btn-group">
-                <button id="btn-process-analytics" class="btn btn-default" style="border-radius: 4px;" onclick="loadAnalytics()">Process Analytics</button>
-                <button id="btnExportProcess" class="btn btn-default" style="border-radius: 4px; margin-left: 5px" data-toggle="modal" data-target="#exportModal" >Export Process</button>
+                <button id="btn-process-analytics" class="btn btn-default" style="border-radius: 4px;"
+                        onclick="loadAnalytics()">{{t "Process Analytics"}}</button>
+                <button id="btnExportProcess" class="btn btn-default" style="border-radius: 4px; margin-left: 5px"
+                        data-toggle="modal" data-target="#exportModal" >{{t "Export Process"}}</button>
             </div>
         </div>
     </div>
@@ -109,13 +111,13 @@
     <div class="modal-content"  >
       <div class="modal-header" style="color:white">
          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:white"><i class="fw fw-cancel"></i></button>
-        <h4 class="modal-title">Do you want to export the process with associations ?</h4>
+        <h4 class="modal-title">{{t "Do you want to export the process with associations ?"}}</h4>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal"onclick="exportProcess('{{processName}}','{{
-                processVersion}}',true)">Yes</button>
+                processVersion}}',true)">{{t "Yes"}}</button>
         <button type="button" class="btn btn-primary" onclick="exportProcess('{{processName}}','{{
-                processVersion}}',false)">No</button>
+                processVersion}}',false)">{{t "No"}}</button>
       </div>
     </div>
   </div>

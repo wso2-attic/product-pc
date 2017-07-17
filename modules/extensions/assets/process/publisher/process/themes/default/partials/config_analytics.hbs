@@ -24,21 +24,21 @@
 
     <h2 class="field-title">
         <a class="collapsing-h2" aria-expanded="true" href="#collapsevariableinfo" data-toggle="collapse">
-            <i class="cu-btn-exp-col btn-collapsed">Process Variables to Config for Analysis</i> </a>
+            <i class="cu-btn-exp-col btn-collapsed">{{t "Process Variables to Config for Analysis"}}</i> </a>
     </h2>
 
     <div class="collapse in responsive-form-container" id="collapsevariableinfo">
         <div class="add-unbounded-row" float="left" width="100%" style="width:auto; float:left;"><a
                 id="btn_addProcessVariablesRow" onclick="addProcessVariableRow('dataTable')"><i
-                class="fa fa-plus-circle"></i> Add Process Variable</a></div>
+                class="fa fa-plus-circle"></i>{{t "Add Process Variable"}}</a></div>
         <div class="add-unbounded-row" style="width:auto;padding-left: 25pt; margin-left:10%;"><a
                 id="btn_deleteProcessVariablesRow"
                 onclick="deleteProcessVariableRow('dataTable')"><i
-                class="fa fa-plus-circle"></i> Delete Process Variable</a></div>
+                class="fa fa-plus-circle"></i>{{t "Delete Process Variable"}}</a></div>
         <div class="add-unbounded-row" float="left" width="100%" style="width:auto; float:left;"><a
                 id="btn_editProcessVariables"
                 onclick="editProcessVariables()"><i
-                class="fa fa-plus-circle"></i> Edit Configuration</a></div>
+                class="fa fa-plus-circle"></i>{{t "Edit Configuration"}}</a></div>
         <br>
 
         <div style="width: 55%;">
@@ -46,10 +46,10 @@
                 <thead>
                 <tr style="background-color:#66c2ff">
                     <th class="col-sm-1"></th>
-                    <th class="col-sm-2">Variable Name</th>
-                    <th class="col-sm-1">Type</th>
-                    <th class="col-sm-1">Analyzing Data</th>
-                    <th class="col-sm-1">Drill Down Variable</th>
+                    <th class="col-sm-2">{{t "Variable Name"}}</th>
+                    <th class="col-sm-1">{{t "Type"}}</th>
+                    <th class="col-sm-1">{{t "Analyzing Data"}}</th>
+                    <th class="col-sm-1">{{t "Drill Down Variable"}}</th>
                 </tr>
                 </thead>
                 {{#if DASAnalyticsConfigured}}
@@ -109,7 +109,7 @@
 
     <h2 class="field-title">
         <a class="collapsing-h2" aria-expanded="true" href="#collapseEventStreamInfo" data-toggle="collapse">
-            <i class="cu-btn-exp-col btn-collapsed">Event Stream Information</i> </a>
+            <i class="cu-btn-exp-col btn-collapsed">{{t "Event Stream Information"}}</i> </a>
     </h2>
     <div class="collapse in responsive-form-container" id="collapseEventStreamInfo">
 
@@ -117,7 +117,7 @@
         <form id="collapseEventStreamInfoForm" class="form-horizontal">
             {{#if DASAnalyticsConfigured}}
                 <div class="form-group">
-                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Event Stream Name<sup
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">{{t "Event Stream Name"}}<sup
                             class="required-field">*</sup></label>
                     <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
                         <input onblur="blurIt()" type="text" name="event_stream_name" id="eventStreamName"
@@ -125,7 +125,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Version<sup
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">{{t "Version"}}<sup
                             class="required-field">*</sup></label>
                     <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
                         <input onblur="blurIt()" type="text" name="event_stream_version" id="eventStreamVersion"
@@ -133,14 +133,14 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Description</label>
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">{{t "Description"}}</label>
                     <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
                         <input onblur="blurIt()" type="text" name="event_stream_description" id="eventStreamDescription"
                                class="form-control" required="" value="{{eventStreamDescription}}" readonly>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Nick Name</label>
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">{{t "Nick Name"}}</label>
                     <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
                         <input onblur="blurIt()" type="text" name="event_stream_nick_name" id="eventStreamNickName"
                                class="form-control" value="{{eventStreamNickName}}" readonly>
@@ -148,7 +148,7 @@
                 </div>
             {{else}}
                 <div class="form-group">
-                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Event Stream Name<sup
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">{{t "Event Stream Name"}}<sup
                             class="required-field">*</sup></label>
                     <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
                         <input onblur="blurIt()" type="text" name="event_stream_name" id="eventStreamName"
@@ -157,7 +157,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Version<sup
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">{{t "Version"}}<sup
                             class="required-field">*</sup></label>
                     <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
                         <input onblur="blurIt()" type="text" name="event_stream_version" id="eventStreamVersion"
@@ -165,11 +165,12 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Description</label>
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">{{t "Description"}}</label>
                     <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
                         <input onblur="blurIt()" type="text" name="event_stream_description" id="eventStreamDescription"
                                class="form-control" required=""
-                               value="This is the event stream generated to configure process analytics with DAS, for the process :{{processName}}_{{processVersion}}">
+                               value='{{t "This is the event stream generated to configure process analytics with
+                               DAS, for the process"}} :{{processName}}_{{processVersion}}'>
                     </div>
                 </div>
                 <div class="form-group">
@@ -186,23 +187,25 @@
 
     <h2 class="field-title">
         <a class="collapsing-h2" aria-expanded="true" href="#collapseEventReceiverInfo" data-toggle="collapse">
-            <i class="cu-btn-exp-col btn-collapsed">Event Receiver Information</i>
+            <i class="cu-btn-exp-col btn-collapsed">{{t "Event Receiver Information"}}</i>
         </a>
     </h2>
     <div class="collapse in responsive-form-container" id="collapseEventReceiverInfo">
         <form id="collapseEventReceiverInfoForm" class="form-horizontal">
             {{#if DASAnalyticsConfigured}}
                 <div class="form-group">
-                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Event Receiver Name<sup
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">{{t "Event Receiver
+                    Name"}}<sup
                             class="required-field">*</sup></label>
                     <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
-                        <input onblur="blurIt()" type="text" placeholder="Enter Event Receiver Name"
+                        <input onblur="blurIt()" type="text" placeholder='{{t "Enter Event Receiver Name"}}'
                                name="event_receiver_name" id="eventReceiverName" class="form-control" required=""
                                value="{{eventReceiverName}}" readonly>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Input Event Adapter Type<sup
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">{{t "Input Event Adapter
+                    Type"}}<sup
                             class="required-field">*</sup></label>
                     <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
                         <input onblur="blurIt()" type="text" name="input_event_adapter_type" id="inputEventAdapterType"
@@ -211,7 +214,8 @@
                 </div>
             {{else}}
                 <div class="form-group">
-                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Event Receiver Name<sup
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">{{t "Event Receiver
+                    Name"}}<sup
                             class="required-field">*</sup></label>
                     <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
                         <input onblur="blurIt()" type="text" placeholder="Enter Event Receiver Name"
@@ -220,7 +224,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Input Event Adapter Type<sup
+                    <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">{{t "Input Event Adapter
+                    Type"}}<sup
                             class="required-field">*</sup></label>
                     <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
                         <input onblur="blurIt()" type="text" name="input_event_adapter_type" id="inputEventAdapterType"
@@ -233,21 +238,22 @@
 
     <h2 class="field-title">
         <a class="collapsing-h2" aria-expanded="true" href="#bpsAssociationInfo" data-toggle="collapse">
-            <i class="cu-btn-exp-col btn-collapsed">BPS Association</i>
+            <i class="cu-btn-exp-col btn-collapsed">{{t "BPS Association"}}</i>
         </a>
     </h2>
     <div class="collapse in responsive-form-container" id="bpsAssociationInfo">
         <form id="bpsAssociationInfoForm" class="form-horizontal">
             <div class="form-group">
-                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">Process Definition ID<sup
+                <label class="custom-form-label col-lg-2 col-md-2 col-sm-12 col-xs-12">{{t "Process Definition ID"}}
+                    <sup
                         class="required-field">*</sup></label>
                 <div class="custom-form-right col-lg-5 col-md-8 col-sm-8 col-xs-12">
                     {{#if DASAnalyticsConfigured}}
-                        <input onblur="blurIt()" type="text" placeholder="Enter Process Definition ID"
+                        <input onblur="blurIt()" type="text" placeholder='{{t "Enter Process Definition ID"}}'
                                name="process_definition_id" id="processDefinitionId" class="form-control" required=""
                                value="{{processDefinitionId}}" readonly>
                     {{else}}
-                        <input onblur="blurIt()" type="text" placeholder="Enter Process Definition ID"
+                        <input onblur="blurIt()" type="text" placeholder='{{t "Enter Process Definition ID"}}'
                                name="process_definition_id" id="processDefinitionId" class="form-control" required=""
                                value="{{processDeploymentID}}" readonly>
                     {{/if}}
@@ -257,6 +263,7 @@
     </div>
 
     <div><label id="updateDisabledMessage"></label></div>
-    <button id="btn_save_analytics_configurations" onclick="configAnalytics()" class="btn btn-primary" disabled>Save Configurations
+    <button id="btn_save_analytics_configurations" onclick="configAnalytics()" class="btn btn-primary" disabled>{{t
+"Save Configurations"
     </button>
 </div>

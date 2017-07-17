@@ -23,6 +23,7 @@ import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 import java.io.InputStream;
 import java.io.StringReader;
 
@@ -172,10 +173,9 @@ public class ProcessDocument {
      */
     public void deleteDocumentResourceCollection(String processName, String processVersion)
             throws ProcessCenterException, RegistryException {
-
         RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
         String documentsResourceCollectionPath =
-                ProcessCenterConstants.DOC_CONTENT_PATH + processName + "/" + processVersion;
+                ProcessCenterConstants.DOC_CONTENT_PATH + processName + File.separator + processVersion;
         if (registryService != null) {
             UserRegistry reg = registryService.getGovernanceSystemRegistry();
             reg.delete(documentsResourceCollectionPath);
@@ -189,7 +189,7 @@ public class ProcessDocument {
      * @return the name of the associated doc file
      */
     private static String getAssociatedDocFileName(String filepath) {
-        return filepath.substring(filepath.lastIndexOf("/") + 1);
+        return filepath.substring(filepath.lastIndexOf(File.separator) + 1);
     }
 
     /**

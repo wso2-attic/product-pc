@@ -18,6 +18,7 @@ package org.wso2.carbon.pc.core;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -32,6 +33,7 @@ import org.wso2.carbon.pc.core.util.Utils;
 import org.wso2.carbon.registry.core.LogEntry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.resource.services.utils.AddRolePermissionUtil;
@@ -40,6 +42,7 @@ import sun.misc.BASE64Decoder;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -419,10 +422,9 @@ public class ProcessStore {
      */
     public void deleteProcessRelatedArtifacts(String processName, String processVersion, String user)
             throws ProcessCenterException {
-
         String processResourcePath =
-                ProcessCenterConstants.GREG_PATH + ProcessCenterConstants.PROCESS_ASSET_ROOT + processName + "/"
-                        + processVersion;
+                ProcessCenterConstants.GREG_PATH + ProcessCenterConstants.PROCESS_ASSET_ROOT + processName
+                        + File.separator + processVersion;
         try {
             RegistryService registryService = ProcessCenterServerHolder.getInstance().getRegistryService();
             if (registryService != null) {
@@ -446,7 +448,12 @@ public class ProcessStore {
                 ProcessText processText = new ProcessText();
                 processText.deleteProcessText(processName, processVersion);
             }
-        } catch (Exception e) {
+        } catch (RegistryException e) {
+            String errMsg =
+                    "Error in deleting the resource collection (directory) created in the governance registry for the "
+                            + "process " + processName + "-" + processVersion + " to keep its documents. ";
+            throw new ProcessCenterException(errMsg, e);
+        } catch (JSONException e) {
             String errMsg =
                     "Error in deleting process related aftifacts of the process " + processName + "-" + processVersion;
             throw new ProcessCenterException(errMsg, e);

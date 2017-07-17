@@ -33,7 +33,6 @@ import java.util.Arrays;
  * Connects with DAS's LoginAdminService
  */
 public class LoginAdminServiceClient {
-    private static final String serviceName = AnalyticsConfigConstants.AUTHENTICATION_ADMIN;
     private AuthenticationAdminStub authenticationAdminStub;
     private String endPoint;
     private static final Log log = LogFactory.getLog(LoginAdminServiceClient.class);
@@ -45,7 +44,8 @@ public class LoginAdminServiceClient {
      */
     public LoginAdminServiceClient(String DASUrl) throws AxisFault {
         this.dasURL = DASUrl;
-        this.endPoint = DASUrl + File.separator + AnalyticsConfigConstants.SERVICES + File.separator + serviceName;
+        this.endPoint = DASUrl + File.separator + AnalyticsConfigConstants.SERVICES + File.separator
+                + AnalyticsConfigConstants.AUTHENTICATION_ADMIN;
         authenticationAdminStub = new AuthenticationAdminStub(endPoint);
     }
 
