@@ -67,7 +67,6 @@ function drawGraph() {
             }
         });
     } else {
-        console.log('Empty user id list.');
         alert("User id list is empty.");
     }
 }
@@ -112,7 +111,7 @@ function loadList(dropdownElementID) {
                 drawGraph();
             }
             else {
-                console.log('Empty User ID list.');
+                alert('Empty User ID list.');
             }
         },
         error: function (xhr, status, error) {

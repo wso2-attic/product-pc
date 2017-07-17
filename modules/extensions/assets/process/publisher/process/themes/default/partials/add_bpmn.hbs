@@ -13,14 +13,14 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<div id="bpmnEditDiv" style="display:none">
+<div id="bpmnEditDiv">
     <form id="bpmn_form"
           enctype="multipart/form-data" target="_blank"
           class="form-horizontal" id="form-bar-create"
           data-redirect-url='{{url ""}}/assets/{{rxt.shortName}}/list'>
         <br/>
 
-        <div style="float:left;width:15cm">
+        <div id="bpmnDiv">
             <input type="file" class="filestyle" data-buttonName="btn-primary"
                    data-placeholder="Enter archive"
                    name="bpmn" id="bpmnFile" data-buttonText="BPMN file" accept=".xml,.bpmn">

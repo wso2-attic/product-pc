@@ -16,14 +16,6 @@
  *  under the License.
  *
  */
-// asset.manager = function(ctx) {
-//  return {
-//      get:function(id){
-//          log.info('overridden get method in the GREG default extension');
-//          return this._super.get.call(this,id);
-//      }
-//  }
-// };
 asset.renderer = function(ctx) {
     var gregPermissionUtil = require('/modules/greg-permission-util.js').gregPermissionUtil;
     var rxt = require('rxt');

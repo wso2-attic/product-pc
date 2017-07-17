@@ -66,7 +66,6 @@ function drawGraph() {
             }
         });
     } else {
-        console.log('Empty process id list.');
         alert("Process id list is empty.");
     }
 }
@@ -111,7 +110,7 @@ function loadList(dropdownElementID) {
                 $(dropdownElementID).selectpicker("refresh");
             }
             else{
-                console.log('Empty Process ID list.');
+                alert('Empty Process ID list.');
             }
             drawGraph();
         },

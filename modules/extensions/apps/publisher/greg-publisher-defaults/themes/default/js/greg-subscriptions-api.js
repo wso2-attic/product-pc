@@ -3,7 +3,6 @@ $(function() {
     
     var addSubscription = function(element, id, type, method, option) {
         var urlSub = caramel.context + '/apis/subscriptions/' + type + '/' + id;
-        //alert('addSubscription');
         var data = {};
         data.notificationType = option;
         data.notificationMethod = method;
@@ -61,7 +60,6 @@ $(function() {
     };
     var removeSubscription = function(element, id, type, subcriptionid, method, option) {
         var urlSub = caramel.context + '/apis/subscriptions/' + type + '/' + id + '?subcriptionid=' + subcriptionid;
-        //alert('removeSubscription');
         $.ajax({
             url: urlSub,
             type: 'DELETE',
@@ -113,7 +111,6 @@ $(function() {
     };
     var loadNotifications = function() {
         var urlSub = caramel.context + '/apis/notification';
-        //alert( 'sdasdad' );
         $.ajax({
             url: urlSub,
             success: function(data) {
@@ -150,8 +147,6 @@ $(function() {
     };
     var removeNotification = function(id, element) {
         var urlSub = caramel.context + '/apis/notification/' + id;
-        //$(this).remove()
-        //console.log(element);
         var notiCount = $('#notificationCount').html();
         notiCount = parseInt(notiCount);
         $.ajax({
@@ -199,17 +194,10 @@ $(function() {
             $(map(containerName, methodName)).on('change', function() {
                 options = info(this);
                 if ($(this)[0].checked) {
-                    //addSubscription();
-                    //alert(GregPageAPI.getAssetId());
-                    //alert(GregPageAPI.getAssetType());
                     addSubscription(this, GregPageAPI.getAssetId(), GregPageAPI.getAssetType(), options.type, options.method);
-                    //$(this)[0].checked
-                    //removeSubscription();
                 } else {
                     removeSubscription(this, GregPageAPI.getAssetId(), GregPageAPI.getAssetType(), options.id, options.type, options.method);
                 }
-                //alert($(this)[0].checked);
-                //alert('Clicked me!!!'+this.id);
             });
         }
     }

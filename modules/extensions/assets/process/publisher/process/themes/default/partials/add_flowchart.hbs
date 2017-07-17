@@ -13,54 +13,52 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<div id="flowChartView" style="display:none">
+<div id="flowChartView">
     <input type="hidden" id="fcProcessName" name="fcProcessName" value="{{assets.tables.[0].fields.name.value}}"/>
     <input type="hidden" id="fcProcessVersion" name="fcProcessVersion"
            value="{{assets.tables.[0].fields.version.value}}"/>
 
-    <div style="width:100%; height: 10%; white-space:nowrap;">
-                            <span style="display: inline-block; vertical-align: top; padding: 5px; width:15%">
-                                <div id="myPalette" style="border: solid 1px gray; height: 602px">
-                                    <div class="jtk-demo-main" style="margin-top: 20px;">
-                                        <div class="jtk-demo-canvas canvas-wide flowchart-demo" id="canvas1"
-                                             style="border: none">
-                                            <div class="window start jsplumb-connected" id="startEv"
-                                                 title="To start the flowchart"><strong>
-                                                <p>start</p></strong></div>
-                                            <div style="border: 1px solid lightgray; width: 90%; top: 8em; position: absolute; left: 0.5em;"></div>
-                                            <div class="window step jsplumb-connected-step" id="stepEv"
-                                                 title="To describe a step"><strong>
-                                                <p>step</p></strong></div>
-                                            <div style="border: 1px solid lightgray; width: 90%; top: 15.25em; position: absolute; left: 0.5em;"></div>
-                                            <div class="window diamond jsplumb-connected-step" id="descEv"
-                                                 title="To describe a decision">
-                                                <strong><p class="desc-text">decision</p></strong></div>
-                                            <div style="border: 1px solid lightgray; width: 90%; top: 24.5em; position: absolute; left: 0.5em;"></div>
-                                            <div class="window step parallelogram jsplumb-connected-step" id="inpEv"
-                                                 title="To take/give input/output"><strong><p class="input-text">i/o</p></strong></div>
-                                            <div style="border: 1px solid lightgray; width: 90%; top: 31.5em; position: absolute; left: 0.5em;"></div>
-                                            <div class="window end jsplumb-connected-end" id="endEv"
-                                                 title="To end the flowchart"><strong>
-                                                <p>end</p></strong></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </span>
+    <div id="flowChartDiv">
+        <span id="flowChartSpan">
+            <div id="myPalette">
+                <div class="jtk-demo-main">
+                    <div class="jtk-demo-canvas canvas-wide flowchart-demo" id="canvas1">
+                        <div class="window start jsplumb-connected" id="startEv"
+                             title="To start the flowchart"><strong>
+                            <p>start</p></strong></div>
+                        <div id="stepEvDiv" class="flowChartEvent"></div>
+                        <div class="window step jsplumb-connected-step" id="stepEv"
+                             title="To describe a step"><strong>
+                            <p>step</p></strong></div>
+                        <div id="descEvDiv" class="flowChartEvent"></div>
+                        <div class="window diamond jsplumb-connected-step" id="descEv"
+                             title="To describe a decision">
+                            <strong><p class="desc-text">decision</p></strong></div>
+                        <div id="inpEvDiv" class="flowChartEvent"></div>
+                        <div class="window step parallelogram jsplumb-connected-step" id="inpEv"
+                             title="To take/give input/output"><strong><p class="input-text">i/o</p></strong></div>
+                        <div id="endEvDiv" class="flowChartEvent"></div>
+                        <div class="window end jsplumb-connected-end" id="endEv"
+                             title="To end the flowchart"><strong>
+                            <p>end</p></strong></div>
+                    </div>
+                </div>
+            </div>
+        </span>
 
-                            <span style="display: inline-block; vertical-align: top; padding: 5px; width:85%">
-                              <div id="myDiagram" style="border: solid 1px gray;"><p>
-                                  <center><strong>Drawing</strong></center>
-                                  </p>
-                                  <div class="jtk-demo-main" style="margin-top: 20px;">
-                                      <div class="jtk-demo-canvas canvas-wide flowchart-demo jtk-surface  jtk-surface-nopan"
-                                           id="{{#if isUpdateView}}editor_canvas{{else}}canvas{{/if}}">
-                                      </div>
-                                  </div>
-                              </div>
-                            </span>
+        <span id="diagramDiv">
+            <div id="myDiagram"><p>
+                <center><strong>Drawing</strong></center>
+                </p>
+                <div id="canvasDiv" class="jtk-demo-main">
+                    <div class="jtk-demo-canvas canvas-wide flowchart-demo jtk-surface  jtk-surface-nopan"
+                         id="{{#if isUpdateView}}editor_canvas{{else}}canvas{{/if}}">
+                    </div>
+              </div>
+          </div>
+        </span>
     </div>
     <br/>
     <button class="btn btn-primary" id="saveFlowChartBtn" onclick="updateDetails(this)">Save</button>
     <button class="btn btn-primary" id="saveAsPNGBtn" onclick="downloadAsPNG({{isUpdateView}})">Download As PNG</button>
-
 </div>

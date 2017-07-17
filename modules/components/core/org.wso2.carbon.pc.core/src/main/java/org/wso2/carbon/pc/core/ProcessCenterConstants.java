@@ -51,6 +51,7 @@ public class ProcessCenterConstants {
     public static final String NO_FILE_SPECIFIED = "no-file-specified";
     public static final String BPMN_RESOURCES = "bpmnResources";
     public static final String DEPLOYMENTS = "deployments";
+    public static final String PROCESS_PATH = "/_system/governance/processes/";
     /**
      * Package asset
      */
@@ -182,9 +183,17 @@ public class ProcessCenterConstants {
     public static final String ANALYTICS_CONFIG_INFO = "analytics_config_info";
     public static final String VARIABLE_NAME = "variableName";
     public static final String VARIABLE_TYPE = "variableType";
+    public static final String PROCESS_MONITORING_DASHBOARD = "process-monitoring";
+    public static final String USER_ANALYTICS_DASHBOARD = "user-analytics";
     //other
     public static final String URL = "url";
     public static final String NA = "NA";
+
+    //lifecycle states
+    public static final String DEVELOPMENT = "Development";
+    public static final String IN_REVIEW = "In-Review";
+    public static final String PUBLISHED = "Published";
+    public static final String RETIRED = "Retired";
 
     // Make the constructor private, since it is a utility class
     private ProcessCenterConstants() {
@@ -222,6 +231,7 @@ public class ProcessCenterConstants {
         public static final String ADMIN_ROLE = "admin";
         public static final String PUBLISHER_ROLE = "Internal/publisher";
         public static final String PRIVATE_USER_ROLE = "Internal/private_";
+        public static final String SYSTEM_ANONYMOUS_ROLE = "system/wso2.anonymous.role";
         public static final String ASSET_TYPE = "asset";
         public static final String ACTION = "action";
         public static final String USER = "user";

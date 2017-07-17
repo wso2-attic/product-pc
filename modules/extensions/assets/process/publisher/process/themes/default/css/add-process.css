@@ -482,7 +482,7 @@
     margin-left: 280px;
     position: absolute;
     top: 220px;
-    bottom: 100px;
+    bottom: 80px;
 }
 
 .img-thumbnail {
@@ -530,4 +530,134 @@ hr {
 .custom-span:hover {
     text-decoration:none;
     color:#23527c;
+}
+
+#addNewDoc {
+    margin-left: 20px;
+}
+
+#newDoc {
+    padding-left:0;
+}
+
+#docNameLabel {
+    color: red;
+}
+
+#docName {
+    width:100%;
+}
+
+#docView {
+    float:left;
+    width:50%;
+}
+
+#summaryDoc {
+    max-width: 100%;
+}
+
+#docEditDiv, #updateDoc, #sourceUrlDoc, #fileNameDiv, #toggleFileDoc, #sourceFile, #flowChartView, #bpmnEditDiv,
+#bpmnViewDiv, #overviewDiv, #detailDiv, #associationDiv, #docViewDiv, #processTextView {
+    display: none;
+}
+
+#docUrl {
+    width: 98%;
+}
+
+#buttonDiv {
+    padding-top: 20px;
+}
+
+#uploadDocDiv {
+    float: right;
+    width: 48%;
+    margin-top: 25px;
+}
+
+#docURLLabel, #googleURLLabel {
+    margin-left: 20px;
+}
+
+.requiredAstrix {
+    color: red;
+}
+
+#docLocation {
+    width: 98%;
+}
+
+#bottomDocDiv {
+    clear: both;
+    font-size: 1px;
+}
+
+#processContent {
+    width: 80em;
+}
+
+#bpmnDiv {
+    float: left;
+    width: 15cm;
+}
+
+#bpmnImage {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+#bpmnImageDiv {
+    overflow:auto;
+    width:1000px;
+    height:500px;
+    border:1px solid black;
+}
+
+#overview, #details, #associations {
+    color: white;
+}
+
+#docTable {
+    width: 95%;
+}
+
+#subprocessadded {
+    margin-left: 85px;
+}
+
+#successoradded {
+    margin-left: 95px;
+}
+
+#prodecessoradded {
+    margin-left: 80px;
+}
+
+#left-sidebar {
+    width: 260px;
+    left: 0px;
+    height: 399.883px;
+    padding-top: 20px;
+}
+
+#backToDetailsBtn {
+    margin-left:30px;
+    position: relative;
+}
+
+#flowchartadded {
+    margin-left: 35px;
+}
+
+#overview_description {
+    width:100%;
+    height:70px;
+}
+
+#processButtonDiv {
+    margin-left: 40px;
+    margin-top: 30px;
 }

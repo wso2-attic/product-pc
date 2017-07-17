@@ -28,6 +28,7 @@
     <title>Datepicker - Default functionality</title>
     <link rel="stylesheet" href="/portal/libs/bootstrap_3.3.5/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/portal/libs/pc-analytics-libs/css/bootstrap-datepicker.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/portal/libs/pc-analytics-libs/css/custom.css" type="text/css">
     <style type="text/css">
         body {
             padding: 12px;
@@ -43,7 +44,7 @@
 <body>
 <div class="panel panel-default">
     <div class="panel-body">
-        <div style="padding-top: 10px;padding-left: 10px;padding-right: 10px;">
+        <div class="panel_div">
             <div class="form-inline well well-sm" role="form">
                 <div class="input-group form-group">
                     <label class="input-group-addon" id="start_date" for="startDate">Start Date</label>

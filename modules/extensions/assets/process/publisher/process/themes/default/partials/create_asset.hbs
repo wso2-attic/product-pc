@@ -20,20 +20,20 @@
                 <div class="wizard-inner">
                     <ol class="wiz-nav-inner">
                         <li id="stp1" class="wiz-step current"><span
-                                class="hidden-xs"><a id="overview" href="#" style="color: white">Overview</a></span>
+                                class="hidden-xs"><a id="overview" href="#">Overview</a></span>
                         </li>
-                        <li id="stp2" class="wiz-step other"><span class="hidden-xs"><a id="details" href="#" style="color: white">Details</a></span>
+                        <li id="stp2" class="wiz-step other"><span class="hidden-xs"><a id="details"
+                                                                                        href="#">Details</a></span>
                         </li>
                         <li id="stp3" class="wiz-step other"><span
                                 class="hidden-xs"><a id="associations" href="#"
-                                                     style="color: white">Associations</a></span></li>
+                        >Associations</a></span></li>
                     </ol>
                 </div>
                 <div id="wiz_content_div" class="wiz-content">
-
-                    <div id="overviewDiv" style="display: none">{{> create_asset_overview .}}</div>
-                    <div id="detailDiv" style="display: none">{{> create_asset_details .}}</div>
-                    <div id="associationDiv" style="display: none">{{> create_asset_associations .}}</div>
+                    <div id="overviewDiv">{{> create_asset_overview .}}</div>
+                    <div id="detailDiv">{{> create_asset_details .}}</div>
+                    <div id="associationDiv">{{> create_asset_associations .}}</div>
                 </div>
             </div>
         </div>

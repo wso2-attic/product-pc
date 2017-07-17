@@ -13,7 +13,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<div id="docEditDiv" style="display:none">
+<div id="docEditDiv">
     <div class="row-fluid">
         <div class="span12">
             <div class="row-fluid">
@@ -23,41 +23,33 @@
                             <i class="fa fa-plus-circle"></i> Add New Document
                         </a>
                     </div>
-                    <div id="updateDoc" style="display:none;">
+                    <div id="updateDoc">
                         <h4></h4>
                     </div>
-
                 </div>
             </div>
             <!-- Row -->
-            <form id="addNewDoc" enctype="multipart/form-data"
-                  style="margin-left: 20px;" target="_blank">
-                <div class="container-fluid" style="padding-left:0">
+            <form id="addNewDoc" enctype="multipart/form-data" target="_blank">
+                <div class="container-fluid">
                     <div id="newDoc">
                         <div class="row-fluid">
-                            <div class="span6 name-column" style="float:left;width:50%;">
+                            <div id="docView" class="span6 name-column">
                                 <div class="control-group">
-                                    <label class="control-label font" for="docName">Name<span
-                                            class="requiredAstrix"
-                                            style="color: red;">*</span></label>
-
+                                    <label id="docNameLabel" class="control-label font" for="docName">Name<span
+                                            class="requiredAstrix">*</span></label>
                                     <div class="controls">
                                         <input type="text" class="required validInput form-control font"
-                                               id="docName" name="docName"
-                                               style="width:100%">
+                                               id="docName" name="docName">
                                     </div>
                                 </div>
-
                                 <div class="control-group">
                                     <label class="control-label" for="textarea">Summary</label>
-
                                     <div class="controls">
-                                        <textarea id="summaryDoc" class="form-control font" name="summaryDoc" rows="3"
-                                                  style="max-width: 100%;"></textarea>
+                                        <textarea id="summaryDoc" class="form-control font" name="summaryDoc" rows="3">
+                                        </textarea>
                                     </div>
                                 </div>
-                                <div class="control-group" style="padding-top: 20px">
-                                    <!--<button type="button" class="btn btn-primary" id="saveDocBtn" onclick="saveDoc()">Add Document</button>-->
+                                <div id="buttonDiv" class="control-group">
                                     <input type="submit" class="btn btn-primary" id="saveDocBtn"
                                            value="Add Document">
                                 </div>
@@ -66,72 +58,51 @@
                                        name="docProcessVersion"/>
                                 <input type="hidden" id="docExtension" name="docExtension"/>
                             </div>
-
-                            <div class="span6" style="float:right;width:48%;margin-top: 25px;">
+                            <div id="uploadDocDiv" class="span6">
                                 <div class="well">
                                     <div class="control-group">
                                         <label class="control-label">Source</label>
-
                                         <div class="controls">
-                                            <label class="radio" style="margin-left:20px">
+                                            <label id="googleURLLabel" class="radio">
                                                 <input type="radio" name="optionsRadios1"
                                                        id="optionsRadios7"
                                                        value="url"
                                                        onclick="javascript:$('#sourceUrlDoc').toggle('slow');$('#sourceFile').hide('slow');$(docLocation).val('');">URL
                                                 (Eg: google doc)
-                                                <a class="icon-question-sign help_popup"
-                                                   data-original-title=""
+                                                <a class="icon-question-sign help_popup" data-original-title=""
                                                    title=""></a>
-
                                                 <p id="urlDoc_help" class="hide">Link to
                                                     documentation managed by an
                                                     external configuration management system</p>
                                             </label>
-
-                                            <div id="sourceUrlDoc" class="controls"
-                                                 style="display: none;">
-                                                                        <span class="requiredAstrix"
-                                                                              style="color: red;">*</span> <input
-                                                    type="text" class="required"
-                                                    style="width:98%" id="docUrl"
-                                                    name="docUrl">
+                                            <div id="sourceUrlDoc" class="controls">
+                                                <span class="requiredAstrix">*</span>
+                                                <input type="text" class="required" id="docUrl" name="docUrl">
                                             </div>
-                                            <label class="radio" style="margin-left:20px">
-                                                <input type="radio" name="optionsRadios1"
-                                                       id="optionsRadios8"
+                                            <label id="docURLLabel" class="radio">
+                                                <input type="radio" name="optionsRadios1" id="optionsRadios8"
                                                        value="file"
                                                        onclick="javascript:$('#sourceFile').toggle('slow');$('#sourceUrlDoc').hide('slow');$('#docUrl').val('');">Document
-                                                <a class="icon-question-sign help_popup"
-                                                   data-original-title=""
+                                                <a class="icon-question-sign help_popup" data-original-title=""
                                                    title=""></a>
-
                                                 <p id="fileDoc_help" class="hide">Upload a
                                                     documentation file</p>
                                             </label>
-
-                                            <div id="fileNameDiv" style="display:none;"></div>
+                                            <div id="fileNameDiv"></div>
                                             <a onclick="javascript:$('#sourceFile').toggle('slow')"
-                                               id="toggleFileDoc"
-                                               style="display:none;">
-                                                Change File
+                                               id="toggleFileDoc">Change File
                                             </a>
-
-                                            <div id="sourceFile" class="controls"
-                                                 style="display:none;">
-                                                                        <span class="requiredAstrix"
-                                                                              style="color: red;">*</span> <input
-                                                    type="file" class="required"
-                                                    style="width:98%"
-                                                    name="docLocation"
-                                                    id="docLocation">
-
+                                            <div id="sourceFile" class="controls">
+                                                <span class="requiredAstrix">*</span>
+                                                <input type="file" class="required" name="docLocation"
+                                                       id="docLocation">
                                                 <p id="fileType_help">eg : .docx, .doc</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div style="clear:both; font-size:1px;"></div>
+                            <div id="bottomDocDiv"></div>
                         </div>
                         <br/>
                         <!-- End of row -->

@@ -32,6 +32,7 @@ import org.wso2.carbon.registry.resource.services.utils.AddRolePermissionUtil;
 import org.wso2.carbon.registry.resource.services.utils.PermissionUtil;
 import org.wso2.carbon.utils.CarbonUtils;
 
+import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -63,8 +64,8 @@ public class ProcessCenterServerHolder {
     public void setRegistryService(RegistryService registrySvc) {
         this.registryService = registrySvc;
         updateArtifactPathPermissions();
-        deployAnalyticsDashboard("process-monitoring");
-        deployAnalyticsDashboard("user-analytics");
+        deployAnalyticsDashboard(ProcessCenterConstants.PROCESS_MONITORING_DASHBOARD);
+        deployAnalyticsDashboard(ProcessCenterConstants.USER_ANALYTICS_DASHBOARD);
     }
 
     public void unsetRegistryService(RegistryService registryService) {
@@ -154,7 +155,7 @@ public class ProcessCenterServerHolder {
                     byte[] content = IOUtils.toByteArray(stream);
                     String jsonText = new String(content);
                     dashboardResource.setContent(jsonText);
-                    dashboardResource.setMediaType("application/json");
+                    dashboardResource.setMediaType(MediaType.APPLICATION_JSON);
                     String dashboardPath = "ues/dashboards/" + file_name;
                     if (!registry.resourceExists(dashboardPath)) {
                         registry.put(dashboardPath, dashboardResource);

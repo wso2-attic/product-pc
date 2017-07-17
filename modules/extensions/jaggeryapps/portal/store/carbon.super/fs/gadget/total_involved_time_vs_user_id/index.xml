@@ -86,13 +86,13 @@
 
 <body>
     <div>
-        <div class="panel-body" style="width:100%; height:95%">
-            <div style="padding-top: 10px;padding-left: 10px;padding-right: 10px;">
+        <div class="panel-body" id="gadgetDiv">
+            <div class="panel_div">
             <a data-toggle="collapse" data-target="#inline-form" href="#">
                             <i class="fw fw-filter" aria-hidden="true"></i>&nbsp;Add Filter
                         </a>
                         <div id="inline-form" class="form-inline collapse" role="form">
-                             <div class="form-group" style="padding-right:0">
+                             <div class="form-group selectpicker-padding">
                         <select id="TasksOrder" class="selectpicker form-control">
                             <option value="top">Top</option>
                             <option value="bottom">Bottom</option>
@@ -115,7 +115,7 @@
                     <button class="btn btn-primary" onclick="drawGraph()">Apply Filter</button>
                 </div>
             </div>
-            <div id="chartA" style="width:100%; height:100%; padding-top:20px"></div>
+            <div id="chartA" class="chartA"></div>
         </div>
     </div>
 

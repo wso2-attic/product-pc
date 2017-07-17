@@ -42,7 +42,6 @@ $(document).ready(function () {
     } else {
         $("#step2").hide();
     }
-
 });
 
 function renderSelect2() {
@@ -74,7 +73,6 @@ $(function () {
                 initSelect2Roles();
             }
         });
-
     };
 
     var isRoleAuthorized = function (role) {
@@ -112,7 +110,6 @@ $(function () {
                 $("#new-version-loading-save").addClass("hide");
             }
         });
-
     };
 
     var invokeRemovePermissionAPI = function (data, role) {
@@ -323,7 +320,7 @@ $(function () {
 
     var initSelect2Roles = function () {
         var rolesDivId = "#div-roles";
-        $(rolesDivId +" > div").each(function () {
+        $(rolesDivId + " > div").each(function () {
             var roleName = $("input[id=roleName]", this).attr("value");
             $(SELECT_CONTAINER + " option[value='" + roleName + "']").remove();
         });

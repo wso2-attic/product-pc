@@ -28,12 +28,12 @@ var sidePanel = '.wr-side-panel',
 /*
  * On window loaded functions.
  */
-$(window).load(function(){
+$(window).load(function () {
     setSidePanelHeight();
     $(sidePanel).css('top', offset);
     sidePanelPositionFix();
-    
-    if($(toggleButton + ' .wr-notification-bubble').html() == 0){
+
+    if ($(toggleButton + ' .wr-notification-bubble').html() == 0) {
         $(toggleButton + ' .wr-notification-bubble').closest(toggleButton).hide();
     }
 });
@@ -41,7 +41,7 @@ $(window).load(function(){
 /*
  * On window resize functions.
  */
-$(window).resize(function(){
+$(window).resize(function () {
     setSidePanelHeight();
     sidePanelPositionFix();
 });
@@ -50,7 +50,7 @@ $(window).resize(function(){
  * On main div.container resize functions.
  * @required  jquery.resize.js
  */
-$('.container').resize(function(){
+$('.container').resize(function () {
     setSidePanelHeight();
     sidePanelPositionFix();
 });
@@ -58,10 +58,10 @@ $('.container').resize(function(){
 /*
  * On window scroll functions.
  */
-$(function(){ // document ready
+$(function () { // document ready
     if (!!$(sidePanel).offset()) { // make sure ".sticky" element exists
         //var stickyTop = $(sidePanel).offset().top; // returns number
-        $(window).scroll(function(){ // scroll event
+        $(window).scroll(function () { // scroll event
             sidePanelPositionFix();
         });
     }
@@ -70,13 +70,13 @@ $(function(){ // document ready
 /*
  * Notification panel fix positioning on window scrolling
  */
-function sidePanelPositionFix(){
+function sidePanelPositionFix() {
     var windowTop = $(window).scrollTop(); // returns number
-    if (headerHeight < windowTop){
-        $(sidePanel).css({ position: 'fixed', top: navHeight });
+    if (headerHeight < windowTop) {
+        $(sidePanel).css({position: 'fixed', top: navHeight});
     }
     else {
-        $(sidePanel).css('position','absolute');
+        $(sidePanel).css('position', 'absolute');
         $(sidePanel).css('top', offset);
     }
 }
@@ -86,17 +86,17 @@ function sidePanelPositionFix(){
  * @param view: which should be visible on side panel open
  * @param button: selected button
  */
-function toggleSidePanel(view,button){
-    
+function toggleSidePanel(view, button) {
+
     var viewElement = (sidePanel + ' #' + view);
-    
+
     $(viewElement).siblings().hide();
     $(viewElement).show();
-    
+
     $(button).siblings().removeClass('selected');
     $(button).toggleClass('selected');
-    
-    if($(button).hasClass('selected')){
+
+    if ($(button).hasClass('selected')) {
         $(sidePanel).addClass('toggled');
     }
     else {
@@ -108,6 +108,6 @@ function toggleSidePanel(view,button){
 /*
  * Set notification bar height to fill window height
  */
-function setSidePanelHeight(){
+function setSidePanelHeight() {
     $(sidePanel).height($('html').height() - offset);
 }

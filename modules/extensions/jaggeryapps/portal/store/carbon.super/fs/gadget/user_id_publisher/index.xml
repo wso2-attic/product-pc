@@ -46,7 +46,7 @@
 <body>
 <div class="panel panel-default">
     <div class="panel-body">
-        <div style="padding-top: 10px;padding-left: 10px;padding-right: 10px;">
+        <div class="panel_div">
             <div class="form-inline well well-sm" role="form">
                 <div class="input-group form-group">
                     <label class="input-group-addon" id="start_date" for="startDate">Start Date</label>
@@ -56,12 +56,12 @@
                     <label class="input-group-addon" id="end_date">End Date</label>
                     <input id="endDate" class="form-control" type="text"/>
                 </div>
-                <div class="form-group" style="padding-right:0">
+                <div class="form-group selectpicker-padding">
                         <select id="UserList" class="selectpicker form-control"></select>
                 </div>
                 <Button class="btn btn-primary" id="applyBtn" onclick="publish()">Publish</Button>
                 <Button class="btn btn-primary" id="resetBtn" onclick="reset()">Reset</Button>
-                <div class="col-sm-4 input-group " role="alert" style="margin-left: 2%">
+                <div class="col-sm-4 input-group date-range-alert" role="alert">
                       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                       This is used to filter analytics data by date range. Default date range 3 months from the current date is applied if user is not selected any date.
                 </div>
