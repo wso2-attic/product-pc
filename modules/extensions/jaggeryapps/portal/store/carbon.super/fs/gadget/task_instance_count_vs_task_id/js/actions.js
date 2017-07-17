@@ -66,7 +66,6 @@ function drawGraph() {
             }
         });
     } else {
-        console.log('Empty process id list.');
         alert("Process id list is empty.");
     }
 }
@@ -75,15 +74,16 @@ function loadProcessList(dropdownId) {
     var process= getUrlVars()["pname"];
 
     $.getJSON("/portal/store/carbon.super/fs/gadget/task_instance_count_vs_task_id/js/meta-data-taskInstanceCountVsTaskID.json.js", function (result) {
+        var $dropDownElement = $(dropdownElementID);
         $.each(result, function (i, field) {
             jsonObj.push(field);
             if(process) {
                 var el = document.createElement("option");
                 el.textContent = process;
                 el.value = process;
-                $(dropdownElementID).append(el);
-                $(dropdownElementID).attr("disabled", true);
-                $(dropdownElementID).selectpicker("refresh");
+                $dropDownElement.append(el);
+                $dropDownElement.attr("disabled", true);
+                $dropDownElement.selectpicker("refresh");
                 drawGraph();
             } else {
                 loadList(dropdownElementID);
@@ -111,7 +111,7 @@ function loadList(dropdownElementID) {
                 $(dropdownElementID).selectpicker("refresh");
             }
             else{
-                console.log('Empty Process ID list.');
+                alert('Empty Process ID list.');
             }
             drawGraph();
         },

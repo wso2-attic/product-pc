@@ -90,7 +90,7 @@ function loadTaskList(dropdownId) {
                 $(dropdownElementID).selectpicker("refresh");   
             }
             else{
-                console.log('Empty Task ID list.');
+                alert('Empty Task ID list.');
             }
         },
         error: function (xhr, status, error) {
@@ -109,7 +109,6 @@ function publish() {
     if(!to) {
         to = 0;
     }
-    console.log(from+" "+to);
     gadgets.Hub.publish('task_id', {
         task_id: task_id,
         from: from,
