@@ -1,3 +1,7 @@
+# NOTE
+
+Since WSO2 PC is no longer maintained, we are deprecating this product and moving it to attic.
+
 product-pc
 ==========
 Welcome to WSO2 Process Center.
